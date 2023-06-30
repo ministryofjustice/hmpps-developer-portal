@@ -1,20 +1,20 @@
 import { dataAccess } from '../data'
 import UserService from './userService'
-import ProductService from './productService'
+import StrapiService from './strapiService'
 
 export const services = () => {
-  const { apiClientBuilder, hmppsAuthClient, applicationInfo } = dataAccess()
+  const { strapiApiClientBuilder, hmppsAuthClient, applicationInfo } = dataAccess()
 
   const userService = new UserService(hmppsAuthClient)
-  const productService = new ProductService(apiClientBuilder)
+  const strapiService = new StrapiService(strapiApiClientBuilder)
 
   return {
     applicationInfo,
     userService,
-    productService,
+    strapiService,
   }
 }
 
 export type Services = ReturnType<typeof services>
 
-export { UserService, ProductService }
+export { UserService, StrapiService }

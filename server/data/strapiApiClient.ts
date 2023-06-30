@@ -2,7 +2,7 @@ import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import { ProductListResponse } from './strapiApiTypes'
 
-export default class ApiClient {
+export default class StrapiApiClient {
   private restClient: RestClient
 
   constructor() {
