@@ -68,6 +68,16 @@ export default {
       agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
+    strapi: {
+      products: {
+        url: get('STRAPI_PRODUCTS_URL', 'http://localhost:3000', requiredInProduction),
+        timeout: {
+          response: Number(get('STRAPI_API_TIMEOUT_RESPONSE', 5000)),
+          deadline: Number(get('STRAPI_API_TIMEOUT_DEADLINE', 5000)),
+        },
+        agent: new AgentConfig(Number(get('STRAPI_API_TIMEOUT_RESPONSE', 5000))),
+      },
+    },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
 }
