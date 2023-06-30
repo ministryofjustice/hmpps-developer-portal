@@ -1,11 +1,11 @@
 version: '3.1'
 services:
 
-  redis-test:
+  redis:
     image: 'redis:7.0'
     networks:
       - hmpps
-    container_name: redis-test
+    container_name: redis
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
@@ -28,7 +28,7 @@ services:
     build: .
     networks:
       - hmpps
-    depends_on: [redis-test]
+    depends_on: [redis]
     ports:
       - "3000:3000"
     environment:
