@@ -2,7 +2,7 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
-import { StrapiService } from '../services'
+import StrapiService from '../services/strapiService'
 import { Product } from '../data/strapiApiTypes'
 
 jest.mock('../services/strapiService.ts')

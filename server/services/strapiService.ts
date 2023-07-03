@@ -1,4 +1,4 @@
-import { StrapiApiClient, RestClientBuilder } from '../data'
+import type { StrapiApiClient, RestClientBuilder } from '../data'
 import { Product } from '../data/strapiApiTypes'
 
 export default class StrapiService {

@@ -10,19 +10,25 @@ import * as auth from '../../authentication/auth'
 import type { Services } from '../../services'
 import type { ApplicationInfo } from '../../applicationInfo'
 
-jest.mock('../../applicationInfo.ts', () => {
-  return {
-    __esModule: true,
-    default: jest.fn(() => {
-      return {
-        applicationName: 'test',
-        buildNumber: '1',
-        gitRef: 'long ref',
-        gitShortHash: 'short ref',
-      } as ApplicationInfo
-    }),
-  }
-})
+// jest.mock('../../applicationInfo.ts', () => {
+//   return {
+//     __esModule: true,
+//     default: jest.fn(() => {
+//       return {
+//         applicationName: 'test',
+//         buildNumber: '1',
+//         gitRef: 'long ref',
+//         gitShortHash: 'short ref',
+//       } as ApplicationInfo
+//     }),
+//   }
+// })
+const testAppInfo: ApplicationInfo = {
+  applicationName: 'test',
+  buildNumber: '1',
+  gitRef: 'long ref',
+  gitShortHash: 'short ref',
+}
 
 export const user = {
   firstName: 'first',
@@ -42,7 +48,7 @@ function appSetup(services: Services, production: boolean, userSupplier: () => E
 
   app.set('view engine', 'njk')
 
-  nunjucksSetup(app, services.applicationInfo)
+  nunjucksSetup(app, testAppInfo)
   app.use(cookieSession({ keys: [''] }))
   app.use((req, res, next) => {
     req.user = userSupplier()
