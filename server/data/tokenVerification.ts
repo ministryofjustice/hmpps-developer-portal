@@ -4,7 +4,7 @@ import getSanitisedError from '../sanitisedError'
 import config from '../config'
 import logger from '../../logger'
 
-function getStrapiApiClientToken(token: string) {
+function getApiClientToken(token: string) {
   return superagent
     .post(`${config.apis.tokenVerification.url}/token/verify`)
     .auth(token, { type: 'bearer' })
@@ -31,7 +31,7 @@ const tokenVerifier: TokenVerifier = async request => {
 
   logger.debug(`token request for user "${user.username}'`)
 
-  const result = await getStrapiApiClientToken(user.token)
+  const result = await getApiClientToken(user.token)
   if (result) {
     request.verified = true
   }
