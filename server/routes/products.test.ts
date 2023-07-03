@@ -1,15 +1,30 @@
 import type { Express } from 'express'
 import request from 'supertest'
-import { StrapiService } from '../services'
 import { appWithAllRoutes } from './testutils/appSetup'
+import { StrapiService } from '../services'
 import { Product } from '../data/strapiApiTypes'
+import type { ApplicationInfo } from '../applicationInfo'
+
+const testAppInfo: ApplicationInfo = {
+  applicationName: 'test',
+  buildNumber: '1',
+  gitRef: 'long ref',
+  gitShortHash: 'short ref',
+}
+
+jest.mock('../../applicationInfo', () => {
+  return {
+    __esModule: true,
+    default: jest.fn(() => testAppInfo),
+  }
+})
 
 const strapiService = new StrapiService(null) as jest.Mocked<StrapiService>
 
 let app: Express
 
 beforeEach(() => {
-  const testProduct = { name: 'testProduct', pid: '1' } as Product
+  const testProduct = [{ name: 'testProduct', pid: '1' } as Product]
   strapiService.getProducts.mockResolvedValue(testProduct)
 
   app = appWithAllRoutes({ services: { strapiService } })
