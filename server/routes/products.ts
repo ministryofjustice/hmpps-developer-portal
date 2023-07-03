@@ -10,7 +10,7 @@ export default function routes({ strapiService }: Services): Router {
   get('/', async (req, res) => {
     const products = await strapiService.getProducts()
 
-    return res.render('pages/prisoner/profile', { products })
+    return res.render('pages/products', { products })
   })
 
   return router

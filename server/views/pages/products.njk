@@ -4,9 +4,10 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-
+  <div class="products">
   {% for name in products %}
   <p>{{ name }}</p>
   {% endfor %}
+  </div>
 
 {% endblock %}

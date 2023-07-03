@@ -39,8 +39,8 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpCsrf())
   app.use(setUpCurrentUser(services))
 
-  app.use(indexRoutes(services))
-  app.use(productRoutes(services))
+  app.use('/', indexRoutes(services))
+  app.use('/products', productRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
