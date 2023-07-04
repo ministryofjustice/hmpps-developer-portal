@@ -10,12 +10,15 @@ const applicationInfo = applicationInfoSupplier()
 initialiseAppInsights()
 buildAppInsightsClient(applicationInfo)
 
+import StrapiApiClient from './strapiApiClient'
+
 type RestClientBuilder<T> = (token: string) => T
 
 export const dataAccess = () => ({
   applicationInfo,
+  strapiApiClientBuilder: (() => new StrapiApiClient()) as RestClientBuilder<StrapiApiClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { RestClientBuilder }
+export { StrapiApiClient, RestClientBuilder }

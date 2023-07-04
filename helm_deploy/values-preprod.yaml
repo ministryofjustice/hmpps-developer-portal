@@ -9,6 +9,7 @@ generic-service:
 
   env:
     INGRESS_URL: "https://hmpps-developer-portal-preprod.hmpps.service.justice.gov.uk"
+    STRAPI_PRODUCTS_URL: "https://service-catalogue.hmpps.service.justice.gov.uk/v1"
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
