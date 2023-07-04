@@ -12,8 +12,8 @@ const strapiService = new StrapiService(null) as jest.Mocked<StrapiService>
 let app: Express
 
 beforeEach(() => {
-  const testProduct = [{ name: 'testProduct', pid: '1' } as Product]
-  strapiService.getProducts.mockResolvedValue(testProduct)
+  const testProducts = [{ name: 'testProduct', pid: '1' } as Product]
+  strapiService.getProducts.mockResolvedValue(testProducts)
 
   app = appWithAllRoutes({ services: { strapiService } })
 })

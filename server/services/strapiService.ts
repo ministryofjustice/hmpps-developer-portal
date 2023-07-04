@@ -5,8 +5,8 @@ export default class StrapiService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
 
   async getProducts(): Promise<Product[]> {
-    const strapiAClient = this.strapiApiClientFactory('')
-    const productData = await strapiAClient.getProducts()
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const productData = await strapiApiClient.getProducts()
 
     const products = productData.data.map(product => product.attributes)
 

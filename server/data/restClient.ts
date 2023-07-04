@@ -46,7 +46,7 @@ export default class RestClient {
   }
 
   async get({ path = null, query = '', headers = {}, responseType = '', raw = false }: GetRequest): Promise<unknown> {
-    logger.info(`Get using user credentials: calling ${this.name}: ${path} ${query}`)
+    logger.info(`Get calling ${this.name}: ${path} ${query}`)
     try {
       const result = await superagent
         .get(`${this.apiUrl()}${path}`)
@@ -77,7 +77,7 @@ export default class RestClient {
     data = {},
     raw = false,
   }: PostRequest = {}): Promise<unknown> {
-    logger.info(`Post using user credentials: calling ${this.name}: ${path}`)
+    logger.info(`Post calling ${this.name}: ${path}`)
     try {
       const result = await superagent
         .post(`${this.apiUrl()}${path}`)
@@ -102,7 +102,7 @@ export default class RestClient {
   }
 
   async stream({ path = null, headers = {} }: StreamRequest = {}): Promise<unknown> {
-    logger.info(`Get using user credentials: calling ${this.name}: ${path}`)
+    logger.info(`Stream calling ${this.name}: ${path}`)
     return new Promise((resolve, reject) => {
       superagent
         .get(`${this.apiUrl()}${path}`)
