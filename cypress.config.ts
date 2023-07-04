@@ -1,6 +1,6 @@
 import { defineConfig } from 'cypress'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
-import strapi from './integration_tests/mockApis/strapi'
+import serviceCatalogue from './integration_tests/mockApis/serviceCatalogue'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -19,7 +19,7 @@ export default defineConfig({
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
-        ...strapi,
+        ...serviceCatalogue,
       })
     },
     baseUrl: 'http://localhost:3007',
