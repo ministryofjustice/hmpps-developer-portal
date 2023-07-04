@@ -46,13 +46,13 @@ export default {
     expiryMinutes: Number(get('WEB_SESSION_TIMEOUT_IN_MINUTES', 120)),
   },
   apis: {
-    strapi: {
-      url: get('STRAPI_PRODUCTS_URL', 'http://localhost:3000', requiredInProduction),
+    serviceCatalogue: {
+      url: get('SERVICE_CATALOGUE_URL', 'http://localhost:3000', requiredInProduction),
       timeout: {
-        response: Number(get('STRAPI_API_TIMEOUT_RESPONSE', 5000)),
-        deadline: Number(get('STRAPI_API_TIMEOUT_DEADLINE', 5000)),
+        response: Number(get('SERVICE_CATALOGUE_TIMEOUT_RESPONSE', 5000)),
+        deadline: Number(get('SERVICE_CATALOGUE_TIMEOUT_DEADLINE', 5000)),
       },
-      agent: new AgentConfig(Number(get('STRAPI_API_TIMEOUT_RESPONSE', 5000))),
+      agent: new AgentConfig(Number(get('SERVICE_CATALOGUE_TIMEOUT_RESPONSE', 5000))),
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),

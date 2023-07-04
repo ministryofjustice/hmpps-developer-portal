@@ -2,20 +2,20 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
-import StrapiService from '../services/strapiService'
+import ServiceCatalogueService from '../services/serviceCatalogueService'
 import { Product } from '../data/strapiApiTypes'
 
-jest.mock('../services/strapiService.ts')
+jest.mock('../services/serviceCatalogueService.ts')
 
-const strapiService = new StrapiService(null) as jest.Mocked<StrapiService>
+const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
 
 beforeEach(() => {
   const testProducts = [{ name: 'testProduct', pid: '1' } as Product]
-  strapiService.getProducts.mockResolvedValue(testProducts)
+  serviceCatalogueService.getProducts.mockResolvedValue(testProducts)
 
-  app = appWithAllRoutes({ services: { strapiService } })
+  app = appWithAllRoutes({ services: { serviceCatalogueService } })
 })
 
 afterEach(() => {

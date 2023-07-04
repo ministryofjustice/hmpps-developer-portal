@@ -12,5 +12,5 @@ const ping = () =>
   })
 
 export default {
-  stubStrapiPing: ping,
+  stubServiceCataloguePing: ping,
 }

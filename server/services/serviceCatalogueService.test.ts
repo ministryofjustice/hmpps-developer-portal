@@ -1,13 +1,13 @@
 import StrapiApiClient from '../data/strapiApiClient'
 import { Product, ProductListResponse } from '../data/strapiApiTypes'
-import StrapiService from './strapiService'
+import ServiceCatalogueService from './serviceCatalogueService'
 
 jest.mock('../data/strapiApiClient')
 
 describe('Strapi service', () => {
   const strapiApiClient = new StrapiApiClient() as jest.Mocked<StrapiApiClient>
 
-  let strapiService: StrapiService
+  let serviceCatalogueService: ServiceCatalogueService
 
   const StrapiApiClientFactory = jest.fn()
 
@@ -22,7 +22,7 @@ describe('Strapi service', () => {
 
   beforeEach(() => {
     StrapiApiClientFactory.mockReturnValue(strapiApiClient)
-    strapiService = new StrapiService(StrapiApiClientFactory)
+    serviceCatalogueService = new ServiceCatalogueService(StrapiApiClientFactory)
   })
 
   afterEach(() => {
@@ -33,7 +33,7 @@ describe('Strapi service', () => {
     it('should return an array of available support options', async () => {
       strapiApiClient.getProducts.mockResolvedValue(testResponse)
 
-      const results = await strapiService.getProducts()
+      const results = await serviceCatalogueService.getProducts()
 
       expect(strapiApiClient.getProducts).toHaveBeenCalledTimes(1)
       expect(results).toEqual(testProducts)

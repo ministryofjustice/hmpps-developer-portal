@@ -1,7 +1,7 @@
 import type { StrapiApiClient, RestClientBuilder } from '../data'
 import { Product } from '../data/strapiApiTypes'
 
-export default class StrapiService {
+export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
 
   async getProducts(): Promise<Product[]> {
