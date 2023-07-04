@@ -8,7 +8,7 @@ describe('strapiApiClient', () => {
   let strapiApiClient: StrapiApiClient
 
   beforeEach(() => {
-    fakeStrapiApi = nock(config.apis.strapi.products.url)
+    fakeStrapiApi = nock(`${config.apis.strapi.url}/v1`)
     strapiApiClient = new StrapiApiClient()
   })
 

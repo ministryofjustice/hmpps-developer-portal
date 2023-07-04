@@ -6,12 +6,12 @@ export default class StrapiApiClient {
   private restClient: RestClient
 
   constructor() {
-    this.restClient = new RestClient('apiClient', config.apis.strapi.products as ApiConfig, '')
+    this.restClient = new RestClient('apiClient', config.apis.strapi as ApiConfig, '')
   }
 
   async getProducts(): Promise<ProductListResponse> {
     return this.restClient.get({
-      path: '/products',
+      path: '/v1/products',
     })
   }
 }
