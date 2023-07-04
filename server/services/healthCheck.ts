@@ -49,7 +49,7 @@ function gatherCheckInfo(aggregateStatus: Record<string, unknown>, currentStatus
   return { ...aggregateStatus, [currentStatus.name]: currentStatus.message }
 }
 
-const apiChecks = [service('strapi', `${config.apis.strapi.url}/_health`, config.apis.strapi.agent)]
+const apiChecks = [service('strapi', `${config.apis.strapi.url}/`, config.apis.strapi.agent)]
 
 export default function healthCheck(
   applicationInfo: ApplicationInfo,
