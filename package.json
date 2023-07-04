@@ -134,6 +134,7 @@
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
     "audit-ci": "^6.6.1",
+    "cheerio": "^1.0.0-rc.12",
     "concurrently": "^8.2.0",
     "cookie-session": "^2.0.0",
     "cypress": "^12.16.0",
@@ -161,5 +162,8 @@
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1",
     "typescript": "^5.1.6"
+  },
+  "overrides": {
+    "semver": "^7.5.3"
   }
 }

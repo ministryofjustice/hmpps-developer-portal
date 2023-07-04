@@ -1,11 +1,17 @@
 import { dataAccess } from '../data'
+import ServiceCatalogueService from './serviceCatalogueService'
 
 export const services = () => {
-  const { applicationInfo } = dataAccess()
+  const { strapiApiClientBuilder, applicationInfo } = dataAccess()
+
+  const serviceCatalogueService = new ServiceCatalogueService(strapiApiClientBuilder)
 
   return {
     applicationInfo,
+    serviceCatalogueService,
   }
 }
 
 export type Services = ReturnType<typeof services>
+
+export { ServiceCatalogueService }
