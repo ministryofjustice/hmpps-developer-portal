@@ -29,7 +29,7 @@ describe('GET /products', () => {
       .expect('Content-Type', /html/)
       .expect(res => {
         const $ = cheerio.load(res.text)
-        expect($('.products').text().trim()).toContain('Object')
+        expect($('.products').text().trim()).toContain('testProduct')
       })
   })
 })
