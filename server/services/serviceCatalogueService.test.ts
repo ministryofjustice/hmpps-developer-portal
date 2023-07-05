@@ -14,11 +14,17 @@ describe('Strapi service', () => {
   const testResponse = {
     data: [
       {
-        attributes: { name: 'testProduct', pid: '1' },
+        attributes: { name: 'z-index testProduct', pid: '1' },
+      },
+      {
+        attributes: { name: 'testProduct', pid: '2' },
       },
     ],
   } as ProductListResponse
-  const testProducts = [{ name: 'testProduct', pid: '1' } as Product]
+  const testProducts = [
+    { name: 'testProduct', pid: '2' },
+    { name: 'z-index testProduct', pid: '1' },
+  ] as Product[]
 
   beforeEach(() => {
     StrapiApiClientFactory.mockReturnValue(strapiApiClient)
@@ -30,7 +36,7 @@ describe('Strapi service', () => {
   })
 
   describe('getProducts', () => {
-    it('should return an array of available support options', async () => {
+    it('should return an ordered array of available support options', async () => {
       strapiApiClient.getProducts.mockResolvedValue(testResponse)
 
       const results = await serviceCatalogueService.getProducts()
