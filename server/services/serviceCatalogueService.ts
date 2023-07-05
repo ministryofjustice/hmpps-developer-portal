@@ -8,7 +8,18 @@ export default class ServiceCatalogueService {
     const strapiApiClient = this.strapiApiClientFactory('')
     const productData = await strapiApiClient.getProducts()
 
-    const products = productData.data.map(product => product.attributes)
+    const products = productData.data
+      .map(product => product.attributes)
+      .sort((product, compareProduct) => {
+        if (product.name < compareProduct.name) {
+          return -1
+        }
+        if (product.name > compareProduct.name) {
+          return 1
+        }
+
+        return 0
+      })
 
     return products
   }
