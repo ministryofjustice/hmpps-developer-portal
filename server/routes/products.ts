@@ -13,5 +13,11 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.render('pages/products', { products })
   })
 
+  get('/data', async (req, res) => {
+    const products = await serviceCatalogueService.getProducts()
+
+    return res.send(products)
+  })
+
   return router
 }

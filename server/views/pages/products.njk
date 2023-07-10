@@ -4,10 +4,25 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-  <div class="products">
-  {% for product in products %}
-  <p>{{ product.p_id }} - {{ product.name }}</p>
-  {% endfor %}
-  </div>
 
+  <h1>Products</h1>
+
+  <table id="productsTable">
+  	<thead>
+	  <tr>
+		<th>ID</th>
+		<th>Name</th>
+	  </tr>
+  	</thead>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  {# Run JavaScript at end of the
+  <body>, to avoid blocking the initial render. #}
+  <script src="/assets/govuk/all.js"></script>
+  <script src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/productsTable.js"></script>
 {% endblock %}
