@@ -6,6 +6,8 @@ function cleanColumnOutput(data, type, row) {
 jQuery(function () {
   $('#productsTable').DataTable({
     paging: true,
+    order: [[1, 'asc']],
+    sortable: true,
     ajax: {
       url: '/products/data',
       dataSrc: '',
@@ -15,14 +17,8 @@ jQuery(function () {
     },
 
     columns: [
-      { data: 'p_id', render: cleanColumnOutput, orderable: true, sorting: true },
-      { data: 'name', render: cleanColumnOutput, orderable: true, sorting: true },
+      { data: 'p_id', render: cleanColumnOutput },
+      { data: 'name', render: cleanColumnOutput },
     ],
-
-    language: {
-      info: 'Showing _START_ to _END_ of _TOTAL_ products',
-      infoEmpty: 'Showing 0 to 0 of 0 products',
-      emptyTable: 'No products found',
-    },
   })
 })
