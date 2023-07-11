@@ -5,6 +5,8 @@ import createError from 'http-errors'
 import indexRoutes from '../index'
 import productRoutes from '../products'
 import componentRoutes from '../components'
+import teamRoutes from '../teams'
+
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import type { Services } from '../../services'
@@ -36,6 +38,7 @@ function appSetup(services: Services, production: boolean): Express {
   app.use('/', indexRoutes(services))
   app.use('/products', productRoutes(services))
   app.use('/components', componentRoutes(services))
+  app.use('/teams', teamRoutes(services))
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(production))
 

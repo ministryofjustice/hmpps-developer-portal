@@ -1,5 +1,5 @@
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Product, Component } from '../data/strapiApiTypes'
+import { Product, Component, Team } from '../data/strapiApiTypes'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -42,5 +42,25 @@ export default class ServiceCatalogueService {
       })
 
     return components
+  }
+
+  async getTeams(): Promise<Team[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const teamData = await strapiApiClient.getTeams()
+
+    const teams = teamData.data
+      .map(team => team.attributes)
+      .sort((team, compareTeam) => {
+        if (team.name < compareTeam.name) {
+          return -1
+        }
+        if (team.name > compareTeam.name) {
+          return 1
+        }
+
+        return 0
+      })
+
+    return teams
   }
 }
