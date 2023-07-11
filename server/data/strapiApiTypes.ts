@@ -8,3 +8,6 @@ export type ComponentListResponse = components['schemas']['ComponentListResponse
 
 export type Team = components['schemas']['Team']
 export type TeamListResponse = components['schemas']['TeamListResponse']
+
+export type ProductSet = components['schemas']['ProductSet']
+export type ProductSetListResponse = components['schemas']['ProductSetListResponse']
