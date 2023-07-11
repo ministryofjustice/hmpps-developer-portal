@@ -1,5 +1,14 @@
 import StrapiApiClient from '../data/strapiApiClient'
-import { Component, Product, ProductListResponse } from '../data/strapiApiTypes'
+import {
+  Component,
+  ComponentListResponse,
+  Product,
+  ProductListResponse,
+  ProductSet,
+  ProductSetListResponse,
+  Team,
+  TeamListResponse,
+} from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
 jest.mock('../data/strapiApiClient')
@@ -56,7 +65,7 @@ describe('Strapi service', () => {
           attributes: { name: 'testComponent' },
         },
       ],
-    } as ProductListResponse
+    } as ComponentListResponse
     const testComponents = [{ name: 'testComponent' }, { name: 'z-index testComponent' }] as Component[]
 
     it('should return an ordered array of components', async () => {
@@ -79,8 +88,8 @@ describe('Strapi service', () => {
           attributes: { name: 'testTeam' },
         },
       ],
-    } as ProductListResponse
-    const testTeams = [{ name: 'testTeam' }, { name: 'z-index testTeam' }] as Component[]
+    } as TeamListResponse
+    const testTeams = [{ name: 'testTeam' }, { name: 'z-index testTeam' }] as Team[]
 
     it('should return an ordered array of teams', async () => {
       strapiApiClient.getTeams.mockResolvedValue(testTeamsResponse)
@@ -89,6 +98,29 @@ describe('Strapi service', () => {
 
       expect(strapiApiClient.getTeams).toHaveBeenCalledTimes(1)
       expect(results).toEqual(testTeams)
+    })
+  })
+
+  describe('getProductSets', () => {
+    const testProductSetsResponse = {
+      data: [
+        {
+          attributes: { name: 'z-index testProductSet' },
+        },
+        {
+          attributes: { name: 'testProductSet' },
+        },
+      ],
+    } as ProductSetListResponse
+    const testProductSets = [{ name: 'testProductSet' }, { name: 'z-index testProductSet' }] as ProductSet[]
+
+    it('should return an ordered array of product sets', async () => {
+      strapiApiClient.getProductSets.mockResolvedValue(testProductSetsResponse)
+
+      const results = await serviceCatalogueService.getProductSets()
+
+      expect(strapiApiClient.getProductSets).toHaveBeenCalledTimes(1)
+      expect(results).toEqual(testProductSets)
     })
   })
 })
