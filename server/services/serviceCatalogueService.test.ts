@@ -1,5 +1,5 @@
 import StrapiApiClient from '../data/strapiApiClient'
-import { Product, ProductListResponse } from '../data/strapiApiTypes'
+import { Component, Product, ProductListResponse } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
 jest.mock('../data/strapiApiClient')
@@ -11,21 +11,6 @@ describe('Strapi service', () => {
 
   const StrapiApiClientFactory = jest.fn()
 
-  const testResponse = {
-    data: [
-      {
-        attributes: { name: 'z-index testProduct', pid: '1' },
-      },
-      {
-        attributes: { name: 'testProduct', pid: '2' },
-      },
-    ],
-  } as ProductListResponse
-  const testProducts = [
-    { name: 'testProduct', pid: '2' },
-    { name: 'z-index testProduct', pid: '1' },
-  ] as Product[]
-
   beforeEach(() => {
     StrapiApiClientFactory.mockReturnValue(strapiApiClient)
     serviceCatalogueService = new ServiceCatalogueService(StrapiApiClientFactory)
@@ -36,13 +21,51 @@ describe('Strapi service', () => {
   })
 
   describe('getProducts', () => {
-    it('should return an ordered array of available support options', async () => {
-      strapiApiClient.getProducts.mockResolvedValue(testResponse)
+    const testProductsResponse = {
+      data: [
+        {
+          attributes: { name: 'z-index testProduct', pid: '1' },
+        },
+        {
+          attributes: { name: 'testProduct', pid: '2' },
+        },
+      ],
+    } as ProductListResponse
+    const testProducts = [
+      { name: 'testProduct', pid: '2' },
+      { name: 'z-index testProduct', pid: '1' },
+    ] as Product[]
+
+    it('should return an ordered array of products', async () => {
+      strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
 
       const results = await serviceCatalogueService.getProducts()
 
       expect(strapiApiClient.getProducts).toHaveBeenCalledTimes(1)
       expect(results).toEqual(testProducts)
+    })
+  })
+
+  describe('getComponents', () => {
+    const testComponentsResponse = {
+      data: [
+        {
+          attributes: { name: 'z-index testComponent' },
+        },
+        {
+          attributes: { name: 'testComponent' },
+        },
+      ],
+    } as ProductListResponse
+    const testComponents = [{ name: 'testComponent' }, { name: 'z-index testComponent' }] as Component[]
+
+    it('should return an ordered array of components', async () => {
+      strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
+
+      const results = await serviceCatalogueService.getComponents()
+
+      expect(strapiApiClient.getComponents).toHaveBeenCalledTimes(1)
+      expect(results).toEqual(testComponents)
     })
   })
 })

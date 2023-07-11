@@ -1,16 +1,15 @@
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Products" %}
+{% set pageTitle = applicationName + " - Components" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
-  <h1>Products</h1>
+  <h1>Components</h1>
 
-  <table id="productsTable" class="stripe">
+  <table id="componentsTable" class="stripe">
   	<thead>
 	  <tr>
-		<th>ID</th>
 		<th>Name</th>
 	  </tr>
   	</thead>
@@ -24,5 +23,5 @@
   <script src="/assets/govuk/all.js"></script>
   <script src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
-  <script src="/assets/js/productsTable.js"></script>
+  <script src="/assets/js/componentsTable.js"></script>
 {% endblock %}
