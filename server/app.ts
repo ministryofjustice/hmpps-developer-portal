@@ -16,6 +16,7 @@ import setUpWebSession from './middleware/setUpWebSession'
 import indexRoutes from './routes'
 import productRoutes from './routes/products'
 import componentRoutes from './routes/components'
+import teamRoutes from './routes/teams'
 
 import type { Services } from './services'
 
@@ -38,6 +39,7 @@ export default function createApp(services: Services): express.Application {
   app.use('/', indexRoutes(services))
   app.use('/products', productRoutes(services))
   app.use('/components', componentRoutes(services))
+  app.use('/teams', teamRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

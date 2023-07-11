@@ -68,4 +68,27 @@ describe('Strapi service', () => {
       expect(results).toEqual(testComponents)
     })
   })
+
+  describe('getTeams', () => {
+    const testTeamsResponse = {
+      data: [
+        {
+          attributes: { name: 'z-index testTeam' },
+        },
+        {
+          attributes: { name: 'testTeam' },
+        },
+      ],
+    } as ProductListResponse
+    const testTeams = [{ name: 'testTeam' }, { name: 'z-index testTeam' }] as Component[]
+
+    it('should return an ordered array of teams', async () => {
+      strapiApiClient.getTeams.mockResolvedValue(testTeamsResponse)
+
+      const results = await serviceCatalogueService.getTeams()
+
+      expect(strapiApiClient.getTeams).toHaveBeenCalledTimes(1)
+      expect(results).toEqual(testTeams)
+    })
+  })
 })
