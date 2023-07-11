@@ -1,6 +1,6 @@
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
-import { ProductListResponse } from './strapiApiTypes'
+import { ProductListResponse, ComponentListResponse } from './strapiApiTypes'
 
 export default class StrapiApiClient {
   private restClient: RestClient
@@ -12,6 +12,12 @@ export default class StrapiApiClient {
   async getProducts(): Promise<ProductListResponse> {
     return this.restClient.get({
       path: '/v1/products',
+    })
+  }
+
+  async getComponents(): Promise<ComponentListResponse> {
+    return this.restClient.get({
+      path: '/v1/components',
     })
   }
 }

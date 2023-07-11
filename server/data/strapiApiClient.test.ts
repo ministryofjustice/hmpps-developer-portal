@@ -1,7 +1,7 @@
 import nock from 'nock'
 import config from '../config'
 import StrapiApiClient from './strapiApiClient'
-import { Product } from './strapiApiTypes'
+import { Product, Component } from './strapiApiTypes'
 
 describe('strapiApiClient', () => {
   let fakeStrapiApi: nock.Scope
@@ -21,12 +21,21 @@ describe('strapiApiClient', () => {
     nock.cleanAll()
   })
 
-  describe('getPrisons', () => {
-    it('should return all prisons from the Prison Register', async () => {
+  describe('getProducts', () => {
+    it('should return all products', async () => {
       const allProducts = [{ name: 'testProduct', pid: '1' } as Product]
       fakeStrapiApi.get('/products').reply(200, allProducts)
       const output = await strapiApiClient.getProducts()
       expect(output).toEqual(allProducts)
+    })
+  })
+
+  describe('getComponents', () => {
+    it('should return all components', async () => {
+      const allComponents = [{ name: 'testComponent' } as Component]
+      fakeStrapiApi.get('/components').reply(200, allComponents)
+      const output = await strapiApiClient.getComponents()
+      expect(output).toEqual(allComponents)
     })
   })
 })
