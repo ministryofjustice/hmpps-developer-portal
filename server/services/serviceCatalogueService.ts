@@ -1,5 +1,5 @@
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Product, Component, Team, ProductSet } from '../data/strapiApiTypes'
+import { Product, Component, Team, ProductSet, ServiceArea } from '../data/strapiApiTypes'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -82,5 +82,25 @@ export default class ServiceCatalogueService {
       })
 
     return productSets
+  }
+
+  async getServiceAreas(): Promise<ServiceArea[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const serviceAreaData = await strapiApiClient.getServiceAreas()
+
+    const serviceAreas = serviceAreaData.data
+      .map(serviceArea => serviceArea.attributes)
+      .sort((serviceArea, compareServiceArea) => {
+        if (serviceArea.name < compareServiceArea.name) {
+          return -1
+        }
+        if (serviceArea.name > compareServiceArea.name) {
+          return 1
+        }
+
+        return 0
+      })
+
+    return serviceAreas
   }
 }

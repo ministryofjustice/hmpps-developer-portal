@@ -4,15 +4,15 @@ function cleanColumnOutput(data, type, row) {
 }
 
 jQuery(function () {
-  $('#productSetsTable').DataTable({
+  $('#serviceAreasTable').DataTable({
     paging: true,
     order: [[0, 'asc']],
     sortable: true,
     ajax: {
-      url: '/product-sets/data',
+      url: '/service-areas/data',
       dataSrc: '',
       error: function (response) {
-        alert('An error occurred when loading product sets.') // eslint-disable-line no-undef
+        alert('An error occurred when loading service areas.') // eslint-disable-line no-undef
       },
     },
 

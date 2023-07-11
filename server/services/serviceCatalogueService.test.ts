@@ -6,6 +6,8 @@ import {
   ProductListResponse,
   ProductSet,
   ProductSetListResponse,
+  ServiceArea,
+  ServiceAreaListResponse,
   Team,
   TeamListResponse,
 } from '../data/strapiApiTypes'
@@ -121,6 +123,29 @@ describe('Strapi service', () => {
 
       expect(strapiApiClient.getProductSets).toHaveBeenCalledTimes(1)
       expect(results).toEqual(testProductSets)
+    })
+  })
+
+  describe('getServiceAreas', () => {
+    const testServiceAreasResponse = {
+      data: [
+        {
+          attributes: { name: 'z-index testServiceArea' },
+        },
+        {
+          attributes: { name: 'testServiceArea' },
+        },
+      ],
+    } as ServiceAreaListResponse
+    const testServiceAreas = [{ name: 'testServiceArea' }, { name: 'z-index testServiceArea' }] as ServiceArea[]
+
+    it('should return an ordered array of product sets', async () => {
+      strapiApiClient.getServiceAreas.mockResolvedValue(testServiceAreasResponse)
+
+      const results = await serviceCatalogueService.getServiceAreas()
+
+      expect(strapiApiClient.getServiceAreas).toHaveBeenCalledTimes(1)
+      expect(results).toEqual(testServiceAreas)
     })
   })
 })
