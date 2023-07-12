@@ -3,17 +3,19 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { ProductSet } from '../data/strapiApiTypes'
+import { ProductSet, ProductSetListResponseDataItem } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testProductSets = [{ name: 'testProductSet' } as ProductSet]
+const testProductSets = [{ id: 1, attributes: { name: 'testProductSet' } }] as ProductSetListResponseDataItem[]
+const testProductSet = { name: 'Product Set' } as ProductSet
 
 beforeEach(() => {
   serviceCatalogueService.getProductSets.mockResolvedValue(testProductSets)
+  serviceCatalogueService.getProductSet.mockResolvedValue(testProductSet)
 
   app = appWithAllRoutes({ services: { serviceCatalogueService } })
 })
@@ -31,6 +33,18 @@ describe('/product-sets', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('#productSets')).toBeDefined()
+        })
+    })
+  })
+
+  describe('GET /:productSetId', () => {
+    it('should render product set page', () => {
+      return request(app)
+        .get('/product-sets/1')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('#detailPageTitle').text()).toContain(testProductSet.name)
         })
     })
   })

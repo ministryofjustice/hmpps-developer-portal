@@ -9,7 +9,9 @@ import {
   ProductListResponse,
   ProductListResponseDataItem,
   ProductSet,
+  ProductSetResponse,
   ProductSetListResponse,
+  ProductSetListResponseDataItem,
   ServiceArea,
   ServiceAreaResponse,
   ServiceAreaListResponse,
@@ -115,6 +117,25 @@ describe('Strapi service', () => {
     })
   })
 
+  describe('getProductSet', () => {
+    const testProductSetResponse = {
+      data: {
+        id: 1,
+        attributes: { name: 'Product Set' },
+      },
+    } as ProductSetResponse
+    const testProductSet = { name: 'Product Set' } as ProductSet
+
+    it('should return the selected product set', async () => {
+      strapiApiClient.getProductSet.mockResolvedValue(testProductSetResponse)
+
+      const results = await serviceCatalogueService.getProductSet('1')
+
+      expect(strapiApiClient.getProductSet).toHaveBeenCalledTimes(1)
+      expect(results).toEqual(testProductSet)
+    })
+  })
+
   describe('getProducts', () => {
     const testProductsResponse = {
       data: [
@@ -215,14 +236,19 @@ describe('Strapi service', () => {
     const testProductSetsResponse = {
       data: [
         {
+          id: 1,
           attributes: { name: 'z-index testProductSet' },
         },
         {
+          id: 2,
           attributes: { name: 'testProductSet' },
         },
       ],
     } as ProductSetListResponse
-    const testProductSets = [{ name: 'testProductSet' }, { name: 'z-index testProductSet' }] as ProductSet[]
+    const testProductSets = [
+      { id: 2, attributes: { name: 'testProductSet' } },
+      { id: 1, attributes: { name: 'z-index testProductSet' } },
+    ] as ProductSetListResponseDataItem[]
 
     it('should return an ordered array of product sets', async () => {
       strapiApiClient.getProductSets.mockResolvedValue(testProductSetsResponse)
