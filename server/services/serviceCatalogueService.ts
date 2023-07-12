@@ -1,25 +1,14 @@
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Product, Component, Team, ProductSet, ServiceArea } from '../data/strapiApiTypes'
+import { Product, Component, Team, ProductSet, ServiceArea, ProductListResponseDataItem } from '../data/strapiApiTypes'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
 
-  async getProducts(): Promise<Product[]> {
+  async getProducts(): Promise<ProductListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const productData = await strapiApiClient.getProducts()
 
-    const products = productData.data
-      .map(product => product.attributes)
-      .sort((product, compareProduct) => {
-        if (product.name < compareProduct.name) {
-          return -1
-        }
-        if (product.name > compareProduct.name) {
-          return 1
-        }
-
-        return 0
-      })
+    const products = productData.data.sort(sortData)
 
     return products
   }
@@ -103,4 +92,24 @@ export default class ServiceCatalogueService {
 
     return serviceAreas
   }
+
+  async getProduct(productId: string): Promise<Product> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const productData = await strapiApiClient.getProduct(productId)
+
+    const product = productData.data?.attributes
+
+    return product
+  }
+}
+
+const sortData = (dataItem: ProductListResponseDataItem, compareDataItem: ProductListResponseDataItem) => {
+  if (dataItem.attributes.name < compareDataItem.attributes.name) {
+    return -1
+  }
+  if (dataItem.attributes.name > compareDataItem.attributes.name) {
+    return 1
+  }
+
+  return 0
 }

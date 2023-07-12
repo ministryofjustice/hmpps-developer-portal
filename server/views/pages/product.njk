@@ -1,0 +1,27 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + product.name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+<h1 id="detailPageTitle">{{ product.name }}</h1>
+
+<p>{{ product.description }}</p>
+
+<p>Confluence: <a href="product.confluence_link">{{ product.confluence_link }}</a></p>
+<p>G Drive: <a href="{{ product.gdrive_link }}">{{ product.gdrive_link }}</a></p>
+<p>ID: {{ product.p_id }}</p>
+<p>Product Manager: {{ product.product_manager }}</p>
+<p>Delivery Manager: {{ product.delivery_manager }}</p>
+<p>Subproduct? {% if product.subproduct %}Yes{% else %}No{% endif %}</p>
+<p>Legacy? {% if product.legacy %}Yes{% else %}No{% endif %}</p>
+<p>Phase: {{ product.phase }}</p>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/govuk/all.js"></script>
+  <script src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+{% endblock %}

@@ -2,7 +2,7 @@ import StrapiApiClient from '../data/strapiApiClient'
 import {
   Component,
   ComponentListResponse,
-  Product,
+  ProductListResponseDataItem,
   ProductListResponse,
   ProductSet,
   ProductSetListResponse,
@@ -10,6 +10,8 @@ import {
   ServiceAreaListResponse,
   Team,
   TeamListResponse,
+  ProductResponse,
+  Product,
 } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
@@ -31,21 +33,48 @@ describe('Strapi service', () => {
     jest.resetAllMocks()
   })
 
+  describe('getProduct', () => {
+    const testProductResponse = {
+      data: {
+        id: 1,
+        attributes: { name: 'z-index testProduct', pid: '1' },
+      },
+    } as ProductResponse
+    const testProduct = { name: 'z-index testProduct', pid: '1' } as Product
+
+    it('should return the selected products', async () => {
+      strapiApiClient.getProduct.mockResolvedValue(testProductResponse)
+
+      const results = await serviceCatalogueService.getProduct('1')
+
+      expect(strapiApiClient.getProduct).toHaveBeenCalledTimes(1)
+      expect(results).toEqual(testProduct)
+    })
+  })
+
   describe('getProducts', () => {
     const testProductsResponse = {
       data: [
         {
+          id: 1,
           attributes: { name: 'z-index testProduct', pid: '1' },
         },
         {
+          id: 2,
           attributes: { name: 'testProduct', pid: '2' },
         },
       ],
     } as ProductListResponse
     const testProducts = [
-      { name: 'testProduct', pid: '2' },
-      { name: 'z-index testProduct', pid: '1' },
-    ] as Product[]
+      {
+        id: 2,
+        attributes: { name: 'testProduct', pid: '2' },
+      },
+      {
+        id: 1,
+        attributes: { name: 'z-index testProduct', pid: '1' },
+      },
+    ] as ProductListResponseDataItem[]
 
     it('should return an ordered array of products', async () => {
       strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
