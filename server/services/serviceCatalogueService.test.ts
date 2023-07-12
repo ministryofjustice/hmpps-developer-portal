@@ -10,6 +10,8 @@ import {
   ServiceAreaListResponse,
   Team,
   TeamListResponse,
+  ProductResponse,
+  Product,
 } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
@@ -29,6 +31,25 @@ describe('Strapi service', () => {
 
   afterEach(() => {
     jest.resetAllMocks()
+  })
+
+  describe('getProduct', () => {
+    const testProductResponse = {
+      data: {
+        id: 1,
+        attributes: { name: 'z-index testProduct', pid: '1' },
+      },
+    } as ProductResponse
+    const testProduct = { name: 'z-index testProduct', pid: '1' } as Product
+
+    it('should return the selected products', async () => {
+      strapiApiClient.getProduct.mockResolvedValue(testProductResponse)
+
+      const results = await serviceCatalogueService.getProduct('1')
+
+      expect(strapiApiClient.getProduct).toHaveBeenCalledTimes(1)
+      expect(results).toEqual(testProduct)
+    })
   })
 
   describe('getProducts', () => {
