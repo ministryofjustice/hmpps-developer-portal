@@ -16,6 +16,13 @@ jQuery(function () {
       },
     },
 
-    columns: [{ data: 'name', render: cleanColumnOutput }],
+    columns: [
+      {
+        data: 'attributes.name',
+        createdCell: function (td, cellData, rowData) {
+          $(td).html(`<a href="/components/${rowData.id}">${rowData.attributes.name}</a>`)
+        },
+      },
+    ],
   })
 })

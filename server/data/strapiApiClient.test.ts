@@ -2,7 +2,8 @@ import nock from 'nock'
 import config from '../config'
 import StrapiApiClient from './strapiApiClient'
 import {
-  Component,
+  ComponentResponse,
+  ComponentListResponse,
   TeamResponse,
   TeamListResponse,
   ProductSet,
@@ -53,16 +54,27 @@ describe('strapiApiClient', () => {
 
   describe('getComponents', () => {
     it('should return all components', async () => {
-      const allComponents = [{ name: 'testComponent' } as Component]
+      const allComponents = { data: [{ attributes: { name: 'testComponent' } }] } as ComponentListResponse
       fakeStrapiApi.get('/components').reply(200, allComponents)
       const output = await strapiApiClient.getComponents()
       expect(output).toEqual(allComponents)
     })
   })
 
+  describe('getComponent', () => {
+    it('should return a single component', async () => {
+      const component = {
+        data: { id: 1, attributes: { name: 'testComponent' } },
+      } as ComponentResponse
+      fakeStrapiApi.get('/components/1').reply(200, component)
+      const output = await strapiApiClient.getComponent('1')
+      expect(output).toEqual(component)
+    })
+  })
+
   describe('getTeams', () => {
     it('should return all teams', async () => {
-      const allTeams = { data: [{ name: 'testTeam' } as TeamListResponse] }
+      const allTeams = { data: [{ attributes: { name: 'testTeam' } }] } as TeamListResponse
       fakeStrapiApi.get('/teams').reply(200, allTeams)
       const output = await strapiApiClient.getTeams()
       expect(output).toEqual(allTeams)
