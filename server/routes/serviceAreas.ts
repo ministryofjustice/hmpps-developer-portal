@@ -1,4 +1,5 @@
-import { type RequestHandler, Router } from 'express'
+import { type RequestHandler, type Request, Router } from 'express'
+import { BadRequest } from 'http-errors'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 
@@ -8,9 +9,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    const serviceAreas = await serviceCatalogueService.getServiceAreas()
-
-    return res.render('pages/serviceAreas', { serviceAreas })
+    return res.render('pages/serviceAreas')
   })
 
   get('/data', async (req, res) => {
@@ -19,5 +18,22 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.send(serviceAreas)
   })
 
+  get('/:serviceAreaId', async (req, res) => {
+    const serviceAreaId = getServiceAreaId(req)
+    const serviceArea = await serviceCatalogueService.getServiceArea(serviceAreaId)
+
+    return res.render('pages/serviceArea', { serviceArea })
+  })
+
   return router
+}
+
+function getServiceAreaId(req: Request): string {
+  const { serviceAreaId } = req.params
+
+  if (!Number.isInteger(Number.parseInt(serviceAreaId, 10))) {
+    throw new BadRequest()
+  }
+
+  return serviceAreaId
 }

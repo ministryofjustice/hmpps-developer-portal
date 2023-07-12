@@ -7,9 +7,10 @@ import {
   TeamResponse,
   TeamListResponse,
   ProductSet,
-  ServiceArea,
   ProductListResponse,
   ProductResponse,
+  ServiceAreaListResponse,
+  ServiceAreaResponse,
 } from './strapiApiTypes'
 
 describe('strapiApiClient', () => {
@@ -33,7 +34,7 @@ describe('strapiApiClient', () => {
   describe('getProducts', () => {
     it('should return all products', async () => {
       const allProducts = {
-        data: [{ id: 1, attributes: { name: 'testProduct', pid: '1' } }],
+        data: [{ id: 1, attributes: { name: 'Product', pid: '1' } }],
       } as ProductListResponse
       fakeStrapiApi.get('/products').reply(200, allProducts)
       const output = await strapiApiClient.getProducts()
@@ -44,7 +45,7 @@ describe('strapiApiClient', () => {
   describe('getProduct', () => {
     it('should return a single product', async () => {
       const product = {
-        data: { id: 1, attributes: { name: 'testProduct', pid: '1' } },
+        data: { id: 1, attributes: { name: 'Product', pid: '1' } },
       } as ProductResponse
       fakeStrapiApi.get('/products/1').reply(200, product)
       const output = await strapiApiClient.getProduct('1')
@@ -54,7 +55,7 @@ describe('strapiApiClient', () => {
 
   describe('getComponents', () => {
     it('should return all components', async () => {
-      const allComponents = { data: [{ attributes: { name: 'testComponent' } }] } as ComponentListResponse
+      const allComponents = { data: [{ attributes: { name: 'Component' } }] } as ComponentListResponse
       fakeStrapiApi.get('/components').reply(200, allComponents)
       const output = await strapiApiClient.getComponents()
       expect(output).toEqual(allComponents)
@@ -64,7 +65,7 @@ describe('strapiApiClient', () => {
   describe('getComponent', () => {
     it('should return a single component', async () => {
       const component = {
-        data: { id: 1, attributes: { name: 'testComponent' } },
+        data: { id: 1, attributes: { name: 'Component' } },
       } as ComponentResponse
       fakeStrapiApi.get('/components/1').reply(200, component)
       const output = await strapiApiClient.getComponent('1')
@@ -74,7 +75,7 @@ describe('strapiApiClient', () => {
 
   describe('getTeams', () => {
     it('should return all teams', async () => {
-      const allTeams = { data: [{ attributes: { name: 'testTeam' } }] } as TeamListResponse
+      const allTeams = { data: [{ attributes: { name: 'Team' } }] } as TeamListResponse
       fakeStrapiApi.get('/teams').reply(200, allTeams)
       const output = await strapiApiClient.getTeams()
       expect(output).toEqual(allTeams)
@@ -84,7 +85,7 @@ describe('strapiApiClient', () => {
   describe('getTeam', () => {
     it('should return a single team', async () => {
       const team = {
-        data: { id: 1, attributes: { name: 'testTeam' } },
+        data: { id: 1, attributes: { name: 'Team' } },
       } as TeamResponse
       fakeStrapiApi.get('/teams/1').reply(200, team)
       const output = await strapiApiClient.getTeam('1')
@@ -94,7 +95,7 @@ describe('strapiApiClient', () => {
 
   describe('getProductSets', () => {
     it('should return all product sets', async () => {
-      const allProductSets = [{ name: 'testProductSet' } as ProductSet]
+      const allProductSets = [{ name: 'Product Set' } as ProductSet]
       fakeStrapiApi.get('/product-sets').reply(200, allProductSets)
       const output = await strapiApiClient.getProductSets()
       expect(output).toEqual(allProductSets)
@@ -103,10 +104,21 @@ describe('strapiApiClient', () => {
 
   describe('getServiceAreas', () => {
     it('should return all service areas', async () => {
-      const allServiceAreas = [{ name: 'testServiceArea' } as ServiceArea]
+      const allServiceAreas = { data: [{ attributes: { name: 'Service Area' } }] } as ServiceAreaListResponse
       fakeStrapiApi.get('/service-areas').reply(200, allServiceAreas)
       const output = await strapiApiClient.getServiceAreas()
       expect(output).toEqual(allServiceAreas)
+    })
+  })
+
+  describe('getServiceArea', () => {
+    it('should return a single service area', async () => {
+      const serviceArea = {
+        data: { id: 1, attributes: { name: 'Service Area' } },
+      } as ServiceAreaResponse
+      fakeStrapiApi.get('/service-areas/1').reply(200, serviceArea)
+      const output = await strapiApiClient.getServiceArea('1')
+      expect(output).toEqual(serviceArea)
     })
   })
 })
