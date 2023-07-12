@@ -1,0 +1,18 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + team.name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+<h1 id="detailPageTitle">{{ team.name }}</h1>
+
+<p>ID: {{ team.t_id }}</p>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/govuk/all.js"></script>
+  <script src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+{% endblock %}

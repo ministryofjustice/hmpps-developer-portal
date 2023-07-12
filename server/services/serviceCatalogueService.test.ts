@@ -9,7 +9,9 @@ import {
   ServiceArea,
   ServiceAreaListResponse,
   Team,
+  TeamResponse,
   TeamListResponse,
+  TeamListResponseDataItem,
   ProductResponse,
   Product,
 } from '../data/strapiApiTypes'
@@ -42,13 +44,32 @@ describe('Strapi service', () => {
     } as ProductResponse
     const testProduct = { name: 'z-index testProduct', pid: '1' } as Product
 
-    it('should return the selected products', async () => {
+    it('should return the selected product', async () => {
       strapiApiClient.getProduct.mockResolvedValue(testProductResponse)
 
       const results = await serviceCatalogueService.getProduct('1')
 
       expect(strapiApiClient.getProduct).toHaveBeenCalledTimes(1)
       expect(results).toEqual(testProduct)
+    })
+  })
+
+  describe('getTeam', () => {
+    const testTeamResponse = {
+      data: {
+        id: 1,
+        attributes: { name: 'z-index testProduct' },
+      },
+    } as TeamResponse
+    const testTeam = { name: 'z-index testProduct' } as Team
+
+    it('should return the selected team', async () => {
+      strapiApiClient.getTeam.mockResolvedValue(testTeamResponse)
+
+      const results = await serviceCatalogueService.getTeam('1')
+
+      expect(strapiApiClient.getTeam).toHaveBeenCalledTimes(1)
+      expect(results).toEqual(testTeam)
     })
   })
 
@@ -113,14 +134,25 @@ describe('Strapi service', () => {
     const testTeamsResponse = {
       data: [
         {
+          id: 1,
           attributes: { name: 'z-index testTeam' },
         },
         {
+          id: 2,
           attributes: { name: 'testTeam' },
         },
       ],
     } as TeamListResponse
-    const testTeams = [{ name: 'testTeam' }, { name: 'z-index testTeam' }] as Team[]
+    const testTeams = [
+      {
+        id: 2,
+        attributes: { name: 'testTeam' },
+      },
+      {
+        id: 1,
+        attributes: { name: 'z-index testTeam' },
+      },
+    ] as TeamListResponseDataItem[]
 
     it('should return an ordered array of teams', async () => {
       strapiApiClient.getTeams.mockResolvedValue(testTeamsResponse)
