@@ -17,8 +17,13 @@ jQuery(function () {
     },
 
     columns: [
-      { data: 'p_id', render: cleanColumnOutput },
-      { data: 'name', render: cleanColumnOutput },
+      {
+        data: 'id',
+        createdCell: function (td, cellData, rowData) {
+          $(td).html(`<a href="/products/${rowData.id}">${rowData.attributes.p_id}</a>`)
+        },
+      },
+      { data: 'attributes.name', render: cleanColumnOutput },
     ],
   })
 })

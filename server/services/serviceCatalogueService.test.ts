@@ -2,7 +2,7 @@ import StrapiApiClient from '../data/strapiApiClient'
 import {
   Component,
   ComponentListResponse,
-  Product,
+  ProductListResponseDataItem,
   ProductListResponse,
   ProductSet,
   ProductSetListResponse,
@@ -35,17 +35,25 @@ describe('Strapi service', () => {
     const testProductsResponse = {
       data: [
         {
+          id: 1,
           attributes: { name: 'z-index testProduct', pid: '1' },
         },
         {
+          id: 2,
           attributes: { name: 'testProduct', pid: '2' },
         },
       ],
     } as ProductListResponse
     const testProducts = [
-      { name: 'testProduct', pid: '2' },
-      { name: 'z-index testProduct', pid: '1' },
-    ] as Product[]
+      {
+        id: 2,
+        attributes: { name: 'testProduct', pid: '2' },
+      },
+      {
+        id: 1,
+        attributes: { name: 'z-index testProduct', pid: '1' },
+      },
+    ] as ProductListResponseDataItem[]
 
     it('should return an ordered array of products', async () => {
       strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)

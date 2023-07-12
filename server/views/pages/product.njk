@@ -1,0 +1,16 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Product" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ product.name }}
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/govuk/all.js"></script>
+  <script src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+{% endblock %}
