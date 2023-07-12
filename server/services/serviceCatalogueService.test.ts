@@ -4,18 +4,20 @@ import {
   ComponentResponse,
   ComponentListResponse,
   ComponentListResponseDataItem,
-  ProductListResponseDataItem,
+  Product,
+  ProductResponse,
   ProductListResponse,
+  ProductListResponseDataItem,
   ProductSet,
   ProductSetListResponse,
   ServiceArea,
+  ServiceAreaResponse,
   ServiceAreaListResponse,
+  ServiceAreaListResponseDataItem,
   Team,
   TeamResponse,
   TeamListResponse,
   TeamListResponseDataItem,
-  ProductResponse,
-  Product,
 } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
@@ -91,6 +93,25 @@ describe('Strapi service', () => {
 
       expect(strapiApiClient.getComponent).toHaveBeenCalledTimes(1)
       expect(results).toEqual(testComponent)
+    })
+  })
+
+  describe('getServiceArea', () => {
+    const testServiceAreaResponse = {
+      data: {
+        id: 1,
+        attributes: { name: 'Service Area' },
+      },
+    } as ServiceAreaResponse
+    const testServiceArea = { name: 'Service Area' } as ServiceArea
+
+    it('should return the selected service area', async () => {
+      strapiApiClient.getServiceArea.mockResolvedValue(testServiceAreaResponse)
+
+      const results = await serviceCatalogueService.getServiceArea('1')
+
+      expect(strapiApiClient.getServiceArea).toHaveBeenCalledTimes(1)
+      expect(results).toEqual(testServiceArea)
     })
   })
 
@@ -217,14 +238,19 @@ describe('Strapi service', () => {
     const testServiceAreasResponse = {
       data: [
         {
+          id: 1,
           attributes: { name: 'z-index testServiceArea' },
         },
         {
+          id: 2,
           attributes: { name: 'testServiceArea' },
         },
       ],
     } as ServiceAreaListResponse
-    const testServiceAreas = [{ name: 'testServiceArea' }, { name: 'z-index testServiceArea' }] as ServiceArea[]
+    const testServiceAreas = [
+      { id: 2, attributes: { name: 'testServiceArea' } },
+      { id: 1, attributes: { name: 'z-index testServiceArea' } },
+    ] as ServiceAreaListResponseDataItem[]
 
     it('should return an ordered array of product sets', async () => {
       strapiApiClient.getServiceAreas.mockResolvedValue(testServiceAreasResponse)
