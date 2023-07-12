@@ -9,6 +9,7 @@ import {
   TeamListResponseDataItem,
   ComponentListResponseDataItem,
   ServiceAreaListResponseDataItem,
+  ProductSetListResponseDataItem,
 } from '../data/strapiApiTypes'
 
 export default class ServiceCatalogueService {
@@ -41,22 +42,11 @@ export default class ServiceCatalogueService {
     return teams
   }
 
-  async getProductSets(): Promise<ProductSet[]> {
+  async getProductSets(): Promise<ProductSetListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const productSetData = await strapiApiClient.getProductSets()
 
-    const productSets = productSetData.data
-      .map(productSet => productSet.attributes)
-      .sort((productSet, compareProductSet) => {
-        if (productSet.name < compareProductSet.name) {
-          return -1
-        }
-        if (productSet.name > compareProductSet.name) {
-          return 1
-        }
-
-        return 0
-      })
+    const productSets = productSetData.data.sort(sortData)
 
     return productSets
   }
@@ -105,6 +95,15 @@ export default class ServiceCatalogueService {
 
     return serviceArea
   }
+
+  async getProductSet(productSetId: string): Promise<ProductSet> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const productSetData = await strapiApiClient.getProductSet(productSetId)
+
+    const productSet = productSetData.data?.attributes
+
+    return productSet
+  }
 }
 
 const sortData = (
@@ -112,12 +111,14 @@ const sortData = (
     | ProductListResponseDataItem
     | TeamListResponseDataItem
     | ComponentListResponseDataItem
-    | ServiceAreaListResponseDataItem,
+    | ServiceAreaListResponseDataItem
+    | ProductSetListResponseDataItem,
   compareDataItem:
     | ProductListResponseDataItem
     | TeamListResponseDataItem
     | ComponentListResponseDataItem
-    | ServiceAreaListResponseDataItem,
+    | ServiceAreaListResponseDataItem
+    | ProductSetListResponseDataItem,
 ) => {
   if (dataItem.attributes.name < compareDataItem.attributes.name) {
     return -1

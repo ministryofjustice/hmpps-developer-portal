@@ -10,6 +10,7 @@ import {
   TeamResponse,
   ComponentResponse,
   ServiceAreaResponse,
+  ProductSetResponse,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
@@ -58,6 +59,12 @@ export default class StrapiApiClient {
   async getProductSets(): Promise<ProductSetListResponse> {
     return this.restClient.get({
       path: '/v1/product-sets',
+    })
+  }
+
+  async getProductSet(productSetId: string): Promise<ProductSetResponse> {
+    return this.restClient.get({
+      path: `/v1/product-sets/${productSetId}`,
     })
   }
 

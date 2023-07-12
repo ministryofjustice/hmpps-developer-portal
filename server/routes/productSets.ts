@@ -1,4 +1,5 @@
-import { type RequestHandler, Router } from 'express'
+import { type RequestHandler, type Request, Router } from 'express'
+import { BadRequest } from 'http-errors'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 
@@ -8,9 +9,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    const productSets = await serviceCatalogueService.getProductSets()
-
-    return res.render('pages/productSets', { productSets })
+    return res.render('pages/productSets')
   })
 
   get('/data', async (req, res) => {
@@ -19,5 +18,22 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.send(productSets)
   })
 
+  get('/:productSetId', async (req, res) => {
+    const productSetId = getProductSetId(req)
+    const productSet = await serviceCatalogueService.getProductSet(productSetId)
+
+    return res.render('pages/productSet', { productSet })
+  })
+
   return router
+}
+
+function getProductSetId(req: Request): string {
+  const { productSetId } = req.params
+
+  if (!Number.isInteger(Number.parseInt(productSetId, 10))) {
+    throw new BadRequest()
+  }
+
+  return productSetId
 }
