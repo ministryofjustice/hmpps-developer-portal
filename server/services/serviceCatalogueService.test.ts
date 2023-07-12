@@ -1,7 +1,9 @@
 import StrapiApiClient from '../data/strapiApiClient'
 import {
   Component,
+  ComponentResponse,
   ComponentListResponse,
+  ComponentListResponseDataItem,
   ProductListResponseDataItem,
   ProductListResponse,
   ProductSet,
@@ -58,10 +60,10 @@ describe('Strapi service', () => {
     const testTeamResponse = {
       data: {
         id: 1,
-        attributes: { name: 'z-index testProduct' },
+        attributes: { name: 'z-index testTeam' },
       },
     } as TeamResponse
-    const testTeam = { name: 'z-index testProduct' } as Team
+    const testTeam = { name: 'z-index testTeam' } as Team
 
     it('should return the selected team', async () => {
       strapiApiClient.getTeam.mockResolvedValue(testTeamResponse)
@@ -70,6 +72,25 @@ describe('Strapi service', () => {
 
       expect(strapiApiClient.getTeam).toHaveBeenCalledTimes(1)
       expect(results).toEqual(testTeam)
+    })
+  })
+
+  describe('getComponent', () => {
+    const testComponentResponse = {
+      data: {
+        id: 1,
+        attributes: { name: 'z-index testComponent' },
+      },
+    } as ComponentResponse
+    const testComponent = { name: 'z-index testComponent' } as Component
+
+    it('should return the selected component', async () => {
+      strapiApiClient.getComponent.mockResolvedValue(testComponentResponse)
+
+      const results = await serviceCatalogueService.getComponent('1')
+
+      expect(strapiApiClient.getComponent).toHaveBeenCalledTimes(1)
+      expect(results).toEqual(testComponent)
     })
   })
 
@@ -111,14 +132,19 @@ describe('Strapi service', () => {
     const testComponentsResponse = {
       data: [
         {
+          id: 1,
           attributes: { name: 'z-index testComponent' },
         },
         {
+          id: 2,
           attributes: { name: 'testComponent' },
         },
       ],
     } as ComponentListResponse
-    const testComponents = [{ name: 'testComponent' }, { name: 'z-index testComponent' }] as Component[]
+    const testComponents = [
+      { id: 2, attributes: { name: 'testComponent' } },
+      { id: 1, attributes: { name: 'z-index testComponent' } },
+    ] as ComponentListResponseDataItem[]
 
     it('should return an ordered array of components', async () => {
       strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)

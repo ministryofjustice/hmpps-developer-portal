@@ -3,17 +3,19 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { Component } from '../data/strapiApiTypes'
+import { Component, ComponentListResponseDataItem } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testComponents = [{ name: 'testProduct' } as Component]
+const testComponents = [{ id: 1, attributes: { name: 'testProduct' } }] as ComponentListResponseDataItem[]
+const testComponent = { name: 'z-index testComponent' } as Component
 
 beforeEach(() => {
   serviceCatalogueService.getComponents.mockResolvedValue(testComponents)
+  serviceCatalogueService.getComponent.mockResolvedValue(testComponent)
 
   app = appWithAllRoutes({ services: { serviceCatalogueService } })
 })
@@ -31,6 +33,18 @@ describe('/components', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('#components')).toBeDefined()
+        })
+    })
+  })
+
+  describe('GET /:componentId', () => {
+    it('should render component page', () => {
+      return request(app)
+        .get('/components/1')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('#detailPageTitle').text()).toContain(testComponent.name)
         })
     })
   })

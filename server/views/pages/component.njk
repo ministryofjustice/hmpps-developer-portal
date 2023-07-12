@@ -1,0 +1,33 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + component.name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+<h1 id="detailPageTitle">{{ component.name }}</h1>
+
+<p>{{ component.description }}</p>
+<p>Title: {{ component.title }}</p>
+<p>ID: {{ component.c_id }}</p>
+<p>Jira Project Keys: {{ component.jira_project_keys }}</p>
+<p>GitHub Write: {{ component.github_project_teams_write }}</p>
+<p>GitHub Admin: {{ component.github_project_teams_admin }}</p>
+<p>GitHub Restricted: {{ component.github_project_branch_protection_restricted_teams }}</p>
+<p>GitHub Repo: {{ component.github_repo }}</p>
+<p>GitHub Visibility: {{ component.github_project_visibility }}</p>
+<p>App Insights Cloud Role Name: {{ component.app_insights_cloud_role_name }}</p>
+<p>API: {% if component.api %}Yes{% else %}No{% endif %}</p>
+<p>Frontend: {% if component.frontend %}Yes{% else %}No{% endif %}</p>
+<p>Part of monorepo: {% if component.part_of_monorepo %}Yes{% else %}No{% endif %}</p>
+<p>Language: {{ component.language }}</p>
+
+<table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/govuk/all.js"></script>
+  <script src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+{% endblock %}
