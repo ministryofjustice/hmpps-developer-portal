@@ -1,3 +1,4 @@
+import { URLSearchParams } from 'url'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import {
@@ -35,6 +36,7 @@ export default class StrapiApiClient {
   async getComponents(): Promise<ComponentListResponse> {
     return this.restClient.get({
       path: '/v1/components',
+      query: new URLSearchParams({ populate: 'product' }).toString(),
     })
   }
 
