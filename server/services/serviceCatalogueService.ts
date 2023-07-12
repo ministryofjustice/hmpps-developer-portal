@@ -1,5 +1,13 @@
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Product, Component, Team, ProductSet, ServiceArea, ProductListResponseDataItem } from '../data/strapiApiTypes'
+import {
+  Product,
+  Component,
+  Team,
+  ProductSet,
+  ServiceArea,
+  ProductListResponseDataItem,
+  TeamListResponseDataItem,
+} from '../data/strapiApiTypes'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -33,22 +41,11 @@ export default class ServiceCatalogueService {
     return components
   }
 
-  async getTeams(): Promise<Team[]> {
+  async getTeams(): Promise<TeamListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const teamData = await strapiApiClient.getTeams()
 
-    const teams = teamData.data
-      .map(team => team.attributes)
-      .sort((team, compareTeam) => {
-        if (team.name < compareTeam.name) {
-          return -1
-        }
-        if (team.name > compareTeam.name) {
-          return 1
-        }
-
-        return 0
-      })
+    const teams = teamData.data.sort(sortData)
 
     return teams
   }
@@ -101,9 +98,21 @@ export default class ServiceCatalogueService {
 
     return product
   }
+
+  async getTeam(teamId: string): Promise<Team> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const teamData = await strapiApiClient.getTeam(teamId)
+
+    const team = teamData.data?.attributes
+
+    return team
+  }
 }
 
-const sortData = (dataItem: ProductListResponseDataItem, compareDataItem: ProductListResponseDataItem) => {
+const sortData = (
+  dataItem: ProductListResponseDataItem | TeamListResponseDataItem,
+  compareDataItem: ProductListResponseDataItem | TeamListResponseDataItem,
+) => {
   if (dataItem.attributes.name < compareDataItem.attributes.name) {
     return -1
   }

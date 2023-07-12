@@ -3,17 +3,19 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { Team } from '../data/strapiApiTypes'
+import { Team, TeamListResponseDataItem } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testTeams = [{ name: 'testTeam' } as Team]
+const testTeams = [{ id: 1, attributes: { name: 'testTeam' } }] as TeamListResponseDataItem[]
+const testTeam = { name: 'z-index testTeam' } as Team
 
 beforeEach(() => {
   serviceCatalogueService.getTeams.mockResolvedValue(testTeams)
+  serviceCatalogueService.getTeam.mockResolvedValue(testTeam)
 
   app = appWithAllRoutes({ services: { serviceCatalogueService } })
 })
@@ -31,6 +33,18 @@ describe('/teams', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('#teams')).toBeDefined()
+        })
+    })
+  })
+
+  describe('GET /:teamId', () => {
+    it('should render team page', () => {
+      return request(app)
+        .get('/teams/1')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('#detailPageTitle').text()).toContain(testTeam.name)
         })
     })
   })

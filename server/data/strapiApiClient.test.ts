@@ -1,7 +1,15 @@
 import nock from 'nock'
 import config from '../config'
 import StrapiApiClient from './strapiApiClient'
-import { Component, Team, ProductSet, ServiceArea, ProductListResponse, ProductResponse } from './strapiApiTypes'
+import {
+  Component,
+  TeamResponse,
+  TeamListResponse,
+  ProductSet,
+  ServiceArea,
+  ProductListResponse,
+  ProductResponse,
+} from './strapiApiTypes'
 
 describe('strapiApiClient', () => {
   let fakeStrapiApi: nock.Scope
@@ -54,10 +62,21 @@ describe('strapiApiClient', () => {
 
   describe('getTeams', () => {
     it('should return all teams', async () => {
-      const allTeams = [{ name: 'testTeam' } as Team]
+      const allTeams = { data: [{ name: 'testTeam' } as TeamListResponse] }
       fakeStrapiApi.get('/teams').reply(200, allTeams)
       const output = await strapiApiClient.getTeams()
       expect(output).toEqual(allTeams)
+    })
+  })
+
+  describe('getTeam', () => {
+    it('should return a single team', async () => {
+      const team = {
+        data: { id: 1, attributes: { name: 'testTeam' } },
+      } as TeamResponse
+      fakeStrapiApi.get('/teams/1').reply(200, team)
+      const output = await strapiApiClient.getTeam('1')
+      expect(output).toEqual(team)
     })
   })
 
