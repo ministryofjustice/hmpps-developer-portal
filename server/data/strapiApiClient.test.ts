@@ -6,7 +6,8 @@ import {
   ComponentListResponse,
   TeamResponse,
   TeamListResponse,
-  ProductSet,
+  ProductSetListResponse,
+  ProductSetResponse,
   ProductListResponse,
   ProductResponse,
   ServiceAreaListResponse,
@@ -95,10 +96,21 @@ describe('strapiApiClient', () => {
 
   describe('getProductSets', () => {
     it('should return all product sets', async () => {
-      const allProductSets = [{ name: 'Product Set' } as ProductSet]
+      const allProductSets = { data: [{ attributes: { name: 'Product Set' } }] } as ProductSetListResponse
       fakeStrapiApi.get('/product-sets').reply(200, allProductSets)
       const output = await strapiApiClient.getProductSets()
       expect(output).toEqual(allProductSets)
+    })
+  })
+
+  describe('getProductSet', () => {
+    it('should return a single product set', async () => {
+      const productSet = {
+        data: { id: 1, attributes: { name: 'Product Set' } },
+      } as ProductSetResponse
+      fakeStrapiApi.get('/product-sets/1').reply(200, productSet)
+      const output = await strapiApiClient.getProductSet('1')
+      expect(output).toEqual(productSet)
     })
   })
 

@@ -16,7 +16,9 @@ export type TeamListResponse = components['schemas']['TeamListResponse']
 export type TeamListResponseDataItem = components['schemas']['TeamListResponseDataItem']
 
 export type ProductSet = components['schemas']['ProductSet']
+export type ProductSetResponse = components['schemas']['ProductSetResponse']
 export type ProductSetListResponse = components['schemas']['ProductSetListResponse']
+export type ProductSetListResponseDataItem = components['schemas']['ProductSetListResponseDataItem']
 
 export type ServiceArea = components['schemas']['ServiceArea']
 export type ServiceAreaResponse = components['schemas']['ServiceAreaResponse']
