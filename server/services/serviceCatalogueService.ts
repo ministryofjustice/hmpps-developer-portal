@@ -8,6 +8,7 @@ import {
   ProductListResponseDataItem,
   TeamListResponseDataItem,
   ComponentListResponseDataItem,
+  ServiceAreaListResponseDataItem,
 } from '../data/strapiApiTypes'
 
 export default class ServiceCatalogueService {
@@ -60,22 +61,11 @@ export default class ServiceCatalogueService {
     return productSets
   }
 
-  async getServiceAreas(): Promise<ServiceArea[]> {
+  async getServiceAreas(): Promise<ServiceAreaListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const serviceAreaData = await strapiApiClient.getServiceAreas()
 
-    const serviceAreas = serviceAreaData.data
-      .map(serviceArea => serviceArea.attributes)
-      .sort((serviceArea, compareServiceArea) => {
-        if (serviceArea.name < compareServiceArea.name) {
-          return -1
-        }
-        if (serviceArea.name > compareServiceArea.name) {
-          return 1
-        }
-
-        return 0
-      })
+    const serviceAreas = serviceAreaData.data.sort(sortData)
 
     return serviceAreas
   }
@@ -106,11 +96,28 @@ export default class ServiceCatalogueService {
 
     return component
   }
+
+  async getServiceArea(serviceAreaId: string): Promise<ServiceArea> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const serviceAreaData = await strapiApiClient.getServiceArea(serviceAreaId)
+
+    const serviceArea = serviceAreaData.data?.attributes
+
+    return serviceArea
+  }
 }
 
 const sortData = (
-  dataItem: ProductListResponseDataItem | TeamListResponseDataItem | ComponentListResponseDataItem,
-  compareDataItem: ProductListResponseDataItem | TeamListResponseDataItem | ComponentListResponseDataItem,
+  dataItem:
+    | ProductListResponseDataItem
+    | TeamListResponseDataItem
+    | ComponentListResponseDataItem
+    | ServiceAreaListResponseDataItem,
+  compareDataItem:
+    | ProductListResponseDataItem
+    | TeamListResponseDataItem
+    | ComponentListResponseDataItem
+    | ServiceAreaListResponseDataItem,
 ) => {
   if (dataItem.attributes.name < compareDataItem.attributes.name) {
     return -1

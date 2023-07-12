@@ -9,6 +9,7 @@ import {
   ProductResponse,
   TeamResponse,
   ComponentResponse,
+  ServiceAreaResponse,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
@@ -63,6 +64,12 @@ export default class StrapiApiClient {
   async getServiceAreas(): Promise<ServiceAreaListResponse> {
     return this.restClient.get({
       path: '/v1/service-areas',
+    })
+  }
+
+  async getServiceArea(serviceAreaId: string): Promise<ServiceAreaResponse> {
+    return this.restClient.get({
+      path: `/v1/service-areas/${serviceAreaId}`,
     })
   }
 }
