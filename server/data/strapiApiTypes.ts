@@ -9,7 +9,9 @@ export type Component = components['schemas']['Component']
 export type ComponentListResponse = components['schemas']['ComponentListResponse']
 
 export type Team = components['schemas']['Team']
+export type TeamResponse = components['schemas']['TeamResponse']
 export type TeamListResponse = components['schemas']['TeamListResponse']
+export type TeamListResponseDataItem = components['schemas']['TeamListResponseDataItem']
 
 export type ProductSet = components['schemas']['ProductSet']
 export type ProductSetListResponse = components['schemas']['ProductSetListResponse']
