@@ -6,7 +6,9 @@ export type ProductListResponse = components['schemas']['ProductListResponse']
 export type ProductListResponseDataItem = components['schemas']['ProductListResponseDataItem']
 
 export type Component = components['schemas']['Component']
+export type ComponentResponse = components['schemas']['ComponentResponse']
 export type ComponentListResponse = components['schemas']['ComponentListResponse']
+export type ComponentListResponseDataItem = components['schemas']['ComponentListResponseDataItem']
 
 export type Team = components['schemas']['Team']
 export type TeamResponse = components['schemas']['TeamResponse']
