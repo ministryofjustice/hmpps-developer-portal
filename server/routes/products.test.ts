@@ -3,7 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { ProductListResponseDataItem } from '../data/strapiApiTypes'
+import { Product, ProductListResponseDataItem } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
@@ -11,9 +11,11 @@ const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked
 
 let app: Express
 const testProducts = [{ id: 1, attributes: { name: 'testProduct', pid: '1' } } as ProductListResponseDataItem]
+const testProduct = { name: 'z-index testProduct', pid: '1' } as Product
 
 beforeEach(() => {
   serviceCatalogueService.getProducts.mockResolvedValue(testProducts)
+  serviceCatalogueService.getProduct.mockResolvedValue(testProduct)
 
   app = appWithAllRoutes({ services: { serviceCatalogueService } })
 })
@@ -31,6 +33,18 @@ describe('/products', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('#products')).toBeDefined()
+        })
+    })
+  })
+
+  describe('GET /:productId', () => {
+    it('should render product page', () => {
+      return request(app)
+        .get('/products/1')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('#detailPageTitle').text()).toContain(testProduct.name)
         })
     })
   })

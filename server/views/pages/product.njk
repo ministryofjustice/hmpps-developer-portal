@@ -1,11 +1,11 @@
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - Product" %}
+{% set pageTitle = applicationName + " - " + product.name %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
-{{ product.name }}
+<h1 id="detailPageTitle">{{ product.name }}</h1>
 
 {% endblock %}
 
