@@ -85,10 +85,8 @@ describe('strapiApiClient', () => {
 
   describe('getTeam', () => {
     it('should return a single team', async () => {
-      const team = {
-        data: { id: 1, attributes: { name: 'Team' } },
-      } as TeamResponse
-      fakeStrapiApi.get('/teams/1').reply(200, team)
+      const team = { data: { id: 1, attributes: { name: 'Team' } } } as TeamResponse
+      fakeStrapiApi.get('/teams/1?populate=products').reply(200, team)
       const output = await strapiApiClient.getTeam('1')
       expect(output).toEqual(team)
     })

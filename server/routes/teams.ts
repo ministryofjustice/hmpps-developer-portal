@@ -21,8 +21,15 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   get('/:teamId', async (req, res) => {
     const teamId = getTeamId(req)
     const team = await serviceCatalogueService.getTeam(teamId)
+    const products = team.products?.data?.map(product => product)
 
-    return res.render('pages/team', { team })
+    const displayTeam = {
+      id: team.t_id,
+      name: team.name,
+      products,
+    }
+
+    return res.render('pages/team', { team: displayTeam })
   })
 
   return router
