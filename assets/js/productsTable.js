@@ -36,7 +36,7 @@ jQuery(function () {
         },
       },
       {
-        data: 'attributes.product_set.data.id',
+        data: 'attributes.product_set.data.attributes.name',
         createdCell: function (td, cellData, rowData) {
           const link = rowData.attributes.product_set.data
             ? cleanColumnOutput(rowData.attributes.product_set.data.attributes.name)

@@ -35,7 +35,7 @@ jQuery(function () {
         },
       },
       {
-        data: 'attributes.product.data.id',
+        data: 'attributes.product.data.attributes.name',
         createdCell: function (td, cellData, rowData) {
           const link = rowData.attributes.product.data
             ? `<a href="/products/${rowData.attributes.product.data.id}">${cleanColumnOutput(
