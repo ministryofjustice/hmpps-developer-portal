@@ -9,14 +9,27 @@
 
 <p>{{ product.description }}</p>
 
-<p>Confluence: <a href="product.confluence_link">{{ product.confluence_link }}</a></p>
-<p>G Drive: <a href="{{ product.gdrive_link }}">{{ product.gdrive_link }}</a></p>
-<p>ID: {{ product.p_id }}</p>
-<p>Product Manager: {{ product.product_manager }}</p>
-<p>Delivery Manager: {{ product.delivery_manager }}</p>
-<p>Subproduct? {% if product.subproduct %}Yes{% else %}No{% endif %}</p>
-<p>Legacy? {% if product.legacy %}Yes{% else %}No{% endif %}</p>
+<p>Confluence: <a href="{{ product.confluenceLink }}">{{ product.confluenceLink }}</a></p>
+<p>G Drive: <a href="{{ product.gDriveLink }}">{{ product.gDriveLink }}</a></p>
+<p>ID: {{ product.id }}</p>
+<p>Product Manager: {{ product.productManager }}</p>
+<p>Delivery Manager: {{ product.deliveryManager }}</p>
+<p>Subproduct? {% if product.subProduct %}Yes{% else %}No{% endif %}</p>
+<p>Legacy? {% if product.legacyProduct %}Yes{% else %}No{% endif %}</p>
 <p>Phase: {{ product.phase }}</p>
+<p>Team: <a href="/teams/{{ product.team.id }}">{{ product.team.attributes.name }} ({{ product.team.attributes.t_id }})</a></p>
+<p>Product Set: <a href="/product-sets/{{ product.productSet.id }}">{{ product.productSet.attributes.name }} ({{ product.productSet.attributes.ps_id }})</a></p>
+<p>Components</p>
+{% if product.components | length %}
+<ul>
+  {% for component in product.components %}
+    <li><a href="/components/{{ component.id }}">{{ component.attributes.name }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>None</p>
+{% endif %}
+
 
 {% endblock %}
 

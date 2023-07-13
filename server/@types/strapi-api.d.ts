@@ -745,7 +745,7 @@ export interface components {
           id?: number
           attributes?: {
             name?: string
-            pid?: string
+            p_id?: string
             subproduct?: boolean
             parent?: {
               data?: {
@@ -1065,7 +1065,7 @@ export interface components {
     ProductRequest: {
       data: {
         name: string
-        pid: string
+        p_id: string
         subproduct?: boolean
         /** @example string or id */
         parent?: number | string
@@ -1103,14 +1103,14 @@ export interface components {
     }
     Product: {
       name: string
-      pid: string
+      p_id: string
       subproduct?: boolean
       parent?: {
         data?: {
           id?: number
           attributes?: {
             name?: string
-            pid?: string
+            p_id?: string
             subproduct?: boolean
             parent?: {
               data?: {
@@ -1483,7 +1483,7 @@ export interface components {
           id?: number
           attributes?: {
             name?: string
-            pid?: string
+            p_id?: string
             subproduct?: boolean
             parent?: {
               data?: {
@@ -1821,7 +1821,7 @@ export interface components {
           id?: number
           attributes?: {
             name?: string
-            pid?: string
+            p_id?: string
             subproduct?: boolean
             parent?: {
               data?: {
@@ -2161,7 +2161,7 @@ export interface components {
           id?: number
           attributes?: {
             name?: string
-            pid?: string
+            p_id?: string
             subproduct?: boolean
             parent?: {
               data?: {
