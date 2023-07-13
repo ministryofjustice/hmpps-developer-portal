@@ -43,7 +43,6 @@ describe('/components', () => {
         .get('/components/1')
         .expect('Content-Type', /html/)
         .expect(res => {
-          console.log(res.text)
           const $ = cheerio.load(res.text)
           expect($('#detailPageTitle').text()).toContain(testComponent.name)
         })
