@@ -9,7 +9,7 @@
 
 <p>{{ product.description }}</p>
 
-<p>Confluence: <a href="{{ product.confluenceLink }}">{{ product.confluenceLink }}</a></p>
+<p>Confluence: {% if product.confluenceLinks | length %}<ul>{% for confluenceLink in product.confluenceLinks %}<li><a href="{{ confluenceLink }}">{{ confluenceLink }}</a></li>{% endfor %}</ul>{% endif %}</p>
 <p>G Drive: <a href="{{ product.gDriveLink }}">{{ product.gDriveLink }}</a></p>
 <p>ID: {{ product.id }}</p>
 <p>Product Manager: {{ product.productManager }}</p>
