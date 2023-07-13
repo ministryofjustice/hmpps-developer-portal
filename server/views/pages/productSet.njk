@@ -9,6 +9,17 @@
 
 <p>ID: {{ productSet.ps_id }}</p>
 
+<p>Products</p>
+{% if productSet.products | length %}
+<ul>
+  {% for product in productSet.products %}
+    <li><a href="/products/{{ product.id }}">{{ product.attributes.name }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>None</p>
+{% endif %}
+
 {% endblock %}
 
 {% block bodyEnd %}
