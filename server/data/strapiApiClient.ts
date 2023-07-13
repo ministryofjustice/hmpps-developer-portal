@@ -24,6 +24,7 @@ export default class StrapiApiClient {
   async getProducts(): Promise<ProductListResponse> {
     return this.restClient.get({
       path: '/v1/products',
+      query: new URLSearchParams({ populate: 'product_set' }).toString(),
     })
   }
 
