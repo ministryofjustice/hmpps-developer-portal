@@ -128,7 +128,7 @@ describe('strapiApiClient', () => {
       const serviceArea = {
         data: { id: 1, attributes: { name: 'Service Area' } },
       } as ServiceAreaResponse
-      fakeStrapiApi.get('/service-areas/1').reply(200, serviceArea)
+      fakeStrapiApi.get('/service-areas/1?populate=products').reply(200, serviceArea)
       const output = await strapiApiClient.getServiceArea('1')
       expect(output).toEqual(serviceArea)
     })

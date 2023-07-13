@@ -82,6 +82,7 @@ export default class StrapiApiClient {
   async getServiceArea(serviceAreaId: string): Promise<ServiceAreaResponse> {
     return this.restClient.get({
       path: `/v1/service-areas/${serviceAreaId}`,
+      query: new URLSearchParams({ populate: 'products' }).toString(),
     })
   }
 }
