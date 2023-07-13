@@ -10,7 +10,7 @@ jest.mock('../services/serviceCatalogueService.ts')
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testComponents = [{ id: 1, attributes: { name: 'testProduct' } }] as ComponentListResponseDataItem[]
+const testComponents = [{ id: 1, attributes: { name: 'testComponent' } }] as ComponentListResponseDataItem[]
 const testComponent = { name: 'z-index testComponent' } as Component
 
 beforeEach(() => {

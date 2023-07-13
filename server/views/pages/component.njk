@@ -9,18 +9,49 @@
 
 <p>{{ component.description }}</p>
 <p>Title: {{ component.title }}</p>
-<p>ID: {{ component.c_id }}</p>
-<p>Jira Project Keys: {{ component.jira_project_keys }}</p>
-<p>GitHub Write: {{ component.github_project_teams_write }}</p>
-<p>GitHub Admin: {{ component.github_project_teams_admin }}</p>
-<p>GitHub Restricted: {{ component.github_project_branch_protection_restricted_teams }}</p>
-<p>GitHub Repo: {{ component.github_repo }}</p>
-<p>GitHub Visibility: {{ component.github_project_visibility }}</p>
-<p>App Insights Cloud Role Name: {{ component.app_insights_cloud_role_name }}</p>
+<p>Jira Project Keys: {{ component.jiraProjectKeys }}</p>
+<p>GitHub Write: {{ component.githubWrite }}</p>
+<p>GitHub Admin: {{ component.githubAdmin }}</p>
+<p>GitHub Restricted: {{ component.githubRestricted }}</p>
+<p>GitHub Repo: {{ component.githubRepo }}</p>
+<p>GitHub Visibility: {{ component.githubVisibility }}</p>
+<p>App Insights Cloud Role Name: {{ component.appInsightsName }}</p>
 <p>API: {% if component.api %}Yes{% else %}No{% endif %}</p>
 <p>Frontend: {% if component.frontend %}Yes{% else %}No{% endif %}</p>
-<p>Part of monorepo: {% if component.part_of_monorepo %}Yes{% else %}No{% endif %}</p>
+<p>Part of monorepo: {% if component.partOfMonorepo %}Yes{% else %}No{% endif %}</p>
 <p>Language: {{ component.language }}</p>
+<p>Product: <a href="/products/{{ component.product.id }}">{{ component.product.attributes.name }}</a></p>
+<p>Environments</p>
+{% if component.environments | length %}
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Namespace</th>
+      <th>Info Path</th>
+      <th>Health Path</th>
+      <th>URL</th>
+      <th>Cluster</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for environment in component.environments %}
+    <tr>
+      <td>{{ environment.id }}</td>
+      <td>{{ environment.name }}</td>
+      <td>{{ environment.namespace }}</td>
+      <td>{{ environment.info_path }}</td>
+      <td>{{ environment.health_path }}</td>
+      <td><a href="{{ environment.url }}">{{ environment.url }}</a></td>
+      <td>{{ environment.cluster }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>None</p>
+{% endif %}
 
 {% endblock %}
 
