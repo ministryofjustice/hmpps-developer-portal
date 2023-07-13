@@ -732,6 +732,7 @@ export interface components {
     }
     Component: {
       name: string
+      title?: string
       description?: string
       environments?: components['schemas']['PropertiesEnvironmentComponent'][]
       jira_project_keys?: unknown
@@ -740,6 +741,12 @@ export interface components {
       github_project_branch_protection_restricted_teams?: unknown
       /** @enum {string} */
       github_project_visibility?: 'public' | 'internal' | 'private'
+      app_insights_cloud_role_name: string
+      api: boolean
+      frontend: boolean
+      part_of_monorepo: boolean
+      github_repo: string
+      language: string
       product?: {
         data?: {
           id?: number

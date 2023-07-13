@@ -21,8 +21,28 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   get('/:componentId', async (req, res) => {
     const componentId = getComponentId(req)
     const component = await serviceCatalogueService.getComponent(componentId)
+    const environments = component.environments?.map(environment => environment)
 
-    return res.render('pages/component', { component })
+    const displayComponent = {
+      name: component.name,
+      description: component.description,
+      title: component.title,
+      jiraProjectKeys: component.jira_project_keys,
+      githubWrite: component.github_project_teams_write,
+      githubAdmin: component.github_project_teams_admin,
+      githubRestricted: component.github_project_branch_protection_restricted_teams,
+      githubRepo: component.github_repo,
+      githubVisibility: component.github_project_visibility,
+      appInsightsName: component.app_insights_cloud_role_name,
+      api: component.api,
+      frontEnd: component.frontend,
+      partOfMonorepo: component.part_of_monorepo,
+      language: component.language,
+      product: component.product?.data,
+      environments,
+    }
+
+    return res.render('pages/component', { component: displayComponent })
   })
 
   return router
