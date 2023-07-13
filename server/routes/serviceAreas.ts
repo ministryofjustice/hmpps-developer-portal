@@ -21,8 +21,16 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   get('/:serviceAreaId', async (req, res) => {
     const serviceAreaId = getServiceAreaId(req)
     const serviceArea = await serviceCatalogueService.getServiceArea(serviceAreaId)
+    const products = serviceArea.products?.data?.map(product => product)
 
-    return res.render('pages/serviceArea', { serviceArea })
+    const displayServiceArea = {
+      id: serviceArea.sa_id,
+      name: serviceArea.name,
+      owner: serviceArea.owner,
+      products,
+    }
+
+    return res.render('pages/serviceArea', { serviceArea: displayServiceArea })
   })
 
   return router

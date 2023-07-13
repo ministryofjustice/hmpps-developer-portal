@@ -927,6 +927,7 @@ export interface components {
             service_area?: {
               data?: {
                 id?: number
+                sa_id?: string
                 attributes?: {
                   name?: string
                   owner?: string
@@ -1293,6 +1294,7 @@ export interface components {
               data?: {
                 id?: number
                 attributes?: {
+                  sa_id?: string
                   name?: string
                   owner?: string
                   products?: {
@@ -1666,6 +1668,7 @@ export interface components {
               data?: {
                 id?: number
                 attributes?: {
+                  sa_id?: string
                   name?: string
                   owner?: string
                   products?: {
@@ -1814,6 +1817,7 @@ export interface components {
       }
     }
     ServiceArea: {
+      sa_id: string
       name: string
       owner: string
       products?: {
@@ -2004,6 +2008,7 @@ export interface components {
               data?: {
                 id?: number
                 attributes?: {
+                  sa_id?: string
                   name?: string
                   owner?: string
                   products?: {
@@ -2344,6 +2349,7 @@ export interface components {
               data?: {
                 id?: number
                 attributes?: {
+                  sa_id?: string
                   name?: string
                   owner?: string
                   products?: {

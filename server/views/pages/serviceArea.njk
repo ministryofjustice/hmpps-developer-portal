@@ -7,8 +7,19 @@
 
 <h1 id="detailPageTitle">{{ serviceArea.name }}</h1>
 
-<p>ID: {{ serviceArea.sa_id }}</p>
+<p>ID: {{ serviceArea.id }}</p>
 <p>Owner: {{ serviceArea.owner }}</p>
+
+<p>Products</p>
+{% if serviceArea.products | length %}
+<ul>
+  {% for product in serviceArea.products %}
+    <li><a href="/products/{{ product.id }}">{{ product.attributes.name }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>None</p>
+{% endif %}
 
 {% endblock %}
 
