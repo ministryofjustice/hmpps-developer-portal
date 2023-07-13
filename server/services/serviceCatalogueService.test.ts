@@ -45,10 +45,10 @@ describe('Strapi service', () => {
     const testProductResponse = {
       data: {
         id: 1,
-        attributes: { name: 'z-index testProduct', pid: '1' },
+        attributes: { name: 'z-index testProduct', p_id: '1' },
       },
     } as ProductResponse
-    const testProduct = { name: 'z-index testProduct', pid: '1' } as Product
+    const testProduct = { name: 'z-index testProduct', p_id: '1' } as Product
 
     it('should return the selected product', async () => {
       strapiApiClient.getProduct.mockResolvedValue(testProductResponse)
@@ -141,22 +141,22 @@ describe('Strapi service', () => {
       data: [
         {
           id: 1,
-          attributes: { name: 'z-index testProduct', pid: '1' },
+          attributes: { name: 'z-index testProduct', p_id: '1' },
         },
         {
           id: 2,
-          attributes: { name: 'testProduct', pid: '2' },
+          attributes: { name: 'testProduct', p_id: '2' },
         },
       ],
     } as ProductListResponse
     const testProducts = [
       {
         id: 2,
-        attributes: { name: 'testProduct', pid: '2' },
+        attributes: { name: 'testProduct', p_id: '2' },
       },
       {
         id: 1,
-        attributes: { name: 'z-index testProduct', pid: '1' },
+        attributes: { name: 'z-index testProduct', p_id: '1' },
       },
     ] as ProductListResponseDataItem[]
 

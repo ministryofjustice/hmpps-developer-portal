@@ -10,8 +10,8 @@ jest.mock('../services/serviceCatalogueService.ts')
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testProducts = [{ id: 1, attributes: { name: 'testProduct', pid: '1' } }] as ProductListResponseDataItem[]
-const testProduct = { name: 'z-index testProduct', pid: '1' } as Product
+const testProducts = [{ id: 1, attributes: { name: 'testProduct', p_id: '1' } }] as ProductListResponseDataItem[]
+const testProduct = { name: 'z-index testProduct', p_id: '1' } as Product
 
 beforeEach(() => {
   serviceCatalogueService.getProducts.mockResolvedValue(testProducts)

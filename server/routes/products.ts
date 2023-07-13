@@ -22,7 +22,27 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const productId = getProductId(req)
     const product = await serviceCatalogueService.getProduct(productId)
 
-    return res.render('pages/product', { product })
+    const productSet = product.product_set?.data
+    const team = product.team?.data
+    const components = product.components?.data?.map(component => component)
+
+    const displayProduct = {
+      name: product.name,
+      description: product.description,
+      confluenceLink: product.confluence_link,
+      gDriveLink: product.gdrive_link,
+      id: product.p_id,
+      productManager: product.product_manager,
+      deliveryManager: product.delivery_manager,
+      subProduct: product.subproduct,
+      legacyProduct: product.legacy,
+      phase: product.phase,
+      productSet,
+      team,
+      components,
+    }
+
+    return res.render('pages/product', { product: displayProduct })
   })
 
   return router

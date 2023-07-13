@@ -35,7 +35,7 @@ describe('strapiApiClient', () => {
   describe('getProducts', () => {
     it('should return all products', async () => {
       const allProducts = {
-        data: [{ id: 1, attributes: { name: 'Product', pid: '1' } }],
+        data: [{ id: 1, attributes: { name: 'Product', p_id: '1' } }],
       } as ProductListResponse
       fakeStrapiApi.get('/products?populate=product_set').reply(200, allProducts)
       const output = await strapiApiClient.getProducts()
@@ -46,9 +46,9 @@ describe('strapiApiClient', () => {
   describe('getProduct', () => {
     it('should return a single product', async () => {
       const product = {
-        data: { id: 1, attributes: { name: 'Product', pid: '1' } },
+        data: { id: 1, attributes: { name: 'Product', p_id: '1' } },
       } as ProductResponse
-      fakeStrapiApi.get('/products/1').reply(200, product)
+      fakeStrapiApi.get('/products/1?populate=product_set%2Cteam%2Ccomponents%2Cservice_area').reply(200, product)
       const output = await strapiApiClient.getProduct('1')
       expect(output).toEqual(product)
     })
