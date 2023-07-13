@@ -57,6 +57,7 @@ export default class StrapiApiClient {
   async getTeam(teamId: string): Promise<TeamResponse> {
     return this.restClient.get({
       path: `/v1/teams/${teamId}`,
+      query: new URLSearchParams({ populate: 'products' }).toString(),
     })
   }
 

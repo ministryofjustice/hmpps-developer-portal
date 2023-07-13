@@ -2161,6 +2161,7 @@ export interface components {
       name: string
       description?: string
       slack_channel?: string
+      t_id?: string
       products?: {
         data?: {
           id?: number
