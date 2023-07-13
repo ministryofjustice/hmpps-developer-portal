@@ -24,6 +24,26 @@ jQuery(function () {
         },
       },
       { data: 'attributes.name', render: cleanColumnOutput },
+      {
+        data: 'attributes.product_set.data.id',
+        createdCell: function (td, cellData, rowData) {
+          const link = rowData.attributes.product_set.data
+            ? `<a href="/product-sets/${rowData.attributes.product_set.data.id}">${cleanColumnOutput(
+                rowData.attributes.product_set.data.attributes.ps_id,
+              )}</a>`
+            : 'N/A'
+          $(td).html(link)
+        },
+      },
+      {
+        data: 'attributes.product_set.data.id',
+        createdCell: function (td, cellData, rowData) {
+          const link = rowData.attributes.product_set.data
+            ? cleanColumnOutput(rowData.attributes.product_set.data.attributes.name)
+            : 'N/A'
+          $(td).html(link)
+        },
+      },
     ],
   })
 })
