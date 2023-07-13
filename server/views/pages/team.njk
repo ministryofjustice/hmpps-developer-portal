@@ -7,7 +7,18 @@
 
 <h1 id="detailPageTitle">{{ team.name }}</h1>
 
-<p>ID: {{ team.t_id }}</p>
+<p>ID: {{ team.id }}</p>
+
+<p>Products</p>
+{% if team.products | length %}
+<ul>
+  {% for product in team.products %}
+    <li><a href="/products/{{ product.id }}">{{ product.attributes.name }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>None</p>
+{% endif %}
 
 {% endblock %}
 
