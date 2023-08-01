@@ -1,7 +1,7 @@
 ---
 generic-service:
   nameOverride: hmpps-developer-portal
-  productId: &productId "DEVPORT001"
+  productId: &productId "DPS000"
 
   replicaCount: 4
 
