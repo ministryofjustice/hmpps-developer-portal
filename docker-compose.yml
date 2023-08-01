@@ -1,11 +1,11 @@
 version: '3.1'
 services:
 
-  redis:
+  redis-dev-portal:
     image: 'redis:7.0'
     networks:
       - hmpps
-    container_name: redis
+    container_name: redis-dev-portal
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
@@ -15,11 +15,11 @@ services:
     build: .
     networks:
       - hmpps
-    depends_on: [redis]
+    depends_on: [redis-dev-portal]
     ports:
       - "3000:3000"
     environment:
-      - REDIS_HOST=redis
+      - REDIS_HOST=redis-dev-portal
 
 networks:
   hmpps:
