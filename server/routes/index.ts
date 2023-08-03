@@ -1,7 +1,6 @@
 import { type RequestHandler, Router } from 'express'
 
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import config from '../config'
 import type { Services } from '../services'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -13,11 +12,17 @@ export default function routes(service: Services): Router {
     res.render('pages/index')
   })
 
-  get('/info', (req, res) =>
-    res.send({
-      productId: config.productId,
-    }),
-  )
+  get('/info', (req, res) => {
+    res.json({
+      uptime: process.uptime(),
+      build: {
+        buildNumber: service.applicationInfo.buildNumber,
+        gitRef: service.applicationInfo.gitRef,
+      },
+      version: service.applicationInfo.buildNumber,
+      productId: service.applicationInfo.productId,
+    })
+  })
 
   return router
 }

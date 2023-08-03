@@ -32,19 +32,6 @@ function service(name: string, url: string, agentConfig: AgentConfig): HealthChe
       .catch(err => ({ name, status: 'ERROR', message: err }))
 }
 
-function addAppInfo(result: HealthCheckResult, applicationInfo: ApplicationInfo): HealthCheckResult {
-  const buildInfo = {
-    uptime: process.uptime(),
-    build: {
-      buildNumber: applicationInfo.buildNumber,
-      gitRef: applicationInfo.gitRef,
-    },
-    version: applicationInfo.buildNumber,
-  }
-
-  return { ...result, ...buildInfo }
-}
-
 function gatherCheckInfo(aggregateStatus: Record<string, unknown>, currentStatus: HealthCheckStatus) {
   return { ...aggregateStatus, [currentStatus.name]: currentStatus.message }
 }
@@ -71,6 +58,6 @@ export default function healthCheck(
       healthCheckGauge.labels(item.name).set(val)
     })
 
-    callback(addAppInfo(result, applicationInfo))
+    callback(result)
   })
 }
