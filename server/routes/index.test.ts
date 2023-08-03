@@ -5,7 +5,17 @@ import { appWithAllRoutes } from './testutils/appSetup'
 let app: Express
 
 beforeEach(() => {
-  app = appWithAllRoutes({})
+  app = appWithAllRoutes({
+    services: {
+      applicationInfo: {
+        applicationName: 'test',
+        buildNumber: '1',
+        gitRef: 'long ref',
+        gitShortHash: 'short ref',
+        productId: 'product id',
+      },
+    },
+  })
 })
 
 afterEach(() => {
@@ -29,7 +39,15 @@ describe('GET /info', () => {
       .get('/info')
       .expect('Content-Type', /application\/json/)
       .expect(res => {
-        expect(res.text).toContain('productId')
+        const info = JSON.parse(res.text)
+
+        expect(info.uptime?.toString()).toMatch(/^\d+\.\d+$/)
+        expect(info.version).toEqual('1')
+        expect(info.productId).toEqual('product id')
+        expect(info.build).toEqual({
+          buildNumber: '1',
+          gitRef: 'long ref',
+        })
       })
   })
 })
