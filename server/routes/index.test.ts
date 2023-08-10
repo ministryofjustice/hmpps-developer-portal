@@ -5,17 +5,7 @@ import { appWithAllRoutes } from './testutils/appSetup'
 let app: Express
 
 beforeEach(() => {
-  app = appWithAllRoutes({
-    services: {
-      applicationInfo: {
-        applicationName: 'test',
-        buildNumber: '1',
-        gitRef: 'long ref',
-        gitShortHash: 'short ref',
-        productId: 'product id',
-      },
-    },
-  })
+  app = appWithAllRoutes({})
 })
 
 afterEach(() => {
