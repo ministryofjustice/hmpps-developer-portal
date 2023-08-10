@@ -13,7 +13,6 @@ import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import type { Services } from '../../services'
 import type { ApplicationInfo } from '../../applicationInfo'
-import setUpHealthChecks from '../../middleware/setUpHealthChecks'
 
 const testAppInfo: ApplicationInfo = {
   applicationName: 'test',
@@ -39,7 +38,6 @@ function appSetup(services: Services, production: boolean): Express {
   })
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
-  app.use(setUpHealthChecks(testAppInfo))
   app.use('/', indexRoutes(services))
   app.use('/products', productRoutes(services))
   app.use('/components', componentRoutes(services))

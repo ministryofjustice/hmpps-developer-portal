@@ -12,6 +12,10 @@ context('Healthcheck', () => {
     it('Ping is visible and UP', () => {
       cy.request('/ping').its('body.status').should('equal', 'UP')
     })
+
+    it('Info is visible and UP', () => {
+      cy.request('/info').its('body.status').should('equal', 'UP')
+    })
   })
 
   context('Some unhealthy', () => {
