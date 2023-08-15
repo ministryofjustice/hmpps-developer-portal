@@ -12,17 +12,5 @@ export default function routes(service: Services): Router {
     res.render('pages/index')
   })
 
-  get('/info', (req, res) => {
-    res.json({
-      uptime: process.uptime(),
-      build: {
-        buildNumber: service.applicationInfo.buildNumber,
-        gitRef: service.applicationInfo.gitRef,
-      },
-      version: service.applicationInfo.buildNumber,
-      productId: service.applicationInfo.productId,
-    })
-  })
-
   return router
 }
