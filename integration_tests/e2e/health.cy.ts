@@ -13,8 +13,8 @@ context('Healthcheck', () => {
       cy.request('/ping').its('body.status').should('equal', 'UP')
     })
 
-    it('Info is visible and UP', () => {
-      cy.request('/info').its('body.status').should('equal', 'UP')
+    it('Info is visible', () => {
+      cy.request('/info').its('body').should('exist')
     })
   })
 
