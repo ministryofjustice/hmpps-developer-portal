@@ -24,3 +24,5 @@ export type ServiceArea = components['schemas']['ServiceArea']
 export type ServiceAreaResponse = components['schemas']['ServiceAreaResponse']
 export type ServiceAreaListResponse = components['schemas']['ServiceAreaListResponse']
 export type ServiceAreaListResponseDataItem = components['schemas']['ServiceAreaListResponseDataItem']
+
+export type Environment = components['schemas']['PropertiesEnvironmentComponent']

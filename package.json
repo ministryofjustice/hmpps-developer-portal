@@ -94,6 +94,7 @@
     "@ministryofjustice/frontend": "^1.8.0",
     "agentkeepalive": "^4.5.0",
     "applicationinsights": "^2.7.2",
+    "async": "^3.2.4",
     "body-parser": "^1.20.2",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
@@ -119,6 +120,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/async": "^3.2.20",
     "@types/bunyan": "^1.8.8",
     "@types/bunyan-format": "^0.2.5",
     "@types/compression": "^1.7.2",
