@@ -1,12 +1,12 @@
 import { type RequestHandler, type Request, Router } from 'express'
 import { BadRequest } from 'http-errors'
-import { forever } from 'async'
-import { commandOptions } from 'redis'
+// import { forever } from 'async'
+// import { commandOptions } from 'redis'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import type { Environment } from '../data/strapiApiTypes'
-import { createRedisClient } from '../data/redisClient'
-import logger from '../../logger'
+// import { createRedisClient } from '../data/redisClient'
+// import logger from '../../logger'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
