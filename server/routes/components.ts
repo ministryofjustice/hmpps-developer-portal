@@ -47,7 +47,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     const messages = await redisService.readStream(streams)
 
-    return res.send(messages)
+    return res.send({ messages })
   })
 
   get('/:componentId', async (req, res) => {
