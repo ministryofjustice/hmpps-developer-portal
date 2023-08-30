@@ -67,9 +67,9 @@
   <script nonce="{{ cspNonce }}">
     const lastIds = {}
     {% for environment in component.environments -%}
-    lastIds['h:{{ environment.name }}'] = '$'
-    lastIds['i:{{ environment.name }}'] = '$'
-    lastIds['v:{{ environment.name }}'] = '$'
+    lastIds['h:{{ environment.name }}'] = '0-0'
+    lastIds['i:{{ environment.name }}'] = '0-0'
+    lastIds['v:{{ environment.name }}'] = '0-0'
     {% endfor -%}
 
     const fetchMessages = async (queryStringOptions) => {
