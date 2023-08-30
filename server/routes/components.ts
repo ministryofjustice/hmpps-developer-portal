@@ -30,7 +30,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     const component = await serviceCatalogueService.getComponent(componentId)
     const environments = component.environments?.map(environment => environment)
-    const streamNames = environments
+    const streams = environments
       ?.map((environment: Environment) => {
         return [
           {
@@ -48,9 +48,10 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
         ]
       })
       .flat(2)
-    const messages = await redisService.readStream(streamNames)
-    logger.info(messages)
-    return res.send(streamNames)
+
+    const messages = await redisService.readStream(streams)
+
+    return res.send(messages)
   })
 
   get('/:componentId', async (req, res) => {
