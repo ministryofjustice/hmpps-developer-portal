@@ -21,6 +21,10 @@
 <p>Part of monorepo: {% if component.partOfMonorepo %}Yes{% else %}No{% endif %}</p>
 <p>Language: {{ component.language }}</p>
 <p>Product: <a href="/products/{{ component.product.id }}">{{ component.product.attributes.name }}</a></p>
+<p>Streams: 
+{% for stream in component.streamNames %}
+  {{ stream.key }} / {{ stream.id }}<br>
+{% endfor %}
 <p>Environments</p>
 {% if component.environments | length %}
 <table>
@@ -59,4 +63,20 @@
   <script src="/assets/govuk/all.js"></script>
   <script src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
+
+  <script nonce="{{ cspNonce }}">
+    const lastIds = {}
+    {% for environment in component.environments -%}
+    lastIds['h:{{ environment.name }}'] = '$'
+    lastIds['i:{{ environment.name }}'] = '$'
+    lastIds['v:{{ environment.name }}'] = '$'
+    {% endfor -%}
+
+    const fetchMessages = async (queryStringOptions) => {
+      const queryString = new URLSearchParams(queryStringOptions).toString()
+      const messages = await fetch(`/components/queue/{{ component.id }}/${queryString}`)
+    }
+
+    fetchMessages(lastIds)
+  </script>
 {% endblock %}

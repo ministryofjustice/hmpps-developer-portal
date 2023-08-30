@@ -6,9 +6,9 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import type { Environment } from '../data/strapiApiTypes'
 // import { createRedisClient } from '../data/redisClient'
-// import logger from '../../logger'
+import logger from '../../logger'
 
-export default function routes({ serviceCatalogueService }: Services): Router {
+export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -23,63 +23,44 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.send(components)
   })
 
-  get('/queue', async (req, res) => {
-    const componentsData = await serviceCatalogueService.getComponents()
-    const components = componentsData
-      .map(component => {
-        const environmentNames = component.attributes.environments?.map((environment: Environment) => {
-          return [
-            {
-              key: `health:${component.attributes.name}:${environment.name}`,
-              id: '0-0',
-            },
-            {
-              key: `info:${component.attributes.name}:${environment.name}`,
-              id: '0-0',
-            },
-            {
-              key: `version:${component.attributes.name}:${environment.name}`,
-              id: '0-0',
-            },
-          ]
-        })
+  get('/queue/:componentId/*', async (req, res) => {
+    const componentId = getComponentId(req)
+    const queueInformation = req.params[0]
+    const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
 
-        return environmentNames
+    const component = await serviceCatalogueService.getComponent(componentId)
+    const environments = component.environments?.map(environment => environment)
+    const streamNames = environments
+      ?.map((environment: Environment) => {
+        return [
+          {
+            key: `health:${component.name}:${environment.name}`,
+            id: queueParams[`h:${environment.name}`],
+          },
+          {
+            key: `info:${component.name}:${environment.name}`,
+            id: queueParams[`i:${environment.name}`],
+          },
+          {
+            key: `version:${component.name}:${environment.name}`,
+            id: queueParams[`v:${environment.name}`],
+          },
+        ]
       })
       .flat(2)
-
-    // const client = createRedisClient()
-    // client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
-
-    // forever(
-    //   next => {
-    //     try {
-    //       const response = client.xRead(
-    //         commandOptions({}), // uses new connection from pool not to block other redis calls
-    //         components,
-    //         { COUNT: 10, BLOCK: 10 },
-    //       )
-    //       logger.info('START')
-    //       logger.info(response)
-    //       logger.info('END')
-    //     } catch (err) {
-    //       logger.error(err)
-    //       next(err)
-    //     }
-    //     next()
-    //   },
-    //   err => logger.error(err),
-    // )
-
-    return res.send(components)
+    const messages = await redisService.readStream(streamNames)
+    logger.info(messages)
+    return res.send(streamNames)
   })
 
   get('/:componentId', async (req, res) => {
     const componentId = getComponentId(req)
     const component = await serviceCatalogueService.getComponent(componentId)
     const environments = component.environments?.map(environment => environment)
+    const environmentNames = environments.reduce((names, environment) => names.concat([environment.name]), [])
 
     const displayComponent = {
+      id: componentId,
       name: component.name,
       description: component.description,
       title: component.title,
@@ -96,6 +77,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       language: component.language,
       product: component.product?.data,
       environments,
+      environmentNames,
     }
 
     return res.render('pages/component', { component: displayComponent })
