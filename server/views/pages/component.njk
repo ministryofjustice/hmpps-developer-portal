@@ -75,6 +75,7 @@
     const fetchMessages = async (queryStringOptions) => {
       const queryString = new URLSearchParams(queryStringOptions).toString()
       const messages = await fetch(`/components/queue/{{ component.id }}/${queryString}`)
+      console.log('Messages', JSON.stringify(messages))
     }
 
     fetchMessages(lastIds)
