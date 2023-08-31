@@ -3,6 +3,7 @@ import { BadRequest } from 'http-errors'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import type { Environment } from '../data/strapiApiTypes'
+import logger from '../../logger'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -23,6 +24,8 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const componentId = getComponentId(req)
     const queueInformation = req.params[0]
     const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
+
+    logger.info(`Queue call for ${componentId} with ${queueInformation}`)
 
     const component = await serviceCatalogueService.getComponent(componentId)
     const environments = component.environments?.map(environment => environment)
@@ -46,6 +49,8 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       .flat(2)
 
     const messages = await redisService.readStream(streams)
+
+    logger.info(JSON.stringify(messages))
 
     return res.send(messages)
   })
