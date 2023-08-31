@@ -72,11 +72,16 @@
     lastIds['v:{{ environment.name }}'] = '0-0'
     {% endfor -%}
 
-    const fetchMessages = (queryStringOptions) => {
+    const fetchMessages = async (queryStringOptions) => {
       const queryString = new URLSearchParams(queryStringOptions).toString()
-      const messages = fetch(`/components/queue/{{ component.id }}/${queryString}`)
-      console.log(queryString)
-      console.log('Messages', JSON.stringify(messages))
+
+      try {
+        const messages = await fetch(`/components/queue/{{ component.id }}/${queryString}`)
+        console.log(queryString)
+        console.log('Messages', JSON.stringify(messages))
+      } catch (e) {
+        console.error(e)
+      }
     }
 
     fetchMessages(lastIds)
