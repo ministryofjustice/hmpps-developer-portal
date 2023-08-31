@@ -77,8 +77,9 @@
 
       try {
         const messages = await fetch(`/components/queue/{{ component.id }}/${queryString}`)
+        const jsonData = await messages.json()
         console.log(queryString)
-        console.log('Messages', JSON.stringify(messages))
+        console.log('Messages', jsonData)
       } catch (e) {
         console.error(e)
       }
