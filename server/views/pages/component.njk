@@ -103,11 +103,11 @@
               case 'v':
                 $(`#${streamName[2]}_version`).text(data[streamKey].v)
                 break
-              {# case 'h':
-                const jsonData = data[streamKey].json.replaceAll('\'', '"')
+              case 'h':
+                const jsonData = data[streamKey].json.replaceAll('\'', '"') // temp fix
                 const status = JSON.parse(data[streamKey].json)
                 $(`#${streamName[2]}_status`).text(status.status)
-                break #}
+                break
             }
           }
         })
