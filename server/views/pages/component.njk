@@ -102,11 +102,12 @@
 
             switch (streamType) {
               case 'v':
-                $(`#${streamName[2]}_version`).text(data[streamKey])
+                $(`#${streamName[2]}_version`).text(data[streamKey].v)
                 break
-              //case 'h':
-              //  $(`#${streamName[2]}_status`).text(data[streamKey])
-              //  break
+              case 'h':
+                const status = JSON.parse(data[streamKey].json)
+                $(`#${streamName[2]}_status`).text(status.status)
+                break
             }
           }
         })
