@@ -105,7 +105,7 @@
                 break
               case 'h':
                 const jsonData = data[streamKey].json.replaceAll('\'', '"') // temp fix
-                const status = JSON.parse(data[streamKey].json)
+                const status = JSON.parse(jsonData)
                 $(`#${streamName[2]}_status`).text(status.status)
                 break
             }
