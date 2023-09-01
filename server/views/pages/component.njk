@@ -90,7 +90,8 @@
 
         streamJson.forEach(stream => {
           const streamName = stream.name.split(':')
-          const streamKey = `${streamName[0].charAt(0)}:${streamName[2]}`
+          const streamType = streamName[0].charAt(0)
+          const streamKey = `${streamType}:${streamName[2]}`
 
           if (lastIds[streamKey]) {
             lastIds[streamKey] = stream.messages[0].id
@@ -98,7 +99,15 @@
           if (data.hasOwnProperty(streamKey)) {
             console.log(stream.messages[0])
             data[streamKey] = stream.messages[0].message
-            $(`#${streamName[2]}_version`).text(data[streamKey])
+
+            switch (streamType) {
+              case 'v':
+                $(`#${streamName[2]}_version`).text(data[streamKey])
+                break
+              //case 'h':
+              //  $(`#${streamName[2]}_status`).text(data[streamKey])
+              //  break
+            }
           }
         })
         console.log(data)
@@ -110,6 +119,6 @@
 
     jQuery(function () {
       fetchMessages(lastIds)
-    }
+    })
   </script>
 {% endblock %}
