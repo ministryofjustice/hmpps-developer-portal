@@ -92,16 +92,16 @@
         streamJson.forEach(stream => {
           const streamName = stream.name.split(':')
           const streamKey = `${streamName[0].charAt(0)}:${streamName[2]}`
-          console.log(streamName, streamKey)
+          console.log(stream)
 
           if (lastIds[streamKey]) {
             lastIds[streamKey] = stream.messages[0].id
           }
-          if (data[streamKey]) {
+          if (data[streamKey] !== '') {
             data[streamKey] = stream.messages[0].message
           }
         })
-        console.log(lastIds, data)
+        console.log(data)
       } catch (e) {
         console.error(e)
       }
