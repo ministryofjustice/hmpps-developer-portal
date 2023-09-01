@@ -96,10 +96,10 @@
           if (lastIds[streamKey]) {
             lastIds[streamKey] = stream.messages[0].id
           }
-          // if (data[streamKey] !== '') {
+          if (data.hasOwnProperty(streamKey)) {
             console.log(stream.messages[0])
             data[streamKey] = stream.messages[0].message
-          // }
+          }
         })
         console.log(data)
       } catch (e) {
