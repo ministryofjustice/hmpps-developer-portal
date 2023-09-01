@@ -56,7 +56,6 @@
 {% else %}
 <p>None</p>
 {% endif %}
-<p>Version: <span id="currentVersion"></span></p>
 
 {% endblock %}
 
@@ -99,6 +98,7 @@
           if (data.hasOwnProperty(streamKey)) {
             console.log(stream.messages[0])
             data[streamKey] = stream.messages[0].message
+            $(`#${streamName[2]}_version`).text(data[streamKey])
           }
         })
         console.log(data)
@@ -107,6 +107,9 @@
       }
     }
 
-    fetchMessages(lastIds)
+
+    jQuery(function () {
+      fetchMessages(lastIds)
+    }
   </script>
 {% endblock %}
