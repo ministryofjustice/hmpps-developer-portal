@@ -97,14 +97,14 @@
             lastIds[streamKey] = stream.messages[0].id
           }
           if (data.hasOwnProperty(streamKey)) {
-            console.log(stream.messages[0])
             data[streamKey] = stream.messages[0].message
-console.log(data[streamKey])
+
             switch (streamType) {
               case 'v':
                 $(`#${streamName[2]}_version`).text(data[streamKey].v)
                 break
               {# case 'h':
+                const jsonData = data[streamKey].json.replaceAll('\'', '"')
                 const status = JSON.parse(data[streamKey].json)
                 $(`#${streamName[2]}_status`).text(status.status)
                 break #}
