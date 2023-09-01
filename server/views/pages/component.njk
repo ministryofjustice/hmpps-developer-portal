@@ -106,40 +106,43 @@
         throw new Error('There was a problem fetching the component data')
       }
 
-      console.log(await response.text())
-      const streamJson = await response.json()
+      try {
+        const streamJson = await response.json()
 
-      streamJson.forEach(stream => {
-        const streamName = stream.name.split(':')
-        const streamType = streamName[0].charAt(0)
-        const streamKey = `${streamType}:${streamName[2]}`
-        const lastMessage = stream.messages[stream.messages.length - 1]
+        streamJson.forEach(stream => {
+          const streamName = stream.name.split(':')
+          const streamType = streamName[0].charAt(0)
+          const streamKey = `${streamType}:${streamName[2]}`
+          const lastMessage = stream.messages[stream.messages.length - 1]
 
-        if (lastIds[streamKey]) {
-          lastIds[streamKey] = lastMessage.id
-        }
-        if (data.hasOwnProperty(streamKey)) {
-          data[streamKey] = lastMessage.message
-
-          switch (streamType) {
-            case 'v':
-              $(`#${streamName[2]}_version`).text(data[streamKey].v)
-              break
-            case 'h':
-              const jsonData = data[streamKey].json // temp fix
-              let status = { status: 'UNK' }
-
-              try {
-                status = JSON.parse(jsonData)
-              } catch (e) {
-                console.error(e)
-              }
-
-              $(`#${streamName[2]}_status`).text(status.status)
-              break
+          if (lastIds[streamKey]) {
+            lastIds[streamKey] = lastMessage.id
           }
-        }
-      })
+          if (data.hasOwnProperty(streamKey)) {
+            data[streamKey] = lastMessage.message
+
+            switch (streamType) {
+              case 'v':
+                $(`#${streamName[2]}_version`).text(data[streamKey].v)
+                break
+              case 'h':
+                const jsonData = data[streamKey].json // temp fix
+                let status = { status: 'UNK' }
+
+                try {
+                  status = JSON.parse(jsonData)
+                } catch (e) {
+                  console.error(e)
+                }
+
+                $(`#${streamName[2]}_status`).text(status.status)
+                break
+            }
+          }
+        })
+      } catch (e) {
+        console.error(e)
+      }
     }
 
     jQuery(function () {
