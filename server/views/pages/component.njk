@@ -101,6 +101,7 @@
     const fetchMessages = async (queryStringOptions) => {
       const queryString = new URLSearchParams(queryStringOptions).toString()
       const response = await fetch(`/components/queue/{{ component.id }}/${queryString}`)
+      console.log(response.status)
 
       if (!response.ok) {
         throw new Error('There was a problem fetching the component data')
