@@ -90,9 +90,9 @@
     const lastIds = {}
     const data = {}
     {% for environment in component.environments -%}
-    lastIds['h:{{ environment.name }}'] = '0-0'
-    lastIds['i:{{ environment.name }}'] = '0-0'
-    lastIds['v:{{ environment.name }}'] = '0-0'
+    lastIds['h:{{ environment.name }}'] = '$'
+    lastIds['i:{{ environment.name }}'] = '$'
+    lastIds['v:{{ environment.name }}'] = '$'
     data['h:{{ environment.name }}'] = ''
     data['i:{{ environment.name }}'] = ''
     data['v:{{ environment.name }}'] = ''
@@ -133,12 +133,10 @@
             }
           }
         })
-        console.log(data)
       } catch (e) {
         console.error(e)
       }
     }
-
 
     jQuery(function () {
       fetchMessages(lastIds)
