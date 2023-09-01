@@ -34,7 +34,7 @@
     <tr>
       <th>Name</th>
       {% for environment in component.environments %}
-      <td>{{ environment.name }}</td>
+      <td><a href="{{ environment.url }}">{{ environment.name }}</a></td>
       {% endfor %}
     </tr>
     <tr>
@@ -53,12 +53,6 @@
       <th>Health</th>
       {% for environment in component.environments %}
       <td>{{ environment.health_path }}</td>
-      {% endfor %}
-    </tr>
-    <tr>
-      <th>URL</th>
-      {% for environment in component.environments %}
-      <td><a href="{{ environment.url }}">{{ environment.url }}</a></td>
       {% endfor %}
     </tr>
     <tr>
