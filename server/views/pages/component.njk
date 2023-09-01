@@ -89,7 +89,7 @@
 
         const streamJson = await response.json()
 
-        streams.forEach(stream => {
+        streamJson.forEach(stream => {
           const streamName = stream.name.split(':')
           const streamKey = `${streamName[0].charAt(0)}:${streamName[2]}`
           console.log(streamName, streamKey)
