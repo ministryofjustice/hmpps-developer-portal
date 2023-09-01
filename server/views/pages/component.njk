@@ -21,10 +21,6 @@
 <p>Part of monorepo: {% if component.partOfMonorepo %}Yes{% else %}No{% endif %}</p>
 <p>Language: {{ component.language }}</p>
 <p>Product: <a href="/products/{{ component.product.id }}">{{ component.product.attributes.name }}</a></p>
-<p>Streams: 
-{% for stream in component.streamNames %}
-  {{ stream.key }} / {{ stream.id }}<br>
-{% endfor %}
 <p>Environments</p>
 {% if component.environments | length %}
 <table>
@@ -37,6 +33,8 @@
       <th>Health Path</th>
       <th>URL</th>
       <th>Cluster</th>
+      <th>Version</th>
+      <th>Status</th>
     </tr>
   </thead>
   <tbody>
@@ -49,6 +47,8 @@
       <td>{{ environment.health_path }}</td>
       <td><a href="{{ environment.url }}">{{ environment.url }}</a></td>
       <td>{{ environment.cluster }}</td>
+      <td id="{{ environment.name }}_version"></td>
+      <td id="{{ environment.name }}_status"></td>
     </tr>
   {% endfor %}
   </tbody>
@@ -56,6 +56,7 @@
 {% else %}
 <p>None</p>
 {% endif %}
+<p>Version: <span id="currentVersion"></span></p>
 
 {% endblock %}
 
@@ -66,20 +67,41 @@
 
   <script nonce="{{ cspNonce }}">
     const lastIds = {}
+    const data = {}
     {% for environment in component.environments -%}
     lastIds['h:{{ environment.name }}'] = '0-0'
     lastIds['i:{{ environment.name }}'] = '0-0'
     lastIds['v:{{ environment.name }}'] = '0-0'
+    data['h:{{ environment.name }}'] = ''
+    data['i:{{ environment.name }}'] = ''
+    data['v:{{ environment.name }}'] = ''
     {% endfor -%}
 
     const fetchMessages = async (queryStringOptions) => {
       const queryString = new URLSearchParams(queryStringOptions).toString()
 
       try {
-        const messages = await fetch(`/components/queue/{{ component.id }}/${queryString}`)
-        const jsonData = await messages.json()
-        console.log(queryString)
-        console.log('Messages', jsonData)
+        const response = await fetch(`/components/queue/{{ component.id }}/${queryString}`)
+
+        if (!response.ok) {
+          throw new Error('There was a problem fetching the component data')
+        }
+
+        const streamJson = await response.json()
+
+        streams.forEach(stream => {
+          const streamName = stream.name.split(':')
+          const streamKey = `${streamName[0].charAt(0)}:${streamName[2]}`
+          console.log(streamName, streamKey)
+
+          if (lastIds[streamKey]) {
+            lastIds[streamKey] = stream.messages[0].id
+          }
+          if (data[streamKey]) {
+            data[streamKey] = stream.messages[0].message
+          }
+        })
+        console.log(lastIds, data)
       } catch (e) {
         console.error(e)
       }
