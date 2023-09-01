@@ -90,9 +90,9 @@
     const lastIds = {}
     const data = {}
     {% for environment in component.environments -%}
-    lastIds['h:{{ environment.name }}'] = '$'
-    lastIds['i:{{ environment.name }}'] = '$'
-    lastIds['v:{{ environment.name }}'] = '$'
+    lastIds['h:{{ environment.name }}'] = '0'
+    lastIds['i:{{ environment.name }}'] = '0'
+    lastIds['v:{{ environment.name }}'] = '0'
     data['h:{{ environment.name }}'] = ''
     data['i:{{ environment.name }}'] = ''
     data['v:{{ environment.name }}'] = ''
@@ -114,19 +114,20 @@
           const streamName = stream.name.split(':')
           const streamType = streamName[0].charAt(0)
           const streamKey = `${streamType}:${streamName[2]}`
+          const lastMessage = stream.messages[stream.messages.length - 1]
 
           if (lastIds[streamKey]) {
-            lastIds[streamKey] = stream.messages[0].id
+            lastIds[streamKey] = lastMessage.id
           }
           if (data.hasOwnProperty(streamKey)) {
-            data[streamKey] = stream.messages[0].message
+            data[streamKey] = lastMessage.message
 
             switch (streamType) {
               case 'v':
                 $(`#${streamName[2]}_version`).text(data[streamKey].v)
                 break
               case 'h':
-                const jsonData = data[streamKey].json.replaceAll('\'', '"') // temp fix
+                {# const jsonData = data[streamKey].json.replaceAll('\'', '"') // temp fix #}
                 const status = JSON.parse(jsonData)
                 $(`#${streamName[2]}_status`).text(status.status)
                 break

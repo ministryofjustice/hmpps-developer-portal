@@ -21,7 +21,6 @@ export default class RedisService {
       const response = await this.redisClient.xRead(
         commandOptions({ isolated: true }), // uses new connection from pool not to block other redis calls
         streamDetails,
-        { BLOCK: 10, COUNT: 1 },
       )
 
       // const messages: RedisStreamMessage[] = response ? response[0].messages : [] // returning first stream (since only 1 stream used)
