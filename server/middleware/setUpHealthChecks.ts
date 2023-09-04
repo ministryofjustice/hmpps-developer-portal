@@ -23,12 +23,13 @@ export default function setUpHealthChecks(applicationInfo: ApplicationInfo): Rou
 
   router.get('/info', (req, res) => {
     res.json({
-      uptime: process.uptime(),
+      git: {
+        branch: applicationInfo.branchName,
+      },
       build: {
-        buildNumber: applicationInfo.buildNumber,
+        version: applicationInfo.buildNumber,
         gitRef: applicationInfo.gitRef,
       },
-      version: applicationInfo.buildNumber,
       productId: applicationInfo.productId,
     })
   })

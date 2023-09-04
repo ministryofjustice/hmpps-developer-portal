@@ -9,6 +9,7 @@ describe('Healthcheck', () => {
     gitRef: 'long ref',
     gitShortHash: 'short ref',
     productId: 'product id',
+    branchName: 'main',
   }
 
   it('Healthcheck reports healthy', done => {
