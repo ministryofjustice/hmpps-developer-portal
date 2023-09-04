@@ -4,6 +4,7 @@ FROM node:18.17-bullseye-slim as base
 ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
 ARG REPONAME=not-available
+ARG CIRCLE_BRANCH=main
 
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
@@ -30,6 +31,7 @@ FROM base as build
 ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
 ARG REPONAME=not-available
+ARG CIRCLE_BRANCH=main
 
 RUN apt-get update && \
         apt-get install -y make python g++
