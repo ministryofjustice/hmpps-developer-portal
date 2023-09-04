@@ -130,6 +130,8 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
+          environment:
+            CIRCLE_BRANCH: $CIRCLE_BRANCH
 
       - request-dev-preview-approval:
           <<: *feature_branch
