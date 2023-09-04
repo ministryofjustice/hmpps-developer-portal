@@ -9,6 +9,7 @@ ARG CIRCLE_BRANCH=main
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
 ENV TZ=Europe/London
+ENV CIRCLE_BRANCH ${CIRCLE_BRANCH}
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
 RUN addgroup --gid 2000 --system appgroup && \
@@ -32,6 +33,7 @@ ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
 ARG REPONAME=not-available
 ARG CIRCLE_BRANCH=main
+ENV CIRCLE_BRANCH ${CIRCLE_BRANCH}
 
 RUN apt-get update && \
         apt-get install -y make python g++
