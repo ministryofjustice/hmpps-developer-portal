@@ -28,7 +28,7 @@ export default function setUpHealthChecks(applicationInfo: ApplicationInfo): Rou
       },
       build: {
         version: applicationInfo.buildNumber,
-        gitRef: applicationInfo.gitRef,
+        name: applicationInfo.applicationName,
       },
       productId: applicationInfo.productId,
     })
