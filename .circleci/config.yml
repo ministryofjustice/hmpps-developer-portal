@@ -5,7 +5,7 @@ feature_branch: &feature_branch
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@7.2.1
+  hmpps: ministryofjustice/hmpps@7.3.4
   slack: circleci/slack@4.12.5
 
 parameters:
@@ -130,8 +130,6 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
-          environment:
-            CIRCLE_BRANCH: $CIRCLE_BRANCH
 
       - request-dev-preview-approval:
           <<: *feature_branch

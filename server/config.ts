@@ -34,7 +34,7 @@ export default {
   productId: get('PRODUCT_ID', 'MISSING', requiredInProduction),
   gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   repoName: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
-  branchName: get('CIRCLE_BRANCH', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
+  branchName: get('GIT_BRANCH', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   production,
   https: production,
   staticResourceCacheDuration: '1h',
