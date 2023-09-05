@@ -27,6 +27,7 @@ export default function setUpHealthChecks(applicationInfo: ApplicationInfo): Rou
         branch: applicationInfo.branchName,
       },
       build: {
+        artifact: applicationInfo.applicationName,
         version: applicationInfo.buildNumber,
         name: applicationInfo.applicationName,
       },
