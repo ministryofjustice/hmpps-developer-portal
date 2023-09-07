@@ -9,6 +9,7 @@ describe('Healthcheck', () => {
     gitRef: 'long ref',
     gitShortHash: 'short ref',
     productId: 'product id',
+    branchName: 'main',
   }
 
   it('Healthcheck reports healthy', done => {
@@ -17,8 +18,15 @@ describe('Healthcheck', () => {
     const callback: HealthCheckCallback = result => {
       expect(result).toEqual(
         expect.objectContaining({
-          healthy: true,
-          checks: { check1: 'some message', check2: 'some message' },
+          status: 'UP',
+          components: {
+            check1: {
+              status: 'some message',
+            },
+            check2: {
+              status: 'some message',
+            },
+          },
         }),
       )
       done()
@@ -33,8 +41,15 @@ describe('Healthcheck', () => {
     const callback: HealthCheckCallback = result => {
       expect(result).toEqual(
         expect.objectContaining({
-          healthy: false,
-          checks: { check1: 'some message', check2: 'some error' },
+          status: 'DOWN',
+          components: {
+            check1: {
+              status: 'some message',
+            },
+            check2: {
+              status: 'some error',
+            },
+          },
         }),
       )
       done()
@@ -48,7 +63,7 @@ function successfulCheck(name: string): HealthCheckService {
   return () =>
     Promise.resolve({
       name: `${name}`,
-      status: 'ok',
+      status: 'UP',
       message: 'some message',
     })
 }
@@ -57,7 +72,7 @@ function erroredCheck(name: string): HealthCheckService {
   return () =>
     Promise.resolve({
       name: `${name}`,
-      status: 'ERROR',
+      status: 'DOWN',
       message: 'some error',
     })
 }
