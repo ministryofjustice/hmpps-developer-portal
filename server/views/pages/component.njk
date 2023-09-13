@@ -110,14 +110,14 @@
         const streamJson = await response.json()
 
         streamJson.forEach(stream => {
-          console.log('Processing streams')
+          // console.log('Processing streams')
           const streamName = stream.name.split(':')
           const streamType = streamName[0].charAt(0)
           const streamKey = `${streamType}:${streamName[2]}`
           const lastMessage = stream.messages[stream.messages.length - 1]
 
           if (lastIds[streamKey]) {
-            console.log(`Updating lastId for ${streamKey} to ${lastMessage.id}`)
+            // console.log(`Updating lastId for ${streamKey} to ${lastMessage.id}`)
             lastIds[streamKey] = lastMessage.id
           }
           if (data.hasOwnProperty(streamKey)) {
@@ -132,7 +132,7 @@
                 let status = { status: 'UNK' }
 
                 try {
-                  console.log(jsonData)
+                  // console.log(jsonData)
                   status = JSON.parse(jsonData)
                 } catch (e) {
                   console.error('Error parsing JSON data')
