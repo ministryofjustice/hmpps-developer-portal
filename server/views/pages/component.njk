@@ -129,17 +129,23 @@
                 break
               case 'h':
                 const jsonData = data[streamKey].json // temp fix
-                let status = { status: 'UNK' }
+                let status = 'UNK'
 
                 try {
                   // console.log(jsonData)
-                  status = JSON.parse(jsonData)
+                  health = JSON.parse(jsonData)
+
+                  if (health.hasOwnProperty('status')) {
+                    status = health.status
+                  } else {
+                    status = health.healthy
+                  }
                 } catch (e) {
                   console.error('Error parsing JSON data')
                   console.error(e)
                 }
 
-                $(`#${streamName[2]}_status`).text(status.status)
+                $(`#${streamName[2]}_status`).text(status)
                 break
             }
           }
