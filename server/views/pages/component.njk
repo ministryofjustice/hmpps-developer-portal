@@ -132,6 +132,7 @@
                 let status = { status: 'UNK' }
 
                 try {
+                  console.log(jsonData)
                   status = JSON.parse(jsonData)
                 } catch (e) {
                   console.error('Error parsing JSON data')
