@@ -22,7 +22,7 @@ export default class RedisService {
         streamDetails,
       )
 
-      return response ? JSON.stringify(response) : ''
+      return response ? JSON.stringify(response) : '[]'
     } catch (error) {
       if (error instanceof ClientClosedError) {
         logger.error(`${error.message} ...RECONNECTING`)
