@@ -132,6 +132,7 @@
                 try {
                   status = JSON.parse(jsonData)
                 } catch (e) {
+                  console.error('Error parsing JSON data')
                   console.error(e)
                 }
 
@@ -145,8 +146,14 @@
       }
     }
 
+    const watch = async () => {
+      await fetchMessages(lastIds)
+
+      setTimeout(watch, 10000)
+    }
+
     jQuery(function () {
-      fetchMessages(lastIds)
+      watch()
     })
   </script>
 {% endblock %}
