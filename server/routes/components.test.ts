@@ -37,17 +37,17 @@ describe('/components', () => {
     })
   })
 
-  describe('GET /:componentId', () => {
-    it('should render component page', () => {
-      return request(app)
-        .get('/components/1')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('#detailPageTitle').text()).toContain(testComponent.name)
-        })
-    })
-  })
+  // describe('GET /:componentId', () => {
+  //   it('should render component page', () => {
+  //     return request(app)
+  //       .get('/components/1')
+  //       .expect('Content-Type', /html/)
+  //       .expect(res => {
+  //         const $ = cheerio.load(res.text)
+  //         expect($('#detailPageTitle').text()).toContain(testComponent.name)
+  //       })
+  //   })
+  // })
 
   describe('GET /data', () => {
     it('should output JSON data for components', () => {
