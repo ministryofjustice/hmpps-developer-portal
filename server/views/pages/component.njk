@@ -24,29 +24,55 @@
 <p>Environments</p>
 {% if component.environments | length %}
 <table>
-  <thead>
+  <tbody>
     <tr>
       <th>ID</th>
-      <th>Name</th>
-      <th>Namespace</th>
-      <th>Info Path</th>
-      <th>Health Path</th>
-      <th>URL</th>
-      <th>Cluster</th>
-    </tr>
-  </thead>
-  <tbody>
-  {% for environment in component.environments %}
-    <tr>
+      {% for environment in component.environments %}
       <td>{{ environment.id }}</td>
-      <td>{{ environment.name }}</td>
-      <td>{{ environment.namespace }}</td>
-      <td>{{ environment.info_path }}</td>
-      <td>{{ environment.health_path }}</td>
-      <td><a href="{{ environment.url }}">{{ environment.url }}</a></td>
-      <td>{{ environment.cluster }}</td>
+      {% endfor %}
     </tr>
-  {% endfor %}
+    <tr>
+      <th>Name</th>
+      {% for environment in component.environments %}
+      <td><a href="{{ environment.url }}">{{ environment.name }}</a></td>
+      {% endfor %}
+    </tr>
+    <tr>
+      <th>Namespace</th>
+      {% for environment in component.environments %}
+      <td>{{ environment.namespace }}</td>
+      {% endfor %}
+    </tr>
+    <tr>
+      <th>Info</th>
+      {% for environment in component.environments %}
+      <td>{{ environment.info_path }}</td>
+      {% endfor %}
+    </tr>
+    <tr>
+      <th>Health</th>
+      {% for environment in component.environments %}
+      <td>{{ environment.health_path }}</td>
+      {% endfor %}
+    </tr>
+    <tr>
+      <th>Cluster</th>
+      {% for environment in component.environments %}
+      <td>{{ environment.cluster }}</td>
+      {% endfor %}
+    </tr>
+    <tr>
+      <th>Version</th>
+      {% for environment in component.environments %}
+      <td id="{{ environment.name }}_version"></td>
+      {% endfor %}
+    </tr>
+    <tr>
+      <th>Status</th>
+      {% for environment in component.environments %}
+      <td id="{{ environment.name }}_status"></td>
+      {% endfor %}
+    </tr>
   </tbody>
 </table>
 {% else %}
@@ -59,4 +85,84 @@
   <script src="/assets/govuk/all.js"></script>
   <script src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
+
+  <script nonce="{{ cspNonce }}">
+    const lastIds = {}
+    const data = {}
+    {% for environment in component.environments -%}
+    lastIds['h:{{ environment.name }}'] = '0'
+    lastIds['i:{{ environment.name }}'] = '0'
+    lastIds['v:{{ environment.name }}'] = '0'
+    data['h:{{ environment.name }}'] = ''
+    data['i:{{ environment.name }}'] = ''
+    data['v:{{ environment.name }}'] = ''
+    {% endfor -%}
+
+    const fetchMessages = async (queryStringOptions) => {
+      const queryString = new URLSearchParams(queryStringOptions).toString()
+      const response = await fetch(`/components/queue/{{ component.id }}/${queryString}`)
+
+      if (!response.ok) {
+        throw new Error('There was a problem fetching the component data')
+      }
+
+      try {
+        const streamJson = await response.json()
+
+        streamJson.forEach(stream => {
+          // console.log('Processing streams')
+          const streamName = stream.name.split(':')
+          const streamType = streamName[0].charAt(0)
+          const streamKey = `${streamType}:${streamName[2]}`
+          const lastMessage = stream.messages[stream.messages.length - 1]
+
+          if (lastIds[streamKey]) {
+            // console.log(`Updating lastId for ${streamKey} to ${lastMessage.id}`)
+            lastIds[streamKey] = lastMessage.id
+          }
+          if (data.hasOwnProperty(streamKey)) {
+            data[streamKey] = lastMessage.message
+
+            switch (streamType) {
+              case 'v':
+                $(`#${streamName[2]}_version`).text(data[streamKey].v)
+                break
+              case 'h':
+                const jsonData = data[streamKey].json // temp fix
+                let status = 'UNK'
+
+                try {
+                  // console.log(jsonData)
+                  health = JSON.parse(jsonData)
+
+                  if (health.hasOwnProperty('status')) {
+                    status = health.status
+                  } else {
+                    status = health.healthy
+                  }
+                } catch (e) {
+                  console.error('Error parsing JSON data')
+                  console.error(e)
+                }
+
+                $(`#${streamName[2]}_status`).text(status)
+                break
+            }
+          }
+        })
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
+    const watch = async () => {
+      await fetchMessages(lastIds)
+
+      setTimeout(watch, 10000)
+    }
+
+    jQuery(function () {
+      watch()
+    })
+  </script>
 {% endblock %}
