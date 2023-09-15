@@ -110,16 +110,15 @@
         const streamJson = await response.json()
 
         streamJson.forEach(stream => {
-          // console.log('Processing streams')
           const streamName = stream.name.split(':')
           const streamType = streamName[0].charAt(0)
           const streamKey = `${streamType}:${streamName[2]}`
           const lastMessage = stream.messages[stream.messages.length - 1]
 
           if (lastIds[streamKey]) {
-            // console.log(`Updating lastId for ${streamKey} to ${lastMessage.id}`)
             lastIds[streamKey] = lastMessage.id
           }
+
           if (data.hasOwnProperty(streamKey)) {
             data[streamKey] = lastMessage.message
 
@@ -128,11 +127,10 @@
                 $(`#${streamName[2]}_version`).text(data[streamKey].v)
                 break
               case 'h':
-                const jsonData = data[streamKey].json // temp fix
+                const jsonData = data[streamKey].json
                 let status = 'UNK'
 
                 try {
-                  // console.log(jsonData)
                   health = JSON.parse(jsonData)
 
                   if (health.hasOwnProperty('status')) {

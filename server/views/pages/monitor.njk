@@ -1,0 +1,95 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = applicationName + " - Monitor" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+  {% set serviceAreas = [] %}
+  {% for serviceArea in serviceAreaList %}
+    {%- set serviceAreas = (serviceAreas.push({
+      value: serviceArea.value,
+      text: serviceArea.text,
+      selected: selectedServiceAreaId == serviceAreaId
+    }), serviceAreas) %}
+  {% endfor %}
+
+  {% set teams = [] %}
+  {% for team in teamList %}
+    {%- set teams = (teams.push({
+      value: team.value,
+      text: team.text,
+      selected: selectedTeamId == teamId
+    }), teams) %}
+  {% endfor %}
+
+  {% set products = [] %}
+  {% for product in productList %}
+    {%- set products = (products.push({
+      value: product.value,
+      text: product.text,
+      selected: selectedProductId == productId
+    }), products) %}
+  {% endfor %}
+
+  <h1>Monitor</h1>
+
+  <form>
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {{ govukSelect({
+      id: "serviceArea",
+      name: "serviceArea",
+      label: {
+        text: "Service Area"
+      },
+      items: serviceAreas
+    }) }}
+    {{ govukButton({
+      id: "updateServiceArea",
+      name: "updateServiceArea",
+      text: "Update",
+      element: "button"
+    }) }}
+    {{ govukSelect({
+      id: "team",
+      name: "team",
+      label: {
+        text: "Team"
+      },
+      items: teams
+    }) }}
+    {{ govukButton({
+      id: "updateTeam",
+      name: "updateTeam",
+      text: "Update",
+      element: "button"
+    }) }}
+    {{ govukSelect({
+      id: "product",
+      name: "product",
+      label: {
+        text: "Product"
+      },
+      items: products
+    }) }}
+    {{ govukButton({
+      id: "updateProduct",
+      name: "updateProduct",
+      text: "Update",
+      element: "button"
+    }) }}
+  </form>
+
+  <h2>{{ selectedItemName }}</h2>
+  <div id="statusTiles">
+  </div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/govuk/all.js"></script>
+  <script src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/monitor.js"></script>
+{% endblock %}

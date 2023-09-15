@@ -1,0 +1,11 @@
+{% macro statusTile(params) %}
+  <div class="statusTile statusTile--{{ params.status }}" data-test="{{ params.id }}">
+    <a href="/components/{{ params.id }}">
+      <span class="statusTileName">{{ params.name }}</span>
+      <span class="statusTileEnvironment">{{ params.environment }}</span>
+      <span class="statusTileBuild">{{ params.build }}</span>
+      <span class="statusTileStatus">{{ params.status }}</span>
+      <span class="statusTileLastRefresh">{{ params.refresh }}</span>
+    </a>
+  </div>
+{% endmacro %}
