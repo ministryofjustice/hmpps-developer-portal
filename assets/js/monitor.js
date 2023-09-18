@@ -97,9 +97,9 @@ const fetchMessages = async queryStringOptions => {
             break
           case 'h':
             const jsonData = data[streamName].json
-            let status = 'UNK'
-
+            
             try {
+              let status = 'UNK'
               health = JSON.parse(jsonData)
 
               if (health.hasOwnProperty('status')) {
@@ -107,12 +107,14 @@ const fetchMessages = async queryStringOptions => {
               } else {
                 status = health.healthy
               }
+
+              $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
             } catch (e) {
               console.error('Error parsing JSON data')
               console.error(e)
+              console.error(jsonData)
             }
 
-            $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
             break
         }
       }
