@@ -2,10 +2,23 @@ const lastIds = {}
 const data = {}
 
 jQuery(function () {
-  $('#updateProduct').on('click', async (e) => {
+  $('#updateProduct,#updateTeam,#updateServiceArea').on('click', async (e) => {
     e.preventDefault(e)
 
-    const response = await fetch(`/monitor/components/product/${$('#product').val()}`)
+    let dropDownType = ''
+
+    switch (e.target.id) {
+      case 'updateProduct':
+        dropDownType = 'product'
+        break;
+      case 'updateTeam':
+        dropDownType = 'team'
+        break;
+      default:
+        dropDownType = 'serviceArea'
+    }
+
+    const response = await fetch(`/monitor/components/${dropDownType}/${$(`#${dropDownType}`).val()}`)
 
     if (!response.ok) {
       throw new Error('There was a problem fetching the component data')
