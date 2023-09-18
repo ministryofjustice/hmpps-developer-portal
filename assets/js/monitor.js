@@ -24,7 +24,7 @@ jQuery(function () {
           data[`health:${component.name}:${environment.name}`] = ''
           data[`info:${component.name}:${environment.name}`] = ''
           data[`version:${component.name}:${environment.name}`] = ''
-          $('#statusTiles').append(`<div class="statusTile" data-test="tile-${component.id}" id="tile-${component.id}">
+          $('#statusTiles').append(`<div class="statusTile" data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
             <a href="/components/${component.id}">
               <span class="statusTileName">${component.name}</span>
               <span class="statusTileEnvironment">${environment.name}</span>
@@ -60,45 +60,47 @@ const fetchMessages = async (queryStringOptions) => {
     const streamJson = await response.json()
     console.log(streamJson)
 
-    // streamJson.forEach(stream => {
-    //   const streamName = stream.name.split(':')
-    //   const streamType = streamName[0].charAt(0)
-    //   const streamKey = `${streamType}:${streamName[2]}`
-    //   const lastMessage = stream.messages[stream.messages.length - 1]
+    streamJson.forEach(stream => {
+      const streamName = stream.name
+      const streamNameParts = streamName.split(':')
+      const streamType = streamNameParts[0].charAt(0)
+      const component = streamNameParts[1]
+      const environment = streamNameParts[2]
+      const lastMessage = stream.messages[stream.messages.length - 1]
 
-    //   if (lastIds[streamKey]) {
-    //     lastIds[streamKey] = lastMessage.id
-    //   }
+      if (lastIds[streamName]) {
+        lastIds[streamName] = lastMessage.id
+      }
 
-    //   if (data.hasOwnProperty(streamKey)) {
-    //     data[streamKey] = lastMessage.message
+      if (data.hasOwnProperty(streamName)) {
+        data[streamName] = lastMessage.message
 
-    //     switch (streamType) {
-    //       case 'v':
-    //         $(`#${streamName[2]}_version`).text(data[streamKey].v)
-    //         break
-    //       case 'h':
-    //         const jsonData = data[streamKey].json
-    //         let status = 'UNK'
+        switch (streamType) {
+          case 'v':
+            $(`#tile-${component}-${environment} .statusTileBuild`).text(data[streamName].v)
+            break
+          case 'h':
+            const jsonData = data[streamName].json
+            let status = 'UNK'
 
-    //         try {
-    //           health = JSON.parse(jsonData)
+            try {
+              health = JSON.parse(jsonData)
 
-    //           if (health.hasOwnProperty('status')) {
-    //             status = health.status
-    //           } else {
-    //             status = health.healthy
-    //           }
-    //         } catch (e) {
-    //           console.error('Error parsing JSON data')
-    //           console.error(e)
-    //         }
+              if (health.hasOwnProperty('status')) {
+                status = health.status
+              } else {
+                status = health.healthy
+              }
+            } catch (e) {
+              console.error('Error parsing JSON data')
+              console.error(e)
+            }
 
-    //         $(`#${streamName[2]}_status`).text(status)
-    //         break
-    //     }
-    //   }
-    // })
+            $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
+            break
+        }
+      }
+    })
   } catch (e) {
     console.error(e)
   }
