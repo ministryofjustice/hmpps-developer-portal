@@ -60,7 +60,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           environments: component.attributes.environments as Environment[],
         }
       })
-      logger.info(components)
     }
     if (monitorType === 'team') {
       const team = await serviceCatalogueService.getTeam(monitorId, true)

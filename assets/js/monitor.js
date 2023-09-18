@@ -2,7 +2,7 @@ const lastIds = {}
 const data = {}
 
 jQuery(function () {
-  $('#updateProduct,#updateTeam,#updateServiceArea').on('click', async (e) => {
+  $('#updateProduct,#updateTeam,#updateServiceArea').on('click', async e => {
     e.preventDefault(e)
 
     let dropDownType = ''
@@ -10,10 +10,10 @@ jQuery(function () {
     switch (e.target.id) {
       case 'updateProduct':
         dropDownType = 'product'
-        break;
+        break
       case 'updateTeam':
         dropDownType = 'team'
-        break;
+        break
       default:
         dropDownType = 'serviceArea'
     }
@@ -37,7 +37,8 @@ jQuery(function () {
           data[`health:${component.name}:${environment.name}`] = ''
           data[`info:${component.name}:${environment.name}`] = ''
           data[`version:${component.name}:${environment.name}`] = ''
-          $('#statusTiles').append(`<div class="statusTile" data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
+          $('#statusTiles')
+            .append(`<div class="statusTile" data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
             <a href="/components/${component.id}">
               <span class="statusTileName">${component.name}</span>
               <span class="statusTileEnvironment">${environment.name}</span>
@@ -49,7 +50,7 @@ jQuery(function () {
         })
       })
       watch()
-    } catch(e) {
+    } catch (e) {
       console.error(e)
     }
   })
@@ -58,10 +59,10 @@ jQuery(function () {
 const watch = async () => {
   await fetchMessages(lastIds)
 
-  setTimeout(watch, 10000)
+  setTimeout(watch, 30000)
 }
 
-const fetchMessages = async (queryStringOptions) => {
+const fetchMessages = async queryStringOptions => {
   const queryString = new URLSearchParams(queryStringOptions).toString()
   const response = await fetch(`/monitor/queue/${queryString}`)
 
@@ -87,6 +88,8 @@ const fetchMessages = async (queryStringOptions) => {
 
       if (data.hasOwnProperty(streamName)) {
         data[streamName] = lastMessage.message
+        const dateString = new Date().toTimeString().substring(0, 7)
+        $(`#tile-${component}-${environment} .statusTileLastRefresh`).text(dateString)
 
         switch (streamType) {
           case 'v':
