@@ -88,7 +88,7 @@ const fetchMessages = async queryStringOptions => {
 
       if (data.hasOwnProperty(streamName)) {
         data[streamName] = lastMessage.message
-        const dateString = new Date().toTimeString().substring(0, 7)
+        const dateString = new Date().toTimeString().substring(0, 8)
         $(`#tile-${component}-${environment} .statusTileLastRefresh`).text(dateString)
 
         switch (streamType) {
