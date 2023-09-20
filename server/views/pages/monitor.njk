@@ -37,6 +37,7 @@
 
   <form>
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
+    <div class="govuk-button-group monitor-selectors">
     {{ govukSelect({
       id: "serviceArea",
       name: "serviceArea",
@@ -79,6 +80,7 @@
       text: "Update",
       element: "button"
     }) }}
+    </div>
   </form>
 
   <h2>{{ selectedItemName }}</h2>

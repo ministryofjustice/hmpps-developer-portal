@@ -38,3 +38,20 @@ table th {
 .statusTileDown {
   background-color: govuk-colour('red');
 }
+
+.monitor-selectors {
+  align-items: flex-end;
+}
+
+.govuk-form-group {
+  margin-bottom: 0;
+}
+
+.govuk-button-group .govuk-button {
+  margin-bottom: 2px;
+  margin-left: 5px;
+}
+
+.govuk-form-group {
+  width: 20%;
+}
