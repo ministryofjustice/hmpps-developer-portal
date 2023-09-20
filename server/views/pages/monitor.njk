@@ -36,7 +36,7 @@
   <h1>Monitor</h1>
 
   <form>
-    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
     {{ govukSelect({
       id: "serviceArea",
       name: "serviceArea",

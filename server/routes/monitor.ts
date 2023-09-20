@@ -15,6 +15,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
     const serviceAreas = await serviceCatalogueService.getServiceAreas()
@@ -91,6 +92,22 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     }
 
     return res.json(components)
+  })
+
+  post('/queue', async (req, res) => {
+    // logger.info(Object.keys(req.body?.streams))
+    const streams = Object.keys(req.body?.streams).map(queueName => {
+      return {
+        key: queueName,
+        id: req.body?.streams[queueName],
+      }
+    })
+    // logger.info(streams)
+    const messages = await redisService.readStream(streams)
+
+    // logger.info(JSON.stringify(messages))
+
+    return res.send(messages)
   })
 
   get('/queue/*', async (req, res) => {

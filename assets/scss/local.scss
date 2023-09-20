@@ -14,6 +14,10 @@ table th {
 
 .statusTile {
   @include govuk-responsive-margin(3, 'bottom');
+  @include govuk-responsive-padding(3, 'top');
+  @include govuk-responsive-padding(3, 'bottom');
+  @include govuk-responsive-padding(3, 'left');
+  @include govuk-responsive-padding(3, 'right');
   width: 30%;
   color: govuk-colour('white');
   background-color: govuk-colour('dark-grey');

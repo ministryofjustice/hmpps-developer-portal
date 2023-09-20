@@ -63,8 +63,20 @@ const watch = async () => {
 }
 
 const fetchMessages = async queryStringOptions => {
-  const queryString = new URLSearchParams(queryStringOptions).toString()
-  const response = await fetch(`/monitor/queue/${queryString}`)
+  // const queryString = new URLSearchParams(queryStringOptions).toString()
+  // const response = await fetch(`/monitor/queue/${queryString}`)
+  console.log(JSON.stringify({ streams: queryStringOptions }))
+  const csrfToken = $('#csrf').val()
+  const response = await fetch('/monitor/queue', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'X-CSRF-Token': csrfToken,
+    },
+    body: JSON.stringify({ streams: queryStringOptions })
+  })
 
   if (!response.ok) {
     throw new Error('There was a problem fetching the component data')
