@@ -8,13 +8,22 @@ table th {
   color: white;
 }
 
+#statusTiles {
+  text-align: center;
+}
+
 .statusTile {
+  @include govuk-responsive-margin(3, 'bottom');
   width: 30%;
   color: govuk-colour('white');
   background-color: govuk-colour('dark-grey');
 
   a {
     color: govuk-colour('white');
+  }
+
+  span {
+    display: block;
   }
 }
 
