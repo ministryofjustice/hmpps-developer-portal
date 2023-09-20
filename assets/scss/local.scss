@@ -11,6 +11,7 @@ table th {
 .statusTile {
   float: left;
   width: 30%;
+  color: govuk-colour('white');
 
   .statusTileUp {
     background-color: govuk-colour('green');
