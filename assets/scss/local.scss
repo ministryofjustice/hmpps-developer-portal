@@ -7,3 +7,16 @@ table th {
   background-color: grey;
   color: white;
 }
+
+.statusTile {
+  float: left;
+  width: 30%;
+
+  .statusTileUp {
+    background-color: govuk-colour('green');
+  }
+
+  .statusTileDown {
+    background-color: govuk-colour('red');
+  }
+}

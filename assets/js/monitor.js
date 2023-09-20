@@ -72,7 +72,6 @@ const fetchMessages = async queryStringOptions => {
 
   try {
     const streamJson = await response.json()
-    console.log(streamJson)
 
     streamJson.forEach(stream => {
       const streamName = stream.name
@@ -96,9 +95,9 @@ const fetchMessages = async queryStringOptions => {
             $(`#tile-${component}-${environment} .statusTileBuild`).text(data[streamName].v)
             break
           case 'h':
-            const jsonData = data[streamName].json
-            
             try {
+              const jsonData = data[streamName].json
+
               let status = 'UNK'
               health = JSON.parse(jsonData)
 
@@ -109,6 +108,11 @@ const fetchMessages = async queryStringOptions => {
               }
 
               $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
+              $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
+
+              const statusClass = ((status === 'true') || (status === 'OK')) ? 'statusTileUp' : 'statusTileDown'
+
+              $(`#tile-${component}-${environment}`).addClass(statusClass)
             } catch (e) {
               console.error('Error parsing JSON data')
               console.error(e)
