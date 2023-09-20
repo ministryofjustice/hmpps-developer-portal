@@ -2,7 +2,7 @@ import { type RequestHandler, type Request, Router } from 'express'
 import { BadRequest } from 'http-errors'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import logger from '../../logger'
+// import logger from '../../logger'
 import { Environment } from '../data/strapiApiTypes'
 
 type MonitorComponent = {
