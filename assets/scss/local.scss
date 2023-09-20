@@ -9,15 +9,14 @@ table th {
 }
 
 .statusTile {
-  float: left;
   width: 30%;
   color: govuk-colour('white');
+}
 
-  .statusTileUp {
-    background-color: govuk-colour('green');
-  }
+.statusTileUp {
+  background-color: govuk-colour('green');
+}
 
-  .statusTileDown {
-    background-color: govuk-colour('red');
-  }
+.statusTileDown {
+  background-color: govuk-colour('red');
 }
