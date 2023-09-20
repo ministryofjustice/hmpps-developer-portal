@@ -12,6 +12,10 @@ table th {
   width: 30%;
   color: govuk-colour('white');
   background-color: govuk-colour('dark-grey');
+
+  a {
+    color: govuk-colour('white');
+  }
 }
 
 .statusTileUp {
