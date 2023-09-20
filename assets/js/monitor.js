@@ -109,7 +109,7 @@ const fetchMessages = async queryStringOptions => {
 
               $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
               $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
-
+console.log(status)
               const statusClass = ((status === 'true') || (status === 'OK')) ? 'statusTileUp' : 'statusTileDown'
 
               $(`#tile-${component}-${environment}`).addClass(statusClass)
