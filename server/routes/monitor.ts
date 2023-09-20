@@ -95,37 +95,14 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   })
 
   post('/queue', async (req, res) => {
-    // logger.info(Object.keys(req.body?.streams))
     const streams = Object.keys(req.body?.streams).map(queueName => {
       return {
         key: queueName,
         id: req.body?.streams[queueName],
       }
     })
-    // logger.info(streams)
-    const messages = await redisService.readStream(streams)
-
-    // logger.info(JSON.stringify(messages))
-
-    return res.send(messages)
-  })
-
-  get('/queue/*', async (req, res) => {
-    const queueInformation = req.params[0]
-    const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
-
-    logger.info(`Queue call for ${queueInformation}`)
-
-    const streams = Object.keys(queueParams).map(queueName => {
-      return {
-        key: queueName,
-        id: queueParams[queueName],
-      }
-    })
 
     const messages = await redisService.readStream(streams)
-
-    logger.info(JSON.stringify(messages))
 
     return res.send(messages)
   })

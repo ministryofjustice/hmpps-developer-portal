@@ -25,7 +25,8 @@ jQuery(function () {
     }
 
     try {
-      $('#statusTiles').empty()
+      // $('#statusTiles').empty()
+      $('#statusRows').empty()
 
       const components = await response.json()
 
@@ -37,16 +38,24 @@ jQuery(function () {
           data[`health:${component.name}:${environment.name}`] = ''
           data[`info:${component.name}:${environment.name}`] = ''
           data[`version:${component.name}:${environment.name}`] = ''
-          $('#statusTiles')
-            .append(`<div class="statusTile" data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
-            <a href="/components/${component.id}">
-              <span class="statusTileName">${component.name}</span>
-              <span class="statusTileEnvironment">${environment.name}</span>
-              <span class="statusTileBuild"></span>
-              <span class="statusTileStatus"></span>
-              <span class="statusTileLastRefresh"></span>
-            </a>
-          </div>`)
+          // $('#statusTiles')
+          //   .append(`<div class="statusTile" data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
+          //   <a href="/components/${component.id}">
+          //     <span class="statusTileName">${component.name}</span>
+          //     <span class="statusTileEnvironment">${environment.name}</span>
+          //     <span class="statusTileBuild"></span>
+          //     <span class="statusTileStatus"></span>
+          //     <span class="statusTileLastRefresh"></span>
+          //   </a>
+          // </div>`)
+          $('#statusRows')
+            .append(`<tr class="statusTile" data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
+              <td><a href="/components/${component.id}" class="statusTileName">${component.name}</a></td>
+              <td class="statusTileEnvironment">${environment.name}</td>
+              <td class="statusTileBuild"></td>
+              <td class="statusTileStatus"></td>
+              <td class="statusTileLastRefresh"></td>
+            </tr>`)
         })
       })
       watch()
@@ -62,10 +71,7 @@ const watch = async () => {
   setTimeout(watch, 30000)
 }
 
-const fetchMessages = async queryStringOptions => {
-  // const queryString = new URLSearchParams(queryStringOptions).toString()
-  // const response = await fetch(`/monitor/queue/${queryString}`)
-  console.log(JSON.stringify({ streams: queryStringOptions }))
+const fetchMessages = async streams => {
   const csrfToken = $('#csrf').val()
   const response = await fetch('/monitor/queue', {
     method: 'POST',
@@ -75,7 +81,7 @@ const fetchMessages = async queryStringOptions => {
       'Content-Type': 'application/json',
       'X-CSRF-Token': csrfToken,
     },
-    body: JSON.stringify({ streams: queryStringOptions })
+    body: JSON.stringify({ streams })
   })
 
   if (!response.ok) {
