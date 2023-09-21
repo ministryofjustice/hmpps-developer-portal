@@ -8,11 +8,11 @@
   tr {
     background-color: grey;
 
-    .statusTileUp {
+    &.statusTileUp {
       background-color: govuk-colour('green');
     }
 
-    .statusTileDown {
+    &.statusTileDown {
       background-color: govuk-colour('red');
     }
   }
