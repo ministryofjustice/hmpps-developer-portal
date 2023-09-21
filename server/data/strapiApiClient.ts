@@ -21,17 +21,29 @@ export default class StrapiApiClient {
     this.restClient = new RestClient('strapiApiClient', config.apis.serviceCatalogue as ApiConfig, '')
   }
 
-  async getProducts(): Promise<ProductListResponse> {
+  async getProducts(productIds?: number[]): Promise<ProductListResponse> {
+    const filters = productIds
+      ? productIds.reduce((filterList, productId, index) => {
+          return `&${filterList},filters[id][$in][${index}]=${productId}`
+        }, '')
+      : ''
+
     return this.restClient.get({
       path: '/v1/products',
-      query: new URLSearchParams({ populate: 'product_set' }).toString(),
+      query: `populate=product_set${filters}`,
     })
   }
 
-  async getProduct(productId: string): Promise<ProductResponse> {
+  async getProduct(productId: string, withEnvironments?: boolean): Promise<ProductResponse> {
+    const populate = ['product_set', 'team', 'components', 'service_area']
+
+    if (withEnvironments) {
+      populate.push('components.environments')
+    }
+
     return this.restClient.get({
       path: `/v1/products/${productId}`,
-      query: new URLSearchParams({ populate: 'product_set,team,components,service_area' }).toString(),
+      query: new URLSearchParams({ populate: populate.join(',') }).toString(),
     })
   }
 
@@ -49,16 +61,32 @@ export default class StrapiApiClient {
     })
   }
 
-  async getTeams(): Promise<TeamListResponse> {
-    return this.restClient.get({
+  async getTeams(expandProperties?: { products: boolean }): Promise<TeamListResponse> {
+    const getParams = {
       path: '/v1/teams',
-    })
+      query: '',
+    }
+
+    if (expandProperties?.products) {
+      getParams.query = new URLSearchParams({ populate: 'products' }).toString()
+    }
+
+    return this.restClient.get(getParams)
   }
 
-  async getTeam(teamId: string): Promise<TeamResponse> {
+  async getTeam(teamId: string, withProducts?: boolean): Promise<TeamResponse> {
+    const populate = ['products']
+
+    if (withProducts) {
+      populate.push('products.components')
+      populate.push('products.components.environments')
+    }
+
     return this.restClient.get({
       path: `/v1/teams/${teamId}`,
-      query: new URLSearchParams({ populate: 'products' }).toString(),
+      query: new URLSearchParams({
+        populate: populate.join(','),
+      }).toString(),
     })
   }
 
@@ -75,16 +103,32 @@ export default class StrapiApiClient {
     })
   }
 
-  async getServiceAreas(): Promise<ServiceAreaListResponse> {
-    return this.restClient.get({
+  async getServiceAreas(expandProperties?: { products: boolean }): Promise<ServiceAreaListResponse> {
+    const getParams = {
       path: '/v1/service-areas',
-    })
+      query: '',
+    }
+
+    if (expandProperties?.products) {
+      getParams.query = new URLSearchParams({ populate: 'products' }).toString()
+    }
+
+    return this.restClient.get(getParams)
   }
 
-  async getServiceArea(serviceAreaId: string): Promise<ServiceAreaResponse> {
+  async getServiceArea(serviceAreaId: string, withProducts?: boolean): Promise<ServiceAreaResponse> {
+    const populate = ['products']
+
+    if (withProducts) {
+      populate.push('products.components')
+      populate.push('products.components.environments')
+    }
+
     return this.restClient.get({
       path: `/v1/service-areas/${serviceAreaId}`,
-      query: new URLSearchParams({ populate: 'products' }).toString(),
+      query: new URLSearchParams({
+        populate: populate.join(','),
+      }).toString(),
     })
   }
 }
