@@ -7,6 +7,14 @@
 
   tr {
     background-color: grey;
+
+    .statusTileUp {
+      background-color: govuk-colour('green');
+    }
+
+    .statusTileDown {
+      background-color: govuk-colour('red');
+    }
   }
   
   th, td {
@@ -17,14 +25,6 @@
       color: white;
     }
   }
-}
-
-.statusTileUp {
-  background-color: govuk-colour('green');
-}
-
-.statusTileDown {
-  background-color: govuk-colour('red');
 }
 
 .monitor-selectors {
