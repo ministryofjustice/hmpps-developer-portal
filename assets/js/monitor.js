@@ -1,14 +1,14 @@
 const lastIds = {}
 const data = {}
 
-jQuery(function () {
+jQuery(async function () {
   const monitorType = $('#monitorType').val()
 
   if (monitorType !== '') {
     const dropDownTypeIdValue = Number.parseInt($(`#${monitorType}`).val())
     const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? '0' : dropDownTypeIdValue
 
-    populateComponentTable(monitorType, dropDownTypeId)
+    await populateComponentTable(monitorType, dropDownTypeId)
   }
 
   $('#updateProduct,#updateTeam,#updateServiceArea').on('click', async e => {
@@ -27,10 +27,13 @@ jQuery(function () {
         dropDownType = 'serviceArea'
     }
 
+    const dropDownText = $(`#${dropDownType} option:selected`).text()
     const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
     const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? '0' : dropDownTypeIdValue
 
-    populateComponentTable(dropDownType, dropDownTypeId)
+    history.pushState({ info: 'dropdown change' }, '', `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`)
+
+    await populateComponentTable(dropDownType, dropDownTypeId)
   })
 })
 
@@ -46,11 +49,11 @@ const fetchMessages = async streams => {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
       'X-CSRF-Token': csrfToken,
     },
-    body: JSON.stringify({ streams })
+    body: JSON.stringify({ streams }),
   })
 
   if (!response.ok) {
@@ -98,7 +101,7 @@ const fetchMessages = async streams => {
                 $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
                 $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
 
-                const statusClass = ((status === true) || (status === 'UP')) ? 'statusTileUp' : 'statusTileDown'
+                const statusClass = status === true || status === 'UP' ? 'statusTileUp' : 'statusTileDown'
 
                 $(`#tile-${component}-${environment}`).addClass(statusClass)
               }
@@ -150,4 +153,13 @@ async function populateComponentTable(type, id) {
   } catch (e) {
     console.error(e)
   }
+}
+
+function formatMonitorName(name) {
+  return `${name} `
+    .trim()
+    .toLowerCase()
+    .replace(/ /g, '-')
+    .replace(/[^-a-z0-9]/g, '')
+    .replace(/-+/g, '-')
 }
