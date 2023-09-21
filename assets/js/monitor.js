@@ -25,7 +25,6 @@ jQuery(function () {
     }
 
     try {
-      // $('#statusTiles').empty()
       $('#statusRows').empty()
 
       const components = await response.json()
@@ -38,16 +37,6 @@ jQuery(function () {
           data[`health:${component.name}:${environment.name}`] = ''
           data[`info:${component.name}:${environment.name}`] = ''
           data[`version:${component.name}:${environment.name}`] = ''
-          // $('#statusTiles')
-          //   .append(`<div class="statusTile" data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
-          //   <a href="/components/${component.id}">
-          //     <span class="statusTileName">${component.name}</span>
-          //     <span class="statusTileEnvironment">${environment.name}</span>
-          //     <span class="statusTileBuild"></span>
-          //     <span class="statusTileStatus"></span>
-          //     <span class="statusTileLastRefresh"></span>
-          //   </a>
-          // </div>`)
           $('#statusRows')
             .append(`<tr class="statusTile" data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
               <td><a href="/components/${component.id}" class="statusTileName">${component.name}</a></td>
@@ -114,27 +103,28 @@ const fetchMessages = async streams => {
             break
           case 'h':
             try {
-              const jsonData = data[streamName].json
+              if (data[streamName].json) {
+                const jsonData = data[streamName].json
 
-              let status = 'UNK'
-              health = JSON.parse(jsonData)
+                let status = 'UNK'
+                health = JSON.parse(jsonData)
 
-              if (health.hasOwnProperty('status')) {
-                status = health.status
-              } else {
-                status = health.healthy
+                if (health.hasOwnProperty('status')) {
+                  status = health.status
+                } else {
+                  status = health.healthy
+                }
+
+                $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
+                $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
+
+                const statusClass = ((status === true) || (status === 'UP')) ? 'statusTileUp' : 'statusTileDown'
+
+                $(`#tile-${component}-${environment}`).addClass(statusClass)
               }
-
-              $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
-              $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
-
-              const statusClass = ((status === true) || (status === 'UP')) ? 'statusTileUp' : 'statusTileDown'
-
-              $(`#tile-${component}-${environment}`).addClass(statusClass)
             } catch (e) {
               console.error('Error parsing JSON data')
               console.error(e)
-              console.error(jsonData)
             }
 
             break
