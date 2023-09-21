@@ -131,11 +131,7 @@ function getMonitorId(req: Request): string {
 function getMonitorType(req: Request): string {
   const { monitorType } = req.params
 
-  if (['product', 'team', 'serviceArea'].includes(monitorType)) {
-    return monitorType
-  }
-
-  return ''
+  return ['product', 'team', 'serviceArea'].includes(monitorType) ? monitorType : ''
 }
 
 function getMonitorName(req: Request): string {
