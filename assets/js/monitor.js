@@ -18,7 +18,9 @@ jQuery(function () {
         dropDownType = 'serviceArea'
     }
 
-    const response = await fetch(`/monitor/components/${dropDownType}/${$(`#${dropDownType}`).val()}`)
+    const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
+    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? '0' : dropDownTypeIdValue
+    const response = await fetch(`/monitor/components/${dropDownType}/${dropDownTypeId}`)
 
     if (!response.ok) {
       throw new Error('There was a problem fetching the component data')
