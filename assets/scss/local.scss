@@ -5,14 +5,14 @@
 table {
   width: 100%;
   
-  th {
+  th, td {
     background-color: grey;
     color: white;
     padding: 3px;
-  }
 
-  td {
-    padding: 3px;
+    a {
+      color: white;
+    }
   }
 }
 
