@@ -13,7 +13,7 @@ table {
     color: white;
     padding: govuk-spacing(1);
 
-    a {
+    a:link, a:visited {
       color: white;
     }
   }
