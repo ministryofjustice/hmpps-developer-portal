@@ -11,7 +11,7 @@
     {%- set serviceAreas = (serviceAreas.push({
       value: serviceArea.value,
       text: serviceArea.text,
-      selected: selectedServiceAreaId == serviceAreaId
+      selected: serviceArea.selected
     }), serviceAreas) %}
   {% endfor %}
 
@@ -20,7 +20,7 @@
     {%- set teams = (teams.push({
       value: team.value,
       text: team.text,
-      selected: selectedTeamId == teamId
+      selected: team.selected
     }), teams) %}
   {% endfor %}
 
@@ -29,13 +29,15 @@
     {%- set products = (products.push({
       value: product.value,
       text: product.text,
-      selected: selectedProductId == productId
+      selected: product.selected
     }), products) %}
   {% endfor %}
 
   <h1>Monitor</h1>
 
   <form>
+    <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
+    <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
     <div class="govuk-button-group monitor-selectors">
     {{ govukSelect({

@@ -2,6 +2,15 @@ const lastIds = {}
 const data = {}
 
 jQuery(function () {
+  const monitorType = $('#monitorType').val()
+
+  if (monitorType !== '') {
+    const dropDownTypeIdValue = Number.parseInt($(`#${monitorType}`).val())
+    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? '0' : dropDownTypeIdValue
+
+    populateComponentTable(monitorType, dropDownTypeId)
+  }
+
   $('#updateProduct,#updateTeam,#updateServiceArea').on('click', async e => {
     e.preventDefault(e)
 
@@ -20,39 +29,8 @@ jQuery(function () {
 
     const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
     const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? '0' : dropDownTypeIdValue
-    const response = await fetch(`/monitor/components/${dropDownType}/${dropDownTypeId}`)
 
-    if (!response.ok) {
-      throw new Error('There was a problem fetching the component data')
-    }
-
-    try {
-      $('#statusRows').empty()
-
-      const components = await response.json()
-
-      components.forEach(component => {
-        component.environments.forEach(environment => {
-          lastIds[`health:${component.name}:${environment.name}`] = '0'
-          lastIds[`info:${component.name}:${environment.name}`] = '0'
-          lastIds[`version:${component.name}:${environment.name}`] = '0'
-          data[`health:${component.name}:${environment.name}`] = ''
-          data[`info:${component.name}:${environment.name}`] = ''
-          data[`version:${component.name}:${environment.name}`] = ''
-          $('#statusRows')
-            .append(`<tr data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
-              <td><a href="/components/${component.id}" class="statusTileName">${component.name}</a></td>
-              <td class="statusTileEnvironment">${environment.name}</td>
-              <td class="statusTileBuild"></td>
-              <td class="statusTileStatus"></td>
-              <td class="statusTileLastRefresh"></td>
-            </tr>`)
-        })
-      })
-      watch()
-    } catch (e) {
-      console.error(e)
-    }
+    populateComponentTable(dropDownType, dropDownTypeId)
   })
 })
 
@@ -133,6 +111,42 @@ const fetchMessages = async streams => {
         }
       }
     })
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+async function populateComponentTable(type, id) {
+  const response = await fetch(`/monitor/components/${type}/${id}`)
+
+  if (!response.ok) {
+    throw new Error('There was a problem fetching the component data')
+  }
+
+  try {
+    $('#statusRows').empty()
+
+    const components = await response.json()
+
+    components.forEach(component => {
+      component.environments.forEach(environment => {
+        lastIds[`health:${component.name}:${environment.name}`] = '0'
+        lastIds[`info:${component.name}:${environment.name}`] = '0'
+        lastIds[`version:${component.name}:${environment.name}`] = '0'
+        data[`health:${component.name}:${environment.name}`] = ''
+        data[`info:${component.name}:${environment.name}`] = ''
+        data[`version:${component.name}:${environment.name}`] = ''
+        $('#statusRows')
+          .append(`<tr data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
+            <td><a href="/components/${component.id}" class="statusTileName">${component.name}</a></td>
+            <td class="statusTileEnvironment">${environment.name}</td>
+            <td class="statusTileBuild"></td>
+            <td class="statusTileStatus"></td>
+            <td class="statusTileLastRefresh"></td>
+          </tr>`)
+      })
+    })
+    watch()
   } catch (e) {
     console.error(e)
   }

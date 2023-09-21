@@ -2,7 +2,7 @@ import { type RequestHandler, type Request, Router } from 'express'
 import { BadRequest } from 'http-errors'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-// import logger from '../../logger'
+import logger from '../../logger'
 import { Environment } from '../data/strapiApiTypes'
 
 type MonitorComponent = {
@@ -17,12 +17,16 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
-  get(['/'], async (req, res) => {
+  get(['/', '/:monitorType/:monitorName'], async (req, res) => {
+    const monitorType = getMonitorType(req)
+    const monitorName = getMonitorName(req)
+    logger.info(`Request for ${monitorType}/${monitorName}`)
     const serviceAreas = await serviceCatalogueService.getServiceAreas()
     const serviceAreaList = serviceAreas.map(serviceArea => {
       return {
         value: serviceArea.id,
         text: serviceArea.attributes.name,
+        selected: monitorType === 'serviceArea' && formatMonitorName(serviceArea.attributes.name) === monitorName,
       }
     })
     const teams = await serviceCatalogueService.getTeams()
@@ -30,6 +34,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       return {
         value: team.id,
         text: team.attributes.name,
+        selected: monitorType === 'team' && formatMonitorName(team.attributes.name) === monitorName,
       }
     })
     const products = await serviceCatalogueService.getProducts()
@@ -37,6 +42,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       return {
         value: product.id,
         text: product.attributes.name,
+        selected: monitorType === 'product' && formatMonitorName(product.attributes.name) === monitorName,
       }
     })
 
@@ -44,6 +50,8 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       serviceAreaList,
       teamList,
       productList,
+      monitorName,
+      monitorType,
     })
   })
 
@@ -128,4 +136,19 @@ function getMonitorType(req: Request): string {
   }
 
   return ''
+}
+
+function getMonitorName(req: Request): string {
+  const { monitorName } = req.params
+
+  return monitorName.replace(/[^-a-z0-9]/g, '')
+}
+
+function formatMonitorName(name: string): string {
+  return `${name} `
+    .trim()
+    .toLowerCase()
+    .replace(/ /g, '-')
+    .replace(/[^-a-z0-9]/g, '')
+    .replace(/-+/g, '-')
 }
