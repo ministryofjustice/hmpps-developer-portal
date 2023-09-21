@@ -148,3 +148,18 @@ function formatMonitorName(name: string): string {
     .replace(/[^-a-z0-9]/g, '')
     .replace(/-+/g, '-')
 }
+
+function getMonitorName(req: Request): string {
+  const { monitorName } = req.params
+
+  return monitorName.replace(/[^-a-z0-9]/g, '')
+}
+
+function formatMonitorName(name: string): string {
+  return `${name} `
+    .trim()
+    .toLowerCase()
+    .replace(/ /g, '-')
+    .replace(/[^-a-z0-9]/g, '')
+    .replace(/-+/g, '-')
+}

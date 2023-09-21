@@ -139,7 +139,8 @@ async function populateComponentTable(type, id) {
         data[`health:${component.name}:${environment.name}`] = ''
         data[`info:${component.name}:${environment.name}`] = ''
         data[`version:${component.name}:${environment.name}`] = ''
-        $('#statusRows').append(`<tr data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
+        $('#statusRows')
+          .append(`<tr data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
             <td><a href="/components/${component.id}" class="statusTileName">${component.name}</a></td>
             <td class="statusTileEnvironment">${environment.name}</td>
             <td class="statusTileBuild"></td>
