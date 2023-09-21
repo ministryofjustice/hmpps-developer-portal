@@ -4,11 +4,14 @@
 
 table {
   width: 100%;
+
+  tr {
+    background-color: grey;
+  }
   
   th, td {
-    background-color: grey;
     color: white;
-    padding: 3px;
+    padding: govuk-spacing(1);
 
     a {
       color: white;
@@ -34,7 +37,7 @@ table {
 
 .govuk-button-group .govuk-button {
   margin-bottom: 2px;
-  margin-left: 5px;
+  margin-left: govuk-spacing(1);
 }
 
 .govuk-form-group {
