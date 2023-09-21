@@ -2,32 +2,17 @@
   min-height: 600px;
 }
 
-table th {
-  text-align: left;
-  background-color: grey;
-  color: white;
-}
-
-#statusTiles {
-  text-align: center;
-}
-
-.statusTile {
-  @include govuk-responsive-margin(3, 'bottom');
-  @include govuk-responsive-padding(3, 'top');
-  @include govuk-responsive-padding(3, 'bottom');
-  @include govuk-responsive-padding(3, 'left');
-  @include govuk-responsive-padding(3, 'right');
-  width: 30%;
-  color: govuk-colour('white');
-  background-color: govuk-colour('dark-grey');
-
-  a {
-    color: govuk-colour('white');
+table {
+  width: 100%;
+  
+  th {
+    background-color: grey;
+    color: white;
+    padding: 3px;
   }
 
-  span {
-    display: block;
+  td {
+    padding: 3px;
   }
 }
 
