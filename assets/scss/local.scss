@@ -2,8 +2,44 @@
   min-height: 600px;
 }
 
-table th {
-  text-align: left;
-  background-color: grey;
-  color: white;
+table {
+  width: 100%;
+
+  tr {
+    background-color: grey;
+  }
+  
+  th, td {
+    color: white;
+    padding: govuk-spacing(1);
+
+    a:link, a:visited {
+      color: white;
+    }
+  }
+}
+
+.statusTileUp {
+  background-color: govuk-colour('green');
+}
+
+.statusTileDown {
+  background-color: govuk-colour('red');
+}
+
+.monitor-selectors {
+  align-items: flex-end;
+}
+
+.govuk-form-group {
+  margin-bottom: 0;
+}
+
+.govuk-button-group .govuk-button {
+  margin-bottom: 2px;
+  margin-left: govuk-spacing(1);
+}
+
+.govuk-form-group {
+  width: 20%;
 }

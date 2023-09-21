@@ -50,8 +50,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     const messages = await redisService.readStream(streams)
 
-    logger.info(JSON.stringify(messages))
-
     return res.send(messages)
   })
 
