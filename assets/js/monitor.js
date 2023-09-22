@@ -35,6 +35,19 @@ jQuery(async function () {
 
     await populateComponentTable(dropDownType, dropDownTypeId)
   })
+
+  $('.environments .govuk-checkboxes__input').on('change', e => {
+    const validEnvironments = ['prod', 'preprod', 'staging', 'dev']
+
+    $(`.${validEnvironments.join(',.')}`).show()
+    $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
+      const environment = $(e).val()
+
+      if (validEnvironments.includes(environment)) {
+        $(`.${environment}`).hide()
+      }
+    })
+  })
 })
 
 const watch = async () => {
@@ -140,7 +153,7 @@ async function populateComponentTable(type, id) {
         data[`info:${component.name}:${environment.name}`] = ''
         data[`version:${component.name}:${environment.name}`] = ''
         $('#statusRows')
-          .append(`<tr data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
+          .append(`<tr data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}" class="${environment.name}">
             <td><a href="/components/${component.id}" class="statusTileName">${component.name}</a></td>
             <td class="statusTileEnvironment">${environment.name}</td>
             <td class="statusTileBuild"></td>
