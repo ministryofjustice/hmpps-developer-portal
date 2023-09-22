@@ -9,6 +9,7 @@ jQuery(async function () {
     const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? '0' : dropDownTypeIdValue
 
     await populateComponentTable(monitorType, dropDownTypeId)
+    updateEnvironmentList()
   }
 
   $('#updateProduct,#updateTeam,#updateServiceArea').on('click', async e => {
@@ -34,21 +35,26 @@ jQuery(async function () {
     history.pushState({ info: 'dropdown change' }, '', `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`)
 
     await populateComponentTable(dropDownType, dropDownTypeId)
+    updateEnvironmentList()
   })
 
   $('.environments .govuk-checkboxes__input').on('change', e => {
-    const validEnvironments = ['prod', 'preprod', 'staging', 'dev']
-
-    $(`.${validEnvironments.join(',.')}`).show()
-    $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
-      const environment = $(e).val()
-
-      if (validEnvironments.includes(environment)) {
-        $(`.${environment}`).hide()
-      }
-    })
+    updateEnvironmentList()
   })
 })
+
+function updateEnvironmentList() {
+  const validEnvironments = ['prod', 'preprod', 'staging', 'dev']
+
+  $(`.${validEnvironments.join(',.')}`).show()
+  $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
+    const environment = $(e).val()
+
+    if (validEnvironments.includes(environment)) {
+      $(`.${environment}`).hide()
+    }
+  })
+}
 
 const watch = async () => {
   await fetchMessages(lastIds)
