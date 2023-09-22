@@ -33,8 +33,7 @@ jobs:
       - checkout
       - run:
           name: Update npm
-          command: 'sudo npm install -g npm@latest' # temporary hard code version until we move to v10
-          # command: 'sudo npm install -g npm@9.8.1'
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
@@ -124,9 +123,9 @@ workflows:
       - unit_test:
           requires:
             - build
-      # - integration_test:
-      #     requires:
-      #       - build
+      - integration_test:
+          requires:
+            - build
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
@@ -138,7 +137,7 @@ workflows:
           requires:
             - helm_lint
             - unit_test
-            # - integration_test
+            - integration_test
             - build_docker
       - hmpps/deploy_env:
           <<: *feature_branch
@@ -160,7 +159,7 @@ workflows:
           requires:
             - helm_lint
             - unit_test
-            # - integration_test
+            - integration_test
             - build_docker
           helm_timeout: 5m
       - request-prod-approval:

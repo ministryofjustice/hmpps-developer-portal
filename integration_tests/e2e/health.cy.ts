@@ -6,7 +6,7 @@ context('Healthcheck', () => {
     })
 
     it('Health check page is visible', () => {
-      cy.request('/health').its('body.healthy').should('equal', true)
+      cy.request('/health').its('body.status').should('equal', 'UP')
     })
 
     it('Ping is visible and UP', () => {
@@ -24,7 +24,7 @@ context('Healthcheck', () => {
       cy.task('stubServiceCataloguePing', 500)
 
       cy.request({ url: '/health', method: 'GET', failOnStatusCode: false }).then(response => {
-        expect(response.body.checks.strapi).to.contain({ status: 500, retries: 2 })
+        expect(response.body.components.strapi.status).to.contain({ status: 500, retries: 2 })
       })
     })
   })
