@@ -135,13 +135,15 @@ function getMonitorType(req: Request): string {
 }
 
 function getMonitorName(req: Request): string {
-  const { monitorName } = req.params
+  const monitorName = req.params?.monitorName || ''
 
   return monitorName.replace(/[^-a-z0-9]/g, '')
 }
 
 function formatMonitorName(name: string): string {
-  return `${name} `
+  const monitorName = name || ''
+
+  return `${monitorName} `
     .trim()
     .toLowerCase()
     .replace(/ /g, '-')
