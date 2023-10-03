@@ -24,8 +24,11 @@ jQuery(async function () {
       case 'updateTeam':
         dropDownType = 'team'
         break
-      default:
+      case 'updateServiceArea':
         dropDownType = 'serviceArea'
+        break
+      default:
+        return false
     }
 
     const dropDownText = $(`#${dropDownType} option:selected`).text()
