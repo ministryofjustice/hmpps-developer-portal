@@ -7,28 +7,68 @@
 
 <h1 id="detailPageTitle">{{ product.name }}</h1>
 
-<p>{{ product.description }}</p>
-
-<p>Confluence: {% if product.confluenceLinks | length %}<ul>{% for confluenceLink in product.confluenceLinks %}<li><a href="{{ confluenceLink }}">{{ confluenceLink }}</a></li>{% endfor %}</ul>{% endif %}</p>
-<p>G Drive: <a href="{{ product.gDriveLink }}">{{ product.gDriveLink }}</a></p>
-<p>ID: {{ product.id }}</p>
-<p>Product Manager: {{ product.productManager }}</p>
-<p>Delivery Manager: {{ product.deliveryManager }}</p>
-<p>Subproduct? {% if product.subProduct %}Yes{% else %}No{% endif %}</p>
-<p>Legacy? {% if product.legacyProduct %}Yes{% else %}No{% endif %}</p>
-<p>Phase: {{ product.phase }}</p>
-<p>Team: <a href="/teams/{{ product.team.id }}">{{ product.team.attributes.name }} ({{ product.team.attributes.t_id }})</a></p>
-<p>Product Set: <a href="/product-sets/{{ product.productSet.id }}">{{ product.productSet.attributes.name }} ({{ product.productSet.attributes.ps_id }})</a></p>
-<p>Components</p>
-{% if product.components | length %}
-<ul>
-  {% for component in product.components %}
-    <li><a href="/components/{{ component.id }}">{{ component.attributes.name }}</a></li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>None</p>
-{% endif %}
+<table class="componentData">
+  <tbody>
+    <tr>
+      <th>Description</th>
+      <td>{{ product.description }}</td>
+    </tr>
+    <tr>
+      <th>Confluence</th>
+      <td>{% if product.confluenceLinks | length %}<ul>{% for confluenceLink in product.confluenceLinks %}<li><a href="{{ confluenceLink }}">{{ confluenceLink }}</a></li>{% endfor %}</ul>{% endif %}</td>
+    </tr>
+    <tr>
+      <th>G Drive</th>
+      <td><a href="{{ product.gDriveLink }}">{{ product.gDriveLink }}</a></td>
+    </tr>
+    <tr>
+      <th>ID</th>
+      <td>{{ product.id }}</p></td>
+    </tr>
+    <tr>
+      <th>Product Manager</th>
+      <td>{{ product.productManager }}</td>
+    </tr>
+    <tr>
+      <th>Delivery Manager</th>
+      <td>{{ product.deliveryManager }}</td>
+    </tr>
+    <tr>
+      <th>Subproduct?</th>
+      <td>{% if product.subProduct %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr>
+      <th>Legacy?</th>
+      <td>{% if product.legacyProduct %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr>
+      <th>Phase</th>
+      <td>{{ product.phase }}</td>
+    </tr>
+    <tr>
+      <th>Team</th>
+      <td><a href="/teams/{{ product.team.id }}">{{ product.team.attributes.name }} ({{ product.team.attributes.t_id }})</a></td>
+    </tr>
+    <tr>
+      <th>Product Set</th>
+      <td><a href="/product-sets/{{ product.productSet.id }}">{{ product.productSet.attributes.name }} ({{ product.productSet.attributes.ps_id }})</a></td>
+    </tr>
+    <tr>
+      <th>Components</th>
+      <td>
+        {% if product.components | length %}
+        <ul>
+          {% for component in product.components %}
+            <li><a href="/components/{{ component.id }}">{{ component.attributes.name }}</a></li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>None</p>
+        {% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 
 {% endblock %}
