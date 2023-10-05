@@ -7,18 +7,28 @@
 
 <h1 id="detailPageTitle">{{ team.name }}</h1>
 
-<p>ID: {{ team.id }}</p>
-
-<p>Products</p>
-{% if team.products | length %}
-<ul>
-  {% for product in team.products %}
-    <li><a href="/products/{{ product.id }}">{{ product.attributes.name }}</a></li>
-  {% endfor %}
-</ul>
-{% else %}
-<p>None</p>
-{% endif %}
+<table class="componentData">
+  <tbody>
+    <tr>
+      <th>ID</th>
+      <td>{{ team.id }}</td>
+    </tr>
+    <tr>
+      <th>Products</th>
+      <td>
+        {% if team.products | length %}
+        <ul>
+          {% for product in team.products %}
+            <li><a href="/products/{{ product.id }}">{{ product.attributes.name }}</a></li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>None</p>
+        {% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 {% endblock %}
 
