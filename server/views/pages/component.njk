@@ -7,77 +7,127 @@
 
 <h1 id="detailPageTitle">{{ component.name }}</h1>
 
-<p>{{ component.description }}</p>
-<p>Title: {{ component.title }}</p>
-<p>Jira Project Keys: {{ component.jiraProjectKeys }}</p>
-<p>GitHub Write: {{ component.githubWrite }}</p>
-<p>GitHub Admin: {{ component.githubAdmin }}</p>
-<p>GitHub Restricted: {{ component.githubRestricted }}</p>
-<p>GitHub Repo: {{ component.githubRepo }}</p>
-<p>GitHub Visibility: {{ component.githubVisibility }}</p>
-<p>App Insights Cloud Role Name: {{ component.appInsightsName }}</p>
-<p>API: {% if component.api %}Yes{% else %}No{% endif %}</p>
-<p>Frontend: {% if component.frontend %}Yes{% else %}No{% endif %}</p>
-<p>Part of monorepo: {% if component.partOfMonorepo %}Yes{% else %}No{% endif %}</p>
-<p>Language: {{ component.language }}</p>
-<p>Product: <a href="/products/{{ component.product.id }}">{{ component.product.attributes.name }}</a></p>
-<p>Environments</p>
-{% if component.environments | length %}
-<table>
+<table class="componentData">
   <tbody>
     <tr>
-      <th>ID</th>
-      {% for environment in component.environments %}
-      <td>{{ environment.id }}</td>
-      {% endfor %}
+      <th>Description</th>
+      <td>{{ component.description }}</td>
     </tr>
     <tr>
-      <th>Name</th>
-      {% for environment in component.environments %}
-      <td><a href="{{ environment.url }}">{{ environment.name }}</a></td>
-      {% endfor %}
+      <th>Title</th>
+      <td>{{ component.title }}</td>
     </tr>
     <tr>
-      <th>Namespace</th>
-      {% for environment in component.environments %}
-      <td>{{ environment.namespace }}</td>
-      {% endfor %}
+      <th>Jira Project Keys</th>
+      <td>{{ component.jiraProjectKeys }}</td>
     </tr>
     <tr>
-      <th>Info</th>
-      {% for environment in component.environments %}
-      <td>{{ environment.info_path }}</td>
-      {% endfor %}
+      <th>GitHub Write</th>
+      <td>{{ component.githubWrite }}</td>
     </tr>
     <tr>
-      <th>Health</th>
-      {% for environment in component.environments %}
-      <td>{{ environment.health_path }}</td>
-      {% endfor %}
+      <th>GitHub Admin</th>
+      <td>{{ component.githubAdmin }}</td>
     </tr>
     <tr>
-      <th>Cluster</th>
-      {% for environment in component.environments %}
-      <td>{{ environment.cluster }}</td>
-      {% endfor %}
+      <th>GitHub Restricted</th>
+      <td>{{ component.githubRestricted }}</td>
     </tr>
     <tr>
-      <th>Version</th>
-      {% for environment in component.environments %}
-      <td id="{{ environment.name }}_version"></td>
-      {% endfor %}
+      <th>GitHub Repo</th>
+      <td>{{ component.githubRepo }}</td>
     </tr>
     <tr>
-      <th>Status</th>
-      {% for environment in component.environments %}
-      <td id="{{ environment.name }}_status"></td>
-      {% endfor %}
+      <th>GitHub Visibility</th>
+      <td>{{ component.githubVisibility }}</td>
+    </tr>
+    <tr>
+      <th>App Insights Cloud Role Name</th>
+      <td>{{ component.appInsightsName }}</td>
+    </tr>
+    <tr>
+      <th>API</th>
+      <td>{% if component.api %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr>
+      <th>Frontend</th>
+      <td>{% if component.frontend %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr>
+      <th>Part of monorepo</th>
+      <td>{% if component.partOfMonorepo %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr>
+      <th>Language</th>
+      <td>{{ component.language }}</td>
+    </tr>
+    <tr>
+      <th>Product</th>
+      <td><a href="/products/{{ component.product.id }}">{{ component.product.attributes.name }}</a></td>
+    </tr>
+    <tr>
+      <th>Environments</th>
+      <td>
+        {% if component.environments | length %}
+        <table>
+          <tbody>
+            <tr>
+              <th>ID</th>
+              {% for environment in component.environments %}
+              <td>{{ environment.id }}</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <th>Name</th>
+              {% for environment in component.environments %}
+              <td><a href="{{ environment.url }}">{{ environment.name }}</a></td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <th>Namespace</th>
+              {% for environment in component.environments %}
+              <td>{{ environment.namespace }}</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <th>Info</th>
+              {% for environment in component.environments %}
+              <td>{{ environment.info_path }}</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <th>Health</th>
+              {% for environment in component.environments %}
+              <td>{{ environment.health_path }}</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <th>Cluster</th>
+              {% for environment in component.environments %}
+              <td>{{ environment.cluster }}</td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <th>Version</th>
+              {% for environment in component.environments %}
+              <td id="{{ environment.name }}_version"></td>
+              {% endfor %}
+            </tr>
+            <tr>
+              <th>Status</th>
+              {% for environment in component.environments %}
+              <td id="{{ environment.name }}_status"></td>
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+        {% else %}
+        <p>None</p>
+        {% endif %}
+      </td>
     </tr>
   </tbody>
 </table>
-{% else %}
-<p>None</p>
-{% endif %}
 
 {% endblock %}
 
