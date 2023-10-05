@@ -29,17 +29,26 @@
 
 .monitor-selectors {
   align-items: flex-end;
+
+  &.govuk-button-group .govuk-button {
+    margin-bottom: 2px;
+    margin-left: govuk-spacing(1);
+  }
+
+  & .govuk-form-group {
+    margin-bottom: 0;
+    width: 20%;
+  }
 }
 
-.govuk-form-group {
-  margin-bottom: 0;
+.govuk-checkboxes--inline:after {
+  content: "";
+  display: block;
+  clear: both;
 }
 
-.govuk-button-group .govuk-button {
-  margin-bottom: 2px;
-  margin-left: govuk-spacing(1);
-}
-
-.govuk-form-group {
-  width: 20%;
+.govuk-checkboxes--inline .govuk-checkboxes__item {
+  margin-right: 20px;
+  float: left;
+  clear: none;
 }
