@@ -1,6 +1,7 @@
 {% extends "../partials/layout.njk" %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% set pageTitle = applicationName + " - Monitor" %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -39,7 +40,7 @@
     <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
     <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-    <div class="govuk-button-group monitor-selectors">
+    <div class="monitor-selectors govuk-button-group">
     {{ govukSelect({
       id: "serviceArea",
       name: "serviceArea",
@@ -83,6 +84,36 @@
       element: "button"
     }) }}
     </div>
+    {{ govukCheckboxes({
+      classes: "govuk-checkboxes--inline environments",
+      name: "environment",
+      items: [
+        {
+          id: "environment-dev",
+          value: "dev",
+          text: "Dev",
+          checked: true
+        },
+        {
+          id: "environment-staging",
+          value: "staging",
+          text: "Staging",
+          checked: true
+        },
+        {
+          id: "environment-preprod",
+          value: "preprod",
+          text: "PreProd",
+          checked: true
+        },
+        {
+          id: "environment-prod",
+          value: "prod",
+          text: "Prod",
+          checked: true
+        }
+      ]
+    }) }}
   </form>
 
   <table id="statusTable">
@@ -98,7 +129,6 @@
     <tbody id="statusRows">
     </tbody>
   </table>
-
 
 {% endblock %}
 

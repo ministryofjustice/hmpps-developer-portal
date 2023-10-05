@@ -9,6 +9,7 @@ jQuery(async function () {
     const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? '0' : dropDownTypeIdValue
 
     await populateComponentTable(monitorType, dropDownTypeId)
+    updateEnvironmentList()
   }
 
   $('#updateProduct,#updateTeam,#updateServiceArea').on('click', async e => {
@@ -23,8 +24,11 @@ jQuery(async function () {
       case 'updateTeam':
         dropDownType = 'team'
         break
-      default:
+      case 'updateServiceArea':
         dropDownType = 'serviceArea'
+        break
+      default:
+        return false
     }
 
     const dropDownText = $(`#${dropDownType} option:selected`).text()
@@ -34,8 +38,30 @@ jQuery(async function () {
     history.pushState({ info: 'dropdown change' }, '', `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`)
 
     await populateComponentTable(dropDownType, dropDownTypeId)
+    updateEnvironmentList()
+  })
+
+  $('.environments .govuk-checkboxes__input').on('change', e => {
+    updateEnvironmentList()
   })
 })
+
+function updateEnvironmentList() {
+  const validEnvironments = ['prod', 'preprod', 'staging', 'stage', 'dev']
+
+  $(`.${validEnvironments.join(',.')}`).show()
+  $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
+    const environment = $(e).val()
+
+    if (validEnvironments.includes(environment)) {
+      $(`.${environment}`).hide()
+
+      if (environment === 'staging') {
+        $('.stage').hide()
+      }
+    }
+  })
+}
 
 const watch = async () => {
   await fetchMessages(lastIds)
@@ -140,7 +166,7 @@ async function populateComponentTable(type, id) {
         data[`info:${component.name}:${environment.name}`] = ''
         data[`version:${component.name}:${environment.name}`] = ''
         $('#statusRows')
-          .append(`<tr data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}">
+          .append(`<tr data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}" class="${environment.name}">
             <td><a href="/components/${component.id}" class="statusTileName">${component.name}</a></td>
             <td class="statusTileEnvironment">${environment.name}</td>
             <td class="statusTileBuild"></td>

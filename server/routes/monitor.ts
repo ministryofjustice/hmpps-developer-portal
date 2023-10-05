@@ -46,6 +46,10 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       }
     })
 
+    serviceAreaList.unshift({ value: 0, text: '', selected: false })
+    teamList.unshift({ value: 0, text: '', selected: false })
+    productList.unshift({ value: 0, text: '', selected: false })
+
     return res.render('pages/monitor', {
       serviceAreaList,
       teamList,
