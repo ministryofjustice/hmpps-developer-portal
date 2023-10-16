@@ -15,9 +15,9 @@ import {
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
 
-  async getProducts(productIds?: number[]): Promise<ProductListResponseDataItem[]> {
+  async getProducts(productIds?: number[], withEnvironments?: boolean): Promise<ProductListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const productData = await strapiApiClient.getProducts(productIds)
+    const productData = await strapiApiClient.getProducts(productIds, withEnvironments)
 
     const products = productData.data.sort(sortData)
 
