@@ -4,10 +4,10 @@ import type { Services } from '../services'
 import logger from '../../logger'
 import { Environment } from '../data/strapiApiTypes'
 
-type MonitorComponent = {
-  id: number
-  name: string
-  environments: Environment[]
+type MonitorEnvironment = {
+  componentId: number
+  componentName: string
+  environmentName: string
 }
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
@@ -61,62 +61,76 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   get('/components/:monitorType/:monitorId?', async (req, res) => {
     const monitorType = getMonitorType(req)
     const monitorId = getMonitorId(req)
-    let components: MonitorComponent[] = []
+    const environments: MonitorEnvironment[] = []
 
     if (monitorType === 'all') {
       const products = await serviceCatalogueService.getProducts(null, true)
-      components = products.reduce((componentList, product) => {
-        return componentList.concat(
-          product.attributes.components.data.map((component): MonitorComponent => {
-            return {
-              id: component.id as number,
-              name: component.attributes.name as string,
-              environments: component.attributes.environments as Environment[],
-            }
-          }),
-        )
-      }, [])
+
+      products.forEach(product => {
+        product.attributes.components.data.forEach(component => {
+          const typedEnvironments = component.attributes.environments as Environment[]
+
+          typedEnvironments.forEach(environment => {
+            environments.push({
+              componentId: component.id as number,
+              componentName: component.attributes.name as string,
+              environmentName: environment.name as string,
+            })
+          })
+        })
+      })
     }
     if (monitorType === 'product') {
       const product = await serviceCatalogueService.getProduct(monitorId, true)
-      components = product.components.data.map((component): MonitorComponent => {
-        return {
-          id: component.id as number,
-          name: component.attributes.name as string,
-          environments: component.attributes.environments as Environment[],
-        }
+
+      product.components.data.forEach(component => {
+        const typedEnvironments = component.attributes.environments as Environment[]
+
+        typedEnvironments.forEach(environment => {
+          environments.push({
+            componentId: component.id as number,
+            componentName: component.attributes.name as string,
+            environmentName: environment.name as string,
+          })
+        })
       })
     }
     if (monitorType === 'team') {
       const team = await serviceCatalogueService.getTeam(monitorId, true)
-      components = team.products.data
-        .map(product => {
-          return product.attributes.components.data.map(component => {
-            return {
-              id: component.id,
-              name: component.attributes.name,
-              environments: component.attributes.environments,
-            }
+
+      team.products.data.forEach(product => {
+        product.attributes.components.data.forEach(component => {
+          const typedEnvironments = component.attributes.environments as Environment[]
+
+          typedEnvironments.forEach(environment => {
+            environments.push({
+              componentId: component.id as number,
+              componentName: component.attributes.name as string,
+              environmentName: environment.name as string,
+            })
           })
         })
-        .flat()
+      })
     }
     if (monitorType === 'serviceArea') {
       const serviceArea = await serviceCatalogueService.getServiceArea(monitorId, true)
-      components = serviceArea.products.data
-        .map(product => {
-          return product.attributes.components.data.map(component => {
-            return {
-              id: component.id,
-              name: component.attributes.name,
-              environments: component.attributes.environments,
-            }
+
+      serviceArea.products.data.forEach(product => {
+        product.attributes.components.data.forEach(component => {
+          const typedEnvironments = component.attributes.environments as Environment[]
+
+          typedEnvironments.forEach(environment => {
+            environments.push({
+              componentId: component.id as number,
+              componentName: component.attributes.name as string,
+              environmentName: environment.name as string,
+            })
           })
         })
-        .flat()
+      })
     }
 
-    return res.json(components)
+    return res.json(environments)
   })
 
   post('/queue', async (req, res) => {

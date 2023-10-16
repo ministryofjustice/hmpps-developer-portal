@@ -6,7 +6,7 @@ jQuery(async function () {
 
   if (monitorType !== '') {
     const dropDownTypeIdValue = Number.parseInt($(`#${monitorType}`).val())
-    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? '0' : dropDownTypeIdValue
+    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
 
     await populateComponentTable(monitorType, dropDownTypeId)
     updateEnvironmentList()
@@ -158,29 +158,38 @@ async function populateComponentTable(type, id) {
     throw new Error('There was a problem fetching the component data')
   }
 
+  function sortEnvironments(environmentA, environmentB) {
+    if (environmentA.componentName < environmentB.componentName) {
+      return -1
+    } else if (environmentA.componentName > environmentB.componentName) {
+      return 1
+    }
+
+    return 0
+  }
+
   try {
     $('#statusRows').empty()
 
-    const components = await response.json()
+    const environments = await response.json()
 
-    components.forEach(component => {
-      component.environments.forEach(environment => {
-        lastIds[`health:${component.name}:${environment.name}`] = '0'
-        lastIds[`info:${component.name}:${environment.name}`] = '0'
-        lastIds[`version:${component.name}:${environment.name}`] = '0'
-        data[`health:${component.name}:${environment.name}`] = ''
-        data[`info:${component.name}:${environment.name}`] = ''
-        data[`version:${component.name}:${environment.name}`] = ''
-        $('#statusRows')
-          .append(`<tr data-test="tile-${component.id}" id="tile-${component.name}-${environment.name}" class="${environment.name}">
-            <td><a href="/components/${component.id}" class="statusTileName">${component.name}</a></td>
-            <td class="statusTileEnvironment">${environment.name}</td>
-            <td class="statusTileBuild"></td>
-            <td class="statusTileStatus"></td>
-            <td class="statusTileLastRefresh"></td>
-          </tr>`)
-      })
+    environments.sort(sortEnvironments).forEach(environment => {
+      lastIds[`health:${environment.componentName}:${environment.environmentName}`] = '0'
+      lastIds[`info:${environment.componentName}:${environment.environmentName}`] = '0'
+      lastIds[`version:${environment.componentName}:${environment.environmentName}`] = '0'
+      data[`health:${environment.componentName}:${environment.environmentName}`] = ''
+      data[`info:${environment.componentName}:${environment.environmentName}`] = ''
+      data[`version:${environment.componentName}:${environment.environmentName}`] = ''
+      $('#statusRows')
+        .append(`<tr data-test="tile-${environment.componentId}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentName}">
+          <td><a href="/components/${environment.componentId}" class="statusTileName">${environment.componentName}</a></td>
+          <td class="statusTileEnvironment">${environment.environmentName}</td>
+          <td class="statusTileBuild"></td>
+          <td class="statusTileStatus"></td>
+          <td class="statusTileLastRefresh"></td>
+        </tr>`)
     })
+
     watch()
   } catch (e) {
     console.error(e)
