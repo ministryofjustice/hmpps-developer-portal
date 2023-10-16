@@ -21,7 +21,14 @@ export default class StrapiApiClient {
     this.restClient = new RestClient('strapiApiClient', config.apis.serviceCatalogue as ApiConfig, '')
   }
 
-  async getProducts(productIds?: number[]): Promise<ProductListResponse> {
+  async getProducts(productIds?: number[], withEnvironments?: boolean): Promise<ProductListResponse> {
+    const populate = ['product_set']
+
+    if (withEnvironments) {
+      populate.push('components')
+      populate.push('components.environments')
+    }
+
     const filters = productIds
       ? productIds.reduce((filterList, productId, index) => {
           return `&${filterList},filters[id][$in][${index}]=${productId}`
@@ -30,7 +37,7 @@ export default class StrapiApiClient {
 
     return this.restClient.get({
       path: '/v1/products',
-      query: `populate=product_set${filters}`,
+      query: `${new URLSearchParams({ populate: populate.join(',') }).toString()}${filters}`,
     })
   }
 
