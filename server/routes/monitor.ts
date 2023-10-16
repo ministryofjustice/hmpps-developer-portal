@@ -59,11 +59,25 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     })
   })
 
-  get('/components/:monitorType/:monitorId', async (req, res) => {
+  get('/components/:monitorType/:monitorId?', async (req, res) => {
     const monitorType = getMonitorType(req)
     const monitorId = getMonitorId(req)
     let components: MonitorComponent[] = []
 
+    if (monitorType === 'all') {
+      const products = await serviceCatalogueService.getProducts(null, true)
+      components = products.reduce((componentList, product) => {
+        return componentList.concat(
+          product.attributes.components.data.map((component): MonitorComponent => {
+            return {
+              id: component.id as number,
+              name: component.attributes.name as string,
+              environments: component.attributes.environments as Environment[],
+            }
+          }),
+        )
+      }, [])
+    }
     if (monitorType === 'product') {
       const product = await serviceCatalogueService.getProduct(monitorId, true)
       components = product.components.data.map((component): MonitorComponent => {
@@ -126,7 +140,7 @@ function getMonitorId(req: Request): string {
   const { monitorId } = req.params
 
   if (!Number.isInteger(Number.parseInt(monitorId, 10))) {
-    throw new BadRequest()
+    return '0'
   }
 
   return monitorId
@@ -135,7 +149,7 @@ function getMonitorId(req: Request): string {
 function getMonitorType(req: Request): string {
   const { monitorType } = req.params
 
-  return ['product', 'team', 'serviceArea'].includes(monitorType) ? monitorType : ''
+  return ['product', 'team', 'serviceArea'].includes(monitorType) ? monitorType : 'all'
 }
 
 function getMonitorName(req: Request): string {

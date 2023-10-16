@@ -33,9 +33,15 @@ jQuery(async function () {
 
     const dropDownText = $(`#${dropDownType} option:selected`).text()
     const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
-    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? '0' : dropDownTypeIdValue
+    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
+    let pushStateUrl = `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`
 
-    history.pushState({ info: 'dropdown change' }, '', `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`)
+    if (dropDownTypeId === 0) {
+      dropDownType = 'all'
+      pushStateUrl = '/monitor'
+    }
+
+    history.pushState({ info: 'dropdown change' }, '', pushStateUrl)
 
     await populateComponentTable(dropDownType, dropDownTypeId)
     updateEnvironmentList()
