@@ -21,7 +21,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
   get('/queue/:componentId/:environmentName/*', async (req, res) => {
     const componentId = getComponentId(req)
-    const { environmentName } = req.params
+    const environmentName = getEnvironmentName(req)
     const queueInformation = req.params[0]
     const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
 
@@ -115,4 +115,12 @@ function getEnvironmentId(req: Request): number {
   }
 
   return Number.parseInt(environmentId, 10)
+}
+
+function getEnvironmentName(req: Request): string {
+  const { environmentName } = req.params
+
+  return ['dev', 'development', 'staging', 'stage', 'preprod', 'prod', 'production'].includes(environmentName)
+    ? environmentName
+    : ''
 }
