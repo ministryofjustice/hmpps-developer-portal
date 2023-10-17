@@ -6,7 +6,7 @@ function cleanColumnOutput(data, type, row) {
 jQuery(function () {
   $('#productSetsTable').DataTable({
     paging: true,
-    order: [[0, 'asc']],
+    order: [[1, 'asc']],
     sortable: true,
     ajax: {
       url: '/product-sets/data',
@@ -17,6 +17,12 @@ jQuery(function () {
     },
 
     columns: [
+      {
+        data: 'attributes.ps_id',
+        createdCell: function (td, cellData, rowData) {
+          $(td).html(`<a href="/product-sets/${rowData.id}">${rowData.attributes.ps_id}</a>`)
+        },
+      },
       {
         data: 'attributes.name',
         createdCell: function (td, cellData, rowData) {
