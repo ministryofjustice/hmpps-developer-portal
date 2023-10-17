@@ -1,14 +1,9 @@
 {% extends "../partials/layout.njk" %}
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% set pageTitle = applicationName + " - " + component.name %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-{{ govukBackLink({
-  text: "Back",
-  href: "/components/" + component.id
-}) }}
 
 <h1 id="detailPageTitle">{{ component.name }} / {{ component.environment.name }}</h1>
 
