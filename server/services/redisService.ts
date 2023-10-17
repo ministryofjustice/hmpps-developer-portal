@@ -17,6 +17,7 @@ export default class RedisService {
     }[],
   ): Promise<string> {
     try {
+      console.log(streamDetails)
       const response = await this.redisClient.xRead(
         commandOptions({ isolated: true }), // uses new connection from pool not to block other redis calls
         streamDetails,
