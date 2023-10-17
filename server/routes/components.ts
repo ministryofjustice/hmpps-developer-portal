@@ -20,33 +20,29 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     return res.send(components)
   })
 
-  get('/queue/:componentId/*', async (req, res) => {
+  get('/queue/:componentId/:environmentName/*', async (req, res) => {
     const componentId = getComponentId(req)
+    const { environmentName } = req.params
     const queueInformation = req.params[0]
     const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
 
     logger.info(`Queue call for ${componentId} with ${queueInformation}`)
 
     const component = await serviceCatalogueService.getComponent(componentId)
-    const environments = component.environments?.map(environment => environment)
-    const streams = environments
-      ?.map((environment: Environment) => {
-        return [
-          {
-            key: `health:${component.name}:${environment.name}`,
-            id: queueParams[`h:${environment.name}`],
-          },
-          {
-            key: `info:${component.name}:${environment.name}`,
-            id: queueParams[`i:${environment.name}`],
-          },
-          {
-            key: `version:${component.name}:${environment.name}`,
-            id: queueParams[`v:${environment.name}`],
-          },
-        ]
-      })
-      .flat(2)
+    const streams = [
+      {
+        key: `health:${component.name}:${environmentName}`,
+        id: queueParams[`h:${environmentName}`],
+      },
+      {
+        key: `info:${component.name}:${environmentName}`,
+        id: queueParams[`i:${environmentName}`],
+      },
+      {
+        key: `version:${component.name}:${environmentName}`,
+        id: queueParams[`v:${environmentName}`],
+      },
+    ]
 
     const messages = await redisService.readStream(streams)
 
@@ -93,7 +89,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const displayComponent = {
       id: componentId,
       name: component.name,
-      environments,
+      environment: environments[0],
     }
 
     return res.render('pages/environment', { component: displayComponent })

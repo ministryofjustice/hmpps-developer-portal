@@ -10,57 +10,41 @@
   href: "/components/" + component.id
 }) }}
 
-<h1 id="detailPageTitle">{{ component.name }} / {{ component.environments[0].name }}</h1>
+<h1 id="detailPageTitle">{{ component.name }} / {{ component.environment.name }}</h1>
 
 <table class="componentData">
   <tbody>
     <tr>
       <th>ID</th>
-      {% for environment in component.environments %}
-      <td>{{ environment.id }}</td>
-      {% endfor %}
+      <td>{{ component.environment.id }}</td>
     </tr>
     <tr>
       <th>Name</th>
-      {% for environment in component.environments %}
-      <td><a href="{{ environment.url }}">{{ environment.name }}</a></td>
-      {% endfor %}
+      <td><a href="{{ component.environment.url }}">{{ component.environment.name }}</a></td>
     </tr>
     <tr>
       <th>Namespace</th>
-      {% for environment in component.environments %}
-      <td>{{ environment.namespace }}</td>
-      {% endfor %}
+      <td>{{ component.environment.namespace }}</td>
     </tr>
     <tr>
       <th>Info</th>
-      {% for environment in component.environments %}
-      <td>{{ environment.info_path }}</td>
-      {% endfor %}
+      <td>{{ component.environment.info_path }}</td>
     </tr>
     <tr>
       <th>Health</th>
-      {% for environment in component.environments %}
-      <td>{{ environment.health_path }}</td>
-      {% endfor %}
+      <td>{{ component.environment.health_path }}</td>
     </tr>
     <tr>
       <th>Cluster</th>
-      {% for environment in component.environments %}
-      <td>{{ environment.cluster }}</td>
-      {% endfor %}
+      <td>{{ component.environment.cluster }}</td>
     </tr>
     <tr>
       <th>Version</th>
-      {% for environment in component.environments %}
-      <td id="{{ environment.name }}_version"></td>
-      {% endfor %}
+      <td id="{{ component.environment.name }}_version"></td>
     </tr>
     <tr>
       <th>Status</th>
-      {% for environment in component.environments %}
-      <td id="{{ environment.name }}_status"></td>
-      {% endfor %}
+      <td id="{{ component.environment.name }}_status"></td>
     </tr>
   </tbody>
 </table>
@@ -75,18 +59,16 @@
   <script nonce="{{ cspNonce }}">
     const lastIds = {}
     const data = {}
-    {% for environment in component.environments -%}
-    lastIds['h:{{ environment.name }}'] = '0'
-    lastIds['i:{{ environment.name }}'] = '0'
-    lastIds['v:{{ environment.name }}'] = '0'
-    data['h:{{ environment.name }}'] = ''
-    data['i:{{ environment.name }}'] = ''
-    data['v:{{ environment.name }}'] = ''
-    {% endfor -%}
+    lastIds['h:{{ component.environment.name }}'] = '0'
+    lastIds['i:{{ component.environment.name }}'] = '0'
+    lastIds['v:{{ component.environment.name }}'] = '0'
+    data['h:{{ component.environment.name }}'] = ''
+    data['i:{{ component.environment.name }}'] = ''
+    data['v:{{ component.environment.name }}'] = ''
 
     const fetchMessages = async (queryStringOptions) => {
       const queryString = new URLSearchParams(queryStringOptions).toString()
-      const response = await fetch(`/components/queue/{{ component.id }}/${queryString}`)
+      const response = await fetch(`/components/queue/{{ component.id }}/{{ component.environment.name }}/${queryString}`)
 
       if (!response.ok) {
         throw new Error('There was a problem fetching the component data')
