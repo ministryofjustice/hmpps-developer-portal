@@ -2,7 +2,6 @@ import { type RequestHandler, type Request, Router } from 'express'
 import { BadRequest } from 'http-errors'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import type { Environment } from '../data/strapiApiTypes'
 import logger from '../../logger'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
@@ -20,33 +19,29 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     return res.send(components)
   })
 
-  get('/queue/:componentId/*', async (req, res) => {
+  get('/queue/:componentId/:environmentName/*', async (req, res) => {
     const componentId = getComponentId(req)
+    const environmentName = getEnvironmentName(req)
     const queueInformation = req.params[0]
     const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
 
     logger.info(`Queue call for ${componentId} with ${queueInformation}`)
 
     const component = await serviceCatalogueService.getComponent(componentId)
-    const environments = component.environments?.map(environment => environment)
-    const streams = environments
-      ?.map((environment: Environment) => {
-        return [
-          {
-            key: `health:${component.name}:${environment.name}`,
-            id: queueParams[`h:${environment.name}`],
-          },
-          {
-            key: `info:${component.name}:${environment.name}`,
-            id: queueParams[`i:${environment.name}`],
-          },
-          {
-            key: `version:${component.name}:${environment.name}`,
-            id: queueParams[`v:${environment.name}`],
-          },
-        ]
-      })
-      .flat(2)
+    const streams = [
+      {
+        key: `health:${component.name}:${environmentName}`,
+        id: queueParams[`h:${environmentName}`],
+      },
+      {
+        key: `info:${component.name}:${environmentName}`,
+        id: queueParams[`i:${environmentName}`],
+      },
+      {
+        key: `version:${component.name}:${environmentName}`,
+        id: queueParams[`v:${environmentName}`],
+      },
+    ]
 
     const messages = await redisService.readStream(streams)
 
@@ -83,6 +78,22 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     return res.render('pages/component', { component: displayComponent })
   })
 
+  get('/:componentId/environment/:environmentId', async (req, res) => {
+    const componentId = getComponentId(req)
+    const environmentId = getEnvironmentId(req)
+
+    const component = await serviceCatalogueService.getComponent(componentId)
+    const environments = component.environments?.filter(environment => environment.id === environmentId)
+
+    const displayComponent = {
+      id: componentId,
+      name: component.name,
+      environment: environments[0],
+    }
+
+    return res.render('pages/environment', { component: displayComponent })
+  })
+
   return router
 }
 
@@ -94,4 +105,22 @@ function getComponentId(req: Request): string {
   }
 
   return componentId
+}
+
+function getEnvironmentId(req: Request): number {
+  const { environmentId } = req.params
+
+  if (!Number.isInteger(Number.parseInt(environmentId, 10))) {
+    throw new BadRequest()
+  }
+
+  return Number.parseInt(environmentId, 10)
+}
+
+function getEnvironmentName(req: Request): string {
+  const { environmentName } = req.params
+
+  return ['dev', 'development', 'staging', 'stage', 'preprod', 'prod', 'production'].includes(environmentName)
+    ? environmentName
+    : ''
 }
