@@ -83,6 +83,22 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     return res.render('pages/component', { component: displayComponent })
   })
 
+  get('/:componentId/environment/:environmentId', async (req, res) => {
+    const componentId = getComponentId(req)
+    const environmentId = getEnvironmentId(req)
+
+    const component = await serviceCatalogueService.getComponent(componentId)
+    const environments = component.environments?.filter(environment => environment.id === environmentId)
+
+    const displayComponent = {
+      id: componentId,
+      name: component.name,
+      environments,
+    }
+
+    return res.render('pages/environment', { component: displayComponent })
+  })
+
   return router
 }
 
@@ -94,4 +110,14 @@ function getComponentId(req: Request): string {
   }
 
   return componentId
+}
+
+function getEnvironmentId(req: Request): number {
+  const { environmentId } = req.params
+
+  if (!Number.isInteger(Number.parseInt(environmentId, 10))) {
+    throw new BadRequest()
+  }
+
+  return Number.parseInt(environmentId, 10)
 }
