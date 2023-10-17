@@ -70,19 +70,19 @@
       <td>
         {% if component.environments | length %}
         <table>
-          <tbody>
+          <thead>
             <tr>
               <th>ID</th>
-              {% for environment in component.environments %}
-              <td>{{ environment.id }}</td>
-              {% endfor %}
-            </tr>
-            <tr>
               <th>Name</th>
-              {% for environment in component.environments %}
-              <td><a href="/components/{{ component.id }}/environment/{{ environment.id }}">{{ environment.name }}</a></td>
-              {% endfor %}
             </tr>
+          </thead>
+          <tbody>
+            {% for environment in component.environments %}
+            <tr>
+              <td>{{ environment.id }}</td>
+              <td><a href="/components/{{ component.id }}/environment/{{ environment.id }}">{{ environment.name }}</a></td>
+            </tr>
+            {% endfor %}
           </tbody>
         </table>
         {% else %}
