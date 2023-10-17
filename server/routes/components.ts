@@ -2,7 +2,6 @@ import { type RequestHandler, type Request, Router } from 'express'
 import { BadRequest } from 'http-errors'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import type { Environment } from '../data/strapiApiTypes'
 import logger from '../../logger'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
