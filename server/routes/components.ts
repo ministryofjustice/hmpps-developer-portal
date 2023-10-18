@@ -104,7 +104,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       environments,
       environmentNames,
     }
-    console.log(displayComponent)
+
     return res.render('pages/component', { component: displayComponent })
   })
 
