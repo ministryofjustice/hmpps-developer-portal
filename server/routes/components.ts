@@ -8,9 +8,38 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
     return res.render('pages/components')
+  })
+
+  get('/dependencies', async (req, res) => {
+    return res.render('pages/dependencies')
+  })
+
+  post('/dependencies', async (req, res) => {
+    // hardwired for now
+    const dependencyType = 'helm'
+    const dependencyName = getDependencyName(req)
+    const components = await serviceCatalogueService.getComponents()
+
+    const displayComponents = components
+      .filter(component => {
+        return (
+          component.attributes?.versions &&
+          component.attributes?.versions[dependencyType] &&
+          component.attributes?.versions[dependencyType].dependencies[dependencyName]
+        )
+      })
+      .map(component => {
+        return {
+          componentName: component.attributes.name,
+          dependencyVersion: component.attributes?.versions[dependencyType]?.dependencies[dependencyName],
+        }
+      })
+
+    return res.render('pages/dependencies', { components: displayComponents, dependencyType, dependencyName })
   })
 
   get('/data', async (req, res) => {
@@ -71,10 +100,11 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       partOfMonorepo: component.part_of_monorepo,
       language: component.language,
       product: component.product?.data,
+      versions: component.versions,
       environments,
       environmentNames,
     }
-
+    console.log(displayComponent)
     return res.render('pages/component', { component: displayComponent })
   })
 
@@ -123,4 +153,10 @@ function getEnvironmentName(req: Request): string {
   return ['dev', 'development', 'staging', 'stage', 'preprod', 'prod', 'production'].includes(environmentName)
     ? environmentName
     : ''
+}
+
+function getDependencyName(req: Request): string {
+  const { helm } = req.body
+
+  return helm.replace(/[^-a-z0-9]/g, '')
 }
