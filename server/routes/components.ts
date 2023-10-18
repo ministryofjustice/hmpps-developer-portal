@@ -19,6 +19,18 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   })
 
   post('/dependencies', async (req, res) => {
+    const dependencyName = getDependencyNamePost(req)
+
+    return res.render('pages/dependencies', { dependencyName })
+  })
+
+  get('/data', async (req, res) => {
+    const components = await serviceCatalogueService.getComponents()
+
+    return res.send(components)
+  })
+
+  get('/dependencies/data/:dependencyName', async (req, res) => {
     // hardwired for now
     const dependencyType = 'helm'
     const dependencyName = getDependencyName(req)
@@ -34,18 +46,13 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       })
       .map(component => {
         return {
+          id: component.id,
           componentName: component.attributes.name,
           dependencyVersion: component.attributes?.versions[dependencyType]?.dependencies[dependencyName],
         }
       })
 
-    return res.render('pages/dependencies', { components: displayComponents, dependencyType, dependencyName })
-  })
-
-  get('/data', async (req, res) => {
-    const components = await serviceCatalogueService.getComponents()
-
-    return res.send(components)
+    return res.send(displayComponents)
   })
 
   get('/queue/:componentId/:environmentName/*', async (req, res) => {
@@ -156,7 +163,13 @@ function getEnvironmentName(req: Request): string {
 }
 
 function getDependencyName(req: Request): string {
-  const { helm } = req.body
+  const { dependencyName } = req.params
 
-  return helm.replace(/[^-a-z0-9]/g, '')
+  return dependencyName.replace(/[^-a-z0-9]/g, '')
+}
+
+function getDependencyNamePost(req: Request): string {
+  const { dependencyName } = req.body
+
+  return dependencyName.replace(/[^-a-z0-9]/g, '')
 }

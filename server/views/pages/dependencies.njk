@@ -12,8 +12,8 @@
   <form method="POST" action="/components/dependencies">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
     {{ govukSelect({
-      id: "helm",
-      name: "helm",
+      id: "dependencyName",
+      name: "dependencyName",
       label: {
         text: "Helm"
       },
@@ -24,7 +24,13 @@
         },
         {
           value: "generic-service",
-          text: "generic-service"
+          text: "generic-service",
+          selected: dependencyName == "generic-service"
+        },
+        {
+          value: "generic-prometheus-alerts",
+          text: "generic-prometheus-alerts",
+          selected: dependencyName == "generic-prometheus-alerts"
         }
       ]
     }) }}
@@ -36,27 +42,28 @@
     }) }}
   </form>
 
-  <table class="componentData">
+  {% if dependencyName|length %}
+  <table class="stripe" id="dependenciesTable">
     <thead>
       <tr>
         <th>Component</th>
         <th>Version</th>
       </tr>
     </thead>
-    <tbody>
-    {% for component in components %}
-      <tr>
-        <td>{{ component.componentName }}</td>
-        <td>{{ component.dependencyVersion }}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
   </table>
+  {% endif %}
 
 {% endblock %}
 
 {% block bodyEnd %}
+  <script nonce="{{ cspNonce }}">
+    const dependencyName = '{{ dependencyName }}'
+  </script>
   <script src="/assets/govuk/all.js"></script>
   <script src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
+
+  {% if dependencyName|length %}
+  <script src="/assets/js/dependenciesTable.js"></script>
+  {% endif %}
 {% endblock %}
