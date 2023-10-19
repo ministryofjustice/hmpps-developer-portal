@@ -107,7 +107,7 @@
                   if (health.hasOwnProperty('status')) {
                     status = health.status
                   } else {
-                    status = health.healthy
+                    status = health.healthy === true ? 'UP' : 'DOWN'
                   }
                 } catch (e) {
                   console.error('Error parsing JSON data')
