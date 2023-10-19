@@ -15,14 +15,14 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   })
 
   get('/dependencies', async (req, res) => {
-    const dropDownItems = await getDropDownOptions(serviceCatalogueService)
+    const dropDownItems = await getDropDownOptions(serviceCatalogueService, '')
 
     return res.render('pages/dependencies', { dropDownItems })
   })
 
   post('/dependencies', async (req, res) => {
     const { dependencyType, dependencyName } = getDependencyData(req)
-    const dropDownItems = await getDropDownOptions(serviceCatalogueService)
+    const dropDownItems = await getDropDownOptions(serviceCatalogueService, `${dependencyType}::${dependencyName}`)
 
     return res.render('pages/dependencies', { dependencyType, dependencyName, dropDownItems })
   })
@@ -212,7 +212,7 @@ function getDependencyData(req: Request) {
   }
 }
 
-async function getDropDownOptions(serviceCatalogueService: ServiceCatalogueService) {
+async function getDropDownOptions(serviceCatalogueService: ServiceCatalogueService, currentDependency: string) {
   const dependencies = await serviceCatalogueService.getDependencies()
 
   const dropDownItems = dependencies.map(dependency => {
@@ -221,12 +221,14 @@ async function getDropDownOptions(serviceCatalogueService: ServiceCatalogueServi
     return {
       value: dependency,
       text: `${parts[0]}: ${parts[1]}`,
+      selected: dependency === currentDependency,
     }
   })
 
   dropDownItems.unshift({
     value: '',
     text: 'Please select',
+    selected: false,
   })
 
   return dropDownItems
