@@ -28,13 +28,13 @@
     {% if component.environment.info_path|length %}
     <tr>
       <th>Info</th>
-      <td><a href="{{ component.environment.url }}{{ component.environment.info_path }}">{{ component.environment.info_path }}</a></td>
+      <td><a href="{{ component.environment.url }}{{ component.environment.info_path }}" target="_blank">{{ component.environment.info_path }}</a> (opens in new window)</td>
     </tr>
     {% endif %}
     {% if component.environment.health_path|length %}
     <tr>
       <th>Health</th>
-      <td><a href="{{ component.environment.url }}{{ component.environment.health_path }}">{{ component.environment.health_path }}</a></td>
+      <td><a href="{{ component.environment.url }}{{ component.environment.health_path }}" target="_blank">{{ component.environment.health_path }}</a> (opens in new window)</td>
     </tr>
     {% endif %}
     <tr>
