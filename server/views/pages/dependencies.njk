@@ -12,27 +12,9 @@
   <form method="POST" action="/components/dependencies">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
     {{ govukSelect({
-      id: "dependencyName",
-      name: "dependencyName",
-      label: {
-        text: "Helm"
-      },
-      items: [
-        {
-          value: "",
-          text: "Please select"
-        },
-        {
-          value: "generic-service",
-          text: "generic-service",
-          selected: dependencyName == "generic-service"
-        },
-        {
-          value: "generic-prometheus-alerts",
-          text: "generic-prometheus-alerts",
-          selected: dependencyName == "generic-prometheus-alerts"
-        }
-      ]
+      id: "dependencyData",
+      name: "dependencyData",
+      items: dropDownItems
     }) }}
     {{ govukButton({
       id: "selectHelm",
@@ -58,6 +40,7 @@
 {% block bodyEnd %}
   <script nonce="{{ cspNonce }}">
     const dependencyName = '{{ dependencyName }}'
+    const dependencyType = '{{ dependencyType }}'
   </script>
   <script src="/assets/govuk/all.js"></script>
   <script src="/assets/govukFrontendInit.js"></script>

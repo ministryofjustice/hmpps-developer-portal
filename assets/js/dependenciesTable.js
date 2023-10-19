@@ -4,6 +4,7 @@ function cleanColumnOutput(data, type, row) {
 }
 
 jQuery(function () {
+  const dataDependencyType = dependencyType || 'helm'
   const dataDependencyName = dependencyName || 'generic-service'
 
   $('#dependenciesTable').DataTable({
@@ -11,7 +12,7 @@ jQuery(function () {
     order: [[1, 'asc']],
     sortable: true,
     ajax: {
-      url: `/components/dependencies/data/${dataDependencyName}`,
+      url: `/components/dependencies/data/${dataDependencyType}/${dataDependencyName}`,
       dataSrc: '',
       error: function (response) {
         alert('An error occurred when loading teams.') // eslint-disable-line no-undef
