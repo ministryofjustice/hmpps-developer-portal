@@ -1,7 +1,7 @@
 import { type RequestHandler, type Request, Router } from 'express'
 import { BadRequest } from 'http-errors'
 import asyncMiddleware from '../middleware/asyncMiddleware'
-import type { Services } from '../services'
+import type { ServiceCatalogueService, Services } from '../services'
 import logger from '../../logger'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
@@ -15,24 +15,16 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   })
 
   get('/dependencies', async (req, res) => {
-    // const dependencies = await serviceCatalogueService.getDependencies()
-    // const dropDownItems = dependencies.map(dependency => {
-    //   const parts = dependency.split('::')
+    const dropDownItems = await getDropDownOptions(serviceCatalogueService)
 
-    //   return {
-    //     value: dependency,
-    //     text: parts[1],
-    //   }
-    // })
-
-    // console.log(dependencies)
-    return res.render('pages/dependencies')
+    return res.render('pages/dependencies', { dropDownItems })
   })
 
   post('/dependencies', async (req, res) => {
-    const dependencyName = getDependencyNamePost(req)
+    const { dependencyType, dependencyName } = getDependencyData(req)
+    const dropDownItems = await getDropDownOptions(serviceCatalogueService)
 
-    return res.render('pages/dependencies', { dependencyName })
+    return res.render('pages/dependencies', { dependencyType, dependencyName, dropDownItems })
   })
 
   get('/data', async (req, res) => {
@@ -41,25 +33,49 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     return res.send(components)
   })
 
-  get('/dependencies/data/:dependencyName', async (req, res) => {
-    // hardwired for now
-    const dependencyType = 'helm'
+  get('/dependencies/data/:dependencyType/:dependencyName', async (req, res) => {
+    const dependencyType = getDependencyType(req)
     const dependencyName = getDependencyName(req)
     const components = await serviceCatalogueService.getComponents()
 
     const displayComponents = components
       .filter(component => {
-        return (
-          component.attributes?.versions &&
-          component.attributes?.versions[dependencyType] &&
-          component.attributes?.versions[dependencyType].dependencies[dependencyName]
-        )
+        if (component.attributes?.versions && component.attributes?.versions[dependencyType]) {
+          switch (dependencyType) {
+            case 'helm':
+              return component.attributes.versions.helm.dependencies[dependencyName]
+            case 'circleci':
+              return component.attributes.versions.circleci.orbs[dependencyName]
+            case 'dockerfile':
+              return component.attributes.versions.dockerfile[dependencyName]
+            default:
+              return false
+          }
+        }
+
+        return false
       })
       .map(component => {
+        let dependencyVersion = ''
+
+        switch (dependencyType) {
+          case 'helm':
+            dependencyVersion = component.attributes.versions.helm.dependencies[dependencyName]
+            break
+          case 'circleci':
+            dependencyVersion = component.attributes.versions.circleci.orbs[dependencyName]
+            break
+          case 'dockerfile':
+            dependencyVersion = component.attributes.versions.dockerfile[dependencyName]
+            break
+          default:
+            dependencyVersion = 'N/A'
+        }
+
         return {
           id: component.id,
           componentName: component.attributes.name,
-          dependencyVersion: component.attributes?.versions[dependencyType]?.dependencies[dependencyName],
+          dependencyVersion,
         }
       })
 
@@ -176,11 +192,42 @@ function getEnvironmentName(req: Request): string {
 function getDependencyName(req: Request): string {
   const { dependencyName } = req.params
 
-  return dependencyName.replace(/[^-a-z0-9]/g, '')
+  return dependencyName.replace(/[^-a-z0-9_]/g, '')
 }
 
-function getDependencyNamePost(req: Request): string {
-  const { dependencyName } = req.body
+function getDependencyType(req: Request): string {
+  const { dependencyType } = req.params
 
-  return dependencyName.replace(/[^-a-z0-9]/g, '')
+  return ['helm', 'circleci', 'dockerfile'].includes(dependencyType) ? dependencyType : 'helm'
+}
+
+function getDependencyData(req: Request) {
+  const { dependencyData } = req.body
+
+  const parts = dependencyData.replace(/[^-a-z0-9:_]/g, '').split('::')
+
+  return {
+    dependencyType: parts[0],
+    dependencyName: parts[1],
+  }
+}
+
+async function getDropDownOptions(serviceCatalogueService: ServiceCatalogueService) {
+  const dependencies = await serviceCatalogueService.getDependencies()
+
+  const dropDownItems = dependencies.map(dependency => {
+    const parts = dependency.split('::')
+
+    return {
+      value: dependency,
+      text: `${parts[0]}: ${parts[1]}`,
+    }
+  })
+
+  dropDownItems.unshift({
+    value: '',
+    text: 'Please select',
+  })
+
+  return dropDownItems
 }

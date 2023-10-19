@@ -1,5 +1,4 @@
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-// import type { DependencyList } from '../@types'
 import {
   Product,
   Component,
@@ -11,8 +10,7 @@ import {
   ComponentListResponseDataItem,
   ServiceAreaListResponseDataItem,
   ProductSetListResponseDataItem,
-  // ComponentListResponse,
-  // ComponentResponse,
+  ComponentListResponse,
 } from '../data/strapiApiTypes'
 
 export default class ServiceCatalogueService {
@@ -36,33 +34,40 @@ export default class ServiceCatalogueService {
     return components
   }
 
-  // async getDependencies(): Promise<string[]> {
-  //   const strapiApiClient = this.strapiApiClientFactory('')
-  //   const componentData = (await strapiApiClient.getComponents()) as ComponentListResponse
-  //   const components = componentData.data.sort(sortData)
-  //   const dependencies: string[] = []
+  async getDependencies(): Promise<string[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const componentData = (await strapiApiClient.getComponents()) as ComponentListResponse
+    const components = componentData.data.sort(sortData)
+    const dependencies: string[] = []
 
-  //   components
-  //     .filter(component => component.attributes.versions)
-  //     .forEach(component => {
-  //       if (component.attributes.versions.helm) {
-  //         Object.keys(component.attributes.versions.helm.dependencies).forEach(dependency => {
-  //           if (!dependencies.includes(`helm::${dependency}`)) {
-  //             dependencies.push(`helm::${dependency}`)
-  //           }
-  //         })
-  //       }
-  //       if (component.attributes.versions.circleci) {
-  //         Object.keys(component.attributes.versions.circleci.orbs).forEach(orb => {
-  //           if (!dependencies.includes(`circleci::${orb}`)) {
-  //             dependencies.push(`circleci::${orb}`)
-  //           }
-  //         })
-  //       }
-  //     })
+    components
+      .filter(component => component.attributes.versions)
+      .forEach(component => {
+        if (component.attributes.versions.helm) {
+          Object.keys(component.attributes.versions.helm.dependencies).forEach(dependency => {
+            if (!dependencies.includes(`helm::${dependency}`)) {
+              dependencies.push(`helm::${dependency}`)
+            }
+          })
+        }
+        if (component.attributes.versions.circleci) {
+          Object.keys(component.attributes.versions.circleci.orbs).forEach(orb => {
+            if (!dependencies.includes(`circleci::${orb}`)) {
+              dependencies.push(`circleci::${orb}`)
+            }
+          })
+        }
+        if (component.attributes.versions.dockerfile) {
+          Object.keys(component.attributes.versions.dockerfile).forEach(dockerfile => {
+            if (!dependencies.includes(`dockerfile::${dockerfile}`)) {
+              dependencies.push(`dockerfile::${dockerfile}`)
+            }
+          })
+        }
+      })
 
-  //   return dependencies.sort()
-  // }
+    return dependencies.sort()
+  }
 
   async getTeams(expandProperties?: { products: boolean }): Promise<TeamListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
