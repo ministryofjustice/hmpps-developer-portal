@@ -15,6 +15,17 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   })
 
   get('/dependencies', async (req, res) => {
+    // const dependencies = await serviceCatalogueService.getDependencies()
+    // const dropDownItems = dependencies.map(dependency => {
+    //   const parts = dependency.split('::')
+
+    //   return {
+    //     value: dependency,
+    //     text: parts[1],
+    //   }
+    // })
+
+    // console.log(dependencies)
     return res.render('pages/dependencies')
   })
 
