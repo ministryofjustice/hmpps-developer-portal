@@ -1064,7 +1064,15 @@ export interface components {
       include_in_subject_access_requests: boolean
       github_project_teams_maintain?: unknown
       github_topics?: unknown
-      versions?: unknown
+      versions?: {
+        helm?: {
+          dependencies?: { [key: string]: string }
+        }
+        circleci?: {
+          orbs?: { [key: string]: string }
+        }
+        dockerfile?: { [key: string]: string }
+      }
       container_image?: string
       /** Format: date-time */
       createdAt?: string
