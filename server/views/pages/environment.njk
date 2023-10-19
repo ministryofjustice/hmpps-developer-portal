@@ -18,17 +18,25 @@
       <td><a href="{{ component.environment.url }}">{{ component.environment.name }}</a></td>
     </tr>
     <tr>
+      <th>URL</th>
+      <td><a href="{{ component.environment.url }}">{{ component.environment.url }}</a></td>
+    </tr>
+    <tr>
       <th>Namespace</th>
       <td>{{ component.environment.namespace }}</td>
     </tr>
+    {% if component.environment.info_path|length %}
     <tr>
       <th>Info</th>
-      <td>{{ component.environment.info_path }}</td>
+      <td><a href="{{ component.environment.url }}{{ component.environment.info_path }}">{{ component.environment.info_path }}</a></td>
     </tr>
+    {% endif %}
+    {% if component.environment.health_path|length %}
     <tr>
       <th>Health</th>
-      <td>{{ component.environment.health_path }}</td>
+      <td><a href="{{ component.environment.url }}{{ component.environment.health_path }}">{{ component.environment.health_path }}</a></td>
     </tr>
+    {% endif %}
     <tr>
       <th>Cluster</th>
       <td>{{ component.environment.cluster }}</td>
