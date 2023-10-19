@@ -127,13 +127,13 @@ const fetchMessages = async streams => {
                 if (health.hasOwnProperty('status')) {
                   status = health.status
                 } else {
-                  status = health.healthy
+                  status = health.healthy === true ? 'UP' : 'DOWN'
                 }
 
                 $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
                 $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
 
-                const statusClass = status === true || status === 'UP' ? 'statusTileUp' : 'statusTileDown'
+                const statusClass = status === 'UP' ? 'statusTileUp' : 'statusTileDown'
 
                 $(`#tile-${component}-${environment}`).addClass(statusClass)
               }
