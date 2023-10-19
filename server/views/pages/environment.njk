@@ -23,20 +23,16 @@
     </tr>
     <tr>
       <th>Namespace</th>
-      <td>{{ component.environment.namespace }}</td>
+      <td><a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ component.environment.namespace }}" target="_blank">{{ component.environment.namespace }}</a> (opens in new window)</td>
     </tr>
-    {% if component.environment.info_path|length %}
     <tr>
       <th>Info</th>
-      <td><a href="{{ component.environment.url }}{{ component.environment.info_path }}" target="_blank">{{ component.environment.info_path }}</a> (opens in new window)</td>
+      <td>{% if component.environment.info_path|length %}<a href="{{ component.environment.url }}{{ component.environment.info_path }}" target="_blank">{{ component.environment.info_path }}</a> (opens in new window){% endif %}</td>
     </tr>
-    {% endif %}
-    {% if component.environment.health_path|length %}
     <tr>
       <th>Health</th>
-      <td><a href="{{ component.environment.url }}{{ component.environment.health_path }}" target="_blank">{{ component.environment.health_path }}</a> (opens in new window)</td>
+      <td>{% if component.environment.health_path|length %}<a href="{{ component.environment.url }}{{ component.environment.health_path }}" target="_blank">{{ component.environment.health_path }}</a> (opens in new window){% endif %}</td>
     </tr>
-    {% endif %}
     <tr>
       <th>Cluster</th>
       <td>{{ component.environment.cluster }}</td>
@@ -52,10 +48,6 @@
     <tr>
       <th>Cloud Platform Reports</th>
       <td><a href="https://reports.cloud-platform.service.justice.gov.uk/namespace/{{ component.environment.namespace }}" target="_blank">View</a> (opens in new window)</td>
-    </tr>
-    <tr>
-      <th>Cloud Platform Env</th>
-      <td><a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ component.environment.namespace }}" target="_blank">View</a> (opens in new window)</td>
     </tr>
   </tbody>
 </table>
