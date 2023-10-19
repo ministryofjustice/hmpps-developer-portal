@@ -9,5 +9,11 @@ generic-service:
     INGRESS_URL: "https://developer-portal.hmpps.service.justice.gov.uk"
     SERVICE_CATALOGUE_URL: "https://service-catalogue.hmpps.service.justice.gov.uk"
 
+  # Using the dev instance of redis for all health/info streams data.
+  namespace_secrets:
+    elasticache-redis-dev:
+      REDIS_HOST: "primary_endpoint_address"
+      REDIS_AUTH_TOKEN: "auth_token"
+
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service
