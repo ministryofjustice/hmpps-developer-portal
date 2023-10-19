@@ -8,15 +8,62 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
     return res.render('pages/components')
+  })
+
+  get('/dependencies', async (req, res) => {
+    // const dependencies = await serviceCatalogueService.getDependencies()
+    // const dropDownItems = dependencies.map(dependency => {
+    //   const parts = dependency.split('::')
+
+    //   return {
+    //     value: dependency,
+    //     text: parts[1],
+    //   }
+    // })
+
+    // console.log(dependencies)
+    return res.render('pages/dependencies')
+  })
+
+  post('/dependencies', async (req, res) => {
+    const dependencyName = getDependencyNamePost(req)
+
+    return res.render('pages/dependencies', { dependencyName })
   })
 
   get('/data', async (req, res) => {
     const components = await serviceCatalogueService.getComponents()
 
     return res.send(components)
+  })
+
+  get('/dependencies/data/:dependencyName', async (req, res) => {
+    // hardwired for now
+    const dependencyType = 'helm'
+    const dependencyName = getDependencyName(req)
+    const components = await serviceCatalogueService.getComponents()
+
+    const displayComponents = components
+      .filter(component => {
+        return (
+          component.attributes?.versions &&
+          component.attributes?.versions[dependencyType] &&
+          component.attributes?.versions[dependencyType].dependencies[dependencyName]
+        )
+      })
+      .map(component => {
+        return {
+          id: component.id,
+          componentName: component.attributes.name,
+          dependencyVersion: component.attributes?.versions[dependencyType]?.dependencies[dependencyName],
+        }
+      })
+
+    return res.send(displayComponents)
   })
 
   get('/queue/:componentId/:environmentName/*', async (req, res) => {
@@ -71,6 +118,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       partOfMonorepo: component.part_of_monorepo,
       language: component.language,
       product: component.product?.data,
+      versions: component.versions,
       environments,
       environmentNames,
     }
@@ -123,4 +171,16 @@ function getEnvironmentName(req: Request): string {
   return ['dev', 'development', 'staging', 'stage', 'preprod', 'prod', 'production'].includes(environmentName)
     ? environmentName
     : ''
+}
+
+function getDependencyName(req: Request): string {
+  const { dependencyName } = req.params
+
+  return dependencyName.replace(/[^-a-z0-9]/g, '')
+}
+
+function getDependencyNamePost(req: Request): string {
+  const { dependencyName } = req.body
+
+  return dependencyName.replace(/[^-a-z0-9]/g, '')
 }

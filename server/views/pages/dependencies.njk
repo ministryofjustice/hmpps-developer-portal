@@ -1,0 +1,69 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% set pageTitle = applicationName + " - Monitor" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+  <h1>Dependencies</h1>
+
+  <form method="POST" action="/components/dependencies">
+    <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
+    {{ govukSelect({
+      id: "dependencyName",
+      name: "dependencyName",
+      label: {
+        text: "Helm"
+      },
+      items: [
+        {
+          value: "",
+          text: "Please select"
+        },
+        {
+          value: "generic-service",
+          text: "generic-service",
+          selected: dependencyName == "generic-service"
+        },
+        {
+          value: "generic-prometheus-alerts",
+          text: "generic-prometheus-alerts",
+          selected: dependencyName == "generic-prometheus-alerts"
+        }
+      ]
+    }) }}
+    {{ govukButton({
+      id: "selectHelm",
+      name: "selectHelm",
+      text: "Update",
+      element: "button"
+    }) }}
+  </form>
+
+  {% if dependencyName|length %}
+  <table class="stripe" id="dependenciesTable">
+    <thead>
+      <tr>
+        <th>Component</th>
+        <th>Version</th>
+      </tr>
+    </thead>
+  </table>
+  {% endif %}
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script nonce="{{ cspNonce }}">
+    const dependencyName = '{{ dependencyName }}'
+  </script>
+  <script src="/assets/govuk/all.js"></script>
+  <script src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+
+  {% if dependencyName|length %}
+  <script src="/assets/js/dependenciesTable.js"></script>
+  {% endif %}
+{% endblock %}

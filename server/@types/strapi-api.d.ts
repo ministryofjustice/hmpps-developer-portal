@@ -207,7 +207,7 @@ export interface paths {
     /** Returns a jwt token and user info */
     post: {
       responses: {
-        /** Successfull registration */
+        /** Successful registration */
         200: {
           content: {
             'application/json': components['schemas']['Users-Permissions-UserRegistration']
@@ -703,6 +703,7 @@ export interface components {
     ComponentRequest: {
       data: {
         name: string
+        title?: string
         description?: string
         environments?: components['schemas']['PropertiesEnvironmentComponent'][]
         jira_project_keys?: unknown
@@ -713,6 +714,17 @@ export interface components {
         github_project_visibility?: 'public' | 'internal' | 'private'
         /** @example string or id */
         product?: number | string
+        app_insights_cloud_role_name?: string
+        api?: boolean
+        frontend?: boolean
+        part_of_monorepo?: boolean
+        github_repo?: string
+        language?: string
+        include_in_subject_access_requests: boolean
+        github_project_teams_maintain?: unknown
+        github_topics?: unknown
+        versions?: unknown
+        container_image?: string
       }
     }
     ComponentListResponseDataItem: {
@@ -741,18 +753,11 @@ export interface components {
       github_project_branch_protection_restricted_teams?: unknown
       /** @enum {string} */
       github_project_visibility?: 'public' | 'internal' | 'private'
-      app_insights_cloud_role_name: string
-      api: boolean
-      frontend: boolean
-      part_of_monorepo: boolean
-      github_repo: string
-      language: string
       product?: {
         data?: {
           id?: number
           attributes?: {
             name?: string
-            p_id?: string
             subproduct?: boolean
             parent?: {
               data?: {
@@ -773,14 +778,13 @@ export interface components {
                 id?: number
                 attributes?: {
                   name?: string
-                  description?: string
-                  slack_channel?: string
                   products?: {
                     data?: {
                       id?: number
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  t_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -817,6 +821,7 @@ export interface components {
                                   id?: number
                                   attributes?: {
                                     action?: string
+                                    actionParameters?: unknown
                                     subject?: string
                                     properties?: unknown
                                     conditions?: unknown
@@ -906,6 +911,7 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  ps_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -934,7 +940,6 @@ export interface components {
             service_area?: {
               data?: {
                 id?: number
-                sa_id?: string
                 attributes?: {
                   name?: string
                   owner?: string
@@ -944,6 +949,7 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  sa_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -970,15 +976,18 @@ export interface components {
                 id?: number
                 attributes?: {
                   name?: string
+                  title?: string
                   description?: string
                   environments?: {
                     id?: number
                     /** @enum {string} */
-                    name?: 'dev' | 'stage' | 'preprod' | 'prod'
+                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
                     namespace?: string
                     info_path?: string
                     health_path?: string
                     url?: string
+                    cluster?: string
+                    name?: string
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -992,6 +1001,17 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }
                   }
+                  app_insights_cloud_role_name?: string
+                  api?: boolean
+                  frontend?: boolean
+                  part_of_monorepo?: boolean
+                  github_repo?: string
+                  language?: string
+                  include_in_subject_access_requests?: boolean
+                  github_project_teams_maintain?: unknown
+                  github_topics?: unknown
+                  versions?: unknown
+                  container_image?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1013,6 +1033,7 @@ export interface components {
                 }
               }[]
             }
+            p_id?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -1034,6 +1055,17 @@ export interface components {
           }
         }
       }
+      app_insights_cloud_role_name?: string
+      api?: boolean
+      frontend?: boolean
+      part_of_monorepo?: boolean
+      github_repo?: string
+      language?: string
+      include_in_subject_access_requests: boolean
+      github_project_teams_maintain?: unknown
+      github_topics?: unknown
+      versions?: unknown
+      container_image?: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -1064,16 +1096,17 @@ export interface components {
     PropertiesEnvironmentComponent: {
       id?: number
       /** @enum {string} */
-      name?: 'dev' | 'stage' | 'preprod' | 'prod'
+      type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
       namespace?: string
       info_path?: string
       health_path?: string
       url?: string
+      cluster?: string
+      name?: string
     }
     ProductRequest: {
       data: {
         name: string
-        p_id: string
         subproduct?: boolean
         /** @example string or id */
         parent?: number | string
@@ -1092,6 +1125,7 @@ export interface components {
         /** @example string or id */
         service_area?: number | string
         components?: (number | string)[]
+        p_id: string
       }
     }
     ProductListResponseDataItem: {
@@ -1111,14 +1145,12 @@ export interface components {
     }
     Product: {
       name: string
-      p_id: string
       subproduct?: boolean
       parent?: {
         data?: {
           id?: number
           attributes?: {
             name?: string
-            p_id?: string
             subproduct?: boolean
             parent?: {
               data?: {
@@ -1139,14 +1171,13 @@ export interface components {
                 id?: number
                 attributes?: {
                   name?: string
-                  description?: string
-                  slack_channel?: string
                   products?: {
                     data?: {
                       id?: number
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  t_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1183,6 +1214,7 @@ export interface components {
                                   id?: number
                                   attributes?: {
                                     action?: string
+                                    actionParameters?: unknown
                                     subject?: string
                                     properties?: unknown
                                     conditions?: unknown
@@ -1272,6 +1304,7 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  ps_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1301,7 +1334,6 @@ export interface components {
               data?: {
                 id?: number
                 attributes?: {
-                  sa_id?: string
                   name?: string
                   owner?: string
                   products?: {
@@ -1310,6 +1342,7 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  sa_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1336,15 +1369,18 @@ export interface components {
                 id?: number
                 attributes?: {
                   name?: string
+                  title?: string
                   description?: string
                   environments?: {
                     id?: number
                     /** @enum {string} */
-                    name?: 'dev' | 'stage' | 'preprod' | 'prod'
+                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
                     namespace?: string
                     info_path?: string
                     health_path?: string
                     url?: string
+                    cluster?: string
+                    name?: string
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -1358,6 +1394,17 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }
                   }
+                  app_insights_cloud_role_name?: string
+                  api?: boolean
+                  frontend?: boolean
+                  part_of_monorepo?: boolean
+                  github_repo?: string
+                  language?: string
+                  include_in_subject_access_requests?: boolean
+                  github_project_teams_maintain?: unknown
+                  github_topics?: unknown
+                  versions?: unknown
+                  container_image?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1379,6 +1426,7 @@ export interface components {
                 }
               }[]
             }
+            p_id?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -1437,6 +1485,7 @@ export interface components {
           attributes?: { [key: string]: unknown }
         }[]
       }
+      p_id: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -1468,6 +1517,7 @@ export interface components {
       data: {
         name: string
         products?: (number | string)[]
+        ps_id: string
       }
     }
     ProductSetListResponseDataItem: {
@@ -1492,7 +1542,6 @@ export interface components {
           id?: number
           attributes?: {
             name?: string
-            p_id?: string
             subproduct?: boolean
             parent?: {
               data?: {
@@ -1513,14 +1562,13 @@ export interface components {
                 id?: number
                 attributes?: {
                   name?: string
-                  description?: string
-                  slack_channel?: string
                   products?: {
                     data?: {
                       id?: number
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  t_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1557,6 +1605,7 @@ export interface components {
                                   id?: number
                                   attributes?: {
                                     action?: string
+                                    actionParameters?: unknown
                                     subject?: string
                                     properties?: unknown
                                     conditions?: unknown
@@ -1646,6 +1695,7 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  ps_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1675,7 +1725,6 @@ export interface components {
               data?: {
                 id?: number
                 attributes?: {
-                  sa_id?: string
                   name?: string
                   owner?: string
                   products?: {
@@ -1684,6 +1733,7 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  sa_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1710,15 +1760,18 @@ export interface components {
                 id?: number
                 attributes?: {
                   name?: string
+                  title?: string
                   description?: string
                   environments?: {
                     id?: number
                     /** @enum {string} */
-                    name?: 'dev' | 'stage' | 'preprod' | 'prod'
+                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
                     namespace?: string
                     info_path?: string
                     health_path?: string
                     url?: string
+                    cluster?: string
+                    name?: string
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -1732,6 +1785,17 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }
                   }
+                  app_insights_cloud_role_name?: string
+                  api?: boolean
+                  frontend?: boolean
+                  part_of_monorepo?: boolean
+                  github_repo?: string
+                  language?: string
+                  include_in_subject_access_requests?: boolean
+                  github_project_teams_maintain?: unknown
+                  github_topics?: unknown
+                  versions?: unknown
+                  container_image?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1753,6 +1817,7 @@ export interface components {
                 }
               }[]
             }
+            p_id?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -1774,6 +1839,7 @@ export interface components {
           }
         }[]
       }
+      ps_id: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -1806,6 +1872,7 @@ export interface components {
         name: string
         owner: string
         products?: (number | string)[]
+        sa_id: string
       }
     }
     ServiceAreaListResponseDataItem: {
@@ -1824,7 +1891,6 @@ export interface components {
       }
     }
     ServiceArea: {
-      sa_id: string
       name: string
       owner: string
       products?: {
@@ -1832,7 +1898,6 @@ export interface components {
           id?: number
           attributes?: {
             name?: string
-            p_id?: string
             subproduct?: boolean
             parent?: {
               data?: {
@@ -1853,14 +1918,13 @@ export interface components {
                 id?: number
                 attributes?: {
                   name?: string
-                  description?: string
-                  slack_channel?: string
                   products?: {
                     data?: {
                       id?: number
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  t_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1897,6 +1961,7 @@ export interface components {
                                   id?: number
                                   attributes?: {
                                     action?: string
+                                    actionParameters?: unknown
                                     subject?: string
                                     properties?: unknown
                                     conditions?: unknown
@@ -1986,6 +2051,7 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  ps_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2015,7 +2081,6 @@ export interface components {
               data?: {
                 id?: number
                 attributes?: {
-                  sa_id?: string
                   name?: string
                   owner?: string
                   products?: {
@@ -2024,6 +2089,7 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  sa_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2050,15 +2116,18 @@ export interface components {
                 id?: number
                 attributes?: {
                   name?: string
+                  title?: string
                   description?: string
                   environments?: {
                     id?: number
                     /** @enum {string} */
-                    name?: 'dev' | 'stage' | 'preprod' | 'prod'
+                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
                     namespace?: string
                     info_path?: string
                     health_path?: string
                     url?: string
+                    cluster?: string
+                    name?: string
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -2072,6 +2141,17 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }
                   }
+                  app_insights_cloud_role_name?: string
+                  api?: boolean
+                  frontend?: boolean
+                  part_of_monorepo?: boolean
+                  github_repo?: string
+                  language?: string
+                  include_in_subject_access_requests?: boolean
+                  github_project_teams_maintain?: unknown
+                  github_topics?: unknown
+                  versions?: unknown
+                  container_image?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2093,6 +2173,7 @@ export interface components {
                 }
               }[]
             }
+            p_id?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -2114,6 +2195,7 @@ export interface components {
           }
         }[]
       }
+      sa_id: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -2144,9 +2226,8 @@ export interface components {
     TeamRequest: {
       data: {
         name: string
-        description?: string
-        slack_channel?: string
         products?: (number | string)[]
+        t_id: string
       }
     }
     TeamListResponseDataItem: {
@@ -2166,15 +2247,11 @@ export interface components {
     }
     Team: {
       name: string
-      description?: string
-      slack_channel?: string
-      t_id?: string
       products?: {
         data?: {
           id?: number
           attributes?: {
             name?: string
-            p_id?: string
             subproduct?: boolean
             parent?: {
               data?: {
@@ -2195,14 +2272,13 @@ export interface components {
                 id?: number
                 attributes?: {
                   name?: string
-                  description?: string
-                  slack_channel?: string
                   products?: {
                     data?: {
                       id?: number
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  t_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2239,6 +2315,7 @@ export interface components {
                                   id?: number
                                   attributes?: {
                                     action?: string
+                                    actionParameters?: unknown
                                     subject?: string
                                     properties?: unknown
                                     conditions?: unknown
@@ -2328,6 +2405,7 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  ps_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2357,7 +2435,6 @@ export interface components {
               data?: {
                 id?: number
                 attributes?: {
-                  sa_id?: string
                   name?: string
                   owner?: string
                   products?: {
@@ -2366,6 +2443,7 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }[]
                   }
+                  sa_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2392,15 +2470,18 @@ export interface components {
                 id?: number
                 attributes?: {
                   name?: string
+                  title?: string
                   description?: string
                   environments?: {
                     id?: number
                     /** @enum {string} */
-                    name?: 'dev' | 'stage' | 'preprod' | 'prod'
+                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
                     namespace?: string
                     info_path?: string
                     health_path?: string
                     url?: string
+                    cluster?: string
+                    name?: string
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -2414,6 +2495,17 @@ export interface components {
                       attributes?: { [key: string]: unknown }
                     }
                   }
+                  app_insights_cloud_role_name?: string
+                  api?: boolean
+                  frontend?: boolean
+                  part_of_monorepo?: boolean
+                  github_repo?: string
+                  language?: string
+                  include_in_subject_access_requests?: boolean
+                  github_project_teams_maintain?: unknown
+                  github_topics?: unknown
+                  versions?: unknown
+                  container_image?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2435,6 +2527,7 @@ export interface components {
                 }
               }[]
             }
+            p_id?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -2456,6 +2549,7 @@ export interface components {
           }
         }[]
       }
+      t_id: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
