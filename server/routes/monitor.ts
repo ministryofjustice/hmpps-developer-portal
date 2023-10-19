@@ -7,7 +7,10 @@ import { Environment } from '../data/strapiApiTypes'
 type MonitorEnvironment = {
   componentId: number
   componentName: string
+  environmentId: number
   environmentName: string
+  environmentUrl: string
+  environmentHealth: string
 }
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
@@ -74,7 +77,10 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
             environments.push({
               componentId: component.id as number,
               componentName: component.attributes.name as string,
+              environmentId: environment.id as number,
               environmentName: environment.name as string,
+              environmentUrl: environment.url as string,
+              environmentHealth: environment.health_path as string,
             })
           })
         })
@@ -90,7 +96,10 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           environments.push({
             componentId: component.id as number,
             componentName: component.attributes.name as string,
+            environmentId: environment.id as number,
             environmentName: environment.name as string,
+            environmentUrl: environment.url as string,
+            environmentHealth: environment.health_path as string,
           })
         })
       })
@@ -106,7 +115,10 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
             environments.push({
               componentId: component.id as number,
               componentName: component.attributes.name as string,
+              environmentId: environment.id as number,
               environmentName: environment.name as string,
+              environmentUrl: environment.url as string,
+              environmentHealth: environment.health_path as string,
             })
           })
         })
@@ -123,7 +135,10 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
             environments.push({
               componentId: component.id as number,
               componentName: component.attributes.name as string,
+              environmentId: environment.id as number,
               environmentName: environment.name as string,
+              environmentUrl: environment.url as string,
+              environmentHealth: environment.health_path as string,
             })
           })
         })
