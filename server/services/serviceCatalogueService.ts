@@ -1,5 +1,4 @@
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import type { DependencyList } from '../@types'
 import {
   Product,
   Component,
@@ -12,7 +11,6 @@ import {
   ServiceAreaListResponseDataItem,
   ProductSetListResponseDataItem,
   ComponentListResponse,
-  ComponentResponse,
 } from '../data/strapiApiTypes'
 
 export default class ServiceCatalogueService {
