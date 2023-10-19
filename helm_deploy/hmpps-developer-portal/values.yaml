@@ -44,9 +44,6 @@ generic-service:
     hmpps-developer-portal:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
       SESSION_SECRET: "SESSION_SECRET"
-    elasticache-redis:
-      REDIS_HOST: "primary_endpoint_address"
-      REDIS_AUTH_TOKEN: "auth_token"
 
   allowlist:
     groups:

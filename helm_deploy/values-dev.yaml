@@ -11,5 +11,10 @@ generic-service:
     INGRESS_URL: "https://developer-portal-dev.hmpps.service.justice.gov.uk"
     SERVICE_CATALOGUE_URL: "https://service-catalogue.hmpps.service.justice.gov.uk"
 
+  namespace_secrets:
+    elasticache-redis:
+      REDIS_HOST: "primary_endpoint_address"
+      REDIS_AUTH_TOKEN: "auth_token"
+
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
