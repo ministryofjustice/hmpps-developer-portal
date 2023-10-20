@@ -50,12 +50,12 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     return res.render('pages/component', { component: displayComponent })
   })
 
-  get('/:componentName/environment/:environmentId', async (req, res) => {
+  get('/:componentName/environment/:environmentName', async (req, res) => {
     const componentName = getComponentName(req)
-    const environmentId = getEnvironmentId(req)
+    const environmentName = getEnvironmentName(req)
 
     const component = await serviceCatalogueService.getComponent(componentName)
-    const environments = component.environments?.filter(environment => environment.id === environmentId)
+    const environments = component.environments?.filter(environment => environment.type === environmentName)
 
     const displayComponent = {
       name: componentName,
@@ -165,20 +165,20 @@ function getComponentName(req: Request): string {
   return componentName.replace(/[^-a-zA-Z0-9_.]/g, '')
 }
 
-function getEnvironmentId(req: Request): number {
-  const { environmentId } = req.params
+// function getEnvironmentId(req: Request): number {
+//   const { environmentId } = req.params
 
-  if (!Number.isInteger(Number.parseInt(environmentId, 10))) {
-    throw new BadRequest()
-  }
+//   if (!Number.isInteger(Number.parseInt(environmentId, 10))) {
+//     throw new BadRequest()
+//   }
 
-  return Number.parseInt(environmentId, 10)
-}
+//   return Number.parseInt(environmentId, 10)
+// }
 
 function getEnvironmentName(req: Request): string {
   const { environmentName } = req.params
 
-  return ['dev', 'development', 'staging', 'stage', 'preprod', 'prod', 'production'].includes(environmentName)
+  return ['dev', 'development', 'staging', 'stage', 'preprod', 'prod', 'production', 'test'].includes(environmentName)
     ? environmentName
     : ''
 }
