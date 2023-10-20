@@ -14,6 +14,57 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     return res.render('pages/components')
   })
 
+  get('/data', async (req, res) => {
+    const components = await serviceCatalogueService.getComponents()
+
+    return res.send(components)
+  })
+
+  get('/:componentName', async (req, res) => {
+    const componentName = getComponentName(req)
+    const component = await serviceCatalogueService.getComponent(componentName)
+    const environments = component.environments?.map(environment => environment)
+    const environmentNames = environments.reduce((names, environment) => names.concat([environment.name]), [])
+
+    const displayComponent = {
+      name: component.name,
+      description: component.description,
+      title: component.title,
+      jiraProjectKeys: component.jira_project_keys,
+      githubWrite: component.github_project_teams_write,
+      githubAdmin: component.github_project_teams_admin,
+      githubRestricted: component.github_project_branch_protection_restricted_teams,
+      githubRepo: component.github_repo,
+      githubVisibility: component.github_project_visibility,
+      appInsightsName: component.app_insights_cloud_role_name,
+      api: component.api,
+      frontEnd: component.frontend,
+      partOfMonorepo: component.part_of_monorepo,
+      language: component.language,
+      product: component.product?.data,
+      versions: component.versions,
+      environments,
+      environmentNames,
+    }
+
+    return res.render('pages/component', { component: displayComponent })
+  })
+
+  get('/:componentName/environment/:environmentId', async (req, res) => {
+    const componentName = getComponentName(req)
+    const environmentId = getEnvironmentId(req)
+
+    const component = await serviceCatalogueService.getComponent(componentName)
+    const environments = component.environments?.filter(environment => environment.id === environmentId)
+
+    const displayComponent = {
+      name: componentName,
+      environment: environments[0],
+    }
+
+    return res.render('pages/environment', { component: displayComponent })
+  })
+
   get('/dependencies', async (req, res) => {
     const dropDownItems = await getDropDownOptions(serviceCatalogueService)
 
@@ -25,12 +76,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const dropDownItems = await getDropDownOptions(serviceCatalogueService, `${dependencyType}::${dependencyName}`)
 
     return res.render('pages/dependencies', { dependencyType, dependencyName, dropDownItems })
-  })
-
-  get('/data', async (req, res) => {
-    const components = await serviceCatalogueService.getComponents()
-
-    return res.send(components)
   })
 
   get('/dependencies/data/:dependencyType/:dependencyName', async (req, res) => {
@@ -82,15 +127,15 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     return res.send(displayComponents)
   })
 
-  get('/queue/:componentId/:environmentName/*', async (req, res) => {
-    const componentId = getComponentId(req)
+  get('/queue/:componentName/:environmentName/*', async (req, res) => {
+    const componentName = getComponentName(req)
     const environmentName = getEnvironmentName(req)
     const queueInformation = req.params[0]
     const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
 
-    logger.info(`Queue call for ${componentId} with ${queueInformation}`)
+    logger.info(`Queue call for ${componentName} with ${queueInformation}`)
 
-    const component = await serviceCatalogueService.getComponent(componentId)
+    const component = await serviceCatalogueService.getComponent(componentName)
     const streams = [
       {
         key: `health:${component.name}:${environmentName}`,
@@ -111,64 +156,23 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     return res.send(messages)
   })
 
-  get('/:componentId', async (req, res) => {
-    const componentId = getComponentId(req)
-    const component = await serviceCatalogueService.getComponent(componentId)
-    const environments = component.environments?.map(environment => environment)
-    const environmentNames = environments.reduce((names, environment) => names.concat([environment.name]), [])
-
-    const displayComponent = {
-      id: componentId,
-      name: component.name,
-      description: component.description,
-      title: component.title,
-      jiraProjectKeys: component.jira_project_keys,
-      githubWrite: component.github_project_teams_write,
-      githubAdmin: component.github_project_teams_admin,
-      githubRestricted: component.github_project_branch_protection_restricted_teams,
-      githubRepo: component.github_repo,
-      githubVisibility: component.github_project_visibility,
-      appInsightsName: component.app_insights_cloud_role_name,
-      api: component.api,
-      frontEnd: component.frontend,
-      partOfMonorepo: component.part_of_monorepo,
-      language: component.language,
-      product: component.product?.data,
-      versions: component.versions,
-      environments,
-      environmentNames,
-    }
-
-    return res.render('pages/component', { component: displayComponent })
-  })
-
-  get('/:componentId/environment/:environmentId', async (req, res) => {
-    const componentId = getComponentId(req)
-    const environmentId = getEnvironmentId(req)
-
-    const component = await serviceCatalogueService.getComponent(componentId)
-    const environments = component.environments?.filter(environment => environment.id === environmentId)
-
-    const displayComponent = {
-      id: componentId,
-      name: component.name,
-      environment: environments[0],
-    }
-
-    return res.render('pages/environment', { component: displayComponent })
-  })
-
   return router
 }
 
-function getComponentId(req: Request): string {
-  const { componentId } = req.params
+// function getComponentId(req: Request): string {
+//   const { componentId } = req.params
 
-  if (!Number.isInteger(Number.parseInt(componentId, 10))) {
-    throw new BadRequest()
-  }
+//   if (!Number.isInteger(Number.parseInt(componentId, 10))) {
+//     throw new BadRequest()
+//   }
 
-  return componentId
+//   return componentId
+// }
+
+function getComponentName(req: Request): string {
+  const { componentName } = req.params
+
+  return componentName.replace(/[^-a-z0-9]/g, '')
 }
 
 function getEnvironmentId(req: Request): number {
