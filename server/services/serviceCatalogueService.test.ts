@@ -81,10 +81,12 @@ describe('Strapi service', () => {
 
   describe('getComponent', () => {
     const testComponentResponse = {
-      data: {
-        id: 1,
-        attributes: { name: 'z-index testComponent' },
-      },
+      data: [
+        {
+          id: 1,
+          attributes: { name: 'z-index testComponent' },
+        },
+      ],
     } as ComponentResponse
     const testComponent = { name: 'z-index testComponent' } as Component
 

@@ -5,7 +5,6 @@ import logger from '../../logger'
 import { Environment } from '../data/strapiApiTypes'
 
 type MonitorEnvironment = {
-  componentId: number
   componentName: string
   environmentId: number
   environmentName: string
@@ -75,7 +74,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
           typedEnvironments.forEach(environment => {
             environments.push({
-              componentId: component.id as number,
               componentName: component.attributes.name as string,
               environmentId: environment.id as number,
               environmentName: environment.type as string,
@@ -94,7 +92,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
         typedEnvironments.forEach(environment => {
           environments.push({
-            componentId: component.id as number,
             componentName: component.attributes.name as string,
             environmentId: environment.id as number,
             environmentName: environment.type as string,
@@ -113,7 +110,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
           typedEnvironments.forEach(environment => {
             environments.push({
-              componentId: component.id as number,
               componentName: component.attributes.name as string,
               environmentId: environment.id as number,
               environmentName: environment.type as string,
@@ -133,7 +129,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
           typedEnvironments.forEach(environment => {
             environments.push({
-              componentId: component.id as number,
               componentName: component.attributes.name as string,
               environmentId: environment.id as number,
               environmentName: environment.type as string,

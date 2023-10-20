@@ -177,9 +177,9 @@ async function populateComponentTable(type, id) {
       data[`info:${environment.componentName}:${environment.environmentName}`] = ''
       data[`version:${environment.componentName}:${environment.environmentName}`] = ''
       $('#statusRows')
-        .append(`<tr data-test="tile-${environment.componentId}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentName}">
-          <td><a href="/components/${environment.componentId}" class="statusTileName">${environment.componentName}</a></td>
-          <td><a href="/components/${environment.componentId}/environment/${environment.environmentId}" class="statusTileEnvironment">${environment.environmentName}</a></td>
+        .append(`<tr data-test="tile-${environment.componentName}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentName}">
+          <td><a href="/components/${environment.componentName}" class="statusTileName">${environment.componentName}</a></td>
+          <td><a href="/components/${environment.componentName}/environment/${environment.environmentId}" class="statusTileEnvironment">${environment.environmentName}</a></td>
           <td><a href="${environment.environmentUrl}${environment.environmentHealth}" class="statusTileHealth">View</a></td>
           <td class="statusTileBuild"></td>
           <td class="statusTileStatus"></td>
