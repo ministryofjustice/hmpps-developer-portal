@@ -59,7 +59,7 @@
         {% if product.components | length %}
         <ul>
           {% for component in product.components %}
-            <li><a href="/components/{{ component.id }}">{{ component.attributes.name }}</a></li>
+            <li><a href="/components/{{ component.attributes.name }}">{{ component.attributes.name }}</a></li>
           {% endfor %}
         </ul>
         {% else %}
