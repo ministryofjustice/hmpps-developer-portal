@@ -23,7 +23,7 @@ jQuery(function () {
       {
         data: 'componentName',
         createdCell: function (td, cellData, rowData) {
-          $(td).html(`<a href="/components/${rowData.id}">${rowData.componentName}</a>`)
+          $(td).html(`<a href="/components/${rowData.componentName}">${rowData.componentName}</a>`)
         },
       },
       {
