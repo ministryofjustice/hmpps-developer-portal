@@ -8,6 +8,8 @@ import componentRoutes from '../components'
 import teamRoutes from '../teams'
 import productSetRoutes from '../productSets'
 import serviceAreaRoutes from '../serviceAreas'
+import monitorRoutes from '../monitor'
+import dependencyRoutes from '../dependencies'
 
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -45,6 +47,8 @@ function appSetup(services: Services, production: boolean): Express {
   app.use('/teams', teamRoutes(services))
   app.use('/product-sets', productSetRoutes(services))
   app.use('/service-areas', serviceAreaRoutes(services))
+  app.use('/monitor', monitorRoutes(services))
+  app.use('/dependencies', dependencyRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(production))
