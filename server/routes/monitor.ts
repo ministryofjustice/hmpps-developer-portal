@@ -6,7 +6,6 @@ import { Environment } from '../data/strapiApiTypes'
 
 type MonitorEnvironment = {
   componentName: string
-  environmentId: number
   environmentName: string
   environmentUrl: string
   environmentHealth: string
@@ -75,7 +74,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           typedEnvironments.forEach(environment => {
             environments.push({
               componentName: component.attributes.name as string,
-              environmentId: environment.id as number,
               environmentName: environment.type as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
@@ -93,7 +91,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
         typedEnvironments.forEach(environment => {
           environments.push({
             componentName: component.attributes.name as string,
-            environmentId: environment.id as number,
             environmentName: environment.type as string,
             environmentUrl: environment.url as string,
             environmentHealth: environment.health_path as string,
@@ -111,7 +108,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           typedEnvironments.forEach(environment => {
             environments.push({
               componentName: component.attributes.name as string,
-              environmentId: environment.id as number,
               environmentName: environment.type as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
@@ -130,7 +126,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           typedEnvironments.forEach(environment => {
             environments.push({
               componentName: component.attributes.name as string,
-              environmentId: environment.id as number,
               environmentName: environment.type as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
