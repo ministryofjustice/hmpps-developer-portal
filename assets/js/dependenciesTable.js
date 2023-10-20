@@ -8,7 +8,7 @@ jQuery(function () {
   const dataDependencyName = dependencyName || 'generic-service'
 
   $('#dependenciesTable').DataTable({
-    paging: true,
+    paging: false,
     order: [[1, 'asc']],
     sortable: true,
     ajax: {
