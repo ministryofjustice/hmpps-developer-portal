@@ -12,7 +12,7 @@ jQuery(function () {
     order: [[1, 'asc']],
     sortable: true,
     ajax: {
-      url: `/components/dependencies/data/${dataDependencyType}/${dataDependencyName}`,
+      url: `/dependencies/data/${dataDependencyType}/${dataDependencyName}`,
       dataSrc: '',
       error: function (response) {
         alert('An error occurred when loading teams.') // eslint-disable-line no-undef
@@ -23,7 +23,11 @@ jQuery(function () {
       {
         data: 'componentName',
         createdCell: function (td, cellData, rowData) {
-          $(td).html(`<a href="/components/${cleanColumnOutput(rowData.componentName)}">${cleanColumnOutput(rowData.componentName)}</a>`)
+          $(td).html(
+            `<a href="/components/${cleanColumnOutput(rowData.componentName)}">${cleanColumnOutput(
+              rowData.componentName,
+            )}</a>`,
+          )
         },
       },
       {

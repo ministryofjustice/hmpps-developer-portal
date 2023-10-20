@@ -20,6 +20,7 @@ import teamRoutes from './routes/teams'
 import productSetRoutes from './routes/productSets'
 import serviceAreaRoutes from './routes/serviceAreas'
 import monitorRoutes from './routes/monitor'
+import dependencyRoutes from './routes/dependencies'
 
 import type { Services } from './services'
 
@@ -46,6 +47,7 @@ export default function createApp(services: Services): express.Application {
   app.use('/product-sets', productSetRoutes(services))
   app.use('/service-areas', serviceAreaRoutes(services))
   app.use('/monitor', monitorRoutes(services))
+  app.use('/dependencies', dependencyRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

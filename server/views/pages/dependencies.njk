@@ -9,7 +9,7 @@
 {% block content %}
   <h1>Dependencies</h1>
 
-  <form method="POST" action="/components/dependencies">
+  <form method="POST" action="/dependencies">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
     {{ govukSelect({
       id: "dependencyData",
