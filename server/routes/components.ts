@@ -159,20 +159,10 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   return router
 }
 
-// function getComponentId(req: Request): string {
-//   const { componentId } = req.params
-
-//   if (!Number.isInteger(Number.parseInt(componentId, 10))) {
-//     throw new BadRequest()
-//   }
-
-//   return componentId
-// }
-
 function getComponentName(req: Request): string {
   const { componentName } = req.params
 
-  return componentName.replace(/[^-a-z0-9]/g, '')
+  return componentName.replace(/[^-a-zA-Z0-9_.]/g, '')
 }
 
 function getEnvironmentId(req: Request): number {
