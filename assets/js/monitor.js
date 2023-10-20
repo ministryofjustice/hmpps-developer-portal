@@ -61,10 +61,6 @@ function updateEnvironmentList() {
 
     if (validEnvironments.includes(environment)) {
       $(`.${environment}`).hide()
-
-      // if (environment === 'staging') {
-      //   $('.stage').hide()
-      // }
     }
   })
 }
