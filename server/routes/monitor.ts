@@ -78,7 +78,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
               componentId: component.id as number,
               componentName: component.attributes.name as string,
               environmentId: environment.id as number,
-              environmentName: environment.name as string,
+              environmentName: environment.type as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
             })
@@ -97,7 +97,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
             componentId: component.id as number,
             componentName: component.attributes.name as string,
             environmentId: environment.id as number,
-            environmentName: environment.name as string,
+            environmentName: environment.type as string,
             environmentUrl: environment.url as string,
             environmentHealth: environment.health_path as string,
           })
@@ -116,7 +116,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
               componentId: component.id as number,
               componentName: component.attributes.name as string,
               environmentId: environment.id as number,
-              environmentName: environment.name as string,
+              environmentName: environment.type as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
             })
@@ -136,7 +136,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
               componentId: component.id as number,
               componentName: component.attributes.name as string,
               environmentId: environment.id as number,
-              environmentName: environment.name as string,
+              environmentName: environment.type as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
             })
