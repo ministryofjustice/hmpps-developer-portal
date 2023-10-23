@@ -37,7 +37,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
         selected: monitorType === 'team' && formatMonitorName(team.attributes.name) === monitorName,
       }
     })
-    const products = await serviceCatalogueService.getProducts()
+    const products = await serviceCatalogueService.getProducts({})
     const productList = products.map(product => {
       return {
         value: product.id,
@@ -65,7 +65,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const environments: MonitorEnvironment[] = []
 
     if (monitorType === 'all') {
-      const products = await serviceCatalogueService.getProducts(null, true)
+      const products = await serviceCatalogueService.getProducts({ withEnvironments: true })
 
       products.forEach(product => {
         product.attributes.components.data.forEach(component => {
@@ -83,7 +83,10 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       })
     }
     if (monitorType === 'product') {
-      const product = await serviceCatalogueService.getProduct(monitorId, true)
+      const product = await serviceCatalogueService.getProduct({
+        productId: monitorId,
+        withEnvironments: true,
+      })
 
       product.components.data.forEach(component => {
         const typedEnvironments = component.attributes.environments as Environment[]
@@ -99,7 +102,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       })
     }
     if (monitorType === 'team') {
-      const team = await serviceCatalogueService.getTeam(monitorId, true)
+      const team = await serviceCatalogueService.getTeam({ teamId: monitorId, withEnvironments: true })
 
       team.products.data.forEach(product => {
         product.attributes.components.data.forEach(component => {
