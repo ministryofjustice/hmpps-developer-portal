@@ -24,6 +24,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const products = productSet.products?.data?.map(product => product)
 
     const displayProductSet = {
+      id: productSet.ps_id,
       name: productSet.name,
       products,
     }
