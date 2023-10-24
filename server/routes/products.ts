@@ -13,14 +13,14 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   get('/data', async (req, res) => {
-    const products = await serviceCatalogueService.getProducts()
+    const products = await serviceCatalogueService.getProducts({})
 
     return res.send(products)
   })
 
   get('/:productId', async (req, res) => {
     const productId = getProductId(req)
-    const product = await serviceCatalogueService.getProduct(productId)
+    const product = await serviceCatalogueService.getProduct({ productId })
 
     const productSet = product.product_set?.data
     const team = product.team?.data

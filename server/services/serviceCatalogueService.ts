@@ -16,9 +16,15 @@ import {
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
 
-  async getProducts(productIds?: number[], withEnvironments?: boolean): Promise<ProductListResponseDataItem[]> {
+  async getProducts({
+    productIds = [],
+    withEnvironments = false,
+  }: {
+    productIds?: number[]
+    withEnvironments?: boolean
+  }): Promise<ProductListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const productData = await strapiApiClient.getProducts(productIds, withEnvironments)
+    const productData = await strapiApiClient.getProducts({ productIds, withEnvironments })
 
     const products = productData.data.sort(sortData)
 
@@ -96,18 +102,30 @@ export default class ServiceCatalogueService {
     return serviceAreas
   }
 
-  async getProduct(productId: string, withEnvironments?: boolean): Promise<Product> {
+  async getProduct({
+    productId = '',
+    withEnvironments = false,
+  }: {
+    productId: string
+    withEnvironments?: boolean
+  }): Promise<Product> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const productData = await strapiApiClient.getProduct(productId, withEnvironments)
+    const productData = await strapiApiClient.getProduct({ productId, withEnvironments })
 
     const product = productData.data?.attributes
 
     return product
   }
 
-  async getTeam(teamId: string, withProducts?: boolean): Promise<Team> {
+  async getTeam({
+    teamId = '',
+    withEnvironments = false,
+  }: {
+    teamId: string
+    withEnvironments?: boolean
+  }): Promise<Team> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const teamData = await strapiApiClient.getTeam(teamId, withProducts)
+    const teamData = await strapiApiClient.getTeam({ teamId, withEnvironments })
 
     const team = teamData.data?.attributes
 
