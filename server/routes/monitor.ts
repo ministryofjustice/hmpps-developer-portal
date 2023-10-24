@@ -1,8 +1,9 @@
-import { type RequestHandler, type Request, Router } from 'express'
+import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { Environment } from '../data/strapiApiTypes'
+import { formatMonitorName, getMonitorId, getMonitorName, getMonitorType } from '../utils/utils'
 
 type MonitorEnvironment = {
   componentName: string
@@ -155,37 +156,4 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   })
 
   return router
-}
-
-function getMonitorId(req: Request): string {
-  const { monitorId } = req.params
-
-  if (!Number.isInteger(Number.parseInt(monitorId, 10))) {
-    return '0'
-  }
-
-  return monitorId
-}
-
-function getMonitorType(req: Request): string {
-  const { monitorType } = req.params
-
-  return ['product', 'team', 'serviceArea'].includes(monitorType) ? monitorType : 'all'
-}
-
-function getMonitorName(req: Request): string {
-  const monitorName = req.params?.monitorName || ''
-
-  return monitorName.replace(/[^-a-z0-9]/g, '')
-}
-
-function formatMonitorName(name: string): string {
-  const monitorName = name || ''
-
-  return `${monitorName} `
-    .trim()
-    .toLowerCase()
-    .replace(/ /g, '-')
-    .replace(/[^-a-z0-9]/g, '')
-    .replace(/-+/g, '-')
 }
