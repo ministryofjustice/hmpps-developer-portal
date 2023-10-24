@@ -1,7 +1,7 @@
-import { type RequestHandler, type Request, Router } from 'express'
-import { BadRequest } from 'http-errors'
+import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
+import { getServiceAreaId } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -34,14 +34,4 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   return router
-}
-
-function getServiceAreaId(req: Request): string {
-  const { serviceAreaId } = req.params
-
-  if (!Number.isInteger(Number.parseInt(serviceAreaId, 10))) {
-    throw new BadRequest()
-  }
-
-  return serviceAreaId
 }
