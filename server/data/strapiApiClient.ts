@@ -50,10 +50,10 @@ export default class StrapiApiClient {
   }
 
   async getProduct({
-    productId = '',
+    productId = 0,
     withEnvironments = false,
   }: {
-    productId: string
+    productId: number
     withEnvironments?: boolean
   }): Promise<ProductResponse> {
     const populate = ['product_set', 'team', 'components', 'service_area']
@@ -98,10 +98,10 @@ export default class StrapiApiClient {
   }
 
   async getTeam({
-    teamId = '',
+    teamId = 0,
     withEnvironments = false,
   }: {
-    teamId: string
+    teamId: number
     withEnvironments?: boolean
   }): Promise<TeamResponse> {
     const populate = ['products']
@@ -125,7 +125,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getProductSet(productSetId: string): Promise<ProductSetResponse> {
+  async getProductSet(productSetId: number): Promise<ProductSetResponse> {
     return this.restClient.get({
       path: `/v1/product-sets/${productSetId}`,
       query: new URLSearchParams({ populate: 'products' }).toString(),
@@ -145,7 +145,7 @@ export default class StrapiApiClient {
     return this.restClient.get(getParams)
   }
 
-  async getServiceArea(serviceAreaId: string, withProducts?: boolean): Promise<ServiceAreaResponse> {
+  async getServiceArea(serviceAreaId: number, withProducts?: boolean): Promise<ServiceAreaResponse> {
     const populate = ['products']
 
     if (withProducts) {

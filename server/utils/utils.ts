@@ -35,56 +35,6 @@ export const getNumericId = (req: Request, paramName: string): number => {
   return Number.parseInt(id, 10)
 }
 
-export const getTeamId = (req: Request): string => {
-  const { teamId } = req.params
-
-  if (!Number.isInteger(Number.parseInt(teamId, 10))) {
-    throw new BadRequest()
-  }
-
-  return teamId
-}
-
-export const getServiceAreaId = (req: Request): string => {
-  const { serviceAreaId } = req.params
-
-  if (!Number.isInteger(Number.parseInt(serviceAreaId, 10))) {
-    throw new BadRequest()
-  }
-
-  return serviceAreaId
-}
-
-export const getProductSetId = (req: Request): string => {
-  const { productSetId } = req.params
-
-  if (!Number.isInteger(Number.parseInt(productSetId, 10))) {
-    throw new BadRequest()
-  }
-
-  return productSetId
-}
-
-export const getProductId = (req: Request): string => {
-  const { productId } = req.params
-
-  if (!Number.isInteger(Number.parseInt(productId, 10))) {
-    throw new BadRequest()
-  }
-
-  return productId
-}
-
-export const getMonitorId = (req: Request): string => {
-  const { monitorId } = req.params
-
-  if (!Number.isInteger(Number.parseInt(monitorId, 10))) {
-    return '0'
-  }
-
-  return monitorId
-}
-
 export const getMonitorType = (req: Request): string => {
   const { monitorType } = req.params
 

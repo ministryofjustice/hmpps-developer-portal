@@ -103,10 +103,10 @@ export default class ServiceCatalogueService {
   }
 
   async getProduct({
-    productId = '',
+    productId = 0,
     withEnvironments = false,
   }: {
-    productId: string
+    productId: number
     withEnvironments?: boolean
   }): Promise<Product> {
     const strapiApiClient = this.strapiApiClientFactory('')
@@ -118,10 +118,10 @@ export default class ServiceCatalogueService {
   }
 
   async getTeam({
-    teamId = '',
+    teamId = 0,
     withEnvironments = false,
   }: {
-    teamId: string
+    teamId: number
     withEnvironments?: boolean
   }): Promise<Team> {
     const strapiApiClient = this.strapiApiClientFactory('')
@@ -141,7 +141,7 @@ export default class ServiceCatalogueService {
     return component
   }
 
-  async getServiceArea(serviceAreaId: string, withProducts?: boolean): Promise<ServiceArea> {
+  async getServiceArea(serviceAreaId: number, withProducts?: boolean): Promise<ServiceArea> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const serviceAreaData = await strapiApiClient.getServiceArea(serviceAreaId, withProducts)
 
@@ -150,7 +150,7 @@ export default class ServiceCatalogueService {
     return serviceArea
   }
 
-  async getProductSet(productSetId: string): Promise<ProductSet> {
+  async getProductSet(productSetId: number): Promise<ProductSet> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const productSetData = await strapiApiClient.getProductSet(productSetId)
 
