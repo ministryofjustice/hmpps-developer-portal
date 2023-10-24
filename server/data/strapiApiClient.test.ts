@@ -73,7 +73,7 @@ describe('strapiApiClient', () => {
           data: { id: 1, attributes: { name: 'Product', p_id: '1' } },
         } as ProductResponse
         fakeStrapiApi.get('/products/1?populate=product_set%2Cteam%2Ccomponents%2Cservice_area').reply(200, product)
-        const output = await strapiApiClient.getProduct({ productId: '1' })
+        const output = await strapiApiClient.getProduct({ productId: 1 })
         expect(output).toEqual(product)
       })
 
@@ -84,7 +84,7 @@ describe('strapiApiClient', () => {
         fakeStrapiApi
           .get('/products/1?populate=product_set%2Cteam%2Ccomponents%2Cservice_area%2Ccomponents.environments')
           .reply(200, product)
-        const output = await strapiApiClient.getProduct({ productId: '1', withEnvironments: true })
+        const output = await strapiApiClient.getProduct({ productId: 1, withEnvironments: true })
         expect(output).toEqual(product)
       })
     })
@@ -128,7 +128,7 @@ describe('strapiApiClient', () => {
       it('should return a single team', async () => {
         const team = { data: { id: 1, attributes: { name: 'Team' } } } as TeamResponse
         fakeStrapiApi.get('/teams/1?populate=products').reply(200, team)
-        const output = await strapiApiClient.getTeam({ teamId: '1' })
+        const output = await strapiApiClient.getTeam({ teamId: 1 })
         expect(output).toEqual(team)
       })
 
@@ -137,7 +137,7 @@ describe('strapiApiClient', () => {
         fakeStrapiApi
           .get('/teams/1?populate=products%2Cproducts.components%2Cproducts.components.environments')
           .reply(200, team)
-        const output = await strapiApiClient.getTeam({ teamId: '1', withEnvironments: true })
+        const output = await strapiApiClient.getTeam({ teamId: 1, withEnvironments: true })
         expect(output).toEqual(team)
       })
     })
@@ -159,7 +159,7 @@ describe('strapiApiClient', () => {
           data: { id: 1, attributes: { name: 'Product Set' } },
         } as ProductSetResponse
         fakeStrapiApi.get('/product-sets/1?populate=products').reply(200, productSet)
-        const output = await strapiApiClient.getProductSet('1')
+        const output = await strapiApiClient.getProductSet(1)
         expect(output).toEqual(productSet)
       })
     })
@@ -181,7 +181,7 @@ describe('strapiApiClient', () => {
           data: { id: 1, attributes: { name: 'Service Area' } },
         } as ServiceAreaResponse
         fakeStrapiApi.get('/service-areas/1?populate=products').reply(200, serviceArea)
-        const output = await strapiApiClient.getServiceArea('1')
+        const output = await strapiApiClient.getServiceArea(1)
         expect(output).toEqual(serviceArea)
       })
     })

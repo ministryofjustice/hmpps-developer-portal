@@ -3,7 +3,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { Environment } from '../data/strapiApiTypes'
-import { formatMonitorName, getMonitorId, getMonitorName, getMonitorType } from '../utils/utils'
+import { formatMonitorName, getNumericId, getMonitorName, getMonitorType } from '../utils/utils'
 
 type MonitorEnvironment = {
   componentName: string
@@ -62,7 +62,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
   get('/components/:monitorType/:monitorId?', async (req, res) => {
     const monitorType = getMonitorType(req)
-    const monitorId = getMonitorId(req)
+    const monitorId = getNumericId(req, 'monitorId')
     const environments: MonitorEnvironment[] = []
 
     if (monitorType === 'all') {
