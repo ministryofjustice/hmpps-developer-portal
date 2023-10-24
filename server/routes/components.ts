@@ -1,7 +1,8 @@
-import { type RequestHandler, type Request, Router } from 'express'
+import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
+import { getComponentName, getEnvironmentName } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -93,28 +94,4 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   })
 
   return router
-}
-
-function getComponentName(req: Request): string {
-  const { componentName } = req.params
-
-  return componentName.replace(/[^-a-zA-Z0-9_.]/g, '')
-}
-
-// function getEnvironmentId(req: Request): number {
-//   const { environmentId } = req.params
-
-//   if (!Number.isInteger(Number.parseInt(environmentId, 10))) {
-//     throw new BadRequest()
-//   }
-
-//   return Number.parseInt(environmentId, 10)
-// }
-
-function getEnvironmentName(req: Request): string {
-  const { environmentName } = req.params
-
-  return ['dev', 'development', 'staging', 'stage', 'preprod', 'prod', 'production', 'test'].includes(environmentName)
-    ? environmentName
-    : ''
 }

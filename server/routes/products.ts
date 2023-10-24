@@ -1,7 +1,7 @@
-import { type RequestHandler, type Request, Router } from 'express'
-import { BadRequest } from 'http-errors'
+import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
+import { getProductId } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -46,14 +46,4 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   return router
-}
-
-function getProductId(req: Request): string {
-  const { productId } = req.params
-
-  if (!Number.isInteger(Number.parseInt(productId, 10))) {
-    throw new BadRequest()
-  }
-
-  return productId
 }

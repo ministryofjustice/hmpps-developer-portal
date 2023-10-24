@@ -1,6 +1,7 @@
 import { type RequestHandler, type Request, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { ServiceCatalogueService, Services } from '../services'
+import { getDependencyName, getDependencyType } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -73,19 +74,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   return router
 }
 
-function getDependencyName(req: Request): string {
-  const { dependencyName } = req.params
-
-  return dependencyName.replace(/[^-a-z0-9_]/g, '')
-}
-
-function getDependencyType(req: Request): string {
-  const { dependencyType } = req.params
-
-  return ['helm', 'circleci', 'dockerfile'].includes(dependencyType) ? dependencyType : 'helm'
-}
-
-function getDependencyData(req: Request) {
+export const getDependencyData = (req: Request) => {
   const { dependencyData } = req.body
 
   const parts = dependencyData.replace(/[^-a-z0-9:_]/g, '').split('::')
@@ -96,7 +85,10 @@ function getDependencyData(req: Request) {
   }
 }
 
-async function getDropDownOptions(serviceCatalogueService: ServiceCatalogueService, currentDependency: string = '') {
+export const getDropDownOptions = async (
+  serviceCatalogueService: ServiceCatalogueService,
+  currentDependency: string = '',
+) => {
   const dependencies = await serviceCatalogueService.getDependencies()
 
   const dropDownItems = dependencies.map(dependency => {
