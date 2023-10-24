@@ -11,7 +11,14 @@ const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked
 
 let app: Express
 const testComponents = [{ id: 1, attributes: { name: 'testComponent' } }] as ComponentListResponseDataItem[]
-const testComponent = { name: 'z-index testComponent' } as Component
+const testComponent = {
+  name: 'z-index testComponent',
+  environments: [
+    {
+      name: 'dev',
+    },
+  ],
+} as Component
 
 beforeEach(() => {
   serviceCatalogueService.getComponents.mockResolvedValue(testComponents)
@@ -32,22 +39,22 @@ describe('/components', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('#components')).toBeDefined()
+          expect($('#componentsTable').length).toBe(1)
         })
     })
   })
 
-  // describe('GET /:componentId', () => {
-  //   it('should render component page', () => {
-  //     return request(app)
-  //       .get('/components/1')
-  //       .expect('Content-Type', /html/)
-  //       .expect(res => {
-  //         const $ = cheerio.load(res.text)
-  //         expect($('#detailPageTitle').text()).toContain(testComponent.name)
-  //       })
-  //   })
-  // })
+  describe('GET /:componentId', () => {
+    it('should render component page', () => {
+      return request(app)
+        .get('/components/1')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('#detailPageTitle').text()).toContain(testComponent.name)
+        })
+    })
+  })
 
   describe('GET /data', () => {
     it('should output JSON data for components', () => {

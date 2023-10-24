@@ -32,7 +32,7 @@ describe('/products', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('#products')).toBeDefined()
+          expect($('#productsTable').length).toBe(1)
         })
     })
   })
