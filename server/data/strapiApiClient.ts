@@ -21,7 +21,13 @@ export default class StrapiApiClient {
     this.restClient = new RestClient('strapiApiClient', config.apis.serviceCatalogue as ApiConfig, '')
   }
 
-  async getProducts(productIds?: number[], withEnvironments?: boolean): Promise<ProductListResponse> {
+  async getProducts({
+    productIds = [],
+    withEnvironments = false,
+  }: {
+    productIds?: number[]
+    withEnvironments?: boolean
+  }): Promise<ProductListResponse> {
     const populate = ['product_set']
 
     if (withEnvironments) {
@@ -30,18 +36,26 @@ export default class StrapiApiClient {
     }
 
     const filters = productIds
-      ? productIds.reduce((filterList, productId, index) => {
-          return `&${filterList},filters[id][$in][${index}]=${productId}`
-        }, '')
+      ? productIds
+          .reduce((filterList, productId, index) => {
+            return `filters[id][$in][${index}]=${productId},${filterList}`
+          }, '')
+          .slice(0, -1)
       : ''
 
     return this.restClient.get({
       path: '/v1/products',
-      query: `${new URLSearchParams({ populate: populate.join(',') }).toString()}${filters}`,
+      query: `${new URLSearchParams({ populate: populate.join(',') }).toString()}&${filters}`,
     })
   }
 
-  async getProduct(productId: string, withEnvironments?: boolean): Promise<ProductResponse> {
+  async getProduct({
+    productId = '',
+    withEnvironments = false,
+  }: {
+    productId: string
+    withEnvironments?: boolean
+  }): Promise<ProductResponse> {
     const populate = ['product_set', 'team', 'components', 'service_area']
 
     if (withEnvironments) {
@@ -83,10 +97,16 @@ export default class StrapiApiClient {
     return this.restClient.get(getParams)
   }
 
-  async getTeam(teamId: string, withProducts?: boolean): Promise<TeamResponse> {
+  async getTeam({
+    teamId = '',
+    withEnvironments = false,
+  }: {
+    teamId: string
+    withEnvironments?: boolean
+  }): Promise<TeamResponse> {
     const populate = ['products']
 
-    if (withProducts) {
+    if (withEnvironments) {
       populate.push('products.components')
       populate.push('products.components.environments')
     }

@@ -20,7 +20,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   get('/:teamId', async (req, res) => {
     const teamId = getTeamId(req)
-    const team = await serviceCatalogueService.getTeam(teamId)
+    const team = await serviceCatalogueService.getTeam({ teamId })
     const products = team.products?.data?.map(product => product)
 
     const displayTeam = {
