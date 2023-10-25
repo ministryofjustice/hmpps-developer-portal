@@ -30,36 +30,13 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const displayComponents = components
       .filter(component => {
         if (component.attributes?.versions && component.attributes?.versions[dependencyType]) {
-          switch (dependencyType) {
-            case 'helm':
-              return component.attributes.versions.helm.dependencies[dependencyName]
-            case 'circleci':
-              return component.attributes.versions.circleci.orbs[dependencyName]
-            case 'dockerfile':
-              return component.attributes.versions.dockerfile[dependencyName]
-            default:
-              return false
-          }
+          return component.attributes.versions[dependencyType][dependencyName]
         }
 
         return false
       })
       .map(component => {
-        let dependencyVersion = ''
-
-        switch (dependencyType) {
-          case 'helm':
-            dependencyVersion = component.attributes.versions.helm.dependencies[dependencyName]
-            break
-          case 'circleci':
-            dependencyVersion = component.attributes.versions.circleci.orbs[dependencyName]
-            break
-          case 'dockerfile':
-            dependencyVersion = component.attributes.versions.dockerfile[dependencyName]
-            break
-          default:
-            dependencyVersion = 'N/A'
-        }
+        const dependencyVersion = component.attributes.versions[dependencyType][dependencyName]
 
         return {
           id: component.id,

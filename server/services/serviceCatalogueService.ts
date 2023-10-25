@@ -49,25 +49,13 @@ export default class ServiceCatalogueService {
     components
       .filter(component => component.attributes.versions)
       .forEach(component => {
-        if (component.attributes.versions.helm) {
-          Object.keys(component.attributes.versions.helm.dependencies).forEach(dependency => {
-            if (!dependencies.includes(`helm::${dependency}`)) {
-              dependencies.push(`helm::${dependency}`)
-            }
-          })
-        }
-        if (component.attributes.versions.circleci) {
-          Object.keys(component.attributes.versions.circleci.orbs).forEach(orb => {
-            if (!dependencies.includes(`circleci::${orb}`)) {
-              dependencies.push(`circleci::${orb}`)
-            }
-          })
-        }
-        if (component.attributes.versions.dockerfile) {
-          Object.keys(component.attributes.versions.dockerfile).forEach(dockerfile => {
-            if (!dependencies.includes(`dockerfile::${dockerfile}`)) {
-              dependencies.push(`dockerfile::${dockerfile}`)
-            }
+        if (component.attributes.versions) {
+          Object.keys(component.attributes.versions).forEach(versionType => {
+            Object.keys(component.attributes.versions[versionType]).forEach(dependency => {
+              if (!dependencies.includes(`${versionType}::${dependency}`)) {
+                dependencies.push(`${versionType}::${dependency}`)
+              }
+            })
           })
         }
       })

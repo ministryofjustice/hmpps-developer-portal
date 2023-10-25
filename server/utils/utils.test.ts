@@ -123,8 +123,8 @@ describe('Utils', () => {
       ['Valid type helm', 'helm', 'helm'],
       ['Valid type circleci', 'circleci', 'circleci'],
       ['Valid type dockerfile', 'dockerfile', 'dockerfile'],
-      ['Invalid type test23', 'test23', 'helm'],
-      ['Empty type', '', 'helm'],
+      ['Invalid type &^%', '&^%', ''],
+      ['Empty type', '', ''],
     ])('%s getDependencyType() with "%s" should return "%s"', (_: string, a: string, expected: string) => {
       const mockRequest = { params: { dependencyType: a } } as unknown as Request
 
