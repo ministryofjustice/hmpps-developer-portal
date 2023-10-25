@@ -44,7 +44,7 @@ export default class ServiceCatalogueService {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentData = (await strapiApiClient.getComponents()) as ComponentListResponse
     const components = componentData.data.sort(sortData)
-    const dependencies: string[] = []
+    let dependencies: string[] = []
 
     components
       .filter(component => component.attributes.versions)
@@ -52,9 +52,7 @@ export default class ServiceCatalogueService {
         if (component.attributes.versions) {
           Object.keys(component.attributes.versions).forEach(versionType => {
             Object.keys(component.attributes.versions[versionType]).forEach(dependency => {
-              if (!dependencies.includes(`${versionType}::${dependency}`)) {
-                dependencies.push(`${versionType}::${dependency}`)
-              }
+              dependencies = [...new Set([...dependencies, `${versionType}::${dependency}`])]
             })
           })
         }
