@@ -14,7 +14,10 @@
     {{ govukSelect({
       id: "dependencyData",
       name: "dependencyData",
-      items: dropDownItems
+      items: dropDownItems,
+      attributes: {
+        'data-test': 'dependency-select'
+      }
     }) }}
     {{ govukButton({
       id: "selectDependency",

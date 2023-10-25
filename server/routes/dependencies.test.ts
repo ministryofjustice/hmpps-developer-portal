@@ -4,14 +4,13 @@ import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import { getDropDownOptions } from './dependencies'
-// import { Component, ComponentListResponseDataItem } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testDependencies = ['type1::dependency1,type1::dependency2,type2::dependency3']
+const testDependencies = ['type1::dependency1', 'type1::dependency2', 'type2::dependency3']
 
 beforeEach(() => {
   serviceCatalogueService.getDependencies.mockResolvedValue(testDependencies)
@@ -24,70 +23,107 @@ afterEach(() => {
 })
 
 describe('/components', () => {
-  describe.only('getDropDownOptions()', () => {
-    const dependencies = getDropDownOptions(serviceCatalogueService)
+  describe('getDropDownOptions()', () => {
+    it('should provide drop down data from dependencies', async () => {
+      const dependencies = await getDropDownOptions(serviceCatalogueService)
+
+      expect(dependencies).toEqual([
+        { value: '', text: 'Please select' },
+        {
+          value: 'type1::dependency1',
+          text: 'type1: dependency1',
+          selected: false,
+          attributes: {
+            'data-test': 'type1::dependency1',
+          },
+        },
+        {
+          value: 'type1::dependency2',
+          text: 'type1: dependency2',
+          selected: false,
+          attributes: {
+            'data-test': 'type1::dependency2',
+          },
+        },
+        {
+          value: 'type2::dependency3',
+          text: 'type2: dependency3',
+          selected: false,
+          attributes: {
+            'data-test': 'type2::dependency3',
+          },
+        },
+      ])
+    })
+
+    it('should provide drop down data from dependencies selecting the chosen option when provided', async () => {
+      const dependencies = await getDropDownOptions(serviceCatalogueService, 'type1::dependency2')
+
+      expect(dependencies).toEqual([
+        { value: '', text: 'Please select' },
+        {
+          value: 'type1::dependency1',
+          text: 'type1: dependency1',
+          selected: false,
+          attributes: {
+            'data-test': 'type1::dependency1',
+          },
+        },
+        {
+          value: 'type1::dependency2',
+          text: 'type1: dependency2',
+          selected: true,
+          attributes: {
+            'data-test': 'type1::dependency2',
+          },
+        },
+        {
+          value: 'type2::dependency3',
+          text: 'type2: dependency3',
+          selected: false,
+          attributes: {
+            'data-test': 'type2::dependency3',
+          },
+        },
+      ])
+    })
   })
 
   describe('GET /', () => {
     it('should render components page', () => {
       return request(app)
-        .get('/components')
+        .get('/dependencies')
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('#componentsTable').length).toBe(1)
+          expect($('[data-test="type1::dependency1"]').length).toBe(1)
+          expect($('[data-test="type1::dependency2"]').length).toBe(1)
+          expect($('[data-test="type2::dependency3"]').length).toBe(1)
         })
     })
   })
 
-  describe('GET /:componentId', () => {
-    it('should render component page', () => {
+  describe.skip('POST /', () => {
+    it('should render components page', () => {
       return request(app)
-        .get('/components/1')
+        .get('/dependencies')
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test="detail-page-title"]').text()).toContain(testComponent.name)
-          expect($('[data-test="description"]').text()).toBe(testComponent.description)
-          expect($('[data-test="title"]').text()).toBe(testComponent.title)
-          expect($('[data-test="jira-project-keys"]').text()).toBe(
-            (testComponent.jira_project_keys as string[]).join(','),
-          )
-          expect($('[data-test="github-write"]').text()).toBe(
-            (testComponent.github_project_teams_write as string[]).join(','),
-          )
-          expect($('[data-test="github-admin"]').text()).toBe(
-            (testComponent.github_project_teams_admin as string[]).join(','),
-          )
-          expect($('[data-test="github-restricted"]').text()).toBe(
-            (testComponent.github_project_branch_protection_restricted_teams as string[]).join(','),
-          )
-          expect($('[data-test="github-repo"]').text()).toBe(testComponent.github_repo)
-          expect($('[data-test="github-visibility"]').text()).toBe(testComponent.github_project_visibility)
-          expect($('[data-test="appinsights-name"]').text()).toBe(testComponent.app_insights_cloud_role_name)
-          expect($('[data-test="api"]').text()).toBe(testComponent.api ? 'Yes' : 'No')
-          expect($('[data-test="frontend"]').text()).toBe(testComponent.frontend ? 'Yes' : 'No')
-          expect($('[data-test="part-of-monorepo"]').text()).toBe(testComponent.part_of_monorepo ? 'Yes' : 'No')
-          expect($('[data-test="language"]').text()).toBe(testComponent.language)
-          expect($('[data-test="product"]').text()).toBe(testComponent.product.data.attributes.name)
-
-          const environments = testComponent.environments.reduce(
-            (environmentList, environment) => `${environmentList}${environment.type}`,
-            '',
-          )
-
-          expect($('[data-test="environment"]').text()).toBe(environments)
+          expect($('[data-test="type1::dependency1"]').length).toBe(1)
+          expect($('[data-test="type1::dependency2"]').length).toBe(1)
+          expect($('[data-test="type2::dependency3"]').length).toBe(1)
         })
     })
   })
 
-  describe('GET /data', () => {
-    it('should output JSON data for components', () => {
+  describe.skip('GET /data/:dependencyType/:dependencyName', () => {
+    it('should output JSON data for dependencies', () => {
       return request(app)
-        .get('/components/data')
+        .get('/components/data/:dependencyType/:dependencyName')
         .expect('Content-Type', /application\/json/)
         .expect(res => {
-          expect(res.text).toStrictEqual(JSON.stringify(testComponents))
+          // expect(res.text).toStrictEqual(JSON.stringify(testComponents))
         })
     })
   })
