@@ -12,10 +12,108 @@ const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked
 let app: Express
 const testComponents = [{ id: 1, attributes: { name: 'testComponent' } }] as ComponentListResponseDataItem[]
 const testComponent = {
-  name: 'z-index testComponent',
+  name: 'testComponent',
+  description:
+    'Facade API to make external API calls and collate results for visit-scheduler and book-a-prison-visit-staff-ui',
+  jira_project_keys: [],
+  github_project_teams_write: ['hmpps-developers'],
+  github_project_teams_admin: ['book-a-prison-visit'],
+  github_project_branch_protection_restricted_teams: ['book-a-prison-visit'],
+  github_project_visibility: 'public',
+  createdAt: '2023-06-07T11:07:00.459Z',
+  updatedAt: '2023-10-25T01:25:05.964Z',
+  publishedAt: '2023-06-07T11:07:00.444Z',
+  title: 'testTitle',
+  app_insights_cloud_role_name: 'hmpps-manage-prison-visits-orchestration',
+  api: true,
+  frontend: false,
+  part_of_monorepo: false,
+  github_repo: 'hmpps-manage-prison-visits-orchestration',
+  language: 'Kotlin',
+  include_in_subject_access_requests: null,
+  github_project_teams_maintain: [],
+  github_topics: [],
+  versions: {
+    helm: {
+      dependencies: {
+        'generic-service': '2.1.0',
+        'generic-prometheus-alerts': '1.1.0',
+      },
+    },
+    gradle: {
+      hmpps_gradle_spring_boot: '5.7.0',
+    },
+    circleci: {
+      orbs: {
+        hmpps: '6',
+      },
+    },
+    dockerfile: {
+      base_image: 'eclipse-temurin:20-jre-jammy',
+    },
+  },
+  container_image: 'quay.io/hmpps/hmpps-manage-prison-visits-orchestration',
+  product: {
+    data: {
+      id: 94,
+      attributes: {
+        name: 'Visit Someone in Prison (VSIP)',
+        subproduct: false,
+        legacy: false,
+        description:
+          'The Visit someone in prison service will enable friends and family to book and manage prison visits via GOV.UK.',
+        phase: 'Alpha',
+        delivery_manager: 'Raveen Panesar',
+        product_manager: 'Simon Nebesnuick',
+        confluence_link: '',
+        gdrive_link: '',
+        createdAt: '2023-07-04T10:48:30.760Z',
+        updatedAt: '2023-10-25T06:40:06.112Z',
+        publishedAt: '2023-07-04T10:48:30.755Z',
+        p_id: 'DPS031',
+      },
+    },
+  },
   environments: [
     {
+      id: 46778,
       name: 'dev',
+      namespace: 'visit-someone-in-prison-backend-svc-dev',
+      info_path: '/info',
+      health_path: '/health',
+      url: 'https://hmpps-manage-prison-visits-orchestration-dev.prison.service.justice.gov.uk',
+      cluster: 'live.cloud-platform.service.justice.gov.uk',
+      type: 'dev',
+    },
+    {
+      id: 48914,
+      name: 'staging',
+      namespace: 'visit-someone-in-prison-backend-svc-staging',
+      info_path: '/info',
+      health_path: '/health',
+      url: 'https://hmpps-manage-prison-visits-orchestration-staging.prison.service.justice.gov.uk',
+      cluster: 'live.cloud-platform.service.justice.gov.uk',
+      type: 'stage',
+    },
+    {
+      id: 46776,
+      name: 'preprod',
+      namespace: 'visit-someone-in-prison-backend-svc-preprod',
+      info_path: '/info',
+      health_path: '/health',
+      url: 'https://hmpps-manage-prison-visits-orchestration-preprod.prison.service.justice.gov.uk',
+      cluster: 'live.cloud-platform.service.justice.gov.uk',
+      type: 'preprod',
+    },
+    {
+      id: 46775,
+      name: 'prod',
+      namespace: 'visit-someone-in-prison-backend-svc-prod',
+      info_path: '/info',
+      health_path: '/health',
+      url: 'https://hmpps-manage-prison-visits-orchestration.prison.service.justice.gov.uk',
+      cluster: 'live.cloud-platform.service.justice.gov.uk',
+      type: 'prod',
     },
   ],
 } as Component
@@ -51,7 +149,36 @@ describe('/components', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('#detailPageTitle').text()).toContain(testComponent.name)
+          expect($('[data-test="detail-page-title"]').text()).toContain(testComponent.name)
+          expect($('[data-test="description"]').text()).toBe(testComponent.description)
+          expect($('[data-test="title"]').text()).toBe(testComponent.title)
+          expect($('[data-test="jira-project-keys"]').text()).toBe(
+            (testComponent.jira_project_keys as string[]).join(','),
+          )
+          expect($('[data-test="github-write"]').text()).toBe(
+            (testComponent.github_project_teams_write as string[]).join(','),
+          )
+          expect($('[data-test="github-admin"]').text()).toBe(
+            (testComponent.github_project_teams_admin as string[]).join(','),
+          )
+          expect($('[data-test="github-restricted"]').text()).toBe(
+            (testComponent.github_project_branch_protection_restricted_teams as string[]).join(','),
+          )
+          expect($('[data-test="github-repo"]').text()).toBe(testComponent.github_repo)
+          expect($('[data-test="github-visibility"]').text()).toBe(testComponent.github_project_visibility)
+          expect($('[data-test="appinsights-name"]').text()).toBe(testComponent.app_insights_cloud_role_name)
+          expect($('[data-test="api"]').text()).toBe(testComponent.api ? 'Yes' : 'No')
+          expect($('[data-test="frontend"]').text()).toBe(testComponent.frontend ? 'Yes' : 'No')
+          expect($('[data-test="part-of-monorepo"]').text()).toBe(testComponent.part_of_monorepo ? 'Yes' : 'No')
+          expect($('[data-test="language"]').text()).toBe(testComponent.language)
+          expect($('[data-test="product"]').text()).toBe(testComponent.product.data.attributes.name)
+
+          const environments = testComponent.environments.reduce(
+            (environmentList, environment) => `${environmentList}${environment.type}`,
+            '',
+          )
+
+          expect($('[data-test="environment"]').text()).toBe(environments)
         })
     })
   })

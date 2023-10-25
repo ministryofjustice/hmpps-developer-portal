@@ -5,75 +5,75 @@
 
 {% block content %}
 
-<h1 id="detailPageTitle">{{ component.name }}</h1>
+<h1 data-test="detail-page-title">{{ component.name }}</h1>
 
 <table class="componentData">
   <tbody>
     <tr>
       <th>Description</th>
-      <td>{{ component.description }}</td>
+      <td data-test="description">{{ component.description }}</td>
     </tr>
     <tr>
       <th>Title</th>
-      <td>{{ component.title }}</td>
+      <td data-test="title">{{ component.title }}</td>
     </tr>
     <tr>
       <th>Jira Project Keys</th>
-      <td>{{ component.jiraProjectKeys }}</td>
+      <td data-test="jira-project-keys">{{ component.jiraProjectKeys }}</td>
     </tr>
     <tr>
       <th>GitHub Write</th>
-      <td>{{ component.githubWrite }}</td>
+      <td data-test="github-write">{{ component.githubWrite }}</td>
     </tr>
     <tr>
       <th>GitHub Admin</th>
-      <td>{{ component.githubAdmin }}</td>
+      <td data-test="github-admin">{{ component.githubAdmin }}</td>
     </tr>
     <tr>
       <th>GitHub Restricted</th>
-      <td>{{ component.githubRestricted }}</td>
+      <td data-test="github-restricted">{{ component.githubRestricted }}</td>
     </tr>
     <tr>
       <th>GitHub Repo</th>
-      <td><a href="https://github.com/ministryofjustice/{{ component.githubRepo }}" target="_blank">{{ component.githubRepo }}</a> (opens in new window)</td>
+      <td><a href="https://github.com/ministryofjustice/{{ component.githubRepo }}" target="_blank" data-test="github-repo">{{ component.githubRepo }}</a> (opens in new window)</td>
     </tr>
     <tr>
       <th>GitHub Visibility</th>
-      <td>{{ component.githubVisibility }}</td>
+      <td data-test="github-visibility">{{ component.githubVisibility }}</td>
     </tr>
     <tr>
       <th>App Insights Cloud Role Name</th>
-      <td>{{ component.appInsightsName }}</td>
+      <td data-test="appinsights-name">{{ component.appInsightsName }}</td>
     </tr>
     <tr>
       <th>API</th>
-      <td>{% if component.api %}Yes{% else %}No{% endif %}</td>
+      <td data-test="api">{% if component.api %}Yes{% else %}No{% endif %}</td>
     </tr>
     <tr>
       <th>Frontend</th>
-      <td>{% if component.frontend %}Yes{% else %}No{% endif %}</td>
+      <td data-test="frontend">{% if component.frontend %}Yes{% else %}No{% endif %}</td>
     </tr>
     <tr>
       <th>Part of monorepo</th>
-      <td>{% if component.partOfMonorepo %}Yes{% else %}No{% endif %}</td>
+      <td data-test="part-of-monorepo">{% if component.partOfMonorepo %}Yes{% else %}No{% endif %}</td>
     </tr>
     <tr>
       <th>Language</th>
-      <td>{{ component.language }}</td>
+      <td data-test="language">{{ component.language }}</td>
     </tr>
     <tr>
       <th>Product</th>
-      <td><a href="/products/{{ component.product.id }}">{{ component.product.attributes.name }}</a></td>
+      <td><a href="/products/{{ component.product.id }}" data-test="product">{{ component.product.attributes.name }}</a></td>
     </tr>
     <tr>
       <th>Environments</th>
       <td>
         {% if component.environments | length %}
           {% for environment in component.environments %}
-            <a href="/components/{{ component.name }}/environment/{{ environment.type }}">{{ environment.type }}</a>&nbsp;
+            <a href="/components/{{ component.name }}/environment/{{ environment.type }}" data-test="environment">{{ environment.type }}</a>&nbsp;
           {% endfor %}
         {% else %}
-        <p>None</p>
+        <p data-test="no-environments">None</p>
         {% endif %}
       </td>
     </tr>
