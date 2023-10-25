@@ -11,7 +11,20 @@ const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked
 
 let app: Express
 const testTeams = [{ id: 1, attributes: { name: 'testTeam' } }] as TeamListResponseDataItem[]
-const testTeam = { name: 'z-index testTeam' } as Team
+const testTeam = {
+  t_id: 'testTeamId',
+  name: 'testTeamName',
+  products: {
+    data: [
+      {
+        id: 23,
+        attributes: {
+          name: 'productName',
+        },
+      },
+    ],
+  },
+} as Team
 
 beforeEach(() => {
   serviceCatalogueService.getTeams.mockResolvedValue(testTeams)
@@ -32,19 +45,44 @@ describe('/teams', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('#teams')).toBeDefined()
+          expect($('#teamsTable').length).toBe(1)
         })
     })
   })
 
   describe('GET /:teamId', () => {
-    it('should render team page', () => {
+    it('should render team page with products list if there are products', () => {
       return request(app)
         .get('/teams/1')
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('#detailPageTitle').text()).toContain(testTeam.name)
+          expect($('[data-test="detail-page-title"]').text()).toContain(testTeam.name)
+          expect($('[data-test="team-id"]').text()).toBe(testTeam.t_id)
+          expect($('[data-test="no-products"]').text()).toBe('')
+          expect($(`[data-test="product-${testTeam.products.data[0].id}"]`).text()).toBe(
+            testTeam.products.data[0].attributes.name,
+          )
+        })
+    })
+
+    it('should render team page with none shown if there are no products', () => {
+      const testTeamNoProducts = {
+        t_id: 'testTeamId',
+        name: 'testTeamName',
+        products: {},
+      } as Team
+
+      serviceCatalogueService.getTeam.mockResolvedValue(testTeamNoProducts)
+
+      return request(app)
+        .get('/teams/1')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="detail-page-title"]').text()).toContain(testTeamNoProducts.name)
+          expect($('[data-test="team-id"]').text()).toBe(testTeamNoProducts.t_id)
+          expect($('[data-test="no-products"]').text()).toBe('None')
         })
     })
   })
