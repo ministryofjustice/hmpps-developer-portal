@@ -5,17 +5,17 @@
 
 {% block content %}
 
-<h1 id="detailPageTitle">{{ serviceArea.name }}</h1>
+<h1 data-test="detail-page-title">{{ serviceArea.name }}</h1>
 
 <table class="componentData">
   <tbody>
     <tr>
       <th>ID</th>
-      <td>{{ serviceArea.id }}</td>
+      <td data-test="service-area-id">{{ serviceArea.id }}</td>
     </tr>
     <tr>
       <th>Owner</th>
-      <td>{{ serviceArea.owner }}</td>
+      <td data-test="service-area-owner">{{ serviceArea.owner }}</td>
     </tr>
     <tr>
       <th>Products</th>
@@ -23,11 +23,11 @@
         {% if serviceArea.products | length %}
         <ul>
           {% for product in serviceArea.products %}
-            <li><a href="/products/{{ product.id }}">{{ product.attributes.name }}</a></li>
+            <li><a href="/products/{{ product.id }}" data-test="product-{{ product.id }}">{{ product.attributes.name }}</a></li>
           {% endfor %}
         </ul>
         {% else %}
-        <p>None</p>
+        <p data-test="no-products">None</p>
         {% endif %}
       </td>
     </tr>

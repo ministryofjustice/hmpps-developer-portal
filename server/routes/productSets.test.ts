@@ -11,7 +11,20 @@ const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked
 
 let app: Express
 const testProductSets = [{ id: 1, attributes: { name: 'testProductSet' } }] as ProductSetListResponseDataItem[]
-const testProductSet = { name: 'Product Set' } as ProductSet
+const testProductSet = {
+  ps_id: 'testProductSetId',
+  name: 'testProductSetName',
+  products: {
+    data: [
+      {
+        id: 23,
+        attributes: {
+          name: 'productName',
+        },
+      },
+    ],
+  },
+} as ProductSet
 
 beforeEach(() => {
   serviceCatalogueService.getProductSets.mockResolvedValue(testProductSets)
@@ -32,19 +45,44 @@ describe('/product-sets', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('#productSets')).toBeDefined()
+          expect($('#productSetsTable').length).toBe(1)
         })
     })
   })
 
   describe('GET /:productSetId', () => {
-    it('should render product set page', () => {
+    it('should render product set page with products list if there are products', () => {
       return request(app)
         .get('/product-sets/1')
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('#detailPageTitle').text()).toContain(testProductSet.name)
+          expect($('[data-test="detail-page-title"]').text()).toContain(testProductSet.name)
+          expect($('[data-test="product-set-id"]').text()).toBe(testProductSet.ps_id)
+          expect($('[data-test="no-products"]').text()).toBe('')
+          expect($(`[data-test="product-${testProductSet.products.data[0].id}"]`).text()).toBe(
+            testProductSet.products.data[0].attributes.name,
+          )
+        })
+    })
+
+    it('should render service area page with none shown if there are no products', () => {
+      const testProductSetNoProducts = {
+        ps_id: 'testProductSetId',
+        name: 'testProductSetName',
+        products: {},
+      } as ProductSet
+
+      serviceCatalogueService.getProductSet.mockResolvedValue(testProductSetNoProducts)
+
+      return request(app)
+        .get('/product-sets/1')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="detail-page-title"]').text()).toContain(testProductSetNoProducts.name)
+          expect($('[data-test="product-set-id"]').text()).toBe(testProductSetNoProducts.ps_id)
+          expect($('[data-test="no-products"]').text()).toBe('None')
         })
     })
   })

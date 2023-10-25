@@ -5,13 +5,13 @@
 
 {% block content %}
 
-<h1 id="detailPageTitle">{{ productSet.name }}</h1>
+<h1 data-test="detail-page-title">{{ productSet.name }}</h1>
 
 <table class="componentData">
   <tbody>
     <tr>
       <th>ID</th>
-      <td>{{ productSet.ps_id }}</td>
+      <td data-test="product-set-id">{{ productSet.id }}</td>
     </tr>
     <tr>
       <th>Products</th>
@@ -19,11 +19,11 @@
         {% if productSet.products | length %}
         <ul>
           {% for product in productSet.products %}
-            <li><a href="/products/{{ product.id }}">{{ product.attributes.name }}</a></li>
+            <li><a href="/products/{{ product.id }}" data-test="product-{{ product.id }}">{{ product.attributes.name }}</a></li>
           {% endfor %}
         </ul>
         {% else %}
-        <p>None</p>
+        <p data-test="no-products">None</p>
         {% endif %}
       </td>
     </tr>

@@ -22,8 +22,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   get('/:componentName', async (req, res) => {
     const componentName = getComponentName(req)
     const component = await serviceCatalogueService.getComponent(componentName)
-    const environments = component.environments?.map(environment => environment)
-    const environmentNames = environments.reduce((names, environment) => names.concat([environment.name]), [])
+    const { environments } = component
 
     const displayComponent = {
       name: component.name,
@@ -43,7 +42,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       product: component.product?.data,
       versions: component.versions,
       environments,
-      environmentNames,
     }
 
     return res.render('pages/component', { component: displayComponent })
