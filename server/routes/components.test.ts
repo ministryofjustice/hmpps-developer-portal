@@ -56,14 +56,13 @@ const testComponent = {
     data: {
       id: 94,
       attributes: {
-        name: 'Visit Someone in Prison (VSIP)',
+        name: 'Test Product',
         subproduct: false,
         legacy: false,
-        description:
-          'The Visit someone in prison service will enable friends and family to book and manage prison visits via GOV.UK.',
+        description: 'Test product description',
         phase: 'Alpha',
-        delivery_manager: 'Raveen Panesar',
-        product_manager: 'Simon Nebesnuick',
+        delivery_manager: 'Test DM',
+        product_manager: 'Test PM',
         confluence_link: '',
         gdrive_link: '',
         createdAt: '2023-07-04T10:48:30.760Z',
