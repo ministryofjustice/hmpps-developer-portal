@@ -82,3 +82,36 @@ Or run tests with the cypress UI:
 
 The template project has implemented some scheduled checks to ensure that key dependencies are kept up to date.
 If these are not desired in the cloned project, remove references to `check_outdated` job from `.circleci/config.yml`
+
+### Port forward to redis hosted in Cloud-platform
+
+This is useful to do so you can test changes with real redis data containing health/info/version stream data.
+
+Create a port forward pod:
+```bash
+kubectl \
+  -n hmpps-portfolio-management-dev \
+  run port-forward-pod \
+  --image=ministryofjustice/port-forward \
+  --port=6379 \
+  --env="REMOTE_HOST=[redis host]" \
+  --env="LOCAL_PORT=6379" \
+  --env="REMOTE_PORT=6379"
+```
+
+Use kubectl to port-forward to it:
+```bash
+kubectl \
+  -n hmpps-portfolio-management-dev \
+  port-forward \
+  port-forward-pod 6379:6379
+```
+
+Ensure following redis environment variables are set:
+
+```bash
+export REDIS_HOST=127.0.0.1
+export REDIS_TLS_ENABLED=true
+export REDIS_TLS_VERIFICATION=false
+export REDIS_AUTH_TOKEN=[access token]
+```

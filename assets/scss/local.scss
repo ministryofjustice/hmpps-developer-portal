@@ -66,5 +66,25 @@
 
   tr:nth-of-type(2n + 1) td {
     background-color: govuk-colour('light-grey');
+
+    &.statusTileUp {
+      color: white;
+      background-color: govuk-colour('green');
+    }
+
+    &.statusTileDown {
+      color: white;
+      background-color: govuk-colour('red');
+    }
+  }
+
+  pre {
+    font-size: 0.9rem;
+    overflow-x: scroll;
+    max-width: 60em;
+    padding: govuk-spacing(1);
+    font-family: Courier, monospace;
+    color: white;
+    background-color: black;
   }
 }

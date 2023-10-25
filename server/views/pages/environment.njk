@@ -52,6 +52,14 @@
       <td id="{{ component.environment.name }}_status"></td>
     </tr>
     <tr>
+      <th>Health output</th>
+      <td><pre id="{{ component.environment.name }}_health_raw">None availableserver/data/redisClient.ts.<pre></td>
+    </tr>
+    <tr>
+      <th>Last Updated</th>
+      <td id="{{ component.environment.name }}_last_updated"></td>
+    </tr>
+    <tr>
       <th>Cloud Platform Reports</th>
       <td><a href="https://reports.cloud-platform.service.justice.gov.uk/namespace/{{ component.environment.namespace }}" target="_blank">View</a> (opens in new window)</td>
     </tr>
@@ -105,6 +113,9 @@
                 break
               case 'h':
                 const jsonData = data[streamKey].json
+                const httpStatus = data[streamKey].http_s
+                const lastTime = new Date(parseInt(lastMessage.id.split('-')[0]));
+
                 let status = 'UNK'
 
                 try {
@@ -115,12 +126,29 @@
                   } else {
                     status = health.healthy === true ? 'UP' : 'DOWN'
                   }
+                  if(status === 'UNK') {
+                    $(`#${streamName[2]}_status`).removeClass('statusTileDown')
+                    $(`#${streamName[2]}_status`).removeClass('statusTileUp')
+                  }
+                  if(httpStatus === '200') {
+                    $(`#${streamName[2]}_status`).removeClass('statusTileDown')
+                    $(`#${streamName[2]}_status`).addClass('statusTileUp')
+                  }
+                  if(httpStatus !== '200') {
+                    $(`#${streamName[2]}_status`).removeClass('statusTileUp')
+                    $(`#${streamName[2]}_status`).addClass('statusTileDown')
+                  }
+
+                  $(`#${streamName[2]}_health_raw`).text(JSON.stringify(health, null, 2))
+
                 } catch (e) {
                   console.error('Error parsing JSON data')
                   console.error(e)
                 }
 
                 $(`#${streamName[2]}_status`).text(status)
+                $(`#${streamName[2]}_last_updated`).text(lastTime.toLocaleString())
+
                 break
             }
           }
@@ -133,7 +161,7 @@
     const watch = async () => {
       await fetchMessages(lastIds)
 
-      setTimeout(watch, 10000)
+      setTimeout(watch, 30000)
     }
 
     jQuery(function () {

@@ -41,7 +41,8 @@ export default {
     host: get('REDIS_HOST', 'localhost', requiredInProduction),
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
     password: process.env.REDIS_AUTH_TOKEN,
-    tls_enabled: get('REDIS_TLS_ENABLED', 'false'),
+    tlsEnabled: get('REDIS_TLS_ENABLED', 'false'),
+    tlsVerification: get('REDIS_TLS_VERIFICATION', 'true'),
   },
   session: {
     secret: get('SESSION_SECRET', 'app-insecure-default-session', requiredInProduction),
