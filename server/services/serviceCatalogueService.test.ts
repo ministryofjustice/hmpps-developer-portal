@@ -210,15 +210,11 @@ describe('Strapi service', () => {
               name: 'z-index testComponent',
               versions: {
                 helm: {
-                  dependencies: {
-                    'generic-service': '2.6.5',
-                    'generic-prometheus-alerts': '1.3.2',
-                  },
+                  'generic-service': '2.6.5',
+                  'generic-prometheus-alerts': '1.3.2',
                 },
                 circleci: {
-                  orbs: {
-                    hmpps: '7',
-                  },
+                  hmpps: '7',
                 },
                 dockerfile: {
                   base_image: 'node:18.18-bullseye-slim',

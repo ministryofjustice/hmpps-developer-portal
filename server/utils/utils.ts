@@ -81,5 +81,5 @@ export const getDependencyName = (req: Request): string => {
 export const getDependencyType = (req: Request): string => {
   const { dependencyType } = req.params
 
-  return ['helm', 'circleci', 'dockerfile'].includes(dependencyType) ? dependencyType : 'helm'
+  return dependencyType.replace(/[^-a-z0-9_]/g, '')
 }
