@@ -66,22 +66,31 @@ export const getDropDownOptions = async (
   serviceCatalogueService: ServiceCatalogueService,
   currentDependency: string = '',
 ) => {
+  type SelectList = {
+    value: string
+    text: string
+    selected?: boolean
+    attributes?: Record<string, string>
+  }
+
   const dependencies = await serviceCatalogueService.getDependencies()
 
-  const dropDownItems = dependencies.map(dependency => {
+  const dropDownItems = dependencies.map((dependency): SelectList => {
     const parts = dependency.split('::')
 
     return {
       value: dependency,
       text: `${parts[0]}: ${parts[1]}`,
       selected: dependency === currentDependency,
+      attributes: {
+        'data-test': dependency,
+      },
     }
   })
 
   dropDownItems.unshift({
     value: '',
     text: 'Please select',
-    selected: false,
   })
 
   return dropDownItems
