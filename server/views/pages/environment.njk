@@ -126,15 +126,13 @@
                   } else {
                     status = health.healthy === true ? 'UP' : 'DOWN'
                   }
-                  if(status === 'UNK') {
+                  if (status === 'UNK') {
                     $(`#${streamName[2]}_status`).removeClass('statusTileDown')
                     $(`#${streamName[2]}_status`).removeClass('statusTileUp')
-                  }
-                  if(httpStatus === '200') {
+                  } else if (httpStatus === '200') {
                     $(`#${streamName[2]}_status`).removeClass('statusTileDown')
                     $(`#${streamName[2]}_status`).addClass('statusTileUp')
-                  }
-                  if(httpStatus !== '200') {
+                  } else {
                     $(`#${streamName[2]}_status`).removeClass('statusTileUp')
                     $(`#${streamName[2]}_status`).addClass('statusTileDown')
                   }
