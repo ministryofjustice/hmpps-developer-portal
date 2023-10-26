@@ -26,6 +26,32 @@ jQuery(function () {
     document.location.href = `/dependencies/${dependencyType}/${dependencyName}`
   })
 
+  const semverTidy = semVer => {
+    // sometimes comes through as a number which has no match method
+    const semVerString = `${semVer}`
+
+    if (semVerString && !semVerString.match(/^\d+(\.\d+){0,2}$/)) {
+      return semVerString
+    }
+
+    ;[major, minor = '.', patch = '.'] = semVerString.split('.')
+
+    return `0000${major}`.slice(-4) + `0000${minor}`.slice(-4) + `0000${patch}`.slice(-4)
+  }
+
+  $.extend($.fn.dataTable.ext.type.order, {
+    'semver-asc': function (a, b) {
+      a = semverTidy(a)
+      b = semverTidy(b)
+      return a < b ? -1 : a > b ? 1 : 0
+    },
+    'semver-desc': function (a, b) {
+      a = semverTidy(a)
+      b = semverTidy(b)
+      return a < b ? 1 : a > b ? -1 : 0
+    },
+  })
+
   $('#dependenciesTable').DataTable({
     paging: false,
     order: [[1, 'asc']],
@@ -51,6 +77,7 @@ jQuery(function () {
       },
       {
         data: 'dependencyVersion',
+        type: 'semver',
       },
     ],
   })
