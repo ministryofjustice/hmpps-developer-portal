@@ -91,7 +91,7 @@
 
       const options = {
         avoidOverlappingGridLines: false,
-        timeline: { 
+        timeline: {
           groupByRowLabel: true,
           colorByRowLabel: false}
       };
@@ -102,7 +102,7 @@
       dataTable.addColumn({ type: 'string', id: 'style', role: 'style' })
       dataTable.addColumn({ type: 'date', id: 'Start' })
       dataTable.addColumn({ type: 'date', id: 'End' })
-      
+
       // Start at from last 20
       const offset = 20
       let i = stream.length - offset
@@ -110,7 +110,7 @@
         const eventEpochTime = parseInt(stream[i].id.split('-')[0])
         const eventTimeStart = new Date(eventEpochTime)
         let eventTimeEnd = new Date(eventEpochTime + 120000) // make events 2 min long
-        
+
         if(stream[i+1]) {
           const nextEventEpochTime = parseInt(stream[i+1].id.split('-')[0])
           eventTimeEnd = new Date(nextEventEpochTime - 10000);
@@ -118,7 +118,7 @@
 
         let prettyJson = stream[i].message.json
 
-        try { 
+        try {
           const messageJson = JSON.parse(stream[i].message.json)
           prettyJson = JSON.stringify(messageJson, null, 2)
         } catch(err) {
@@ -134,11 +134,11 @@
         } else if (stream[i].message.http_s === '0') {
           dataTable.addRows([
             [ 'Status', stream[i].message.http_s, prettyJson, '#000000', eventTimeStart, eventTimeEnd ]
-          ]);    
+          ]);
         } else {
           dataTable.addRows([
             [ 'Status', stream[i].message.http_s, prettyJson, '#d4351c', eventTimeStart, eventTimeEnd ]
-          ]);          
+          ]);
         }
         i++;
       }
