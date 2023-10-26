@@ -31,10 +31,10 @@ jQuery(function () {
     const semVerString = `${semVer}`
 
     if (semVerString && !semVerString.match(/^\d+(\.\d+){0,2}$/)) {
-      return 'ZZZZ'
+      return semVerString
     }
 
-    ;[major, minor = 0, patch = 0] = semVerString.split('.')
+    ;[major, minor = '.', patch = '.'] = semVerString.split('.')
 
     return `0000${major}`.slice(-4) + `0000${minor}`.slice(-4) + `0000${patch}`.slice(-4)
   }
