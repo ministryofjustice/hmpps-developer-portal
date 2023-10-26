@@ -3,9 +3,28 @@ function cleanColumnOutput(data, type, row) {
   return data.replace(unsafeOutputPattern, '')
 }
 
+const getDependencyData = dependencyData => {
+  let dependencyName = ''
+  let dependencyType = ''
+
+  if (dependencyData) {
+    ;[dependencyType, dependencyName] = dependencyData.replace(/[^-a-z0-9:_]/g, '').split('::')
+  }
+
+  return {
+    dependencyType,
+    dependencyName,
+  }
+}
+
 jQuery(function () {
-  const dataDependencyType = dependencyType || 'helm'
-  const dataDependencyName = dependencyName || 'generic-service'
+  $('#selectDependency').on('click', async e => {
+    e.preventDefault(e)
+
+    const { dependencyType, dependencyName } = getDependencyData($('#dependencyData').val())
+
+    document.location.href = `/dependencies/${dependencyType}/${dependencyName}`
+  })
 
   $('#dependenciesTable').DataTable({
     paging: false,

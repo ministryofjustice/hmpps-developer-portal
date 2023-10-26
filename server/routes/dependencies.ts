@@ -1,4 +1,4 @@
-import { type RequestHandler, type Request, Router } from 'express'
+import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { ServiceCatalogueService, Services } from '../services'
 import { getDependencyName, getDependencyType } from '../utils/utils'
@@ -6,20 +6,14 @@ import { getDependencyName, getDependencyType } from '../utils/utils'
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
+  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  get('/', async (req, res) => {
-    const dropDownItems = await getDropDownOptions(serviceCatalogueService)
-
-    return res.render('pages/dependencies', { dropDownItems })
-  })
-
-  post('/', async (req, res) => {
-    const { dependencyType, dependencyName } = getDependencyData(req)
+  get(['/', '/:dependencyType/:dependencyName'], async (req, res) => {
+    const dependencyType = getDependencyType(req)
+    const dependencyName = getDependencyName(req)
     const dropDownItems = await getDropDownOptions(serviceCatalogueService, `${dependencyType}::${dependencyName}`)
 
-    return res.render('pages/dependencies', { dependencyType, dependencyName, dropDownItems })
+    return res.render('pages/dependencies', { dropDownItems, dependencyType, dependencyName })
   })
 
   get('/data/:dependencyType/:dependencyName', async (req, res) => {
@@ -49,17 +43,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   return router
-}
-
-export const getDependencyData = (req: Request) => {
-  const { dependencyData } = req.body
-
-  const parts = dependencyData.replace(/[^-a-z0-9:_]/g, '').split('::')
-
-  return {
-    dependencyType: parts[0],
-    dependencyName: parts[1],
-  }
 }
 
 export const getDropDownOptions = async (
