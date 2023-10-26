@@ -26,12 +26,15 @@ jQuery(function () {
     document.location.href = `/dependencies/${dependencyType}/${dependencyName}`
   })
 
-  const semverTidy = semVerString => {
-    if (!semVerString.match(/^\d+\.\d+\.\d+$/)) {
-      return ''
+  const semverTidy = semVer => {
+    // sometimes comes through as a number which has no match method
+    const semVerString = `${semVer}`
+
+    if (semVerString && !semVerString.match(/^\d+(\.\d+){0,2}$/)) {
+      return 'ZZZZ'
     }
 
-    ;[major, minor, patch] = semVerString.split('.')
+    ;[major, minor = 0, patch = 0] = semVerString.split('.')
 
     return `0000${major}`.slice(-4) + `0000${minor}`.slice(-4) + `0000${patch}`.slice(-4)
   }
