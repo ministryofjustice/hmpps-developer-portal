@@ -9,7 +9,7 @@
 {% block content %}
   <h1>Dependencies</h1>
 
-  <form method="POST" action="/dependencies">
+  <form>
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
     {{ govukSelect({
       id: "dependencyData",
@@ -42,8 +42,8 @@
 
 {% block bodyEnd %}
   <script nonce="{{ cspNonce }}">
-    const dependencyName = '{{ dependencyName }}'
-    const dependencyType = '{{ dependencyType }}'
+    const dataDependencyName = '{{ dependencyName }}'
+    const dataDependencyType = '{{ dependencyType }}'
   </script>
   <script src="/assets/govuk/all.js"></script>
   <script src="/assets/govukFrontendInit.js"></script>

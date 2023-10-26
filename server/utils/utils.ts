@@ -73,13 +73,13 @@ export const getEnvironmentName = (req: Request): string => {
 }
 
 export const getDependencyName = (req: Request): string => {
-  const { dependencyName } = req.params
+  const dependencyName = req.params.dependencyName || ''
 
   return dependencyName.replace(/[^-a-z0-9_]/g, '')
 }
 
 export const getDependencyType = (req: Request): string => {
-  const { dependencyType } = req.params
+  const dependencyType = req.params.dependencyType || ''
 
   return dependencyType.replace(/[^-a-z0-9_]/g, '')
 }
