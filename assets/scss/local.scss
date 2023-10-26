@@ -64,6 +64,18 @@
     background-color: govuk-colour('light-grey');
   }
 
+  tr td {
+    &.statusTileUp {
+      color: white;
+      background-color: govuk-colour('green');
+    }
+
+    &.statusTileDown {
+      color: white;
+      background-color: govuk-colour('red');
+    }
+  }
+
   tr:nth-of-type(2n + 1) td {
     background-color: govuk-colour('light-grey');
 
@@ -87,4 +99,10 @@
     color: white;
     background-color: black;
   }
+}
+
+.healthOutputHover {
+  font-size: 0.7rem;
+  max-width: 40em;
+  white-space: pre-wrap;
 }
