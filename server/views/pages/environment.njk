@@ -59,7 +59,7 @@
     </tr>
     <tr>
       <th>Health output</th>
-      <td><pre id="{{ component.environment.name }}_health_raw">None availableserver/data/redisClient.ts.<pre></td>
+      <td><pre id="{{ component.environment.name }}_health_raw">None available</pre></td>
     </tr>
     <tr>
       <th>Last Updated</th>
@@ -72,6 +72,9 @@
   </tbody>
 </table>
 
+<h2>Health status history</h2>
+<div id="healthTimeline"></div>
+
 {% endblock %}
 
 {% block bodyEnd %}
@@ -79,9 +82,73 @@
   <script src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
 
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
   <script nonce="{{ cspNonce }}">
+    function drawChart(stream) {
+      const container = document.getElementById('healthTimeline')
+      const chart = new google.visualization.Timeline(container)
+
+      const options = {
+        avoidOverlappingGridLines: false,
+        timeline: { 
+          groupByRowLabel: true,
+          colorByRowLabel: false}
+      };
+      const dataTable = new google.visualization.DataTable()
+      dataTable.addColumn({ type: 'string', id: 'Status' })
+      dataTable.addColumn({ type: 'string', id: 'DummyLabel' })
+      dataTable.addColumn({ type: 'string', role: 'tooltip' })
+      dataTable.addColumn({ type: 'string', id: 'style', role: 'style' })
+      dataTable.addColumn({ type: 'date', id: 'Start' })
+      dataTable.addColumn({ type: 'date', id: 'End' })
+      
+      // Start at from last 20
+      const offset = 20
+      let i = stream.length - offset
+      while (i < stream.length) {
+        const eventEpochTime = parseInt(stream[i].id.split('-')[0])
+        const eventTimeStart = new Date(eventEpochTime)
+        let eventTimeEnd = new Date(eventEpochTime + 120000) // make events 2 min long
+        
+        if(stream[i+1]) {
+          const nextEventEpochTime = parseInt(stream[i+1].id.split('-')[0])
+          eventTimeEnd = new Date(nextEventEpochTime - 10000);
+        }
+
+        let prettyJson = stream[i].message.json
+
+        try { 
+          const messageJson = JSON.parse(stream[i].message.json)
+          prettyJson = JSON.stringify(messageJson, null, 2)
+        } catch(err) {
+          console.error(err)
+        }
+
+        prettyJson = `<pre class="healthOutputHover">${prettyJson}</pre>`
+
+        if(stream[i].message.http_s === '200') {
+          dataTable.addRows([
+            [ 'Status', stream[i].message.http_s, prettyJson, '#00703c', eventTimeStart, eventTimeEnd ]
+          ]);
+        } else if (stream[i].message.http_s === '0') {
+          dataTable.addRows([
+            [ 'Status', stream[i].message.http_s, prettyJson, '#000000', eventTimeStart, eventTimeEnd ]
+          ]);    
+        } else {
+          dataTable.addRows([
+            [ 'Status', stream[i].message.http_s, prettyJson, '#d4351c', eventTimeStart, eventTimeEnd ]
+          ]);          
+        }
+        i++;
+      }
+
+      chart.draw(dataTable, options)
+    }
+
     const lastIds = {}
     const data = {}
+    let streamData = []
     lastIds['h:{{ component.environment.name }}'] = '0'
     lastIds['i:{{ component.environment.name }}'] = '0'
     lastIds['v:{{ component.environment.name }}'] = '0'
@@ -122,6 +189,11 @@
                 const httpStatus = data[streamKey].http_s
                 const lastTime = new Date(parseInt(lastMessage.id.split('-')[0]));
 
+                stream.messages.forEach(message => {
+                  streamData.push(message)
+                })
+
+                drawChart(streamData)
                 let status = 'UNK'
 
                 try {
@@ -170,6 +242,7 @@
 
     jQuery(function () {
       watch()
+      google.charts.load("current", {packages:["timeline"]})
     })
   </script>
 {% endblock %}
