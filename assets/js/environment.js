@@ -11,13 +11,21 @@ let chartReady = false
 
 const setChartReady = () => {
   chartReady = true
+  console.log('eridufhkjds')
 }
 
 function drawChart(stream) {
   if (!chartReady) {
-    return false
+    console.log('878')
+    setTimeout(() => {
+      console.log('CXCCC')
+    }, 5000)
   }
 
+  if (!chartReady) {
+    return false
+  }
+  console.log('sfsdf')
   const container = document.getElementById('healthTimeline')
   const chart = new google.visualization.Timeline(container)
 
