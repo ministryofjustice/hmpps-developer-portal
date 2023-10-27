@@ -15,17 +15,17 @@ const setChartReady = () => {
 }
 
 function drawChart(stream) {
-  if (!chartReady) {
-    console.log('878')
-    setTimeout(() => {
-      console.log('CXCCC')
-    }, 5000)
-  }
+  // if (!chartReady) {
+  //   console.log('878')
+  //   setTimeout(() => {
+  //     console.log('CXCCC')
+  //   }, 5000)
+  // }
 
-  if (!chartReady) {
-    return false
-  }
-  console.log('sfsdf')
+  // if (!chartReady) {
+  //   return false
+  // }
+  // console.log('sfsdf')
   const container = document.getElementById('healthTimeline')
   const chart = new google.visualization.Timeline(container)
 
@@ -161,7 +161,7 @@ const fetchMessages = async queryStringOptions => {
 const watch = async () => {
   await fetchMessages(lastIds)
 
-  setTimeout(watch, 30000)
+  setTimeout(watch, 10000)
 }
 
 jQuery(function () {
