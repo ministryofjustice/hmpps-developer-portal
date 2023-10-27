@@ -98,6 +98,7 @@ const fetchMessages = async streams => {
       const component = streamNameParts[1]
       const environment = streamNameParts[2]
       const lastMessage = stream.messages[stream.messages.length - 1]
+      const lastMessageTime = new Date(parseInt(lastMessage.id.split('-')[0]))
 
       if (lastIds[streamName]) {
         lastIds[streamName] = lastMessage.id
@@ -105,7 +106,7 @@ const fetchMessages = async streams => {
 
       if (data.hasOwnProperty(streamName)) {
         data[streamName] = lastMessage.message
-        const dateString = new Date().toTimeString().substring(0, 8)
+        const dateString = lastMessageTime.toLocaleString()
         $(`#tile-${component}-${environment} .statusTileLastRefresh`).text(dateString)
 
         switch (streamType) {
