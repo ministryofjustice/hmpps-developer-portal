@@ -36,6 +36,14 @@ export default function setUpStaticResources(): Router {
     router.use('/assets/js/jquery.min.js', express.static(path.join(process.cwd(), dir), cacheControl))
   })
 
+  Array.of('/node_modules/dayjs/dayjs.min.js').forEach(dir => {
+    router.use('/assets/js/dayjs/dayjs.min.js', express.static(path.join(process.cwd(), dir), cacheControl))
+  })
+
+  Array.of('/node_modules/dayjs/plugin/relativeTime.js').forEach(dir => {
+    router.use('/assets/js/dayjs/plugin/relativeTime.js', express.static(path.join(process.cwd(), dir), cacheControl))
+  })
+
   // Don't cache dynamic resources
   router.use(noCache())
 
