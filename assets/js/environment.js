@@ -166,6 +166,6 @@ const watch = async () => {
 
 jQuery(function () {
   google.charts.load('current', { packages: ['timeline'] })
-  google.charts.setOnLoadCallback(setChartReady)
-  watch()
+  google.charts.setOnLoadCallback(watch)
+  // watch()
 })
