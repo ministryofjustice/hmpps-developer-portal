@@ -1,4 +1,23 @@
+const lastIds = {}
+const data = {}
+let streamData = []
+lastIds[`h:${environmentName}`] = '0'
+lastIds[`i:${environmentName}`] = '0'
+lastIds[`v:${environmentName}`] = '0'
+data[`h:${environmentName}`] = ''
+data[`i:${environmentName}`] = ''
+data[`v:${environmentName}`] = ''
+let chartReady = false
+
+const setChartReady = () => {
+  chartReady = true
+}
+
 function drawChart(stream) {
+  if (!chartReady) {
+    return false
+  }
+
   const container = document.getElementById('healthTimeline')
   const chart = new google.visualization.Timeline(container)
 
@@ -53,16 +72,6 @@ function drawChart(stream) {
 
   chart.draw(dataTable, options)
 }
-
-const lastIds = {}
-const data = {}
-let streamData = []
-lastIds[`h:${environmentName}`] = '0'
-lastIds[`i:${environmentName}`] = '0'
-lastIds[`v:${environmentName}`] = '0'
-data[`h:${environmentName}`] = ''
-data[`i:${environmentName}`] = ''
-data[`v:${environmentName}`] = ''
 
 const fetchMessages = async queryStringOptions => {
   const queryString = new URLSearchParams(queryStringOptions).toString()
@@ -150,4 +159,5 @@ const watch = async () => {
 jQuery(function () {
   watch()
   google.charts.load('current', { packages: ['timeline'] })
+  google.charts.setOnLoadCallback(setChartReady)
 })
