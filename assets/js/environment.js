@@ -24,8 +24,7 @@ function drawChart(stream) {
 
   // Start at from last 20
   const offset = 20
-  // let i = stream.length - offset
-  // while (i < stream.length) {
+  
   for (let i = stream.length - offset; i < stream.length; i++) {
     const eventEpochTime = parseInt(stream[i].id.split('-')[0])
     const eventTimeStart = new Date(eventEpochTime)
@@ -47,15 +46,15 @@ function drawChart(stream) {
 
     prettyJson = `<pre class="healthOutputHover">${prettyJson}</pre>`
 
+    let rowColour = '#d4351c'
+
     if (stream[i].message.http_s === '200') {
-      dataTable.addRows([['Status', stream[i].message.http_s, prettyJson, '#00703c', eventTimeStart, eventTimeEnd]])
+      rowColour = '#00703c'
     } else if (stream[i].message.http_s === '0') {
-      dataTable.addRows([['Status', stream[i].message.http_s, prettyJson, '#000000', eventTimeStart, eventTimeEnd]])
-    } else {
-      dataTable.addRows([['Status', stream[i].message.http_s, prettyJson, '#d4351c', eventTimeStart, eventTimeEnd]])
+      rowColour = '#000000'
     }
 
-    // i++
+    dataTable.addRows([['Status', stream[i].message.http_s, prettyJson, rowColour, eventTimeStart, eventTimeEnd]])
   }
 
   const options = {
