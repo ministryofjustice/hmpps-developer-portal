@@ -1,42 +1,20 @@
-const lastIds = {}
-const data = {}
-let streamData = []
-lastIds[`h:${environmentName}`] = '0'
-lastIds[`i:${environmentName}`] = '0'
-lastIds[`v:${environmentName}`] = '0'
-data[`h:${environmentName}`] = ''
-data[`i:${environmentName}`] = ''
-data[`v:${environmentName}`] = ''
-let chartReady = false
-
-const setChartReady = () => {
-  chartReady = true
-  console.log('eridufhkjds')
+const lastIds = {
+  [`h:${environmentName}`]: '0',
+  [`i:${environmentName}`]: '0',
+  [`v:${environmentName}`]: '0',
 }
+const data = {
+  [`h:${environmentName}`]: '',
+  [`i:${environmentName}`]: '',
+  [`v:${environmentName}`]: '',
+}
+let streamData = []
 
 function drawChart(stream) {
-  // if (!chartReady) {
-  //   console.log('878')
-  //   setTimeout(() => {
-  //     console.log('CXCCC')
-  //   }, 5000)
-  // }
-
-  // if (!chartReady) {
-  //   return false
-  // }
-  // console.log('sfsdf')
   const container = document.getElementById('healthTimeline')
   const chart = new google.visualization.Timeline(container)
-
-  const options = {
-    avoidOverlappingGridLines: false,
-    timeline: {
-      groupByRowLabel: true,
-      colorByRowLabel: false,
-    },
-  }
   const dataTable = new google.visualization.DataTable()
+
   dataTable.addColumn({ type: 'string', id: 'Status' })
   dataTable.addColumn({ type: 'string', id: 'DummyLabel' })
   dataTable.addColumn({ type: 'string', role: 'tooltip' })
@@ -46,8 +24,9 @@ function drawChart(stream) {
 
   // Start at from last 20
   const offset = 20
-  let i = stream.length - offset
-  while (i < stream.length) {
+  // let i = stream.length - offset
+  // while (i < stream.length) {
+  for (let i = stream.length - offset; i < stream.length; i++) {
     const eventEpochTime = parseInt(stream[i].id.split('-')[0])
     const eventTimeStart = new Date(eventEpochTime)
     let eventTimeEnd = new Date(eventEpochTime + 120000) // make events 2 min long
@@ -75,7 +54,16 @@ function drawChart(stream) {
     } else {
       dataTable.addRows([['Status', stream[i].message.http_s, prettyJson, '#d4351c', eventTimeStart, eventTimeEnd]])
     }
-    i++
+
+    // i++
+  }
+
+  const options = {
+    avoidOverlappingGridLines: false,
+    timeline: {
+      groupByRowLabel: true,
+      colorByRowLabel: false,
+    },
   }
 
   chart.draw(dataTable, options)
@@ -167,5 +155,4 @@ const watch = async () => {
 jQuery(function () {
   google.charts.load('current', { packages: ['timeline'] })
   google.charts.setOnLoadCallback(watch)
-  // watch()
 })
