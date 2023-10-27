@@ -1,5 +1,6 @@
 const lastIds = {}
 const data = {}
+dayjs.extend(window.dayjs_plugin_relativeTime)
 
 jQuery(async function () {
   const monitorType = $('#monitorType').val()
@@ -105,14 +106,15 @@ const fetchMessages = async streams => {
 
       if (data.hasOwnProperty(streamName)) {
         data[streamName] = lastMessage.message
-        const dateString = new Date().toTimeString().substring(0, 8)
-        $(`#tile-${component}-${environment} .statusTileLastRefresh`).text(dateString)
 
         switch (streamType) {
           case 'v':
             $(`#tile-${component}-${environment} .statusTileBuild`).text(data[streamName].v)
             break
           case 'h':
+            const lastMessageTime = new Date(parseInt(lastMessage.id.split('-')[0]))
+            const dateString = dayjs().to(dayjs(lastMessageTime))
+            $(`#tile-${component}-${environment} .statusTileLastRefresh`).text(dateString)
             try {
               if (data[streamName].json) {
                 const jsonData = data[streamName].json
