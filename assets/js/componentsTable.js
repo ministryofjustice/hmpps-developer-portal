@@ -20,11 +20,15 @@ jQuery(function () {
       {
         data: 'attributes.name',
         createdCell: function (td, cellData, rowData) {
-          $(td).html(`<a href="/components/${cleanColumnOutput(rowData.attributes.name)}">${cleanColumnOutput(rowData.attributes.name)}</a>`)
+          $(td).html(
+            `<a href="/components/${cleanColumnOutput(rowData.attributes.name)}">${cleanColumnOutput(
+              rowData.attributes.name,
+            )}</a>`,
+          )
         },
       },
       {
-        data: 'attributes.product.data.id',
+        data: 'attributes.product.data.attributes.p_id',
         createdCell: function (td, cellData, rowData) {
           const link = rowData.attributes.product.data
             ? `<a href="/products/${rowData.attributes.product.data.id}">${cleanColumnOutput(
