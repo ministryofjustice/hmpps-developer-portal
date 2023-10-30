@@ -53,6 +53,10 @@ jQuery(function () {
   })
 
   $('#dependenciesTable').DataTable({
+    lengthMenu: [
+      [10, 25, 50, 75, 100, -1],
+      [10, 25, 50, 75, 100, 'All'],
+    ],
     paging: false,
     order: [[1, 'asc']],
     sortable: true,
