@@ -5,6 +5,10 @@ function cleanColumnOutput(data, type, row) {
 
 jQuery(function () {
   $('#productsTable').DataTable({
+    lengthMenu: [
+      [10, 25, 50, 75, 100, -1],
+      [10, 25, 50, 75, 100, 'All'],
+    ],
     paging: true,
     order: [[1, 'asc']],
     sortable: true,
