@@ -18,14 +18,14 @@ jQuery(function () {
 
     columns: [
       {
-        data: 'id',
+        data: 'attributes.p_id',
         createdCell: function (td, cellData, rowData) {
           $(td).html(`<a href="/products/${rowData.id}">${rowData.attributes.p_id}</a>`)
         },
       },
       { data: 'attributes.name', render: cleanColumnOutput },
       {
-        data: 'attributes.product_set.data.id',
+        data: 'attributes.product_set.data.attributes.ps_id',
         createdCell: function (td, cellData, rowData) {
           const link = rowData.attributes.product_set.data
             ? `<a href="/product-sets/${rowData.attributes.product_set.data.id}">${cleanColumnOutput(
