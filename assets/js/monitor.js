@@ -54,7 +54,7 @@ jQuery(async function () {
 })
 
 function updateEnvironmentList() {
-  const validEnvironments = ['prod', 'preprod', 'test', 'stage', 'dev']
+  const validEnvironments = ['prod', 'preprod', 'test', 'stage', 'staging', 'dev']
 
   $(`.${validEnvironments.join(',.')}`).show()
   $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
@@ -149,8 +149,8 @@ const fetchMessages = async streams => {
   }
 }
 
-async function populateComponentTable(type, id) {
-  const response = await fetch(`/monitor/components/${type}/${id}`)
+async function populateComponentTable(monitorType, monitorTypeId) {
+  const response = await fetch(`/monitor/components/${monitorType}/${monitorTypeId}`)
 
   if (!response.ok) {
     throw new Error('There was a problem fetching the component data')

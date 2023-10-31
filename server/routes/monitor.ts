@@ -21,7 +21,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   get(['/', '/:monitorType/:monitorName'], async (req, res) => {
     const monitorType = getMonitorType(req)
     const monitorName = getMonitorName(req)
-    logger.info(`Request for ${monitorType}/${monitorName}`)
+    logger.info(`Request for /monitor/${monitorType}/${monitorName}`)
     const serviceAreas = await serviceCatalogueService.getServiceAreas()
     const serviceAreaList = serviceAreas.map(serviceArea => {
       return {
@@ -75,15 +75,14 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           typedEnvironments.forEach(environment => {
             environments.push({
               componentName: component.attributes.name as string,
-              environmentName: environment.type as string,
+              environmentName: environment.name as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
             })
           })
         })
       })
-    }
-    if (monitorType === 'product') {
+    } else if (monitorType === 'product') {
       const product = await serviceCatalogueService.getProduct({
         productId: monitorId,
         withEnvironments: true,
@@ -95,14 +94,13 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
         typedEnvironments.forEach(environment => {
           environments.push({
             componentName: component.attributes.name as string,
-            environmentName: environment.type as string,
+            environmentName: environment.name as string,
             environmentUrl: environment.url as string,
             environmentHealth: environment.health_path as string,
           })
         })
       })
-    }
-    if (monitorType === 'team') {
+    } else if (monitorType === 'team') {
       const team = await serviceCatalogueService.getTeam({ teamId: monitorId, withEnvironments: true })
 
       team.products.data.forEach(product => {
@@ -112,15 +110,14 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           typedEnvironments.forEach(environment => {
             environments.push({
               componentName: component.attributes.name as string,
-              environmentName: environment.type as string,
+              environmentName: environment.name as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
             })
           })
         })
       })
-    }
-    if (monitorType === 'serviceArea') {
+    } else if (monitorType === 'serviceArea') {
       const serviceArea = await serviceCatalogueService.getServiceArea(monitorId, true)
 
       serviceArea.products.data.forEach(product => {
@@ -130,7 +127,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           typedEnvironments.forEach(environment => {
             environments.push({
               componentName: component.attributes.name as string,
-              environmentName: environment.type as string,
+              environmentName: environment.name as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
             })
