@@ -1,12 +1,12 @@
 const lastIds = {
-  [`h:${environmentName}`]: '0',
-  [`i:${environmentName}`]: '0',
-  [`v:${environmentName}`]: '0',
+  [`h:${environmentType}`]: '0',
+  [`i:${environmentType}`]: '0',
+  [`v:${environmentType}`]: '0',
 }
 const data = {
-  [`h:${environmentName}`]: '',
-  [`i:${environmentName}`]: '',
-  [`v:${environmentName}`]: '',
+  [`h:${environmentType}`]: '',
+  [`i:${environmentType}`]: '',
+  [`v:${environmentType}`]: '',
 }
 let streamData = []
 
