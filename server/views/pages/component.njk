@@ -70,7 +70,7 @@
       <td>
         {% if component.environments | length %}
           {% for environment in component.environments %}
-            <a href="/components/{{ component.name }}/environment/{{ environment.type }}" data-test="environment">{{ environment.type }}</a>&nbsp;
+            <a href="/components/{{ component.name }}/environment/{{ environment.name }}" data-test="environment">{{ environment.name }}</a>&nbsp;
           {% endfor %}
         {% else %}
         <p data-test="no-environments">None</p>
