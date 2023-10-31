@@ -52,7 +52,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const environmentName = getEnvironmentName(req)
 
     const component = await serviceCatalogueService.getComponent(componentName)
-    const environments = component.environments?.filter(environment => environment.name === environmentName)
+    const environments = component.environments?.filter(environment => environment.type === environmentName)
 
     const displayComponent = {
       name: componentName,
