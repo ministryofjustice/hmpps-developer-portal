@@ -94,15 +94,21 @@
     font-size: 0.9rem;
     overflow-x: scroll;
     max-width: 60em;
+    max-height: 40em;
+    scroll-behavior: auto;
     padding: govuk-spacing(1);
     font-family: Courier, monospace;
     color: white;
     background-color: black;
+    white-space: pre-wrap;
   }
 }
 
-.healthOutputHover {
-  font-size: 0.7rem;
-  max-width: 40em;
+#healthOutputSelected {
+  color: white;
+  font-family: Courier, monospace;
+  padding: govuk-spacing(1);
+  background-color: black;
+  font-size: 0.8rem;
   white-space: pre-wrap;
 }
