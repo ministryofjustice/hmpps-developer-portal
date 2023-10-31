@@ -89,7 +89,7 @@ function drawChart(stream) {
 
 const fetchMessages = async queryStringOptions => {
   const queryString = new URLSearchParams(queryStringOptions).toString()
-  const response = await fetch(`/components/queue/${componentName}/${environmentType}/${queryString}`)
+  const response = await fetch(`/components/queue/${componentName}/${environmentName}/${queryString}`)
 
   if (!response.ok) {
     throw new Error('There was a problem fetching the component data')
