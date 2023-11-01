@@ -54,7 +54,7 @@ jQuery(async function () {
 })
 
 function updateEnvironmentList() {
-  const validEnvironments = ['prod', 'preprod', 'test', 'stage', 'staging', 'dev']
+  const validEnvironments = ['prod', 'preprod', 'test', 'stage', 'dev']
 
   $(`.${validEnvironments.join(',.')}`).show()
   $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
@@ -179,7 +179,7 @@ async function populateComponentTable(monitorType, monitorTypeId) {
       data[`info:${environment.componentName}:${environment.environmentName}`] = ''
       data[`version:${environment.componentName}:${environment.environmentName}`] = ''
       $('#statusRows')
-        .append(`<tr data-test="tile-${environment.componentName}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentName}">
+        .append(`<tr data-test="tile-${environment.componentName}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentType}">
           <td><a href="/components/${environment.componentName}" class="statusTileName">${environment.componentName}</a></td>
           <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment">${environment.environmentName}</a></td>
           <td><a href="${environment.environmentUrl}${environment.environmentHealth}" class="statusTileHealth">View</a></td>

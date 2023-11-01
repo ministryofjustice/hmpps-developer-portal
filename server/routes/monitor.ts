@@ -10,6 +10,7 @@ type MonitorEnvironment = {
   environmentName: string
   environmentUrl: string
   environmentHealth: string
+  environmentType: string
 }
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
@@ -78,6 +79,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
               environmentName: environment.name as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
+              environmentType: environment.type as string,
             })
           })
         })
@@ -97,6 +99,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
             environmentName: environment.name as string,
             environmentUrl: environment.url as string,
             environmentHealth: environment.health_path as string,
+            environmentType: environment.type as string,
           })
         })
       })
@@ -113,6 +116,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
               environmentName: environment.name as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
+              environmentType: environment.type as string,
             })
           })
         })
@@ -130,6 +134,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
               environmentName: environment.name as string,
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
+              environmentType: environment.type as string,
             })
           })
         })
