@@ -149,8 +149,8 @@ const fetchMessages = async streams => {
   }
 }
 
-async function populateComponentTable(type, id) {
-  const response = await fetch(`/monitor/components/${type}/${id}`)
+async function populateComponentTable(monitorType, monitorTypeId) {
+  const response = await fetch(`/monitor/components/${monitorType}/${monitorTypeId}`)
 
   if (!response.ok) {
     throw new Error('There was a problem fetching the component data')
@@ -179,7 +179,7 @@ async function populateComponentTable(type, id) {
       data[`info:${environment.componentName}:${environment.environmentName}`] = ''
       data[`version:${environment.componentName}:${environment.environmentName}`] = ''
       $('#statusRows')
-        .append(`<tr data-test="tile-${environment.componentName}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentName}">
+        .append(`<tr data-test="tile-${environment.componentName}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentType}">
           <td><a href="/components/${environment.componentName}" class="statusTileName">${environment.componentName}</a></td>
           <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment">${environment.environmentName}</a></td>
           <td><a href="${environment.environmentUrl}${environment.environmentHealth}" class="statusTileHealth">View</a></td>

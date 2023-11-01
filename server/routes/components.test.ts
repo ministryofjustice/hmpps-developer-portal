@@ -152,7 +152,7 @@ describe('/components', () => {
           expect($('[data-test="product"]').text()).toBe(testComponent.product.data.attributes.name)
 
           const environments = testComponent.environments.reduce(
-            (environmentList, environment) => `${environmentList}${environment.type}`,
+            (environmentList, environment) => `${environmentList}${environment.name}`,
             '',
           )
 
