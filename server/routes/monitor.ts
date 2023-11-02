@@ -66,27 +66,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const monitorId = getNumericId(req, 'monitorId')
     const environments: MonitorEnvironment[] = []
 
-    if (monitorType === 'all') {
-      const products = await serviceCatalogueService.getProducts({ withEnvironments: true })
-
-      products.forEach(product => {
-        product.attributes.components.data.forEach(component => {
-          const typedEnvironments = component.attributes.environments as Environment[]
-
-          typedEnvironments.forEach(environment => {
-            if (environment.monitor) {
-              environments.push({
-                componentName: component.attributes.name as string,
-                environmentName: environment.name as string,
-                environmentUrl: environment.url as string,
-                environmentHealth: environment.health_path as string,
-                environmentType: environment.type as string,
-              })
-            }
-          })
-        })
-      })
-    } else if (monitorType === 'product') {
+    if (monitorType === 'product') {
       const product = await serviceCatalogueService.getProduct({
         productId: monitorId,
         withEnvironments: true,
@@ -131,6 +111,26 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       const serviceArea = await serviceCatalogueService.getServiceArea(monitorId, true)
 
       serviceArea.products.data.forEach(product => {
+        product.attributes.components.data.forEach(component => {
+          const typedEnvironments = component.attributes.environments as Environment[]
+
+          typedEnvironments.forEach(environment => {
+            if (environment.monitor) {
+              environments.push({
+                componentName: component.attributes.name as string,
+                environmentName: environment.name as string,
+                environmentUrl: environment.url as string,
+                environmentHealth: environment.health_path as string,
+                environmentType: environment.type as string,
+              })
+            }
+          })
+        })
+      })
+    } else {
+      const products = await serviceCatalogueService.getProducts({ withEnvironments: true })
+
+      products.forEach(product => {
         product.attributes.components.data.forEach(component => {
           const typedEnvironments = component.attributes.environments as Environment[]
 

@@ -120,6 +120,24 @@
         }
       ]
     }) }}
+    {{ govukCheckboxes({
+      classes: "govuk-checkboxes--inline status",
+      name: "status",
+      items: [
+        {
+          id: "status-up",
+          value: "up",
+          text: "UP",
+          checked: true
+        },
+        {
+          id: "status-down",
+          value: "down",
+          text: "DOWN",
+          checked: true
+        }
+      ]
+    }) }}
   </form>
 
   <table id="statusTable">

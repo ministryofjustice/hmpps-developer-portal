@@ -48,7 +48,7 @@ jQuery(async function () {
     updateEnvironmentList()
   })
 
-  $('.environments .govuk-checkboxes__input').on('change', e => {
+  $('.environments .govuk-checkboxes__input, .status .govuk-checkboxes__input').on('change', e => {
     updateEnvironmentList()
   })
 })
@@ -56,7 +56,15 @@ jQuery(async function () {
 function updateEnvironmentList() {
   const validEnvironments = ['prod', 'preprod', 'test', 'stage', 'dev']
 
-  $(`.${validEnvironments.join(',.')}`).show()
+  $('#statusRows tr').show()
+
+  if (!$('#status-up').checked) {
+    $('.statusTileUp').hide()
+  }
+  if (!$('#status-up').checked) {
+    $('.statusTileDown').hide()
+  }
+
   $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
     const environment = $(e).val()
 
