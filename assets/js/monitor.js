@@ -172,6 +172,9 @@ async function populateComponentTable(monitorType, monitorTypeId) {
     const environments = await response.json()
 
     environments.sort(sortEnvironments).forEach(environment => {
+      const healthLink = environment.environmentHealth
+        ? `<a href="${environment.environmentUrl}${environment.environmentHealth}" class="statusTileHealth">View</a>`
+        : 'N/A'
       lastIds[`health:${environment.componentName}:${environment.environmentName}`] = '0'
       lastIds[`info:${environment.componentName}:${environment.environmentName}`] = '0'
       lastIds[`version:${environment.componentName}:${environment.environmentName}`] = '0'
@@ -182,7 +185,7 @@ async function populateComponentTable(monitorType, monitorTypeId) {
         .append(`<tr data-test="tile-${environment.componentName}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentType}">
           <td><a href="/components/${environment.componentName}" class="statusTileName">${environment.componentName}</a></td>
           <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment">${environment.environmentName}</a></td>
-          <td><a href="${environment.environmentUrl}${environment.environmentHealth}" class="statusTileHealth">View</a></td>
+          <td>${healthLink}</td>
           <td class="statusTileBuild"></td>
           <td class="statusTileStatus"></td>
           <td class="statusTileLastRefresh"></td>

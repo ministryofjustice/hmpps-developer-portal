@@ -1102,6 +1102,7 @@ export interface components {
       meta?: { [key: string]: unknown }
     }
     PropertiesEnvironmentComponent: {
+      monitor: boolean
       id?: number
       /** @enum {string} */
       type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
