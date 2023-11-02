@@ -82,6 +82,7 @@ const testComponent = {
       url: 'https://dev.test.com',
       cluster: 'live-cluster.com',
       type: 'dev',
+      monitor: true,
     },
     {
       id: 48914,
@@ -92,6 +93,7 @@ const testComponent = {
       url: 'https://stage.test.com',
       cluster: 'live-cluster.com',
       type: 'stage',
+      monitor: true,
     },
   ],
 } as Component
