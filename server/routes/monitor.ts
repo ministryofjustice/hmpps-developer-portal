@@ -74,13 +74,15 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           const typedEnvironments = component.attributes.environments as Environment[]
 
           typedEnvironments.forEach(environment => {
-            environments.push({
-              componentName: component.attributes.name as string,
-              environmentName: environment.name as string,
-              environmentUrl: environment.url as string,
-              environmentHealth: environment.health_path as string,
-              environmentType: environment.type as string,
-            })
+            if (environment.monitor) {
+              environments.push({
+                componentName: component.attributes.name as string,
+                environmentName: environment.name as string,
+                environmentUrl: environment.url as string,
+                environmentHealth: environment.health_path as string,
+                environmentType: environment.type as string,
+              })
+            }
           })
         })
       })
@@ -94,13 +96,15 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
         const typedEnvironments = component.attributes.environments as Environment[]
 
         typedEnvironments.forEach(environment => {
-          environments.push({
-            componentName: component.attributes.name as string,
-            environmentName: environment.name as string,
-            environmentUrl: environment.url as string,
-            environmentHealth: environment.health_path as string,
-            environmentType: environment.type as string,
-          })
+          if (environment.monitor) {
+            environments.push({
+              componentName: component.attributes.name as string,
+              environmentName: environment.name as string,
+              environmentUrl: environment.url as string,
+              environmentHealth: environment.health_path as string,
+              environmentType: environment.type as string,
+            })
+          }
         })
       })
     } else if (monitorType === 'team') {
@@ -111,13 +115,15 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           const typedEnvironments = component.attributes.environments as Environment[]
 
           typedEnvironments.forEach(environment => {
-            environments.push({
-              componentName: component.attributes.name as string,
-              environmentName: environment.name as string,
-              environmentUrl: environment.url as string,
-              environmentHealth: environment.health_path as string,
-              environmentType: environment.type as string,
-            })
+            if (environment.monitor) {
+              environments.push({
+                componentName: component.attributes.name as string,
+                environmentName: environment.name as string,
+                environmentUrl: environment.url as string,
+                environmentHealth: environment.health_path as string,
+                environmentType: environment.type as string,
+              })
+            }
           })
         })
       })
@@ -129,13 +135,15 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           const typedEnvironments = component.attributes.environments as Environment[]
 
           typedEnvironments.forEach(environment => {
-            environments.push({
-              componentName: component.attributes.name as string,
-              environmentName: environment.name as string,
-              environmentUrl: environment.url as string,
-              environmentHealth: environment.health_path as string,
-              environmentType: environment.type as string,
-            })
+            if (environment.monitor) {
+              environments.push({
+                componentName: component.attributes.name as string,
+                environmentName: environment.name as string,
+                environmentUrl: environment.url as string,
+                environmentHealth: environment.health_path as string,
+                environmentType: environment.type as string,
+              })
+            }
           })
         })
       })
