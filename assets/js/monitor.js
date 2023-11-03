@@ -57,11 +57,14 @@ function updateEnvironmentList() {
   const validEnvironments = ['prod', 'preprod', 'test', 'stage', 'dev']
 
   $('#statusRows tr').show()
+  console.log('All rows shown', $('#status-up').is(':checked'), $('#status-down').is(':checked'))
 
-  if (!$('#status-up').checked) {
+  if (!$('#status-up').is(':checked')) {
+    console.log('hiding up')
     $('.statusTileUp').hide()
   }
-  if (!$('#status-down').checked) {
+  if (!$('#status-down').is(':checked')) {
+    console.log('hiding down')
     $('.statusTileDown').hide()
   }
 
