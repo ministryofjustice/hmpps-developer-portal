@@ -56,7 +56,15 @@ jQuery(async function () {
 function updateEnvironmentList() {
   const validEnvironments = ['prod', 'preprod', 'test', 'stage', 'dev']
 
-  $(`.${validEnvironments.join(',.')}`).show()
+  $('#statusRows tr').show()
+
+  if (!$('#status-up').is(':checked')) {
+    $('.statusTileUp').hide()
+  }
+  if (!$('#status-down').is(':checked')) {
+    $('.statusTileDown').hide()
+  }
+
   $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
     const environment = $(e).val()
 
