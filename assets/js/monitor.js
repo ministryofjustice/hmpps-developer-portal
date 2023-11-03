@@ -61,7 +61,7 @@ function updateEnvironmentList() {
   if (!$('#status-up').checked) {
     $('.statusTileUp').hide()
   }
-  if (!$('#status-up').checked) {
+  if (!$('#status-down').checked) {
     $('.statusTileDown').hide()
   }
 
