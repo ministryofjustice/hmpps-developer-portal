@@ -109,7 +109,7 @@ describe('Utils', () => {
       ['Valid name prod', 'prod', 'prod'],
       ['Valid name production', 'production', 'production'],
       ['Valid name test', 'test', 'test'],
-      ['Invalid name test23', 'test23', ''],
+      ['Invalid name 23', '23', ''],
       ['Empty name', '', ''],
     ])('%s getEnvironmentName() with "%s" should return "%s"', (_: string, a: string, expected: string) => {
       const mockRequest = { params: { environmentName: a } } as unknown as Request
