@@ -67,9 +67,7 @@ export const getComponentName = (req: Request): string => {
 export const getEnvironmentName = (req: Request): string => {
   const { environmentName } = req.params
 
-  return ['dev', 'development', 'staging', 'stage', 'preprod', 'prod', 'production', 'test'].includes(environmentName)
-    ? environmentName
-    : ''
+  return environmentName.replace(/[^a-z]/g, '')
 }
 
 export const getDependencyName = (req: Request): string => {
