@@ -128,23 +128,21 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
         })
       })
     } else {
-      const products = await serviceCatalogueService.getProducts({ withEnvironments: true })
+      const components = await serviceCatalogueService.getComponents()
 
-      products.forEach(product => {
-        product.attributes.components.data.forEach(component => {
-          const typedEnvironments = component.attributes.environments as Environment[]
+      components.forEach(component => {
+        const typedEnvironments = component.attributes.environments as Environment[]
 
-          typedEnvironments.forEach(environment => {
-            if (environment.monitor) {
-              environments.push({
-                componentName: component.attributes.name as string,
-                environmentName: environment.name as string,
-                environmentUrl: environment.url as string,
-                environmentHealth: environment.health_path as string,
-                environmentType: environment.type as string,
-              })
-            }
-          })
+        typedEnvironments.forEach(environment => {
+          if (environment.monitor) {
+            environments.push({
+              componentName: component.attributes.name as string,
+              environmentName: environment.name as string,
+              environmentUrl: environment.url as string,
+              environmentHealth: environment.health_path as string,
+              environmentType: environment.type as string,
+            })
+          }
         })
       })
     }
