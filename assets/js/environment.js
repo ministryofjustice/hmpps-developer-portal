@@ -9,6 +9,7 @@ const data = {
   [`v:${environmentName}`]: '',
 }
 let streamData = []
+let streamVersionData = []
 
 function drawChart(stream) {
   const container = document.getElementById('healthTimeline')
@@ -87,6 +88,61 @@ function drawChart(stream) {
   chart.draw(dataTable, options)
 }
 
+function drawVersionChart(stream) {
+  const container = document.getElementById('versionTimeline')
+  const versionChart = new google.visualization.Timeline(container)
+  const dataVersionTable = new google.visualization.DataTable()
+
+  dataVersionTable.addColumn({ type: 'string', id: 'Status' })
+  dataVersionTable.addColumn({ type: 'string', id: 'DummyLabel' })
+  dataVersionTable.addColumn({ type: 'date', id: 'Start' })
+  dataVersionTable.addColumn({ type: 'date', id: 'End' })
+
+  for (let i = 0; i < stream.length; i++) {
+    const eventEpochTime = parseInt(stream[i].id.split('-')[0])
+    const eventTimeStart = new Date(eventEpochTime)
+    let eventTimeEnd = new Date(eventEpochTime + 120000) // make events 2 min long by default
+
+    // This makes the time line look better if each block butts up to the next,
+    // however we need to see the big gaps, e.g. if there are missing data.
+    if (stream[i + 1]) {
+      const nextEventEpochTime = parseInt(stream[i + 1].id.split('-')[0])
+      eventTimeEnd = new Date(nextEventEpochTime - 10000)
+    }
+
+    let versionOutput = 'na'
+    if (stream[i].message.hasOwnProperty('v')) {
+      try {
+        versionOutput = stream[i].message.v
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    dataVersionTable.addRows([['Status', versionOutput, eventTimeStart, eventTimeEnd]])
+  }
+
+  const options = {
+    height: 100,
+    avoidOverlappingGridLines: false,
+    timeline: {
+      groupByRowLabel: true,
+      colorByRowLabel: false,
+    },
+  }
+
+  function selectHandler() {
+    var selectedItem = versionChart.getSelection()[0]
+    if (selectedItem) {
+      var version = dataVersionTable.getValue(selectedItem.row, 1)
+      var time = dataVersionTable.getValue(selectedItem.row, 2)
+      $(`#versionOutputSelected`).text(`Version: ${version} - Deployed @ ${time}`)
+    }
+  }
+  google.visualization.events.addListener(versionChart, 'select', selectHandler)
+  versionChart.draw(dataVersionTable, options)
+}
+
 const fetchMessages = async queryStringOptions => {
   const queryString = new URLSearchParams(queryStringOptions).toString()
   const response = await fetch(`/components/queue/${componentName}/${environmentName}/${queryString}`)
@@ -114,6 +170,10 @@ const fetchMessages = async queryStringOptions => {
         switch (streamType) {
           case 'v':
             $(`#${streamName[2]}_version`).text(data[streamKey].v)
+            stream.messages.forEach(message => {
+              streamVersionData.push(message)
+            })
+            drawVersionChart(streamVersionData)
             break
           case 'h':
             const httpStatus = data[streamKey].http_s
