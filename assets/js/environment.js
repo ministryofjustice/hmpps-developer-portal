@@ -11,7 +11,7 @@ const data = {
 let streamData = []
 let streamVersionData = []
 
-function drawChart(stream) {
+function drawHealthChart(stream) {
   const container = document.getElementById('healthTimeline')
   const chart = new google.visualization.Timeline(container)
   const dataTable = new google.visualization.DataTable()
@@ -186,7 +186,7 @@ const fetchMessages = async queryStringOptions => {
             // Don't draw chart if data is more than 5 hours old.
             const currentEpochTime = Date.now()
             if (currentEpochTime - lastTime < 1000 * 60 * 60 * 5) {
-              drawChart(streamData)
+              drawHealthChart(streamData)
             }
 
             let status = 'UNK'
