@@ -35,9 +35,9 @@ function drawHealthChart(stream) {
     // however we need to see the big gaps, e.g. if there are missing data.
     if (stream[i + 1]) {
       const nextEventEpochTime = parseInt(stream[i + 1].id.split('-')[0])
-      // Only if it's less than 5 mins apart.
+      // Only if it's less than 5 mins apart, so show big gaps, e.g. when no data collected.
       if (nextEventEpochTime - eventEpochTime < 300000) {
-        eventTimeEnd = new Date(nextEventEpochTime - 10000)
+        eventTimeEnd = new Date(nextEventEpochTime)
       }
     }
 
@@ -101,13 +101,13 @@ function drawVersionChart(stream) {
   for (let i = 0; i < stream.length; i++) {
     const eventEpochTime = parseInt(stream[i].id.split('-')[0])
     const eventTimeStart = new Date(eventEpochTime)
-    let eventTimeEnd = new Date(eventEpochTime + 120000) // make events 2 min long by default
+    let eventTimeEnd = new Date(Date.now()) // Default endtime for events
 
     // This makes the time line look better if each block butts up to the next,
     // however we need to see the big gaps, e.g. if there are missing data.
     if (stream[i + 1]) {
       const nextEventEpochTime = parseInt(stream[i + 1].id.split('-')[0])
-      eventTimeEnd = new Date(nextEventEpochTime - 10000)
+      eventTimeEnd = new Date(nextEventEpochTime)
     }
 
     let versionOutput = 'na'
