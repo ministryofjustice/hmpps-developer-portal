@@ -50,17 +50,9 @@ export interface paths {
     delete: operations['delete/teams/{id}']
   }
   '/upload': {
-    /** Upload files */
+    /** @description Upload files */
     post: {
-      responses: {
-        /** response */
-        200: {
-          content: {
-            'application/json': components['schemas']['UploadFile'][]
-          }
-        }
-      }
-      /** Upload files */
+      /** @description Upload files */
       requestBody: {
         content: {
           'multipart/form-data': {
@@ -76,26 +68,26 @@ export interface paths {
           }
         }
       }
-    }
-  }
-  '/upload?id={id}': {
-    /** Upload file information */
-    post: {
-      parameters: {
-        query: {
-          /** File id */
-          id: string
-        }
-      }
       responses: {
-        /** response */
+        /** @description response */
         200: {
           content: {
             'application/json': components['schemas']['UploadFile'][]
           }
         }
       }
-      /** Upload files */
+    }
+  }
+  '/upload?id={id}': {
+    /** @description Upload file information */
+    post: {
+      parameters: {
+        query: {
+          /** @description File id */
+          id: string
+        }
+      }
+      /** @description Upload files */
       requestBody: {
         content: {
           'multipart/form-data': {
@@ -109,12 +101,20 @@ export interface paths {
           }
         }
       }
+      responses: {
+        /** @description response */
+        200: {
+          content: {
+            'application/json': components['schemas']['UploadFile'][]
+          }
+        }
+      }
     }
   }
   '/upload/files': {
     get: {
       responses: {
-        /** Get a list of files */
+        /** @description Get a list of files */
         200: {
           content: {
             'application/json': components['schemas']['UploadFile'][]
@@ -131,7 +131,7 @@ export interface paths {
         }
       }
       responses: {
-        /** Get a specific file */
+        /** @description Get a specific file */
         200: {
           content: {
             'application/json': components['schemas']['UploadFile']
@@ -146,7 +146,7 @@ export interface paths {
         }
       }
       responses: {
-        /** Delete a file */
+        /** @description Delete a file */
         200: {
           content: {
             'application/json': components['schemas']['UploadFile']
@@ -156,18 +156,23 @@ export interface paths {
     }
   }
   '/connect/{provider}': {
-    /** Redirects to provider login before being redirect to /auth/{provider}/callback */
+    /**
+     * Login with a provider
+     * @description Redirects to provider login before being redirect to /auth/{provider}/callback
+     */
     get: {
       parameters: {
         path: {
-          /** Provider name */
+          /** @description Provider name */
           provider: string
         }
       }
       responses: {
-        /** Redirect response */
-        301: never
-        /** Error */
+        /** @description Redirect response */
+        301: {
+          content: never
+        }
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
@@ -177,51 +182,56 @@ export interface paths {
     }
   }
   '/auth/local': {
-    /** Returns a jwt token and user info */
+    /**
+     * Local login
+     * @description Returns a jwt token and user info
+     */
     post: {
-      responses: {
-        /** Connection */
-        200: {
-          content: {
-            'application/json': components['schemas']['Users-Permissions-UserRegistration']
-          }
-        }
-        /** Error */
-        default: {
-          content: {
-            'application/json': components['schemas']['Error']
-          }
-        }
-      }
       requestBody: {
         content: {
+          /**
+           * @example {
+           *   "identifier": "foobar",
+           *   "password": "Test1234"
+           * }
+           */
           'application/json': {
             identifier?: string
             password?: string
           }
         }
       }
-    }
-  }
-  '/auth/local/register': {
-    /** Returns a jwt token and user info */
-    post: {
       responses: {
-        /** Successful registration */
+        /** @description Connection */
         200: {
           content: {
             'application/json': components['schemas']['Users-Permissions-UserRegistration']
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
+    }
+  }
+  '/auth/local/register': {
+    /**
+     * Register a user
+     * @description Returns a jwt token and user info
+     */
+    post: {
       requestBody: {
         content: {
+          /**
+           * @example {
+           *   "username": "foobar",
+           *   "email": "foo.bar@strapi.io",
+           *   "password": "Test1234"
+           * }
+           */
           'application/json': {
             username?: string
             email?: string
@@ -229,24 +239,39 @@ export interface paths {
           }
         }
       }
-    }
-  }
-  '/auth/{provider}/callback': {
-    get: {
-      parameters: {
-        path: {
-          /** Provider name */
-          provider: string
-        }
-      }
       responses: {
-        /** Returns a jwt token and user info */
+        /** @description Successful registration */
         200: {
           content: {
             'application/json': components['schemas']['Users-Permissions-UserRegistration']
           }
         }
-        /** Error */
+        /** @description Error */
+        default: {
+          content: {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+  }
+  '/auth/{provider}/callback': {
+    /** Default Callback from provider auth */
+    get: {
+      parameters: {
+        path: {
+          /** @description Provider name */
+          provider: string
+        }
+      }
+      responses: {
+        /** @description Returns a jwt token and user info */
+        200: {
+          content: {
+            'application/json': components['schemas']['Users-Permissions-UserRegistration']
+          }
+        }
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
@@ -256,9 +281,22 @@ export interface paths {
     }
   }
   '/auth/forgot-password': {
+    /** Send rest password email */
     post: {
+      requestBody: {
+        content: {
+          /**
+           * @example {
+           *   "email": "foo.bar@strapi.io"
+           * }
+           */
+          'application/json': {
+            email?: string
+          }
+        }
+      }
       responses: {
-        /** Returns ok */
+        /** @description Returns ok */
         200: {
           content: {
             'application/json': {
@@ -267,40 +305,27 @@ export interface paths {
             }
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
-          }
-        }
-      }
-      requestBody: {
-        content: {
-          'application/json': {
-            email?: string
           }
         }
       }
     }
   }
   '/auth/reset-password': {
+    /** Rest user password */
     post: {
-      responses: {
-        /** Returns a jwt token and user info */
-        200: {
-          content: {
-            'application/json': components['schemas']['Users-Permissions-UserRegistration']
-          }
-        }
-        /** Error */
-        default: {
-          content: {
-            'application/json': components['schemas']['Error']
-          }
-        }
-      }
       requestBody: {
         content: {
+          /**
+           * @example {
+           *   "password": "Test1234",
+           *   "passwordConfirmation": "Test1234",
+           *   "code": "zertyoaizndoianzodianzdonaizdoinaozdnia"
+           * }
+           */
           'application/json': {
             password?: string
             passwordConfirmation?: string
@@ -308,24 +333,25 @@ export interface paths {
           }
         }
       }
-    }
-  }
-  '/auth/change-password': {
-    post: {
       responses: {
-        /** Returns a jwt token and user info */
+        /** @description Returns a jwt token and user info */
         200: {
           content: {
             'application/json': components['schemas']['Users-Permissions-UserRegistration']
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
+    }
+  }
+  '/auth/change-password': {
+    /** Update user's own password */
+    post: {
       requestBody: {
         content: {
           'application/json': {
@@ -335,20 +361,37 @@ export interface paths {
           }
         }
       }
+      responses: {
+        /** @description Returns a jwt token and user info */
+        200: {
+          content: {
+            'application/json': components['schemas']['Users-Permissions-UserRegistration']
+          }
+        }
+        /** @description Error */
+        default: {
+          content: {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
     }
   }
   '/auth/email-confirmation': {
+    /** Confirm user email */
     get: {
       parameters: {
-        query: {
-          /** confirmation token received by email */
+        query?: {
+          /** @description confirmation token received by email */
           confirmation?: string
         }
       }
       responses: {
-        /** Redirects to the configure email confirmation redirect url */
-        301: never
-        /** Error */
+        /** @description Redirects to the configure email confirmation redirect url */
+        301: {
+          content: never
+        }
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
@@ -358,9 +401,17 @@ export interface paths {
     }
   }
   '/auth/send-email-confirmation': {
+    /** Send confirmation email */
     post: {
+      requestBody: {
+        content: {
+          'application/json': {
+            email?: string
+          }
+        }
+      }
       responses: {
-        /** Returns email and boolean to confirm email was sent */
+        /** @description Returns email and boolean to confirm email was sent */
         200: {
           content: {
             'application/json': {
@@ -370,26 +421,20 @@ export interface paths {
             }
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
-      requestBody: {
-        content: {
-          'application/json': {
-            email?: string
-          }
-        }
-      }
     }
   }
   '/users-permissions/permissions': {
+    /** Get default generated permissions */
     get: {
       responses: {
-        /** Returns the permissions tree */
+        /** @description Returns the permissions tree */
         200: {
           content: {
             'application/json': {
@@ -397,7 +442,7 @@ export interface paths {
             }
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
@@ -407,9 +452,10 @@ export interface paths {
     }
   }
   '/users-permissions/roles': {
+    /** List roles */
     get: {
       responses: {
-        /** Returns list of roles */
+        /** @description Returns list of roles */
         200: {
           content: {
             'application/json': {
@@ -419,7 +465,7 @@ export interface paths {
             }
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
@@ -427,9 +473,11 @@ export interface paths {
         }
       }
     }
+    /** Create a role */
     post: {
+      requestBody: components['requestBodies']['Users-Permissions-RoleRequest']
       responses: {
-        /** Returns ok if the role was create */
+        /** @description Returns ok if the role was create */
         200: {
           content: {
             'application/json': {
@@ -438,26 +486,26 @@ export interface paths {
             }
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
-      requestBody: components['requestBodies']['Users-Permissions-RoleRequest']
     }
   }
   '/users-permissions/roles/{id}': {
+    /** Get a role */
     get: {
       parameters: {
         path: {
-          /** role Id */
+          /** @description role Id */
           id: string
         }
       }
       responses: {
-        /** Returns the role */
+        /** @description Returns the role */
         200: {
           content: {
             'application/json': {
@@ -465,7 +513,7 @@ export interface paths {
             }
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
@@ -475,15 +523,17 @@ export interface paths {
     }
   }
   '/users-permissions/roles/{role}': {
+    /** Update a role */
     put: {
       parameters: {
         path: {
-          /** role Id */
+          /** @description role Id */
           role: string
         }
       }
+      requestBody: components['requestBodies']['Users-Permissions-RoleRequest']
       responses: {
-        /** Returns ok if the role was udpated */
+        /** @description Returns ok if the role was udpated */
         200: {
           content: {
             'application/json': {
@@ -492,24 +542,24 @@ export interface paths {
             }
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
-      requestBody: components['requestBodies']['Users-Permissions-RoleRequest']
     }
+    /** Delete a role */
     delete: {
       parameters: {
         path: {
-          /** role Id */
+          /** @description role Id */
           role: string
         }
       }
       responses: {
-        /** Returns ok if the role was delete */
+        /** @description Returns ok if the role was delete */
         200: {
           content: {
             'application/json': {
@@ -518,7 +568,7 @@ export interface paths {
             }
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
@@ -528,15 +578,16 @@ export interface paths {
     }
   }
   '/users': {
+    /** Get list of users */
     get: {
       responses: {
-        /** Returns an array of users */
+        /** @description Returns an array of users */
         200: {
           content: {
             'application/json': components['schemas']['Users-Permissions-User'][]
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
@@ -544,9 +595,26 @@ export interface paths {
         }
       }
     }
+    /** Create a user */
     post: {
+      requestBody: {
+        content: {
+          /**
+           * @example {
+           *   "username": "foo",
+           *   "email": "foo@strapi.io",
+           *   "password": "foo-password"
+           * }
+           */
+          'application/json': {
+            email: string
+            username: string
+            password: string
+          }
+        }
+      }
       responses: {
-        /** Returns created user info */
+        /** @description Returns created user info */
         201: {
           content: {
             'application/json': components['schemas']['Users-Permissions-User'] & {
@@ -554,15 +622,56 @@ export interface paths {
             }
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
+    }
+  }
+  '/users/{id}': {
+    /** Get a user */
+    get: {
+      parameters: {
+        path: {
+          /** @description user Id */
+          id: string
+        }
+      }
+      responses: {
+        /** @description Returns a user */
+        200: {
+          content: {
+            'application/json': components['schemas']['Users-Permissions-User']
+          }
+        }
+        /** @description Error */
+        default: {
+          content: {
+            'application/json': components['schemas']['Error']
+          }
+        }
+      }
+    }
+    /** Update a user */
+    put: {
+      parameters: {
+        path: {
+          /** @description user Id */
+          id: string
+        }
+      }
       requestBody: {
         content: {
+          /**
+           * @example {
+           *   "username": "foo",
+           *   "email": "foo@strapi.io",
+           *   "password": "foo-password"
+           * }
+           */
           'application/json': {
             email: string
             username: string
@@ -570,40 +679,8 @@ export interface paths {
           }
         }
       }
-    }
-  }
-  '/users/{id}': {
-    get: {
-      parameters: {
-        path: {
-          /** user Id */
-          id: string
-        }
-      }
       responses: {
-        /** Returns a user */
-        200: {
-          content: {
-            'application/json': components['schemas']['Users-Permissions-User']
-          }
-        }
-        /** Error */
-        default: {
-          content: {
-            'application/json': components['schemas']['Error']
-          }
-        }
-      }
-    }
-    put: {
-      parameters: {
-        path: {
-          /** user Id */
-          id: string
-        }
-      }
-      responses: {
-        /** Returns updated user info */
+        /** @description Returns updated user info */
         200: {
           content: {
             'application/json': components['schemas']['Users-Permissions-User'] & {
@@ -611,38 +688,30 @@ export interface paths {
             }
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
-      requestBody: {
-        content: {
-          'application/json': {
-            email: string
-            username: string
-            password: string
-          }
-        }
-      }
     }
+    /** Delete a user */
     delete: {
       parameters: {
         path: {
-          /** user Id */
+          /** @description user Id */
           id: string
         }
       }
       responses: {
-        /** Returns deleted user info */
+        /** @description Returns deleted user info */
         200: {
           content: {
             'application/json': components['schemas']['Users-Permissions-User']
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
@@ -652,15 +721,16 @@ export interface paths {
     }
   }
   '/users/me': {
+    /** Get authenticated user info */
     get: {
       responses: {
-        /** Returns user info */
+        /** @description Returns user info */
         200: {
           content: {
             'application/json': components['schemas']['Users-Permissions-User']
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
@@ -670,15 +740,16 @@ export interface paths {
     }
   }
   '/users/count': {
+    /** Get user count */
     get: {
       responses: {
-        /** Returns a number */
+        /** @description Returns a number */
         200: {
           content: {
             'application/json': number
           }
         }
-        /** Error */
+        /** @description Error */
         default: {
           content: {
             'application/json': components['schemas']['Error']
@@ -689,15 +760,17 @@ export interface paths {
   }
 }
 
+export type webhooks = Record<string, never>
+
 export interface components {
   schemas: {
     Error: {
-      data?: ({ [key: string]: unknown } | { [key: string]: unknown }[]) | null
+      data?: Record<string, never> | Record<string, never>[] | null
       error: {
         status?: number
         name?: string
         message?: string
-        details?: { [key: string]: unknown }
+        details?: Record<string, never>
       }
     }
     ComponentRequest: {
@@ -725,6 +798,11 @@ export interface components {
         github_topics?: unknown
         versions?: unknown
         container_image?: string
+        veracode_results_url?: string
+        veracode_last_completed_scan_date?: string
+        veracode_results_summary?: unknown
+        veracode_exempt?: boolean
+        veracode_policy_rules_status?: string
       }
     }
     ComponentListResponseDataItem: {
@@ -762,13 +840,13 @@ export interface components {
             parent?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
             children?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }[]
             }
             legacy?: boolean
@@ -781,7 +859,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   t_id?: string
@@ -813,7 +891,7 @@ export interface components {
                               users?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }[]
                               }
                               permissions?: {
@@ -828,7 +906,7 @@ export interface components {
                                     role?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                     /** Format: date-time */
@@ -838,13 +916,13 @@ export interface components {
                                     createdBy?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                     updatedBy?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                   }
@@ -857,13 +935,13 @@ export interface components {
                               createdBy?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }
                               }
                               updatedBy?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }
                               }
                             }
@@ -878,13 +956,13 @@ export interface components {
                         createdBy?: {
                           data?: {
                             id?: number
-                            attributes?: { [key: string]: unknown }
+                            attributes?: Record<string, never>
                           }
                         }
                         updatedBy?: {
                           data?: {
                             id?: number
-                            attributes?: { [key: string]: unknown }
+                            attributes?: Record<string, never>
                           }
                         }
                       }
@@ -893,7 +971,7 @@ export interface components {
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -908,7 +986,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   ps_id?: string
@@ -921,13 +999,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -946,7 +1024,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   sa_id?: string
@@ -959,13 +1037,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -988,6 +1066,19 @@ export interface components {
                     url?: string
                     cluster?: string
                     name?: string
+                    rds?: {
+                      id?: number
+                      name?: string
+                      db_instance_class?: string
+                      db_engine_version?: string
+                      rds_family?: string
+                      tf_raw?: unknown
+                      is_production?: string
+                      namespace?: string
+                      environment_name?: string
+                      application?: string
+                    }[]
+                    monitor?: boolean
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -998,7 +1089,7 @@ export interface components {
                   product?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   app_insights_cloud_role_name?: string
@@ -1012,6 +1103,11 @@ export interface components {
                   github_topics?: unknown
                   versions?: unknown
                   container_image?: string
+                  veracode_results_url?: string
+                  veracode_last_completed_scan_date?: string
+                  veracode_results_summary?: unknown
+                  veracode_exempt?: boolean
+                  veracode_policy_rules_status?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1021,13 +1117,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -1043,13 +1139,13 @@ export interface components {
             createdBy?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
             updatedBy?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
           }
@@ -1064,16 +1160,22 @@ export interface components {
       include_in_subject_access_requests: boolean
       github_project_teams_maintain?: unknown
       github_topics?: unknown
-      versions?: {
-        helm?: {
-          dependencies?: { [key: string]: string }
-        }
-        circleci?: {
-          orbs?: { [key: string]: string }
-        }
-        dockerfile?: { [key: string]: string }
-      }
+      versions?: unknown
       container_image?: string
+      veracode_results_url?: string
+      veracode_last_completed_scan_date?: string
+      veracode_results_summary?: {
+        severity: {
+          level: number
+          category: {
+            count: number
+            severity: string
+            categoryname: string
+          }[]
+        }[]
+      }
+      veracode_exempt?: boolean
+      veracode_policy_rules_status?: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -1083,13 +1185,13 @@ export interface components {
       createdBy?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
       updatedBy?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
     }
@@ -1099,10 +1201,9 @@ export interface components {
     }
     ComponentResponse: {
       data?: components['schemas']['ComponentResponseDataObject']
-      meta?: { [key: string]: unknown }
+      meta?: Record<string, never>
     }
     PropertiesEnvironmentComponent: {
-      monitor: boolean
       id?: number
       /** @enum {string} */
       type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
@@ -1112,6 +1213,19 @@ export interface components {
       url?: string
       cluster?: string
       name?: string
+      rds?: {
+        id?: number
+        name?: string
+        db_instance_class?: string
+        db_engine_version?: string
+        rds_family?: string
+        tf_raw?: unknown
+        is_production?: string
+        namespace?: string
+        environment_name?: string
+        application?: string
+      }[]
+      monitor?: boolean
     }
     ProductRequest: {
       data: {
@@ -1164,13 +1278,13 @@ export interface components {
             parent?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
             children?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }[]
             }
             legacy?: boolean
@@ -1183,7 +1297,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   t_id?: string
@@ -1215,7 +1329,7 @@ export interface components {
                               users?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }[]
                               }
                               permissions?: {
@@ -1230,7 +1344,7 @@ export interface components {
                                     role?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                     /** Format: date-time */
@@ -1240,13 +1354,13 @@ export interface components {
                                     createdBy?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                     updatedBy?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                   }
@@ -1259,13 +1373,13 @@ export interface components {
                               createdBy?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }
                               }
                               updatedBy?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }
                               }
                             }
@@ -1280,13 +1394,13 @@ export interface components {
                         createdBy?: {
                           data?: {
                             id?: number
-                            attributes?: { [key: string]: unknown }
+                            attributes?: Record<string, never>
                           }
                         }
                         updatedBy?: {
                           data?: {
                             id?: number
-                            attributes?: { [key: string]: unknown }
+                            attributes?: Record<string, never>
                           }
                         }
                       }
@@ -1295,7 +1409,7 @@ export interface components {
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -1310,7 +1424,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   ps_id?: string
@@ -1323,13 +1437,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -1348,7 +1462,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   sa_id?: string
@@ -1361,13 +1475,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -1390,6 +1504,19 @@ export interface components {
                     url?: string
                     cluster?: string
                     name?: string
+                    rds?: {
+                      id?: number
+                      name?: string
+                      db_instance_class?: string
+                      db_engine_version?: string
+                      rds_family?: string
+                      tf_raw?: unknown
+                      is_production?: string
+                      namespace?: string
+                      environment_name?: string
+                      application?: string
+                    }[]
+                    monitor?: boolean
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -1400,7 +1527,7 @@ export interface components {
                   product?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   app_insights_cloud_role_name?: string
@@ -1414,6 +1541,11 @@ export interface components {
                   github_topics?: unknown
                   versions?: unknown
                   container_image?: string
+                  veracode_results_url?: string
+                  veracode_last_completed_scan_date?: string
+                  veracode_results_summary?: unknown
+                  veracode_exempt?: boolean
+                  veracode_policy_rules_status?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1423,13 +1555,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -1445,13 +1577,13 @@ export interface components {
             createdBy?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
             updatedBy?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
           }
@@ -1460,7 +1592,7 @@ export interface components {
       children?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }[]
       }
       legacy?: boolean
@@ -1468,14 +1600,14 @@ export interface components {
       team?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
       phase?: string
       product_set?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
       delivery_manager?: string
@@ -1485,13 +1617,13 @@ export interface components {
       service_area?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
       components?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }[]
       }
       p_id: string
@@ -1504,13 +1636,13 @@ export interface components {
       createdBy?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
       updatedBy?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
     }
@@ -1520,7 +1652,7 @@ export interface components {
     }
     ProductResponse: {
       data?: components['schemas']['ProductResponseDataObject']
-      meta?: { [key: string]: unknown }
+      meta?: Record<string, never>
     }
     ProductSetRequest: {
       data: {
@@ -1555,13 +1687,13 @@ export interface components {
             parent?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
             children?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }[]
             }
             legacy?: boolean
@@ -1574,7 +1706,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   t_id?: string
@@ -1606,7 +1738,7 @@ export interface components {
                               users?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }[]
                               }
                               permissions?: {
@@ -1621,7 +1753,7 @@ export interface components {
                                     role?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                     /** Format: date-time */
@@ -1631,13 +1763,13 @@ export interface components {
                                     createdBy?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                     updatedBy?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                   }
@@ -1650,13 +1782,13 @@ export interface components {
                               createdBy?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }
                               }
                               updatedBy?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }
                               }
                             }
@@ -1671,13 +1803,13 @@ export interface components {
                         createdBy?: {
                           data?: {
                             id?: number
-                            attributes?: { [key: string]: unknown }
+                            attributes?: Record<string, never>
                           }
                         }
                         updatedBy?: {
                           data?: {
                             id?: number
-                            attributes?: { [key: string]: unknown }
+                            attributes?: Record<string, never>
                           }
                         }
                       }
@@ -1686,7 +1818,7 @@ export interface components {
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -1701,7 +1833,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   ps_id?: string
@@ -1714,13 +1846,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -1739,7 +1871,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   sa_id?: string
@@ -1752,13 +1884,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -1781,6 +1913,19 @@ export interface components {
                     url?: string
                     cluster?: string
                     name?: string
+                    rds?: {
+                      id?: number
+                      name?: string
+                      db_instance_class?: string
+                      db_engine_version?: string
+                      rds_family?: string
+                      tf_raw?: unknown
+                      is_production?: string
+                      namespace?: string
+                      environment_name?: string
+                      application?: string
+                    }[]
+                    monitor?: boolean
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -1791,7 +1936,7 @@ export interface components {
                   product?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   app_insights_cloud_role_name?: string
@@ -1805,6 +1950,11 @@ export interface components {
                   github_topics?: unknown
                   versions?: unknown
                   container_image?: string
+                  veracode_results_url?: string
+                  veracode_last_completed_scan_date?: string
+                  veracode_results_summary?: unknown
+                  veracode_exempt?: boolean
+                  veracode_policy_rules_status?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1814,13 +1964,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -1836,13 +1986,13 @@ export interface components {
             createdBy?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
             updatedBy?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
           }
@@ -1858,13 +2008,13 @@ export interface components {
       createdBy?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
       updatedBy?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
     }
@@ -1874,7 +2024,7 @@ export interface components {
     }
     ProductSetResponse: {
       data?: components['schemas']['ProductSetResponseDataObject']
-      meta?: { [key: string]: unknown }
+      meta?: Record<string, never>
     }
     ServiceAreaRequest: {
       data: {
@@ -1911,13 +2061,13 @@ export interface components {
             parent?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
             children?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }[]
             }
             legacy?: boolean
@@ -1930,7 +2080,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   t_id?: string
@@ -1962,7 +2112,7 @@ export interface components {
                               users?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }[]
                               }
                               permissions?: {
@@ -1977,7 +2127,7 @@ export interface components {
                                     role?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                     /** Format: date-time */
@@ -1987,13 +2137,13 @@ export interface components {
                                     createdBy?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                     updatedBy?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                   }
@@ -2006,13 +2156,13 @@ export interface components {
                               createdBy?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }
                               }
                               updatedBy?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }
                               }
                             }
@@ -2027,13 +2177,13 @@ export interface components {
                         createdBy?: {
                           data?: {
                             id?: number
-                            attributes?: { [key: string]: unknown }
+                            attributes?: Record<string, never>
                           }
                         }
                         updatedBy?: {
                           data?: {
                             id?: number
-                            attributes?: { [key: string]: unknown }
+                            attributes?: Record<string, never>
                           }
                         }
                       }
@@ -2042,7 +2192,7 @@ export interface components {
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -2057,7 +2207,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   ps_id?: string
@@ -2070,13 +2220,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -2095,7 +2245,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   sa_id?: string
@@ -2108,13 +2258,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -2137,6 +2287,19 @@ export interface components {
                     url?: string
                     cluster?: string
                     name?: string
+                    rds?: {
+                      id?: number
+                      name?: string
+                      db_instance_class?: string
+                      db_engine_version?: string
+                      rds_family?: string
+                      tf_raw?: unknown
+                      is_production?: string
+                      namespace?: string
+                      environment_name?: string
+                      application?: string
+                    }[]
+                    monitor?: boolean
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -2147,7 +2310,7 @@ export interface components {
                   product?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   app_insights_cloud_role_name?: string
@@ -2161,6 +2324,11 @@ export interface components {
                   github_topics?: unknown
                   versions?: unknown
                   container_image?: string
+                  veracode_results_url?: string
+                  veracode_last_completed_scan_date?: string
+                  veracode_results_summary?: unknown
+                  veracode_exempt?: boolean
+                  veracode_policy_rules_status?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2170,13 +2338,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -2192,13 +2360,13 @@ export interface components {
             createdBy?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
             updatedBy?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
           }
@@ -2214,13 +2382,13 @@ export interface components {
       createdBy?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
       updatedBy?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
     }
@@ -2230,7 +2398,7 @@ export interface components {
     }
     ServiceAreaResponse: {
       data?: components['schemas']['ServiceAreaResponseDataObject']
-      meta?: { [key: string]: unknown }
+      meta?: Record<string, never>
     }
     TeamRequest: {
       data: {
@@ -2265,13 +2433,13 @@ export interface components {
             parent?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
             children?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }[]
             }
             legacy?: boolean
@@ -2284,7 +2452,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   t_id?: string
@@ -2316,7 +2484,7 @@ export interface components {
                               users?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }[]
                               }
                               permissions?: {
@@ -2331,7 +2499,7 @@ export interface components {
                                     role?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                     /** Format: date-time */
@@ -2341,13 +2509,13 @@ export interface components {
                                     createdBy?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                     updatedBy?: {
                                       data?: {
                                         id?: number
-                                        attributes?: { [key: string]: unknown }
+                                        attributes?: Record<string, never>
                                       }
                                     }
                                   }
@@ -2360,13 +2528,13 @@ export interface components {
                               createdBy?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }
                               }
                               updatedBy?: {
                                 data?: {
                                   id?: number
-                                  attributes?: { [key: string]: unknown }
+                                  attributes?: Record<string, never>
                                 }
                               }
                             }
@@ -2381,13 +2549,13 @@ export interface components {
                         createdBy?: {
                           data?: {
                             id?: number
-                            attributes?: { [key: string]: unknown }
+                            attributes?: Record<string, never>
                           }
                         }
                         updatedBy?: {
                           data?: {
                             id?: number
-                            attributes?: { [key: string]: unknown }
+                            attributes?: Record<string, never>
                           }
                         }
                       }
@@ -2396,7 +2564,7 @@ export interface components {
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -2411,7 +2579,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   ps_id?: string
@@ -2424,13 +2592,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -2449,7 +2617,7 @@ export interface components {
                   products?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }[]
                   }
                   sa_id?: string
@@ -2462,13 +2630,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -2491,6 +2659,19 @@ export interface components {
                     url?: string
                     cluster?: string
                     name?: string
+                    rds?: {
+                      id?: number
+                      name?: string
+                      db_instance_class?: string
+                      db_engine_version?: string
+                      rds_family?: string
+                      tf_raw?: unknown
+                      is_production?: string
+                      namespace?: string
+                      environment_name?: string
+                      application?: string
+                    }[]
+                    monitor?: boolean
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -2501,7 +2682,7 @@ export interface components {
                   product?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   app_insights_cloud_role_name?: string
@@ -2515,6 +2696,11 @@ export interface components {
                   github_topics?: unknown
                   versions?: unknown
                   container_image?: string
+                  veracode_results_url?: string
+                  veracode_last_completed_scan_date?: string
+                  veracode_results_summary?: unknown
+                  veracode_exempt?: boolean
+                  veracode_policy_rules_status?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2524,13 +2710,13 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
                     data?: {
                       id?: number
-                      attributes?: { [key: string]: unknown }
+                      attributes?: Record<string, never>
                     }
                   }
                 }
@@ -2546,13 +2732,13 @@ export interface components {
             createdBy?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
             updatedBy?: {
               data?: {
                 id?: number
-                attributes?: { [key: string]: unknown }
+                attributes?: Record<string, never>
               }
             }
           }
@@ -2568,13 +2754,13 @@ export interface components {
       createdBy?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
       updatedBy?: {
         data?: {
           id?: number
-          attributes?: { [key: string]: unknown }
+          attributes?: Record<string, never>
         }
       }
     }
@@ -2584,7 +2770,7 @@ export interface components {
     }
     TeamResponse: {
       data?: components['schemas']['TeamResponseDataObject']
-      meta?: { [key: string]: unknown }
+      meta?: Record<string, never>
     }
     UploadFile: {
       id?: number
@@ -2604,7 +2790,7 @@ export interface components {
       url?: string
       previewUrl?: string
       provider?: string
-      provider_metadata?: { [key: string]: unknown }
+      provider_metadata?: Record<string, never>
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -2663,9 +2849,28 @@ export interface components {
       }
     }
   }
+  responses: never
+  parameters: never
   requestBodies: {
     'Users-Permissions-RoleRequest': {
       content: {
+        /**
+         * @example {
+         *   "name": "foo",
+         *   "description": "role foo",
+         *   "permissions": {
+         *     "api::content-type.content-type": {
+         *       "controllers": {
+         *         "controllerA": {
+         *           "find": {
+         *             "enabled": true
+         *           }
+         *         }
+         *       }
+         *     }
+         *   }
+         * }
+         */
         'application/json': {
           name?: string
           description?: string
@@ -2675,66 +2880,72 @@ export interface components {
       }
     }
   }
+  headers: never
+  pathItems: never
 }
+
+export type $defs = Record<string, never>
+
+export type external = Record<string, never>
 
 export interface operations {
   'get/components': {
     parameters: {
-      query: {
-        /** Sort by attributes ascending (asc) or descending (desc) */
+      query?: {
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
         sort?: string
-        /** Return page/pageSize (default: true) */
+        /** @description Return page/pageSize (default: true) */
         'pagination[withCount]'?: boolean
-        /** Page number (default: 0) */
+        /** @description Page number (default: 0) */
         'pagination[page]'?: number
-        /** Page size (default: 25) */
+        /** @description Page size (default: 25) */
         'pagination[pageSize]'?: number
-        /** Offset value (default: 0) */
+        /** @description Offset value (default: 0) */
         'pagination[start]'?: number
-        /** Number of entities to return (default: 25) */
+        /** @description Number of entities to return (default: 25) */
         'pagination[limit]'?: number
-        /** Fields to return (ex: title,author) */
+        /** @description Fields to return (ex: title,author) */
         fields?: string
-        /** Relations to return */
+        /** @description Relations to return */
         populate?: string
-        /** Filters to apply */
-        filters?: { [key: string]: unknown }
-        /** Locale to apply */
+        /** @description Filters to apply */
+        filters?: Record<string, never>
+        /** @description Locale to apply */
         locale?: string
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ComponentListResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -2743,48 +2954,47 @@ export interface operations {
     }
   }
   'post/components': {
-    parameters: Record<string, never>
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ComponentRequest']
+      }
+    }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ComponentResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
         }
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ComponentRequest']
       }
     }
   }
@@ -2795,37 +3005,37 @@ export interface operations {
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ComponentResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -2839,47 +3049,47 @@ export interface operations {
         id: number
       }
     }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ComponentRequest']
+      }
+    }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ComponentResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
         }
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ComponentRequest']
       }
     }
   }
@@ -2890,37 +3100,37 @@ export interface operations {
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': number
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -2930,61 +3140,61 @@ export interface operations {
   }
   'get/products': {
     parameters: {
-      query: {
-        /** Sort by attributes ascending (asc) or descending (desc) */
+      query?: {
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
         sort?: string
-        /** Return page/pageSize (default: true) */
+        /** @description Return page/pageSize (default: true) */
         'pagination[withCount]'?: boolean
-        /** Page number (default: 0) */
+        /** @description Page number (default: 0) */
         'pagination[page]'?: number
-        /** Page size (default: 25) */
+        /** @description Page size (default: 25) */
         'pagination[pageSize]'?: number
-        /** Offset value (default: 0) */
+        /** @description Offset value (default: 0) */
         'pagination[start]'?: number
-        /** Number of entities to return (default: 25) */
+        /** @description Number of entities to return (default: 25) */
         'pagination[limit]'?: number
-        /** Fields to return (ex: title,author) */
+        /** @description Fields to return (ex: title,author) */
         fields?: string
-        /** Relations to return */
+        /** @description Relations to return */
         populate?: string
-        /** Filters to apply */
-        filters?: { [key: string]: unknown }
-        /** Locale to apply */
+        /** @description Filters to apply */
+        filters?: Record<string, never>
+        /** @description Locale to apply */
         locale?: string
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ProductListResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -2993,48 +3203,47 @@ export interface operations {
     }
   }
   'post/products': {
-    parameters: Record<string, never>
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ProductRequest']
+      }
+    }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ProductResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
         }
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ProductRequest']
       }
     }
   }
@@ -3045,37 +3254,37 @@ export interface operations {
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ProductResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -3089,47 +3298,47 @@ export interface operations {
         id: number
       }
     }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ProductRequest']
+      }
+    }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ProductResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
         }
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ProductRequest']
       }
     }
   }
@@ -3140,37 +3349,37 @@ export interface operations {
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': number
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -3180,61 +3389,61 @@ export interface operations {
   }
   'get/product-sets': {
     parameters: {
-      query: {
-        /** Sort by attributes ascending (asc) or descending (desc) */
+      query?: {
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
         sort?: string
-        /** Return page/pageSize (default: true) */
+        /** @description Return page/pageSize (default: true) */
         'pagination[withCount]'?: boolean
-        /** Page number (default: 0) */
+        /** @description Page number (default: 0) */
         'pagination[page]'?: number
-        /** Page size (default: 25) */
+        /** @description Page size (default: 25) */
         'pagination[pageSize]'?: number
-        /** Offset value (default: 0) */
+        /** @description Offset value (default: 0) */
         'pagination[start]'?: number
-        /** Number of entities to return (default: 25) */
+        /** @description Number of entities to return (default: 25) */
         'pagination[limit]'?: number
-        /** Fields to return (ex: title,author) */
+        /** @description Fields to return (ex: title,author) */
         fields?: string
-        /** Relations to return */
+        /** @description Relations to return */
         populate?: string
-        /** Filters to apply */
-        filters?: { [key: string]: unknown }
-        /** Locale to apply */
+        /** @description Filters to apply */
+        filters?: Record<string, never>
+        /** @description Locale to apply */
         locale?: string
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ProductSetListResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -3243,48 +3452,47 @@ export interface operations {
     }
   }
   'post/product-sets': {
-    parameters: Record<string, never>
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ProductSetRequest']
+      }
+    }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ProductSetResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
         }
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ProductSetRequest']
       }
     }
   }
@@ -3295,37 +3503,37 @@ export interface operations {
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ProductSetResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -3339,47 +3547,47 @@ export interface operations {
         id: number
       }
     }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ProductSetRequest']
+      }
+    }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ProductSetResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
         }
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ProductSetRequest']
       }
     }
   }
@@ -3390,37 +3598,37 @@ export interface operations {
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': number
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -3430,61 +3638,61 @@ export interface operations {
   }
   'get/service-areas': {
     parameters: {
-      query: {
-        /** Sort by attributes ascending (asc) or descending (desc) */
+      query?: {
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
         sort?: string
-        /** Return page/pageSize (default: true) */
+        /** @description Return page/pageSize (default: true) */
         'pagination[withCount]'?: boolean
-        /** Page number (default: 0) */
+        /** @description Page number (default: 0) */
         'pagination[page]'?: number
-        /** Page size (default: 25) */
+        /** @description Page size (default: 25) */
         'pagination[pageSize]'?: number
-        /** Offset value (default: 0) */
+        /** @description Offset value (default: 0) */
         'pagination[start]'?: number
-        /** Number of entities to return (default: 25) */
+        /** @description Number of entities to return (default: 25) */
         'pagination[limit]'?: number
-        /** Fields to return (ex: title,author) */
+        /** @description Fields to return (ex: title,author) */
         fields?: string
-        /** Relations to return */
+        /** @description Relations to return */
         populate?: string
-        /** Filters to apply */
-        filters?: { [key: string]: unknown }
-        /** Locale to apply */
+        /** @description Filters to apply */
+        filters?: Record<string, never>
+        /** @description Locale to apply */
         locale?: string
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ServiceAreaListResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -3493,48 +3701,47 @@ export interface operations {
     }
   }
   'post/service-areas': {
-    parameters: Record<string, never>
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ServiceAreaRequest']
+      }
+    }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ServiceAreaResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
         }
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ServiceAreaRequest']
       }
     }
   }
@@ -3545,37 +3752,37 @@ export interface operations {
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ServiceAreaResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -3589,47 +3796,47 @@ export interface operations {
         id: number
       }
     }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ServiceAreaRequest']
+      }
+    }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['ServiceAreaResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
         }
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ServiceAreaRequest']
       }
     }
   }
@@ -3640,37 +3847,37 @@ export interface operations {
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': number
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -3680,61 +3887,61 @@ export interface operations {
   }
   'get/teams': {
     parameters: {
-      query: {
-        /** Sort by attributes ascending (asc) or descending (desc) */
+      query?: {
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
         sort?: string
-        /** Return page/pageSize (default: true) */
+        /** @description Return page/pageSize (default: true) */
         'pagination[withCount]'?: boolean
-        /** Page number (default: 0) */
+        /** @description Page number (default: 0) */
         'pagination[page]'?: number
-        /** Page size (default: 25) */
+        /** @description Page size (default: 25) */
         'pagination[pageSize]'?: number
-        /** Offset value (default: 0) */
+        /** @description Offset value (default: 0) */
         'pagination[start]'?: number
-        /** Number of entities to return (default: 25) */
+        /** @description Number of entities to return (default: 25) */
         'pagination[limit]'?: number
-        /** Fields to return (ex: title,author) */
+        /** @description Fields to return (ex: title,author) */
         fields?: string
-        /** Relations to return */
+        /** @description Relations to return */
         populate?: string
-        /** Filters to apply */
-        filters?: { [key: string]: unknown }
-        /** Locale to apply */
+        /** @description Filters to apply */
+        filters?: Record<string, never>
+        /** @description Locale to apply */
         locale?: string
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['TeamListResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -3743,48 +3950,47 @@ export interface operations {
     }
   }
   'post/teams': {
-    parameters: Record<string, never>
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TeamRequest']
+      }
+    }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['TeamResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
         }
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['TeamRequest']
       }
     }
   }
@@ -3795,37 +4001,37 @@ export interface operations {
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['TeamResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
@@ -3839,47 +4045,47 @@ export interface operations {
         id: number
       }
     }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TeamRequest']
+      }
+    }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': components['schemas']['TeamResponse']
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
         }
-      }
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['TeamRequest']
       }
     }
   }
@@ -3890,37 +4096,37 @@ export interface operations {
       }
     }
     responses: {
-      /** OK */
+      /** @description OK */
       200: {
         content: {
           'application/json': number
         }
       }
-      /** Bad Request */
+      /** @description Bad Request */
       400: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Unauthorized */
+      /** @description Unauthorized */
       401: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Forbidden */
+      /** @description Forbidden */
       403: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Not Found */
+      /** @description Not Found */
       404: {
         content: {
           'application/json': components['schemas']['Error']
         }
       }
-      /** Internal Server Error */
+      /** @description Internal Server Error */
       500: {
         content: {
           'application/json': components['schemas']['Error']
