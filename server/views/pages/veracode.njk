@@ -1,0 +1,30 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Components" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+  <h1>Varecode Scan Results</h1>
+
+  <table id="veracodeTable" class="stripe">
+  	<thead>
+	  <tr>
+		<th>Name</th>
+		<th>Pass</th>
+		<th>Highs</th>
+		<th>Medium</th>
+		<th>Lows</th>
+		<th>Report</th>
+	  </tr>
+  	</thead>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/govuk/all.js"></script>
+  <script src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/veracodeTable.js"></script>
+{% endblock %}
