@@ -29,8 +29,14 @@ jQuery(function () {
       {
         data: 'result',
         createdCell: function (td, cellData, rowData) {
-          const data = rowData.hasVeracode ? rowData.result : 'N/A'
-          const className = rowData.result === 'Passed' ? 'veracode--passed' : 'veracode--failed'
+          let className = 'veracode--missing'
+          let data = 'N/A'
+
+          if (rowData.hasVeracode) {
+            className = rowData.result === 'Passed' ? 'veracode--passed' : 'veracode--failed'
+            data = rowData.result
+          }
+
           $(td).html(data).addClass(className)
         },
       },
