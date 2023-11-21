@@ -10,7 +10,7 @@ jQuery(function () {
       [10, 25, 50, 75, 100, 'All'],
     ],
     paging: true,
-    order: [[0, 'asc']],
+    order: [[6, 'desc']],
     sortable: true,
     ajax: {
       url: '/components/veracode/data',
@@ -61,6 +61,15 @@ jQuery(function () {
           const data = rowData.hasVeracode ? rowData.severityLevels.LOW : 'N/A'
           $(td).html(data)
         },
+      },
+      {
+        data: 'blip',
+        createdCell: function (td, cellData, rowData) {
+          // const data = rowData.hasVeracode ? rowData.score : 0
+          console.log(rowData.blip)
+          $(td).html(rowData.blip)
+        },
+        type: 'num',
       },
       {
         data: 'report',

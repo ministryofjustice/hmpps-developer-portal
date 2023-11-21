@@ -48,6 +48,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           hasVeracode,
           result: component.attributes.veracode_policy_rules_status === 'Pass' ? 'Passed' : 'Failed',
           report: hasVeracode ? component.attributes.veracode_results_url : 'N/A',
+          blip: hasVeracode ? component.attributes.veracode_results_summary['static-analysis'].score : 0,
           severityLevels,
         }
       })
