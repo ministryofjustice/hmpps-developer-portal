@@ -112,3 +112,13 @@
   font-size: 0.8rem;
   white-space: pre-wrap;
 }
+
+.veracode--passed {
+  color: white;
+  background-color: govuk-colour('green');
+}
+
+.veracode--failed {
+  color: white;
+  background-color: govuk-colour('red');
+}

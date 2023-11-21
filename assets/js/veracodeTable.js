@@ -19,7 +19,6 @@ jQuery(function () {
         alert('An error occurred when loading components.') // eslint-disable-line no-undef
       },
     },
-
     columns: [
       {
         data: 'name',
@@ -28,9 +27,17 @@ jQuery(function () {
         },
       },
       {
-        data: 'pass',
+        data: 'result',
         createdCell: function (td, cellData, rowData) {
-          const data = rowData.hasVeracode ? rowData.pass : 'N/A'
+          const data = rowData.hasVeracode ? rowData.result : 'N/A'
+          const className = rowData.result === 'Passed' ? 'veracode--passed' : 'veracode--failed'
+          $(td).html(data).addClass(className)
+        },
+      },
+      {
+        data: 'severityLevels.VERY_HIGH',
+        createdCell: function (td, cellData, rowData) {
+          const data = rowData.hasVeracode ? rowData.severityLevels.VERY_HIGH : 'N/A'
           $(td).html(data)
         },
       },
