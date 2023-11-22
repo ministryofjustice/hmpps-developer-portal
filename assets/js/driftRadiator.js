@@ -3,10 +3,17 @@ dayjs.extend(window.dayjs_plugin_relativeTime)
 const lastIds = Object.fromEntries(environments.map(e => [`v:${e}`, 0]))
 const data = Object.fromEntries(environments.map(e => [`${e}`, undefined]))
 
-const updateVersion = ({ env, version, date, build, sha }) => {
+const tileLine = (label, value) => `<strong>${label}:</strong><span class="tile-value">${value}</span><br/>`
+const tileLink = (title, href) => `<a class="govuk-link--no-visited-state" href="${href}">${title}</a>`
+
+const updateVersion = ({ env, version }) => {
+  const [date, build, sha] = version.split('.')
   data[env] = { version, date, build, sha }
-  $(`#${env}_build`).text(build)
-  $(`#${env}_date`).text(date)
+
+  $(`#${env}_details`).html(`
+    ${tileLine('Environment', env)}
+    ${tileLine('Build date', date)}
+    ${tileLine('Build number', build)}`)
 
   if (env != devEnvName && data[devEnvName]) {
     const devEnvSha = data[devEnvName].sha
@@ -16,13 +23,15 @@ const updateVersion = ({ env, version, date, build, sha }) => {
     const thisEnvDate = data[env].date
 
     const humanReadableDate = `${dayjs(devEnvDate).diff(thisEnvDate, 'day')} days behind dev`
+    const gitDiffUrl = `https://github.com/ministryofjustice/${componentName}/compare/${thisEnvSha}...${devEnvSha}`
 
     if (devEnvSha !== thisEnvSha) {
       $(`#${env}_details`).html(`
-      
-      <strong>Staleness:</strong> ${humanReadableDate}<br/>
-      <strong>Differences:</strong>
-      <a class="govuk-link--no-visited-state" href="https://github.com/ministryofjustice/${componentName}/compare/${thisEnvSha}...${devEnvSha}">View in GitHub</a>
+        ${tileLine('Environment', env)}
+        ${tileLine('Build date', date)}
+        ${tileLine('Build number', build)}
+        ${tileLine('Staleness', humanReadableDate)}
+        ${tileLine('Differences', tileLink('View in GitHub', gitDiffUrl))}
     `)
     }
   }
@@ -51,8 +60,7 @@ const fetchMessages = async queryStringOptions => {
       }
 
       const version = lastMessage.message.v
-      const [date, build, sha] = version.split('.')
-      updateVersion({ env, version, date, build, sha })
+      updateVersion({ env, version })
     })
   } catch (e) {
     console.error(e)

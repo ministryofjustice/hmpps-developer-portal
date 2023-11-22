@@ -58,13 +58,17 @@
   flex-wrap: wrap;
   justify-content: center;
   padding: 10px;
-}
 
-.radiator-tile {
-   flex: 0 0 320px;
-   margin: 1em;
-   padding: 10px;
-   background-color: lightgray;
+  .radiator-tile {
+    flex: 0 0 320px;
+    margin: 1em;
+    padding: 10px;
+    background-color: lightgray;
+ 
+    .tile-value {
+       float: right;
+    }
+ }
 }
 
 .componentData {
