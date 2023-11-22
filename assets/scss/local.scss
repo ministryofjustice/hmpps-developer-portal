@@ -53,6 +53,14 @@
   clear: none;
 }
 
+.drift-tile {
+  width: 30%;
+  height: 6em;
+  display: inline-block;
+  background-color: lightgray;
+  padding: 10px
+}
+
 .componentData {
   th, td {
     padding: govuk-spacing(1);
