@@ -53,12 +53,18 @@
   clear: none;
 }
 
-.drift-tile {
-  width: 30%;
-  height: 6em;
-  display: inline-block;
-  background-color: lightgray;
-  padding: 10px
+.radiator-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 10px;
+}
+
+.radiator-tile {
+   flex: 0 0 320px;
+   margin: 1em;
+   padding: 10px;
+   background-color: lightgray;
 }
 
 .componentData {

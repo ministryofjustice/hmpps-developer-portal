@@ -6,6 +6,7 @@ const data = Object.fromEntries(environments.map(e => [`${e}`, undefined]))
 const updateVersion = ({ env, version, date, build, sha }) => {
   data[env] = { version, date, build, sha }
   $(`#${env}_build`).text(build)
+  $(`#${env}_date`).text(date)
 
   if (env != devEnvName && data[devEnvName]) {
     const devEnvSha = data[devEnvName].sha
@@ -16,16 +17,14 @@ const updateVersion = ({ env, version, date, build, sha }) => {
 
     const humanReadableDate = `${dayjs(devEnvDate).diff(thisEnvDate, 'day')} days behind dev`
 
-    $(`#${env}_date`).text(`${date} (${humanReadableDate})`)
-
     if (devEnvSha !== thisEnvSha) {
       $(`#${env}_details`).html(`
+      
+      <strong>Staleness:</strong> ${humanReadableDate}<br/>
       <strong>Differences:</strong>
       <a class="govuk-link--no-visited-state" href="https://github.com/ministryofjustice/${componentName}/compare/${thisEnvSha}...${devEnvSha}">View in GitHub</a>
     `)
     }
-  } else {
-    $(`#${env}_date`).text(date)
   }
 }
 

@@ -17,16 +17,16 @@
 <h2>{{ component.name }}</h2>  
     <p><a class="govuk-link--no-visited-state" href="https://app.circleci.com/pipelines/github/ministryofjustice/{{ component.name}}?branch=main">Circle CI pipeline</a></p>
     
-    {% for environment in component.environments %}
-    <div class="drift-tile">
-      <strong>Environment:</strong> {{environment.name}}<br/>
-      <strong>Date:</strong> <span id="{{environment.name}}_date"></span><br/>
-      <strong>Build:</strong> <span id="{{environment.name}}_build"></span><br/> 
-      {% if environment.name != devEnvName %} 
-        <p id="{{ environment.name}}_details"></p>
-      {% endif %}
+    <div class="radiator-row">
+      {% for environment in component.environments %}
+      <div class="radiator-tile">
+        <strong>Environment:</strong> {{environment.name}}<br/>
+        <strong>Date:</strong> <span id="{{environment.name}}_date"></span><br/>
+        <strong>Build:</strong> <span id="{{environment.name}}_build"></span><br/> 
+        <span id="{{ environment.name}}_details"></span>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
 {% endblock %}
 
 {% block bodyEnd %}
