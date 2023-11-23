@@ -1165,6 +1165,9 @@ export interface components {
       veracode_results_url?: string
       veracode_last_completed_scan_date?: string
       veracode_results_summary?: {
+        'static-analysis': {
+          score: number
+        }
         severity: {
           level: number
           category: {
