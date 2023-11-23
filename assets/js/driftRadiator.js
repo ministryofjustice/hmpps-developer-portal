@@ -22,7 +22,16 @@ const updateVersion = ({ env, version }) => {
     const devEnvDate = data[devEnvName].date
     const thisEnvDate = data[env].date
 
-    const humanReadableDate = `${dayjs(devEnvDate).diff(thisEnvDate, 'day')} days behind dev`
+    const daysDiff = devEnvSha === thisEnvSha ? -1 : dayjs(devEnvDate).diff(thisEnvDate, 'day')
+
+    // Decrease denominator to increase rate of change , increase daysDiff to increase initial jump
+    const diffScore = (daysDiff + 6) / 15
+
+    const hue = Math.max(0, (1 - diffScore) * 120).toString(10)
+
+    const style = `hsl(${hue},50%,50%)`
+    $(`#${env}_details`).css('background-color', style)
+
     const gitDiffUrl = `https://github.com/ministryofjustice/${componentName}/compare/${thisEnvSha}...${devEnvSha}`
 
     if (devEnvSha !== thisEnvSha) {
@@ -30,7 +39,7 @@ const updateVersion = ({ env, version }) => {
         ${tileLine('Environment', env)}
         ${tileLine('Build date', date)}
         ${tileLine('Build number', build)}
-        ${tileLine('Staleness', humanReadableDate)}
+        ${tileLine('Staleness', `${daysDiff} days behind dev`)}
         ${tileLine('Differences', tileLink('View in GitHub', gitDiffUrl))}
     `)
     }
