@@ -72,7 +72,6 @@ jQuery(function () {
         data: 'codeScore',
         createdCell: function (td, cellData, rowData) {
           const data = rowData.hasVeracode ? rowData.codeScore : 0
-          console.log(data)
           $(td).html(data)
         },
         type: 'num',
