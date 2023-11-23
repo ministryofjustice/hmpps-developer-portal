@@ -1,0 +1,40 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% set pageTitle = applicationName + " - " + component.name %}
+{% set mainClasses = "app-container govuk-body" %}
+{% set devEnvName = component.environments[0].name %}
+
+{% block content %}
+
+{{ govukBackLink({
+  text: "Back",
+  href: "/components/" + component.name
+}) }}
+
+<h1 id="detailPageTitle">Deployment Drift Radiator</h1>  
+<h2>{{ component.name }}</h2>  
+    <p><a class="govuk-link--no-visited-state" href="https://app.circleci.com/pipelines/github/ministryofjustice/{{ component.name}}?branch=main">Circle CI pipeline</a></p>
+    
+    <div class="radiator-row">
+      {% for environment in component.environments %}
+        <div id="{{ environment.name}}_details" class="radiator-tile"></div>
+      {% endfor %}
+    </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/govuk/all.js"></script>
+  <script src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script nonce="{{ cspNonce }}">
+    const environments = ["{{ component.environments | join("\", \"", "name") | safe }}"]
+    const devEnvName = '{{ devEnvName }}'
+    const componentName = '{{ component.name }}'
+  </script>
+  <script src="/assets/js/dayjs/dayjs.min.js"></script>
+  <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
+  <script src="/assets/js/driftRadiator.js"></script>
+{% endblock %}
