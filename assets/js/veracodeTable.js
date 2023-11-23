@@ -69,11 +69,11 @@ jQuery(function () {
         },
       },
       {
-        data: 'blip',
+        data: 'codeScore',
         createdCell: function (td, cellData, rowData) {
-          // const data = rowData.hasVeracode ? rowData.score : 0
-          console.log(rowData.blip)
-          $(td).html(rowData.blip)
+          const data = rowData.hasVeracode ? rowData.codeScore : 0
+          console.log(data)
+          $(td).html(data)
         },
         type: 'num',
       },
