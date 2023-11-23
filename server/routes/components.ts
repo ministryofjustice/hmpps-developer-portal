@@ -26,28 +26,32 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   get('/veracode/data', async (req, res) => {
     const components = await serviceCatalogueService.getComponents()
 
-    const rows = components.map(component => {
-      const hasVeracode = !!component.attributes.veracode_results_summary
-      const severityLevels = {
-        LOW: 0,
-        MEDIUM: 0,
-        HIGH: 0,
-      }
+    const rows = components
+      .filter(component => !component.attributes.veracode_exempt)
+      .map(component => {
+        const hasVeracode = !!component.attributes.veracode_results_summary
+        const severityLevels = {
+          LOW: 0,
+          MEDIUM: 0,
+          HIGH: 0,
+          VERY_HIGH: 0,
+        }
 
-      component.attributes.veracode_results_summary?.severity?.forEach(severity => {
-        severity.category.forEach(category => {
-          severityLevels[category.severity] += category.count
+        component.attributes.veracode_results_summary?.severity?.forEach(severity => {
+          severity.category.forEach(category => {
+            severityLevels[category.severity] += category.count
+          })
         })
-      })
 
-      return {
-        name: component.attributes.name,
-        hasVeracode,
-        pass: component.attributes.veracode_policy_rules_status === 'Pass',
-        report: hasVeracode ? component.attributes.veracode_results_url : 'N/A',
-        severityLevels,
-      }
-    })
+        return {
+          name: component.attributes.name,
+          hasVeracode,
+          result: component.attributes.veracode_policy_rules_status === 'Pass' ? 'Passed' : 'Failed',
+          report: hasVeracode ? component.attributes.veracode_results_url : 'N/A',
+          codeScore: hasVeracode ? component.attributes.veracode_results_summary['static-analysis'].score : 0,
+          severityLevels,
+        }
+      })
 
     return res.send(rows)
   })
