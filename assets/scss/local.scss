@@ -63,8 +63,13 @@
     flex: 0 0 320px;
     margin: 1em;
     padding: 10px;
-    background-color: rgb(140, 191, 64);
- 
+    border-style: groove;
+    .radiator-indicator {
+      height: 2em;
+      margin-bottom: 5px;
+      width: 100%;
+      background-color: rgb(140, 191, 64);
+    }
     .tile-value {
        float: right;
     }

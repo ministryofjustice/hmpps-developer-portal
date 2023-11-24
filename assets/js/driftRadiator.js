@@ -30,7 +30,7 @@ const updateVersion = ({ env, version }) => {
     const hue = Math.max(0, (1 - diffScore) * 120).toString(10)
 
     const style = `hsl(${hue},50%,50%)`
-    $(`#${env}_details`).css('background-color', style)
+    $(`#${env}_indicator`).css('background-color', style)
 
     const gitDiffUrl = `https://github.com/ministryofjustice/${componentName}/compare/${thisEnvSha}...${devEnvSha}`
 
