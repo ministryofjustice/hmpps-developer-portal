@@ -10,7 +10,13 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    return res.render('pages/components')
+    const components = await serviceCatalogueService.getComponents()
+    return res.render('pages/driftRadiator', {
+      components: components.map(c => ({
+        name: c.attributes.name,
+        environments: c.attributes.environments,
+      })),
+    })
   })
 
   get('/data', async (req, res) => {
@@ -25,8 +31,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const component = await serviceCatalogueService.getComponent(componentName)
 
     const displayComponent = {
-      name: componentName,
-      api: component.api,
+      name: component.name,
       environments: component.environments,
     }
 

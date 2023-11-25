@@ -4,17 +4,15 @@ const lastIds = Object.fromEntries(environments.map(e => [`v:${e}`, 0]))
 const data = Object.fromEntries(environments.map(e => [`${e}`, undefined]))
 
 const tileLine = (label, value) => `<strong>${label}:</strong><span class="tile-value">${value}</span><br/>`
-const tileLink = (title, href) => `<a class="govuk-link--no-visited-state" href="${href}">${title}</a>`
+const tileLink = (title, href) => `<a class="tile-value govuk-link--no-visited-state" href="${href}">${title}</a>`
 
 const updateVersion = ({ env, version }) => {
   const [date, build, sha] = version.split('.')
   data[env] = { version, date, build, sha }
-
+  $(`#${env}_name`).html(tileLine(env, 'Up to date'))
   $(`#${env}_details`).html(`
-    ${tileLine('Environment', env)}
-    ${tileLine('Build date', date)}
-    ${tileLine('Build number', build)}`)
-
+  ${tileLine('Version', `${version}`)}
+`)
   if (env != devEnvName && data[devEnvName]) {
     const devEnvSha = data[devEnvName].sha
     const thisEnvSha = data[env].sha
@@ -35,12 +33,13 @@ const updateVersion = ({ env, version }) => {
     const gitDiffUrl = `https://github.com/ministryofjustice/${componentName}/compare/${thisEnvSha}...${devEnvSha}`
 
     if (devEnvSha !== thisEnvSha) {
+      const diffDescription =
+        daysDiff > 0 ? `${daysDiff} day${daysDiff != 1 ? 's' : ''} behind dev` : 'New changes available'
+
+      $(`#${env}_name`).html(tileLine(env, diffDescription))
       $(`#${env}_details`).html(`
-        ${tileLine('Environment', env)}
-        ${tileLine('Build date', date)}
-        ${tileLine('Build number', build)}
-        ${tileLine('Staleness', `${daysDiff} days behind dev`)}
-        ${tileLine('Differences', tileLink('View in GitHub', gitDiffUrl))}
+        ${tileLine('Version', `${version}`)}
+        ${tileLink('View difference to dev in GitHub', gitDiffUrl)}
     `)
     }
   }

@@ -21,6 +21,7 @@
       {% for environment in component.environments %}
         <div class="radiator-tile">
           <div id="{{ environment.name}}_indicator" class="radiator-indicator"></div>
+          <div id="{{ environment.name}}_name"></div>
           <div id="{{ environment.name}}_details"></div>
         </div>
       {% endfor %}
