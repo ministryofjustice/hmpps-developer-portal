@@ -40,4 +40,5 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   )
 
   njkEnv.addFilter('initialiseName', initialiseName)
+  njkEnv.addFilter('toJson', (val: unknown, depth = 0) => JSON.stringify(val, null, depth))
 }
