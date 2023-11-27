@@ -2,26 +2,33 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
-{% set pageTitle = applicationName + " - " + component.name %}
+{% set pageTitle = applicationName + " - Deployment drift radiator" %}
 {% set mainClasses = "app-container govuk-body" %}
-{% set devEnvName = component.environments[0].name %}
 
 {% block content %}
 
-{{ govukBackLink({
-  text: "Back",
-  href: "/components/" + component.name
-}) }}
+  {{ govukBackLink({
+    text: "Back",
+    href: "/"
+  }) }}
 
-<h1 id="detailPageTitle">Deployment Drift Radiator</h1>  
-<h2>{{ component.name }}</h2>  
-    <p><a class="govuk-link--no-visited-state" href="https://app.circleci.com/pipelines/github/ministryofjustice/{{ component.name}}?branch=main">Circle CI pipeline</a></p>
+  <h1 id="detailPageTitle">Deployment Drift Radiator</h1>
+  <form>
+    <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
+  </form>
+  {% for component in components %}  
+    <p class="govuk-!-margin-bottom-0 govuk-!-margin-top-4"><strong>{{ component.name }}</strong> <a class="govuk-link--no-visited-state radiator-circle-link" href="https://app.circleci.com/pipelines/github/ministryofjustice/{{ component.name}}?branch=main">Circle CI pipeline</a></p>
     
     <div class="radiator-row">
       {% for environment in component.environments %}
-        <div id="{{ environment.name}}_details" class="radiator-tile"></div>
+        <div class="radiator-tile">
+          <div id="{{ environment.id }}_indicator" class="radiator-indicator {{ 'dev' if environment.isDev else 'awaiting-version' }}"></div>
+          <div id="{{ environment.id }}_name"></div>
+          <div id="{{ environment.id }}_details"></div>
+        </div>
       {% endfor %}
     </div>
+  {% endfor %}
 {% endblock %}
 
 {% block bodyEnd %}
@@ -30,9 +37,7 @@
   <script src="/assets/moj/all.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script nonce="{{ cspNonce }}">
-    const environments = ["{{ component.environments | join("\", \"", "name") | safe }}"]
-    const devEnvName = '{{ devEnvName }}'
-    const componentName = '{{ component.name }}'
+    const components = {{components | toJson(2) | safe }}
   </script>
   <script src="/assets/js/dayjs/dayjs.min.js"></script>
   <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>

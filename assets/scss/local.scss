@@ -53,18 +53,30 @@
   clear: none;
 }
 
+.radiator-circle-link {
+  margin-left: 30px;
+}
 .radiator-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  padding: 10px;
+  justify-content: left;
 
   .radiator-tile {
     flex: 0 0 320px;
-    margin: 1em;
+    margin: 10px 10px 10px 10px;
     padding: 10px;
-    background-color: rgb(140, 191, 64);
- 
+    border-style: groove;
+    .radiator-indicator {
+      height: 1em;
+      margin-bottom: 5px;
+      width: 100%; 
+      &.dev {
+        background-color: rgb(140, 191, 64);
+      }
+      &.awaiting-version {
+        background-color: grey;
+      }
+    }
     .tile-value {
        float: right;
     }
