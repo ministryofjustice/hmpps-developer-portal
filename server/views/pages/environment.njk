@@ -74,6 +74,10 @@
       <td><a href="https://grafana.live.cloud-platform.service.justice.gov.uk/d/golden-signals/golden-signals?var-namespace={{ component.environment.namespace }}&orgId=1&var-service={{ component.name }}" target="_blank">View</a> (opens grafana in new window)</td>
     </tr>
     <tr>
+      <th>Compute Resources Dashboard</th>
+      <td><a href="https://grafana.live.cloud-platform.service.justice.gov.uk/d/a164a7f0339f99e89cea5cb47e9be617/kubernetes-compute-resources-workload?orgId=1&var-namespace={{ component.environment.namespace }}&var-type=deployment&var-workload={{ component.name }}" target="_blank">View</a> (opens grafana in new window)</td>
+    </tr>
+    <tr>
       <th>Kubernetes logs</th>
       <td><a href="https://kibana.cloud-platform.service.justice.gov.uk/_plugin/kibana/app/discover#/?_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_a=(columns:!(log),filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:'167701b0-f8c0-11ec-b95c-1d65c3682287',key:kubernetes.namespace_name,negate:!f,params:(query:{{ component.environment.namespace }}),type:phrase),query:(match_phrase:(kubernetes.namespace_name:{{ component.environment.namespace }})))),index:'167701b0-f8c0-11ec-b95c-1d65c3682287',interval:auto,query:(language:kuery,query:''),sort:!())" target="_blank">View</a> (opens kibana in new window)</td>
     </tr>
