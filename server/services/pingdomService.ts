@@ -1,5 +1,5 @@
 import type { PingdomApiClient, RestClientBuilder } from '../data'
-import { Check, Checks } from '../data/pingdomApiTypes'
+import { Checks } from '../data/pingdomApiTypes'
 
 export default class PingdomService {
   constructor(private readonly pingdomApiClientFactory: RestClientBuilder<PingdomApiClient>) {}
