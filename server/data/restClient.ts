@@ -36,7 +36,6 @@ export default class RestClient {
   constructor(
     private readonly name: string,
     private readonly config: ApiConfig,
-    private readonly token: string,
   ) {
     this.agent = config.url.startsWith('https') ? new HttpsAgent(config.agent) : new Agent(config.agent)
   }
@@ -47,6 +46,10 @@ export default class RestClient {
 
   private timeoutConfig() {
     return this.config.timeout
+  }
+
+  private token() {
+    return this.config.token
   }
 
   async get({ path = null, query = '', headers = {}, responseType = '', raw = false }: GetRequest): Promise<unknown> {
@@ -61,7 +64,7 @@ export default class RestClient {
           return undefined // retry handler only for logging retries, not to influence retry logic
         })
         .query(query)
-        .auth(this.token, { type: 'bearer' })
+        .auth(this.token(), { type: 'bearer' })
         .set(headers)
         .responseType(responseType)
         .timeout(this.timeoutConfig())
@@ -92,7 +95,7 @@ export default class RestClient {
           if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
         })
-        .auth(this.token, { type: 'bearer' })
+        .auth(this.token(), { type: 'bearer' })
         .set(headers)
         .responseType(responseType)
         .timeout(this.timeoutConfig())
@@ -111,7 +114,7 @@ export default class RestClient {
       superagent
         .get(`${this.apiUrl()}${path}`)
         .agent(this.agent)
-        .auth(this.token, { type: 'bearer' })
+        .auth(this.token(), { type: 'bearer' })
         .use(restClientMetricsMiddleware)
         .retry(2, (err, res) => {
           if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)

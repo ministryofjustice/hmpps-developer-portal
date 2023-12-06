@@ -12,13 +12,16 @@ buildAppInsightsClient(applicationInfo)
 
 import StrapiApiClient from './strapiApiClient'
 
+import PingdomApiClient from './pingdomApiClient'
+
 type RestClientBuilder<T> = (token: string) => T
 
 export const dataAccess = () => ({
   applicationInfo,
   strapiApiClientBuilder: (() => new StrapiApiClient()) as RestClientBuilder<StrapiApiClient>,
+  pingdomApiClientBuilder: (() => new PingdomApiClient()) as RestClientBuilder<PingdomApiClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { StrapiApiClient, RestClientBuilder }
+export { PingdomApiClient, StrapiApiClient, RestClientBuilder }

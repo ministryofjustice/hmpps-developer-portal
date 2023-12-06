@@ -27,6 +27,7 @@ export interface ApiConfig {
     deadline: number
   }
   agent: AgentConfig
+  token: string
 }
 
 export default {
@@ -56,6 +57,15 @@ export default {
         deadline: Number(get('SERVICE_CATALOGUE_TIMEOUT_DEADLINE', 5000)),
       },
       agent: new AgentConfig(Number(get('SERVICE_CATALOGUE_TIMEOUT_RESPONSE', 5000))),
+    },
+    pingdom: {
+      url: get('PINGDOM_API', 'https://api.pingdom.com/api/3.1/', requiredInProduction),
+      timeout: {
+        response: Number(get('PINGDOM_API_TIMEOUT_RESPONSE', 5000)),
+        deadline: Number(get('PINGDOM_API_TIMEOUT_DEADLINE', 5000)),
+      },
+      agent: new AgentConfig(Number(get('PINGDOM_API_TIMEOUT_RESPONSE', 5000))),
+      token: get('PINGDOM_TOKEN', '', requiredInProduction),
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
