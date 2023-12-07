@@ -49,6 +49,7 @@ generic-service:
     groups:
       - internal
       - prisons
+      - unilink_staff
 
 generic-prometheus-alerts:
   targetApplication: hmpps-developer-portal
