@@ -29,7 +29,10 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const displayProduct = {
       name: product.name,
       description: product.description,
-      confluenceLinks: product.confluence_link?.split(',').map(link => link.trim()),
+      confluenceLinks: product.confluence_link
+        ?.split(',')
+        .filter(link => link !== '')
+        .map(link => link.trim()),
       gDriveLink: product.gdrive_link,
       id: product.p_id,
       productManager: product.product_manager,
