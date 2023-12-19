@@ -13,32 +13,23 @@
   }) }}
 
   <h1 id="detailPageTitle">Deployment Drift Radiator</h1>
-  <form>
-    <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-  </form>
-  {% for component in components %}  
-    <p class="govuk-!-margin-bottom-0 govuk-!-margin-top-4"><strong>{{ component.name }}</strong> <a class="govuk-link--no-visited-state radiator-circle-link" href="https://app.circleci.com/pipelines/github/ministryofjustice/{{ component.name}}?branch=main">Circle CI pipeline</a></p>
-    
-    <div class="radiator-row">
-      {% for environment in component.environments %}
-        <div class="radiator-tile">
-          <div id="{{ environment.id }}_indicator" class="radiator-indicator {{ 'dev' if environment.isDev else 'awaiting-version' }}"></div>
-          <div id="{{ environment.id }}_name"></div>
-          <div id="{{ environment.id }}_details"></div>
-        </div>
-      {% endfor %}
-    </div>
-  {% endfor %}
+  <div id="drift-radiator"></div>
 {% endblock %}
 
 {% block bodyEnd %}
   <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
-  <script nonce="{{ cspNonce }}">
-    const components = {{components | toJson(2) | safe }}
-  </script>
   <script src="/assets/js/dayjs/dayjs.min.js"></script>
   <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
   <script src="/assets/js/driftRadiator.js"></script>
+  <script nonce="{{ cspNonce }}">
+    jQuery(function () {
+      const components = {{components | toJson(2) | safe }}
+      const csrfToken = "{{ csrfToken }}"
+      const renderer = new DeploymentRenderer(csrfToken, 'list')
+      renderer.start(components)
+    })
+  </script>
+  
 {% endblock %}
