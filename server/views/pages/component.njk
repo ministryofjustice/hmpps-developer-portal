@@ -80,4 +80,21 @@
   </tbody>
 </table>
 
+<div id="drift-radiator"></div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/js/dayjs/dayjs.min.js"></script>
+  <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
+  <script src="/assets/js/driftRadiator.js"></script>
+  <script nonce="{{ cspNonce }}">
+    jQuery(function () {
+      const components = {{[component.name] | toJson(2) | safe }}
+      const csrfToken = "{{ csrfToken }}"
+      const renderer = new DeploymentRenderer(csrfToken, 'standalone')
+      renderer.start(components)
+    })
+  </script>
+  
 {% endblock %}
