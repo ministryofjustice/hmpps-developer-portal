@@ -27,6 +27,19 @@
         {% endif %}
       </td>
     </tr>
+    <tr>
+      <th>Links</th>
+      <td>
+       <ul>
+          <li><a class="govuk-link--no-visited-state" href="/monitor/team/{{  team.name | toMonitorName }}">
+             Health Monitor
+          </a></li>
+          <li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/{{ team.name | toMonitorName }}">
+             Deployment drift
+          </a></li>
+        </ul>
+      </td>
+    </tr>
   </tbody>
 </table>
 
