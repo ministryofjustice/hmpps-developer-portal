@@ -11,25 +11,25 @@ export default function routes({ serviceCatalogueService, redisService, componen
 
   get('/', async (req, res) => {
     const components = await componentNameService.getAllDeployedComponents()
-    return res.render('pages/driftRadiator', { components })
+    return res.render('pages/driftRadiator', { title: `Deployment Drift Radiator`, components })
   })
 
   get('/teams/:teamName', async (req, res) => {
     const { teamName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForTeam(teamName)
-    return res.render('pages/driftRadiator', { components })
+    return res.render('pages/driftRadiator', { title: `Deployment drift radiator for ${teamName}`, components })
   })
 
   get('/service-areas/:serviceAreaName', async (req, res) => {
     const { serviceAreaName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForServiceArea(serviceAreaName)
-    return res.render('pages/driftRadiator', { components })
+    return res.render('pages/driftRadiator', { title: `Deployment drift radiator for ${serviceAreaName}`, components })
   })
 
   get('/products/:productName', async (req, res) => {
     const { productName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForProduct(productName)
-    return res.render('pages/driftRadiator', { components })
+    return res.render('pages/driftRadiator', { title: `Deployment drift radiator for ${productName}`, components })
   })
 
   const toComponentView = (component: Component) => ({
