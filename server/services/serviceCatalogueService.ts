@@ -12,6 +12,7 @@ import {
   ProductSetListResponseDataItem,
   ComponentListResponse,
 } from '../data/strapiApiTypes'
+import { sortData } from '../utils/utils'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -144,28 +145,4 @@ export default class ServiceCatalogueService {
 
     return productSet
   }
-}
-
-const sortData = (
-  dataItem:
-    | ProductListResponseDataItem
-    | TeamListResponseDataItem
-    | ComponentListResponseDataItem
-    | ServiceAreaListResponseDataItem
-    | ProductSetListResponseDataItem,
-  compareDataItem:
-    | ProductListResponseDataItem
-    | TeamListResponseDataItem
-    | ComponentListResponseDataItem
-    | ServiceAreaListResponseDataItem
-    | ProductSetListResponseDataItem,
-) => {
-  if (dataItem.attributes.name < compareDataItem.attributes.name) {
-    return -1
-  }
-  if (dataItem.attributes.name > compareDataItem.attributes.name) {
-    return 1
-  }
-
-  return 0
 }
