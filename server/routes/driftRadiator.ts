@@ -3,27 +3,33 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import type { Component } from '../data/strapiApiTypes'
 
-export default function routes({ serviceCatalogueService, redisService }: Services): Router {
+export default function routes({ serviceCatalogueService, redisService, componentNameService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    const rawComponents = await serviceCatalogueService.getComponents()
-
-    const components = rawComponents
-      .map(({ attributes: component }) => component)
-      .filter(component => component.environments?.length)
-      .map(component => component.name)
-
+    const components = await componentNameService.getAllDeployedComponents()
     return res.render('pages/driftRadiator', { components })
   })
 
-  get('/data', async (req, res) => {
-    const components = await serviceCatalogueService.getComponents()
+  get('/teams/:teamName', async (req, res) => {
+    const { teamName } = req.params
+    const components = await componentNameService.getAllDeployedComponentsForTeam(teamName)
+    return res.render('pages/driftRadiator', { components })
+  })
 
-    return res.send(components)
+  get('/service-areas/:serviceAreaName', async (req, res) => {
+    const { serviceAreaName } = req.params
+    const components = await componentNameService.getAllDeployedComponentsForServiceArea(serviceAreaName)
+    return res.render('pages/driftRadiator', { components })
+  })
+
+  get('/products/:productName', async (req, res) => {
+    const { productName } = req.params
+    const components = await componentNameService.getAllDeployedComponentsForProduct(productName)
+    return res.render('pages/driftRadiator', { components })
   })
 
   const toComponentView = (component: Component) => ({

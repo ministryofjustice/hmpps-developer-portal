@@ -1,6 +1,8 @@
 import { type Request } from 'express'
 import { BadRequest } from 'http-errors'
 
+type HasName = { attributes?: { name: string } }
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -56,6 +58,17 @@ export const formatMonitorName = (name: string): string => {
     .replace(/ /g, '-')
     .replace(/[^-a-z0-9]/g, '')
     .replace(/-+/g, '-')
+}
+
+export const sortData = (dataItem: HasName, compareDataItem: HasName) => {
+  if (dataItem.attributes.name < compareDataItem.attributes.name) {
+    return -1
+  }
+  if (dataItem.attributes.name > compareDataItem.attributes.name) {
+    return 1
+  }
+
+  return 0
 }
 
 export const getComponentName = (req: Request): string => {
