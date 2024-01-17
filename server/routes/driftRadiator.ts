@@ -11,7 +11,7 @@ export default function routes({ serviceCatalogueService, redisService, componen
 
   get('/', async (req, res) => {
     const components = await componentNameService.getAllDeployedComponents()
-    return res.render('pages/driftRadiator', { title: `Deployment Drift Radiator`, components })
+    return res.render('pages/driftRadiator', { title: 'Deployment Drift Radiator', components })
   })
 
   get('/teams/:teamName', async (req, res) => {
