@@ -29,12 +29,11 @@ export default class ComponentNameService {
       withEnvironments: true,
     })
 
-    return teamDetails.data.attributes.products.data.flatMap(
-      product =>
-        product.attributes?.components?.data
-          .filter(component => component.attributes?.environments?.length)
-          .sort(sortData)
-          .map(component => component.attributes.name),
+    return teamDetails.data.attributes.products.data.flatMap(product =>
+      product.attributes?.components?.data
+        .filter(component => component.attributes?.environments?.length)
+        .sort(sortData)
+        .map(component => component.attributes.name),
     )
   }
 
@@ -49,12 +48,11 @@ export default class ComponentNameService {
 
     const serviceAreaDetails = await this.strapiApiClientFactory('').getServiceArea(serviceAreaSummary.id, true)
 
-    return serviceAreaDetails.data.attributes.products.data.flatMap(
-      product =>
-        product.attributes?.components?.data
-          .filter(component => component.attributes?.environments?.length)
-          .sort(sortData)
-          .map(component => component.attributes.name),
+    return serviceAreaDetails.data.attributes.products.data.flatMap(product =>
+      product.attributes?.components?.data
+        .filter(component => component.attributes?.environments?.length)
+        .sort(sortData)
+        .map(component => component.attributes.name),
     )
   }
 
