@@ -7,83 +7,15 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-  {% set serviceAreas = [] %}
-  {% for serviceArea in serviceAreaList %}
-    {%- set serviceAreas = (serviceAreas.push({
-      value: serviceArea.value,
-      text: serviceArea.text,
-      selected: serviceArea.selected
-    }), serviceAreas) %}
-  {% endfor %}
-
-  {% set teams = [] %}
-  {% for team in teamList %}
-    {%- set teams = (teams.push({
-      value: team.value,
-      text: team.text,
-      selected: team.selected
-    }), teams) %}
-  {% endfor %}
-
-  {% set products = [] %}
-  {% for product in productList %}
-    {%- set products = (products.push({
-      value: product.value,
-      text: product.text,
-      selected: product.selected
-    }), products) %}
-  {% endfor %}
-
   <h1>Monitor</h1>
 
   <form>
     <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
     <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-    <div class="monitor-selectors govuk-button-group">
-    {{ govukSelect({
-      id: "serviceArea",
-      name: "serviceArea",
-      label: {
-        text: "Service Area"
-      },
-      items: serviceAreas
-    }) }}
-    {{ govukButton({
-      id: "updateServiceArea",
-      name: "updateServiceArea",
-      text: "Update",
-      element: "button"
-    }) }}
-    {{ govukSelect({
-      id: "team",
-      name: "team",
-      label: {
-        text: "Team"
-      },
-      items: teams
-    }) }}
-    {{ govukButton({
-      id: "updateTeam",
-      name: "updateTeam",
-      text: "Update",
-      element: "button"
-    }) }}
-    {{ govukSelect({
-      id: "product",
-      name: "product",
-      label: {
-        text: "Product"
-      },
-      items: products
-    }) }}
-    {{ govukButton({
-      id: "updateProduct",
-      name: "updateProduct",
-      text: "Update",
-      element: "button"
-    }) }}
-    </div>
+
+    {% include "../partials/filterDropDowns.njk" %}
+
     {{ govukCheckboxes({
       classes: "govuk-checkboxes--inline environments",
       name: "environment",
