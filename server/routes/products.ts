@@ -40,6 +40,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       subProduct: product.subproduct,
       legacyProduct: product.legacy,
       phase: product.phase,
+      slackChannelId: product.slack_channel_id,
       productSet,
       team,
       components,

@@ -26,6 +26,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const displayTeam = {
       id: team.t_id,
       name: team.name,
+      slackChannelId: team.slack_channel_id,
       products,
     }
 
