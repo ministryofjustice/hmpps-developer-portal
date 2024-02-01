@@ -1630,6 +1630,7 @@ export interface components {
         }[]
       }
       p_id: string
+      slack_channel_id: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -2748,6 +2749,7 @@ export interface components {
         }[]
       }
       t_id: string
+      slack_channel_id: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */

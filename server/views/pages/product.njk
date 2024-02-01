@@ -77,6 +77,11 @@
           <li><a class="govuk-link--no-visited-state" href="/drift-radiator/products/{{ product.name | toMonitorName }}">
              Deployment drift
           </a></li>
+          {% if product.slackChannelId | length %}
+          <li><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">
+             Slack channel
+          </a></li>
+          {% endif %}
         </ul>
       </td>
     </tr>
