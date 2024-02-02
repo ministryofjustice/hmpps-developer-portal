@@ -81,6 +81,7 @@ const testComponent = {
       health_path: '/health',
       url: 'https://dev.test.com',
       cluster: 'live-cluster.com',
+      active_agencies: ['LEI', 'EAI'],
       type: 'dev',
       monitor: true,
     },
@@ -170,6 +171,37 @@ describe('/components', () => {
         .expect('Content-Type', /application\/json/)
         .expect(res => {
           expect(res.text).toStrictEqual(JSON.stringify(testComponents))
+        })
+    })
+  })
+
+  describe('GET /:componentName/environment/:environmentName', () => {
+    it('should render environment page', () => {
+      return request(app)
+        .get('/components/testComponent/environment/dev')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const devEnvironment = testComponent.environments.find(env => env.name === 'dev')
+          expect(devEnvironment).not.toBeNull()
+          const $ = cheerio.load(res.text)
+          expect($('td[data-test="name"]').text()).toBe(devEnvironment.name)
+          expect($('td[data-test="type"]').text()).toBe(devEnvironment.type)
+          expect($('a[data-test="url"]').attr('href')).toBe(devEnvironment.url)
+          expect($('a[data-test="url"]').text()).toBe(devEnvironment.url)
+          expect($('a[data-test="api"]').length).toBeGreaterThan(0)
+          expect($('a[data-test="api"]').attr('href')).toBe(`${devEnvironment.url}/swagger-ui/index.html`)
+          expect($('a[data-test="namespace"]').attr('href')).toBe(
+            `https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/${devEnvironment.namespace}`,
+          )
+          expect($('a[data-test="namespace"]').text()).toBe(devEnvironment.namespace)
+          expect($('a[data-test="info"]').attr('href')).toBe(`${devEnvironment.url}${devEnvironment.info_path}`)
+          expect($('a[data-test="info"]').text()).toBe(devEnvironment.info_path)
+          expect($('a[data-test="health"]').attr('href')).toBe(`${devEnvironment.url}${devEnvironment.health_path}`)
+          expect($('a[data-test="health"]').text()).toBe(devEnvironment.health_path)
+          expect($('td[data-test="cluster"]').text()).toBe(devEnvironment.cluster)
+          // TODO: fix when we have updated definition from strapi.
+          const activeAgencies = devEnvironment.active_agencies as Array<string>
+          expect($('td[data-test="active-agencies"]').text()).toBe(activeAgencies.join(','))
         })
     })
   })
