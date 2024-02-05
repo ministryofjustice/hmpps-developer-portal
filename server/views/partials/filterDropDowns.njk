@@ -1,39 +1,37 @@
-{% set serviceAreas = [] %}
-{% for serviceArea in serviceAreaList %}
+{%- set serviceAreas = [] -%}
+{%- set teams = [] -%}
+{%- set products = [] -%}
+{%- for serviceArea in serviceAreaList -%}
   {%- set serviceAreas = (serviceAreas.push({
     value: serviceArea.value,
     text: serviceArea.text,
     selected: serviceArea.selected
-  }), serviceAreas) %}
-{% endfor %}
-
-{% set teams = [] %}
-{% for team in teamList %}
+  }), serviceAreas) -%}
+{%- endfor -%}
+{%- for team in teamList -%}
   {%- set teams = (teams.push({
     value: team.value,
     text: team.text,
     selected: team.selected
-  }), teams) %}
-{% endfor %}
-
-{% set products = [] %}
-{% for product in productList %}
+  }), teams) -%}
+{%- endfor -%}
+{%- for product in productList -%}
   {%- set products = (products.push({
     value: product.value,
     text: product.text,
     selected: product.selected
-  }), products) %}
-{% endfor %}
+  }), products) -%}
+{%- endfor -%}
 
 <div class="monitor-selectors govuk-button-group">
-{{ govukSelect({
+{{- govukSelect({
   id: "serviceArea",
   name: "serviceArea",
   label: {
     text: "Service Area"
   },
   items: serviceAreas
-}) }}
+}) -}}
 {{ govukButton({
   id: "updateServiceArea",
   name: "updateServiceArea",
