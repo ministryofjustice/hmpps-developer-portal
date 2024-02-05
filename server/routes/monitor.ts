@@ -3,7 +3,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { Environment } from '../data/strapiApiTypes'
-import { formatMonitorName, getNumericId, getMonitorName, getMonitorType } from '../utils/utils'
+import { getNumericId, getMonitorName, getMonitorType } from '../utils/utils'
 
 type MonitorEnvironment = {
   componentName: string
@@ -13,7 +13,7 @@ type MonitorEnvironment = {
   environmentType: string
 }
 
-export default function routes({ serviceCatalogueService, redisService }: Services): Router {
+export default function routes({ serviceCatalogueService, redisService, dataFilterService }: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -23,34 +23,10 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const monitorType = getMonitorType(req)
     const monitorName = getMonitorName(req)
     logger.info(`Request for /monitor/${monitorType}/${monitorName}`)
-    const serviceAreas = await serviceCatalogueService.getServiceAreas()
-    const serviceAreaList = serviceAreas.map(serviceArea => {
-      return {
-        value: serviceArea.id,
-        text: serviceArea.attributes.name,
-        selected: monitorType === 'serviceArea' && formatMonitorName(serviceArea.attributes.name) === monitorName,
-      }
-    })
-    const teams = await serviceCatalogueService.getTeams()
-    const teamList = teams.map(team => {
-      return {
-        value: team.id,
-        text: team.attributes.name,
-        selected: monitorType === 'team' && formatMonitorName(team.attributes.name) === monitorName,
-      }
-    })
-    const products = await serviceCatalogueService.getProducts({})
-    const productList = products.map(product => {
-      return {
-        value: product.id,
-        text: product.attributes.name,
-        selected: monitorType === 'product' && formatMonitorName(product.attributes.name) === monitorName,
-      }
-    })
 
-    serviceAreaList.unshift({ value: 0, text: '', selected: false })
-    teamList.unshift({ value: 0, text: '', selected: false })
-    productList.unshift({ value: 0, text: '', selected: false })
+    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList(monitorName)
+    const teamList = await dataFilterService.getTeamsDropDownList(monitorName)
+    const productList = await dataFilterService.getProductsDropDownList(monitorName)
 
     return res.render('pages/monitor', {
       serviceAreaList,
