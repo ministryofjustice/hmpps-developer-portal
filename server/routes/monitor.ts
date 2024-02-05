@@ -3,7 +3,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { Environment } from '../data/strapiApiTypes'
-import { formatMonitorName, getNumericId, getMonitorName, getMonitorType } from '../utils/utils'
+import { getNumericId, getMonitorName, getMonitorType } from '../utils/utils'
 
 type MonitorEnvironment = {
   componentName: string
