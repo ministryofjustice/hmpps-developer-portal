@@ -4,6 +4,7 @@ import RedisService from './redisService'
 import { createRedisClient } from '../data/redisClient'
 import logger from '../../logger'
 import ComponentNameService from './componentNameService'
+import DataFilterService from './dataFilterService'
 
 export const services = () => {
   const { strapiApiClientBuilder, applicationInfo } = dataAccess()
@@ -12,6 +13,7 @@ export const services = () => {
 
   const serviceCatalogueService = new ServiceCatalogueService(strapiApiClientBuilder)
   const componentNameService = new ComponentNameService(strapiApiClientBuilder)
+  const dataFilterService = new DataFilterService(strapiApiClientBuilder)
   const redisService = new RedisService(client)
 
   return {
@@ -19,9 +21,10 @@ export const services = () => {
     serviceCatalogueService,
     componentNameService,
     redisService,
+    dataFilterService,
   }
 }
 
 export type Services = ReturnType<typeof services>
 
-export { ServiceCatalogueService, RedisService, ComponentNameService }
+export { ServiceCatalogueService, RedisService, ComponentNameService, DataFilterService }
