@@ -3,7 +3,12 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import type { Component } from '../data/strapiApiTypes'
 
-export default function routes({ serviceCatalogueService, redisService, componentNameService }: Services): Router {
+export default function routes({
+  serviceCatalogueService,
+  redisService,
+  componentNameService,
+  dataFilterService,
+}: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -11,7 +16,18 @@ export default function routes({ serviceCatalogueService, redisService, componen
 
   get('/', async (req, res) => {
     const components = await componentNameService.getAllDeployedComponents()
-    return res.render('pages/driftRadiator', { title: 'Deployment Drift Radiator', components })
+
+    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList('')
+    const teamList = await dataFilterService.getTeamsDropDownList('')
+    const productList = await dataFilterService.getProductsDropDownList('')
+
+    return res.render('pages/driftRadiator', {
+      title: 'Deployment Drift Radiator',
+      components,
+      serviceAreaList,
+      teamList,
+      productList,
+    })
   })
 
   get('/teams/:teamName', async (req, res) => {
