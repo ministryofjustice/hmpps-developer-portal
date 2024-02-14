@@ -144,6 +144,7 @@ workflows:
           pipeline_id: <<pipeline.id>>
           pipeline_number: <<pipeline.number>>
           jira_update: true
+          jira_env_type: development
           name: deploy_dev_preview
           env: "dev"
           context: hmpps-common-vars
@@ -156,6 +157,7 @@ workflows:
           pipeline_id: <<pipeline.id>>
           pipeline_number: <<pipeline.number>>
           jira_update: true
+          jira_env_type: development
           context: hmpps-common-vars
           filters:
             branches:
