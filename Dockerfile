@@ -34,7 +34,7 @@ ARG GIT_BRANCH=main
 ENV GIT_BRANCH ${GIT_BRANCH}
 
 RUN apt-get update && \
-        apt-get install -y make python-is-python3 g++
+        apt-get install -y make python3 g++
 
 COPY package*.json ./
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit
