@@ -19,6 +19,11 @@ generic-service:
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
 
+  # Set the alert for Elasticache's cluster memberIds.
+  elastiCacheAlertsClusterIds:
+    - "cp-1350a759b0fb407e-001"
+    - "cp-1350a759b0fb407e-002"
+
   # Set the alert for Elasticache's Engine CPU threshold value between 0 and 1.
   elastiCacheAlertsEngineCPUThreshold: 0.30
   elastiCacheAlertsEngineCPUThresholdMinutes: 5
