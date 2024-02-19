@@ -18,3 +18,20 @@ generic-service:
 
 generic-prometheus-alerts:
   alertSeverity: digital-prison-service-dev
+
+  # Set the alert for Elasticache's cluster memberIds.
+  elastiCacheAlertsClusterIds:
+    - "cp-1350a759b0fb407e-001"
+    - "cp-1350a759b0fb407e-002"
+
+  # Set the alert for Elasticache's Engine CPU threshold value between 0 and 1.
+  elastiCacheAlertsEngineCPUThreshold: 0.30
+  elastiCacheAlertsEngineCPUThresholdMinutes: 5
+
+  # Set the alert for Elasticache's CPU threshold - value between 0 and 100.
+  elastiCacheAlertsCPUThreshold: 9
+  elastiCacheAlertsCPUThresholdMinutes: 5
+
+  # Set the alert for Elasticache's FreeMemory threshold - value should be above 150MB.
+  elastiCacheAlertsFreeMemoryThreshold: 150
+  elastiCacheAlertsFreeMemoryThresholdMinutes: 5
