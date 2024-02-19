@@ -98,5 +98,5 @@ export const getDependencyType = (req: Request): string => {
 export const isValidDropDown = (req: Request, paramName: string): boolean => {
   const param = req.query[paramName] as string
 
-  return param !== undefined && /[a-z0-9_-]+/.test(param)
+  return param !== undefined && /^[a-z0-9_-]+$/.test(param)
 }
