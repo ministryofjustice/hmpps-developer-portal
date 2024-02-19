@@ -200,7 +200,7 @@ describe('/components', () => {
   })
 
   describe('GET /:componentName/environment/:environmentName', () => {
-    it('should render environment page for multiple ones', () => {
+    it('should render environment page and have multiple active agencies', () => {
       return request(app)
         .get('/components/testComponent/environment/dev')
         .expect('Content-Type', /html/)
