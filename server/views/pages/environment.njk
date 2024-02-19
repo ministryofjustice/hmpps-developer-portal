@@ -51,7 +51,13 @@
     </tr>
     <tr>
       <th>Active Agencies</th>
-      <td data-test="active-agencies"">{{component.environment.active_agencies}}</td>
+      {% if not component.environment.active_agencies  %}
+        <td data-test="active-agencies">Not set</td>
+      {% elif (component.environment.active_agencies or []).indexOf('***') >-1 %}
+        <td data-test="active-agencies">All agencies</td>
+      {% else %}
+        <td data-test="active-agencies">{{component.environment.active_agencies }}</td>
+      {% endif %}
     </tr>
     <tr>
       <th>Version</th>

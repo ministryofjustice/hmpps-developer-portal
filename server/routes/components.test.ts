@@ -96,6 +96,30 @@ const testComponent = {
       type: 'stage',
       monitor: true,
     },
+    {
+      id: 46779,
+      name: 'dev-all-agencies',
+      namespace: 'test-namespace-svc-dev-all-agencies',
+      info_path: '/info',
+      health_path: '/health',
+      url: 'https://dev.test.com',
+      cluster: 'live-cluster.com',
+      active_agencies: ['***'],
+      type: 'dev',
+      monitor: true,
+    },
+    {
+      id: 46780,
+      name: 'dev-not-set-agencies',
+      namespace: 'test-namespace-svc-not-set-agencies',
+      info_path: '/info',
+      health_path: '/health',
+      url: 'https://dev.test.com',
+      cluster: 'live-cluster.com',
+      active_agencies: undefined,
+      type: 'dev',
+      monitor: true,
+    },
   ],
 } as Component
 
@@ -176,7 +200,7 @@ describe('/components', () => {
   })
 
   describe('GET /:componentName/environment/:environmentName', () => {
-    it('should render environment page', () => {
+    it('should render environment page for multiple ones', () => {
       return request(app)
         .get('/components/testComponent/environment/dev')
         .expect('Content-Type', /html/)
@@ -184,25 +208,79 @@ describe('/components', () => {
           const devEnvironment = testComponent.environments.find(env => env.name === 'dev')
           expect(devEnvironment).not.toBeNull()
           const $ = cheerio.load(res.text)
-          expect($('td[data-test="name"]').text()).toBe(devEnvironment.name)
-          expect($('td[data-test="type"]').text()).toBe(devEnvironment.type)
-          expect($('a[data-test="url"]').attr('href')).toBe(devEnvironment.url)
-          expect($('a[data-test="url"]').text()).toBe(devEnvironment.url)
-          expect($('a[data-test="api"]').length).toBeGreaterThan(0)
-          expect($('a[data-test="api"]').attr('href')).toBe(`${devEnvironment.url}/swagger-ui/index.html`)
-          expect($('a[data-test="namespace"]').attr('href')).toBe(
-            `https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/${devEnvironment.namespace}`,
-          )
-          expect($('a[data-test="namespace"]').text()).toBe(devEnvironment.namespace)
-          expect($('a[data-test="info"]').attr('href')).toBe(`${devEnvironment.url}${devEnvironment.info_path}`)
-          expect($('a[data-test="info"]').text()).toBe(devEnvironment.info_path)
-          expect($('a[data-test="health"]').attr('href')).toBe(`${devEnvironment.url}${devEnvironment.health_path}`)
-          expect($('a[data-test="health"]').text()).toBe(devEnvironment.health_path)
-          expect($('td[data-test="cluster"]').text()).toBe(devEnvironment.cluster)
-          // TODO: fix when we have updated definition from strapi.
+          expectEnvironmentScreenTobeFilled($, devEnvironment)
           const activeAgencies = devEnvironment.active_agencies as Array<string>
           expect($('td[data-test="active-agencies"]').text()).toBe(activeAgencies.join(','))
         })
     })
   })
+  it('should render environment page for all agencies, denoted by *** in the info endpoint', () => {
+    return request(app)
+      .get('/components/testComponent/environment/dev-all-agencies')
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const devEnvironment = testComponent.environments.find(env => env.name === 'dev-all-agencies')
+        expect(devEnvironment).not.toBeNull()
+        const $ = cheerio.load(res.text)
+        expectEnvironmentScreenTobeFilled($, devEnvironment)
+        expect($('td[data-test="active-agencies"]').text()).toBe('All agencies')
+      })
+  })
+  it('should render environment page for agencies not set on info endpoint', () => {
+    return request(app)
+      .get('/components/testComponent/environment/dev-not-set-agencies')
+      .expect('Content-Type', /html/)
+      .expect(res => {
+        const devEnvironment = testComponent.environments.find(env => env.name === 'dev-not-set-agencies')
+        expect(devEnvironment).not.toBeNull()
+        const $ = cheerio.load(res.text)
+        expectEnvironmentScreenTobeFilled($, devEnvironment)
+        const notSet = $('td[data-test="active-agencies"]').text()
+        expect(notSet).toBe('Not set')
+      })
+  })
 })
+
+function expectEnvironmentScreenTobeFilled(
+  $: cheerio.CheerioAPI,
+  devEnvironment: {
+    id?: number
+    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
+    namespace?: string
+    info_path?: string
+    health_path?: string
+    url?: string
+    cluster?: string
+    name?: string
+    rds?: {
+      id?: number
+      name?: string
+      db_instance_class?: string
+      db_engine_version?: string
+      rds_family?: string
+      tf_raw?: unknown
+      is_production?: string
+      namespace?: string
+      environment_name?: string
+      application?: string
+    }[]
+    monitor?: boolean
+    active_agencies?: unknown
+  },
+) {
+  expect($('td[data-test="name"]').text()).toBe(devEnvironment.name)
+  expect($('td[data-test="type"]').text()).toBe(devEnvironment.type)
+  expect($('a[data-test="url"]').attr('href')).toBe(devEnvironment.url)
+  expect($('a[data-test="url"]').text()).toBe(devEnvironment.url)
+  expect($('a[data-test="api"]').length).toBeGreaterThan(0)
+  expect($('a[data-test="api"]').attr('href')).toBe(`${devEnvironment.url}/swagger-ui/index.html`)
+  expect($('a[data-test="namespace"]').attr('href')).toBe(
+    `https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/${devEnvironment.namespace}`,
+  )
+  expect($('a[data-test="namespace"]').text()).toBe(devEnvironment.namespace)
+  expect($('a[data-test="info"]').attr('href')).toBe(`${devEnvironment.url}${devEnvironment.info_path}`)
+  expect($('a[data-test="info"]').text()).toBe(devEnvironment.info_path)
+  expect($('a[data-test="health"]').attr('href')).toBe(`${devEnvironment.url}${devEnvironment.health_path}`)
+  expect($('a[data-test="health"]').text()).toBe(devEnvironment.health_path)
+  expect($('td[data-test="cluster"]').text()).toBe(devEnvironment.cluster)
+}
