@@ -208,7 +208,7 @@ describe('/components', () => {
           const devEnvironment = testComponent.environments.find(env => env.name === 'dev')
           expect(devEnvironment).not.toBeNull()
           const $ = cheerio.load(res.text)
-          expectEnvironmentScreenTobeFilled($, devEnvironment)
+          expectEnvironmentScreenToBeFilled($, devEnvironment)
           const activeAgencies = devEnvironment.active_agencies as Array<string>
           expect($('td[data-test="active-agencies"]').text()).toBe(activeAgencies.join(','))
         })
@@ -222,7 +222,7 @@ describe('/components', () => {
         const devEnvironment = testComponent.environments.find(env => env.name === 'dev-all-agencies')
         expect(devEnvironment).not.toBeNull()
         const $ = cheerio.load(res.text)
-        expectEnvironmentScreenTobeFilled($, devEnvironment)
+        expectEnvironmentScreenToBeFilled($, devEnvironment)
         expect($('td[data-test="active-agencies"]').text()).toBe('All agencies')
       })
   })
@@ -234,14 +234,14 @@ describe('/components', () => {
         const devEnvironment = testComponent.environments.find(env => env.name === 'dev-not-set-agencies')
         expect(devEnvironment).not.toBeNull()
         const $ = cheerio.load(res.text)
-        expectEnvironmentScreenTobeFilled($, devEnvironment)
+        expectEnvironmentScreenToBeFilled($, devEnvironment)
         const notSet = $('td[data-test="active-agencies"]').text()
         expect(notSet).toBe('Not set')
       })
   })
 })
 
-function expectEnvironmentScreenTobeFilled(
+function expectEnvironmentScreenToBeFilled(
   $: cheerio.CheerioAPI,
   devEnvironment: {
     id?: number
