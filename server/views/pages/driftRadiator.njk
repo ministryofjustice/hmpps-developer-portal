@@ -7,8 +7,7 @@
 {% block content %}
   <h1 id="detailPageTitle">{{ title }}</h1>
 
-  <form>
-    <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
+  <form method="GET" action="/drift-radiator">
     {% include "../partials/filterDropDowns.njk" %}
   </form>
   <div id="drift-radiator"></div>

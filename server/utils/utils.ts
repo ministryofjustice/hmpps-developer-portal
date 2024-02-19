@@ -94,3 +94,9 @@ export const getDependencyType = (req: Request): string => {
 
   return dependencyType.replace(/[^-a-z0-9_]/g, '')
 }
+
+export const isValidDropDown = (req: Request, paramName: string): boolean => {
+  const param = req.query[paramName] as string
+
+  return param !== undefined && /[a-z0-9_-]+/.test(param)
+}

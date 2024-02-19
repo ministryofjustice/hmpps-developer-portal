@@ -38,7 +38,7 @@ describe('Data Filter service', () => {
       {
         selected: false,
         text: '',
-        value: '0',
+        value: '',
       },
       {
         selected: false,
@@ -55,7 +55,7 @@ describe('Data Filter service', () => {
     it('should return all service areas as a sorted list for Select component', async () => {
       strapiApiClient.getServiceAreas.mockResolvedValue(testServiceAreasResponse)
 
-      const results = await dataFilterService.getServiceAreasDropDownList('Service Area 1')
+      const results = await dataFilterService.getServiceAreasDropDownList({ serviceAreaName: 'Service Area 1' })
 
       expect(strapiApiClient.getServiceAreas).toHaveBeenCalledTimes(1)
       expect(results).toStrictEqual(sortedDropDownList)
@@ -79,7 +79,7 @@ describe('Data Filter service', () => {
       {
         selected: false,
         text: '',
-        value: '0',
+        value: '',
       },
       {
         selected: false,
@@ -96,7 +96,7 @@ describe('Data Filter service', () => {
     it('should return all teams as a sorted list for Select component', async () => {
       strapiApiClient.getTeams.mockResolvedValue(testTeamsResponse)
 
-      const results = await dataFilterService.getTeamsDropDownList('Team 1')
+      const results = await dataFilterService.getTeamsDropDownList({ teamName: 'Team 1' })
 
       expect(strapiApiClient.getTeams).toHaveBeenCalledTimes(1)
       expect(results).toStrictEqual(sortedDropDownList)
@@ -120,7 +120,7 @@ describe('Data Filter service', () => {
       {
         selected: false,
         text: '',
-        value: '0',
+        value: '',
       },
       {
         selected: false,
@@ -137,7 +137,7 @@ describe('Data Filter service', () => {
     it('should return all teams as a sorted list for Select component', async () => {
       strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
 
-      const results = await dataFilterService.getProductsDropDownList('Product 1')
+      const results = await dataFilterService.getProductsDropDownList({ productName: 'Product 1' })
 
       expect(strapiApiClient.getProducts).toHaveBeenCalledTimes(1)
       expect(results).toStrictEqual(sortedDropDownList)

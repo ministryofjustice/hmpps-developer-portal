@@ -2,6 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import type { Component } from '../data/strapiApiTypes'
+import { isValidDropDown } from '../utils/utils'
 
 export default function routes({
   serviceCatalogueService,
@@ -15,11 +16,23 @@ export default function routes({
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    const components = await componentNameService.getAllDeployedComponents()
+    if (req.query.updateServiceArea === '' && isValidDropDown(req, 'serviceArea')) {
+      return res.redirect(`/drift-radiator/service-areas/${req.query.serviceArea}`)
+    }
+    if (req.query.updateTeam === '' && isValidDropDown(req, 'team')) {
+      return res.redirect(`/drift-radiator/teams/${req.query.team}`)
+    }
+    if (req.query.updateProduct === '' && isValidDropDown(req, 'product')) {
+      return res.redirect(`/drift-radiator/products/${req.query.product}`)
+    }
 
-    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList('')
-    const teamList = await dataFilterService.getTeamsDropDownList('')
-    const productList = await dataFilterService.getProductsDropDownList('')
+    const components = await componentNameService.getAllDeployedComponents()
+    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({
+      serviceAreaName: '',
+      useFormattedName: true,
+    })
+    const teamList = await dataFilterService.getTeamsDropDownList({ teamName: '', useFormattedName: true })
+    const productList = await dataFilterService.getProductsDropDownList({ productName: '', useFormattedName: true })
 
     return res.render('pages/driftRadiator', {
       title: 'Deployment Drift Radiator',
@@ -33,19 +46,58 @@ export default function routes({
   get('/teams/:teamName', async (req, res) => {
     const { teamName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForTeam(teamName)
-    return res.render('pages/driftRadiator', { title: `Deployment drift radiator for ${teamName}`, components })
+    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({
+      serviceAreaName: '',
+      useFormattedName: true,
+    })
+    const teamList = await dataFilterService.getTeamsDropDownList({ teamName, useFormattedName: true })
+    const productList = await dataFilterService.getProductsDropDownList({ productName: '', useFormattedName: true })
+
+    return res.render('pages/driftRadiator', {
+      title: `Deployment drift radiator for ${teamName}`,
+      components,
+      serviceAreaList,
+      teamList,
+      productList,
+    })
   })
 
   get('/service-areas/:serviceAreaName', async (req, res) => {
     const { serviceAreaName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForServiceArea(serviceAreaName)
-    return res.render('pages/driftRadiator', { title: `Deployment drift radiator for ${serviceAreaName}`, components })
+    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({
+      serviceAreaName,
+      useFormattedName: true,
+    })
+    const teamList = await dataFilterService.getTeamsDropDownList({ teamName: '', useFormattedName: true })
+    const productList = await dataFilterService.getProductsDropDownList({ productName: '', useFormattedName: true })
+
+    return res.render('pages/driftRadiator', {
+      title: `Deployment drift radiator for ${serviceAreaName}`,
+      components,
+      serviceAreaList,
+      teamList,
+      productList,
+    })
   })
 
   get('/products/:productName', async (req, res) => {
     const { productName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForProduct(productName)
-    return res.render('pages/driftRadiator', { title: `Deployment drift radiator for ${productName}`, components })
+    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({
+      serviceAreaName: '',
+      useFormattedName: true,
+    })
+    const teamList = await dataFilterService.getTeamsDropDownList({ teamName: '', useFormattedName: true })
+    const productList = await dataFilterService.getProductsDropDownList({ productName, useFormattedName: true })
+
+    return res.render('pages/driftRadiator', {
+      title: `Deployment drift radiator for ${productName}`,
+      components,
+      serviceAreaList,
+      teamList,
+      productList,
+    })
   })
 
   const toComponentView = (component: Component) => ({
