@@ -12,6 +12,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Hmpps Developer Portal (beta)'
+  app.locals.isDev = !production
 
   // Cachebusting version string
   if (production) {
@@ -21,6 +22,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
     // Version changes every request
     app.use((req, res, next) => {
       res.locals.version = Date.now().toString()
+
       return next()
     })
   }

@@ -2,6 +2,13 @@
 
 {% block head %}
   <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
+  {% if isDev %}
+  <style type="text/css" nonce="{{ cspNonce }}">
+  .govuk-template__body {
+    border: 10px solid red;
+  }
+  </style>
+  {% endif %}
 
   <script src="/assets/js/jquery.min.js"></script> 
   <script src="/assets/js/jquery.dataTables.min.js"></script>
