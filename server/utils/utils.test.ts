@@ -11,6 +11,7 @@ import {
   getDependencyType,
   getDependencyName,
   formatMonitorName,
+  isValidDropDown,
 } from './utils'
 
 describe('Utils', () => {
@@ -157,6 +158,21 @@ describe('Utils', () => {
       ['Empty name', '', ''],
     ])('%s formatMonitorName("%s") should return "%s"', (_: string, a: string, expected: string) => {
       expect(formatMonitorName(a)).toBe(expected)
+    })
+  })
+
+  describe('isValidDropDown', () => {
+    it.each([
+      ['Valid', 'product', true],
+      ['Valid', 'product-2-de', true],
+      ['Invalid', '%^$kjg', false],
+      ['Invalid', 'product-2-De', false],
+      ['Invalid', 'product 2 De ^% l', false],
+      ['Empty string', '', false],
+    ])('%s isValidDropDown() with "%s" should return "%s"', (_: string, a: string, expected: boolean) => {
+      const mockRequest = { query: { paramName: a } } as unknown as Request
+
+      expect(isValidDropDown(mockRequest, 'paramName')).toBe(expected)
     })
   })
 })

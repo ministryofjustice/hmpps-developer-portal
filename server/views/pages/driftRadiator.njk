@@ -6,6 +6,10 @@
 
 {% block content %}
   <h1 id="detailPageTitle">{{ title }}</h1>
+
+  <form method="GET" action="/drift-radiator">
+    {% include "../partials/filterDropDowns.njk" %}
+  </form>
   <div id="drift-radiator"></div>
 {% endblock %}
 
