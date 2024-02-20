@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2023-11-20T14:50:37.393Z"
+    "x-generation-date": "2024-02-01T16:01:36.093Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -339,6 +339,9 @@
                                   "t_id": {
                                     "type": "string"
                                   },
+                                  "slack_channel_id": {
+                                    "type": "string"
+                                  },
                                   "createdAt": {
                                     "type": "string",
                                     "format": "date-time"
@@ -932,7 +935,8 @@
                                           },
                                           "monitor": {
                                             "type": "boolean"
-                                          }
+                                          },
+                                          "active_agencies": {}
                                         }
                                       }
                                     },
@@ -1055,6 +1059,9 @@
                         }
                       },
                       "p_id": {
+                        "type": "string"
+                      },
+                      "slack_channel_id": {
                         "type": "string"
                       },
                       "createdAt": {
@@ -1285,7 +1292,8 @@
           },
           "monitor": {
             "type": "boolean"
-          }
+          },
+          "active_agencies": {}
         }
       },
       "ProductRequest": {
@@ -1396,6 +1404,9 @@
                 }
               },
               "p_id": {
+                "type": "string"
+              },
+              "slack_channel_id": {
                 "type": "string"
               }
             }
@@ -1555,6 +1566,9 @@
                                     }
                                   },
                                   "t_id": {
+                                    "type": "string"
+                                  },
+                                  "slack_channel_id": {
                                     "type": "string"
                                   },
                                   "createdAt": {
@@ -2150,7 +2164,8 @@
                                           },
                                           "monitor": {
                                             "type": "boolean"
-                                          }
+                                          },
+                                          "active_agencies": {}
                                         }
                                       }
                                     },
@@ -2273,6 +2288,9 @@
                         }
                       },
                       "p_id": {
+                        "type": "string"
+                      },
+                      "slack_channel_id": {
                         "type": "string"
                       },
                       "createdAt": {
@@ -2440,6 +2458,9 @@
             }
           },
           "p_id": {
+            "type": "string"
+          },
+          "slack_channel_id": {
             "type": "string"
           },
           "createdAt": {
@@ -2696,6 +2717,9 @@
                                       }
                                     },
                                     "t_id": {
+                                      "type": "string"
+                                    },
+                                    "slack_channel_id": {
                                       "type": "string"
                                     },
                                     "createdAt": {
@@ -3291,7 +3315,8 @@
                                             },
                                             "monitor": {
                                               "type": "boolean"
-                                            }
+                                            },
+                                            "active_agencies": {}
                                           }
                                         }
                                       },
@@ -3414,6 +3439,9 @@
                           }
                         },
                         "p_id": {
+                          "type": "string"
+                        },
+                        "slack_channel_id": {
                           "type": "string"
                         },
                         "createdAt": {
@@ -3734,6 +3762,9 @@
                                     "t_id": {
                                       "type": "string"
                                     },
+                                    "slack_channel_id": {
+                                      "type": "string"
+                                    },
                                     "createdAt": {
                                       "type": "string",
                                       "format": "date-time"
@@ -4327,7 +4358,8 @@
                                             },
                                             "monitor": {
                                               "type": "boolean"
-                                            }
+                                            },
+                                            "active_agencies": {}
                                           }
                                         }
                                       },
@@ -4450,6 +4482,9 @@
                           }
                         },
                         "p_id": {
+                          "type": "string"
+                        },
+                        "slack_channel_id": {
                           "type": "string"
                         },
                         "createdAt": {
@@ -4604,6 +4639,9 @@
                 }
               },
               "t_id": {
+                "type": "string"
+              },
+              "slack_channel_id": {
                 "type": "string"
               }
             }
@@ -4764,6 +4802,9 @@
                                     "t_id": {
                                       "type": "string"
                                     },
+                                    "slack_channel_id": {
+                                      "type": "string"
+                                    },
                                     "createdAt": {
                                       "type": "string",
                                       "format": "date-time"
@@ -5357,7 +5398,8 @@
                                             },
                                             "monitor": {
                                               "type": "boolean"
-                                            }
+                                            },
+                                            "active_agencies": {}
                                           }
                                         }
                                       },
@@ -5482,6 +5524,9 @@
                         "p_id": {
                           "type": "string"
                         },
+                        "slack_channel_id": {
+                          "type": "string"
+                        },
                         "createdAt": {
                           "type": "string",
                           "format": "date-time"
@@ -5536,6 +5581,9 @@
             }
           },
           "t_id": {
+            "type": "string"
+          },
+          "slack_channel_id": {
             "type": "string"
           },
           "createdAt": {

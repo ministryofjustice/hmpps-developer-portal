@@ -863,6 +863,7 @@ export interface components {
                     }[]
                   }
                   t_id?: string
+                  slack_channel_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1079,6 +1080,7 @@ export interface components {
                       application?: string
                     }[]
                     monitor?: boolean
+                    active_agencies?: unknown
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -1130,6 +1132,7 @@ export interface components {
               }[]
             }
             p_id?: string
+            slack_channel_id?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -1229,6 +1232,7 @@ export interface components {
         application?: string
       }[]
       monitor?: boolean
+      active_agencies?: unknown
     }
     ProductRequest: {
       data: {
@@ -1252,6 +1256,7 @@ export interface components {
         service_area?: number | string
         components?: (number | string)[]
         p_id: string
+        slack_channel_id?: string
       }
     }
     ProductListResponseDataItem: {
@@ -1304,6 +1309,7 @@ export interface components {
                     }[]
                   }
                   t_id?: string
+                  slack_channel_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1520,6 +1526,7 @@ export interface components {
                       application?: string
                     }[]
                     monitor?: boolean
+                    active_agencies?: unknown
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -1571,6 +1578,7 @@ export interface components {
               }[]
             }
             p_id?: string
+            slack_channel_id?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -1630,7 +1638,7 @@ export interface components {
         }[]
       }
       p_id: string
-      slack_channel_id: string
+      slack_channel_id?: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -1714,6 +1722,7 @@ export interface components {
                     }[]
                   }
                   t_id?: string
+                  slack_channel_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1930,6 +1939,7 @@ export interface components {
                       application?: string
                     }[]
                     monitor?: boolean
+                    active_agencies?: unknown
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -1981,6 +1991,7 @@ export interface components {
               }[]
             }
             p_id?: string
+            slack_channel_id?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -2088,6 +2099,7 @@ export interface components {
                     }[]
                   }
                   t_id?: string
+                  slack_channel_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2304,6 +2316,7 @@ export interface components {
                       application?: string
                     }[]
                     monitor?: boolean
+                    active_agencies?: unknown
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -2355,6 +2368,7 @@ export interface components {
               }[]
             }
             p_id?: string
+            slack_channel_id?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -2409,6 +2423,7 @@ export interface components {
         name: string
         products?: (number | string)[]
         t_id: string
+        slack_channel_id?: string
       }
     }
     TeamListResponseDataItem: {
@@ -2460,6 +2475,7 @@ export interface components {
                     }[]
                   }
                   t_id?: string
+                  slack_channel_id?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2676,6 +2692,7 @@ export interface components {
                       application?: string
                     }[]
                     monitor?: boolean
+                    active_agencies?: unknown
                   }[]
                   jira_project_keys?: unknown
                   github_project_teams_write?: unknown
@@ -2727,6 +2744,7 @@ export interface components {
               }[]
             }
             p_id?: string
+            slack_channel_id?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -2749,7 +2767,7 @@ export interface components {
         }[]
       }
       t_id: string
-      slack_channel_id: string
+      slack_channel_id?: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */

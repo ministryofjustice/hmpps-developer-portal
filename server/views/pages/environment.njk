@@ -17,37 +17,47 @@
   <tbody>
     <tr>
       <th>Name</th>
-      <td>{{ component.environment.name }}</td>
+      <td data-test="name">{{ component.environment.name }}</td>
     </tr>
     <tr>
       <th>Type</th>
-      <td>{{ component.environment.type }}</td>
+      <td data-test="type">{{ component.environment.type }}</td>
     </tr>
     <tr>
       <th>URL</th>
-      <td><a href="{{ component.environment.url }}">{{ component.environment.url }}</a></td>
+      <td><a data-test="url" href="{{ component.environment.url }}">{{ component.environment.url }}</a></td>
     </tr>
     {% if component.api %}
     <tr>
       <th>Swagger</th>
-      <td><a href="{{ component.environment.url }}/swagger-ui/index.html" target="_blank">View</a> (opens in new window)</td>
+      <td><a data-test="api" href="{{ component.environment.url }}/swagger-ui/index.html" target="_blank">View</a> (opens in new window)</td>
     </tr>
     {% endif %}
     <tr>
       <th>Namespace</th>
-      <td><a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ component.environment.namespace }}" target="_blank">{{ component.environment.namespace }}</a> (opens in new window)</td>
+      <td><a data-test="namespace" href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ component.environment.namespace }}" target="_blank">{{ component.environment.namespace }}</a> (opens in new window)</td>
     </tr>
     <tr>
       <th>Info</th>
-      <td>{% if component.environment.info_path|length %}<a href="{{ component.environment.url }}{{ component.environment.info_path }}" target="_blank">{{ component.environment.info_path }}</a> (opens in new window){% endif %}</td>
+      <td>{% if component.environment.info_path|length %}<a data-test="info" href="{{ component.environment.url }}{{ component.environment.info_path }}" target="_blank">{{ component.environment.info_path }}</a> (opens in new window){% endif %}</td>
     </tr>
     <tr>
       <th>Health</th>
-      <td>{% if component.environment.health_path|length %}<a href="{{ component.environment.url }}{{ component.environment.health_path }}" target="_blank">{{ component.environment.health_path }}</a> (opens in new window){% endif %}</td>
+      <td>{% if component.environment.health_path|length %}<a data-test="health" href="{{ component.environment.url }}{{ component.environment.health_path }}" target="_blank">{{ component.environment.health_path }}</a> (opens in new window){% endif %}</td>
     </tr>
     <tr>
       <th>Cluster</th>
-      <td>{{ component.environment.cluster }}</td>
+      <td data-test="cluster">{{ component.environment.cluster }}</td>
+    </tr>
+    <tr>
+      <th>Active Agencies</th>
+      {% if not component.environment.active_agencies  %}
+        <td data-test="active-agencies">Not set</td>
+      {% elif (component.environment.active_agencies or []).indexOf('***') >-1 %}
+        <td data-test="active-agencies">All agencies</td>
+      {% else %}
+        <td data-test="active-agencies">{{component.environment.active_agencies }}</td>
+      {% endif %}
     </tr>
     <tr>
       <th>Version</th>
