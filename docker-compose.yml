@@ -20,6 +20,10 @@ services:
       - "3000:3000"
     environment:
       - REDIS_HOST=redis-dev-portal
-
+      - PRODUCT_ID=${PRODUCT_ID}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - SERVICE_CATALOGUE_URL=${SERVICE_CATALOGUE_URL}
+      - SERVICE_CATALOGUE_API_KEY=${SERVICE_CATALOGUE_API_KEY}
+      - NODE_ENV=${NODE_ENV}
 networks:
   hmpps:
