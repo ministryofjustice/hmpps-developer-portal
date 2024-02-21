@@ -70,4 +70,21 @@ export default class ComponentNameService {
       .sort(sortData)
       .map(component => component.attributes.name)
   }
+
+  async getAllDeployedComponentsForCustomComponents(customComponentName: string): Promise<string[]> {
+    const customComponents = await this.strapiApiClientFactory('').getCustomComponents()
+
+    const customComponentDetails = customComponents.data.find(
+      customComponent => formatMonitorName(customComponent.attributes.name) === customComponentName,
+    )
+
+    if (!customComponentDetails) throw Error(`No custom component called: ${customComponentName}`)
+
+    const components = customComponentDetails.attributes?.components?.data as unknown as ComponentListResponseDataItem[]
+
+    return components
+      .filter(component => component.attributes?.environments?.length)
+      .sort(sortData)
+      .map(component => component.attributes.name)
+  }
 }

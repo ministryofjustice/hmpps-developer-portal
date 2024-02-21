@@ -13,7 +13,7 @@ jQuery(async function () {
     updateEnvironmentList()
   }
 
-  $('#updateProduct,#updateTeam,#updateServiceArea').on('click', async e => {
+  $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponent').on('click', async e => {
     e.preventDefault(e)
 
     let dropDownType = ''
@@ -27,6 +27,9 @@ jQuery(async function () {
         break
       case 'updateServiceArea':
         dropDownType = 'serviceArea'
+        break
+      case 'updateCustomComponent':
+        dropDownType = 'customComponent'
         break
       default:
         return false
@@ -158,6 +161,7 @@ const fetchMessages = async streams => {
 }
 
 async function populateComponentTable(monitorType, monitorTypeId) {
+  console.log(`/monitor/components/${monitorType}/${monitorTypeId}`)
   const response = await fetch(`/monitor/components/${monitorType}/${monitorTypeId}`)
 
   if (!response.ok) {

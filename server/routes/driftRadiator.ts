@@ -25,6 +25,9 @@ export default function routes({
     if (req.query.updateProduct === '' && isValidDropDown(req, 'product')) {
       return res.redirect(`/drift-radiator/products/${req.query.product}`)
     }
+    if (req.query.updateCustomComponent === '' && isValidDropDown(req, 'customComponent')) {
+      return res.redirect(`/drift-radiator/custom-components/${req.query.customComponent}`)
+    }
 
     const components = await componentNameService.getAllDeployedComponents()
     const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({
@@ -33,6 +36,10 @@ export default function routes({
     })
     const teamList = await dataFilterService.getTeamsDropDownList({ teamName: '', useFormattedName: true })
     const productList = await dataFilterService.getProductsDropDownList({ productName: '', useFormattedName: true })
+    const customComponentsList = await dataFilterService.getCustomComponentsDropDownList({
+      customComponentName: '',
+      useFormattedName: true,
+    })
 
     return res.render('pages/driftRadiator', {
       title: 'Deployment Drift Radiator',
@@ -40,6 +47,7 @@ export default function routes({
       serviceAreaList,
       teamList,
       productList,
+      customComponentsList,
     })
   })
 
@@ -52,6 +60,10 @@ export default function routes({
     })
     const teamList = await dataFilterService.getTeamsDropDownList({ teamName, useFormattedName: true })
     const productList = await dataFilterService.getProductsDropDownList({ productName: '', useFormattedName: true })
+    const customComponentsList = await dataFilterService.getCustomComponentsDropDownList({
+      customComponentName: '',
+      useFormattedName: true,
+    })
 
     return res.render('pages/driftRadiator', {
       title: `Deployment drift radiator for ${teamName}`,
@@ -59,6 +71,7 @@ export default function routes({
       serviceAreaList,
       teamList,
       productList,
+      customComponentsList,
     })
   })
 
@@ -71,6 +84,10 @@ export default function routes({
     })
     const teamList = await dataFilterService.getTeamsDropDownList({ teamName: '', useFormattedName: true })
     const productList = await dataFilterService.getProductsDropDownList({ productName: '', useFormattedName: true })
+    const customComponentsList = await dataFilterService.getCustomComponentsDropDownList({
+      customComponentName: '',
+      useFormattedName: true,
+    })
 
     return res.render('pages/driftRadiator', {
       title: `Deployment drift radiator for ${serviceAreaName}`,
@@ -78,6 +95,7 @@ export default function routes({
       serviceAreaList,
       teamList,
       productList,
+      customComponentsList,
     })
   })
 
@@ -90,6 +108,10 @@ export default function routes({
     })
     const teamList = await dataFilterService.getTeamsDropDownList({ teamName: '', useFormattedName: true })
     const productList = await dataFilterService.getProductsDropDownList({ productName, useFormattedName: true })
+    const customComponentsList = await dataFilterService.getCustomComponentsDropDownList({
+      customComponentName: '',
+      useFormattedName: true,
+    })
 
     return res.render('pages/driftRadiator', {
       title: `Deployment drift radiator for ${productName}`,
@@ -97,6 +119,31 @@ export default function routes({
       serviceAreaList,
       teamList,
       productList,
+      customComponentsList,
+    })
+  })
+
+  get('/custom-components/:customComponentName', async (req, res) => {
+    const { customComponentName } = req.params
+    const components = await componentNameService.getAllDeployedComponentsForCustomComponents(customComponentName)
+    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({
+      serviceAreaName: '',
+      useFormattedName: true,
+    })
+    const teamList = await dataFilterService.getTeamsDropDownList({ teamName: '', useFormattedName: true })
+    const productList = await dataFilterService.getProductsDropDownList({ productName: '', useFormattedName: true })
+    const customComponentsList = await dataFilterService.getCustomComponentsDropDownList({
+      customComponentName,
+      useFormattedName: true,
+    })
+
+    return res.render('pages/driftRadiator', {
+      title: `Deployment drift radiator for ${customComponentName}`,
+      components,
+      serviceAreaList,
+      teamList,
+      productList,
+      customComponentsList,
     })
   })
 
