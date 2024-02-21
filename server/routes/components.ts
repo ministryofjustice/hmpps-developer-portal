@@ -90,10 +90,9 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     const component = await serviceCatalogueService.getComponent(componentName)
     const environments = component.environments?.filter(environment => environment.name === environmentName)
-    let activeAgencies = ''
-    if (environments.length > 0) {
-      activeAgencies = formatActiveAgencies(environments[0].active_agencies as Array<string>)
-    }
+    const activeAgencies =
+      environments.length === 0 ? '' : formatActiveAgencies(environments[0].active_agencies as Array<string>)
+
     const displayComponent = {
       name: componentName,
       api: component.api,
