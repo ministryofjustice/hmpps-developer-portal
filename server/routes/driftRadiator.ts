@@ -30,14 +30,10 @@ export default function routes({
     }
 
     const components = await componentNameService.getAllDeployedComponents()
-    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({
+    const [teamList, productList, serviceAreaList] = await dataFilterService.getDropDownLists({
+      teamName: '',
+      productName: '',
       serviceAreaName: '',
-      useFormattedName: true,
-    })
-    const teamList = await dataFilterService.getTeamsDropDownList({ teamName: '', useFormattedName: true })
-    const productList = await dataFilterService.getProductsDropDownList({ productName: '', useFormattedName: true })
-    const customComponentsList = await dataFilterService.getCustomComponentsDropDownList({
-      customComponentName: '',
       useFormattedName: true,
     })
 
@@ -54,14 +50,10 @@ export default function routes({
   get('/teams/:teamName', async (req, res) => {
     const { teamName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForTeam(teamName)
-    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({
+    const [teamList, productList, serviceAreaList] = await dataFilterService.getDropDownLists({
+      teamName,
+      productName: '',
       serviceAreaName: '',
-      useFormattedName: true,
-    })
-    const teamList = await dataFilterService.getTeamsDropDownList({ teamName, useFormattedName: true })
-    const productList = await dataFilterService.getProductsDropDownList({ productName: '', useFormattedName: true })
-    const customComponentsList = await dataFilterService.getCustomComponentsDropDownList({
-      customComponentName: '',
       useFormattedName: true,
     })
 
@@ -78,14 +70,10 @@ export default function routes({
   get('/service-areas/:serviceAreaName', async (req, res) => {
     const { serviceAreaName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForServiceArea(serviceAreaName)
-    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({
+    const [teamList, productList, serviceAreaList] = await dataFilterService.getDropDownLists({
+      teamName: '',
+      productName: '',
       serviceAreaName,
-      useFormattedName: true,
-    })
-    const teamList = await dataFilterService.getTeamsDropDownList({ teamName: '', useFormattedName: true })
-    const productList = await dataFilterService.getProductsDropDownList({ productName: '', useFormattedName: true })
-    const customComponentsList = await dataFilterService.getCustomComponentsDropDownList({
-      customComponentName: '',
       useFormattedName: true,
     })
 
@@ -102,14 +90,10 @@ export default function routes({
   get('/products/:productName', async (req, res) => {
     const { productName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForProduct(productName)
-    const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({
+    const [teamList, productList, serviceAreaList] = await dataFilterService.getDropDownLists({
+      teamName: '',
+      productName,
       serviceAreaName: '',
-      useFormattedName: true,
-    })
-    const teamList = await dataFilterService.getTeamsDropDownList({ teamName: '', useFormattedName: true })
-    const productList = await dataFilterService.getProductsDropDownList({ productName, useFormattedName: true })
-    const customComponentsList = await dataFilterService.getCustomComponentsDropDownList({
-      customComponentName: '',
       useFormattedName: true,
     })
 

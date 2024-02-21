@@ -100,4 +100,22 @@ export default class DataFilterService {
 
     return productsList
   }
+
+  async getDropDownLists({
+    teamName = '',
+    productName = '',
+    serviceAreaName = '',
+    useFormattedName = false,
+  }: {
+    teamName?: string
+    productName?: string
+    serviceAreaName?: string
+    useFormattedName?: boolean
+  }) {
+    return Promise.all([
+      await this.getTeamsDropDownList({ teamName, useFormattedName }),
+      await this.getProductsDropDownList({ productName, useFormattedName }),
+      await this.getServiceAreasDropDownList({ serviceAreaName, useFormattedName }),
+    ])
+  }
 }
