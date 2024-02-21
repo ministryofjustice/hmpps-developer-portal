@@ -161,7 +161,6 @@ const fetchMessages = async streams => {
 }
 
 async function populateComponentTable(monitorType, monitorTypeId) {
-  console.log(`/monitor/components/${monitorType}/${monitorTypeId}`)
   const response = await fetch(`/monitor/components/${monitorType}/${monitorTypeId}`)
 
   if (!response.ok) {

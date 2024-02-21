@@ -45,7 +45,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     const monitorType = getMonitorType(req)
     const monitorId = getNumericId(req, 'monitorId')
     const environments: MonitorEnvironment[] = []
-    console.log(monitorType)
+
     if (monitorType === 'customComponent') {
       const customComponent = await serviceCatalogueService.getCustomComponent({
         customComponentId: monitorId,
