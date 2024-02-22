@@ -163,8 +163,12 @@ export default class StrapiApiClient {
     })
   }
 
-  async getCustomComponents(): Promise<CustomComponentListResponse> {
+  async getCustomComponents(withProducts?: boolean): Promise<CustomComponentListResponse> {
     const populate = ['components']
+
+    if (withProducts) {
+      populate.push('components.environments')
+    }
 
     return this.restClient.get({
       path: '/v1/custom-component-views',

@@ -126,6 +126,7 @@ export default function routes({
   get('/custom-components/:customComponentName', async (req, res) => {
     const { customComponentName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForCustomComponents(customComponentName)
+
     const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({
       serviceAreaName: '',
       useFormattedName: true,

@@ -72,7 +72,7 @@ export default class ComponentNameService {
   }
 
   async getAllDeployedComponentsForCustomComponents(customComponentName: string): Promise<string[]> {
-    const customComponents = await this.strapiApiClientFactory('').getCustomComponents()
+    const customComponents = await this.strapiApiClientFactory('').getCustomComponents(true)
 
     const customComponentDetails = customComponents.data.find(
       customComponent => formatMonitorName(customComponent.attributes.name) === customComponentName,
