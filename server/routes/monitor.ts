@@ -24,10 +24,11 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     const monitorName = getMonitorName(req)
     logger.info(`Request for /monitor/${monitorType}/${monitorName}`)
 
-    const [teamList, productList, serviceAreaList] = await dataFilterService.getDropDownLists({
+    const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
       teamName: monitorName,
       productName: monitorName,
       serviceAreaName: monitorName,
+      customComponentName: monitorName,
     })
 
     return res.render('pages/monitor', {
