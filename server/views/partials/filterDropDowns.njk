@@ -4,6 +4,7 @@
 {%- set serviceAreas = [] -%}
 {%- set teams = [] -%}
 {%- set products = [] -%}
+{%- set customComponents = [] -%}
 {%- for serviceArea in serviceAreaList -%}
   {%- set serviceAreas = (serviceAreas.push({
     value: serviceArea.value,
@@ -24,6 +25,13 @@
     text: product.text,
     selected: product.selected
   }), products) -%}
+{%- endfor -%}
+{%- for customComponent in customComponentsList -%}
+  {%- set customComponents = (customComponents.push({
+    value: customComponent.value,
+    text: customComponent.text,
+    selected: customComponent.selected
+  }), customComponents) -%}
 {%- endfor -%}
 
 <div class="monitor-selectors govuk-button-group">
@@ -66,6 +74,20 @@
 {{ govukButton({
   id: "updateProduct",
   name: "updateProduct",
+  text: "Update",
+  element: "button"
+}) }}
+{{ govukSelect({
+  id: "customComponent",
+  name: "customComponent",
+  label: {
+    text: "Custom Component"
+  },
+  items: customComponents
+}) }}
+{{ govukButton({
+  id: "updateCustomComponent",
+  name: "updateCustomComponent",
   text: "Update",
   element: "button"
 }) }}

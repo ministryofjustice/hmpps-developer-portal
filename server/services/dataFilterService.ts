@@ -5,6 +5,30 @@ import { formatMonitorName, sortData } from '../utils/utils'
 export default class DataFilterService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
 
+  async getCustomComponentsDropDownList({
+    customComponentName,
+    useFormattedName = false,
+  }: {
+    customComponentName: string
+    useFormattedName?: boolean
+  }): Promise<MoJSelectDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const customComponentsData = await strapiApiClient.getCustomComponents()
+    const customComponents = customComponentsData.data.sort(sortData)
+    const customComponentsList = customComponents.map(customComponent => {
+      const formattedName = formatMonitorName(customComponent.attributes.name)
+
+      return {
+        value: useFormattedName ? formattedName : customComponent.id.toString(),
+        text: customComponent.attributes.name,
+        selected: formattedName === customComponentName,
+      }
+    })
+    customComponentsList.unshift({ value: '', text: '', selected: false })
+
+    return customComponentsList
+  }
+
   async getServiceAreasDropDownList({
     serviceAreaName,
     useFormattedName = false,

@@ -22,7 +22,7 @@ The app requires:
 
 The TypeScript types for Strapi are imported via the Open API (Swagger) docs.
 
-This are stored in [`./server/@types/`](./server/@types/). Unfortunately strapi doesn't provide access in the normal way and the documentaion file must first be downloaded from the running service catalogue i.e. `kubectl -n hmpps-portfolio-management-dev cp hmpps-service-catalogue-6778c7667f-qwmj5:/opt/app/src/extensions/documentation/documentation/1.0.0/full_documentation.json  ./full_documentation.json`
+This are stored in [`./server/@types/`](./server/@types/). Unfortunately strapi doesn't provide access in the normal way and the documentaion file must first be downloaded from the running service catalogue i.e. `kubectl -n hmpps-portfolio-management-dev cp hmpps-service-catalogue-<PODID>:/opt/app/src/extensions/documentation/documentation/1.0.0/full_documentation.json  ./full_documentation.json`
 
 We can then run the relevant command to create the types file
 

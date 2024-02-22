@@ -27,11 +27,15 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     const serviceAreaList = await dataFilterService.getServiceAreasDropDownList({ serviceAreaName: monitorName })
     const teamList = await dataFilterService.getTeamsDropDownList({ teamName: monitorName })
     const productList = await dataFilterService.getProductsDropDownList({ productName: monitorName })
+    const customComponentsList = await dataFilterService.getCustomComponentsDropDownList({
+      customComponentName: monitorName,
+    })
 
     return res.render('pages/monitor', {
       serviceAreaList,
       teamList,
       productList,
+      customComponentsList,
       monitorName,
       monitorType,
     })
@@ -42,7 +46,28 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     const monitorId = getNumericId(req, 'monitorId')
     const environments: MonitorEnvironment[] = []
 
-    if (monitorType === 'product') {
+    if (monitorType === 'customComponent') {
+      const customComponent = await serviceCatalogueService.getCustomComponent({
+        customComponentId: monitorId,
+        withEnvironments: true,
+      })
+
+      customComponent.components.data.forEach(component => {
+        const typedEnvironments = component.attributes.environments as Environment[]
+
+        typedEnvironments.forEach(environment => {
+          if (environment.monitor) {
+            environments.push({
+              componentName: component.attributes.name as string,
+              environmentName: environment.name as string,
+              environmentUrl: environment.url as string,
+              environmentHealth: environment.health_path as string,
+              environmentType: environment.type as string,
+            })
+          }
+        })
+      })
+    } else if (monitorType === 'product') {
       const product = await serviceCatalogueService.getProduct({
         productId: monitorId,
         withEnvironments: true,
