@@ -100,3 +100,16 @@ export const isValidDropDown = (req: Request, paramName: string): boolean => {
 
   return param !== undefined && /^[a-z0-9_-]+$/.test(param)
 }
+/**
+ * @param activeAgencies a list of agencies if available.
+ * @returns formatted version of the agencies.
+ */
+export const formatActiveAgencies = (activeAgencies: Array<string>) => {
+  if (!activeAgencies || activeAgencies.length < 1) {
+    return 'Not set'
+  }
+  if (activeAgencies.includes('***')) {
+    return 'All agencies'
+  }
+  return activeAgencies.join(',')
+}

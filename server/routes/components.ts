@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { getComponentName, getEnvironmentName } from '../utils/utils'
+import { formatActiveAgencies, getComponentName, getEnvironmentName } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -90,11 +90,14 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     const component = await serviceCatalogueService.getComponent(componentName)
     const environments = component.environments?.filter(environment => environment.name === environmentName)
+    const activeAgencies =
+      environments.length === 0 ? '' : formatActiveAgencies(environments[0].active_agencies as Array<string>)
 
     const displayComponent = {
       name: componentName,
       api: component.api,
       environment: environments[0],
+      activeAgencies,
     }
 
     return res.render('pages/environment', { component: displayComponent })
