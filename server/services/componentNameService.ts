@@ -29,11 +29,12 @@ export default class ComponentNameService {
       withEnvironments: true,
     })
 
-    return teamDetails.data.attributes.products.data.flatMap(product =>
-      product.attributes?.components?.data
-        .filter(component => component.attributes?.environments?.length)
-        .sort(sortData)
-        .map(component => component.attributes.name),
+    return teamDetails.data.attributes.products.data.flatMap(
+      product =>
+        product.attributes?.components?.data
+          .filter(component => component.attributes?.environments?.length)
+          .sort(sortData)
+          .map(component => component.attributes.name),
     )
   }
 
@@ -48,11 +49,12 @@ export default class ComponentNameService {
 
     const serviceAreaDetails = await this.strapiApiClientFactory('').getServiceArea(serviceAreaSummary.id, true)
 
-    return serviceAreaDetails.data.attributes.products.data.flatMap(product =>
-      product.attributes?.components?.data
-        .filter(component => component.attributes?.environments?.length)
-        .sort(sortData)
-        .map(component => component.attributes.name),
+    return serviceAreaDetails.data.attributes.products.data.flatMap(
+      product =>
+        product.attributes?.components?.data
+          .filter(component => component.attributes?.environments?.length)
+          .sort(sortData)
+          .map(component => component.attributes.name),
     )
   }
 
@@ -75,7 +77,7 @@ export default class ComponentNameService {
     const customComponents = await this.strapiApiClientFactory('').getCustomComponents(true)
 
     const customComponentDetails = customComponents.data.find(
-      customComponent => formatMonitorName(customComponent.attributes.name) === customComponentName,
+      customComponentView => formatMonitorName(customComponentView.attributes.name) === customComponentName,
     )
 
     if (!customComponentDetails) throw Error(`No custom component called: ${customComponentName}`)

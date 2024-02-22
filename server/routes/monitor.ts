@@ -46,13 +46,13 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     const monitorId = getNumericId(req, 'monitorId')
     const environments: MonitorEnvironment[] = []
 
-    if (monitorType === 'customComponent') {
-      const customComponent = await serviceCatalogueService.getCustomComponent({
+    if (monitorType === 'customComponentView') {
+      const customComponentView = await serviceCatalogueService.getCustomComponentView({
         customComponentId: monitorId,
         withEnvironments: true,
       })
 
-      customComponent.components.data.forEach(component => {
+      customComponentView.components.data.forEach(component => {
         const typedEnvironments = component.attributes.environments as Environment[]
 
         typedEnvironments.forEach(environment => {
