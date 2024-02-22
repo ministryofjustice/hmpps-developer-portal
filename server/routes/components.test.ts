@@ -119,7 +119,7 @@ const testComponent = {
       active_agencies: undefined,
       type: 'dev',
       monitor: true,
-      swagger_docs: '/swagger-ui.html'
+      swagger_docs: '/swagger-ui.html',
     },
   ],
 } as Component
