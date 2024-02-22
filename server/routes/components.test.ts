@@ -245,7 +245,6 @@ describe('/components', () => {
 })
 
 function expectEnvironmentScreenToBeFilled($: cheerio.CheerioAPI, devEnvironment: Environment) {
-  console.log('API', devEnvironment)
   expect($('td[data-test="name"]').text()).toBe(devEnvironment.name)
   expect($('td[data-test="type"]').text()).toBe(devEnvironment.type)
   expect($('a[data-test="url"]').attr('href')).toBe(devEnvironment.url)
