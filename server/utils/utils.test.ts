@@ -12,6 +12,7 @@ import {
   getDependencyName,
   formatMonitorName,
   isValidDropDown,
+  formatActiveAgencies,
 } from './utils'
 
 describe('Utils', () => {
@@ -175,4 +176,17 @@ describe('Utils', () => {
       expect(isValidDropDown(mockRequest, 'paramName')).toBe(expected)
     })
   })
+})
+
+describe('formatActiveAgencies', () => {
+  it.each([
+    ['undefined', undefined, 'Not set'],
+    ['all agencies token', ['***'], 'All agencies'],
+    ['a list of agencies', ['ABC', 'DEF', 'GHI'], 'ABC,DEF,GHI'],
+  ])(
+    '%s is passed to formatActiveAgencies(), value "%s" should return "%s"',
+    (_: string, input: string[], expected: string) => {
+      expect(formatActiveAgencies(input)).toBe(expected)
+    },
+  )
 })
