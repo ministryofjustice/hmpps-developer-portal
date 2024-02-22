@@ -30,7 +30,7 @@
     {% if component.api %}
     <tr>
       <th>Swagger</th>
-      <td><a data-test="api" href="{{ component.environment.url }}/swagger-ui/index.html" target="_blank">View</a> (opens in new window)</td>
+      <td><a data-test="api" href="{{ component.environment.url }}{{ component.environment.swagger_docs }}" target="_blank">View</a> (opens in new window)</td>
     </tr>
     {% endif %}
     <tr>

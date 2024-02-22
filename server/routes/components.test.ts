@@ -119,6 +119,7 @@ const testComponent = {
       active_agencies: undefined,
       type: 'dev',
       monitor: true,
+      swagger_docs: "/swagger-ui.html"
     },
   ],
 } as Component
@@ -265,6 +266,7 @@ function expectEnvironmentScreenToBeFilled(
     }[]
     monitor?: boolean
     active_agencies?: unknown
+    swagger_docs?: string
   },
 ) {
   expect($('td[data-test="name"]').text()).toBe(devEnvironment.name)
@@ -272,7 +274,7 @@ function expectEnvironmentScreenToBeFilled(
   expect($('a[data-test="url"]').attr('href')).toBe(devEnvironment.url)
   expect($('a[data-test="url"]').text()).toBe(devEnvironment.url)
   expect($('a[data-test="api"]').length).toBeGreaterThan(0)
-  expect($('a[data-test="api"]').attr('href')).toBe(`${devEnvironment.url}/swagger-ui/index.html`)
+  expect($('a[data-test="api"]').attr('href')).toBe(`${devEnvironment.url}${devEnvironment.swagger_docs}`)
   expect($('a[data-test="namespace"]').attr('href')).toBe(
     `https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/${devEnvironment.namespace}`,
   )
