@@ -3,7 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { Component, ComponentListResponseDataItem } from '../data/strapiApiTypes'
+import { Component, ComponentListResponseDataItem, Environment } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
@@ -29,7 +29,7 @@ const testComponent = {
   part_of_monorepo: false,
   github_repo: 'test-github-repo',
   language: 'Kotlin',
-  include_in_subject_access_requests: null,
+  include_in_subject_access_requests: false,
   github_project_teams_maintain: [],
   github_topics: [],
   versions: {
@@ -84,6 +84,7 @@ const testComponent = {
       active_agencies: ['LEI', 'EAI'],
       type: 'dev',
       monitor: true,
+      swagger_docs: '/swagger-ui.html',
     },
     {
       id: 48914,
@@ -95,6 +96,7 @@ const testComponent = {
       cluster: 'live-cluster.com',
       type: 'stage',
       monitor: true,
+      swagger_docs: '/swagger-ui.html',
     },
     {
       id: 46779,
@@ -107,6 +109,7 @@ const testComponent = {
       active_agencies: ['***'],
       type: 'dev',
       monitor: true,
+      swagger_docs: '/swagger-ui.html',
     },
     {
       id: 46780,
@@ -119,6 +122,7 @@ const testComponent = {
       active_agencies: undefined,
       type: 'dev',
       monitor: true,
+      swagger_docs: '/swagger-ui.html',
     },
   ],
 } as Component
@@ -240,39 +244,13 @@ describe('/components', () => {
   })
 })
 
-function expectEnvironmentScreenToBeFilled(
-  $: cheerio.CheerioAPI,
-  devEnvironment: {
-    id?: number
-    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-    namespace?: string
-    info_path?: string
-    health_path?: string
-    url?: string
-    cluster?: string
-    name?: string
-    rds?: {
-      id?: number
-      name?: string
-      db_instance_class?: string
-      db_engine_version?: string
-      rds_family?: string
-      tf_raw?: unknown
-      is_production?: string
-      namespace?: string
-      environment_name?: string
-      application?: string
-    }[]
-    monitor?: boolean
-    active_agencies?: unknown
-  },
-) {
+function expectEnvironmentScreenToBeFilled($: cheerio.CheerioAPI, devEnvironment: Environment) {
   expect($('td[data-test="name"]').text()).toBe(devEnvironment.name)
   expect($('td[data-test="type"]').text()).toBe(devEnvironment.type)
   expect($('a[data-test="url"]').attr('href')).toBe(devEnvironment.url)
   expect($('a[data-test="url"]').text()).toBe(devEnvironment.url)
   expect($('a[data-test="api"]').length).toBeGreaterThan(0)
-  expect($('a[data-test="api"]').attr('href')).toBe(`${devEnvironment.url}/swagger-ui/index.html`)
+  expect($('a[data-test="api"]').attr('href')).toBe(`${devEnvironment.url}${devEnvironment.swagger_docs}`)
   expect($('a[data-test="namespace"]').attr('href')).toBe(
     `https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/${devEnvironment.namespace}`,
   )

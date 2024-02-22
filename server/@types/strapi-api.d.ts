@@ -1266,6 +1266,7 @@ export interface components {
       }[]
       monitor?: boolean
       active_agencies?: unknown
+      swagger_docs?: string
     }
     CustomComponentViewRequest: {
       data: {
