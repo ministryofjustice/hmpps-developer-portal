@@ -27,7 +27,7 @@
       <th>URL</th>
       <td><a data-test="url" href="{{ component.environment.url }}">{{ component.environment.url }}</a></td>
     </tr>
-    {% if component.api %}
+    {% if component.api and component.environment.swagger_docs %}
     <tr>
       <th>Swagger</th>
       <td><a data-test="api" href="{{ component.environment.url }}{{ component.environment.swagger_docs }}" target="_blank">View</a> (opens in new window)</td>
