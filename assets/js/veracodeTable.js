@@ -10,6 +10,7 @@ jQuery(function () {
       [10, 25, 50, 75, 100, 'All'],
     ],
     paging: true,
+    pagingType: 'simple_numbers',
     order: [[6, 'desc']],
     sortable: true,
     ajax: {

@@ -11,6 +11,7 @@ import {
   ServiceAreaListResponseDataItem,
   ProductSetListResponseDataItem,
   ComponentListResponse,
+  CustomComponent,
 } from '../data/strapiApiTypes'
 import { sortData } from '../utils/utils'
 
@@ -144,5 +145,20 @@ export default class ServiceCatalogueService {
     const productSet = productSetData.data?.attributes
 
     return productSet
+  }
+
+  async getCustomComponent({
+    customComponentId = 0,
+    withEnvironments = false,
+  }: {
+    customComponentId: number
+    withEnvironments?: boolean
+  }): Promise<CustomComponent> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const customComponentData = await strapiApiClient.getCustomComponent(customComponentId, withEnvironments)
+
+    const customComponent = customComponentData.data?.attributes
+
+    return customComponent
   }
 }

@@ -9,7 +9,7 @@ generic-service:
 
   env:
     INGRESS_URL: "https://developer-portal-dev.hmpps.service.justice.gov.uk"
-    SERVICE_CATALOGUE_URL: "https://service-catalogue.hmpps.service.justice.gov.uk"
+    SERVICE_CATALOGUE_URL: "https://service-catalogue-dev.hmpps.service.justice.gov.uk"
     NODE_ENV: "development"
 
   namespace_secrets:

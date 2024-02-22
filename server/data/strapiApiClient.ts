@@ -12,6 +12,8 @@ import {
   ComponentResponse,
   ServiceAreaResponse,
   ProductSetResponse,
+  CustomComponentListResponse,
+  CustomComponentResponse,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
@@ -155,6 +157,36 @@ export default class StrapiApiClient {
 
     return this.restClient.get({
       path: `/v1/service-areas/${serviceAreaId}`,
+      query: new URLSearchParams({
+        populate: populate.join(','),
+      }).toString(),
+    })
+  }
+
+  async getCustomComponents(withProducts?: boolean): Promise<CustomComponentListResponse> {
+    const populate = ['components']
+
+    if (withProducts) {
+      populate.push('components.environments')
+    }
+
+    return this.restClient.get({
+      path: '/v1/custom-component-views',
+      query: new URLSearchParams({
+        populate: populate.join(','),
+      }).toString(),
+    })
+  }
+
+  async getCustomComponent(customComponentId: number, withProducts?: boolean): Promise<CustomComponentResponse> {
+    const populate = ['components']
+
+    if (withProducts) {
+      populate.push('components.environments')
+    }
+
+    return this.restClient.get({
+      path: `/v1/custom-component-views/${customComponentId}`,
       query: new URLSearchParams({
         populate: populate.join(','),
       }).toString(),

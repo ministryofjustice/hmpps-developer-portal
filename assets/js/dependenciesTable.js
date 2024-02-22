@@ -58,6 +58,7 @@ jQuery(function () {
       [10, 25, 50, 75, 100, 'All'],
     ],
     paging: false,
+    pagingType: 'simple_numbers',
     order: [[1, 'asc']],
     sortable: true,
     ajax: {
