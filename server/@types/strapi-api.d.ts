@@ -809,7 +809,19 @@ export interface components {
         container_image?: string
         veracode_results_url?: string
         veracode_last_completed_scan_date?: string
-        veracode_results_summary?: unknown
+        veracode_results_summary?: {
+          'static-analysis': {
+            score: number
+          }
+          severity: {
+            level: number
+            category: {
+              count: number
+              severity: string
+              categoryname: string
+            }[]
+          }[]
+        }
         veracode_exempt?: boolean
         veracode_policy_rules_status?: string
       }
@@ -1116,7 +1128,19 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: unknown
+                  veracode_results_summary?: {
+                    'static-analysis': {
+                      score: number
+                    }
+                    severity: {
+                      level: number
+                      category: {
+                        count: number
+                        severity: string
+                        categoryname: string
+                      }[]
+                    }[]
+                  }
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   /** Format: date-time */
@@ -1176,7 +1200,19 @@ export interface components {
       container_image?: string
       veracode_results_url?: string
       veracode_last_completed_scan_date?: string
-      veracode_results_summary?: unknown
+      veracode_results_summary?: {
+        'static-analysis': {
+          score: number
+        }
+        severity: {
+          level: number
+          category: {
+            count: number
+            severity: string
+            categoryname: string
+          }[]
+        }[]
+      }
       veracode_exempt?: boolean
       veracode_policy_rules_status?: string
       /** Format: date-time */
@@ -1552,7 +1588,19 @@ export interface components {
             container_image?: string
             veracode_results_url?: string
             veracode_last_completed_scan_date?: string
-            veracode_results_summary?: unknown
+            veracode_results_summary?: {
+              'static-analysis': {
+                score: number
+              }
+              severity: {
+                level: number
+                category: {
+                  count: number
+                  severity: string
+                  categoryname: string
+                }[]
+              }[]
+            }
             veracode_exempt?: boolean
             veracode_policy_rules_status?: string
             /** Format: date-time */
@@ -1923,7 +1971,19 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: unknown
+                  veracode_results_summary?: {
+                    'static-analysis': {
+                      score: number
+                    }
+                    severity: {
+                      level: number
+                      category: {
+                        count: number
+                        severity: string
+                        categoryname: string
+                      }[]
+                    }[]
+                  }
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   /** Format: date-time */
@@ -2336,7 +2396,19 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: unknown
+                  veracode_results_summary?: {
+                    'static-analysis': {
+                      score: number
+                    }
+                    severity: {
+                      level: number
+                      category: {
+                        count: number
+                        severity: string
+                        categoryname: string
+                      }[]
+                    }[]
+                  }
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   /** Format: date-time */
@@ -2713,7 +2785,19 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: unknown
+                  veracode_results_summary?: {
+                    'static-analysis': {
+                      score: number
+                    }
+                    severity: {
+                      level: number
+                      category: {
+                        count: number
+                        severity: string
+                        categoryname: string
+                      }[]
+                    }[]
+                  }
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   /** Format: date-time */
@@ -3089,7 +3173,19 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: unknown
+                  veracode_results_summary?: {
+                    'static-analysis': {
+                      score: number
+                    }
+                    severity: {
+                      level: number
+                      category: {
+                        count: number
+                        severity: string
+                        categoryname: string
+                      }[]
+                    }[]
+                  }
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   /** Format: date-time */
