@@ -25,8 +25,8 @@ export default function routes({
     if (req.query.updateProduct === '' && isValidDropDown(req, 'product')) {
       return res.redirect(`/drift-radiator/products/${req.query.product}`)
     }
-    if (req.query.updateCustomComponent === '' && isValidDropDown(req, 'customComponent')) {
-      return res.redirect(`/drift-radiator/custom-components/${req.query.customComponent}`)
+    if (req.query.updateCustomComponentView === '' && isValidDropDown(req, 'customComponentView')) {
+      return res.redirect(`/drift-radiator/custom-components/${req.query.customComponentView}`)
     }
 
     const components = await componentNameService.getAllDeployedComponents()

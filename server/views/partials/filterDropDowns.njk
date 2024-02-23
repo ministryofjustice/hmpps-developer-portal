@@ -26,11 +26,11 @@
     selected: product.selected
   }), products) -%}
 {%- endfor -%}
-{%- for customComponent in customComponentsList -%}
+{%- for customComponentView in customComponentsList -%}
   {%- set customComponents = (customComponents.push({
-    value: customComponent.value,
-    text: customComponent.text,
-    selected: customComponent.selected
+    value: customComponentView.value,
+    text: customComponentView.text,
+    selected: customComponentView.selected
   }), customComponents) -%}
 {%- endfor -%}
 
@@ -78,16 +78,16 @@
   element: "button"
 }) }}
 {{ govukSelect({
-  id: "customComponent",
-  name: "customComponent",
+  id: "customComponentView",
+  name: "customComponentView",
   label: {
-    text: "Custom Component"
+    text: "Custom View"
   },
   items: customComponents
 }) }}
 {{ govukButton({
-  id: "updateCustomComponent",
-  name: "updateCustomComponent",
+  id: "updateCustomComponentView",
+  name: "updateCustomComponentView",
   text: "Update",
   element: "button"
 }) }}

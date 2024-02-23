@@ -15,12 +15,12 @@ export default class DataFilterService {
     const strapiApiClient = this.strapiApiClientFactory('')
     const customComponentsData = await strapiApiClient.getCustomComponents()
     const customComponents = customComponentsData.data.sort(sortData)
-    const customComponentsList = customComponents.map(customComponent => {
-      const formattedName = formatMonitorName(customComponent.attributes.name)
+    const customComponentsList = customComponents.map(customComponentView => {
+      const formattedName = formatMonitorName(customComponentView.attributes.name)
 
       return {
-        value: useFormattedName ? formattedName : customComponent.id.toString(),
-        text: customComponent.attributes.name,
+        value: useFormattedName ? formattedName : customComponentView.id.toString(),
+        text: customComponentView.attributes.name,
         selected: formattedName === customComponentName,
       }
     })

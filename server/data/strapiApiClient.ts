@@ -178,7 +178,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getCustomComponent(customComponentId: number, withProducts?: boolean): Promise<CustomComponentResponse> {
+  async getCustomComponentView(customComponentId: number, withProducts?: boolean): Promise<CustomComponentResponse> {
     const populate = ['components']
 
     if (withProducts) {
