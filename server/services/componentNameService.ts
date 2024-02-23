@@ -75,7 +75,7 @@ export default class ComponentNameService {
     const customComponents = await this.strapiApiClientFactory('').getCustomComponents(true)
 
     const customComponentDetails = customComponents.data.find(
-      customComponent => formatMonitorName(customComponent.attributes.name) === customComponentName,
+      customComponentView => formatMonitorName(customComponentView.attributes.name) === customComponentName,
     )
 
     if (!customComponentDetails) throw Error(`No custom component called: ${customComponentName}`)

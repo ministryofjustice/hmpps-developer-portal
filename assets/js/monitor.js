@@ -13,7 +13,7 @@ jQuery(async function () {
     updateEnvironmentList()
   }
 
-  $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponent').on('click', async e => {
+  $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponentView').on('click', async e => {
     e.preventDefault(e)
 
     let dropDownType = ''
@@ -28,8 +28,8 @@ jQuery(async function () {
       case 'updateServiceArea':
         dropDownType = 'serviceArea'
         break
-      case 'updateCustomComponent':
-        dropDownType = 'customComponent'
+      case 'updateCustomComponentView':
+        dropDownType = 'customComponentView'
         break
       default:
         return false
