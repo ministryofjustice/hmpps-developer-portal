@@ -26,6 +26,23 @@ jQuery(function () {
     document.location.href = `/dependencies/${dependencyType}/${dependencyName}`
   })
 
+  let filterType = ''
+  let filterValue = ''
+
+  if (teamName.length > 0) {
+    filterType = 'team'
+    filterValue = teamName
+  } else if (productName.length > 0) {
+    filterType = 'product'
+    filterValue = productName
+  } else if (serviceAreaName.length > 0) {
+    filterType = 'serviceArea'
+    filterValue = serviceAreaName
+  } else if (customComponentName.length > 0) {
+    filterType = 'customComponent'
+    filterValue = customComponentName
+  }
+
   const semverTidy = semVer => {
     // sometimes comes through as a number which has no match method
     const semVerString = `${semVer}`
@@ -62,7 +79,7 @@ jQuery(function () {
     order: [[1, 'asc']],
     sortable: true,
     ajax: {
-      url: `/dependencies/data/${dataDependencyType}/${dataDependencyName}`,
+      url: `/dependencies/data/${dataDependencyType}/${dataDependencyName}/${filterType}/${filterValue}`,
       dataSrc: '',
       error: function (response) {
         alert('An error occurred when loading teams.') // eslint-disable-line no-undef
