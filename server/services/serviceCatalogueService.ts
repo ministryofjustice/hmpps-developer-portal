@@ -40,6 +40,27 @@ export default class ServiceCatalogueService {
     return components
   }
 
+  async getComponentsByFilter(filterType: string, filterName: string): Promise<ComponentListResponseDataItem[]> {
+    switch (filterType) {
+      case 'product':
+        break
+      case 'team':
+        const teamData = this.getTeam({ teamName: filterName, withComponents: true })
+        break
+      case 'serviceArea':
+        break
+      case 'customComponent':
+        break
+      default:
+    }
+
+    // const componentData = await strapiApiClient.getComponents()
+
+    const components = componentData.data.sort(sortData)
+
+    return components
+  }
+
   async getDependencies(): Promise<string[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentData = (await strapiApiClient.getComponents()) as ComponentListResponse
@@ -105,13 +126,17 @@ export default class ServiceCatalogueService {
 
   async getTeam({
     teamId = 0,
+    teamName = '',
+    withComponents = false,
     withEnvironments = false,
   }: {
-    teamId: number
+    teamId?: number
+    teamName?: string
+    withComponents?: boolean
     withEnvironments?: boolean
   }): Promise<Team> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const teamData = await strapiApiClient.getTeam({ teamId, withEnvironments })
+    const teamData = await strapiApiClient.getTeam({ teamId, teamName, withComponents, withEnvironments })
 
     const team = teamData.data?.attributes
 

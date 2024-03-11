@@ -85,23 +85,38 @@ export default class StrapiApiClient {
 
   async getTeam({
     teamId = 0,
+    teamName = '',
+    withComponents = false,
     withEnvironments = false,
   }: {
-    teamId: number
+    teamId?: number
+    teamName?: string
+    withComponents?: boolean
     withEnvironments?: boolean
   }): Promise<TeamResponse> {
     const populate = ['products']
+
+    if (withComponents) {
+      populate.push('products.components')
+    }
 
     if (withEnvironments) {
       populate.push('products.components.environments')
     }
 
-    return this.restClient.get({
+    const getParams = {
       path: `/v1/teams/${teamId}`,
       query: new URLSearchParams({
         populate: populate.join(','),
       }).toString(),
-    })
+    }
+
+    if (teamName !== '') {
+      getParams.path = '/v1/teams'
+      getParams.query = `filters[name][$eq]=${teamName}&${populate}`
+    }
+
+    return this.restClient.get(getParams)
   }
 
   async getProductSets(): Promise<ProductSetListResponse> {

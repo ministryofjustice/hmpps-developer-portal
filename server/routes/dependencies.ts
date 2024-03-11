@@ -61,7 +61,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
   get('/data/:dependencyType/:dependencyName/:filterType/:filterValue', async (req, res) => {
     const dependencyType = getDependencyType(req)
     const dependencyName = getDependencyName(req)
-    const components = await serviceCatalogueService.getComponents()
+    const components = await serviceCatalogueService.getComponentsByFilter(req.params.filterType, req.params.filterName)
 
     const displayComponents = components
       .filter(component => {
