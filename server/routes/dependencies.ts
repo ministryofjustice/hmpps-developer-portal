@@ -1,7 +1,7 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { ServiceCatalogueService, Services } from '../services'
-import { getDependencyName, getDependencyType, isValidDropDown } from '../utils/utils'
+import { getSanitizedValue, isValidDropDown } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
@@ -9,8 +9,8 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get(['/', '/:dependencyType/:dependencyName'], async (req, res) => {
-    const dependencyType = getDependencyType(req)
-    const dependencyName = getDependencyName(req)
+    const dependencyType = getSanitizedValue(req, 'dependencyType')
+    const dependencyName = getSanitizedValue(req, 'dependencyName')
     const dropDownItems = await getDropDownOptions(serviceCatalogueService, `${dependencyType}::${dependencyName}`)
     let serviceAreaName
     let teamName
@@ -40,6 +40,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
       productName,
       serviceAreaName,
       customComponentName,
+      useFormattedName: true,
     })
 
     return res.render('pages/dependencies', {
@@ -59,9 +60,12 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
   })
 
   get('/data/:dependencyType/:dependencyName/:filterType/:filterValue', async (req, res) => {
-    const dependencyType = getDependencyType(req)
-    const dependencyName = getDependencyName(req)
-    const components = await serviceCatalogueService.getComponentsByFilter(req.params.filterType, req.params.filterName)
+    const dependencyType = getSanitizedValue(req, 'dependencyType')
+    const dependencyName = getSanitizedValue(req, 'dependencyName')
+    const filterType = getSanitizedValue(req, 'filterType')
+    const filterValue = getSanitizedValue(req, 'filterValue')
+    console.log(`${filterType} / ${filterValue}`)
+    const components = await serviceCatalogueService.getComponentsByFilter(filterType, filterValue)
 
     const displayComponents = components
       .filter(component => {

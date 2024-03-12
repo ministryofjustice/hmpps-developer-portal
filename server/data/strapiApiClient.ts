@@ -113,9 +113,9 @@ export default class StrapiApiClient {
 
     if (teamName !== '') {
       getParams.path = '/v1/teams'
-      getParams.query = `filters[name][$eq]=${teamName}&${populate}`
+      getParams.query = `filters[name][$eq]=${teamName}&populate=${populate.join(',')}`
     }
-
+console.log(getParams)
     return this.restClient.get(getParams)
   }
 

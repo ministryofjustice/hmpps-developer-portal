@@ -41,12 +41,22 @@ export default class ServiceCatalogueService {
   }
 
   async getComponentsByFilter(filterType: string, filterName: string): Promise<ComponentListResponseDataItem[]> {
+    const componentData: ComponentListResponseDataItem[] = []
+
     switch (filterType) {
       case 'product':
         break
-      case 'team':
-        const teamData = this.getTeam({ teamName: filterName, withComponents: true })
+      case 'team': {
+        console.log(filterName)
+        const teamData = await this.getTeam({ teamName: filterName, withComponents: true })
+        console.log(teamData)
+        teamData.products.data.forEach(product => {
+          product.attributes.components.data.forEach(component => {
+            componentData.push(component as ComponentListResponseDataItem)
+          })
+        })
         break
+      }
       case 'serviceArea':
         break
       case 'customComponent':
@@ -54,9 +64,7 @@ export default class ServiceCatalogueService {
       default:
     }
 
-    // const componentData = await strapiApiClient.getComponents()
-
-    const components = componentData.data.sort(sortData)
+    const components = componentData.sort(sortData)
 
     return components
   }

@@ -43,6 +43,8 @@ jQuery(function () {
     filterValue = customComponentName
   }
 
+  console.log(`filterType:${filterType} / filterValue:${filterValue}`)
+
   const semverTidy = semVer => {
     // sometimes comes through as a number which has no match method
     const semVerString = `${semVer}`
@@ -68,7 +70,7 @@ jQuery(function () {
       return a < b ? 1 : a > b ? -1 : 0
     },
   })
-
+  console.log(`/dependencies/data/${dataDependencyType}/${dataDependencyName}/${filterType}/${filterValue}`)
   $('#dependenciesTable').DataTable({
     lengthMenu: [
       [10, 25, 50, 75, 100, -1],
