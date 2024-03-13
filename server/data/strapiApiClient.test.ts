@@ -143,7 +143,7 @@ describe('strapiApiClient', () => {
           data: { id: 1, attributes: { name: 'Product Set' } },
         } as ProductSetResponse
         fakeStrapiApi.get('/product-sets/1?populate=products').reply(200, productSet)
-        const output = await strapiApiClient.getProductSet(1)
+        const output = await strapiApiClient.getProductSet({ productSetId: 1 })
         expect(output).toEqual(productSet)
       })
     })
@@ -165,7 +165,7 @@ describe('strapiApiClient', () => {
           data: { id: 1, attributes: { name: 'Service Area' } },
         } as ServiceAreaResponse
         fakeStrapiApi.get('/service-areas/1?populate=products').reply(200, serviceArea)
-        const output = await strapiApiClient.getServiceArea(1)
+        const output = await strapiApiClient.getServiceArea({ serviceAreaId: 1 })
         expect(output).toEqual(serviceArea)
       })
     })

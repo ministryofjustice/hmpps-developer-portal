@@ -46,7 +46,10 @@ export default class ComponentNameService {
 
     if (!serviceAreaSummary) throw Error(`No serviceArea called: ${serviceAreaName}`)
 
-    const serviceAreaDetails = await this.strapiApiClientFactory('').getServiceArea(serviceAreaSummary.id, true)
+    const serviceAreaDetails = await this.strapiApiClientFactory('').getServiceArea({
+      serviceAreaId: serviceAreaSummary.id,
+      withProducts: true,
+    })
 
     return serviceAreaDetails.data.attributes.products.data.flatMap(product =>
       product.attributes?.components?.data
@@ -72,7 +75,7 @@ export default class ComponentNameService {
   }
 
   async getAllDeployedComponentsForCustomComponents(customComponentName: string): Promise<string[]> {
-    const customComponents = await this.strapiApiClientFactory('').getCustomComponents(true)
+    const customComponents = await this.strapiApiClientFactory('').getCustomComponentViews({ withEnvironments: true })
 
     const customComponentDetails = customComponents.data.find(
       customComponentView => formatMonitorName(customComponentView.attributes.name) === customComponentName,

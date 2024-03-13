@@ -107,7 +107,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getProductSet(productSetId: number): Promise<ProductSetResponse> {
+  async getProductSet({ productSetId = 0 }: { productSetId: number }): Promise<ProductSetResponse> {
     return this.restClient.get({
       path: `/v1/product-sets/${productSetId}`,
       query: new URLSearchParams({ populate: 'products' }).toString(),
@@ -123,7 +123,13 @@ export default class StrapiApiClient {
     return this.restClient.get(getParams)
   }
 
-  async getServiceArea(serviceAreaId: number, withProducts?: boolean): Promise<ServiceAreaResponse> {
+  async getServiceArea({
+    serviceAreaId = 0,
+    withProducts = false,
+  }: {
+    serviceAreaId: number
+    withProducts?: boolean
+  }): Promise<ServiceAreaResponse> {
     const populate = ['products']
 
     if (withProducts) {
@@ -138,10 +144,14 @@ export default class StrapiApiClient {
     })
   }
 
-  async getCustomComponents(withProducts?: boolean): Promise<CustomComponentListResponse> {
+  async getCustomComponentViews({
+    withEnvironments = false,
+  }: {
+    withEnvironments?: boolean
+  }): Promise<CustomComponentListResponse> {
     const populate = ['components']
 
-    if (withProducts) {
+    if (withEnvironments) {
       populate.push('components.environments')
     }
 
@@ -153,10 +163,16 @@ export default class StrapiApiClient {
     })
   }
 
-  async getCustomComponentView(customComponentId: number, withProducts?: boolean): Promise<CustomComponentResponse> {
+  async getCustomComponentView({
+    customComponentId = 0,
+    withEnvironments = false,
+  }: {
+    customComponentId: number
+    withEnvironments?: boolean
+  }): Promise<CustomComponentResponse> {
     const populate = ['components']
 
-    if (withProducts) {
+    if (withEnvironments) {
       populate.push('components.environments')
     }
 
