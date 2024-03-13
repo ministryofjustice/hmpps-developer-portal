@@ -56,9 +56,11 @@ export default class StrapiApiClient {
   }
 
   async getComponents(): Promise<ComponentListResponse> {
+    const populate = ['product', 'environments']
+
     return this.restClient.get({
       path: '/v1/components',
-      query: new URLSearchParams({ populate: 'product,environments' }).toString(),
+      query: new URLSearchParams({ populate: populate.join(',') }).toString(),
     })
   }
 
