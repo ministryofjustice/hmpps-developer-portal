@@ -194,7 +194,7 @@ describe('Strapi service', () => {
       it('should return the selected component', async () => {
         strapiApiClient.getComponent.mockResolvedValue(testComponentResponse)
 
-        const results = await serviceCatalogueService.getComponent('1')
+        const results = await serviceCatalogueService.getComponent({ componentName: '1' })
 
         expect(strapiApiClient.getComponent).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testComponent)

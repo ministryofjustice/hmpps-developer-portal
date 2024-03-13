@@ -23,31 +23,16 @@ export default class StrapiApiClient {
     this.restClient = new RestClient('strapiApiClient', config.apis.serviceCatalogue as ApiConfig, '')
   }
 
-  async getProducts({
-    productIds = [],
-    withEnvironments = false,
-  }: {
-    productIds?: number[]
-    withEnvironments?: boolean
-  }): Promise<ProductListResponse> {
+  async getProducts({ withEnvironments = false }: { withEnvironments?: boolean }): Promise<ProductListResponse> {
     const populate = ['product_set']
 
     if (withEnvironments) {
-      populate.push('components')
       populate.push('components.environments')
     }
 
-    const filters = productIds
-      ? productIds
-          .reduce((filterList, productId, index) => {
-            return `filters[id][$in][${index}]=${productId},${filterList}`
-          }, '')
-          .slice(0, -1)
-      : ''
-
     return this.restClient.get({
       path: '/v1/products',
-      query: `${new URLSearchParams({ populate: populate.join(',') }).toString()}&${filters}`,
+      query: `${new URLSearchParams({ populate: populate.join(',') }).toString()}`,
     })
   }
 
@@ -77,7 +62,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getComponent(componentName: string): Promise<ComponentResponse> {
+  async getComponent({ componentName }: { componentName: string }): Promise<ComponentResponse> {
     const populate = new URLSearchParams({ populate: 'product,environments' }).toString()
 
     return this.restClient.get({
@@ -86,14 +71,10 @@ export default class StrapiApiClient {
     })
   }
 
-  async getTeams(expandProperties?: { products: boolean }): Promise<TeamListResponse> {
+  async getTeams(): Promise<TeamListResponse> {
     const getParams = {
       path: '/v1/teams',
       query: '',
-    }
-
-    if (expandProperties?.products) {
-      getParams.query = new URLSearchParams({ populate: 'products' }).toString()
     }
 
     return this.restClient.get(getParams)
@@ -109,7 +90,6 @@ export default class StrapiApiClient {
     const populate = ['products']
 
     if (withEnvironments) {
-      populate.push('products.components')
       populate.push('products.components.environments')
     }
 
@@ -134,14 +114,10 @@ export default class StrapiApiClient {
     })
   }
 
-  async getServiceAreas(expandProperties?: { products: boolean }): Promise<ServiceAreaListResponse> {
+  async getServiceAreas(): Promise<ServiceAreaListResponse> {
     const getParams = {
       path: '/v1/service-areas',
       query: '',
-    }
-
-    if (expandProperties?.products) {
-      getParams.query = new URLSearchParams({ populate: 'products' }).toString()
     }
 
     return this.restClient.get(getParams)
@@ -151,7 +127,6 @@ export default class StrapiApiClient {
     const populate = ['products']
 
     if (withProducts) {
-      populate.push('products.components')
       populate.push('products.components.environments')
     }
 

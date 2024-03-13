@@ -58,7 +58,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
   get('/:componentName', async (req, res) => {
     const componentName = getComponentName(req)
-    const component = await serviceCatalogueService.getComponent(componentName)
+    const component = await serviceCatalogueService.getComponent({ componentName })
     const { environments } = component
 
     const displayComponent = {
@@ -88,7 +88,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const componentName = getComponentName(req)
     const environmentName = getEnvironmentName(req)
 
-    const component = await serviceCatalogueService.getComponent(componentName)
+    const component = await serviceCatalogueService.getComponent({ componentName })
     const environments = component.environments?.filter(environment => environment.name === environmentName)
     const activeAgencies =
       environments.length === 0 ? '' : formatActiveAgencies(environments[0].active_agencies as Array<string>)
@@ -111,7 +111,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     logger.info(`Queue call for ${componentName} with ${queueInformation}`)
 
-    const component = await serviceCatalogueService.getComponent(componentName)
+    const component = await serviceCatalogueService.getComponent({ componentName })
     const streams = [
       {
         key: `health:${component.name}:${environmentName}`,
