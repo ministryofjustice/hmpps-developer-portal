@@ -64,7 +64,6 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
     const dependencyName = getSanitizedValue(req, 'dependencyName')
     const filterType = getSanitizedValue(req, 'filterType')
     const filterValue = getSanitizedValue(req, 'filterValue')
-    console.log(`${filterType} / ${filterValue}`)
     const components = await serviceCatalogueService.getComponentsByFilter(filterType, filterValue)
 
     const displayComponents = components

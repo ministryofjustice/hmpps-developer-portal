@@ -47,9 +47,8 @@ export default class ServiceCatalogueService {
       case 'product':
         break
       case 'team': {
-        console.log(filterName)
         const teamData = await this.getTeam({ teamName: filterName, withComponents: true })
-        console.log(teamData)
+
         teamData.products.data.forEach(product => {
           product.attributes.components.data.forEach(component => {
             componentData.push(component as ComponentListResponseDataItem)
