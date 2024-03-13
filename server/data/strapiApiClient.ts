@@ -33,7 +33,6 @@ export default class StrapiApiClient {
     const populate = ['product_set']
 
     if (withEnvironments) {
-      populate.push('components')
       populate.push('components.environments')
     }
 
@@ -73,12 +72,12 @@ export default class StrapiApiClient {
   async getComponents(): Promise<ComponentListResponse> {
     return this.restClient.get({
       path: '/v1/components',
-      query: new URLSearchParams({ populate: 'product,environments' }).toString(),
+      query: new URLSearchParams({ populate: 'environments' }).toString(),
     })
   }
 
   async getComponent(componentName: string): Promise<ComponentResponse> {
-    const populate = new URLSearchParams({ populate: 'product,environments' }).toString()
+    const populate = new URLSearchParams({ populate: 'environments' }).toString()
 
     return this.restClient.get({
       path: '/v1/components',
@@ -109,7 +108,6 @@ export default class StrapiApiClient {
     const populate = ['products']
 
     if (withEnvironments) {
-      populate.push('products.components')
       populate.push('products.components.environments')
     }
 
@@ -151,7 +149,6 @@ export default class StrapiApiClient {
     const populate = ['products']
 
     if (withProducts) {
-      populate.push('products.components')
       populate.push('products.components.environments')
     }
 

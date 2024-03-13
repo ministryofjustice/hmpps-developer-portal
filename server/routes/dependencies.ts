@@ -1,25 +1,70 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { ServiceCatalogueService, Services } from '../services'
-import { getDependencyName, getDependencyType } from '../utils/utils'
+import { getSanitizedValue, isValidDropDown } from '../utils/utils'
 
-export default function routes({ serviceCatalogueService }: Services): Router {
+export default function routes({ serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get(['/', '/:dependencyType/:dependencyName'], async (req, res) => {
-    const dependencyType = getDependencyType(req)
-    const dependencyName = getDependencyName(req)
+    const dependencyType = getSanitizedValue(req, 'dependencyType')
+    const dependencyName = getSanitizedValue(req, 'dependencyName')
     const dropDownItems = await getDropDownOptions(serviceCatalogueService, `${dependencyType}::${dependencyName}`)
+    let serviceAreaName
+    let teamName
+    let productName
+    let customComponentName
+    let filterType
 
-    return res.render('pages/dependencies', { dropDownItems, dependencyType, dependencyName })
+    if (req.query.updateServiceArea === '' && isValidDropDown(req, 'serviceArea')) {
+      serviceAreaName = req.query.serviceArea as string
+      filterType = 'serviceArea'
+    }
+    if (req.query.updateTeam === '' && isValidDropDown(req, 'team')) {
+      teamName = req.query.team as string
+      filterType = 'team'
+    }
+    if (req.query.updateProduct === '' && isValidDropDown(req, 'product')) {
+      productName = req.query.product as string
+      filterType = 'product'
+    }
+    if (req.query.updateCustomComponentView === '' && isValidDropDown(req, 'customComponentView')) {
+      customComponentName = req.query.customComponentView as string
+      filterType = 'customComponent'
+    }
+
+    const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
+      teamName,
+      productName,
+      serviceAreaName,
+      customComponentName,
+      useFormattedName: true,
+    })
+
+    return res.render('pages/dependencies', {
+      dropDownItems,
+      dependencyType,
+      dependencyName,
+      teamList,
+      productList,
+      serviceAreaList,
+      customComponentsList,
+      teamName,
+      productName,
+      serviceAreaName,
+      customComponentName,
+      filterType,
+    })
   })
 
-  get('/data/:dependencyType/:dependencyName', async (req, res) => {
-    const dependencyType = getDependencyType(req)
-    const dependencyName = getDependencyName(req)
-    const components = await serviceCatalogueService.getComponents()
+  get('/data/:dependencyType/:dependencyName/:filterType/:filterValue', async (req, res) => {
+    const dependencyType = getSanitizedValue(req, 'dependencyType')
+    const dependencyName = getSanitizedValue(req, 'dependencyName')
+    const filterType = getSanitizedValue(req, 'filterType')
+    const filterValue = getSanitizedValue(req, 'filterValue')
+    const components = await serviceCatalogueService.getComponentsByFilter(filterType, filterValue)
 
     const displayComponents = components
       .filter(component => {
@@ -39,7 +84,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         }
       })
 
-    return res.send(displayComponents)
+    return res.json(displayComponents)
   })
 
   return router
