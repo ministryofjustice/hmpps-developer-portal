@@ -72,12 +72,10 @@ export default class StrapiApiClient {
   }
 
   async getTeams(): Promise<TeamListResponse> {
-    const getParams = {
+    return this.restClient.get({
       path: '/v1/teams',
       query: '',
-    }
-
-    return this.restClient.get(getParams)
+    })
   }
 
   async getTeam({
@@ -115,12 +113,10 @@ export default class StrapiApiClient {
   }
 
   async getServiceAreas(): Promise<ServiceAreaListResponse> {
-    const getParams = {
+    return this.restClient.get({
       path: '/v1/service-areas',
       query: '',
-    }
-
-    return this.restClient.get(getParams)
+    })
   }
 
   async getServiceArea({
