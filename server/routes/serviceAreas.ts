@@ -20,7 +20,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   get('/:serviceAreaId', async (req, res) => {
     const serviceAreaId = getNumericId(req, 'serviceAreaId')
-    const serviceArea = await serviceCatalogueService.getServiceArea(serviceAreaId)
+    const serviceArea = await serviceCatalogueService.getServiceArea({ serviceAreaId })
     const products = serviceArea.products?.data?.map(product => product)
 
     const displayServiceArea = {

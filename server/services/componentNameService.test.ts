@@ -131,7 +131,7 @@ describe('Component name service', () => {
 
       const results = await componentNameService.getAllDeployedComponentsForServiceArea('service-area-1')
 
-      expect(strapiApiClient.getServiceArea).toHaveBeenCalledWith(2, true)
+      expect(strapiApiClient.getServiceArea).toHaveBeenCalledWith({ serviceAreaId: 2, withProducts: true })
       expect(results).toStrictEqual(['comp-1', 'comp-3'])
     })
   })

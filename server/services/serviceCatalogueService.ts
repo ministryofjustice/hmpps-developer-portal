@@ -19,14 +19,12 @@ export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
 
   async getProducts({
-    productIds = [],
     withEnvironments = false,
   }: {
-    productIds?: number[]
     withEnvironments?: boolean
   }): Promise<ProductListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const productData = await strapiApiClient.getProducts({ productIds, withEnvironments })
+    const productData = await strapiApiClient.getProducts({ withEnvironments })
 
     const products = productData.data.sort(sortData)
 
@@ -63,9 +61,9 @@ export default class ServiceCatalogueService {
     return dependencies.sort()
   }
 
-  async getTeams(expandProperties?: { products: boolean }): Promise<TeamListResponseDataItem[]> {
+  async getTeams(): Promise<TeamListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const teamData = await strapiApiClient.getTeams(expandProperties)
+    const teamData = await strapiApiClient.getTeams()
 
     const teams = teamData.data.sort(sortData)
 
@@ -81,9 +79,9 @@ export default class ServiceCatalogueService {
     return productSets
   }
 
-  async getServiceAreas(expandProperties?: { products: boolean }): Promise<ServiceAreaListResponseDataItem[]> {
+  async getServiceAreas(): Promise<ServiceAreaListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const serviceAreaData = await strapiApiClient.getServiceAreas(expandProperties)
+    const serviceAreaData = await strapiApiClient.getServiceAreas()
 
     const serviceAreas = serviceAreaData.data.sort(sortData)
 
@@ -120,27 +118,33 @@ export default class ServiceCatalogueService {
     return team
   }
 
-  async getComponent(componentName: string): Promise<Component> {
+  async getComponent({ componentName }: { componentName: string }): Promise<Component> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const componentData = await strapiApiClient.getComponent(componentName)
+    const componentData = await strapiApiClient.getComponent({ componentName })
 
     const component = componentData.data[0].attributes
 
     return component
   }
 
-  async getServiceArea(serviceAreaId: number, withProducts?: boolean): Promise<ServiceArea> {
+  async getServiceArea({
+    serviceAreaId = 0,
+    withProducts = false,
+  }: {
+    serviceAreaId: number
+    withProducts?: boolean
+  }): Promise<ServiceArea> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const serviceAreaData = await strapiApiClient.getServiceArea(serviceAreaId, withProducts)
+    const serviceAreaData = await strapiApiClient.getServiceArea({ serviceAreaId, withProducts })
 
     const serviceArea = serviceAreaData.data?.attributes
 
     return serviceArea
   }
 
-  async getProductSet(productSetId: number): Promise<ProductSet> {
+  async getProductSet({ productSetId = 0 }: { productSetId: number }): Promise<ProductSet> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const productSetData = await strapiApiClient.getProductSet(productSetId)
+    const productSetData = await strapiApiClient.getProductSet({ productSetId })
 
     const productSet = productSetData.data?.attributes
 
@@ -155,7 +159,7 @@ export default class ServiceCatalogueService {
     withEnvironments?: boolean
   }): Promise<CustomComponentView> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const customComponentData = await strapiApiClient.getCustomComponentView(customComponentId, withEnvironments)
+    const customComponentData = await strapiApiClient.getCustomComponentView({ customComponentId, withEnvironments })
 
     const customComponentView = customComponentData.data?.attributes
 

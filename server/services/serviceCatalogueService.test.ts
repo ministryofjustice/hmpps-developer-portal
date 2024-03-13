@@ -194,7 +194,7 @@ describe('Strapi service', () => {
       it('should return the selected component', async () => {
         strapiApiClient.getComponent.mockResolvedValue(testComponentResponse)
 
-        const results = await serviceCatalogueService.getComponent('1')
+        const results = await serviceCatalogueService.getComponent({ componentName: '1' })
 
         expect(strapiApiClient.getComponent).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testComponent)
@@ -289,7 +289,7 @@ describe('Strapi service', () => {
       it('should return the selected service area', async () => {
         strapiApiClient.getServiceArea.mockResolvedValue(testServiceAreaResponse)
 
-        const results = await serviceCatalogueService.getServiceArea(1)
+        const results = await serviceCatalogueService.getServiceArea({ serviceAreaId: 1 })
 
         expect(strapiApiClient.getServiceArea).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testServiceArea)
@@ -338,7 +338,7 @@ describe('Strapi service', () => {
       it('should return the selected product set', async () => {
         strapiApiClient.getProductSet.mockResolvedValue(testProductSetResponse)
 
-        const results = await serviceCatalogueService.getProductSet(1)
+        const results = await serviceCatalogueService.getProductSet({ productSetId: 1 })
 
         expect(strapiApiClient.getProductSet).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testProductSet)

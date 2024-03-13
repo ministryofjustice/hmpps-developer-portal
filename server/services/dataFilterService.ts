@@ -13,7 +13,7 @@ export default class DataFilterService {
     useFormattedName?: boolean
   }): Promise<MoJSelectDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const customComponentsData = await strapiApiClient.getCustomComponents()
+    const customComponentsData = await strapiApiClient.getCustomComponentViews({})
     const customComponents = customComponentsData.data.sort(sortData)
     const customComponentsList = customComponents.map(customComponentView => {
       const formattedName = formatMonitorName(customComponentView.attributes.name)
