@@ -33,7 +33,6 @@ export default class StrapiApiClient {
     const populate = ['product_set']
 
     if (withEnvironments) {
-      populate.push('components')
       populate.push('components.environments')
     }
 
@@ -73,12 +72,12 @@ export default class StrapiApiClient {
   async getComponents(): Promise<ComponentListResponse> {
     return this.restClient.get({
       path: '/v1/components',
-      query: new URLSearchParams({ populate: 'product,environments' }).toString(),
+      query: new URLSearchParams({ populate: 'environments' }).toString(),
     })
   }
 
   async getComponent(componentName: string): Promise<ComponentResponse> {
-    const populate = new URLSearchParams({ populate: 'product,environments' }).toString()
+    const populate = new URLSearchParams({ populate: 'environments' }).toString()
 
     return this.restClient.get({
       path: '/v1/components',
@@ -101,38 +100,23 @@ export default class StrapiApiClient {
 
   async getTeam({
     teamId = 0,
-    teamName = '',
-    withComponents = false,
     withEnvironments = false,
   }: {
-    teamId?: number
-    teamName?: string
-    withComponents?: boolean
+    teamId: number
     withEnvironments?: boolean
   }): Promise<TeamResponse> {
     const populate = ['products']
-
-    if (withComponents) {
-      populate.push('products.components')
-    }
 
     if (withEnvironments) {
       populate.push('products.components.environments')
     }
 
-    const getParams = {
+    return this.restClient.get({
       path: `/v1/teams/${teamId}`,
       query: new URLSearchParams({
         populate: populate.join(','),
       }).toString(),
-    }
-
-    if (teamName !== '') {
-      getParams.path = '/v1/teams'
-      getParams.query = `filters[name][$eq]=${teamName}&populate=${populate.join(',')}`
-    }
-console.log(getParams)
-    return this.restClient.get(getParams)
+    })
   }
 
   async getProductSets(): Promise<ProductSetListResponse> {
@@ -165,7 +149,6 @@ console.log(getParams)
     const populate = ['products']
 
     if (withProducts) {
-      populate.push('products.components')
       populate.push('products.components.environments')
     }
 
