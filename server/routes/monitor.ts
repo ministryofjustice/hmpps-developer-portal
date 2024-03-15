@@ -152,16 +152,21 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   })
 
   post('/queue', async (req, res) => {
-    const streams = Object.keys(req.body?.streams).map(queueName => {
-      return {
-        key: queueName,
-        id: req.body?.streams[queueName],
-      }
-    })
+    const versions = await redisService.readLatest('latest:versions')
+    const health = await redisService.readLatest('latest:health')
+    const info = await redisService.readLatest('latest:info')
 
-    const messages = await redisService.readStream(streams)
+    const envNames = Array.from(new Set([health, info, versions].flatMap(Object.keys)))
 
-    return res.send(messages)
+    const result = envNames.reduce((acc, key) => {
+      acc[key] = {}
+      Object.assign(acc[key], versions[key])
+      Object.assign(acc[key], health[key])
+      Object.assign(acc[key], info[key])
+      return acc
+    }, {})
+
+    return res.send(JSON.stringify(Object.entries(result)))
   })
 
   return router

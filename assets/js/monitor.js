@@ -101,58 +101,38 @@ const fetchMessages = async streams => {
   }
 
   try {
-    const streamJson = await response.json()
-
-    streamJson.forEach(stream => {
-      const streamName = stream.name
+    const envs = await response.json()
+    envs.forEach(([name, env]) => {
+      const streamName = name
       const streamNameParts = streamName.split(':')
-      const streamType = streamNameParts[0].charAt(0)
-      const component = streamNameParts[1]
-      const environment = streamNameParts[2]
-      const lastMessage = stream.messages[stream.messages.length - 1]
+      const component = streamNameParts[0]
+      const environment = streamNameParts[1]
 
-      if (lastIds[streamName]) {
-        lastIds[streamName] = lastMessage.id
-      }
+      const { v, dateAdded, json: healthJson } = env
 
-      if (data.hasOwnProperty(streamName)) {
-        data[streamName] = lastMessage.message
+      $(`#tile-${component}-${environment} .statusTileBuild`).text(v)
+      const lastMessageTime = new Date(dateAdded)
+      const dateString = dayjs().to(dayjs(lastMessageTime))
+      $(`#tile-${component}-${environment} .statusTileLastRefresh`).text(dateString)
+      try {
+        let status = 'UNK'
+        health = JSON.parse(healthJson)
 
-        switch (streamType) {
-          case 'v':
-            $(`#tile-${component}-${environment} .statusTileBuild`).text(data[streamName].v)
-            break
-          case 'h':
-            const lastMessageTime = new Date(parseInt(lastMessage.id.split('-')[0]))
-            const dateString = dayjs().to(dayjs(lastMessageTime))
-            $(`#tile-${component}-${environment} .statusTileLastRefresh`).text(dateString)
-            try {
-              if (data[streamName].json) {
-                const jsonData = data[streamName].json
-
-                let status = 'UNK'
-                health = JSON.parse(jsonData)
-
-                if (health.hasOwnProperty('status')) {
-                  status = health.status
-                } else {
-                  status = health.healthy === true ? 'UP' : 'DOWN'
-                }
-
-                $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
-                $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
-
-                const statusClass = status === 'UP' ? 'statusTileUp' : 'statusTileDown'
-
-                $(`#tile-${component}-${environment}`).addClass(statusClass)
-              }
-            } catch (e) {
-              console.error('Error parsing JSON data')
-              console.error(e)
-            }
-
-            break
+        if (health.hasOwnProperty('status')) {
+          status = health.status
+        } else {
+          status = health.healthy === true ? 'UP' : 'DOWN'
         }
+
+        $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
+        $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
+
+        const statusClass = status === 'UP' ? 'statusTileUp' : 'statusTileDown'
+
+        $(`#tile-${component}-${environment}`).addClass(statusClass)
+      } catch (e) {
+        console.error('Error parsing JSON data')
+        console.error(e)
       }
     })
   } catch (e) {
