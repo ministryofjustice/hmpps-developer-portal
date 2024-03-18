@@ -13,6 +13,7 @@ import {
   formatMonitorName,
   isValidDropDown,
   formatActiveAgencies,
+  relativeTimeFromNow,
 } from './utils'
 
 describe('Utils', () => {
@@ -187,6 +188,22 @@ describe('formatActiveAgencies', () => {
     '%s is passed to formatActiveAgencies(), value "%s" should return "%s"',
     (_: string, input: string[], expected: string) => {
       expect(formatActiveAgencies(input)).toBe(expected)
+    },
+  )
+})
+
+describe('relativeTimeFromNow', () => {
+  it.each([
+    ['in 1 hour', new Date(new Date().getTime() + 1000 * 60 * 60), 'in an hour'],
+    ['in a few seconds', new Date(new Date().getTime() + 4000), 'in a few seconds'],
+    ['a few seconds ago', new Date(new Date().getTime() - 4000), 'a few seconds ago'],
+    ['3 minutes ago', new Date(new Date().getTime() - 1 * 60 * 1000 * 3), '3 minutes ago'],
+    ['4 hours ago', new Date(new Date().getTime() - 1 * 60 * 1000 * 4 * 60), '4 hours ago'],
+    ['5 days ago', new Date(new Date().getTime() - 1 * 60 * 1000 * 5 * 60 * 24), '5 days ago'],
+  ])(
+    '%s is passed to relativeTimeFromNow(), value "%s" should return "%s"',
+    (_: string, input: Date, expected: string) => {
+      expect(relativeTimeFromNow(input)).toBe(expected)
     },
   )
 })

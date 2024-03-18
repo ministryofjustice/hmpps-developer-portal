@@ -32,11 +32,11 @@ export default class RedisService {
     }
   }
 
-  async readLatest(redisKey: string): Promise<Record<string, unknown>> {
+  async readLatest(redisKey: string): Promise<Record<string, Record<string, string>>> {
     try {
       const result = await this.redisClient.json.get(commandOptions({ isolated: true }), redisKey)
       const entries = Object.entries(result).map(
-        ([key, value]) => [key.substring(key.indexOf(':') + 1), value] as [string, unknown],
+        ([key, value]) => [key.substring(key.indexOf(':') + 1), value] as [string, Record<string, string>],
       )
       return Object.fromEntries(entries)
     } catch (error) {

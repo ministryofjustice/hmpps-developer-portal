@@ -3,7 +3,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { Environment } from '../data/strapiApiTypes'
-import { getNumericId, getMonitorName, getMonitorType } from '../utils/utils'
+import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow } from '../utils/utils'
 
 type MonitorEnvironment = {
   componentName: string
@@ -151,18 +151,29 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     return res.json(environments)
   })
 
+  const getHealthStatus = (json: string): string => {
+    const healthPayload = (json && JSON.parse(json)) || { status: 'UNKNOWN' }
+
+    if (Object.prototype.hasOwnProperty.call(healthPayload, 'status')) {
+      return healthPayload.status
+    }
+    return healthPayload.healthy === true ? 'UP' : 'DOWN'
+  }
+
   post('/queue', async (req, res) => {
     const versions = await redisService.readLatest('latest:versions')
     const health = await redisService.readLatest('latest:health')
-    const info = await redisService.readLatest('latest:info')
 
-    const envNames = Array.from(new Set([health, info, versions].flatMap(Object.keys)))
+    const envNames = Array.from(new Set([health, versions].flatMap(Object.keys)))
 
     const result = envNames.reduce((acc, key) => {
-      acc[key] = {}
-      Object.assign(acc[key], versions[key])
-      Object.assign(acc[key], health[key])
-      Object.assign(acc[key], info[key])
+      const { v: version } = versions[key] || {}
+      const { json, dateAdded } = health[key] || {}
+
+      const lastMessageTime = relativeTimeFromNow(new Date(dateAdded))
+      const healthStatus = getHealthStatus(json)
+
+      acc[key] = { version, lastMessageTime, healthStatus }
       return acc
     }, {})
 
