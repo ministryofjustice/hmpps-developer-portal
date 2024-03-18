@@ -1,5 +1,9 @@
 import { type Request } from 'express'
 import { BadRequest } from 'http-errors'
+import * as dayjs from 'dayjs'
+import * as relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime.default)
 
 type HasName = { attributes?: { name: string } }
 
@@ -112,4 +116,8 @@ export const formatActiveAgencies = (activeAgencies: Array<string>) => {
     return 'All agencies'
   }
   return activeAgencies.join(',')
+}
+
+export const relativeTimeFromNow = (date: Date): string => {
+  return dayjs.default().to(dayjs.default(date))
 }
