@@ -33,7 +33,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const exempt = selectedFilters.includes('exempt')
     const nonExempt = selectedFilters.includes('nonExempt')
     const allComponents = await serviceCatalogueService.getComponents()
-    console.log(doFilters)
+
     const components: ComponentListResponseDataItem[] = doFilters
       ? filterComponents(allComponents, { passed, failed, exempt, nonExempt })
       : allComponents
