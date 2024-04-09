@@ -16,7 +16,7 @@ jQuery(function () {
     order: [[6, 'desc']],
     sortable: true,
     ajax: {
-      url: rootDataUrl,
+      url: `${rootDataUrl}?filters=failed`,
       dataSrc: '',
       error: function (response) {
         alert('An error occurred when loading components.') // eslint-disable-line no-undef

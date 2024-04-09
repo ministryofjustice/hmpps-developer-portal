@@ -32,6 +32,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const failed = selectedFilters.includes('failed')
     const exempt = selectedFilters.includes('exempt')
     const nonExempt = selectedFilters.includes('nonExempt')
+
     const allComponents = await serviceCatalogueService.getComponents()
 
     const components: ComponentListResponseDataItem[] = doFilters
