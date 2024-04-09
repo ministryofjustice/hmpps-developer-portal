@@ -4,7 +4,9 @@ function cleanColumnOutput(data, type, row) {
 }
 
 jQuery(function () {
-  $('#veracodeTable').DataTable({
+  const rootDataUrl = '/components/veracode/data'
+
+  const veracodeTable = new DataTable('#veracodeTable', {
     lengthMenu: [
       [10, 25, 50, 75, 100, -1],
       [10, 25, 50, 75, 100, 'All'],
@@ -14,7 +16,7 @@ jQuery(function () {
     order: [[6, 'desc']],
     sortable: true,
     ajax: {
-      url: '/components/veracode/data',
+      url: rootDataUrl,
       dataSrc: '',
       error: function (response) {
         alert('An error occurred when loading components.') // eslint-disable-line no-undef
@@ -85,5 +87,18 @@ jQuery(function () {
         },
       },
     ],
+  })
+
+  $('#updateVeracodeFilters').on('click', async e => {
+    e.preventDefault(e)
+    const selectedFilters = []
+
+    $('input:checkbox[name=filters]:checked').each(function () {
+      selectedFilters.push($(this).val())
+    })
+
+    const newDataUrl = `${rootDataUrl}?filters=${selectedFilters.join(',')}`
+
+    veracodeTable.ajax.url(newDataUrl).load()
   })
 })
