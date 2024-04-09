@@ -12,13 +12,7 @@
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
 		<div class="monitor-selectors govuk-button-group">
 			{{ govukCheckboxes({
-				name: "filters",
-				fieldset: {
-					legend: {
-						text: "Select the filters you want to apply",
-						isPageHeading: false
-					}
-				},
+				name: "results",
 				items: [
 					{
 						value: "passed",
@@ -31,12 +25,22 @@
 						checked: true
 					},
 					{
-						value: "exempt",
+						value: "unknown",
+						text: "Unknown",
+						checked: false
+					}
+				]
+			}) }}
+			{{ govukCheckboxes({
+				name: "exemption",
+				items: [
+					{
+						value: "true",
 						text: "Exempt",
 						checked: false
 					},
 					{
-						value: "nonExempt",
+						value: "false",
 						text: "Non Exempt",
 						checked: false
 					}
@@ -56,6 +60,7 @@
 	  <tr>
 		<th>Name</th>
 		<th>Result</th>
+		<th>Date</th>
 		<th>Very High</th>
 		<th>High</th>
 		<th>Medium</th>

@@ -1,9 +1,9 @@
 import { type RequestHandler, Router } from 'express'
+import dayjs from 'dayjs'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { formatActiveAgencies, getComponentName, getEnvironmentName } from '../utils/utils'
-import { ComponentListResponseDataItem } from '../data/strapiApiTypes'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -25,43 +25,82 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   })
 
   get('/veracode/data', async (req, res) => {
-    const filters = req.query.filters as string
-    const doFilters = !!filters
-    const selectedFilters = filters ? filters.split(',') : []
-    const passed = selectedFilters.includes('passed')
-    const failed = selectedFilters.includes('failed')
-    const exempt = selectedFilters.includes('exempt')
-    const nonExempt = selectedFilters.includes('nonExempt')
+    const resultFilters = getResultFilters(req.query.results as string)
+    const exemptionFilters = getExemptionFilters(req.query.exemption as string)
+    const allComponents = await serviceCatalogueService.getComponents(exemptionFilters)
 
-    const allComponents = await serviceCatalogueService.getComponents()
+    const rows = allComponents
+      .filter(component => {
+        const passed = resultFilters.includes('passed')
+        const failed = resultFilters.includes('failed')
+        const unknown = resultFilters.includes('unknown')
+        const status = component.attributes.veracode_policy_rules_status
 
-    const components: ComponentListResponseDataItem[] = doFilters
-      ? filterComponents(allComponents, { passed, failed, exempt, nonExempt })
-      : allComponents
-    const rows = components.map(component => {
-      const hasVeracode = !!component.attributes.veracode_results_summary
-      const severityLevels = {
-        LOW: 0,
-        MEDIUM: 0,
-        HIGH: 0,
-        VERY_HIGH: 0,
-      }
+        if ((passed && failed && unknown) || (!passed && !failed && !unknown)) {
+          return true
+        }
 
-      component.attributes.veracode_results_summary?.severity?.forEach(severity => {
-        severity.category.forEach(category => {
-          severityLevels[category.severity] += category.count
-        })
+        if (passed && !failed && !unknown && status === 'Pass') {
+          return true
+        }
+
+        if (passed && failed && !unknown && status !== null) {
+          return true
+        }
+
+        if (passed && !failed && unknown && (status === 'Pass' || status === null)) {
+          return true
+        }
+
+        if (!passed && failed && !unknown && status === 'Did Not Pass' && status !== null) {
+          return true
+        }
+
+        if (!passed && !failed && unknown && status === null) {
+          return true
+        }
+
+        if (!passed && failed && unknown && (status === 'Did Not Pass' || status === null)) {
+          return true
+        }
+
+        return false
       })
+      .map(component => {
+        const hasVeracode = !!component.attributes.veracode_results_summary
+        const severityLevels = {
+          LOW: 0,
+          MEDIUM: 0,
+          HIGH: 0,
+          VERY_HIGH: 0,
+        }
 
-      return {
-        name: component.attributes.name,
-        hasVeracode,
-        result: component.attributes.veracode_policy_rules_status === 'Pass' ? 'Passed' : 'Failed',
-        report: hasVeracode ? component.attributes.veracode_results_url : 'N/A',
-        codeScore: hasVeracode ? component.attributes.veracode_results_summary['static-analysis'].score : 0,
-        severityLevels,
-      }
-    })
+        component.attributes.veracode_results_summary?.severity?.forEach(severity => {
+          severity.category.forEach(category => {
+            severityLevels[category.severity] += category.count
+          })
+        })
+
+        let result = 'Failed'
+
+        if (!hasVeracode) {
+          result = 'N/A'
+        } else if (component.attributes.veracode_policy_rules_status === 'Pass') {
+          result = 'Passed'
+        }
+
+        return {
+          name: component.attributes.name,
+          hasVeracode,
+          result,
+          report: hasVeracode ? component.attributes.veracode_results_url : 'N/A',
+          date: hasVeracode
+            ? dayjs(component.attributes.veracode_last_completed_scan_date).format('YYYY-MM-DD HH:mm')
+            : 'N/A',
+          codeScore: hasVeracode ? component.attributes.veracode_results_summary['static-analysis'].score : 0,
+          severityLevels,
+        }
+      })
 
     return res.send(rows)
   })
@@ -145,79 +184,22 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   return router
 }
 
-const filterComponents = (
-  components: ComponentListResponseDataItem[],
-  filters: {
-    passed: boolean
-    failed: boolean
-    exempt: boolean
-    nonExempt: boolean
-  },
-): ComponentListResponseDataItem[] => {
-  if (
-    (filters.passed && filters.failed && filters.exempt && filters.nonExempt) ||
-    (!filters.passed && !filters.failed && filters.exempt && filters.nonExempt)
-  ) {
-    return components
+const getResultFilters = (resultFilters: string): string[] => {
+  if (!resultFilters) {
+    return []
   }
 
-  const onlyPassed = filters.passed && !filters.failed && !filters.exempt && !filters.nonExempt
-  const onlyFailed = !filters.passed && filters.failed && !filters.exempt && !filters.nonExempt
-  const onlyExempt = !filters.passed && !filters.failed && filters.exempt && !filters.nonExempt
-  const onlyNonExempt = !filters.passed && !filters.failed && !filters.exempt && filters.nonExempt
+  const resultFiltersToCheck = resultFilters.split(',')
 
-  const passedComponents = components.filter(
-    component => filters.passed && component.attributes.veracode_policy_rules_status === 'Pass',
-  )
+  return resultFiltersToCheck.filter(resultFilter => ['passed', 'failed', 'unknown'].includes(resultFilter))
+}
 
-  if (onlyPassed) {
-    return passedComponents
+const getExemptionFilters = (exemptionFilters: string): string[] => {
+  if (!exemptionFilters) {
+    return []
   }
 
-  const failedComponents = components.filter(
-    component =>
-      filters.failed &&
-      component.attributes.veracode_policy_rules_status !== 'Pass' &&
-      component.attributes.veracode_policy_rules_status !== null,
-  )
+  const exemptionFiltersToCheck = exemptionFilters.split(',')
 
-  if (onlyFailed) {
-    return failedComponents
-  }
-
-  const exemptComponents = components.filter(component => filters.exempt && component.attributes.veracode_exempt)
-
-  if (onlyExempt) {
-    return exemptComponents
-  }
-
-  const nonExemptComponents = components.filter(component => filters.nonExempt && !component.attributes.veracode_exempt)
-
-  if (onlyNonExempt) {
-    return nonExemptComponents
-  }
-
-  const combined = passedComponents.concat(failedComponents).concat(exemptComponents).concat(nonExemptComponents)
-  const unique = [
-    ...new Set(passedComponents.concat(failedComponents).concat(exemptComponents).concat(nonExemptComponents)),
-  ] as ComponentListResponseDataItem[]
-
-  const intersectionIds: number[] = []
-  combined
-    .sort((a, b) => a.id - b.id)
-    .reduce((uniqueIds, component) => {
-      const dupe = uniqueIds.includes(component.id)
-
-      if (dupe && !intersectionIds.includes(component.id)) {
-        intersectionIds.push(component.id)
-
-        return uniqueIds
-      }
-
-      uniqueIds.push(component.id)
-
-      return uniqueIds
-    }, [])
-
-  return unique.filter(component => intersectionIds.includes(component.id))
+  return exemptionFiltersToCheck.filter(exemptionFilter => ['true', 'false'].includes(exemptionFilter))
 }

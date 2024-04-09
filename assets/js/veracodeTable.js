@@ -16,7 +16,7 @@ jQuery(function () {
     order: [[6, 'desc']],
     sortable: true,
     ajax: {
-      url: `${rootDataUrl}?filters=failed`,
+      url: `${rootDataUrl}?results=failed`,
       dataSrc: '',
       error: function (response) {
         alert('An error occurred when loading components.') // eslint-disable-line no-undef
@@ -41,6 +41,12 @@ jQuery(function () {
           }
 
           $(td).html(data).addClass(className)
+        },
+      },
+      {
+        data: 'date',
+        createdCell: function (td, cellData, rowData) {
+          $(td).html(`${rowData.date}`).addClass('td-nowrap')
         },
       },
       {
@@ -91,13 +97,18 @@ jQuery(function () {
 
   $('#updateVeracodeFilters').on('click', async e => {
     e.preventDefault(e)
-    const selectedFilters = []
+    const selectedResultFilters = []
+    const selectedExemptionFilters = []
 
-    $('input:checkbox[name=filters]:checked').each(function () {
-      selectedFilters.push($(this).val())
+    $('input:checkbox[name=results]:checked').each(function () {
+      selectedResultFilters.push($(this).val())
     })
 
-    const newDataUrl = `${rootDataUrl}?filters=${selectedFilters.join(',')}`
+    $('input:checkbox[name=exemption]:checked').each(function () {
+      selectedExemptionFilters.push($(this).val())
+    })
+
+    const newDataUrl = `${rootDataUrl}?results=${selectedResultFilters.join(',')}&exemption=${selectedExemptionFilters.join(',')}`
 
     veracodeTable.ajax.url(newDataUrl).load()
   })
