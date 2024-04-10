@@ -1,4 +1,6 @@
 {% extends "../partials/layout.njk" %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = applicationName + " - Components" %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -6,12 +8,59 @@
 {% block content %}
 
   <h1>Veracode Scan Results</h1>
+  <form>
+    <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
+		<div class="monitor-selectors govuk-button-group">
+			{{ govukCheckboxes({
+				name: "results",
+				items: [
+					{
+						value: "passed",
+						text: "Passed",
+						checked: false
+					},
+					{
+						value: "failed",
+						text: "Failed",
+						checked: true
+					},
+					{
+						value: "unknown",
+						text: "Unknown",
+						checked: false
+					}
+				]
+			}) }}
+			{{ govukCheckboxes({
+				name: "exemption",
+				items: [
+					{
+						value: "true",
+						text: "Exempt",
+						checked: false
+					},
+					{
+						value: "false",
+						text: "Non Exempt",
+						checked: false
+					}
+				]
+			}) }}
+			{{ govukButton({
+				id: "updateVeracodeFilters",
+				name: "updateVeracodeFilters",
+				text: "Update",
+				element: "button"
+			}) }}
+		</div>
+	</form>
 
   <table id="veracodeTable" class="stripe">
   	<thead>
 	  <tr>
 		<th>Name</th>
 		<th>Result</th>
+		<th>Date</th>
 		<th>Very High</th>
 		<th>High</th>
 		<th>Medium</th>

@@ -4,7 +4,9 @@ function cleanColumnOutput(data, type, row) {
 }
 
 jQuery(function () {
-  $('#veracodeTable').DataTable({
+  const rootDataUrl = '/components/veracode/data'
+
+  const veracodeTable = new DataTable('#veracodeTable', {
     lengthMenu: [
       [10, 25, 50, 75, 100, -1],
       [10, 25, 50, 75, 100, 'All'],
@@ -14,7 +16,7 @@ jQuery(function () {
     order: [[6, 'desc']],
     sortable: true,
     ajax: {
-      url: '/components/veracode/data',
+      url: `${rootDataUrl}?results=failed`,
       dataSrc: '',
       error: function (response) {
         alert('An error occurred when loading components.') // eslint-disable-line no-undef
@@ -39,6 +41,12 @@ jQuery(function () {
           }
 
           $(td).html(data).addClass(className)
+        },
+      },
+      {
+        data: 'date',
+        createdCell: function (td, cellData, rowData) {
+          $(td).html(`${rowData.date}`).addClass('td-nowrap')
         },
       },
       {
@@ -85,5 +93,23 @@ jQuery(function () {
         },
       },
     ],
+  })
+
+  $('#updateVeracodeFilters').on('click', async e => {
+    e.preventDefault(e)
+    const selectedResultFilters = []
+    const selectedExemptionFilters = []
+
+    $('input:checkbox[name=results]:checked').each(function () {
+      selectedResultFilters.push($(this).val())
+    })
+
+    $('input:checkbox[name=exemption]:checked').each(function () {
+      selectedExemptionFilters.push($(this).val())
+    })
+
+    const newDataUrl = `${rootDataUrl}?results=${selectedResultFilters.join(',')}&exemption=${selectedExemptionFilters.join(',')}`
+
+    veracodeTable.ajax.url(newDataUrl).load()
   })
 })
