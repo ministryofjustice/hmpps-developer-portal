@@ -14,6 +14,7 @@ import {
   isValidDropDown,
   formatActiveAgencies,
   relativeTimeFromNow,
+  veracodeFilters,
 } from './utils'
 
 describe('Utils', () => {
@@ -204,6 +205,40 @@ describe('relativeTimeFromNow', () => {
     '%s is passed to relativeTimeFromNow(), value "%s" should return "%s"',
     (_: string, input: Date, expected: string) => {
       expect(relativeTimeFromNow(input)).toBe(expected)
+    },
+  )
+})
+
+describe('veracodeFilters', () => {
+  it.each([
+    [true, true, true, null, true],
+    [true, true, true, 'Pass', true],
+    [true, true, true, 'Did Not Pass', true],
+    [false, false, false, null, true],
+    [false, false, false, 'Pass', true],
+    [false, false, false, 'Did Not Pass', true],
+    [true, false, false, 'Pass', true],
+    [true, false, false, 'Did Not Pass', false],
+    [true, false, false, null, false],
+    [true, true, false, 'Pass', true],
+    [true, true, false, 'Did Not Pass', true],
+    [true, true, false, null, false],
+    [true, false, true, 'Pass', true],
+    [true, false, true, null, true],
+    [true, false, true, 'Did Not Pass', false],
+    [false, true, false, 'Did Not Pass', true],
+    [false, true, false, 'Pass', false],
+    [false, true, false, null, false],
+    [false, false, true, null, true],
+    [false, false, true, 'Pass', false],
+    [false, false, true, 'Did Not Pass', false],
+    [false, true, true, 'Did Not Pass', true],
+    [false, true, true, 'Pass', false],
+    [false, true, true, null, true],
+  ])(
+    'Passed is %s, failed is %s, unknown is %s and status is "%s" it should return %s',
+    (passed: boolean, failed: boolean, unknown: boolean, status: 'string', expected: boolean) => {
+      expect(veracodeFilters(passed, failed, unknown, status)).toBe(expected)
     },
   )
 })

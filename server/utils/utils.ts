@@ -121,3 +121,23 @@ export const formatActiveAgencies = (activeAgencies: Array<string>) => {
 export const relativeTimeFromNow = (date: Date): string => {
   return dayjs.default().to(dayjs.default(date))
 }
+
+export const veracodeFilters = (passed: boolean, failed: boolean, unknown: boolean, status: string) => {
+  if ((passed && failed && unknown) || (!passed && !failed && !unknown)) {
+    return true
+  }
+
+  if (passed && status === 'Pass') {
+    return true
+  }
+
+  if (failed && status === 'Did Not Pass') {
+    return true
+  }
+
+  if (unknown && status === null) {
+    return true
+  }
+
+  return false
+}
