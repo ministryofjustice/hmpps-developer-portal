@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { formatActiveAgencies, getComponentName, getEnvironmentName } from '../utils/utils'
+import { formatActiveAgencies, getComponentName, getEnvironmentName, veracodeFilters } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -28,44 +28,12 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const resultFilters = getResultFilters(req.query.results as string)
     const exemptionFilters = getExemptionFilters(req.query.exemption as string)
     const allComponents = await serviceCatalogueService.getComponents(exemptionFilters)
+    const passed = resultFilters.includes('passed')
+    const failed = resultFilters.includes('failed')
+    const unknown = resultFilters.includes('unknown')
 
     const rows = allComponents
-      .filter(component => {
-        const passed = resultFilters.includes('passed')
-        const failed = resultFilters.includes('failed')
-        const unknown = resultFilters.includes('unknown')
-        const status = component.attributes.veracode_policy_rules_status
-
-        if ((passed && failed && unknown) || (!passed && !failed && !unknown)) {
-          return true
-        }
-
-        if (passed && !failed && !unknown && status === 'Pass') {
-          return true
-        }
-
-        if (passed && failed && !unknown && status !== null) {
-          return true
-        }
-
-        if (passed && !failed && unknown && (status === 'Pass' || status === null)) {
-          return true
-        }
-
-        if (!passed && failed && !unknown && status === 'Did Not Pass' && status !== null) {
-          return true
-        }
-
-        if (!passed && !failed && unknown && status === null) {
-          return true
-        }
-
-        if (!passed && failed && unknown && (status === 'Did Not Pass' || status === null)) {
-          return true
-        }
-
-        return false
-      })
+      .filter(component => veracodeFilters(passed, failed, unknown, component.attributes.veracode_policy_rules_status))
       .map(component => {
         const hasVeracode = !!component.attributes.veracode_results_summary
         const severityLevels = {
