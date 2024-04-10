@@ -31,9 +31,9 @@ export default class ServiceCatalogueService {
     return products
   }
 
-  async getComponents(): Promise<ComponentListResponseDataItem[]> {
+  async getComponents(exemptionFilters: string[] = []): Promise<ComponentListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const componentData = await strapiApiClient.getComponents()
+    const componentData = await strapiApiClient.getComponents(exemptionFilters)
 
     const components = componentData.data.sort(sortData)
 

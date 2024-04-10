@@ -1,4 +1,5 @@
 import { type RequestHandler, Router } from 'express'
+import dayjs from 'dayjs'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
@@ -24,10 +25,47 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   })
 
   get('/veracode/data', async (req, res) => {
-    const components = await serviceCatalogueService.getComponents()
+    const resultFilters = getResultFilters(req.query.results as string)
+    const exemptionFilters = getExemptionFilters(req.query.exemption as string)
+    const allComponents = await serviceCatalogueService.getComponents(exemptionFilters)
 
-    const rows = components
-      .filter(component => !component.attributes.veracode_exempt)
+    const rows = allComponents
+      .filter(component => {
+        const passed = resultFilters.includes('passed')
+        const failed = resultFilters.includes('failed')
+        const unknown = resultFilters.includes('unknown')
+        const status = component.attributes.veracode_policy_rules_status
+
+        if ((passed && failed && unknown) || (!passed && !failed && !unknown)) {
+          return true
+        }
+
+        if (passed && !failed && !unknown && status === 'Pass') {
+          return true
+        }
+
+        if (passed && failed && !unknown && status !== null) {
+          return true
+        }
+
+        if (passed && !failed && unknown && (status === 'Pass' || status === null)) {
+          return true
+        }
+
+        if (!passed && failed && !unknown && status === 'Did Not Pass' && status !== null) {
+          return true
+        }
+
+        if (!passed && !failed && unknown && status === null) {
+          return true
+        }
+
+        if (!passed && failed && unknown && (status === 'Did Not Pass' || status === null)) {
+          return true
+        }
+
+        return false
+      })
       .map(component => {
         const hasVeracode = !!component.attributes.veracode_results_summary
         const severityLevels = {
@@ -43,11 +81,22 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
           })
         })
 
+        let result = 'Failed'
+
+        if (!hasVeracode) {
+          result = 'N/A'
+        } else if (component.attributes.veracode_policy_rules_status === 'Pass') {
+          result = 'Passed'
+        }
+
         return {
           name: component.attributes.name,
           hasVeracode,
-          result: component.attributes.veracode_policy_rules_status === 'Pass' ? 'Passed' : 'Failed',
+          result,
           report: hasVeracode ? component.attributes.veracode_results_url : 'N/A',
+          date: hasVeracode
+            ? dayjs(component.attributes.veracode_last_completed_scan_date).format('YYYY-MM-DD HH:mm')
+            : 'N/A',
           codeScore: hasVeracode ? component.attributes.veracode_results_summary['static-analysis'].score : 0,
           severityLevels,
         }
@@ -133,4 +182,24 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   })
 
   return router
+}
+
+const getResultFilters = (resultFilters: string): string[] => {
+  if (!resultFilters) {
+    return []
+  }
+
+  const resultFiltersToCheck = resultFilters.split(',')
+
+  return resultFiltersToCheck.filter(resultFilter => ['passed', 'failed', 'unknown'].includes(resultFilter))
+}
+
+const getExemptionFilters = (exemptionFilters: string): string[] => {
+  if (!exemptionFilters) {
+    return []
+  }
+
+  const exemptionFiltersToCheck = exemptionFilters.split(',')
+
+  return exemptionFiltersToCheck.filter(exemptionFilter => ['true', 'false'].includes(exemptionFilter))
 }
