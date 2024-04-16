@@ -66,6 +66,16 @@ function updateEnvironmentList() {
   if (!$('#status-down').is(':checked')) {
     $('.statusTileDown').hide()
   }
+  if (!$('#status-unknown').is(':checked')) {
+    console.log('checked')
+    $('#statusRows tr').each(function () {
+      if (!$(this).hasClass('statusTileDown') && !$(this).hasClass('statusTileUp')) {
+        console.log('hiding')
+        console.log($(this))
+        $(this).hide()
+      }
+    })
+  }
 
   $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
     const environment = $(e).val()
