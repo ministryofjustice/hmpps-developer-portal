@@ -23,8 +23,8 @@ function drawHealthChart(stream) {
   dataTable.addColumn({ type: 'date', id: 'Start' })
   dataTable.addColumn({ type: 'date', id: 'End' })
 
-  // Start from last 25
-  const offset = 25
+  // Start from last 25 (unless there is less than that)
+  const offset = stream.length <= 25 ? 0 : 25
 
   for (let i = stream.length - offset; i < stream.length; i++) {
     const eventEpochTime = parseInt(stream[i].id.split('-')[0])
