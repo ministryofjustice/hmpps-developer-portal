@@ -76,6 +76,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   get('/:componentName', async (req, res) => {
     const componentName = getComponentName(req)
     const component = await serviceCatalogueService.getComponent({ componentName })
+    const dependencies = await redisService.getDependencies(componentName)
     const { environments } = component
 
     const displayComponent = {
@@ -95,6 +96,9 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       language: component.language,
       product: component.product?.data,
       versions: component.versions,
+      dependencyTypes: dependencies.categories,
+      dependents: dependencies.dependents,
+      dependencies: dependencies.dependencies,
       environments,
     }
 

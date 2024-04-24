@@ -1,12 +1,22 @@
 import { ClientClosedError, commandOptions } from 'redis'
+
 import logger from '../../logger'
 import { RedisClient } from '../data/redisClient'
+import { DependencyInfo } from '../data/dependencyInfoTypes'
 
 export type RedisStreamMessage = Awaited<ReturnType<RedisClient['xRead']>>[number]['messages'][number]
 export type AsyncRedisStreamGenerator = AsyncGenerator<RedisStreamMessage, void, unknown>
 
 export default class RedisService {
   constructor(private readonly redisClient: RedisClient) {}
+
+  async handleError(error: Error, message: string): Promise<void> {
+    if (error instanceof ClientClosedError) {
+      logger.error(`${error.message} ...RECONNECTING`)
+      await this.redisClient.connect
+    }
+    logger.error(`${message}: ${error.message}`, error)
+  }
 
   async readStream(
     streamDetails: {
@@ -22,13 +32,8 @@ export default class RedisService {
 
       return response ? JSON.stringify(response) : '[]'
     } catch (error) {
-      if (error instanceof ClientClosedError) {
-        logger.error(`${error.message} ...RECONNECTING`)
-        await this.redisClient.connect
-        return null
-      }
-      logger.error(`Failed to xRead from Redis Stream: ${error.message}`, error)
-      return null
+      await this.handleError(error, 'Failed to xRead from Redis Stream')
+      throw error
     }
   }
 
@@ -40,13 +45,42 @@ export default class RedisService {
       )
       return Object.fromEntries(entries)
     } catch (error) {
-      if (error instanceof ClientClosedError) {
-        logger.error(`${error.message} ...RECONNECTING`)
-        await this.redisClient.connect
-        return null
+      await this.handleError(error, 'Failed to read latest')
+      throw error
+    }
+  }
+
+  async getDependencies(
+    componentName: string,
+  ): Promise<{ categories: string[]; dependencies: string[]; dependents: Record<string, boolean> }> {
+    try {
+      const result = (await this.redisClient.json.get(
+        commandOptions({ isolated: true }),
+        'dependency:info',
+      )) as DependencyInfo
+
+      const dependencyInfo = Object.values(result).flatMap(env => [env.componentDependencyInfo[componentName]] || [])
+
+      const categories = dependencyInfo.flatMap(component => component.dependencies.categories)
+      const dependencies = dependencyInfo.flatMap(component => component.dependencies.components)
+      const dependents = dependencyInfo
+        .flatMap(component => component.dependents)
+        .reduce(
+          (acc, component) => {
+            acc[component.name] = acc[component.name] || component.isKnownComponent
+            return acc
+          },
+          {} as Record<string, boolean>,
+        )
+
+      return {
+        categories: Array.from(new Set(categories)),
+        dependencies: Array.from(new Set(dependencies)),
+        dependents,
       }
-      logger.error(`Failed to json.get: ${error.message}`, error)
-      return null
+    } catch (error) {
+      await this.handleError(error, 'Failed to get dependency info')
+      throw error
     }
   }
 }
