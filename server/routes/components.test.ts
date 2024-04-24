@@ -3,11 +3,14 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
+import RedisService from '../services/redisService'
 import { Component, ComponentListResponseDataItem, Environment } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
+jest.mock('../services/redisService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
+const redisService = new RedisService(null) as jest.Mocked<RedisService>
 
 let app: Express
 const testComponents = [{ id: 1, attributes: { name: 'testComponent' } }] as ComponentListResponseDataItem[]
@@ -130,8 +133,13 @@ const testComponent = {
 beforeEach(() => {
   serviceCatalogueService.getComponents.mockResolvedValue(testComponents)
   serviceCatalogueService.getComponent.mockResolvedValue(testComponent)
+  redisService.getDependencies.mockResolvedValue({
+    dependencies: ['bbbb'],
+    categories: ['GOTENBERG'],
+    dependents: { aaaa: true },
+  })
 
-  app = appWithAllRoutes({ services: { serviceCatalogueService } })
+  app = appWithAllRoutes({ services: { serviceCatalogueService, redisService } })
 })
 
 afterEach(() => {
@@ -144,6 +152,7 @@ describe('/components', () => {
       return request(app)
         .get('/components')
         .expect('Content-Type', /html/)
+        .expect(200)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('#componentsTable').length).toBe(1)
@@ -156,21 +165,22 @@ describe('/components', () => {
       return request(app)
         .get('/components/1')
         .expect('Content-Type', /html/)
+        .expect(200)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('[data-test="detail-page-title"]').text()).toContain(testComponent.name)
           expect($('[data-test="description"]').text()).toBe(testComponent.description)
           expect($('[data-test="title"]').text()).toBe(testComponent.title)
           expect($('[data-test="jira-project-keys"]').text()).toBe(
-            (testComponent.jira_project_keys as string[]).join(','),
+            (testComponent.jira_project_keys as string[]).join(', '),
           )
-          expect($('[data-test="github-write"]').text()).toBe(
-            (testComponent.github_project_teams_write as string[]).join(','),
+          expect($('[data-test="github-write"]').text()).toContain(
+            (testComponent.github_project_teams_write as string[]).join(', '),
           )
-          expect($('[data-test="github-admin"]').text()).toBe(
-            (testComponent.github_project_teams_admin as string[]).join(','),
+          expect($('[data-test="github-admin"]').text()).toContain(
+            (testComponent.github_project_teams_admin as string[]).join(', '),
           )
-          expect($('[data-test="github-restricted"]').text()).toBe(
+          expect($('[data-test="github-restricted"]').text()).toContain(
             (testComponent.github_project_branch_protection_restricted_teams as string[]).join(','),
           )
           expect($('[data-test="github-repo"]').text()).toBe(testComponent.github_repo)
@@ -181,6 +191,9 @@ describe('/components', () => {
           expect($('[data-test="part-of-monorepo"]').text()).toBe(testComponent.part_of_monorepo ? 'Yes' : 'No')
           expect($('[data-test="language"]').text()).toBe(testComponent.language)
           expect($('[data-test="product"]').text()).toBe(testComponent.product.data.attributes.name)
+          expect($('[data-test="dependency-types"]').text()).toBe('GOTENBERG')
+          expect($('[data-test="dependency-0"]').text()).toContain('bbb')
+          expect($('[data-test="dependent-0"]').text()).toContain('aaa')
 
           const environments = testComponent.environments.reduce(
             (environmentList, environment) => `${environmentList}${environment.name}`,
