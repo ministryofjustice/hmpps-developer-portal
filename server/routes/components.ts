@@ -113,12 +113,29 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const environments = component.environments?.filter(environment => environment.name === environmentName)
     const activeAgencies =
       environments.length === 0 ? '' : formatActiveAgencies(environments[0].active_agencies as Array<string>)
+    const allowList = new Map([['groups', []]])
+    const ipAllowListFiles = Object.keys(environments[0].ip_allow_list)
 
+    ipAllowListFiles.forEach(fileName => {
+      const genericService = environments[0].ip_allow_list[fileName]['generic-service']
+
+      Object.keys(genericService).forEach(ipName => {
+        if (ipName !== 'groups') {
+          allowList.set(ipName, genericService[ipName])
+        }
+        if (ipName === 'groups') {
+          allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...genericService[ipName]])]))
+        }
+      })
+    })
+
+    console.log(allowList)
     const displayComponent = {
       name: componentName,
       api: component.api,
       environment: environments[0],
       activeAgencies,
+      allowList,
     }
 
     return res.render('pages/environment', { component: displayComponent })

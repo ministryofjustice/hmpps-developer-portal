@@ -62,6 +62,31 @@
       <td id="{{ component.environment.name }}_status"></td>
     </tr>
     <tr>
+      <th>Allowlist Enabled</th>
+      <td>{{ component.environment.ip_allow_list_enabled }}</td>
+    </tr>
+    <tr>
+      <th>Allowlist Details</th>
+      <td>
+        <table class="govuk-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header">Name</th>
+              <th scope="col" class="govuk-table__header">Range/Groups</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for name, range in component.allowList %}
+            <tr class="govuk-table__row">
+              <td scope="row" class="govuk-table__cell">{{ name }}</td>
+              <td class="govuk-table__cell">{{ range }}</td>
+            </tr>
+            {% endfor %} 
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
       <th>Health output</th>
       <td><pre id="{{ component.environment.name }}_health_raw">None available</pre></td>
     </tr>
