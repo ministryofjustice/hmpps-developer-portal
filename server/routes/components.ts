@@ -125,8 +125,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
         Object.keys(genericService).forEach(ipName => {
           if (ipName !== 'groups') {
             allowList.set(ipName, genericService[ipName])
-          }
-          if (ipName === 'groups') {
+          } else {
             allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...genericService[ipName]])]))
           }
         })
