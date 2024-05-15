@@ -129,7 +129,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       })
     })
 
-    console.log(allowList)
     const displayComponent = {
       name: componentName,
       api: component.api,
