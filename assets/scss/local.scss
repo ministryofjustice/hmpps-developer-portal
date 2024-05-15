@@ -92,6 +92,10 @@
     text-align: right;
     vertical-align: top;
     background-color: govuk-colour('light-grey');
+
+    &.govuk-table__header {
+      text-align: left;
+    }
   }
 
   tr td {
