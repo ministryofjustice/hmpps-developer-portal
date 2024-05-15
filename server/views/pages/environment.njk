@@ -65,6 +65,7 @@
       <th>Allowlist Enabled</th>
       <td>{{ component.environment.ip_allow_list_enabled }}</td>
     </tr>
+    {% if component.environment.ip_allow_list_enabled %}
     <tr>
       <th>Allowlist Details</th>
       <td>
@@ -86,6 +87,7 @@
         </table>
       </td>
     </tr>
+    {% endif %}
     <tr>
       <th>Health output</th>
       <td><pre id="{{ component.environment.name }}_health_raw">None available</pre></td>
