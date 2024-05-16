@@ -11,6 +11,8 @@ type MonitorEnvironment = {
   environmentUrl: string
   environmentHealth: string
   environmentType: string
+  isPrisons: boolean
+  isProbation: boolean
 }
 
 export default function routes({ serviceCatalogueService, redisService, dataFilterService }: Services): Router {
@@ -54,6 +56,9 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
       customComponentView.components.data.forEach(component => {
         const typedEnvironments = component.attributes.environments as Environment[]
+        const productId = component.attributes.product.data?.attributes?.p_id
+        const isPrisons = `${productId}`.startsWith('DPS')
+        const isProbation = `${productId}`.startsWith('HMPPS')
 
         typedEnvironments.forEach(environment => {
           if (environment.monitor) {
@@ -63,6 +68,8 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
               environmentType: environment.type as string,
+              isPrisons,
+              isProbation,
             })
           }
         })
@@ -75,6 +82,9 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
       product.components.data.forEach(component => {
         const typedEnvironments = component.attributes.environments as Environment[]
+        const productId = product.p_id
+        const isPrisons = `${productId}`.startsWith('DPS')
+        const isProbation = `${productId}`.startsWith('HMPPS')
 
         typedEnvironments.forEach(environment => {
           if (environment.monitor) {
@@ -84,6 +94,8 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
               environmentType: environment.type as string,
+              isPrisons,
+              isProbation,
             })
           }
         })
@@ -94,6 +106,9 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       team.products.data.forEach(product => {
         product.attributes.components.data.forEach(component => {
           const typedEnvironments = component.attributes.environments as Environment[]
+          const productId = component.attributes.product.data?.attributes?.p_id
+          const isPrisons = `${productId}`.startsWith('DPS')
+          const isProbation = `${productId}`.startsWith('HMPPS')
 
           typedEnvironments.forEach(environment => {
             if (environment.monitor) {
@@ -103,6 +118,8 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
                 environmentUrl: environment.url as string,
                 environmentHealth: environment.health_path as string,
                 environmentType: environment.type as string,
+                isPrisons,
+                isProbation,
               })
             }
           })
@@ -114,6 +131,9 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       serviceArea.products.data.forEach(product => {
         product.attributes.components.data.forEach(component => {
           const typedEnvironments = component.attributes.environments as Environment[]
+          const productId = component.attributes.product.data?.attributes?.p_id
+          const isPrisons = `${productId}`.startsWith('DPS')
+          const isProbation = `${productId}`.startsWith('HMPPS')
 
           typedEnvironments.forEach(environment => {
             if (environment.monitor) {
@@ -123,6 +143,8 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
                 environmentUrl: environment.url as string,
                 environmentHealth: environment.health_path as string,
                 environmentType: environment.type as string,
+                isPrisons,
+                isProbation,
               })
             }
           })
@@ -133,6 +155,9 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
       components.forEach(component => {
         const typedEnvironments = component.attributes.environments as Environment[]
+        const productId = component.attributes.product.data?.attributes?.p_id
+        const isPrisons = `${productId}`.startsWith('DPS')
+        const isProbation = `${productId}`.startsWith('HMPPS')
 
         typedEnvironments.forEach(environment => {
           if (environment.monitor) {
@@ -142,6 +167,8 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
               environmentUrl: environment.url as string,
               environmentHealth: environment.health_path as string,
               environmentType: environment.type as string,
+              isPrisons,
+              isProbation,
             })
           }
         })
