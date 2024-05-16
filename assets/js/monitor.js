@@ -75,21 +75,12 @@ function updateEnvironmentList() {
   }
   if ($('#hmpps-area-probation').is(':checked')) {
     $('#statusRows tr').each(function () {
-      console.log($(this).data('probation'))
-      if ($(this).data('probation')) {
-        $(this).show()
-      } else {
-        $(this).hide()
-      }
+      $(this).data('probation') ? $(this).show() : $(this).hide()
     })
   }
   if ($('#hmpps-area-prisons').is(':checked')) {
     $('#statusRows tr').each(function () {
-      if ($(this).data('prisons')) {
-        $(this).show()
-      } else {
-        $(this).hide()
-      }
+      $(this).data('prisons') ? $(this).show() : $(this).hide()
     })
   }
 
