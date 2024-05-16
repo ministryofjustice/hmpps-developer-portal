@@ -35,7 +35,6 @@ export default class ServiceCatalogueService {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentData = await strapiApiClient.getComponents(exemptionFilters)
     const components = componentData.data.sort(sortData)
-
     return components
   }
 
