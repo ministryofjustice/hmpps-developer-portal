@@ -59,10 +59,12 @@ export default class RedisService {
         'dependency:info',
       )) as DependencyInfo
 
-      const dependencyInfo = Object.values(result).flatMap(env => [env.componentDependencyInfo[componentName]] || [])
+      const dependencyInfo = Object.values(result).flatMap(env =>
+        env.componentDependencyInfo[componentName] ? [env.componentDependencyInfo[componentName]] : [],
+      )
 
-      const categories = dependencyInfo.flatMap(component => component.dependencies.categories)
-      const dependencies = dependencyInfo.flatMap(component => component.dependencies.components)
+      const categories = dependencyInfo.flatMap(component => component.dependencies?.categories)
+      const dependencies = dependencyInfo.flatMap(component => component.dependencies?.components)
       const dependents = dependencyInfo
         .flatMap(component => component.dependents)
         .reduce(
