@@ -120,9 +120,10 @@ export default class ServiceCatalogueService {
 
   async getComponent({ componentName }: { componentName: string }): Promise<Component> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const componentData = await strapiApiClient.getComponent({ componentName })
+    const componentItem = await strapiApiClient.getComponent({ componentName })
+    const componentData = componentItem.data as ComponentListResponseDataItem[]
 
-    const component = componentData.data[0].attributes
+    const component = componentData.length > 0 ? componentItem.data[0]?.attributes : {}
 
     return component
   }
