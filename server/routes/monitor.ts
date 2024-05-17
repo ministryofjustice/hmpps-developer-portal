@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { ComponentListResponseDataItem, Environment } from '../data/strapiApiTypes'
+import { Environment } from '../data/strapiApiTypes'
 import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow } from '../utils/utils'
 
 type MonitorEnvironment = {
