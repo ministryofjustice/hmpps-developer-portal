@@ -12,15 +12,16 @@ let streamData = []
 let streamVersionData = []
 
 function drawHealthChart(stream) {
-  const traceUpX = []
-  const traceUpY = []
-  const traceUpText = []
-  const traceDownX = []
-  const traceDownY = []
-  const traceDownText = []
-  const traceUnknownX = []
-  const traceUnknownY = []
-  const traceUnknownText = []
+  // Start with null's in the the arrays so all traces appear in the legend.
+  const traceUpX = [null]
+  const traceUpY = [null]
+  const traceUpText = [null]
+  const traceDownX = [null]
+  const traceDownY = [null]
+  const traceDownText = [null]
+  const traceUnknownX = [null]
+  const traceUnknownY = [null]
+  const traceUnknownText = [null]
   var rangeStart
   for (let i = 0; i < stream.length; i++) {
     const eventEpochTime = parseInt(stream[i].id.split('-')[0])
@@ -94,9 +95,9 @@ function drawHealthChart(stream) {
     marker: {
       color: '#000000',
       size: 15,
-      symbol: 'square',
+      symbol: 'star-square',
     },
-    name: 'Unknown',
+    name: 'Connection Error',
     x: traceUnknownX,
     y: traceUnknownY,
     text: traceUnknownText,
@@ -106,13 +107,17 @@ function drawHealthChart(stream) {
 
   var statusData = [traceUp, traceDown, traceUnknown]
 
-  let dateNow = new Date()
-  let rangeSelectorStart = dateNow.setHours(dateNow.getHours() - 1)
+  const dateNow = new Date(Date.now())
+  const dateNowMinus1Hour = new Date(Date.now())
+  const rangeSelectorStart = new Date(dateNowMinus1Hour.setHours(dateNowMinus1Hour.getHours() - 1))
 
   var layout = {
-    autosize: true,
+    //autosize: true,
     xaxis: {
-      range: [rangeSelectorStart, Date.now()],
+      maxallowed: dateNow,
+      minallowed: rangeStart,
+      range: [rangeSelectorStart, dateNow],
+      automargin: false,
       rangeselector: {
         buttons: [
           {
@@ -145,10 +150,10 @@ function drawHealthChart(stream) {
             step: 'day',
             stepmode: 'backward',
           },
-          { step: 'all' },
+          { step: 'all' }, // this doesn't work, possible bug.
         ],
       },
-      rangeslider: { range: [rangeStart, Date.now()] },
+      rangeslider: { range: [rangeStart, dateNow] },
       type: 'date',
     },
     yaxis: {
