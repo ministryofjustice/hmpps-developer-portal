@@ -12,35 +12,22 @@ let streamData = []
 let streamVersionData = []
 
 function drawHealthChart(stream) {
-  const container = document.getElementById('healthTimeline')
-  const chart = new google.visualization.Timeline(container)
-  const dataTable = new google.visualization.DataTable()
-
-  dataTable.addColumn({ type: 'string', id: 'Status' })
-  dataTable.addColumn({ type: 'string', id: 'DummyLabel' })
-  dataTable.addColumn({ type: 'string', role: 'tooltip' })
-  dataTable.addColumn({ type: 'string', id: 'style', role: 'style' })
-  dataTable.addColumn({ type: 'date', id: 'Start' })
-  dataTable.addColumn({ type: 'date', id: 'End' })
-
-  // Start from last 25 (unless there is less than that)
-  const offset = stream.length <= 25 ? 0 : 25
-
-  for (let i = stream.length - offset; i < stream.length; i++) {
+  const traceUpX = []
+  const traceUpY = []
+  const traceUpText = []
+  const traceDownX = []
+  const traceDownY = []
+  const traceDownText = []
+  const traceUnknownX = []
+  const traceUnknownY = []
+  const traceUnknownText = []
+  var rangeStart
+  for (let i = 0; i < stream.length; i++) {
     const eventEpochTime = parseInt(stream[i].id.split('-')[0])
     const eventTimeStart = new Date(eventEpochTime)
-    let eventTimeEnd = new Date(eventEpochTime + 120000) // make events 2 min long by default
-
-    // This makes the time line look better if each block butts up to the next,
-    // however we need to see the big gaps, e.g. if there are missing data.
-    if (stream[i + 1]) {
-      const nextEventEpochTime = parseInt(stream[i + 1].id.split('-')[0])
-      // Only if it's less than 5 mins apart, so show big gaps, e.g. when no data collected.
-      if (nextEventEpochTime - eventEpochTime < 300000) {
-        eventTimeEnd = new Date(nextEventEpochTime)
-      }
+    if (i == 0) {
+      rangeStart = eventTimeStart
     }
-
     let healthOutput = null
     if (stream[i].message.hasOwnProperty('error')) {
       healthOutput = stream[i].message.error
@@ -53,39 +40,134 @@ function drawHealthChart(stream) {
       }
     }
 
-    let rowColour = '#d4351c'
-
-    if (stream[i].message.http_s === '200') {
-      rowColour = '#00703c'
-    } else if (stream[i].message.http_s === '0') {
-      rowColour = '#000000'
-    }
-
-    dataTable.addRows([['Status', stream[i].message.http_s, healthOutput, rowColour, eventTimeStart, eventTimeEnd]])
-  }
-
-  const options = {
-    height: 100,
-    avoidOverlappingGridLines: false,
-    tooltip: {
-      trigger: 'none',
-    },
-    timeline: {
-      groupByRowLabel: true,
-      colorByRowLabel: false,
-    },
-  }
-
-  function selectHandler() {
-    var selectedItem = chart.getSelection()[0]
-    if (selectedItem) {
-      var value = dataTable.getValue(selectedItem.row, 2)
-      $(`#healthOutputSelected`).text(value)
+    const eventStatus = parseInt(stream[i].message.http_s)
+    if (eventStatus == 200) {
+      traceUpX.push(eventTimeStart)
+      traceUpY.push(eventStatus)
+      traceUpText.push(healthOutput)
+    } else if (eventStatus == 0) {
+      traceUnknownX.push(eventTimeStart)
+      traceUnknownY.push(eventStatus)
+      traceUnknownText.push(healthOutput)
+    } else {
+      traceDownX.push(eventTimeStart)
+      traceDownY.push(eventStatus)
+      traceDownText.push(healthOutput)
     }
   }
-  google.visualization.events.addListener(chart, 'select', selectHandler)
 
-  chart.draw(dataTable, options)
+  var traceUp = {
+    type: 'scatter',
+    mode: 'markers',
+    marker: {
+      color: '#00703c',
+      size: 10,
+      symbol: 'circle',
+    },
+    name: 'Up',
+    x: traceUpX,
+    y: traceUpY,
+    text: traceUpText,
+    hovertemplate: '%{x}' + '<br><b>HTTP</b>: %{y}',
+    connectgaps: false,
+  }
+
+  var traceDown = {
+    type: 'scatter',
+    mode: 'markers',
+    marker: {
+      color: '#d4351c',
+      size: 15,
+      symbol: 'triangle-up',
+    },
+    name: 'Down',
+    x: traceDownX,
+    y: traceDownY,
+    text: traceDownText,
+    hovertemplate: '%{x}' + '<br><b>HTTP</b>: %{y}',
+    connectgaps: false,
+  }
+
+  var traceUnknown = {
+    type: 'scatter',
+    mode: 'markers',
+    marker: {
+      color: '#000000',
+      size: 15,
+      symbol: 'square',
+    },
+    name: 'Unknown',
+    x: traceUnknownX,
+    y: traceUnknownY,
+    text: traceUnknownText,
+    hovertemplate: '%{x}' + '<br><b>HTTP</b>: %{y}',
+    connectgaps: false,
+  }
+
+  var statusData = [traceUp, traceDown, traceUnknown]
+
+  let dateNow = new Date()
+  let rangeSelectorStart = dateNow.setHours(dateNow.getHours() - 1)
+
+  var layout = {
+    autosize: true,
+    xaxis: {
+      range: [rangeSelectorStart, Date.now()],
+      rangeselector: {
+        buttons: [
+          {
+            count: 1,
+            label: '1h',
+            step: 'hour',
+            stepmode: 'backward',
+          },
+          {
+            count: 6,
+            label: '6h',
+            step: 'hour',
+            stepmode: 'backward',
+          },
+          {
+            count: 12,
+            label: '12h',
+            step: 'hour',
+            stepmode: 'backward',
+          },
+          {
+            count: 1,
+            label: '1d',
+            step: 'day',
+            stepmode: 'backward',
+          },
+          {
+            count: 2,
+            label: '2d',
+            step: 'day',
+            stepmode: 'backward',
+          },
+          { step: 'all' },
+        ],
+      },
+      rangeslider: { range: [rangeStart, Date.now()] },
+      type: 'date',
+    },
+    yaxis: {
+      type: 'category',
+      title: 'http status',
+    },
+  }
+
+  Plotly.newPlot('healthChart', statusData, layout, { displayModeBar: false })
+  var myPlot = document.getElementById('healthChart')
+  myPlot.on('plotly_click', function (data) {
+    var healthText
+    for (var i = 0; i < data.points.length; i++) {
+      healthText = data.points[i].text
+    }
+    if (healthText) {
+      $(`#healthOutputSelected`).text(healthText)
+    }
+  })
 }
 
 function drawVersionChart(stream) {
@@ -241,6 +323,8 @@ const watch = async () => {
 }
 
 jQuery(function () {
+  google.charts.load('current', { packages: ['corechart'] })
   google.charts.load('current', { packages: ['timeline'] })
+  google.charts.load('current', { packages: ['annotationchart'] })
   google.charts.setOnLoadCallback(watch)
 })

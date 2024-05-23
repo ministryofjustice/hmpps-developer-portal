@@ -128,7 +128,8 @@
 </table>
 
 <h2>Health status history</h2>
-<div id="healthTimeline"></div>
+<div id="healthAnnotationChart"></div>
+<div id="healthChart"></div>
 <pre id="healthOutputSelected">Click timeline above to display health output.</pre>
 
 <h2>Version history</h2>
@@ -140,6 +141,7 @@
   <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" crossorigin="anonymous" charset="utf-8"></script>
   <script nonce="{{ cspNonce }}">
     const environmentName = '{{ component.environment.name }}'
     const componentName = '{{ component.name }}'
