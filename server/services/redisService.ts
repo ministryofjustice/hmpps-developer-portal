@@ -52,7 +52,7 @@ export default class RedisService {
 
   async getDependencies(
     componentName: string,
-  ): Promise<{ categories: string[]; dependencies: string[]; dependents: Record<string, boolean> }> {
+  ): Promise<{ categories: string[]; dependencies: Record<string, boolean>; dependents: Record<string, boolean> }> {
     try {
       const result = (await this.redisClient.json.get(
         commandOptions({ isolated: true }),
@@ -64,9 +64,19 @@ export default class RedisService {
       )
 
       const categories = dependencyInfo.flatMap(component => component.dependencies?.categories)
-      const dependencies = dependencyInfo.flatMap(component => component.dependencies?.components)
+      const dependencies = dependencyInfo
+        .flatMap(component => {
+          const known = component.dependencies?.components ? component.dependencies.components.map(d => [d, true]) : []
+          const unknown = (component.dependencies?.other || [])
+            .filter(d => !d.name.toLowerCase().includes('localhost') && d.name !== 'Http')
+            .map(d => [d.name, false])
+          return known.concat(unknown) as [[name: string, known: boolean]]
+        })
+        .sort(([a], [b]) => a.localeCompare(b))
+
       const dependents = dependencyInfo
         .flatMap(component => component.dependents)
+        .sort((a, b) => a.name.localeCompare(b.name))
         .reduce(
           (acc, component) => {
             acc[component.name] = acc[component.name] || component.isKnownComponent
@@ -77,7 +87,7 @@ export default class RedisService {
 
       return {
         categories: Array.from(new Set(categories)),
-        dependencies: Array.from(new Set(dependencies)),
+        dependencies: Object.fromEntries(dependencies),
         dependents,
       }
     } catch (error) {
