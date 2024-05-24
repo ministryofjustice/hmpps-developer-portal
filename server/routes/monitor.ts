@@ -127,11 +127,23 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   return router
 }
 
-const getEnvironmentData = (component: ComponentListResponseDataItem, productId?: string): MonitorEnvironment[] => {
+const getEnvironmentData = (
+  component: ComponentListResponseDataItem,
+  selectedProductId?: string,
+): MonitorEnvironment[] => {
   const typedEnvironments = component.attributes.environments as Environment[]
-  const componentProductId = productId || component.attributes.product.data?.attributes?.p_id
-  const isPrisons = `${componentProductId}`.startsWith('DPS')
-  const isProbation = `${componentProductId}`.startsWith('HMPPS')
+  let productId
+  console.log(typeof selectedProductId)
+  console.log(selectedProductId)
+
+  if (selectedProductId) {
+    productId = selectedProductId
+  } else {
+    productId = component.attributes.product.data?.attributes?.p_id
+  }
+
+  const isPrisons = `${productId}`.startsWith('DPS')
+  const isProbation = `${productId}`.startsWith('HMPPS')
   const environments: MonitorEnvironment[] = []
 
   typedEnvironments.forEach(environment => {
