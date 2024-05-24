@@ -107,9 +107,9 @@ function drawHealthChart(stream) {
 
   const statusData = [traceUp, traceDown, traceUnknown]
 
-  const dateNow = new Date(Date.now())
-  const dateNowMinus1Hour = new Date(Date.now())
-  const rangeSelectorStart = new Date(dateNowMinus1Hour.setHours(dateNowMinus1Hour.getHours() - 1))
+  const dateNow = new Date()
+  const rangeSelectorStart = new Date()
+  rangeSelectorStart.setHours(rangeSelectorStart.getHours() - 1)
 
   const layout = {
     //autosize: true,
