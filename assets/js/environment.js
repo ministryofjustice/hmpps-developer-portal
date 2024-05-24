@@ -165,10 +165,7 @@ function drawHealthChart(stream) {
   Plotly.newPlot('healthChart', statusData, layout, { displayModeBar: false })
   let myPlot = document.getElementById('healthChart')
   myPlot.on('plotly_click', function (data) {
-    let healthText
-    for (let i = 0; i < data.points.length; i++) {
-      healthText = data.points[i].text
-    }
+    let healthText = data.points.pop().text
     if (healthText) {
       $(`#healthOutputSelected`).text(healthText)
     }
