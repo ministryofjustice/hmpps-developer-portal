@@ -22,26 +22,26 @@ function drawHealthChart(stream) {
   const traceUnknownX = [null]
   const traceUnknownY = [null]
   const traceUnknownText = [null]
-  var rangeStart
-  for (let i = 0; i < stream.length; i++) {
-    const eventEpochTime = parseInt(stream[i].id.split('-')[0])
+  let rangeStart
+  stream.forEach((streamItem, i) => {
+    const eventEpochTime = parseInt(streamItem.id.split('-')[0])
     const eventTimeStart = new Date(eventEpochTime)
     if (i == 0) {
       rangeStart = eventTimeStart
     }
     let healthOutput = null
-    if (stream[i].message.hasOwnProperty('error')) {
-      healthOutput = stream[i].message.error
-    } else if (stream[i].message.hasOwnProperty('json')) {
+    if (streamItem.message.hasOwnProperty('error')) {
+      healthOutput = streamItem.message.error
+    } else if (streamItem.message.hasOwnProperty('json')) {
       try {
-        const messageJson = JSON.parse(stream[i].message.json)
+        const messageJson = JSON.parse(streamItem.message.json)
         healthOutput = JSON.stringify(messageJson, null, 2)
       } catch (err) {
         console.error(err)
       }
     }
 
-    const eventStatus = parseInt(stream[i].message.http_s)
+    const eventStatus = parseInt(streamItem.message.http_s)
     if (eventStatus == 200) {
       traceUpX.push(eventTimeStart)
       traceUpY.push(eventStatus)
@@ -55,9 +55,9 @@ function drawHealthChart(stream) {
       traceDownY.push(eventStatus)
       traceDownText.push(healthOutput)
     }
-  }
+  })
 
-  var traceUp = {
+  const traceUp = {
     type: 'scatter',
     mode: 'markers',
     marker: {
@@ -73,7 +73,7 @@ function drawHealthChart(stream) {
     connectgaps: false,
   }
 
-  var traceDown = {
+  const traceDown = {
     type: 'scatter',
     mode: 'markers',
     marker: {
@@ -89,7 +89,7 @@ function drawHealthChart(stream) {
     connectgaps: false,
   }
 
-  var traceUnknown = {
+  const traceUnknown = {
     type: 'scatter',
     mode: 'markers',
     marker: {
@@ -105,13 +105,13 @@ function drawHealthChart(stream) {
     connectgaps: false,
   }
 
-  var statusData = [traceUp, traceDown, traceUnknown]
+  const statusData = [traceUp, traceDown, traceUnknown]
 
   const dateNow = new Date(Date.now())
   const dateNowMinus1Hour = new Date(Date.now())
   const rangeSelectorStart = new Date(dateNowMinus1Hour.setHours(dateNowMinus1Hour.getHours() - 1))
 
-  var layout = {
+  const layout = {
     //autosize: true,
     xaxis: {
       maxallowed: dateNow,
@@ -163,10 +163,10 @@ function drawHealthChart(stream) {
   }
 
   Plotly.newPlot('healthChart', statusData, layout, { displayModeBar: false })
-  var myPlot = document.getElementById('healthChart')
+  let myPlot = document.getElementById('healthChart')
   myPlot.on('plotly_click', function (data) {
-    var healthText
-    for (var i = 0; i < data.points.length; i++) {
+    let healthText
+    for (let i = 0; i < data.points.length; i++) {
       healthText = data.points[i].text
     }
     if (healthText) {
