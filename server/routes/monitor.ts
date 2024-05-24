@@ -133,8 +133,8 @@ const getEnvironmentData = (
 ): MonitorEnvironment[] => {
   const typedEnvironments = component.attributes.environments as Environment[]
   let productId
-  console.log(typeof selectedProductId)
-  console.log(selectedProductId)
+  logger.error(typeof selectedProductId)
+  logger.error(selectedProductId)
 
   if (selectedProductId) {
     productId = selectedProductId
