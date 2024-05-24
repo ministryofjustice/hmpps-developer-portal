@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { Environment } from '../data/strapiApiTypes'
+import { ComponentListResponseDataItem, Environment } from '../data/strapiApiTypes'
 import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow } from '../utils/utils'
 
 type MonitorEnvironment = {
@@ -11,6 +11,8 @@ type MonitorEnvironment = {
   environmentUrl: string
   environmentHealth: string
   environmentType: string
+  isPrisons: boolean
+  isProbation: boolean
 }
 
 export default function routes({ serviceCatalogueService, redisService, dataFilterService }: Services): Router {
@@ -44,28 +46,15 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   get('/components/:monitorType/:monitorId?', async (req, res) => {
     const monitorType = getMonitorType(req)
     const monitorId = getNumericId(req, 'monitorId')
-    const environments: MonitorEnvironment[] = []
+    let environments: MonitorEnvironment[] = []
 
     if (monitorType === 'customComponentView') {
       const customComponentView = await serviceCatalogueService.getCustomComponentView({
         customComponentId: monitorId,
         withEnvironments: true,
       })
-
       customComponentView.components.data.forEach(component => {
-        const typedEnvironments = component.attributes.environments as Environment[]
-
-        typedEnvironments.forEach(environment => {
-          if (environment.monitor) {
-            environments.push({
-              componentName: component.attributes.name as string,
-              environmentName: environment.name as string,
-              environmentUrl: environment.url as string,
-              environmentHealth: environment.health_path as string,
-              environmentType: environment.type as string,
-            })
-          }
-        })
+        environments = environments.concat(getEnvironmentData(component as ComponentListResponseDataItem))
       })
     } else if (monitorType === 'product') {
       const product = await serviceCatalogueService.getProduct({
@@ -74,38 +63,18 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       })
 
       product.components.data.forEach(component => {
-        const typedEnvironments = component.attributes.environments as Environment[]
-
-        typedEnvironments.forEach(environment => {
-          if (environment.monitor) {
-            environments.push({
-              componentName: component.attributes.name as string,
-              environmentName: environment.name as string,
-              environmentUrl: environment.url as string,
-              environmentHealth: environment.health_path as string,
-              environmentType: environment.type as string,
-            })
-          }
-        })
+        environments = environments.concat(
+          getEnvironmentData(component as unknown as ComponentListResponseDataItem, product.p_id),
+        )
       })
     } else if (monitorType === 'team') {
       const team = await serviceCatalogueService.getTeam({ teamId: monitorId, withEnvironments: true })
 
       team.products.data.forEach(product => {
         product.attributes.components.data.forEach(component => {
-          const typedEnvironments = component.attributes.environments as Environment[]
-
-          typedEnvironments.forEach(environment => {
-            if (environment.monitor) {
-              environments.push({
-                componentName: component.attributes.name as string,
-                environmentName: environment.name as string,
-                environmentUrl: environment.url as string,
-                environmentHealth: environment.health_path as string,
-                environmentType: environment.type as string,
-              })
-            }
-          })
+          environments = environments.concat(
+            getEnvironmentData(component as ComponentListResponseDataItem, product.attributes.p_id),
+          )
         })
       })
     } else if (monitorType === 'serviceArea') {
@@ -113,38 +82,16 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
       serviceArea.products.data.forEach(product => {
         product.attributes.components.data.forEach(component => {
-          const typedEnvironments = component.attributes.environments as Environment[]
-
-          typedEnvironments.forEach(environment => {
-            if (environment.monitor) {
-              environments.push({
-                componentName: component.attributes.name as string,
-                environmentName: environment.name as string,
-                environmentUrl: environment.url as string,
-                environmentHealth: environment.health_path as string,
-                environmentType: environment.type as string,
-              })
-            }
-          })
+          environments = environments.concat(
+            getEnvironmentData(component as ComponentListResponseDataItem, product.attributes.p_id),
+          )
         })
       })
     } else {
       const components = await serviceCatalogueService.getComponents()
 
       components.forEach(component => {
-        const typedEnvironments = component.attributes.environments as Environment[]
-
-        typedEnvironments.forEach(environment => {
-          if (environment.monitor) {
-            environments.push({
-              componentName: component.attributes.name as string,
-              environmentName: environment.name as string,
-              environmentUrl: environment.url as string,
-              environmentHealth: environment.health_path as string,
-              environmentType: environment.type as string,
-            })
-          }
-        })
+        environments = environments.concat(getEnvironmentData(component as ComponentListResponseDataItem))
       })
     }
 
@@ -181,4 +128,37 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   })
 
   return router
+}
+
+const getEnvironmentData = (
+  component: ComponentListResponseDataItem,
+  selectedProductId?: string,
+): MonitorEnvironment[] => {
+  const typedEnvironments = component.attributes.environments as Environment[]
+  let productId
+  if (selectedProductId) {
+    productId = selectedProductId
+  } else {
+    productId = component.attributes.product?.data?.attributes?.p_id
+  }
+
+  const isPrisons = `${productId}`.startsWith('DPS')
+  const isProbation = `${productId}`.startsWith('HMPPS')
+  const environments: MonitorEnvironment[] = []
+
+  typedEnvironments.forEach(environment => {
+    if (environment.monitor) {
+      environments.push({
+        componentName: component.attributes.name as string,
+        environmentName: environment.name as string,
+        environmentUrl: environment.url as string,
+        environmentHealth: environment.health_path as string,
+        environmentType: environment.type as string,
+        isPrisons,
+        isProbation,
+      })
+    }
+  })
+
+  return environments
 }

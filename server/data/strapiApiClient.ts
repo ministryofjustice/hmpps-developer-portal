@@ -171,7 +171,7 @@ export default class StrapiApiClient {
     customComponentId: number
     withEnvironments?: boolean
   }): Promise<CustomComponentResponse> {
-    const populate = ['components']
+    const populate = ['components', 'components.product']
 
     if (withEnvironments) {
       populate.push('components.environments')

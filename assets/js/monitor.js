@@ -73,6 +73,16 @@ function updateEnvironmentList() {
       }
     })
   }
+  if ($('#hmpps-area-probation').is(':checked')) {
+    $('#statusRows tr').each(function () {
+      $(this).data('probation') ? $(this).show() : $(this).hide()
+    })
+  }
+  if ($('#hmpps-area-prisons').is(':checked')) {
+    $('#statusRows tr').each(function () {
+      $(this).data('prisons') ? $(this).show() : $(this).hide()
+    })
+  }
 
   $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
     const environment = $(e).val()
@@ -163,7 +173,7 @@ async function populateComponentTable(monitorType, monitorTypeId) {
       data[`info:${environment.componentName}:${environment.environmentName}`] = ''
       data[`version:${environment.componentName}:${environment.environmentName}`] = ''
       $('#statusRows')
-        .append(`<tr data-test="tile-${environment.componentName}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentType}">
+        .append(`<tr data-test="tile-${environment.componentName}" data-prisons="${environment.isPrisons}" data-probation="${environment.isProbation}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentType}">
           <td><a href="/components/${environment.componentName}" class="statusTileName">${environment.componentName}</a></td>
           <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment">${environment.environmentName}</a></td>
           <td>${healthLink}</td>
