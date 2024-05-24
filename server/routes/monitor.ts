@@ -133,13 +133,11 @@ const getEnvironmentData = (
 ): MonitorEnvironment[] => {
   const typedEnvironments = component.attributes.environments as Environment[]
   let productId
-  logger.error(typeof selectedProductId)
-  logger.error(selectedProductId)
 
   if (selectedProductId) {
     productId = selectedProductId
   } else {
-    productId = component.attributes.product.data?.attributes?.p_id
+    productId = component.attributes.product?.data?.attributes?.p_id
   }
 
   const isPrisons = `${productId}`.startsWith('DPS')
