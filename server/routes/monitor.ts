@@ -53,7 +53,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         customComponentId: monitorId,
         withEnvironments: true,
       })
-
       customComponentView.components.data.forEach(component => {
         environments = environments.concat(getEnvironmentData(component as ComponentListResponseDataItem))
       })
@@ -73,7 +72,9 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
       team.products.data.forEach(product => {
         product.attributes.components.data.forEach(component => {
-          environments = environments.concat(getEnvironmentData(component as ComponentListResponseDataItem))
+          environments = environments.concat(
+            getEnvironmentData(component as ComponentListResponseDataItem, product.attributes.p_id),
+          )
         })
       })
     } else if (monitorType === 'serviceArea') {
@@ -81,7 +82,9 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
       serviceArea.products.data.forEach(product => {
         product.attributes.components.data.forEach(component => {
-          environments = environments.concat(getEnvironmentData(component as ComponentListResponseDataItem))
+          environments = environments.concat(
+            getEnvironmentData(component as ComponentListResponseDataItem, product.attributes.p_id),
+          )
         })
       })
     } else {
@@ -133,7 +136,6 @@ const getEnvironmentData = (
 ): MonitorEnvironment[] => {
   const typedEnvironments = component.attributes.environments as Environment[]
   let productId
-
   if (selectedProductId) {
     productId = selectedProductId
   } else {
