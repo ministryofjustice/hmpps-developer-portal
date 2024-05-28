@@ -134,7 +134,7 @@ beforeEach(() => {
   serviceCatalogueService.getComponents.mockResolvedValue(testComponents)
   serviceCatalogueService.getComponent.mockResolvedValue(testComponent)
   redisService.getDependencies.mockResolvedValue({
-    dependencies: ['bbbb'],
+    dependencies: { bbbb: true },
     categories: ['GOTENBERG'],
     dependents: { aaaa: true },
   })

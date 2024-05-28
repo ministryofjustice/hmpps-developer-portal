@@ -95,8 +95,14 @@
   <div class="govuk-grid-column-one-third">
       <h3>Depends on:</h3>
       <ul>
-      {% for dependency in component.dependencies %}
-        <li><a data-test="dependency-{{loop.index0}}" href="/components/{{dependency}}" class="govuk-link--no-visited-state">{{dependency}}</a></li>
+      {% for dependency, known in component.dependencies %}
+        <li>
+          {% if known %}
+          <a data-test="dependency-{{loop.index0}}" href="/components/{{dependency}}" class="govuk-link--no-visited-state">{{dependency}}</a>
+          {% else %}
+          {{dependency}}
+          {% endif %}
+        </li>
       {% else %}
         <p>This component relies on no other components.</p>
       {% endfor %}
