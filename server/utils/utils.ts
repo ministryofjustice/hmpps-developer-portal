@@ -81,22 +81,10 @@ export const getComponentName = (req: Request): string => {
   return componentName.replace(/[^-a-zA-Z0-9_.]/g, '')
 }
 
-export const getEnvironmentName = (req: Request): string => {
-  const { environmentName } = req.params
+export const getSanitizedValue = (req: Request, value: string): string => {
+  const valueToBeSanitized = req.params[value] || ''
 
-  return environmentName.replace(/[^-a-z0-9_]/g, '')
-}
-
-export const getDependencyName = (req: Request): string => {
-  const dependencyName = req.params.dependencyName || ''
-
-  return dependencyName.replace(/[^-a-z0-9_]/g, '')
-}
-
-export const getDependencyType = (req: Request): string => {
-  const dependencyType = req.params.dependencyType || ''
-
-  return dependencyType.replace(/[^-a-z0-9_]/g, '')
+  return valueToBeSanitized.replace(/[^-a-z0-9_]/g, '')
 }
 
 export const isValidDropDown = (req: Request, paramName: string): boolean => {

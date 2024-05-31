@@ -7,9 +7,7 @@ import {
   getMonitorType,
   getMonitorName,
   getComponentName,
-  getEnvironmentName,
-  getDependencyType,
-  getDependencyName,
+  getSanitizedValue,
   formatMonitorName,
   isValidDropDown,
   formatActiveAgencies,
@@ -103,7 +101,7 @@ describe('Utils', () => {
     })
   })
 
-  describe('getEnvironmentName', () => {
+  describe('getSanitizedValue', () => {
     it.each([
       ['Valid name dev', 'dev', 'dev'],
       ['Valid name development', 'development', 'development'],
@@ -116,38 +114,10 @@ describe('Utils', () => {
       ['Valid name test-cp', 'test-cp', 'test-cp'],
       ['Cleaned name &23', '&23', '23'],
       ['Empty name', '', ''],
-    ])('%s getEnvironmentName() with "%s" should return "%s"', (_: string, a: string, expected: string) => {
+    ])('%s getSanitizedValue() with "%s" should return "%s"', (_: string, a: string, expected: string) => {
       const mockRequest = { params: { environmentName: a } } as unknown as Request
 
-      expect(getEnvironmentName(mockRequest)).toBe(expected)
-    })
-  })
-
-  describe('getDependencyType', () => {
-    it.each([
-      ['Valid type helm', 'helm', 'helm'],
-      ['Valid type circleci', 'circleci', 'circleci'],
-      ['Valid type dockerfile', 'dockerfile', 'dockerfile'],
-      ['Invalid type &^%', '&^%', ''],
-      ['Empty type', '', ''],
-    ])('%s getDependencyType() with "%s" should return "%s"', (_: string, a: string, expected: string) => {
-      const mockRequest = { params: { dependencyType: a } } as unknown as Request
-
-      expect(getDependencyType(mockRequest)).toBe(expected)
-    })
-  })
-
-  describe('getDependencyName', () => {
-    it.each([
-      ['Already clean', 'product', 'product'],
-      ['Already clean', 'ae-0_99', 'ae-0_99'],
-      ['Invalid characters', 'ADso-+0', 'so-0'],
-      ['Invalid characters', 'AD+', ''],
-      ['Empty string', '', ''],
-    ])('%s getDependencyName() with "%s" should return "%s"', (_: string, a: string, expected: string) => {
-      const mockRequest = { params: { dependencyName: a } } as unknown as Request
-
-      expect(getDependencyName(mockRequest)).toBe(expected)
+      expect(getSanitizedValue(mockRequest, 'environmentName')).toBe(expected)
     })
   })
 

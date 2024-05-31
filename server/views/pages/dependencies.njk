@@ -11,20 +11,26 @@
 
   <form>
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-    {{ govukSelect({
-      id: "dependencyData",
-      name: "dependencyData",
-      items: dropDownItems,
-      attributes: {
-        'data-test': 'dependency-select'
-      }
-    }) }}
-    {{ govukButton({
-      id: "selectDependency",
-      name: "selectDependency",
-      text: "Update",
-      element: "button"
-    }) }}
+    {% include "../partials/filterDropDowns.njk" %}
+    <div class="monitor-selectors govuk-button-group">
+      {{ govukSelect({
+        id: "dependencyData",
+        name: "dependencyData",
+        label: {
+          text: "Dependency"
+        },
+        items: dropDownItems,
+        attributes: {
+          'data-test': 'dependency-select'
+        }
+      }) }}
+      {{ govukButton({
+        id: "selectDependency",
+        name: "selectDependency",
+        text: "Update",
+        element: "button"
+      }) }}
+    </div>
   </form>
 
   {% if dependencyName|length %}
@@ -44,8 +50,13 @@
   <script nonce="{{ cspNonce }}">
     const dataDependencyName = '{{ dependencyName }}'
     const dataDependencyType = '{{ dependencyType }}'
+    const teamName = '{{ teamName }}'
+    const productName = '{{ productName }}'
+    const serviceAreaName = '{{ serviceAreaName }}'
+    const customComponentName = '{{ customComponentName }}'
+    const filterType = '{{ filterType }}'
   </script>
   <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
-  <script src="/assets/js/dependenciesTable.js"></script>
+  <script src="/assets/js/dependencies.js"></script>
 {% endblock %}

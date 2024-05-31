@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { formatActiveAgencies, getComponentName, getEnvironmentName, veracodeFilters } from '../utils/utils'
+import { formatActiveAgencies, getComponentName, getSanitizedValue, veracodeFilters } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -107,7 +107,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
   get('/:componentName/environment/:environmentName', async (req, res) => {
     const componentName = getComponentName(req)
-    const environmentName = getEnvironmentName(req)
+    const environmentName = getSanitizedValue(req, 'environmentName')
 
     const component = await serviceCatalogueService.getComponent({ componentName })
     const environments = component.environments?.filter(environment => environment.name === environmentName)
@@ -147,7 +147,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
   get('/queue/:componentName/:environmentName/*', async (req, res) => {
     const componentName = getComponentName(req)
-    const environmentName = getEnvironmentName(req)
+    const environmentName = getSanitizedValue(req, 'environmentName')
     const queueInformation = req.params[0]
     const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
 
