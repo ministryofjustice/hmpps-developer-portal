@@ -141,13 +141,13 @@ const fetchMessages = async streams => {
       $(`#tile-${component}-${environment} .statusTileBuild`).text(version)
       $(`#tile-${component}-${environment} .statusTileLastRefresh`).text(lastMessageTime)
       try {
-        $(`#tile-${component}-${environment} .statusTileStatus`).text(healthStatus).data('health', healthStatus)
+        $(`#tile-${component}-${environment} .statusTileStatus`).text(healthStatus)
         $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
 
         const statusClass = healthStatus === 'UP' ? 'statusTileUp' : 'statusTileDown'
         $(`#tile-${component}-${environment}`).addClass(statusClass).data('status', healthStatus)
       } catch (e) {
-        // console.error('Error parsing JSON data')
+        console.error('Error parsing JSON data')
         console.error(e)
       }
     })
