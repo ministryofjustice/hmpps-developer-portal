@@ -93,12 +93,12 @@ function updateEnvironmentList() {
   }
 
   $('#statusRows tr')
-    .hide()
+    // .hide()
     .each(function () {
       const isPrisons = $(this).data('prisons')
       const isProbation = $(this).data('probation')
       const environment = $(this).data('environment')
-      console.log(`${isPrisons} = ${showPrisons}, ${isProbation} = ${showProbation}, ${environment}`)
+
       if (
         ((showPrisons && isPrisons) || (showProbation && isProbation)) &&
         selectedEnvironments.includes(environment)
@@ -144,7 +144,7 @@ const fetchMessages = async streams => {
         $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
 
         const statusClass = healthStatus === 'UP' ? 'statusTileUp' : 'statusTileDown'
-        $(`#tile-${component}-${environment}`).addClass(statusClass).data('status', healthStatus)
+        $(`#tile-${component}-${environment}`).addClass(statusClass)
       } catch (e) {
         console.error('Error parsing JSON data')
         console.error(e)
@@ -188,7 +188,7 @@ async function populateComponentTable(monitorType, monitorTypeId) {
       data[`info:${environment.componentName}:${environment.environmentName}`] = ''
       data[`version:${environment.componentName}:${environment.environmentName}`] = ''
       $('#statusRows')
-        .append(`<tr data-test="tile-${environment.componentName}" data-prisons="${environment.isPrisons}" data-probation="${environment.isProbation}" data-environment="${environment.environmentName}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentType}">
+        .append(`<tr data-status="" data-prisons="${environment.isPrisons}" data-probation="${environment.isProbation}" data-environment="${environment.environmentName}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentType}">
           <td><a href="/components/${environment.componentName}" class="statusTileName">${environment.componentName}</a></td>
           <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment">${environment.environmentName}</a></td>
           <td>${healthLink}</td>
