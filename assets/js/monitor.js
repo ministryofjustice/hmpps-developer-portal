@@ -57,40 +57,55 @@ jQuery(async function () {
 
 function updateEnvironmentList() {
   const validEnvironments = ['prod', 'preprod', 'test', 'stage', 'dev']
+  const selectedEnvironments = []
+  let showProbation = false
+  let showPrisons = false
+  let showStatusUp = false
+  let showStatusDown = false
+  let showStatusMissing = false
 
-  $('#statusRows tr').show()
-
-  if (!$('#status-up').is(':checked')) {
-    $('.statusTileUp').hide()
-  }
-  if (!$('#status-down').is(':checked')) {
-    $('.statusTileDown').hide()
-  }
-  if (!$('#status-missing').is(':checked')) {
-    $('#statusRows tr').each(function () {
-      if (!$(this).hasClass('statusTileDown') && !$(this).hasClass('statusTileUp')) {
-        $(this).hide()
-      }
-    })
-  }
-  if ($('#hmpps-area-probation').is(':checked')) {
-    $('#statusRows tr').each(function () {
-      $(this).data('probation') ? $(this).show() : $(this).hide()
-    })
-  }
-  if ($('#hmpps-area-prisons').is(':checked')) {
-    $('#statusRows tr').each(function () {
-      $(this).data('prisons') ? $(this).show() : $(this).hide()
-    })
-  }
-
-  $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
+  $('.environments .govuk-checkboxes__input:checked').each((index, e) => {
     const environment = $(e).val()
 
     if (validEnvironments.includes(environment)) {
-      $(`.${environment}`).hide()
+      selectedEnvironments.push(environment)
     }
   })
+
+  if (!$('#status-up').is(':checked')) {
+    showStatusUp = true
+  }
+
+  if (!$('#status-down').is(':checked')) {
+    showStatusDown = true
+  }
+
+  if (!$('#status-missing').is(':checked')) {
+    showStatusMissing = true
+  }
+
+  if ($('#hmpps-area-probation').is(':checked')) {
+    showProbation = true
+  }
+
+  if ($('#hmpps-area-prisons').is(':checked')) {
+    showPrisons = true
+  }
+
+  $('#statusRows tr')
+    .hide()
+    .each(function () {
+      const isPrisons = $(this).data('prisons')
+      const isProbation = $(this).data('probation')
+      const environment = $(this).data('environment')
+      console.log(`${isPrisons} = ${showPrisons}, ${isProbation} = ${showProbation}, ${environment}`)
+      if (
+        ((showPrisons && isPrisons) || (showProbation && isProbation)) &&
+        selectedEnvironments.includes(environment)
+      ) {
+        $(this).show()
+      }
+    })
 }
 
 const watch = async () => {
@@ -118,6 +133,7 @@ const fetchMessages = async streams => {
 
   try {
     const envs = await response.json()
+
     envs.forEach(([streamName, env]) => {
       const [component, environment] = streamName.split(':')
       const { version, lastMessageTime, healthStatus } = env
@@ -125,13 +141,13 @@ const fetchMessages = async streams => {
       $(`#tile-${component}-${environment} .statusTileBuild`).text(version)
       $(`#tile-${component}-${environment} .statusTileLastRefresh`).text(lastMessageTime)
       try {
-        $(`#tile-${component}-${environment} .statusTileStatus`).text(healthStatus)
+        $(`#tile-${component}-${environment} .statusTileStatus`).text(healthStatus).data('health', healthStatus)
         $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
 
         const statusClass = healthStatus === 'UP' ? 'statusTileUp' : 'statusTileDown'
-        $(`#tile-${component}-${environment}`).addClass(statusClass)
+        $(`#tile-${component}-${environment}`).addClass(statusClass).data('status', healthStatus)
       } catch (e) {
-        console.error('Error parsing JSON data')
+        // console.error('Error parsing JSON data')
         console.error(e)
       }
     })
@@ -159,7 +175,6 @@ async function populateComponentTable(monitorType, monitorTypeId) {
 
   try {
     $('#statusRows').empty()
-
     const environments = await response.json()
 
     environments.sort(sortEnvironments).forEach(environment => {
@@ -173,7 +188,7 @@ async function populateComponentTable(monitorType, monitorTypeId) {
       data[`info:${environment.componentName}:${environment.environmentName}`] = ''
       data[`version:${environment.componentName}:${environment.environmentName}`] = ''
       $('#statusRows')
-        .append(`<tr data-test="tile-${environment.componentName}" data-prisons="${environment.isPrisons}" data-probation="${environment.isProbation}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentType}">
+        .append(`<tr data-test="tile-${environment.componentName}" data-prisons="${environment.isPrisons}" data-probation="${environment.isProbation}" data-environment="${environment.environmentName}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentType}">
           <td><a href="/components/${environment.componentName}" class="statusTileName">${environment.componentName}</a></td>
           <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment">${environment.environmentName}</a></td>
           <td>${healthLink}</td>
