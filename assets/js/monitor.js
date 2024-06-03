@@ -133,7 +133,6 @@ const fetchMessages = async streams => {
 
   try {
     const envs = await response.json()
-
     envs.forEach(([streamName, env]) => {
       const [component, environment] = streamName.split(':')
       const { version, lastMessageTime, healthStatus } = env
@@ -175,6 +174,7 @@ async function populateComponentTable(monitorType, monitorTypeId) {
 
   try {
     $('#statusRows').empty()
+
     const environments = await response.json()
 
     environments.sort(sortEnvironments).forEach(environment => {
