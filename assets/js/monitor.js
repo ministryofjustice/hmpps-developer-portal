@@ -1,6 +1,3 @@
-const lastIds = {}
-const data = {}
-
 jQuery(async function () {
   const monitorType = $('#monitorType').val()
 
@@ -102,7 +99,9 @@ function updateEnvironmentList() {
 
       if (
         ((showPrisons && isPrisons) || (showProbation && isProbation)) &&
-        ((showStatusUp && status === 'UP') || (showStatusDown && status === 'DOWN') || (showStatusMissing && status !== 'UP' && status !== 'DOWN')) &&
+        ((showStatusUp && status === 'UP') ||
+          (showStatusDown && status === 'DOWN') ||
+          (showStatusMissing && status !== 'UP' && status !== 'DOWN')) &&
         selectedEnvironments.includes(environment)
       ) {
         $(this).show()
@@ -111,22 +110,21 @@ function updateEnvironmentList() {
 }
 
 const watch = async () => {
-  await fetchMessages(lastIds)
+  await fetchMessages()
 
   setTimeout(watch, 30000)
 }
 
-const fetchMessages = async streams => {
+const fetchMessages = async () => {
   const csrfToken = $('#csrf').val()
   const response = await fetch('/monitor/queue', {
-    method: 'POST',
+    method: 'GET',
     credentials: 'same-origin',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       'X-CSRF-Token': csrfToken,
     },
-    body: JSON.stringify({ streams }),
   })
 
   if (!response.ok) {
@@ -182,12 +180,6 @@ async function populateComponentTable(monitorType, monitorTypeId) {
       const healthLink = environment.environmentHealth
         ? `<a href="${environment.environmentUrl}${environment.environmentHealth}" class="statusTileHealth">View</a>`
         : 'N/A'
-      lastIds[`health:${environment.componentName}:${environment.environmentName}`] = '0'
-      lastIds[`info:${environment.componentName}:${environment.environmentName}`] = '0'
-      lastIds[`version:${environment.componentName}:${environment.environmentName}`] = '0'
-      data[`health:${environment.componentName}:${environment.environmentName}`] = ''
-      data[`info:${environment.componentName}:${environment.environmentName}`] = ''
-      data[`version:${environment.componentName}:${environment.environmentName}`] = ''
       $('#statusRows')
         .append(`<tr data-prisons="${environment.isPrisons}" data-probation="${environment.isProbation}" data-environment="${environment.environmentName}" id="tile-${environment.componentName}-${environment.environmentName}">
           <td><a href="/components/${environment.componentName}" class="statusTileName">${environment.componentName}</a></td>

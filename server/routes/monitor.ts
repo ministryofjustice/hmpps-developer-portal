@@ -19,7 +19,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get(['/', '/:monitorType/:monitorName'], async (req, res) => {
     const monitorType = getMonitorType(req)
@@ -107,7 +106,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     return healthPayload.healthy === true ? 'UP' : 'DOWN'
   }
 
-  post('/queue', async (req, res) => {
+  get('/queue', async (req, res) => {
     const versions = await redisService.readLatest('latest:versions')
     const health = await redisService.readLatest('latest:health')
 
