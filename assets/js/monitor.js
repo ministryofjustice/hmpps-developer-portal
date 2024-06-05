@@ -1,5 +1,5 @@
-const lastIds = {}
-const data = {}
+let lastIds = {}
+let data = {}
 
 jQuery(async function () {
   const monitorType = $('#monitorType').val()
@@ -45,6 +45,9 @@ jQuery(async function () {
     }
 
     history.pushState({ info: 'dropdown change' }, '', pushStateUrl)
+
+    lastIds = {}
+    data = {}
 
     await populateComponentTable(dropDownType, dropDownTypeId)
     updateEnvironmentList()
@@ -102,7 +105,9 @@ function updateEnvironmentList() {
 
       if (
         ((showPrisons && isPrisons) || (showProbation && isProbation)) &&
-        ((showStatusUp && status === 'UP') || (showStatusDown && status === 'DOWN') || (showStatusMissing && status !== 'UP' && status !== 'DOWN')) &&
+        ((showStatusUp && status === 'UP') ||
+          (showStatusDown && status === 'DOWN') ||
+          (showStatusMissing && status !== 'UP' && status !== 'DOWN')) &&
         selectedEnvironments.includes(environment)
       ) {
         $(this).show()
