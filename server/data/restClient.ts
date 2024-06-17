@@ -6,7 +6,6 @@ import logger from '../../logger'
 import sanitiseError from '../sanitisedError'
 import { ApiConfig } from '../config'
 import type { UnsanitisedError } from '../sanitisedError'
-import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'
 
 interface GetRequest {
   path?: string
@@ -55,7 +54,6 @@ export default class RestClient {
       const result = await superagent
         .get(`${this.apiUrl()}${path}`)
         .agent(this.agent)
-        .use(restClientMetricsMiddleware)
         .retry(2, (err, res) => {
           if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
@@ -87,7 +85,6 @@ export default class RestClient {
         .post(`${this.apiUrl()}${path}`)
         .send(data)
         .agent(this.agent)
-        .use(restClientMetricsMiddleware)
         .retry(2, (err, res) => {
           if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
@@ -112,7 +109,6 @@ export default class RestClient {
         .get(`${this.apiUrl()}${path}`)
         .agent(this.agent)
         .auth(this.token, { type: 'bearer' })
-        .use(restClientMetricsMiddleware)
         .retry(2, (err, res) => {
           if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
           return undefined // retry handler only for logging retries, not to influence retry logic
