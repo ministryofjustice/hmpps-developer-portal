@@ -1,18 +1,18 @@
 ---
 generic-service:
   nameOverride: hmpps-developer-portal
-  productId: "DPS000"
+  productId: 'DPS000'
 
   replicaCount: 4
 
   image:
     repository: quay.io/hmpps/hmpps-developer-portal
-    tag: app_version    # override at deployment time
+    tag: app_version # override at deployment time
     port: 3000
 
   ingress:
     enabled: true
-    host: app-hostname.local    # override per environment
+    host: app-hostname.local # override per environment
     tlsSecretName: hmpps-developer-portal-cert
 
   livenessProbe:
@@ -23,17 +23,11 @@ generic-service:
     httpGet:
       path: /ping
 
-  custommetrics:
-    enabled: true
-    scrapeInterval: 15s
-    metricsPath: /metrics
-    metricsPort: 3001
-
   # Environment variables to load into the deployment
   env:
-    NODE_ENV: "production"
-    REDIS_TLS_ENABLED: "true"
-    APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/"
+    NODE_ENV: 'production'
+    REDIS_TLS_ENABLED: 'true'
+    APPLICATIONINSIGHTS_CONNECTION_STRING: 'InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/'
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -42,8 +36,8 @@ generic-service:
 
   namespace_secrets:
     hmpps-developer-portal:
-      APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
-      SESSION_SECRET: "SESSION_SECRET"
+      APPINSIGHTS_INSTRUMENTATIONKEY: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+      SESSION_SECRET: 'SESSION_SECRET'
 
   allowlist:
     groups:
