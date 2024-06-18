@@ -278,18 +278,37 @@ describe('Strapi service', () => {
     })
 
     describe('getServiceArea', () => {
-      const testServiceAreaResponse = {
-        data: {
-          id: 1,
-          attributes: { name: 'Service Area 1' },
-        },
-      } as ServiceAreaResponse
-      const testServiceArea = { name: 'Service Area 1' } as ServiceArea
+      const testServiceArea = { name: 'Service Area 1', slug: 'service-area-1' } as ServiceArea
 
-      it('should return the selected service area', async () => {
+      it('should return the selected service area by ID', async () => {
+        const testServiceAreaResponse = {
+          data: {
+            id: 1,
+            attributes: { name: 'Service Area 1', slug: 'service-area-1' },
+          },
+        } as ServiceAreaResponse
+
         strapiApiClient.getServiceArea.mockResolvedValue(testServiceAreaResponse)
 
         const results = await serviceCatalogueService.getServiceArea({ serviceAreaId: 1 })
+
+        expect(strapiApiClient.getServiceArea).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testServiceArea)
+      })
+
+      it('should return the selected service area by slug', async () => {
+        const testServiceAreaResponse = {
+          data: [
+            {
+              id: 1,
+              attributes: { name: 'Service Area 1', slug: 'service-area-1' },
+            },
+          ],
+        } as ServiceAreaResponse
+
+        strapiApiClient.getServiceArea.mockResolvedValue(testServiceAreaResponse)
+
+        const results = await serviceCatalogueService.getServiceArea({ serviceAreaSlug: 'service-area-1' })
 
         expect(strapiApiClient.getServiceArea).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testServiceArea)
