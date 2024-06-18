@@ -75,6 +75,12 @@ export const sortData = (dataItem: HasName, compareDataItem: HasName) => {
   return 0
 }
 
+export const getFormattedName = (req: Request, param: string): string => {
+  const paramName = req.params[param]
+
+  return paramName.replace(/[^-a-zA-Z0-9_.]/g, '')
+}
+
 export const getComponentName = (req: Request): string => {
   const { componentName } = req.params
 

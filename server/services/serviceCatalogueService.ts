@@ -130,15 +130,17 @@ export default class ServiceCatalogueService {
 
   async getServiceArea({
     serviceAreaId = 0,
+    serviceAreaSlug = '',
     withProducts = false,
   }: {
-    serviceAreaId: number
+    serviceAreaId?: number
+    serviceAreaSlug?: string
     withProducts?: boolean
   }): Promise<ServiceArea> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const serviceAreaData = await strapiApiClient.getServiceArea({ serviceAreaId, withProducts })
+    const serviceAreaData = await strapiApiClient.getServiceArea({ serviceAreaId, serviceAreaSlug, withProducts })
 
-    const serviceArea = serviceAreaData.data?.attributes
+    const serviceArea = serviceAreaSlug ? serviceAreaData.data[0].attributes : serviceAreaData.data?.attributes
 
     return serviceArea
   }
