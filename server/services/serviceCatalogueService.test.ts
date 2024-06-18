@@ -132,18 +132,37 @@ describe('Strapi service', () => {
     })
 
     describe('getTeam', () => {
-      const testTeamResponse = {
-        data: {
-          id: 1,
-          attributes: { name: 'Team 1' },
-        },
-      } as TeamResponse
-      const testTeam = { name: 'Team 1' } as Team
+      const testTeam = { name: 'Team 1', slug: 'team-1' } as Team
 
-      it('should return the selected team', async () => {
+      it('should return the selected team by ID', async () => {
+        const testTeamResponse = {
+          data: {
+            id: 1,
+            attributes: { name: 'Team 1', slug: 'team-1' },
+          },
+        } as TeamResponse
+
         strapiApiClient.getTeam.mockResolvedValue(testTeamResponse)
 
         const results = await serviceCatalogueService.getTeam({ teamId: 1 })
+
+        expect(strapiApiClient.getTeam).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testTeam)
+      })
+
+      it('should return the selected team by slug', async () => {
+        const testTeamResponse = {
+          data: [
+            {
+              id: 1,
+              attributes: { name: 'Team 1', slug: 'team-1' },
+            },
+          ],
+        } as TeamResponse
+
+        strapiApiClient.getTeam.mockResolvedValue(testTeamResponse)
+
+        const results = await serviceCatalogueService.getTeam({ teamSlug: 'team-1' })
 
         expect(strapiApiClient.getTeam).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testTeam)

@@ -25,7 +25,7 @@ jQuery(function () {
       {
         data: 'attributes.name',
         createdCell: function (td, cellData, rowData) {
-          $(td).html(`<a href="/teams/${rowData.id}">${rowData.attributes.name}</a>`)
+          $(td).html(`<a href="/teams/${rowData.attributes.slug}">${rowData.attributes.name}</a>`)
         },
       },
     ],
