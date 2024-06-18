@@ -105,15 +105,17 @@ export default class ServiceCatalogueService {
 
   async getTeam({
     teamId = 0,
+    teamSlug = '',
     withEnvironments = false,
   }: {
-    teamId: number
+    teamId?: number
+    teamSlug?: string
     withEnvironments?: boolean
   }): Promise<Team> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const teamData = await strapiApiClient.getTeam({ teamId, withEnvironments })
+    const teamData = await strapiApiClient.getTeam({ teamId, teamSlug, withEnvironments })
 
-    const team = teamData.data?.attributes
+    const team = teamSlug ? teamData.data[0].attributes : teamData.data?.attributes
 
     return team
   }
