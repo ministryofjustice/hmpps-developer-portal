@@ -126,23 +126,24 @@ export default class StrapiApiClient {
 
   async getServiceArea({
     serviceAreaId = 0,
+    serviceAreaSlug = '',
     withProducts = false,
   }: {
-    serviceAreaId: number
+    serviceAreaId?: number
+    serviceAreaSlug?: string
     withProducts?: boolean
   }): Promise<ServiceAreaResponse> {
-    const populate = ['products']
+    const populateList = ['products']
 
     if (withProducts) {
-      populate.push('products.components.environments')
+      populateList.push('products.components.environments')
     }
 
-    return this.restClient.get({
-      path: `/v1/service-areas/${serviceAreaId}`,
-      query: new URLSearchParams({
-        populate: populate.join(','),
-      }).toString(),
-    })
+    const populate = new URLSearchParams({ populate: populateList }).toString()
+    const query = serviceAreaSlug ? `filters[slug][$eq]=${serviceAreaSlug}&${populate}` : populate
+    const path = serviceAreaSlug ? '/v1/service-areas' : `/v1/service-areas/${serviceAreaId}`
+
+    return this.restClient.get({ path, query })
   }
 
   async getCustomComponentViews({
