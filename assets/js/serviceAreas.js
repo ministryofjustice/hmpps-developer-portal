@@ -8,5 +8,5 @@ jQuery(function () {
     },
   ]
 
-  createTable('serviceAreasTable', '/service-areas/data', 0, columns)
+  createTable('serviceAreasTable', '/service-areas/data', 0, 'asc', columns)
 })

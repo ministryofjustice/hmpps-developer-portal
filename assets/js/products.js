@@ -29,5 +29,5 @@ jQuery(function () {
     },
   ]
 
-  createTable('productsTable', '/products/data', 1, columns)
+  createTable('productsTable', '/products/data', 1, 'asc', columns)
 })

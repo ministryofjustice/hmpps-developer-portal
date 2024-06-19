@@ -30,5 +30,5 @@ jQuery(function () {
     },
   ]
 
-  createTable('dependenciesTable', `/dependencies/data/${dataDependencyType}/${dataDependencyName}`, 1, columns)
+  createTable('dependenciesTable', `/dependencies/data/${dataDependencyType}/${dataDependencyName}`, 1, 'asc', columns)
 })

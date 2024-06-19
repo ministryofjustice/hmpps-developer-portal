@@ -14,5 +14,5 @@ jQuery(function () {
     },
   ]
 
-  createTable('productSetsTable', '/product-sets/data', 1, columns)
+  createTable('productSetsTable', '/product-sets/data', 1, 'asc', columns)
 })

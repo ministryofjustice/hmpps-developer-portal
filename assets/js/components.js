@@ -34,5 +34,5 @@ jQuery(function () {
     },
   ]
 
-  createTable('componentsTable', '/components/data', 0, columns)
+  createTable('componentsTable', '/components/data', 0, 'asc', columns)
 })

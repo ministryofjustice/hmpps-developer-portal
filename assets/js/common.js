@@ -3,7 +3,7 @@ function cleanColumnOutput(data) {
   return data.replace(unsafeOutputPattern, '')
 }
 
-function createTable(id, ajaxUrl, orderColumn, columns) {
+function createTable(id, ajaxUrl, orderColumn, orderType, columns) {
   const semverTidy = semVer => {
     // sometimes comes through as a number which has no match method
     const semVerString = `${semVer}`
@@ -37,7 +37,7 @@ function createTable(id, ajaxUrl, orderColumn, columns) {
     ],
     paging: true,
     pagingType: 'simple_numbers',
-    order: [[orderColumn, 'asc']],
+    order: [[orderColumn, orderType]],
     sortable: true,
     ajax: {
       url: ajaxUrl,
