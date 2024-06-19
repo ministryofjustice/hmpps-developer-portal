@@ -94,7 +94,7 @@ function updateEnvironmentList() {
     .each(function () {
       const isPrisons = $(this).data('prisons')
       const isProbation = $(this).data('probation')
-      const environment = $(this).data('environment')
+      const environmentType = $(this).data('environment-type')
       const status = $(this).data('status')
 
       if (
@@ -102,7 +102,7 @@ function updateEnvironmentList() {
         ((showStatusUp && status === 'UP') ||
           (showStatusDown && status === 'DOWN') ||
           (showStatusMissing && status !== 'UP' && status !== 'DOWN')) &&
-        selectedEnvironments.includes(environment)
+        selectedEnvironments.includes(environmentType)
       ) {
         $(this).show()
       }
@@ -181,9 +181,9 @@ async function populateComponentTable(monitorType, monitorTypeId) {
         ? `<a href="${environment.environmentUrl}${environment.environmentHealth}" class="statusTileHealth">View</a>`
         : 'N/A'
       $('#statusRows')
-        .append(`<tr data-prisons="${environment.isPrisons}" data-probation="${environment.isProbation}" data-environment="${environment.environmentName}" id="tile-${environment.componentName}-${environment.environmentName}">
+        .append(`<tr data-prisons="${environment.isPrisons}" data-probation="${environment.isProbation}" data-environment="${environment.environmentName}" data-environment-type="${environment.environmentType}" id="tile-${environment.componentName}-${environment.environmentName}">
           <td><a href="/components/${environment.componentName}" class="statusTileName">${environment.componentName}</a></td>
-          <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment">${environment.environmentName}</a></td>
+          <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment">${environment.environmentName} (${environment.environmentType})</a></td>
           <td>${healthLink}</td>
           <td class="statusTileBuild"></td>
           <td class="statusTileStatus"></td>
