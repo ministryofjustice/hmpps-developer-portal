@@ -15,7 +15,7 @@
     {% include "../partials/filterDropDowns.njk" %}
 
     {{ govukCheckboxes({
-      classes: "govuk-checkboxes--inline environments",
+      classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
       name: "environment",
       items: [
         {
@@ -51,31 +51,31 @@
         {
           id: "status-up",
           value: "up",
-          text: "UP",
+          text: "Up",
           checked: true
         },
         {
           id: "status-down",
           value: "down",
-          text: "DOWN",
+          text: "Down",
           checked: true
         },
         {
           id: "status-missing",
           value: "missing",
-          text: "MISSING",
+          text: "Missing",
           checked: true
         },
         {
           id: "hmpps-area-probation",
           value: "probation",
-          text: "PROBATION",
+          text: "Probation",
           checked: true
         },
         {
           id: "hmpps-area-prisons",
           value: "prisons",
-          text: "PRISONS",
+          text: "Prisons",
           checked: true
         }
       ]
