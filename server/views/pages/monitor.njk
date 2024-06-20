@@ -14,72 +14,98 @@
 
     {% include "../partials/filterDropDowns.njk" %}
 
-    {{ govukCheckboxes({
-      classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
-      name: "environment",
-      items: [
-        {
-          id: "environment-dev",
-          value: "dev",
-          text: "Dev",
-          checked: true
-        },
-        {
-          id: "environment-stage",
-          value: "stage",
-          text: "Stage",
-          checked: true
-        },
-        {
-          id: "environment-test",
-          value: "test",
-          text: "Test",
-          checked: true
-        },
-        {
-          id: "environment-preprod",
-          value: "preprod",
-          text: "PreProd",
-          checked: true
-        },
-        {
-          id: "environment-prod",
-          value: "prod",
-          text: "Prod",
-          checked: true
-        },
-        {
-          id: "status-up",
-          value: "up",
-          text: "Up",
-          checked: true
-        },
-        {
-          id: "status-down",
-          value: "down",
-          text: "Down",
-          checked: true
-        },
-        {
-          id: "status-missing",
-          value: "missing",
-          text: "Missing",
-          checked: true
-        },
-        {
-          id: "hmpps-area-probation",
-          value: "probation",
-          text: "Probation",
-          checked: true
-        },
-        {
-          id: "hmpps-area-prisons",
-          value: "prisons",
-          text: "Prisons",
-          checked: true
-        }
-      ]
-    }) }}
+    <div class="monitor">
+
+      <div class="monitor-filter-block">
+        <div class="govuk-heading-s">Environments</div>
+        {{ govukCheckboxes({
+          classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+          name: "environment",
+          items: [
+            {
+              id: "environment-dev",
+              value: "dev",
+              text: "Dev",
+              checked: true
+            },
+            {
+              id: "environment-stage",
+              value: "stage",
+              text: "Stage",
+              checked: true
+            },
+            {
+              id: "environment-test",
+              value: "test",
+              text: "Test",
+              checked: true
+            },
+            {
+              id: "environment-preprod",
+              value: "preprod",
+              text: "PreProd",
+              checked: true
+            },
+            {
+              id: "environment-prod",
+              value: "prod",
+              text: "Prod",
+              checked: true
+            }
+          ]
+        }) }}
+      </div>
+
+      <div class="monitor-filter-block">
+        <div class="govuk-heading-s">Status</div>
+        {{ govukCheckboxes({
+          classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+          name: "status",
+          items: [
+            {
+              id: "status-up",
+              value: "up",
+              text: "Up",
+              checked: true
+            },
+            {
+              id: "status-down",
+              value: "down",
+              text: "Down",
+              checked: true
+            },
+            {
+              id: "status-missing",
+              value: "missing",
+              text: "Missing",
+              checked: true
+            }
+          ]
+        }) }}
+      </div>
+
+      <div class="monitor-filter-block">
+        <div class="govuk-heading-s">Area</div>
+        {{ govukCheckboxes({
+          classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+          name: "area",
+          items: [
+            {
+              id: "hmpps-area-probation",
+              value: "probation",
+              text: "Probation",
+              checked: true
+            },
+            {
+              id: "hmpps-area-prisons",
+              value: "prisons",
+              text: "Prisons",
+              checked: true
+            }
+          ]
+        }) }}
+      </div>
+    </div>
   </form>
 
   <table id="statusTable">
