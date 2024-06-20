@@ -130,8 +130,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
                 allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...genericService[ipName]])]))
               }
             })
-          }
-          if (item !== 'generic-service') {
+          } else {
             allowList.set(item, environments[0].ip_allow_list[fileName][item])
           }
         })
