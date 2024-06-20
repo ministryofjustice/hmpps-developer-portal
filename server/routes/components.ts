@@ -117,20 +117,23 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     if (environments[0].ip_allow_list && environments[0].ip_allow_list_enabled) {
       const ipAllowListFiles = Object.keys(environments[0].ip_allow_list)
-      allowList.set('groups', [])
 
       ipAllowListFiles.forEach(fileName => {
-        if (Object.keys(environments[0].ip_allow_list[fileName]).length > 0) {
-          const genericService = environments[0].ip_allow_list[fileName]['generic-service']
-
-          Object.keys(genericService).forEach(ipName => {
-            if (ipName !== 'groups') {
-              allowList.set(ipName, genericService[ipName])
-            } else {
-              allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...genericService[ipName]])]))
-            }
-          })
-        }
+        Object.keys(environments[0].ip_allow_list[fileName]).forEach(item => {
+          if (item === 'generic-service') {
+            allowList.set('groups', [])
+            const genericService = environments[0].ip_allow_list[fileName]['generic-service']
+            Object.keys(genericService).forEach(ipName => {
+              if (ipName !== 'groups') {
+                allowList.set(ipName, genericService[ipName])
+              } else {
+                allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...genericService[ipName]])]))
+              }
+            })
+          } else {
+            allowList.set(item, environments[0].ip_allow_list[fileName][item])
+          }
+        })
       })
     }
 
