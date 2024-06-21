@@ -47,9 +47,12 @@ jQuery(async function () {
     updateEnvironmentList()
   })
 
-  $('.environments .govuk-checkboxes__input').on('change', e => {
-    updateEnvironmentList()
-  })
+  $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
+    'change',
+    e => {
+      updateEnvironmentList()
+    },
+  )
 })
 
 function updateEnvironmentList() {
