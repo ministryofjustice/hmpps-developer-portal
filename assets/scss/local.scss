@@ -164,3 +164,16 @@
 .td-nowrap {
   white-space: nowrap;
 }
+
+.monitor .govuk-form-group {
+  margin: 0;
+}
+
+.monitor-filter-block {
+  display: flex;
+  align-items: center;
+}
+
+.monitor-filter-block > :first-child.govuk-heading-s {
+  margin: 0 govuk-spacing(2) 0 0;
+}
