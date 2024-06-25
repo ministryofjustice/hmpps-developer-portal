@@ -23,8 +23,18 @@ export default class StrapiApiClient {
     this.restClient = new RestClient('strapiApiClient', config.apis.serviceCatalogue as ApiConfig, '')
   }
 
-  async getProducts({ withEnvironments = false }: { withEnvironments?: boolean }): Promise<ProductListResponse> {
+  async getProducts({
+    withEnvironments = false,
+    withComponents = false,
+  }: {
+    withEnvironments?: boolean
+    withComponents?: boolean
+  }): Promise<ProductListResponse> {
     const populate = ['product_set']
+
+    if (withComponents) {
+      populate.push('components')
+    }
 
     if (withEnvironments) {
       populate.push('components.environments')
