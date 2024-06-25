@@ -1,0 +1,106 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + product.name %}
+{% set mainClasses = "app-container govuk-body" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+    {% macro productDiagram(product) %}
+        graph {{orientation}} 
+            subgraph {{product.productCode}}["{{product.productName}}"]
+                direction TB
+                {% for componentName in product.componentNames %}
+                    {{componentName}}-prod-comp["{{componentName}}"]
+                {% endfor %}
+            end
+            {% for ref in product.dependencies %}
+            subgraph {{ref.productCode}}["{{ref.productName}}"]
+                direction TB
+                {% for componentName in ref.componentNames %}
+                    {{componentName}}-dependency-comp["{{componentName}}"]
+                {% endfor %}
+            end
+            {{ref.productCode}} --> {{product.productCode}}
+            {% endfor %}
+            
+            {% for ref in product.dependents %}
+            subgraph {{ref.productCode}}["{{ref.productName}}"]
+                direction TB
+                {% for componentName in ref.componentNames %}
+                    {{componentName}}-dependent-comp["{{componentName}}"]
+                {% endfor %}
+            end
+            {{product.productCode}} --> {{ref.productCode}}
+            {% endfor %}
+{% endmacro %}
+
+    <h1 id="detailPageTitle">Product Dependencies</h1>  
+
+    <div class="monitor-selectors govuk-button-group">
+        {{ govukSelect({
+            id: "product",
+            name: "product",
+            classes: "govuk-!-width-one-third",
+            label: {
+                text: "Product"
+            },
+            items: products | sort(false, false, 'productName') | toSelect('productCode', 'productName', selectedProduct)
+        }) }}
+        {{ govukButton({
+            id: "updateProduct",
+            name: "updateProduct",
+            text: "Update",
+            element: "button"
+            }) }}
+        {{ govukButton({
+            id: "toggleOrientation",
+            name: "toggleOrientation",
+            text: "Toggle Orientation",
+            element: "button"
+            }) }}
+    </div>
+  
+    <div class="dependency-graph govuk-!-margin-top-9"></div>
+
+    <div>
+       <h2 id="productName">{{product.productName}}</h2>
+       <h3>Depends on</h3>
+          <ul>
+           {% for ref in product.dependencies %}
+            <li>{{ref.productName}}
+              <ul>
+                {% for componentName in ref.componentNames %}
+                    <li>{{componentName}}</li>
+                {% endfor %}
+              </ul>  
+            </li>
+            {% else %}
+                <p>No other services</p>
+            {% endfor %}
+          </ul>
+       <h3>Is relied on by</h3>
+         <ul>
+           {% for ref in product.dependents %}
+            <li>{{ref.productName}}
+              <ul>
+                {% for componentName in ref.componentNames %}
+                    <li>{{componentName}}</li>
+                {% endfor %}
+              </ul>  
+            </li>
+            {% else %}
+                <p>No other services</p>
+            {% endfor %}
+          </ul>
+    </div>
+{% endblock %}
+
+{% block bodyEnd %}
+    <script id="graph-source" type="text/x-mermaid">{{ productDiagram(product) }}</script>
+
+    <script type="module" src="/assets/govukFrontendInit.js"></script>
+    <script type="module" src="/assets/svg-pan-zoom.min.js"></script>
+    <script src="/assets/moj/all.js"></script>
+    <script type="module" src="/assets/js/productDependencies.js"></script>
+{% endblock %}

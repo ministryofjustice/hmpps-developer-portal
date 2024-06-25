@@ -24,6 +24,8 @@ export default function setUpStaticResources(): Router {
     '/node_modules/jquery/dist',
     '/node_modules/datatables.net',
     '/node_modules/datatables.net-dt',
+    '/node_modules/mermaid/dist',
+    '/node_modules/svg-pan-zoom/dist',
   ).forEach(dir => {
     router.use('/assets', express.static(path.join(process.cwd(), dir), cacheControl))
   })

@@ -41,5 +41,11 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('toJson', (val: unknown, depth = 0) => JSON.stringify(val, null, depth))
+  njkEnv.addFilter(
+    'toSelect',
+    (arr: Record<string, unknown>[], valueKey: string, textKey: string, selectedValue: unknown) =>
+      arr.map(item => ({ text: item[textKey], value: item[valueKey], selected: item[valueKey] === selectedValue })),
+  )
+
   njkEnv.addFilter('toMonitorName', (val: string) => formatMonitorName(val))
 }
