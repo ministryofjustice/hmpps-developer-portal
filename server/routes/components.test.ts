@@ -5,6 +5,7 @@ import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import RedisService from '../services/redisService'
 import { Component, ComponentListResponseDataItem, Environment } from '../data/strapiApiTypes'
+import Dependencies from '../services/Dependencies'
 
 jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/redisService.ts')
@@ -133,11 +134,35 @@ const testComponent = {
 beforeEach(() => {
   serviceCatalogueService.getComponents.mockResolvedValue(testComponents)
   serviceCatalogueService.getComponent.mockResolvedValue(testComponent)
-  redisService.getDependencies.mockResolvedValue({
-    dependencies: { bbbb: true },
-    categories: ['GOTENBERG'],
-    dependents: { aaaa: true },
+
+  const dependencies = new Dependencies({
+    PROD: {
+      categoryToComponent: { GOTENBERG: ['aaa'] },
+      componentDependencyInfo: {
+        [testComponent.name]: {
+          dependencies: {
+            components: ['bbbb'],
+            categories: ['GOTENBERG'],
+            other: [],
+          },
+          dependents: [{ name: 'aaaa', isKnownComponent: true }],
+        },
+      },
+      missingServices: [],
+    },
+    PREPROD: {
+      categoryToComponent: {},
+      componentDependencyInfo: {},
+      missingServices: [],
+    },
+    DEV: {
+      categoryToComponent: {},
+      componentDependencyInfo: {},
+      missingServices: [],
+    },
   })
+
+  redisService.getAllDependencies.mockResolvedValue(dependencies)
 
   app = appWithAllRoutes({ services: { serviceCatalogueService, redisService } })
 })
@@ -163,7 +188,7 @@ describe('/components', () => {
   describe('GET /:componentId', () => {
     it('should render component page', () => {
       return request(app)
-        .get('/components/1')
+        .get(`/components/${testComponent.name}`)
         .expect('Content-Type', /html/)
         .expect(200)
         .expect(res => {
