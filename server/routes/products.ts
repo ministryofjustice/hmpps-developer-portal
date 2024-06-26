@@ -21,7 +21,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   get('/:productSlug', async (req, res) => {
     const productSlug = getFormattedName(req, 'productSlug')
     const product = await serviceCatalogueService.getProduct({ productSlug })
-    console.log(productSlug)
     const productSet = product.product_set?.data
     const team = product.team?.data
     const components = product.components?.data?.map(component => component)
