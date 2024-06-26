@@ -78,17 +78,19 @@ describe('Strapi service', () => {
 
     describe('getProduct', () => {
       const testProductResponse = {
-        data: {
-          id: 1,
-          attributes: { name: 'Product 1', p_id: '1' },
-        },
+        data: [
+          {
+            id: 1,
+            attributes: { name: 'Product 1', p_id: '1', slug: 'product-1' },
+          },
+        ],
       } as ProductResponse
-      const testProduct = { name: 'Product 1', p_id: '1' } as Product
+      const testProduct = { name: 'Product 1', p_id: '1', slug: 'product-1' } as Product
 
       it('should return the selected product', async () => {
         strapiApiClient.getProduct.mockResolvedValue(testProductResponse)
 
-        const results = await serviceCatalogueService.getProduct({ productId: 1 })
+        const results = await serviceCatalogueService.getProduct({ productSlug: 'product-1' })
 
         expect(strapiApiClient.getProduct).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testProduct)
