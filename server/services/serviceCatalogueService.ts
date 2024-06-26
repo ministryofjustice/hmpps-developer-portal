@@ -89,16 +89,17 @@ export default class ServiceCatalogueService {
   }
 
   async getProduct({
+    productSlug = '',
     productId = 0,
     withEnvironments = false,
   }: {
-    productId: number
+    productSlug?: string
+    productId?: number
     withEnvironments?: boolean
   }): Promise<Product> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const productData = await strapiApiClient.getProduct({ productId, withEnvironments })
-
-    const product = productData.data?.attributes
+    const productData = await strapiApiClient.getProduct({ productSlug, productId, withEnvironments })
+    const product = productSlug ? productData.data[0].attributes : productData.data?.attributes
 
     return product
   }

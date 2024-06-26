@@ -14,7 +14,7 @@ jQuery(function () {
       data: 'attributes.product.data.attributes.p_id',
       createdCell: function (td, _cellData, rowData) {
         const link = rowData.attributes.product.data
-          ? `<a href="/products/${rowData.attributes.product.data.id}">${cleanColumnOutput(
+          ? `<a href="/products/${rowData.attributes.product.data.attributes.slug}">${cleanColumnOutput(
               rowData.attributes.product.data.attributes.p_id,
             )}</a>`
           : 'N/A'
@@ -25,7 +25,7 @@ jQuery(function () {
       data: 'attributes.product.data.attributes.name',
       createdCell: function (td, _cellData, rowData) {
         const link = rowData.attributes.product.data
-          ? `<a href="/products/${rowData.attributes.product.data.id}">${cleanColumnOutput(
+          ? `<a href="/products/${rowData.attributes.product.data.attributes.slug}">${cleanColumnOutput(
               rowData.attributes.product.data.attributes.name,
             )}</a>`
           : 'N/A'

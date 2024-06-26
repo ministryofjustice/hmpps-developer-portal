@@ -1,7 +1,7 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { getNumericId } from '../utils/utils'
+import { getFormattedName } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -18,10 +18,10 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.send(products)
   })
 
-  get('/:productId', async (req, res) => {
-    const productId = getNumericId(req, 'productId')
-    const product = await serviceCatalogueService.getProduct({ productId })
-
+  get('/:productSlug', async (req, res) => {
+    const productSlug = getFormattedName(req, 'productSlug')
+    const product = await serviceCatalogueService.getProduct({ productSlug })
+    console.log(productSlug)
     const productSet = product.product_set?.data
     const team = product.team?.data
     const components = product.components?.data?.map(component => component)
