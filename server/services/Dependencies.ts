@@ -49,4 +49,8 @@ export default class Dependencies {
       dependents,
     }
   }
+
+  public getAllUnknownHosts() {
+    return Object.values(this.dependencyInfo).flatMap(e => e.missingServices)
+  }
 }
