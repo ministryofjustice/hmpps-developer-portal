@@ -23,7 +23,7 @@
         {% if serviceArea.products | length %}
         <ul>
           {% for product in serviceArea.products %}
-            <li><a href="/products/{{ product.id }}" data-test="product-{{ product.id }}">{{ product.attributes.name }}</a></li>
+            <li><a href="/products/{{ product.attributes.slug }}" data-test="product-{{ product.id }}">{{ product.attributes.name }}</a></li>
           {% endfor %}
         </ul>
         {% else %}

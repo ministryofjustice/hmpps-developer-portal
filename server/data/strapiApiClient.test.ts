@@ -54,24 +54,51 @@ describe('strapiApiClient', () => {
     })
 
     describe('getProduct', () => {
-      it('should return a single product', async () => {
-        const product = {
-          data: { id: 1, attributes: { name: 'Product', p_id: '1' } },
-        } as ProductResponse
-        fakeStrapiApi.get('/products/1?populate=product_set%2Cteam%2Ccomponents%2Cservice_area').reply(200, product)
-        const output = await strapiApiClient.getProduct({ productId: 1 })
-        expect(output).toEqual(product)
-      })
+      describe('with productId', () => {
+        it('should return a single product', async () => {
+          const product = {
+            data: { id: 1, attributes: { name: 'Product', p_id: '1', slug: 'product' } },
+          } as ProductResponse
+          fakeStrapiApi.get('/products/1?populate=product_set%2Cteam%2Ccomponents%2Cservice_area').reply(200, product)
+          const output = await strapiApiClient.getProduct({ productId: 1 })
+          expect(output).toEqual(product)
+        })
 
-      it('should return a single product with environments if selected', async () => {
-        const product = {
-          data: { id: 1, attributes: { name: 'Product', p_id: '1' } },
-        } as ProductResponse
-        fakeStrapiApi
-          .get('/products/1?populate=product_set%2Cteam%2Ccomponents%2Cservice_area%2Ccomponents.environments')
-          .reply(200, product)
-        const output = await strapiApiClient.getProduct({ productId: 1, withEnvironments: true })
-        expect(output).toEqual(product)
+        it('should return a single product with environments if selected', async () => {
+          const product = {
+            data: { id: 1, attributes: { name: 'Product', p_id: '1', slug: 'product' } },
+          } as ProductResponse
+          fakeStrapiApi
+            .get('/products/1?populate=product_set%2Cteam%2Ccomponents%2Cservice_area%2Ccomponents.environments')
+            .reply(200, product)
+          const output = await strapiApiClient.getProduct({ productId: 1, withEnvironments: true })
+          expect(output).toEqual(product)
+        })
+      })
+      describe('with productSlug', () => {
+        it('should return a single product', async () => {
+          const product = {
+            data: { id: 1, attributes: { name: 'Product', p_id: '1', slug: 'product' } },
+          } as ProductResponse
+          fakeStrapiApi
+            .get('/products?filters[slug][$eq]=product&populate=product_set%2Cteam%2Ccomponents%2Cservice_area')
+            .reply(200, product)
+          const output = await strapiApiClient.getProduct({ productSlug: 'product' })
+          expect(output).toEqual(product)
+        })
+
+        it('should return a single product with environments if selected', async () => {
+          const product = {
+            data: { id: 1, attributes: { name: 'Product', p_id: '1', slug: 'product' } },
+          } as ProductResponse
+          fakeStrapiApi
+            .get(
+              '/products?filters[slug][$eq]=product&populate=product_set%2Cteam%2Ccomponents%2Cservice_area%2Ccomponents.environments',
+            )
+            .reply(200, product)
+          const output = await strapiApiClient.getProduct({ productSlug: 'product', withEnvironments: true })
+          expect(output).toEqual(product)
+        })
       })
     })
   })

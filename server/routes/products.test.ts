@@ -10,7 +10,9 @@ jest.mock('../services/serviceCatalogueService.ts')
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testProducts = [{ id: 1, attributes: { name: 'testProduct', p_id: '1' } }] as ProductListResponseDataItem[]
+const testProducts = [
+  { id: 1, attributes: { name: 'testProduct', p_id: '1', slug: 'testproduct' } },
+] as ProductListResponseDataItem[]
 const testProduct = { name: 'z-index testProduct', p_id: '1' } as Product
 
 beforeEach(() => {
@@ -40,7 +42,7 @@ describe('/products', () => {
   describe('GET /:productId', () => {
     it('should render product page', () => {
       return request(app)
-        .get('/products/1')
+        .get('/products/testproduct')
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
