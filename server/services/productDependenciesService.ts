@@ -53,6 +53,43 @@ export default class ServiceCatalogueService {
     })
   }
 
+  async getComponentsWithUnknownProducts(): Promise<string[]> {
+    const products = (await this.strapiApiClientFactory('').getProducts({ withComponents: true })).data
+      .filter(product => product.attributes.components?.data.length)
+      .map(product => ({
+        productName: product.attributes.name,
+        productCode: formatMonitorName(product.attributes.name),
+        componentNames: product.attributes.components.data.map(components => components.attributes.name),
+      }))
+
+    const componentToProduct = Object.fromEntries(
+      products.flatMap(product => product.componentNames.map(component => [component, product])),
+    )
+
+    const allDependencies = await this.redisService.getAllDependencies()
+
+    const componentNames = products.flatMap(product => {
+      const productDependencies = allDependencies.getDependenciesForComponents(product.componentNames)
+      const dependencies = this.getProductsToComponents(
+        product.productCode,
+        productDependencies.dependencies,
+        componentToProduct,
+      )
+      const dependents = this.getProductsToComponents(
+        product.productCode,
+        productDependencies.dependents,
+        componentToProduct,
+      )
+      return [...dependents, ...dependencies].filter(p => p.productCode === 'UNKNOWN').flatMap(p => p.componentNames)
+    })
+    return Array.from(new Set(componentNames)).sort()
+  }
+
+  async getHostNamesMissingComponents(): Promise<string[]> {
+    const allDependencies = await this.redisService.getAllDependencies()
+    return Array.from(new Set(allDependencies.getAllUnknownHosts())).sort()
+  }
+
   private getProductsToComponents(
     owningProductCode: string,
     components: Record<string, boolean>,
