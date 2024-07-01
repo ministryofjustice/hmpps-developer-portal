@@ -5,6 +5,8 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
+{% set containerClasses = "wide-screen" %}
+
 {% block content %}
     {% macro productDiagram(product) %}
         graph {{orientation}} 
@@ -33,7 +35,7 @@
             end
             {{product.productCode}} --> {{ref.productCode}}
             {% endfor %}
-{% endmacro %}
+    {% endmacro %}
 
     <h1 id="detailPageTitle">Product Dependencies</h1>  
 
@@ -41,7 +43,6 @@
         {{ govukSelect({
             id: "product",
             name: "product",
-            classes: "govuk-!-width-one-third",
             label: {
                 text: "Product"
             },
