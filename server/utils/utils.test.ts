@@ -15,6 +15,9 @@ import {
   formatActiveAgencies,
   relativeTimeFromNow,
   veracodeFilters,
+  associateBy,
+  groupBy,
+  differenceInDate,
 } from './utils'
 
 describe('Utils', () => {
@@ -241,4 +244,94 @@ describe('veracodeFilters', () => {
       expect(veracodeFilters(passed, failed, unknown, status)).toBe(expected)
     },
   )
+
+  describe('associateBy', () => {
+    it('empty', () => {
+      const names: string[] = []
+      expect(associateBy(names, name => `${name.length}`)).toStrictEqual({})
+    })
+
+    it('example', () => {
+      const names: string[] = ['one', 'two', 'three', 'four']
+      expect(associateBy(names, name => `${name.length}`)).toStrictEqual({ '3': 'two', '4': 'four', '5': 'three' })
+    })
+  })
+
+  describe('groupBy', () => {
+    it('empty', () => {
+      const names: string[] = []
+      expect(groupBy(names, name => `${name.length}`)).toStrictEqual({})
+    })
+
+    it('example', () => {
+      const names: string[] = ['one', 'two', 'three', 'four']
+      expect(groupBy(names, name => `${name.length}`)).toStrictEqual({
+        '3': ['one', 'two'],
+        '4': ['four'],
+        '5': ['three'],
+      })
+    })
+  })
+
+  describe('differenceInDate', () => {
+    it('missing both', () => {
+      expect(differenceInDate(undefined, undefined)).toStrictEqual({
+        days: 0,
+        description: 'not available',
+        hours: 0,
+        millis: 0,
+      })
+    })
+
+    it('missing from', () => {
+      expect(differenceInDate(undefined, new Date())).toStrictEqual({
+        days: 0,
+        description: 'not available',
+        hours: 0,
+        millis: 0,
+      })
+    })
+
+    it('missing to', () => {
+      expect(differenceInDate(new Date(), undefined)).toStrictEqual({
+        days: 0,
+        description: 'not available',
+        hours: 0,
+        millis: 0,
+      })
+    })
+
+    it('same date', () => {
+      const date = new Date()
+      expect(differenceInDate(date, date)).toStrictEqual({
+        days: 0,
+        description: 'no difference',
+        hours: 0,
+        millis: 0,
+      })
+    })
+
+    it('small difference in dates', () => {
+      const from = new Date()
+      const to = new Date(from.getTime() + 1000)
+      expect(differenceInDate(from, to)).toStrictEqual({
+        days: 0,
+        description: 'a few seconds',
+        hours: 0,
+        millis: -1000,
+      })
+    })
+
+    it('different dates', () => {
+      const from = new Date()
+      // 28 hours in the future
+      const to = new Date(from.getTime() + 1000 * 60 * 60 * 28)
+      expect(differenceInDate(from, to)).toStrictEqual({
+        days: -1,
+        description: 'a day',
+        hours: -28,
+        millis: -100800000,
+      })
+    })
+  })
 })

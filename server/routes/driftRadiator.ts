@@ -1,15 +1,9 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import type { Component } from '../data/strapiApiTypes'
 import { isValidDropDown } from '../utils/utils'
 
-export default function routes({
-  serviceCatalogueService,
-  redisService,
-  componentNameService,
-  dataFilterService,
-}: Services): Router {
+export default function routes({ teamHealthService, componentNameService, dataFilterService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -132,38 +126,10 @@ export default function routes({
     })
   })
 
-  const toComponentView = (component: Component) => ({
-    name: component.name,
-    environments: component.environments.map((env, i) => ({
-      id: `${component.name}_${env.name}`,
-      name: env.name,
-      componentName: component.name,
-      streamName: `version:${component.name}:${env.name}`,
-      devEnvId: `${component.name}_${component.environments[0].name}`,
-      prodEnvId: `${component.name}_${component.environments.at(-1).name}`,
-      isDev: i === 0,
-    })),
-  })
-
   post('/components.json', async (req, res) => {
     const { componentNames } = req.body as Record<string, string[]>
-
-    const allComponents = await serviceCatalogueService.getComponents()
-    const components = allComponents
-      .filter(c => componentNames.includes(c.attributes.name))
-      .map(c => toComponentView(c.attributes))
-    return res.send(components)
-  })
-
-  post('/queue', async (req, res) => {
-    const streams = Object.keys(req.body?.streams).map(queueName => ({
-      key: queueName,
-      id: req.body?.streams[queueName],
-    }))
-
-    const messages = await redisService.readStream(streams)
-
-    return res.send(messages)
+    const driftData = await teamHealthService.getDriftData(componentNames)
+    return res.send(driftData)
   })
 
   return router
