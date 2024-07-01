@@ -143,7 +143,7 @@ export default class ServiceCatalogueService {
     const strapiApiClient = this.strapiApiClientFactory('')
     const serviceAreaData = await strapiApiClient.getServiceArea({ serviceAreaId, serviceAreaSlug, withProducts })
 
-    const serviceArea = serviceAreaSlug ? serviceAreaData.data[0].attributes : serviceAreaData.data?.attributes
+    const serviceArea = serviceAreaSlug ? serviceAreaData.data[0]?.attributes : serviceAreaData.data?.attributes
 
     return serviceArea
   }
