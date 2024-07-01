@@ -1,0 +1,16 @@
+
+
+{% macro driftRadiatorTable(params) %}
+    <table id="dependencyDriftTable" class="govuk-table {{ 'govuk-!-margin-top-9' if params.standalone }}">
+        <thead>
+        <tr>
+            <th>Component</th>
+            <th>Staleness</th>
+            <th>Drift</th>
+            <th>Environments</th>
+        </tr>
+        </thead>
+        <tbody id="dependencyDriftRows" class="govuk-table__body">
+        </tbody>
+    </table>
+{% endmacro %}

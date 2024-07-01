@@ -1,6 +1,7 @@
 {% extends "../partials/layout.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
-
+{% from "../partials/driftRadiatorTable.njk" import driftRadiatorTable %}
+  
 {% set pageTitle = applicationName + " - Deployment drift radiator" %}
 {% set mainClasses = "app-container govuk-body" %}
 
@@ -10,7 +11,9 @@
   <form method="GET" action="/drift-radiator">
     {% include "../partials/filterDropDowns.njk" %}
   </form>
-  <div id="drift-radiator"></div>
+  
+  {{ driftRadiatorTable() }}
+
 {% endblock %}
 
 {% block bodyEnd %}
