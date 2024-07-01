@@ -110,6 +110,31 @@ export const isValidDropDown = (req: Request, paramName: string): boolean => {
 
   return param !== undefined && /^[a-z0-9_-]+$/.test(param)
 }
+
+export const groupBy = <T>(arr: Array<T>, keyGetter: (t: T) => string): Record<string, T[]> => {
+  return (arr || []).reduce(
+    (acc, i) => {
+      const key = keyGetter(i)
+      const bucket = acc[key] || []
+      bucket.push(i)
+      acc[key] = bucket
+      return acc
+    },
+    {} as Record<string, T[]>,
+  )
+}
+
+export const associateBy = <T>(arr: Array<T>, keyGetter: (t: T) => string): Record<string, T> => {
+  return (arr || []).reduce(
+    (acc, i) => {
+      const key = keyGetter(i)
+      acc[key] = i
+      return acc
+    },
+    {} as Record<string, T>,
+  )
+}
+
 /**
  * @param activeAgencies a list of agencies if available.
  * @returns formatted version of the agencies.
@@ -126,6 +151,25 @@ export const formatActiveAgencies = (activeAgencies: Array<string>) => {
 
 export const relativeTimeFromNow = (date: Date): string => {
   return dayjs.default().to(dayjs.default(date))
+}
+
+export const differenceInDate = (from: Date, to: Date) => {
+  if (!from || !to) {
+    return {
+      millis: 0,
+      days: 0,
+      hours: 0,
+      description: 'not available',
+    }
+  }
+  const fromDayJs = dayjs.default(from)
+  const toDayJs = dayjs.default(to)
+  return {
+    millis: fromDayJs.valueOf() - toDayJs.valueOf(),
+    days: fromDayJs.diff(toDayJs, 'days'),
+    hours: fromDayJs.diff(toDayJs, 'hours'),
+    description: fromDayJs.valueOf() === toDayJs.valueOf() ? 'no difference' : fromDayJs.to(toDayJs, true),
+  }
 }
 
 export const veracodeFilters = (passed: boolean, failed: boolean, unknown: boolean, status: string) => {

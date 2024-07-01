@@ -40,7 +40,8 @@
         ), rows) %}
     {% endfor %}
 
-    {{ govukTable({
+
+  {{ govukTable({
         captionClasses: "govuk-table__caption--m",
         firstCellIsHeader: false,
         head: [
@@ -51,7 +52,34 @@
         rows: rows
     }) }}
   {% endset %}
- 
+
+  {% set incalcableHealthComponents %}
+    {% set rows = [] %}
+    {% for component in componentsWeCannotCalculateTeamHealthFor %}
+        {% set rows = (rows.push(
+        [{
+            text: component.component
+        },
+        {
+            text: component.reason
+        }]
+        ), rows) %}
+    {% endfor %}
+    {{ govukTable({
+        captionClasses: "govuk-table__caption--m",
+        firstCellIsHeader: false,
+        head: [
+            {
+            text: "Component"
+            },
+            {
+            text: "Reason"
+            }
+        ],
+        rows: rows
+    }) }}
+ {% endset %}
+
  {{ govukTabs({
   items: [
     {
@@ -67,9 +95,17 @@
       panel: {
         html: missingComponents
       }
+    },
+    {
+      label: "Components we cannot calculate team health for",
+      id: "incalcable-health-components",
+      panel: {
+        html: incalcableHealthComponents
+      }
     }
   ]
 }) }}
+
 {% endblock %}
 
 {% block bodyEnd %}

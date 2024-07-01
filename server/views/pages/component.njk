@@ -1,4 +1,5 @@
 {% extends "../partials/layout.njk" %}
+{% from "../partials/driftRadiatorTable.njk" import driftRadiatorTable %}
 
 {% set pageTitle = applicationName + " - " + component.name %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -124,7 +125,8 @@
       </ul>
   </div>
 </div>
-<div id="drift-radiator"></div>
+
+{{ driftRadiatorTable({ standalone: true }) }}
 
 {% endblock %}
 

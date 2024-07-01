@@ -27,6 +27,28 @@
   }
 }
 
+#dependencyDriftTable {
+  width: 100%;
+  thead {
+    tr {
+      background-color: grey;
+    }
+    th, td {
+      color: white;
+      padding: govuk-spacing(1);
+
+      a:link, a:visited {
+        color: white;
+      }
+    }
+  }
+
+  .env {
+    display: inline-block;
+    width: 92px;
+  }
+}
+
 .monitor-selectors {
   align-items: flex-end;
 

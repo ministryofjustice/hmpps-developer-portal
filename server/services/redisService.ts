@@ -8,6 +8,16 @@ import Dependencies from './Dependencies'
 export type RedisStreamMessage = Awaited<ReturnType<RedisClient['xRead']>>[number]['messages'][number]
 export type AsyncRedisStreamGenerator = AsyncGenerator<RedisStreamMessage, void, unknown>
 
+export type VersionDetails = {
+  component: string
+  env: string
+  version: string
+  buildDate: Date
+  build: string
+  sha: string
+  dateAdded: Date
+}
+
 export default class RedisService {
   constructor(private readonly redisClient: RedisClient) {}
 
