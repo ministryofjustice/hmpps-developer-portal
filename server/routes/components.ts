@@ -73,6 +73,37 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     return res.send(rows)
   })
 
+  get('/trivy', async (req, res) => {
+    return res.render('pages/trivy')
+  })
+
+  get('/trivy/data', async (req, res) => {
+    const allComponents = await serviceCatalogueService.getComponents()
+
+    const rows = allComponents
+      .map(component => {
+        return component.attributes.trivy_scan_summary?.Results?.reduce((acc, result) => {
+          acc.push(
+            result.Vulnerabilities?.map(vulnerability => {
+              return {
+                name: component.attributes.name,
+                lastScan: component.attributes.trivy_last_completed_scan_date,
+                vulnerability: vulnerability.VulnerabilityID,
+                severity: vulnerability.Severity,
+                references: vulnerability.References.join(','),
+              }
+            }),
+          )
+
+          return acc
+        }, [])
+      })
+      .flat(Infinity)
+      .filter(n => n)
+
+    return res.send(rows)
+  })
+
   get('/:componentName', async (req, res) => {
     const componentName = getComponentName(req)
     const component = await serviceCatalogueService.getComponent({ componentName })
