@@ -54,17 +54,17 @@ class DeploymentRenderer {
         .join('')
 
       $('#dependencyDriftRows').append(`<tr class= "govuk-table__row">
-      <td class="govuk-table__cell"><a href="/components/${component.name}" class="statusTileName">${component.name}</a></td>
-      <td class="govuk-table__cell">
-        <div id="radiator-${component.name}-staleness" class="radiator-indicator">&nbsp;</div>
-        ${component.staleness.description}
-      </td>
-      <td class="govuk-table__cell">
-        <div id="radiator-${component.name}-drift" class="radiator-indicator">&nbsp;</div>
-        ${component.drift.description}
-      </td>
-      <td class="govuk-table__cell">Environments:<ul class="govuk-!-margin-top-0">${environments}</ul></td>
-      </tr>`)
+        <td class="govuk-table__cell"><a href="/components/${component.name}" class="statusTileName">${component.name}</a></td>
+        <td class="govuk-table__cell">
+          <div id="radiator-${component.name}-staleness" class="radiator-indicator">&nbsp;</div>
+          ${component.staleness.description}
+        </td>
+        <td class="govuk-table__cell">
+          <div id="radiator-${component.name}-drift" class="radiator-indicator">&nbsp;</div>
+          ${component.drift.description}
+        </td>
+        <td class="govuk-table__cell">Environments:<ul class="govuk-!-margin-top-0">${environments}</ul></td>
+        </tr>`)
       // red after around 30 days
       $(`#radiator-${component.name}-staleness`).css(
         'background-color',
