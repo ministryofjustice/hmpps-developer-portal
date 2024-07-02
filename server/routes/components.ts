@@ -109,8 +109,11 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       })
       .flat(Infinity)
       .filter(n => n)
+      .map(n => JSON.stringify(n))
 
-    return res.send(rows)
+    const uniqueRows = new Set(rows)
+
+    return res.send(Array.from(uniqueRows).map(n => JSON.parse(n)))
   })
 
   get('/:componentName', async (req, res) => {
