@@ -83,23 +83,29 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     const rows = allComponents
       .map(component => {
-        const results: TrivyResult[] = (component.attributes.trivy_scan_summary as TrivyScanResults).Results
+        const hasResults = component.attributes.trivy_scan_summary !== null
 
-        return results.reduce((acc: TrivyDisplayEntry[], result: TrivyResult) => {
-          acc.push(
-            result.Vulnerabilities?.map((vulnerability: TrivyVulnerability) => {
-              return {
-                name: component.attributes.name,
-                lastScan: component.attributes.trivy_last_completed_scan_date,
-                vulnerability: vulnerability.VulnerabilityID,
-                severity: vulnerability.Severity,
-                references: vulnerability.References.join(','),
-              }
-            }) as unknown as TrivyDisplayEntry,
-          )
+        if (hasResults) {
+          const results: TrivyResult[] = (component.attributes.trivy_scan_summary as TrivyScanResults).Results
 
-          return acc
-        }, [])
+          return results.reduce((acc: TrivyDisplayEntry[], result: TrivyResult) => {
+            acc.push(
+              result.Vulnerabilities?.map((vulnerability: TrivyVulnerability) => {
+                return {
+                  name: component.attributes.name,
+                  lastScan: component.attributes.trivy_last_completed_scan_date,
+                  vulnerability: vulnerability.VulnerabilityID,
+                  severity: vulnerability.Severity,
+                  references: vulnerability.References.join(','),
+                }
+              }) as unknown as TrivyDisplayEntry,
+            )
+
+            return acc
+          }, [])
+        }
+
+        return []
       })
       .flat(Infinity)
       .filter(n => n)
