@@ -4,6 +4,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { formatActiveAgencies, getComponentName, getEnvironmentName, veracodeFilters } from '../utils/utils'
+import { TrivyDisplayEntry, TrivyResult, TrivyScanResults, TrivyVulnerability } from '../@types'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -82,9 +83,11 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     const rows = allComponents
       .map(component => {
-        return component.attributes.trivy_scan_summary?.Results?.reduce((acc, result) => {
+        const results: TrivyResult[] = (component.attributes.trivy_scan_summary as TrivyScanResults).Results
+
+        return results.reduce((acc: TrivyDisplayEntry[], result: TrivyResult) => {
           acc.push(
-            result.Vulnerabilities?.map(vulnerability => {
+            result.Vulnerabilities?.map((vulnerability: TrivyVulnerability) => {
               return {
                 name: component.attributes.name,
                 lastScan: component.attributes.trivy_last_completed_scan_date,
@@ -92,7 +95,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
                 severity: vulnerability.Severity,
                 references: vulnerability.References.join(','),
               }
-            }),
+            }) as unknown as TrivyDisplayEntry,
           )
 
           return acc
