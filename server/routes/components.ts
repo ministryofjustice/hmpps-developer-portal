@@ -4,6 +4,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { formatActiveAgencies, getComponentName, getEnvironmentName, veracodeFilters } from '../utils/utils'
+import { TrivyDisplayEntry, TrivyResult, TrivyScanResults, TrivyVulnerability } from '../@types'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -71,6 +72,48 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       })
 
     return res.send(rows)
+  })
+
+  get('/trivy', async (req, res) => {
+    return res.render('pages/trivy')
+  })
+
+  get('/trivy/data', async (req, res) => {
+    const allComponents = await serviceCatalogueService.getComponents()
+
+    const rows = allComponents
+      .map(component => {
+        const hasResults = component.attributes.trivy_scan_summary !== null
+
+        if (hasResults) {
+          const results: TrivyResult[] = (component.attributes.trivy_scan_summary as TrivyScanResults).Results ?? []
+
+          return results.reduce((acc: TrivyDisplayEntry[], result: TrivyResult) => {
+            acc.push(
+              result.Vulnerabilities?.map((vulnerability: TrivyVulnerability) => {
+                return {
+                  name: component.attributes.name,
+                  lastScan: component.attributes.trivy_last_completed_scan_date,
+                  vulnerability: vulnerability.VulnerabilityID,
+                  severity: vulnerability.Severity,
+                  references: vulnerability.References.join(','),
+                }
+              }) as unknown as TrivyDisplayEntry,
+            )
+
+            return acc
+          }, [])
+        }
+
+        return []
+      })
+      .flat(Infinity)
+      .filter(n => n)
+      .map(n => JSON.stringify(n))
+
+    const uniqueRows = new Set(rows)
+
+    return res.send(Array.from(uniqueRows).map(n => JSON.parse(n)))
   })
 
   get('/:componentName', async (req, res) => {
