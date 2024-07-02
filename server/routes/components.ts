@@ -86,7 +86,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
         const hasResults = component.attributes.trivy_scan_summary !== null
 
         if (hasResults) {
-          const results: TrivyResult[] = (component.attributes.trivy_scan_summary as TrivyScanResults).Results
+          const results: TrivyResult[] = (component.attributes.trivy_scan_summary as TrivyScanResults).Results ?? []
 
           return results.reduce((acc: TrivyDisplayEntry[], result: TrivyResult) => {
             acc.push(
