@@ -1,13 +1,9 @@
 import dayjs from 'dayjs'
-import { RedisClient } from '../data/redisClient'
 
 import { DateDifference, associateBy, differenceInDate, formatMonitorName, groupBy, median } from '../utils/utils'
 import RedisService from './redisService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { Component } from '../data/strapiApiTypes'
-
-export type RedisStreamMessage = Awaited<ReturnType<RedisClient['xRead']>>[number]['messages'][number]
-export type AsyncRedisStreamGenerator = AsyncGenerator<RedisStreamMessage, void, unknown>
 
 export type VersionDetails = {
   component: string
@@ -131,7 +127,7 @@ export default class TeamHealthService {
       .sort(({ component: c1 }, { component: c2 }) => c1.localeCompare(c2))
   }
 
-  async getDriftData(componentNames: string[]) {
+  async getDriftData(componentNames: string[], now?: Date) {
     const versionDetailsByComponent = await this.getVersionDetailsByComponent()
     const allComponents = await this.serviceCatalogueService.getComponents()
     const components = allComponents
@@ -140,6 +136,7 @@ export default class TeamHealthService {
         const driftData = this.toComponentView(
           component.attributes,
           versionDetailsByComponent[component.attributes.name],
+          now || new Date(),
         )
         return driftData
       })
@@ -148,7 +145,7 @@ export default class TeamHealthService {
     return components
   }
 
-  async getTeamHealth() {
+  async getTeamHealth(now?: Date) {
     const versionDetailsByComponent = await this.getVersionDetailsByComponent()
     const allComponents = await this.serviceCatalogueService.getComponents([], true)
     const components = allComponents
@@ -156,6 +153,7 @@ export default class TeamHealthService {
         const driftData = this.toComponentView(
           component.attributes,
           versionDetailsByComponent[component.attributes.name],
+          now || new Date(),
         )
         return { driftData, component }
       })
@@ -224,7 +222,10 @@ export default class TeamHealthService {
     }
   }
 
-  getStats = (driftAndStaleness: ComponentHealth[], metricChooser: (element: ComponentHealth) => number): Stats => {
+  private getStats = (
+    driftAndStaleness: ComponentHealth[],
+    metricChooser: (element: ComponentHealth) => number,
+  ): Stats => {
     const days = driftAndStaleness.map(metricChooser).sort((a, b) => a - b)
     const max = Math.max(...days)
     const maxComponent = driftAndStaleness.find(element => metricChooser(element) === max)
@@ -246,7 +247,7 @@ export default class TeamHealthService {
     return healthA.stats.max === healthB.stats.max ? teamA.localeCompare(teamB) : healthB.stats.max - healthA.stats.max
   }
 
-  toComponentView = (component: Component, versionDetails: VersionDetails[]) => {
+  toComponentView = (component: Component, versionDetails: VersionDetails[], now: Date) => {
     const versionDetailByEnv = associateBy(versionDetails, details => details.type)
 
     const environmentsWithVersions = component.environments
@@ -286,7 +287,7 @@ export default class TeamHealthService {
       devEnvSha: latestDevEnvironment?.sha,
       prodEnvSha: earliestProdEnvironment?.sha,
       drift: differenceInDate(latestDevEnvironment?.buildDate, earliestProdEnvironment?.buildDate),
-      staleness: differenceInDate(new Date(), latestDevEnvironment?.buildDate),
+      staleness: differenceInDate(now, latestDevEnvironment?.buildDate),
       environments: environmentsWithVersions,
     }
   }
