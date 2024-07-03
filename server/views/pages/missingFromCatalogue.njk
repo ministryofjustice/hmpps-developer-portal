@@ -13,7 +13,7 @@
     {% for component in componentsWithoutProducts %}
         {% set rows = (rows.push(
         [{
-            text: component
+            html: '<a class="govuk-link--no-visited-state" href="/components/' + component  +'">' + component + '</a>'
         }]
         ), rows) %}
     {% endfor %}
@@ -58,7 +58,7 @@
     {% for component in componentsWeCannotCalculateTeamHealthFor %}
         {% set rows = (rows.push(
         [{
-            text: component.component
+            html: '<a class="govuk-link--no-visited-state" href="/components/' + component.component  +'">' + component.component + '</a>'
         },
         {
             text: component.reason

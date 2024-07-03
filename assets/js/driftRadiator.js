@@ -54,12 +54,12 @@ class DeploymentRenderer {
         .join('')
 
       $('#dependencyDriftRows').append(`<tr class= "govuk-table__row">
-        <td class="govuk-table__cell"><a href="/components/${component.name}" class="statusTileName">${component.name}</a></td>
-        <td class="govuk-table__cell">
+        <td class="govuk-table__cell"><a href="/components/${component.name}" class="statusTileNam govuk-link--no-visited-state">${component.name}</a></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="${component.staleness.days}">
           <div id="radiator-${component.name}-staleness" class="radiator-indicator">&nbsp;</div>
           ${component.staleness.description}
         </td>
-        <td class="govuk-table__cell">
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="${component.drift.days}">
           <div id="radiator-${component.name}-drift" class="radiator-indicator">&nbsp;</div>
           ${component.drift.description === 'no difference' && component.prodEnvSha !== component.devEnvSha ? 'less than 1 day' : component.drift.description}
         </td>
@@ -76,10 +76,6 @@ class DeploymentRenderer {
   }
 
   start = async componentNames => {
-    const update = async () => {
-      await this.fetchMessages(componentNames)
-      setTimeout(update, 10000)
-    }
-    update()
+    await this.fetchMessages(componentNames)
   }
 }
