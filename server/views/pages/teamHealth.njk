@@ -1,0 +1,114 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set pageTitle = applicationName + " - Team Health" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+  <h1 id="detailPageTitle">{{ title }}</h1>
+
+  {%set driftHtml %}
+  <table class="govuk-table">
+    <thead>
+      <tr>
+          <th class="govuk-table__header">Team</th>
+          <th class="govuk-table__header govuk-table__header--numeric">No.</th>
+          <th class="govuk-table__header govuk-table__header--numeric">Mean</th>
+          <th class="govuk-table__header govuk-table__header--numeric">Median</th>
+          <th class="govuk-table__header govuk-table__header--numeric">Max</th>
+          <th class="govuk-table__header">Component with highest drift</th>
+      </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% for team, teamInfo in teamHealth.drift %}
+        {% set drift = teamInfo.stats %}
+        <tr>
+          <td class="govuk-table__cell">
+            {% if team != 'undefined' and team != 'All' %}
+              <a class="govuk-link--no-visited-state" href="/drift-radiator/teams/{{teamInfo.teamSlug}}">{{team}}</a>
+            {% else %}
+                {{ team }}
+            {% endif %}
+          </td>
+          <td class="govuk-table__cell govuk-table__header--numeric">{{teamInfo.numberOfComponents}}</td>
+          <td class="govuk-table__cell govuk-table__header--numeric">{{drift.avg | fixed(2)}}</td>
+          <td class="govuk-table__cell govuk-table__header--numeric">{{drift.median}}</td>
+          <td class="govuk-table__cell govuk-table__header--numeric">{{drift.max}}</td>
+          <td class="govuk-table__cell">
+            <a class="govuk-link--no-visited-state" href="/components/{{drift.maxComponent.name}}">{{drift.maxComponent.name}}</a> ({{drift.maxComponent.drift.days}} days)
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endset %}
+
+  {%set stalenessHtml %}
+  <table class="govuk-table">
+        <thead>
+        <tr>
+            <th class="govuk-table__header">Team</th>
+            <th class="govuk-table__header govuk-table__header--numeric">No.</th>
+            <th class="govuk-table__header govuk-table__header--numeric">Mean</th>
+            <th class="govuk-table__header govuk-table__header--numeric">Median</th>
+            <th class="govuk-table__header govuk-table__header--numeric">Max</th>
+            <th class="govuk-table__header">Component with highest staleness</th>
+        </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for team, teamInfo in teamHealth.staleness %}
+          {% set staleness = teamInfo.stats  %}
+          <tr>
+            <td class="govuk-table__cell">
+              {% if team != 'undefined' and team != 'All' %}
+                <a class="govuk-link--no-visited-state" href="/drift-radiator/teams/{{teamInfo.teamSlug}}">{{team}}</a>
+              {% else %}
+                  {{team}}
+              {% endif %}
+            </td>
+            <td class="govuk-table__cell govuk-table__header--numeric">{{teamInfo.numberOfComponents}}</td>
+            <td class="govuk-table__cell govuk-table__header--numeric">{{staleness.avg | fixed(2)}}</td>
+            <td class="govuk-table__cell govuk-table__header--numeric">{{staleness.median}}</td>
+            <td class="govuk-table__cell govuk-table__header--numeric">{{staleness.max}}</td>
+            <td class="govuk-table__cell">
+              <a class="govuk-link--no-visited-state" href="/components/{{staleness.maxComponent.name}}">{{staleness.maxComponent.name}}</a> ({{staleness.maxComponent.staleness.days}} days)
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+  {% endset %}
+
+  {{ govukTabs({
+    items: [
+      {
+        label: "Staleness",
+        id: "staleness",
+        panel: {
+          html: stalenessHtml
+        }
+      },
+      {
+        label: "Drift",
+        id: "drift",
+        panel: {
+          html: driftHtml
+        }
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="/assets/js/dayjs/dayjs.min.js"></script>
+  <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
+  
+{% endblock %}

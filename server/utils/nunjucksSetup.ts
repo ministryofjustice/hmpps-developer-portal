@@ -47,5 +47,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
       arr.map(item => ({ text: item[textKey], value: item[valueKey], selected: item[valueKey] === selectedValue })),
   )
 
+  njkEnv.addFilter('fixed', (num, length) => (num ? num.toFixed(length || 2) : num))
+
   njkEnv.addFilter('toMonitorName', (val: string) => formatMonitorName(val))
 }

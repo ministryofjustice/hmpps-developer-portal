@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { RedisClient } from '../data/redisClient'
 
-import { associateBy, differenceInDate, groupBy } from '../utils/utils'
+import { DateDifference, associateBy, differenceInDate, formatMonitorName, groupBy, median } from '../utils/utils'
 import RedisService from './redisService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { Component } from '../data/strapiApiTypes'
@@ -22,6 +22,30 @@ export type VersionDetails = {
 export type ComponentAndReason = {
   component: string
   reason: string
+}
+
+export type ComponentHealth = { name: string; staleness: DateDifference; drift: DateDifference }
+
+type Stats = {
+  avg: number
+  median: number
+  max: number
+  maxComponent: unknown
+  days: number[]
+}
+
+export type TeamWithComponentHealth = {
+  name: string
+  teamSlug: string
+  serviceAreaSlug: string
+  componentHealth: ComponentHealth[]
+}
+
+export type TeamWithHealthStats = {
+  teamSlug: string
+  serviceAreaSlug: string
+  numberOfComponents: number
+  stats: Stats
 }
 
 export type DriftData = Awaited<ReturnType<TeamHealthService['getDriftData']>>[0]
@@ -124,6 +148,104 @@ export default class TeamHealthService {
     return components
   }
 
+  async getTeamHealth() {
+    const versionDetailsByComponent = await this.getVersionDetailsByComponent()
+    const allComponents = await this.serviceCatalogueService.getComponents([], true)
+    const components = allComponents
+      .map(component => {
+        const driftData = this.toComponentView(
+          component.attributes,
+          versionDetailsByComponent[component.attributes.name],
+        )
+        return { driftData, component }
+      })
+      .filter(({ driftData }) => driftData?.environments.length)
+
+    const teamsWithComponentHealth: Record<string, TeamWithComponentHealth> = components.reduce(
+      (acc, { driftData, component }) => {
+        const product = component.attributes.product?.data?.attributes
+        const teamName = product?.team?.data?.attributes?.name
+        const teamSlug = product?.team?.data?.attributes?.slug
+        const serviceAreaSlug = product?.service_area?.data?.attributes?.slug
+        const componentHealth = acc[teamName]?.componentHealth || ([] as ComponentHealth[])
+        const { staleness, drift, name } = driftData
+        componentHealth.push({ staleness, drift, name })
+        acc[teamName] = {
+          name: teamName,
+          teamSlug,
+          serviceAreaSlug,
+          componentHealth,
+        }
+        return acc
+      },
+      {} as Record<string, TeamWithComponentHealth>,
+    )
+
+    teamsWithComponentHealth.All = {
+      name: 'All',
+      teamSlug: undefined as string,
+      serviceAreaSlug: undefined as string,
+      componentHealth: components.map(({ driftData }) => {
+        const { staleness, drift, name } = driftData
+        return { staleness, drift, name }
+      }),
+    }
+
+    const drift: Record<string, TeamWithHealthStats> = Object.fromEntries(
+      Object.entries(teamsWithComponentHealth)
+        .map(([team, teamHealth]) => [
+          team,
+          {
+            teamSlug: formatMonitorName(team),
+            serviceAreaSlug: teamHealth.serviceAreaSlug,
+            numberOfComponents: teamHealth.componentHealth.length,
+            stats: this.getStats(teamHealth.componentHealth, componenent => componenent.drift.days),
+          },
+        ])
+        .sort(this.sortTeamHealth),
+    )
+    const staleness = Object.fromEntries(
+      Object.entries(teamsWithComponentHealth)
+        .map(([team, teamHealth]): [team: string, team: TeamWithHealthStats] => [
+          team,
+          {
+            teamSlug: formatMonitorName(team),
+            serviceAreaSlug: teamHealth.serviceAreaSlug,
+            numberOfComponents: teamHealth.componentHealth.length,
+            stats: this.getStats(teamHealth.componentHealth, componenent => componenent.staleness.days),
+          },
+        ])
+        .sort(this.sortTeamHealth),
+    )
+
+    return {
+      drift,
+      staleness,
+    }
+  }
+
+  getStats = (driftAndStaleness: ComponentHealth[], metricChooser: (element: ComponentHealth) => number): Stats => {
+    const days = driftAndStaleness.map(metricChooser).sort((a, b) => a - b)
+    const max = Math.max(...days)
+    const maxComponent = driftAndStaleness.find(element => metricChooser(element) === max)
+    const avg = days.reduce((acc, i) => acc + i) / driftAndStaleness.length
+
+    return {
+      avg,
+      median: median(days),
+      max,
+      maxComponent,
+      days,
+    }
+  }
+
+  sortTeamHealth = (
+    [teamA, healthA]: [team: string, teamHealth: TeamWithHealthStats],
+    [teamB, healthB]: [team: string, teamHealth: TeamWithHealthStats],
+  ) => {
+    return healthA.stats.max === healthB.stats.max ? teamA.localeCompare(teamB) : healthB.stats.max - healthA.stats.max
+  }
+
   toComponentView = (component: Component, versionDetails: VersionDetails[]) => {
     const versionDetailByEnv = associateBy(versionDetails, details => details.type)
 
@@ -160,7 +282,9 @@ export default class TeamHealthService {
 
     return {
       name: component.name,
+      repo: component.github_repo,
       devEnvSha: latestDevEnvironment?.sha,
+      prodEnvSha: earliestProdEnvironment?.sha,
       drift: differenceInDate(latestDevEnvironment?.buildDate, earliestProdEnvironment?.buildDate),
       staleness: differenceInDate(new Date(), latestDevEnvironment?.buildDate),
       environments: environmentsWithVersions,

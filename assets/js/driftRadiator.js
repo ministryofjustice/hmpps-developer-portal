@@ -38,7 +38,7 @@ class DeploymentRenderer {
     components.forEach(component => {
       const environments = component.environments
         .map(environment => {
-          const gitDiffUrl = `https://github.com/ministryofjustice/${component.name}/compare/${environment.sha}...${component.devEnvSha}`
+          const gitDiffUrl = `https://github.com/ministryofjustice/${component.repo}/compare/${environment.sha}...${component.devEnvSha}`
           const showDiff =
             environment.type !== 'dev' && Boolean(component.devEnvSha) && environment.sha !== component.devEnvSha
           const diffAnchor = showDiff ? `(<a class="govuk-link--no-visited-state" href="${gitDiffUrl}">diff</a>)` : ''
@@ -61,7 +61,7 @@ class DeploymentRenderer {
         </td>
         <td class="govuk-table__cell">
           <div id="radiator-${component.name}-drift" class="radiator-indicator">&nbsp;</div>
-          ${component.drift.description}
+          ${component.drift.description === 'no difference' && component.prodEnvSha !== component.devEnvSha ? 'less than 1 day' : component.drift.description}
         </td>
         <td class="govuk-table__cell">Environments:<ul class="govuk-!-margin-top-0">${environments}</ul></td>
         </tr>`)
