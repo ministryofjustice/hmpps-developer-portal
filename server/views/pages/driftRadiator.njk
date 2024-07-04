@@ -1,6 +1,8 @@
 {% extends "../partials/layout.njk" %}
+{% from "../partials/docs.njk" import drift, staleness %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 {% from "../partials/driftRadiatorTable.njk" import driftRadiatorTable %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
   
 {% set pageTitle = applicationName + " - Deployment drift radiator" %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -12,6 +14,11 @@
     {% include "../partials/filterDropDowns.njk" %}
   </form>
   
+  {{ govukDetails({
+      summaryText: "About staleness and drift",
+      html: staleness() + drift()
+  }) }}  
+
   {{ driftRadiatorTable() }}
 
 {% endblock %}
@@ -19,6 +26,7 @@
 {% block bodyEnd %}
   <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
+  <script src="/assets/mojFrontendInit.js"></script>
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="/assets/js/dayjs/dayjs.min.js"></script>
   <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>

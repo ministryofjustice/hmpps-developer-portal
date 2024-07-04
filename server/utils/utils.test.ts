@@ -18,6 +18,7 @@ import {
   associateBy,
   groupBy,
   differenceInDate,
+  median,
 } from './utils'
 
 describe('Utils', () => {
@@ -332,6 +333,24 @@ describe('veracodeFilters', () => {
         hours: -28,
         millis: -100800000,
       })
+    })
+  })
+
+  describe('median', () => {
+    it('empty', () => {
+      expect(median([])).toStrictEqual(undefined)
+    })
+
+    it('single value', () => {
+      expect(median([1])).toStrictEqual(1)
+    })
+
+    it('odd number of elements', () => {
+      expect(median([1, 2, 3, 4, 5])).toStrictEqual(3)
+    })
+
+    it('even number of elements', () => {
+      expect(median([1, 2, 3, 4])).toStrictEqual(2.5)
     })
   })
 })
