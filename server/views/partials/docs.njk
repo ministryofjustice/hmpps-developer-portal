@@ -1,0 +1,44 @@
+
+{% macro drift() %}
+    <h2>Drift</h2>
+    <p>
+    Drift is a measure of how far the production version of a service has diverged from a version of the service deployed to a development environment. 
+    This is measured in real days and is calculated by comparing dates present in the build version as exposed via `/info` endpoint on the deployed service. 
+    </p>
+    <h3>Why do we measure drift?</h3>
+    <p>
+    Large drift numbers suggest a stockpiling of risk and anti-agile practices. We should look to deploy frequently to ensure that we spread risk and maintain a focus on iteratively delivering value to end-users.
+    </p>
+    <p>A high drift number may also indicate that patching is not being pushed through the deployment pipeline. The majority of our security alerts are carried out on code hosted on the main branch or the most recently built docker image.
+    Teams may address noisy security alerts but we need to ensure these fixes are pushed through to production to address security issues present in production deploys. 
+    </p>
+    <h3>Limitations to measuring drift</h3>
+    <p>
+    The way we currently measure drift does not take into account the passage of time since a deploy, so if there is a drift of 1 day, and that change is not deployed for 6 months, then the radiator would still remain green. 
+    <p>
+    </p>
+    It is also a very rough indicator and can't take into account complexity/scale of changes, it assumes that risk builds up linearly over time.
+    </p>
+{% endmacro %}
+
+
+{% macro staleness() %}
+    <h2>Staleness</h2>
+    <p>
+    Staleness is a measure of whether an application is under active development. 
+    This is measured in real days and is calculated by comparing the current date to the date present in the build version as exposed via `/info` endpoint on the deployed service. 
+    </p>
+    <h3>Why do we measure staleness?</h3>
+    <p>
+    Large staleness numbers suggest that an application is no longer being maintained.
+    </p>
+    <p>A high staleness number indicates that security patching is not taking placed, suggesting that associated deployments may have known security issues.  
+    </p>
+    <h3>Limitations to measuring staleness</h3>
+    <p>
+    We cannot assume that low levels of staleness mean that security patching is taking place. It may mean that teams are focusing on delivering features - additional measures are required to determine whether this is the case.
+    </p>
+    <p>
+    A low staleness score doesn't not guarantee that incremental delivery of value to end users is occuring. Changes may languish on development. 
+    </p>
+{% endmacro %}

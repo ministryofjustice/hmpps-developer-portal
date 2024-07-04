@@ -153,7 +153,14 @@ export const relativeTimeFromNow = (date: Date): string => {
   return dayjs.default().to(dayjs.default(date))
 }
 
-export const differenceInDate = (from: Date, to: Date) => {
+export type DateDifference = {
+  millis: number
+  days: number
+  hours: number
+  description: string
+}
+
+export const differenceInDate = (from: Date, to: Date): DateDifference => {
   if (!from || !to) {
     return {
       millis: 0,
@@ -190,4 +197,16 @@ export const veracodeFilters = (passed: boolean, failed: boolean, unknown: boole
   }
 
   return false
+}
+
+export const median = (values: number[]): number => {
+  if (values.length === 0) {
+    return undefined
+  }
+
+  const sortedValues = [...values].sort((a, b) => a - b)
+
+  const half = Math.floor(sortedValues.length / 2)
+
+  return sortedValues.length % 2 ? sortedValues[half] : (sortedValues[half - 1] + sortedValues[half]) / 2
 }
