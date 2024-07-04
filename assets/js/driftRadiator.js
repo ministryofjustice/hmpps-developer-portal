@@ -44,7 +44,7 @@ class DeploymentRenderer {
           const diffAnchor = showDiff ? `(<a class="govuk-link--no-visited-state" href="${gitDiffUrl}">diff</a>)` : ''
           return `
         <li>
-          <a class="env govuk-link--no-visited-state" href="/components/${component.name}/environment/${environment.name}" class="statusTileName">
+          <a class="env govuk-link--no-visited-state" href="/components/${component.name}/environment/${environment.name}">
               ${environment.name}
           </a> 
               ${environment.version}
@@ -54,7 +54,7 @@ class DeploymentRenderer {
         .join('')
 
       $('#dependencyDriftRows').append(`<tr class= "govuk-table__row">
-        <td class="govuk-table__cell"><a href="/components/${component.name}" class="statusTileNam govuk-link--no-visited-state">${component.name}</a></td>
+        <td class="govuk-table__cell"><a href="/components/${component.name}" class="govuk-link--no-visited-state">${component.name}</a></td>
         <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="${component.staleness.days}">
           <div id="radiator-${component.name}-staleness" class="radiator-indicator">&nbsp;</div>
           ${component.staleness.description}
