@@ -7,15 +7,27 @@ jQuery(function () {
       },
     },
     {
+      data: 'title',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${cleanColumnOutput(rowData.title)}`)
+      },
+    },
+    {
       data: 'lastScan',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${cleanColumnOutput(rowData.lastScan)}`)
+        const date = new Date(rowData.lastScan)
+        const formattedDate = date.toLocaleString('en-GB', { timeZone: 'UTC' })
+        $(td).html(formattedDate)
       },
     },
     {
       data: 'vulnerability',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${cleanColumnOutput(rowData.vulnerability)}`)
+        if (rowData.primaryUrl) {
+          $(td).html(`<a href="${rowData.primaryUrl}" target="_blank">${cleanColumnOutput(rowData.vulnerability)}</a>`)
+        } else {
+          $(td).html(`${cleanColumnOutput(rowData.vulnerability)}`)
+        }
       },
     },
     {
@@ -27,7 +39,7 @@ jQuery(function () {
     {
       data: 'references',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${cleanColumnOutput(rowData.references)}`)
+        $(td).html(rowData.references)
       },
     },
   ]

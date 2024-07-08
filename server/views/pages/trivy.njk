@@ -4,6 +4,7 @@
 
 {% set pageTitle = applicationName + " - Trivy" %}
 {% set mainClasses = "app-container govuk-body" %}
+{% set containerClasses = "wide-screen" %}
 
 {% block content %}
 
@@ -12,7 +13,8 @@
   <table id="trivyTable" class="stripe">
   	<thead>
 	  <tr>
-		<th>Name</th>
+		<th>Component</th>
+		<th>Title</th>
 		<th>Last Scan</th>
 		<th>Vulnerability</th>
 		<th>Severity</th>

@@ -79,29 +79,35 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   })
 
   get('/trivy/data', async (req, res) => {
-    const allComponents = await serviceCatalogueService.getComponents()
-
-    const rows = allComponents
+    const components = (await serviceCatalogueService.getComponents())
       .map(component => {
         const hasResults = component.attributes.trivy_scan_summary !== null
 
         if (hasResults) {
           const results: TrivyResult[] = (component.attributes.trivy_scan_summary as TrivyScanResults).Results ?? []
 
-          return results.reduce((acc: TrivyDisplayEntry[], result: TrivyResult) => {
-            acc.push(
+          return results.reduce((displayEntries: TrivyDisplayEntry[], result: TrivyResult) => {
+            displayEntries.push(
               result.Vulnerabilities?.map((vulnerability: TrivyVulnerability) => {
+                const referenceUrls = vulnerability.References.map(url => `<a href="${url}">${url}</a>`)
+                const references = `<details class="govuk-details">
+                  <summary class="govuk-details__summary"><span class="govuk-details__summary-text">Links</span></summary>
+                  <div class="govuk-details__text">${referenceUrls.join('<br>')}</div>
+                </details>`
+
                 return {
                   name: component.attributes.name,
+                  title: vulnerability.Title,
                   lastScan: component.attributes.trivy_last_completed_scan_date,
                   vulnerability: vulnerability.VulnerabilityID,
+                  primaryUrl: vulnerability.PrimaryURL,
                   severity: vulnerability.Severity,
-                  references: vulnerability.References.join(','),
+                  references,
                 }
               }) as unknown as TrivyDisplayEntry,
             )
 
-            return acc
+            return displayEntries
           }, [])
         }
 
@@ -111,7 +117,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       .filter(n => n)
       .map(n => JSON.stringify(n))
 
-    const uniqueRows = new Set(rows)
+    const uniqueRows = new Set(components)
 
     return res.send(Array.from(uniqueRows).map(n => JSON.parse(n)))
   })

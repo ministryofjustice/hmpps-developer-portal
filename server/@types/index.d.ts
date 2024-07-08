@@ -10,6 +10,8 @@ export type MoJSelectDataItem = {
 }
 
 export type TrivyVulnerability = {
+  PrimaryURL: string
+  Title: string
   VulnerabilityID: string
   Severity: string
   References: string[]
@@ -25,8 +27,10 @@ export type TrivyScanResults = {
 
 export type TrivyDisplayEntry = {
   name: string
+  title: string
   lastScan: string
   vulnerability: string
   severity: string
   references: string
+  primaryUrl: string
 }
