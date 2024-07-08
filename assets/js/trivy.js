@@ -44,5 +44,5 @@ jQuery(function () {
     },
   ]
 
-  createTable('trivyTable', '/components/trivy/data', 2, 'desc', columns)
+  createTable('trivyTable', '/reports/trivy/data', 2, 'desc', columns)
 })
