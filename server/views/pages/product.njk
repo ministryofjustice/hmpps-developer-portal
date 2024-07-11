@@ -49,6 +49,11 @@
       <th>Team</th>
       <td><a href="/teams/{{ product.team.attributes.slug }}">{{ product.team.attributes.name }} ({{ product.team.attributes.t_id }})</a></td>
     </tr>
+    {% if product.slackChannelId | length %}
+      <th>Slack Channel</th>
+      <td><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">Slack Channel</a></td>
+    </tr>
+    {% endif %}
     <tr>
       <th>Product Set</th>
       <td><a href="/product-sets/{{ product.productSet.id }}">{{ product.productSet.attributes.name }} ({{ product.productSet.attributes.ps_id }})</a></td>
@@ -77,11 +82,6 @@
           <li><a class="govuk-link--no-visited-state" href="/drift-radiator/products/{{ product.name | toMonitorName }}">
              Deployment drift
           </a></li>
-          {% if product.slackChannelId | length %}
-          <li><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">
-             Slack channel
-          </a></li>
-          {% endif %}
         </ul>
       </td>
     </tr>
