@@ -50,8 +50,15 @@
       <td><a href="/teams/{{ product.team.attributes.slug }}">{{ product.team.attributes.name }} ({{ product.team.attributes.t_id }})</a></td>
     </tr>
     {% if product.slackChannelId | length %}
+    <tr>
       <th>Slack Channel</th>
-      <td><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">{{ product.slackChannelName }}</a></td>
+      <td><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">
+      {% if product.slackChannelName | length %}
+      {{ product.slackChannelName }}
+      {% else %}
+      Link
+      {% endif %}
+      </a></td>
     </tr>
     {% endif %}
     <tr>
