@@ -51,7 +51,7 @@
     </tr>
     {% if product.slackChannelId | length %}
       <th>Slack Channel</th>
-      <td><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">Slack Channel</a></td>
+      <td><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">{{ product.slackChannelName }}</a></td>
     </tr>
     {% endif %}
     <tr>
