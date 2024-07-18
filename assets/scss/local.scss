@@ -170,6 +170,14 @@
   white-space: pre-wrap;
 }
 
+#versionOutputCommits div pre {
+  color: black;
+  font-family: Courier, monospace;
+  padding: govuk-spacing(1);
+  background-color: #f3f2f1;
+  white-space: pre-wrap;
+}
+
 .veracode--missing {
   background-color: govuk-colour('light-grey');
 }

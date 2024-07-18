@@ -215,12 +215,73 @@ function drawVersionChart(stream) {
     },
   }
 
+  async function getData(componentName, previousCommitSha, commitSha) {
+    const url = `https://api.github.com/repos/ministryofjustice/${componentName}/compare/${previousCommitSha}...${commitSha}`
+    try {
+      console.log(url)
+      const githubHeaders = new Headers()
+      githubHeaders.append('Accept', 'application/vnd.github+json')
+      //githubHeaders.append("Authorization", "Bearer xxx")
+      githubHeaders.append('X-GitHub-Api-Version', '2022-11-28')
+
+      const response = await fetch(url, { headers: githubHeaders })
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`)
+      }
+
+      const json = await response.json()
+      return json
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
+
+  function getCommitMessages(json) {
+    const commitMessages = []
+    for (let i = 0; i < json.commits.length; i++) {
+      console.log(json.commits[i])
+      message = json.commits[i]['commit']['message']
+
+      message = message.replace(
+        /([A-Z][A-Z0-9]+-[0-9]+)/gm,
+        '<a href="https://dsdmoj.atlassian.net/browse/$1" target="_blank">$1</a>',
+      )
+
+      sha = json.commits[i]['sha'].substring(0, 6)
+      html_url = json.commits[i]['html_url']
+      commitMessages.push(`<a href=${html_url} target="_blank">${sha}</a> - ${message}`)
+    }
+    return commitMessages
+  }
+
   function selectHandler() {
     var selectedItem = versionChart.getSelection()[0]
     if (selectedItem) {
+      var previousVersion = dataVersionTable.getValue(selectedItem.row - 1, 1)
       var version = dataVersionTable.getValue(selectedItem.row, 1)
       var time = dataVersionTable.getValue(selectedItem.row, 2)
-      $(`#versionOutputSelected`).text(`Version: ${version} - Deployed @ ${time}`)
+      var previousCommitSha = previousVersion.split('.').pop()
+      var commitSha = version.split('.').pop()
+      const promise = getData(componentName, previousCommitSha, commitSha)
+      promise
+        .then(json => {
+          var commitMessages = getCommitMessages(json)
+          console.log(commitMessages)
+          let list = document.getElementById('versionOutputCommits')
+          list.innerHTML = ''
+          for (i = 0; i < commitMessages.length; ++i) {
+            let div = document.createElement('div')
+            div.innerHTML = `<pre>${commitMessages[i]}</pre>`
+            list.appendChild(div)
+          }
+        })
+        .catch(error => {
+          console.error(`Could not get commit messages: ${error}`)
+        })
+
+      var githubCompareURL = `https://github.com/ministryofjustice/${componentName}/compare/${previousCommitSha}...${commitSha}`
+      $(`#versionOutputSelected`).html(`<p>Version: ${version} - Deployed @ ${time}
+        <br/><a href=${githubCompareURL} target="_blank">View github commits to previous version</a></p>`)
     }
   }
   google.visualization.events.addListener(versionChart, 'select', selectHandler)
