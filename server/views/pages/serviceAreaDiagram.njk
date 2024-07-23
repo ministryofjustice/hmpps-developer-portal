@@ -16,6 +16,7 @@
                 direction TB
                 {% for component in product.components %}
                     {{component.name}}-prod-comp["{{component.name}}"]
+                    click {{component.name}}-prod-comp href "/components/{{component.name}}"
                 {% endfor %}
             end
             {{serviceArea.id}} --> {{product.productCode}}
