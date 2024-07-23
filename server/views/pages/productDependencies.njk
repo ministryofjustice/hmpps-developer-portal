@@ -14,6 +14,7 @@
                 direction TB
                 {% for componentName in product.componentNames %}
                     {{componentName}}-prod-comp["{{componentName}}"]
+                    click {{componentName}}-prod-comp href "/components/{{componentName}}"
                 {% endfor %}
             end
             {% for ref in product.dependencies %}
@@ -21,6 +22,7 @@
                 direction TB
                 {% for componentName in ref.componentNames %}
                     {{componentName}}-dependency-comp["{{componentName}}"]
+                    click {{componentName}}-dependency-comp href "/components/{{componentName}}"
                 {% endfor %}
             end
             {{ref.productCode}} --> {{product.productCode}}
@@ -31,6 +33,7 @@
                 direction TB
                 {% for componentName in ref.componentNames %}
                     {{componentName}}-dependent-comp["{{componentName}}"]
+                    click {{componentName}}-dependent-comp href "/components/{{componentName}}"
                 {% endfor %}
             end
             {{product.productCode}} --> {{ref.productCode}}

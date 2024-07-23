@@ -4,7 +4,7 @@ jQuery(function () {
       data: 'attributes.name',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(
-          `<a href="/components/${cleanColumnOutput(rowData.attributes.name)}">${cleanColumnOutput(
+          `<a class="govuk-link--no-visited-state" href="/components/${cleanColumnOutput(rowData.attributes.name)}">${cleanColumnOutput(
             rowData.attributes.name,
           )}</a>`,
         )
@@ -14,7 +14,7 @@ jQuery(function () {
       data: 'attributes.product.data.attributes.p_id',
       createdCell: function (td, _cellData, rowData) {
         const link = rowData.attributes.product.data
-          ? `<a href="/products/${rowData.attributes.product.data.attributes.slug}">${cleanColumnOutput(
+          ? `<a class="govuk-link--no-visited-state" href="/products/${rowData.attributes.product.data.attributes.slug}">${cleanColumnOutput(
               rowData.attributes.product.data.attributes.p_id,
             )}</a>`
           : 'N/A'
@@ -25,7 +25,7 @@ jQuery(function () {
       data: 'attributes.product.data.attributes.name',
       createdCell: function (td, _cellData, rowData) {
         const link = rowData.attributes.product.data
-          ? `<a href="/products/${rowData.attributes.product.data.attributes.slug}">${cleanColumnOutput(
+          ? `<a class="govuk-link--no-visited-state" href="/products/${rowData.attributes.product.data.attributes.slug}">${cleanColumnOutput(
               rowData.attributes.product.data.attributes.name,
             )}</a>`
           : 'N/A'
