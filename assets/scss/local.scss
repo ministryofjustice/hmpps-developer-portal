@@ -27,6 +27,13 @@
   }
 }
 
+#graph-svg {
+  border: black;
+  overflow: hidden;
+  border-style: solid;
+  padding-top: govuk-spacing(5);
+}
+
 #dependencyDriftTable {
   width: 100%;
   thead {
@@ -101,9 +108,7 @@
 }
 
 .wide-screen {
-  max-width: 100%;
-  margin-right: 50px;
-  margin-left: 50px;
+  max-width: 96%;
 }
 
 .componentData {
