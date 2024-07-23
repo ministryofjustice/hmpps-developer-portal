@@ -2,6 +2,8 @@
 import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
+import { deflate } from 'pako'
+import { fromUint8Array } from 'js-base64'
 import { formatMonitorName, initialiseName } from './utils'
 import { ApplicationInfo } from '../applicationInfo'
 
@@ -50,4 +52,16 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('fixed', (num, length) => (num ? num.toFixed(length || 2) : num))
 
   njkEnv.addFilter('toMonitorName', (val: string) => formatMonitorName(val))
+
+  njkEnv.addFilter('toMermaidEncodedString', (mermaidSource: Record<string, string>) => {
+    const payload = {
+      code: mermaidSource.val.trim(),
+      mermaid: '{ "theme": "default" }',
+      autoSync: true,
+      updateDiagram: true,
+    }
+    const data = new TextEncoder().encode(JSON.stringify(payload))
+    const compressed = deflate(data, { level: 9 })
+    return fromUint8Array(compressed, true)
+  })
 }
