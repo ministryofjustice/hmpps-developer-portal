@@ -13,6 +13,18 @@
       <th>ID</th>
       <td data-test="team-id">{{ team.id }}</td>
     </tr>
+    {% if team.slackChannelId | length %}
+      <tr>
+        <th>Slack</th>
+        <td data-test="Slack channel"><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ team.slackChannelId }}">
+        {% if team.slackChannelName | length %}
+        {{ team.slackChannelName }}
+        {% else %}
+        Link
+        {% endif %}
+        </a></td>
+      </tr>
+    {% endif %}
     <tr>
       <th>Products</th>
       <td>
@@ -37,11 +49,6 @@
           <li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/{{ team.name | toMonitorName }}">
              Deployment drift
           </a></li>
-          {% if team.slackChannelId | length %}
-          <li><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ team.slackChannelId }}">
-             Slack channel
-          </a></li>
-          {% endif %}
         </ul>
       </td>
     </tr>

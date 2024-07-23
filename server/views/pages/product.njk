@@ -49,9 +49,21 @@
       <th>Team</th>
       <td><a href="/teams/{{ product.team.attributes.slug }}">{{ product.team.attributes.name }} ({{ product.team.attributes.t_id }})</a></td>
     </tr>
+    {% if product.team.attributes.slack_channel_id | length %}
+    <tr>
+      <th>Team Slack</th>
+      <td><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.team.attributes.slack_channel_id }}">
+      {% if product.team.attributes.slack_channel_name | length %}
+      {{ product.team.attributes.slack_channel_name }}
+      {% else %}
+      Link
+      {% endif %}
+      </a></td>
+    </tr>
+    {% endif %}
     {% if product.slackChannelId | length %}
     <tr>
-      <th>Slack Channel</th>
+      <th>Product Slack</th>
       <td><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">
       {% if product.slackChannelName | length %}
       {{ product.slackChannelName }}
