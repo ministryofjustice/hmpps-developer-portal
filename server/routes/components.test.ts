@@ -18,7 +18,7 @@ const testComponents = [{ id: 1, attributes: { name: 'testComponent' } }] as Com
 const testComponent = {
   name: 'testComponent',
   description: 'Test component description',
-  jira_project_keys: [],
+  jira_project_keys: ['TEST'],
   github_project_teams_write: ['test-write'],
   github_project_teams_admin: ['test-admin'],
   github_project_branch_protection_restricted_teams: ['test-restricted'],
@@ -196,7 +196,7 @@ describe('/components', () => {
           expect($('[data-test="detail-page-title"]').text()).toContain(testComponent.name)
           expect($('[data-test="description"]').text()).toBe(testComponent.description)
           expect($('[data-test="title"]').text()).toBe(testComponent.title)
-          expect($('[data-test="jira-project-keys"]').text()).toBe(
+          expect($('[data-test="jira-project-keys"]').text()).toContain(
             (testComponent.jira_project_keys as string[]).join(', '),
           )
           expect($('[data-test="github-write"]').text()).toContain(
