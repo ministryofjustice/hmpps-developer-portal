@@ -47,36 +47,54 @@
     </tr>
     <tr>
       <th>Team</th>
-      <td><a href="/teams/{{ product.team.attributes.slug }}">{{ product.team.attributes.name }} ({{ product.team.attributes.t_id }})</a></td>
+      <td>
+        {% if product.team.attributes.name | length %}
+        <a href="/teams/{{ product.team.attributes.slug }}">{{ product.team.attributes.name }} ({{ product.team.attributes.t_id }})</a>
+        {% else %}
+        No team associated with this product &#129301;
+        {% endif %}
+        </td>
     </tr>
-    {% if product.team.attributes.slack_channel_id | length %}
     <tr>
       <th>Team Slack</th>
-      <td><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.team.attributes.slack_channel_id }}">
-      {% if product.team.attributes.slack_channel_name | length %}
-      {{ product.team.attributes.slack_channel_name }}
-      {% else %}
-      Link
-      {% endif %}
-      </a></td>
+      <td>
+        {% if product.team.attributes.slack_channel_id | length %}
+        <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.team.attributes.slack_channel_id }}">
+        <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+          {% if product.team.attributes.slack_channel_name | length %}
+          #{{ product.team.attributes.slack_channel_name }}
+          {% else %}
+          Link
+          {% endif %}
+          (opens slack)</a>
+        {% else %}
+        No team slack &#129301; - please provide one.
+        {% endif %}
+      </td>
     </tr>
-    {% endif %}
-    {% if product.slackChannelId | length %}
     <tr>
       <th>Product Slack</th>
-      <td><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">
-      {% if product.slackChannelName | length %}
-      {{ product.slackChannelName }}
+      <td>
+      {% if product.slackChannelId | length %}
+        <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">
+        <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+        {% if product.slackChannelName | length %}
+        #{{ product.slackChannelName }}
+        {% else %}
+        Link
+        {% endif %}
+        (opens slack)</a>
       {% else %}
-      Link
+        No product slack &#129301; - please provide one.
       {% endif %}
-      </a></td>
+      </td>
     </tr>
-    {% endif %}
+    {% if product.productSet.id | length %}
     <tr>
       <th>Product Set</th>
       <td><a href="/product-sets/{{ product.productSet.id }}">{{ product.productSet.attributes.name }} ({{ product.productSet.attributes.ps_id }})</a></td>
     </tr>
+    {% endif %}
     <tr>
       <th>Components</th>
       <td>

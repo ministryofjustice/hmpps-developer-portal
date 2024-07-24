@@ -112,13 +112,13 @@
 }
 
 .componentData {
-  th, td {
+  th, td, img{
     padding: govuk-spacing(1);
+    vertical-align: middle;
   }
 
   th {
     text-align: right;
-    vertical-align: top;
     background-color: govuk-colour('light-grey');
 
     &.govuk-table__header {
