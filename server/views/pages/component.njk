@@ -27,7 +27,16 @@
         </tr>
         <tr>
           <th>Jira Project Keys</th>
-          <td data-test="jira-project-keys">{{ component.jiraProjectKeys }}</td>
+          <td data-test="jira-project-keys">
+          {% if component.jiraProjectKeys | length %}
+            <a class="govuk-link--no-visited-state" target="_blank" href="https://dsdmoj.atlassian.net/browse/{{ component.jiraProjectKeys }}?searchContentType=project">
+            <image src="/assets/images/jira_favicon.ico" width="32" height="32"></image>
+            {{ component.jiraProjectKeys }} (opens Jira)
+            </a>
+          {% else %}
+            No Jira &#129301; - please provide one.
+          {% endif %}
+          </td>
         </tr>
         <tr>
           <th>GitHub Write</th>
