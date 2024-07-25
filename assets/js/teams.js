@@ -16,7 +16,6 @@ jQuery(function () {
       },
     },
   ]
-  console.log(columns)
 
   createTable('teamsTable', '/teams/data', 0, 'asc', columns)
 })
