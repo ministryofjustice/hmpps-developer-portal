@@ -111,6 +111,13 @@
   max-width: 96%;
 }
 
+#teamsTable {
+  th, td, img{
+    padding: govuk-spacing(1);
+    vertical-align: middle;
+  }
+}
+
 .componentData {
   th, td, img{
     padding: govuk-spacing(1);

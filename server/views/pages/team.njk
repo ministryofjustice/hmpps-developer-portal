@@ -13,18 +13,24 @@
       <th>ID</th>
       <td data-test="team-id">{{ team.id }}</td>
     </tr>
-    {% if team.slackChannelId | length %}
+
       <tr>
         <th>Slack</th>
-        <td data-test="Slack channel"><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ team.slackChannelId }}">
-        {% if team.slackChannelName | length %}
-        {{ team.slackChannelName }}
+        <td data-test="Slack channel">
+        {% if team.slackChannelId | length %}
+          <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ team.slackChannelId }}">
+          <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+          {% if team.slackChannelName | length %}
+          #{{ team.slackChannelName }}
+          {% else %}
+          Link
+          {% endif %}
+          (opens slack)</a>
         {% else %}
-        Link
+           No team slack &#129301; - please provide one.
         {% endif %}
-        </a></td>
+        </td>
       </tr>
-    {% endif %}
     <tr>
       <th>Products</th>
       <td>
