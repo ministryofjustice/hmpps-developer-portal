@@ -119,7 +119,7 @@ describe('strapiApiClient', () => {
           data: [{ id: 1, attributes: { name: 'component' } }],
         } as ComponentResponse
         fakeStrapiApi
-          .get('/components?filters[name][$eq]=component&populate=product%2Cenvironments')
+          .get('/components?filters[name][$eq]=component&populate=product.team%2Cenvironments')
           .reply(200, component)
         const output = await strapiApiClient.getComponent({ componentName: 'component' })
         expect(output).toEqual(component)
