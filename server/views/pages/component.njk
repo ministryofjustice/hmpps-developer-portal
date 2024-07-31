@@ -83,6 +83,45 @@
           <td><a class="govuk-link--no-visited-state" href="/products/{{ component.product.attributes.slug }}" data-test="product">{{ component.product.attributes.name }}</a></td>
         </tr>
         <tr>
+        <th>Product Slack</th>
+          <td>
+          {% if component.product.attributes.slack_channel_id | length %}
+            <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.attributes.slack_channel_id }}">
+            <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+            {% if component.product.attributes.slack_channel_name | length %}
+            #{{ component.product.attributes.slack_channel_name }}
+            {% else %}
+            Link
+            {% endif %}
+            (opens slack)</a>
+          {% else %}
+            No product slack &#129301; - please provide one.
+          {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>Team</th>
+          <td><a class="govuk-link--no-visited-state" href="/teams/{{ component.product.attributes.team.data.attributes.slug }}" data-test="product">{{ component.product.attributes.team.data.attributes.name }}</a></td>
+        </tr>
+        <tr>
+        <tr>
+        <th>Team Slack</th>
+          <td>
+          {% if component.product.attributes.team.data.attributes.slack_channel_id | length %}
+            <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.attributes.team.data.attributes.slack_channel_id }}">
+            <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+            {% if component.product.attributes.team.data.attributes.slack_channel_name | length %}
+            #{{ component.product.attributes.team.data.attributes.slack_channel_name }}
+            {% else %}
+            Link
+            {% endif %}
+            (opens slack)</a>
+          {% else %}
+            No Team slack &#129301; - please provide one.
+          {% endif %}
+          </td>
+        </tr>
+        <tr>
           <th>Uses</th>
           <td data-test="dependency-types">{{ component.dependencyTypes | join(', ') }}</td>
         </tr>
