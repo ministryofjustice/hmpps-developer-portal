@@ -63,7 +63,17 @@
     </tr>
     <tr>
       <th><a href="https://github.com/ministryofjustice/hmpps-ip-allowlists/blob/main/ip-allowlist-groups.yaml" target="_blank">IP Allowlist</a><br>(opens in new window)</th>
-      <td>{% if component.environment.ip_allow_list_enabled %}Yes{% else %}No{% endif %}</td>
+      <td>
+      {% if component.environment.ip_allow_list_enabled %}
+      &#128274; Enabled
+      {% else %}
+        {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+          {{ govukWarningText({
+            text: "This site is publicly accessible.",
+            iconFallbackText: "Warning"
+          }) }}
+      {% endif %}
+      </td>
     </tr>
     {% if component.environment.ip_allow_list_enabled %}
     <tr>
