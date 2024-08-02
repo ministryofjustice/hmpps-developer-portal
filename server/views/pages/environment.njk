@@ -6,11 +6,6 @@
 
 {% block content %}
 
-{# {{ govukBackLink({
-  text: "Back",
-  href: "/components/" + component.name
-}) }} #}
-
 {% set breadCrumbList = [
     {title: "Products", href: "/products"},
     {title: component.product.attributes.name, href: "/products/" + component.product.attributes.slug},
