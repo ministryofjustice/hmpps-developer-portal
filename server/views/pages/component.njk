@@ -12,6 +12,14 @@
   {% endfor %} 
 {% endmacro %}
 
+{% set breadCrumbList = [
+    {title: "Products", href: "/products"},
+    {title: component.product.attributes.name, href: "/products/" + component.product.attributes.slug}
+  ]
+%}
+
+{{ breadCrumb(component.name, breadCrumbList) }}
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 data-test="detail-page-title">{{ component.name }}</h1>

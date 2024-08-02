@@ -5,6 +5,8 @@
 
 {% block content %}
 
+{{ breadCrumb(team.name, [{title: "Teams", href: "/teams"}]) }}
+
 <h1 data-test="detail-page-title">{{ team.name }}</h1>
 
 <table class="componentData">
