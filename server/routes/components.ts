@@ -85,6 +85,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     const displayComponent = {
       name: componentName,
+      product: component.product?.data,
       api: component.api,
       environment: environments[0],
       activeAgencies,
