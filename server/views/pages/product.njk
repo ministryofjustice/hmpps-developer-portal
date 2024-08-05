@@ -4,7 +4,7 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-
+{{ breadCrumb(product.name, [{title: "Products", href: "/products"}]) }}
 <h1 id="detailPageTitle">{{ product.name }}</h1>
 
 <table class="componentData">
