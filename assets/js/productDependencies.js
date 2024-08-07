@@ -7,14 +7,16 @@ jQuery(async function () {
   const graphDefinition = document.getElementById('graph-source').innerText
 
   const { svg } = await mermaid.render('graph-svg', graphDefinition)
-  element.innerHTML = svg.replace(/[ ]*max-width:[ 0-9\.]*px;/i, '')
+  element.innerHTML = svg
   svgPanZoom('#graph-svg', {
     zoomEnabled: true,
     fit: true,
     center: true,
   })
 
-  document.getElementById('graph-svg').setAttribute('height', '1500px')
+  const graph = document.getElementById('graph-svg')
+  graph.setAttribute('height', '1500px')
+  graph.setAttribute('width', '100%')
 
   $('#updateProduct').on('click', async e => {
     e.preventDefault(e)

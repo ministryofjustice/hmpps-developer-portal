@@ -4,6 +4,7 @@
 {% set mainClasses = "app-container govuk-body" %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set containerClasses = "wide-screen" %}
 
@@ -16,6 +17,7 @@
                 direction TB
                 {% for component in product.components %}
                     {{component.name}}-prod-comp["{{component.name}}"]
+                    click {{component.name}}-prod-comp href "/components/{{component.name}}"
                 {% endfor %}
             end
             {{serviceArea.id}} --> {{product.productCode}}
@@ -45,10 +47,27 @@
             text: "Toggle Orientation",
             element: "button"
             }) }}
+        {{ govukButton({
+            id: "viewImage",
+            text: "View as image",
+            href: "https://mermaid.ink/img/pako:" + serviceAreaDiagram(serviceArea) | toMermaidEncodedString
+        }) }}
     </div>
   
-    <div class="service-area-diagram govuk-!-margin-top-9"></div>
+  {% set source %}
+    <a class="govuk-link--no-visited-state" href="https://mermaid.live/edit#pako:{{ serviceAreaDiagram(serviceArea) | toMermaidEncodedString }}">View in mermaid js editor</a>
+    <br/>
+    <textarea class="govuk-!-margin-top-4" cols="160" rows=50>{{ serviceAreaDiagram(serviceArea) }}</textarea>
+  {% endset %}
 
+  {{ govukDetails({
+    summaryText: "View source",
+    html: source,
+    classes: "govuk-!-margin-top-9"
+   }) }}
+ 
+   <div class="service-area-diagram"></div>
+  
     <div>
        <h2 id="serviceAreaName">{{serviceArea.name}}</h2>
        <h3>Contains</h3>

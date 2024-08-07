@@ -27,6 +27,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       id: team.t_id,
       name: team.name,
       slackChannelId: team.slack_channel_id,
+      slackChannelName: team.slack_channel_name,
       products,
     }
 

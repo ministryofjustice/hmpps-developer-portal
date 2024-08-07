@@ -5,6 +5,8 @@
 
 {% block content %}
 
+{{ breadCrumb(team.name, [{title: "Teams", href: "/teams"}]) }}
+
 <h1 data-test="detail-page-title">{{ team.name }}</h1>
 
 <table class="componentData">
@@ -13,6 +15,24 @@
       <th>ID</th>
       <td data-test="team-id">{{ team.id }}</td>
     </tr>
+
+      <tr>
+        <th>Slack</th>
+        <td data-test="Slack channel">
+        {% if team.slackChannelId | length %}
+          <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ team.slackChannelId }}">
+          <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+          {% if team.slackChannelName | length %}
+          #{{ team.slackChannelName }}
+          {% else %}
+          Link
+          {% endif %}
+          (opens slack)</a>
+        {% else %}
+           No team slack &#129301; - please provide one.
+        {% endif %}
+        </td>
+      </tr>
     <tr>
       <th>Products</th>
       <td>
@@ -37,11 +57,6 @@
           <li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/{{ team.name | toMonitorName }}">
              Deployment drift
           </a></li>
-          {% if team.slackChannelId | length %}
-          <li><a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ team.slackChannelId }}">
-             Slack channel
-          </a></li>
-          {% endif %}
         </ul>
       </td>
     </tr>

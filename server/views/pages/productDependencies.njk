@@ -4,6 +4,7 @@
 {% set mainClasses = "app-container govuk-body" %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set containerClasses = "wide-screen" %}
 
@@ -14,6 +15,7 @@
                 direction TB
                 {% for componentName in product.componentNames %}
                     {{componentName}}-prod-comp["{{componentName}}"]
+                    click {{componentName}}-prod-comp href "/components/{{componentName}}"
                 {% endfor %}
             end
             {% for ref in product.dependencies %}
@@ -21,6 +23,7 @@
                 direction TB
                 {% for componentName in ref.componentNames %}
                     {{componentName}}-dependency-comp["{{componentName}}"]
+                    click {{componentName}}-dependency-comp href "/components/{{componentName}}"
                 {% endfor %}
             end
             {{ref.productCode}} --> {{product.productCode}}
@@ -31,6 +34,7 @@
                 direction TB
                 {% for componentName in ref.componentNames %}
                     {{componentName}}-dependent-comp["{{componentName}}"]
+                    click {{componentName}}-dependent-comp href "/components/{{componentName}}"
                 {% endfor %}
             end
             {{product.productCode}} --> {{ref.productCode}}
@@ -60,9 +64,26 @@
             text: "Toggle Orientation",
             element: "button"
             }) }}
+        {{ govukButton({
+            id: "viewImage",
+            text: "View as image",
+            href: "https://mermaid.ink/img/pako:" + productDiagram(product) | toMermaidEncodedString
+        }) }}
     </div>
   
-    <div class="dependency-graph govuk-!-margin-top-9"></div>
+    {% set source %}
+        <a class="govuk-link--no-visited-state" href="https://mermaid.live/edit#pako:{{ productDiagram(product) | toMermaidEncodedString }}">View in mermaid js editor</a>
+        <br/>
+        <textarea class="govuk-!-margin-top-4" cols="160" rows=50>{{ productDiagram(product) }}</textarea>
+    {% endset %}
+
+    {{ govukDetails({
+        summaryText: "View source",
+        html: source,
+        classes: "govuk-!-margin-top-9"
+    }) }}
+ 
+   <div class="dependency-graph govuk-!-margin-top-9"></div>
 
     <div>
        <h2 id="productName">{{product.productName}}</h2>

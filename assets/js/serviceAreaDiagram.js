@@ -14,7 +14,10 @@ jQuery(async function () {
     center: true,
   })
 
-  document.getElementById('graph-svg').setAttribute('height', '1500px')
+  const graph = document.getElementById('graph-svg')
+  graph.setAttribute('height', '2500px')
+  graph.setAttribute('width', '100%')
+
   $('#updateServiceArea').on('click', async e => {
     e.preventDefault(e)
     const serviceAreaId = document.getElementById('serviceArea').value
