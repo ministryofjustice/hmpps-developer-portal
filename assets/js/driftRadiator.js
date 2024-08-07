@@ -41,7 +41,9 @@ class DeploymentRenderer {
           const gitDiffUrl = `https://github.com/ministryofjustice/${component.repo}/compare/${environment.sha}...${component.devEnvSha}`
           const showDiff =
             environment.type !== 'dev' && Boolean(component.devEnvSha) && environment.sha !== component.devEnvSha
-          const diffAnchor = showDiff ? `(<a class="govuk-link--no-visited-state" href="${gitDiffUrl}">diff</a>)` : ''
+          const diffAnchor = showDiff
+            ? `(<a class="govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank" href="${gitDiffUrl}">diff</a>)`
+            : ''
           return `
         <li>
           <a class="env govuk-link--no-visited-state" href="/components/${component.name}/environment/${environment.name}">
