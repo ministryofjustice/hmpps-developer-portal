@@ -179,6 +179,7 @@ function drawVersionChart(stream) {
 
   dataVersionTable.addColumn({ type: 'string', id: 'Status' })
   dataVersionTable.addColumn({ type: 'string', id: 'DummyLabel' })
+  dataVersionTable.addColumn({ type: 'string', role: 'tooltip' })
   dataVersionTable.addColumn({ type: 'date', id: 'Start' })
   dataVersionTable.addColumn({ type: 'date', id: 'End' })
 
@@ -203,7 +204,16 @@ function drawVersionChart(stream) {
       }
     }
 
-    dataVersionTable.addRows([['Status', versionOutput, eventTimeStart, eventTimeEnd]])
+    let gitCompare = '[]'
+    if (stream[i].message.hasOwnProperty('git_compare')) {
+      try {
+        gitCompare = stream[i].message.git_compare
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    dataVersionTable.addRows([['Build', versionOutput, gitCompare, eventTimeStart, eventTimeEnd]])
   }
 
   const options = {
@@ -213,14 +223,48 @@ function drawVersionChart(stream) {
       groupByRowLabel: true,
       colorByRowLabel: false,
     },
+    tooltip: {
+      trigger: 'none',
+    },
   }
 
   function selectHandler() {
     var selectedItem = versionChart.getSelection()[0]
     if (selectedItem) {
+      var previousVersion = dataVersionTable.getValue(selectedItem.row - 1, 1)
       var version = dataVersionTable.getValue(selectedItem.row, 1)
-      var time = dataVersionTable.getValue(selectedItem.row, 2)
-      $(`#versionOutputSelected`).text(`Version: ${version} - Deployed @ ${time}`)
+      var gitCompareRaw = dataVersionTable.getValue(selectedItem.row, 2)
+      var time = dataVersionTable.getValue(selectedItem.row, 3)
+      var previousCommitSha = previousVersion.split('.').pop()
+      var commitSha = version.split('.').pop()
+
+      var gitCommits = JSON.parse(gitCompareRaw)
+
+      var gitCommitsHTML = ''
+
+      gitCommits.forEach(commit => {
+        message = commit.message.replace(
+          /([A-Z][A-Z0-9]+-[0-9]+)/gm,
+          '<a href="https://dsdmoj.atlassian.net/browse/$1" target="_blank">$1</a>',
+        )
+        gitCommitsHTML = gitCommitsHTML.concat(
+          `<tr><td><a href="${commit.html_url}" target="_blank">${commit.sha.substring(0, 6)}</a></td><td>${message}</td></tr>`,
+        )
+      })
+      var githubCompareURL = `https://github.com/ministryofjustice/${componentName}/compare/${previousCommitSha}...${commitSha}`
+
+      var versionOutputSelectedHTML = `
+      <table class="componentData">
+        <tbody>
+          <tr><th>Commit</th><th>Commit Message</th></tr>
+          ${gitCommitsHTML}
+        </tbody>
+      </table>
+      `
+      $(`#versionOutputSelected`).html(`<p>Version: ${version} - Deployed @ ${time}
+        <br/><a href=${githubCompareURL} target="_blank">View github compare.</a></p>
+        ${versionOutputSelectedHTML}
+        `)
     }
   }
   google.visualization.events.addListener(versionChart, 'select', selectHandler)
