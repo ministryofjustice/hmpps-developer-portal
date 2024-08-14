@@ -256,7 +256,7 @@ function drawVersionChart(stream) {
       let gitCommitsHTML = ''
 
       gitCommits.forEach(commit => {
-        message = commit.message
+        let message = commit.message
         // Try to find Jira tickets and create links
         message = message.replace(
           /([A-Z][A-Z0-9]+-[0-9]+)/gm,
