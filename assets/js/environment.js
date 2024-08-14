@@ -186,7 +186,9 @@ function drawVersionChart(stream) {
   for (let i = 0; i < stream.length; i++) {
     const eventEpochTime = parseInt(stream[i].id.split('-')[0])
     const eventTimeStart = new Date(eventEpochTime)
-    let eventTimeEnd = new Date(Date.now()) // Default endtime for events
+    // Set default endtime, this is used for the latest event
+    // Increase size of the latest event so it's more visible + 7 days)
+    let eventTimeEnd = new Date(Date.now() + 60 * 60 * 24 * 7 * 1000)
 
     // This makes the time line look better if each block butts up to the next,
     // however we need to see the big gaps, e.g. if there are missing data.
@@ -228,24 +230,42 @@ function drawVersionChart(stream) {
     },
   }
 
-  function selectHandler() {
-    var selectedItem = versionChart.getSelection()[0]
+  function selectHandler(arg) {
+    if (arg) {
+      versionChart.setSelection(arg)
+    }
+    selectedItem = versionChart.getSelection()[0]
+
     if (selectedItem) {
-      var previousVersion = dataVersionTable.getValue(selectedItem.row - 1, 1)
       var version = dataVersionTable.getValue(selectedItem.row, 1)
       var gitCompareRaw = dataVersionTable.getValue(selectedItem.row, 2)
       var time = dataVersionTable.getValue(selectedItem.row, 3)
-      var previousCommitSha = previousVersion.split('.').pop()
+
       var commitSha = version.split('.').pop()
+      // First item in the chart should not refer to the previous row which does not exist.
+      if (selectedItem.row != 0) {
+        var previousVersion = dataVersionTable.getValue(selectedItem.row - 1, 1)
+        var previousCommitSha = previousVersion.split('.').pop()
+      } else {
+        // Just use the git shortcut for the previous commit.
+        var previousCommitSha = `${commitSha}^`
+      }
 
       var gitCommits = JSON.parse(gitCompareRaw)
 
       var gitCommitsHTML = ''
 
       gitCommits.forEach(commit => {
-        message = commit.message.replace(
+        message = commit.message
+        // Try to find Jira tickets and create links
+        message = message.replace(
           /([A-Z][A-Z0-9]+-[0-9]+)/gm,
           '<a href="https://dsdmoj.atlassian.net/browse/$1" target="_blank">$1</a>',
+        )
+        // Try to find PR numbers and create links
+        message = message.replace(
+          /\s[\(]?#([0-9]{1,5})[\)]?\s/gm,
+          ` <a href="https://github.com/ministryofjustice/${componentName}/pull/$1" target="_blank">#$1</a> `,
         )
         gitCommitsHTML = gitCommitsHTML.concat(
           `<tr><td><a href="${commit.html_url}" target="_blank">${commit.sha.substring(0, 6)}</a></td><td>${message}</td></tr>`,
@@ -267,7 +287,14 @@ function drawVersionChart(stream) {
         `)
     }
   }
+
   google.visualization.events.addListener(versionChart, 'select', selectHandler)
+  google.visualization.events.addListener(versionChart, 'ready', function () {
+    // Get the last item in the table - the last deployed build
+    selectedItem = dataVersionTable.getNumberOfRows() - 1
+    // Set the current selection to the last deployed build
+    google.visualization.events.trigger(versionChart, 'select', [{ row: selectedItem, column: null }])
+  })
   versionChart.draw(dataVersionTable, options)
 }
 
