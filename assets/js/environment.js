@@ -237,21 +237,21 @@ function drawVersionChart(stream) {
     selectedItem = versionChart.getSelection()[0]
 
     if (selectedItem) {
-      let version = dataVersionTable.getValue(selectedItem.row, 1)
-      let gitCompareRaw = dataVersionTable.getValue(selectedItem.row, 2)
-      let time = dataVersionTable.getValue(selectedItem.row, 3)
+      const version = dataVersionTable.getValue(selectedItem.row, 1)
+      const gitCompareRaw = dataVersionTable.getValue(selectedItem.row, 2)
+      const time = dataVersionTable.getValue(selectedItem.row, 3)
 
-      let commitSha = version.split('.').pop()
+      const commitSha = version.split('.').pop()
       // First item in the chart should not refer to the previous row which does not exist.
       if (selectedItem.row != 0) {
-        let previousVersion = dataVersionTable.getValue(selectedItem.row - 1, 1)
-        let previousCommitSha = previousVersion.split('.').pop()
+        const previousVersion = dataVersionTable.getValue(selectedItem.row - 1, 1)
+        const previousCommitSha = previousVersion.split('.').pop()
       } else {
         // Just use the git shortcut for the previous commit.
-        let previousCommitSha = `${commitSha}^`
+        const previousCommitSha = `${commitSha}^`
       }
 
-      let gitCommits = JSON.parse(gitCompareRaw)
+      const gitCommits = JSON.parse(gitCompareRaw)
 
       let gitCommitsHTML = ''
 
@@ -271,9 +271,9 @@ function drawVersionChart(stream) {
           `<tr><td><a href="${commit.html_url}" target="_blank">${commit.sha.substring(0, 6)}</a></td><td>${message}</td></tr>`,
         )
       })
-      let githubCompareURL = `https://github.com/ministryofjustice/${componentName}/compare/${previousCommitSha}...${commitSha}`
+      const githubCompareURL = `https://github.com/ministryofjustice/${componentName}/compare/${previousCommitSha}...${commitSha}`
 
-      let versionOutputSelectedHTML = `
+      const versionOutputSelectedHTML = `
       <table class="componentData">
         <tbody>
           <tr><th>Commit</th><th>Commit Message</th></tr>
