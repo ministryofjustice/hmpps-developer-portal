@@ -291,7 +291,7 @@ function drawVersionChart(stream) {
   google.visualization.events.addListener(versionChart, 'select', selectHandler)
   google.visualization.events.addListener(versionChart, 'ready', function () {
     // Get the last item in the table - the last deployed build
-    selectedItem = dataVersionTable.getNumberOfRows() - 1
+    let selectedItem = dataVersionTable.getNumberOfRows() - 1
     // Set the current selection to the last deployed build
     google.visualization.events.trigger(versionChart, 'select', [{ row: selectedItem, column: null }])
   })
