@@ -237,23 +237,23 @@ function drawVersionChart(stream) {
     selectedItem = versionChart.getSelection()[0]
 
     if (selectedItem) {
-      var version = dataVersionTable.getValue(selectedItem.row, 1)
-      var gitCompareRaw = dataVersionTable.getValue(selectedItem.row, 2)
-      var time = dataVersionTable.getValue(selectedItem.row, 3)
+      let version = dataVersionTable.getValue(selectedItem.row, 1)
+      let gitCompareRaw = dataVersionTable.getValue(selectedItem.row, 2)
+      let time = dataVersionTable.getValue(selectedItem.row, 3)
 
-      var commitSha = version.split('.').pop()
+      let commitSha = version.split('.').pop()
       // First item in the chart should not refer to the previous row which does not exist.
       if (selectedItem.row != 0) {
-        var previousVersion = dataVersionTable.getValue(selectedItem.row - 1, 1)
-        var previousCommitSha = previousVersion.split('.').pop()
+        let previousVersion = dataVersionTable.getValue(selectedItem.row - 1, 1)
+        let previousCommitSha = previousVersion.split('.').pop()
       } else {
         // Just use the git shortcut for the previous commit.
-        var previousCommitSha = `${commitSha}^`
+        let previousCommitSha = `${commitSha}^`
       }
 
-      var gitCommits = JSON.parse(gitCompareRaw)
+      let gitCommits = JSON.parse(gitCompareRaw)
 
-      var gitCommitsHTML = ''
+      let gitCommitsHTML = ''
 
       gitCommits.forEach(commit => {
         message = commit.message
@@ -271,9 +271,9 @@ function drawVersionChart(stream) {
           `<tr><td><a href="${commit.html_url}" target="_blank">${commit.sha.substring(0, 6)}</a></td><td>${message}</td></tr>`,
         )
       })
-      var githubCompareURL = `https://github.com/ministryofjustice/${componentName}/compare/${previousCommitSha}...${commitSha}`
+      let githubCompareURL = `https://github.com/ministryofjustice/${componentName}/compare/${previousCommitSha}...${commitSha}`
 
-      var versionOutputSelectedHTML = `
+      let versionOutputSelectedHTML = `
       <table class="componentData">
         <tbody>
           <tr><th>Commit</th><th>Commit Message</th></tr>
