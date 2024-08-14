@@ -242,13 +242,14 @@ function drawVersionChart(stream) {
       const time = dataVersionTable.getValue(selectedItem.row, 3)
 
       const commitSha = version.split('.').pop()
+      let previousCommitSha = ''
       // First item in the chart should not refer to the previous row which does not exist.
       if (selectedItem.row != 0) {
         const previousVersion = dataVersionTable.getValue(selectedItem.row - 1, 1)
-        const previousCommitSha = previousVersion.split('.').pop()
+        previousCommitSha = previousVersion.split('.').pop()
       } else {
         // Just use the git shortcut for the previous commit.
-        const previousCommitSha = `${commitSha}^`
+        previousCommitSha = `${commitSha}^`
       }
 
       const gitCommits = JSON.parse(gitCompareRaw)
