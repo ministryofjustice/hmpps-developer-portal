@@ -265,8 +265,8 @@ function drawVersionChart(stream) {
         )
         // Try to find PR numbers and create links
         message = message.replace(
-          /\s[\(]?#([0-9]{1,5})[\)]?\s/gm,
-          ` <a href="https://github.com/ministryofjustice/${componentName}/pull/$1" target="_blank">#$1</a> `,
+          /[\(]?#([0-9]{1,5})[\)]?/gm,
+          ` <a href="https://github.com/ministryofjustice/${componentName}/pull/$1" target="_blank">$&</a> `,
         )
         gitCommitsHTML = gitCommitsHTML.concat(
           `<tr><td><a href="${commit.html_url}" target="_blank">${commit.sha.substring(0, 6)}</a></td><td>${message}</td></tr>`,
@@ -274,16 +274,21 @@ function drawVersionChart(stream) {
       })
       const githubCompareURL = `https://github.com/ministryofjustice/${componentName}/compare/${previousCommitSha}...${commitSha}`
 
-      const versionOutputSelectedHTML = `
-      <table class="componentData">
-        <tbody>
-          <tr><th>Commit</th><th>Commit Message</th></tr>
-          ${gitCommitsHTML}
-        </tbody>
-      </table>
-      `
-      $(`#versionOutputSelected`).html(`<p>Version: ${version} - Deployed @ ${time}
-        <br/><a href=${githubCompareURL} target="_blank">View github compare.</a></p>
+      let versionOutputSelectedHTML = ''
+      if (gitCommitsHTML) {
+        versionOutputSelectedHTML = `
+        <table class="componentData">
+          <tbody>
+            <tr><th>Commit</th><th>Commit Message</th></tr>
+            ${gitCommitsHTML}
+          </tbody>
+        </table>
+        `
+      }
+
+      $(`#versionOutputSelected`).html(`<p>&#128295 Click the timeline above to display build details.</p>
+        <p><b>Selected build:</b> ${version}</br><b>Deployed at</b>: ${time}</p>
+        <p><a href=${githubCompareURL} target="_blank">View git compare from previous version.</a> (opens in new window).</p>
         ${versionOutputSelectedHTML}
         `)
     }
