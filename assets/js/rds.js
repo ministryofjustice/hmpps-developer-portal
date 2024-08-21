@@ -21,13 +21,7 @@ jQuery(function () {
     {
       data: 'db_engine_version',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}">${rowData.db_engine_version}</a>`)
-      },
-    },
-    {
-      data: 'rds_family',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}">${rowData.rds_family}</a>`)
+        $(td).html(`<a href="/reports/rds/${rowData.tf_label}">${rowData.rds_family} (${rowData.db_engine_version})</a>`)
       },
     },
     {
