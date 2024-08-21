@@ -34,3 +34,12 @@ export type TrivyDisplayEntry = {
   references: string
   primaryUrl: string
 }
+
+export type RdsEntry = {
+  tf_label: string
+  namespace: string
+  db_instance_class: string
+  db_engine_version: string
+  rds_family: string
+  db_max_allocated_storage: string
+}

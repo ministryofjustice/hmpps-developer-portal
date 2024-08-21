@@ -1,0 +1,27 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Namespaces" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb("Namespaces", []) }}
+
+  <h1>Namespaces</h1>
+
+  <table id="namespacesTable" class="stripe">
+  	<thead>
+	  <tr>
+		<th>Name</th>
+	  </tr>
+  	</thead>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/namespaces.js"></script>
+{% endblock %}

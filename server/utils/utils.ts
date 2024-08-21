@@ -2,6 +2,7 @@ import { type Request } from 'express'
 import { BadRequest } from 'http-errors'
 import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
+import { RdsEntry } from '../@types'
 
 dayjs.extend(relativeTime.default)
 
@@ -69,6 +70,17 @@ export const sortData = (dataItem: HasName, compareDataItem: HasName) => {
     return -1
   }
   if (dataItem.attributes.name > compareDataItem.attributes.name) {
+    return 1
+  }
+
+  return 0
+}
+
+export const sortRdsInstances = (rdsInstance: RdsEntry, compareRdsInstance: RdsEntry) => {
+  if (rdsInstance.tf_label < compareRdsInstance.tf_label) {
+    return -1
+  }
+  if (rdsInstance.tf_label > compareRdsInstance.tf_label) {
     return 1
   }
 

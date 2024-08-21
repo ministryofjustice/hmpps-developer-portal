@@ -14,6 +14,7 @@ import {
   ProductSetResponse,
   CustomComponentListResponse,
   CustomComponentResponse,
+  NamespaceListResponse,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
@@ -114,6 +115,37 @@ export default class StrapiApiClient {
     const populate = new URLSearchParams({ populate: populateList }).toString()
     const query = teamSlug ? `filters[slug][$eq]=${teamSlug}&${populate}` : populate
     const path = teamSlug ? '/v1/teams' : `/v1/teams/${teamId}`
+
+    return this.restClient.get({ path, query })
+  }
+
+  async getNamespaces({ withRdsInstances = false }: { withRdsInstances?: boolean }): Promise<NamespaceListResponse> {
+    const populate = []
+
+    if (withRdsInstances) {
+      populate.push('rds_instance')
+    }
+
+    return this.restClient.get({
+      path: '/v1/namespaces',
+      query: new URLSearchParams({
+        populate: populate.join(','),
+      }).toString(),
+    })
+  }
+
+  async getNamespace({
+    namespaceId = 0,
+    namespaceSlug = '',
+  }: {
+    namespaceId?: number
+    namespaceSlug?: string
+  }): Promise<TeamResponse> {
+    const populateList = ['rds_instance']
+
+    const populate = new URLSearchParams({ populate: populateList }).toString()
+    const query = namespaceSlug ? `filters[name][$eq]=${namespaceSlug}&${populate}` : populate
+    const path = namespaceSlug ? '/v1/namespaces' : `/v1/namespaces/${namespaceId}`
 
     return this.restClient.get({ path, query })
   }

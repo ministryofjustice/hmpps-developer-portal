@@ -1,0 +1,36 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + namespace.name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb(namespace.name, [{title: "Namespaces", href: "/namespaces"}]) }}
+
+<h1 data-test="detail-page-title">{{ namespace.name }}</h1>
+
+<table class="componentData">
+  <tbody>
+    <tr>
+      <th>RDS instances</th>
+      <td>
+        {% if namespace.rdsInstances | length %}
+        <ul>
+          {% for rdsInstance in namespace.rdsInstances %}
+            <li><a href="/rds/{{ rdsInstance.tf_label }}">{{ rdsInstance.tf_label }}</a></li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p data-test="no-rds-instances">None</p>
+        {% endif %}
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+{% endblock %}
