@@ -108,6 +108,16 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.send(Array.from(uniqueRows).map(n => JSON.parse(n)))
   })
 
+  get('/rds', async (req, res) => {
+    return res.render('pages/rds')
+  })
+
+  get('/rds/data', async (req, res) => {
+    const rdsInstances = await serviceCatalogueService.getRdsInstances()
+
+    return res.send(rdsInstances)
+  })
+
   return router
 }
 
