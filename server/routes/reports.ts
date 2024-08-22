@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import dayjs from 'dayjs'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { veracodeFilters } from '../utils/utils'
+import { getFormattedName, veracodeFilters } from '../utils/utils'
 import { TrivyDisplayEntry, TrivyResult, TrivyScanResults, TrivyVulnerability } from '../@types'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
@@ -106,6 +106,28 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const uniqueRows = new Set(components)
 
     return res.send(Array.from(uniqueRows).map(n => JSON.parse(n)))
+  })
+
+  get('/rds', async (req, res) => {
+    return res.render('pages/rds')
+  })
+
+  get('/rds/data', async (req, res) => {
+    const rdsInstances = await serviceCatalogueService.getRdsInstances()
+
+    return res.send(rdsInstances)
+  })
+
+  get('/rds/:rdsInstanceSlug', async (req, res) => {
+    const rdsInstanceSlug = getFormattedName(req, 'rdsInstanceSlug')
+    const rdsInstances = await serviceCatalogueService.getRdsInstances()
+    const rdsInstanceData = rdsInstances.find(
+      rdsInstance => `${rdsInstance.tf_label}-${rdsInstance.namespace}` === rdsInstanceSlug,
+    )
+
+    const rdsInstance = rdsInstanceData
+
+    return res.render('pages/rdsInstance', { rdsInstance })
   })
 
   return router

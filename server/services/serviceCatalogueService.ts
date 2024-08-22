@@ -1,3 +1,4 @@
+import { RdsEntry } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
 import {
   Product,
@@ -12,8 +13,10 @@ import {
   ProductSetListResponseDataItem,
   ComponentListResponse,
   CustomComponentView,
+  NamespaceListResponseDataItem,
+  Namespace,
 } from '../data/strapiApiTypes'
-import { sortData } from '../utils/utils'
+import { sortData, sortRdsInstances } from '../utils/utils'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -73,6 +76,38 @@ export default class ServiceCatalogueService {
     return teams
   }
 
+  async getRdsInstances(): Promise<RdsEntry[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const namespaceData = await strapiApiClient.getNamespaces({ withRdsInstances: true })
+    const rdsInstances = namespaceData.data.reduce((existing, namespace) => {
+      const instances = namespace.attributes.rds_instance.map(rdsInstance => {
+        return {
+          tf_label: rdsInstance.tf_label,
+          namespace: rdsInstance.namespace,
+          db_instance_class: rdsInstance.db_instance_class,
+          db_engine_version: rdsInstance.db_engine_version,
+          rds_family: rdsInstance.rds_family,
+          db_max_allocated_storage: rdsInstance.db_max_allocated_storage,
+        }
+      })
+
+      return existing.concat(instances)
+    }, [])
+
+    return Array.from(new Set(rdsInstances.map(rdsInstance => JSON.stringify(rdsInstance))))
+      .map(rdsInstance => JSON.parse(rdsInstance))
+      .sort(sortRdsInstances)
+  }
+
+  async getNamespaces(): Promise<NamespaceListResponseDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const namespaceData = await strapiApiClient.getNamespaces({})
+
+    const namespaces = namespaceData.data.sort(sortData)
+
+    return namespaces
+  }
+
   async getProductSets(): Promise<ProductSetListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const productSetData = await strapiApiClient.getProductSets()
@@ -122,6 +157,20 @@ export default class ServiceCatalogueService {
     const team = teamSlug ? teamData.data[0].attributes : teamData.data?.attributes
 
     return team
+  }
+
+  async getNamespace({
+    namespaceId = 0,
+    namespaceSlug = '',
+  }: {
+    namespaceId?: number
+    namespaceSlug?: string
+  }): Promise<Namespace> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const namespaceData = await strapiApiClient.getNamespace({ namespaceId, namespaceSlug })
+    const namespace = namespaceSlug ? namespaceData.data[0].attributes : namespaceData.data?.attributes
+
+    return namespace
   }
 
   async getComponent({ componentName }: { componentName: string }): Promise<Component> {
