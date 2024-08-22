@@ -102,9 +102,9 @@ function updateEnvironmentList() {
 
       if (
         ((showPrisons && isPrisons) || (showProbation && isProbation)) &&
-        ((showStatusUp && status === 'UP') ||
+        ((showStatusUp && isUp(status)) ||
           (showStatusDown && status === 'DOWN') ||
-          (showStatusMissing && status !== 'UP' && status !== 'DOWN')) &&
+          (showStatusMissing && !isUp(status) && status !== 'DOWN')) &&
         selectedEnvironments.includes(environmentType)
       ) {
         $(this).show()
@@ -147,7 +147,7 @@ const fetchMessages = async () => {
         $(`${tileName} .statusTileStatus`).text(healthStatus)
         $(tileName).removeClass('statusTileUp statusTileDown')
 
-        const statusClass = ['UP', 'GREEN', 'SERVING'].includes(healthStatus.toUpperCase()) ? 'statusTileUp' : 'statusTileDown'
+        const statusClass = isUp(healthStatus) ? 'statusTileUp' : 'statusTileDown'
         $(tileName).addClass(statusClass)
         $(tileName).attr('data-status', healthStatus)
       }
@@ -207,4 +207,8 @@ function formatMonitorName(name) {
     .replace(/ /g, '-')
     .replace(/[^-a-z0-9]/g, '')
     .replace(/-+/g, '-')
+}
+
+function isUp(status) {
+  return ['UP', 'GREEN', 'SERVING'].includes(status.toUpperCase())
 }
