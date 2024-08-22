@@ -147,7 +147,7 @@ const fetchMessages = async () => {
         $(`${tileName} .statusTileStatus`).text(healthStatus)
         $(tileName).removeClass('statusTileUp statusTileDown')
 
-        const statusClass = healthStatus === 'UP' ? 'statusTileUp' : 'statusTileDown'
+        const statusClass = ['UP', 'GREEN', 'SERVING'].includes(healthStatus.toUpperCase()) ? 'statusTileUp' : 'statusTileDown'
         $(tileName).addClass(statusClass)
         $(tileName).attr('data-status', healthStatus)
       }
