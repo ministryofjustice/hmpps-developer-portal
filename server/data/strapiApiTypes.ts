@@ -31,3 +31,8 @@ export type CustomComponentListResponse = components['schemas']['CustomComponent
 export type CustomComponentListResponseDataItem = components['schemas']['CustomComponentViewListResponseDataItem']
 
 export type Environment = components['schemas']['PropertiesEnvironmentComponent']
+
+export type Namespace = components['schemas']['Namespace']
+export type NamespaceResponse = components['schemas']['NamespaceResponse']
+export type NamespaceListResponse = components['schemas']['NamespaceListResponse']
+export type NamespaceListResponseDataItem = components['schemas']['NamespaceListResponseDataItem']
