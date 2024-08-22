@@ -210,5 +210,5 @@ function formatMonitorName(name) {
 }
 
 function isUp(status) {
-  return ['UP', 'GREEN', 'SERVING'].includes(status.toUpperCase())
+  return status && ['UP', 'GREEN', 'SERVING'].includes(status.toUpperCase())
 }
