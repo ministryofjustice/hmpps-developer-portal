@@ -1,3 +1,4 @@
+import { RdsEntry } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
 import {
   Product,
@@ -75,7 +76,7 @@ export default class ServiceCatalogueService {
     return teams
   }
 
-  async getRdsInstances(): Promise<NamespaceListResponseDataItem[]> {
+  async getRdsInstances(): Promise<RdsEntry[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const namespaceData = await strapiApiClient.getNamespaces({ withRdsInstances: true })
     const rdsInstances = namespaceData.data.reduce((existing, namespace) => {

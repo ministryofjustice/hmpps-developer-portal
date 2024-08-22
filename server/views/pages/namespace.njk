@@ -17,7 +17,7 @@
         {% if namespace.rdsInstances | length %}
         <ul>
           {% for rdsInstance in namespace.rdsInstances %}
-            <li><a href="/rds/{{ rdsInstance.tf_label }}">{{ rdsInstance.tf_label }}</a></li>
+            <li><a href="/reports/rds/{{ rdsInstance.tf_label }}-{{ rdsInstance.namespace }}">{{ rdsInstance.tf_label }}</a></li>
           {% endfor %}
         </ul>
         {% else %}

@@ -3,31 +3,31 @@ jQuery(function () {
     {
       data: 'tf_label',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}">${rowData.tf_label}</a>`)
+        $(td).html(`<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${rowData.tf_label}</a>`)
       },
     },
     {
       data: 'namespace',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}">${rowData.namespace}</a>`)
+        $(td).html(`<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${rowData.namespace}</a>`)
       },
     },
     {
       data: 'db_instance_class',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}">${rowData.db_instance_class}</a>`)
+        $(td).html(`<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${rowData.db_instance_class}</a>`)
       },
     },
     {
       data: 'db_engine_version',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}">${rowData.rds_family} (${rowData.db_engine_version})</a>`)
+        $(td).html(`<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${rowData.rds_family} (${rowData.db_engine_version})</a>`)
       },
     },
     {
       data: 'db_max_allocated_storage',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}">${rowData.db_max_allocated_storage}</a>`)
+        $(td).html(`<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${rowData.db_max_allocated_storage}</a>`)
       },
     },
   ]

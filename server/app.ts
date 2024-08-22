@@ -26,7 +26,6 @@ import driftRadiatorRoutes from './routes/driftRadiator'
 import teamHealthRoutes from './routes/teamHealth'
 import missingFromCatalogueRoutes from './routes/missingFromCatalogue'
 import namespacesRoutes from './routes/namespaces'
-import rdsRoutes from './routes/rds'
 
 import type { Services } from './services'
 
@@ -59,7 +58,6 @@ export default function createApp(services: Services): express.Application {
   app.use('/product-dependencies', productDependencyRoutes(services))
   app.use('/missing-from-catalogue', missingFromCatalogueRoutes(services))
   app.use('/namespaces', namespacesRoutes(services))
-  app.use('/rds', rdsRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))
