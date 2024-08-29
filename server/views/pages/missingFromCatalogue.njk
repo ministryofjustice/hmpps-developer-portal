@@ -40,7 +40,6 @@
         ), rows) %}
     {% endfor %}
 
-
   {{ govukTable({
         captionClasses: "govuk-table__caption--m",
         firstCellIsHeader: false,
@@ -52,6 +51,35 @@
         rows: rows
     }) }}
   {% endset %}
+
+
+  {% set componentsMissingTeamSection %}
+    {% set rows = [] %}
+    {% for component in componentsMissingTeams %}
+        {% set rows = (rows.push(
+        [{
+            html: '<a class="govuk-link--no-visited-state" href="/components/' + component.component  +'">' + component.component + '</a>'
+        },
+        {
+            html: '<a class="govuk-link--no-visited-state" href="/products/' + component.productSlug  +'">' + component.product + '</a>'
+        }]
+        ), rows) %}
+    {% endfor %}
+    {{ govukTable({
+        captionClasses: "govuk-table__caption--m",
+        firstCellIsHeader: false,
+        head: [
+            {
+            text: "Component"
+            },
+            {
+            text: "Product Missing Team"
+            }
+        ],
+        rows: rows
+    }) }}
+ {% endset %}
+
 
   {% set incalcableHealthComponents %}
     {% set rows = [] %}
@@ -96,6 +124,14 @@
         html: missingComponents
       }
     },
+    {
+      label: "Components with products missing teams",
+      id: "components-missing-teams",
+      panel: {
+        html: componentsMissingTeamSection
+      }
+    },
+    
     {
       label: "Components we cannot calculate team health for",
       id: "incalcable-health-components",
