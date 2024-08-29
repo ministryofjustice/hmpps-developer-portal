@@ -25,7 +25,14 @@
         {% if serviceArea.products | length %}
         <ul>
           {% for product in serviceArea.products %}
-            <li><a href="/products/{{ product.attributes.slug }}" data-test="product-{{ product.id }}">{{ product.attributes.name }}</a></li>
+            <li>
+              <a class="govuk-link--no-visited-state govuk-!-margin-bottom-0 govuk-!-margin-top-3 govuk-heading-s" href="/products/{{ product.attributes.slug }}" data-test="product-{{ product.id }}">{{ product.attributes.name }}</a>
+              <ul>
+              {% for component in product.attributes.components.data %}
+                <li><a class="govuk-link--no-visited-state" href="/components/{{component.attributes.name}}" data-test="product-{{ product.id }}-component-{{ component.id }}">{{component.attributes.name}}</a></li>
+              {% endfor %} 
+              </ul>
+            </li>
           {% endfor %}
         </ul>
         {% else %}

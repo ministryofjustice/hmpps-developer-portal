@@ -53,6 +53,11 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   njkEnv.addFilter('toMonitorName', (val: string) => formatMonitorName(val))
 
+  njkEnv.addFilter(
+    'dumpJson',
+    (val: string) => new nunjucks.runtime.SafeString(`<pre>${JSON.stringify(val, null, 2)}</pre>`),
+  )
+
   njkEnv.addFilter('toMermaidEncodedString', (mermaidSource: Record<string, string>) => {
     const payload = {
       code: mermaidSource.val.trim(),
