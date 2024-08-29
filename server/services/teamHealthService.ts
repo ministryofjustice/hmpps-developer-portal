@@ -127,6 +127,22 @@ export default class TeamHealthService {
       .sort(({ component: c1 }, { component: c2 }) => c1.localeCompare(c2))
   }
 
+  async getComponentsMissingTeams(): Promise<{ component: string; product: string }[]> {
+    const allComponents = await this.serviceCatalogueService.getComponents(undefined, true)
+    const componentsMissingTeams = allComponents
+      .filter(component => !component?.attributes?.product?.data.attributes.team.data)
+      .map(component => ({
+        product: component.attributes.product.data?.attributes?.name,
+        productSlug: component.attributes.product.data?.attributes?.slug,
+        component: component.attributes.name,
+      }))
+
+    return componentsMissingTeams.sort(({ product: p1, component: c1 }, { product: p2, component: c2 }) => {
+      const productDiff = p1.localeCompare(p2)
+      return productDiff !== 0 ? productDiff : c1.localeCompare(c2)
+    })
+  }
+
   async getDriftData(componentNames: string[], now?: Date) {
     const versionDetailsByComponent = await this.getVersionDetailsByComponent()
     const allComponents = await this.serviceCatalogueService.getComponents()

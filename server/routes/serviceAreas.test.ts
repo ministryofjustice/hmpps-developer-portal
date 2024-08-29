@@ -21,6 +21,7 @@ const testServiceArea = {
         id: 23,
         attributes: {
           name: 'productName',
+          components: { data: [{ id: 1, attributes: { name: 'component-1' } }] },
         },
       },
     ],
@@ -62,8 +63,12 @@ describe('/service-areas', () => {
           expect($('[data-test="service-area-id"]').text()).toBe(testServiceArea.sa_id)
           expect($('[data-test="service-area-owner"]').text()).toBe(testServiceArea.owner)
           expect($('[data-test="no-products"]').text()).toBe('')
-          expect($(`[data-test="product-${testServiceArea.products.data[0].id}"]`).text()).toBe(
-            testServiceArea.products.data[0].attributes.name,
+
+          const product = testServiceArea.products.data[0]
+          const component = product.attributes.components.data[0]
+          expect($(`[data-test="product-${product.id}"]`).text()).toBe(product.attributes.name)
+          expect($(`[data-test="product-${product.id}-component-${component.id}"]`).text()).toBe(
+            component.attributes.name,
           )
         })
     })

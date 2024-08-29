@@ -19,7 +19,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   get('/:serviceAreaSlug', async (req, res) => {
     const { serviceAreaSlug } = req.params
-    const serviceArea = await serviceCatalogueService.getServiceArea({ serviceAreaSlug })
+    const serviceArea = await serviceCatalogueService.getServiceArea({ serviceAreaSlug, withProducts: true })
     const products = serviceArea.products?.data?.map(product => product)
 
     const displayServiceArea = {
