@@ -35,6 +35,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       gDriveLink: product.gdrive_link,
       id: product.p_id,
       productManager: product.product_manager,
+      leadDeveloper: product.lead_developer,
       deliveryManager: product.delivery_manager,
       subProduct: product.subproduct,
       legacyProduct: product.legacy,

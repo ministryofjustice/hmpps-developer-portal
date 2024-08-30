@@ -13,7 +13,13 @@ let app: Express
 const testProducts = [
   { id: 1, attributes: { name: 'testProduct', p_id: '1', slug: 'testproduct' } },
 ] as ProductListResponseDataItem[]
-const testProduct = { name: 'z-index testProduct', p_id: '1' } as Product
+const testProduct = {
+  name: 'z-index testProduct',
+  p_id: '1',
+  lead_developer: 'Some Lead Developer',
+  product_manager: 'Some Product Manager',
+  delivery_manager: 'Some Lead Developer',
+} as Product
 
 beforeEach(() => {
   serviceCatalogueService.getProducts.mockResolvedValue(testProducts)
@@ -47,6 +53,9 @@ describe('/products', () => {
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('#detailPageTitle').text()).toContain(testProduct.name)
+          expect($('[data-test="product-manager"]').text()).toBe(testProduct.product_manager)
+          expect($('[data-test="delivery-manager"]').text()).toBe(testProduct.delivery_manager)
+          expect($('[data-test="lead-developer"]').text()).toBe(testProduct.lead_developer)
         })
     })
   })
