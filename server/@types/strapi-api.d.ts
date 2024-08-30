@@ -2229,6 +2229,7 @@ export interface components {
       }
       delivery_manager?: string
       product_manager?: string
+      lead_developer?: string
       confluence_link?: string
       gdrive_link?: string
       service_area?: {
