@@ -42,4 +42,11 @@ export type RdsEntry = {
   db_engine_version: string
   rds_family: string
   db_max_allocated_storage: string
+  allow_major_version_upgrade?: string
+  allow_minor_version_upgrade?: string
+  deletion_protection?: string
+  maintenance_window?: string
+  performance_insights_enabled?: string
+  is_production?: string
+  environment_name?: string
 }

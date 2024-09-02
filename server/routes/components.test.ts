@@ -293,6 +293,8 @@ function expectEnvironmentScreenToBeFilled($: cheerio.CheerioAPI, devEnvironment
     `https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/${devEnvironment.namespace}`,
   )
   expect($('a[data-test="namespace"]').text()).toBe(devEnvironment.namespace)
+  expect($('a[data-test="namespace-local"]').attr('href')).toBe(`/namespaces/${devEnvironment.namespace}`)
+  expect($('a[data-test="namespace-local"]').text()).toBe(devEnvironment.namespace)
   expect($('a[data-test="info"]').attr('href')).toBe(`${devEnvironment.url}${devEnvironment.info_path}`)
   expect($('a[data-test="info"]').text()).toBe(devEnvironment.info_path)
   expect($('a[data-test="health"]').attr('href')).toBe(`${devEnvironment.url}${devEnvironment.health_path}`)

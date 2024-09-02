@@ -1808,6 +1808,11 @@ export interface components {
       meta?: Record<string, never>
     }
     TerraformModulesRdsComponent: {
+      allow_major_version_upgrade: string
+      allow_minor_version_upgrade: string
+      deletion_protection: string
+      maintenance_window: string
+      performance_insights_enabled: string
       id?: number
       tf_label?: string
       db_instance_class?: string
