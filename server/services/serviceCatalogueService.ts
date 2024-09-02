@@ -88,6 +88,13 @@ export default class ServiceCatalogueService {
           db_engine_version: rdsInstance.db_engine_version,
           rds_family: rdsInstance.rds_family,
           db_max_allocated_storage: rdsInstance.db_max_allocated_storage,
+          allow_major_version_upgrade: rdsInstance.allow_major_version_upgrade,
+          allow_minor_version_upgrade: rdsInstance.allow_minor_version_upgrade,
+          deletion_protection: rdsInstance.deletion_protection,
+          maintenance_window: rdsInstance.maintenance_window,
+          performance_insights_enabled: rdsInstance.performance_insights_enabled,
+          is_production: rdsInstance.is_production,
+          environment_name: rdsInstance.environment_name,
         }
       })
 

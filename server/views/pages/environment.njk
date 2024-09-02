@@ -39,8 +39,12 @@
     </tr>
     {% endif %}
     <tr>
-      <th>Namespace</th>
+      <th>Namespace (Cloud Platform)</th>
       <td><a data-test="namespace" href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ component.environment.namespace }}" target="_blank">{{ component.environment.namespace }}</a> (opens in new window)</td>
+    </tr>
+    <tr>
+      <th>Namespace</th>
+      <td><a data-test="namespace-local" href="/namespaces/{{ component.environment.namespace }}">{{ component.environment.namespace }}</a></td>
     </tr>
     <tr>
       <th>Info</th>
@@ -56,7 +60,7 @@
     </tr>
     <tr>
       <th>Active Agencies</th>
-        <td data-test="active-agencies">{{ component.activeAgencies }}</td>
+      <td data-test="active-agencies">{{ component.activeAgencies }}</td>
     </tr>
     <tr>
       <th>Version</th>
