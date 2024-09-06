@@ -291,6 +291,8 @@ function drawVersionChart(stream) {
 
       gitCommits.forEach(commit => {
         let message = commit.message
+        // Replace newlines with html break.
+        message = message.replace(/(\n)/gm, '<br>')
         // Try to find Jira tickets and create links
         message = message.replace(
           /([A-Z][A-Z0-9]+-[0-9]+)/gm,
