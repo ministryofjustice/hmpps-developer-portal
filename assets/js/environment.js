@@ -175,13 +175,20 @@ function drawHealthChart(stream) {
 function drawVersionChart(stream) {
   const container = document.getElementById('versionTimeline')
   const versionChart = new google.visualization.Timeline(container)
+  const dataVersionTimeline = new google.visualization.DataTable()
+
+  const tableContainer = document.getElementById('versionTable')
+  const tableChart = new google.visualization.Table(tableContainer)
   const dataVersionTable = new google.visualization.DataTable()
 
-  dataVersionTable.addColumn({ type: 'string', id: 'Status' })
-  dataVersionTable.addColumn({ type: 'string', id: 'DummyLabel' })
-  dataVersionTable.addColumn({ type: 'string', role: 'tooltip' })
-  dataVersionTable.addColumn({ type: 'date', id: 'Start' })
-  dataVersionTable.addColumn({ type: 'date', id: 'End' })
+  dataVersionTimeline.addColumn({ type: 'string', id: 'Status' })
+  dataVersionTimeline.addColumn({ type: 'string', id: 'DummyLabel' })
+  dataVersionTimeline.addColumn({ type: 'string', role: 'tooltip' })
+  dataVersionTimeline.addColumn({ type: 'date', id: 'Start' })
+  dataVersionTimeline.addColumn({ type: 'date', id: 'End' })
+
+  dataVersionTable.addColumn({ type: 'string', label: 'Build' })
+  dataVersionTable.addColumn({ type: 'date', label: 'Deploy Time' })
 
   for (let i = 0; i < stream.length; i++) {
     const eventEpochTime = parseInt(stream[i].id.split('-')[0])
@@ -215,7 +222,8 @@ function drawVersionChart(stream) {
       }
     }
 
-    dataVersionTable.addRows([['Build', versionOutput, gitCompare, eventTimeStart, eventTimeEnd]])
+    dataVersionTimeline.addRows([['Build', versionOutput, gitCompare, eventTimeStart, eventTimeEnd]])
+    dataVersionTable.addRows([[versionOutput, eventTimeStart]])
   }
 
   const options = {
@@ -230,22 +238,47 @@ function drawVersionChart(stream) {
     },
   }
 
+  const tableOptions = {
+    showRowNumber: false,
+    width: '100%',
+    height: '200px',
+    sortAscending: false,
+    sortColumn: 1,
+  }
+
+  function selectHandlerTable(arg) {
+    if (arg.length > 0) {
+      tableChart.setSelection(arg)
+    }
+    selected = tableChart.getSelection()
+    console.log(selected)
+    if (selected.length > 0) {
+      const selectedItem = selected[0]
+      const version = dataVersionTable.getValue(selectedItem.row, 0)
+      result = dataVersionTimeline.getFilteredRows([{ column: 1, value: version }])
+      google.visualization.events.trigger(versionChart, 'select', [{ row: result[0], column: null }])
+    } else {
+      $(`#versionOutputSelected`).html(`<p>&#128295 Click the timeline above to display build details.</p>`)
+    }
+  }
+
   function selectHandler(arg) {
+    console.log('selectHandler fired')
     if (arg) {
       versionChart.setSelection(arg)
     }
-    selectedItem = versionChart.getSelection()[0]
-
-    if (selectedItem) {
-      const version = dataVersionTable.getValue(selectedItem.row, 1)
-      const gitCompareRaw = dataVersionTable.getValue(selectedItem.row, 2)
-      const time = dataVersionTable.getValue(selectedItem.row, 3)
+    selected = versionChart.getSelection()
+    if (selected[0].row != null) {
+      const selectedItem = selected[0]
+      const version = dataVersionTimeline.getValue(selectedItem.row, 1)
+      const gitCompareRaw = dataVersionTimeline.getValue(selectedItem.row, 2)
+      const time = dataVersionTimeline.getValue(selectedItem.row, 3)
 
       const commitSha = version.split('.').pop()
       let previousCommitSha = ''
       // First item in the chart should not refer to the previous row which does not exist.
       if (selectedItem.row != 0) {
-        const previousVersion = dataVersionTable.getValue(selectedItem.row - 1, 1)
+        const previousVersion = dataVersionTimeline.getValue(selectedItem.row - 1, 1)
         previousCommitSha = previousVersion.split('.').pop()
       } else {
         // Just use the git shortcut for the previous commit.
@@ -286,22 +319,33 @@ function drawVersionChart(stream) {
         `
       }
 
-      $(`#versionOutputSelected`).html(`<p>&#128295 Click the timeline above to display build details.</p>
+      $(`#versionOutputSelected`)
+        .html(`<p><i>&#128295 Click the timeline or table above to display build details.</i></p>
         <p><b>Selected build:</b> ${version}</br><b>Deployed at</b>: ${time}</p>
         <p><a href=${githubCompareURL} target="_blank">View git compare from previous version.</a> (opens in new window).</p>
         ${versionOutputSelectedHTML}
         `)
+
+      result = dataVersionTable.getFilteredRows([{ column: 0, value: version }])
+      tableChart.setSelection([{ row: result[0], column: null }])
+    } else {
+      $(`#versionOutputSelected`).html(`<p>&#128295 Click the timeline above to display build details.</p>`)
     }
   }
 
   google.visualization.events.addListener(versionChart, 'select', selectHandler)
-  google.visualization.events.addListener(versionChart, 'ready', function () {
+  google.visualization.events.addOneTimeListener(versionChart, 'ready', function () {
     // Get the last item in the table - the last deployed build
-    let selectedItem = dataVersionTable.getNumberOfRows() - 1
-    // Set the current selection to the last deployed build
+    let selectedItem = dataVersionTimeline.getNumberOfRows() - 1
+    // Set the current selection to the last deployed buildz
     google.visualization.events.trigger(versionChart, 'select', [{ row: selectedItem, column: null }])
   })
-  versionChart.draw(dataVersionTable, options)
+  google.visualization.events.addListener(tableChart, 'select', selectHandlerTable)
+  const dateFormatter = new google.visualization.DateFormat({ pattern: "MMMM d  'at'  h:mm a" })
+  dateFormatter.format(dataVersionTable, 1)
+
+  tableChart.draw(dataVersionTable, tableOptions)
+  versionChart.draw(dataVersionTimeline, options)
 }
 
 const fetchMessages = async queryStringOptions => {
@@ -404,6 +448,7 @@ const watch = async () => {
 jQuery(function () {
   google.charts.load('current', { packages: ['corechart'] })
   google.charts.load('current', { packages: ['timeline'] })
-  google.charts.load('current', { packages: ['annotationchart'] })
+  google.charts.load('current', { packages: ['table'] })
+
   google.charts.setOnLoadCallback(watch)
 })
