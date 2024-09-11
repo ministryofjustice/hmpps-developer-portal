@@ -21,7 +21,7 @@ export default class StrapiApiClient {
   private restClient: RestClient
 
   constructor() {
-    this.restClient = new RestClient('strapiApiClient', config.apis.serviceCatalogue as ApiConfig, '')
+    this.restClient = new RestClient('strapiApiClient', config.apis.serviceCatalogue as ApiConfig)
   }
 
   async getProducts({
