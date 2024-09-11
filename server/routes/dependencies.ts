@@ -23,13 +23,16 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const displayComponents = components
       .filter(component => {
+        // @ts-expect-error Suppress any declaration
         if (component.attributes?.versions && component.attributes?.versions[dependencyType]) {
+          // @ts-expect-error Suppress any declaration
           return component.attributes.versions[dependencyType][dependencyName]
         }
 
         return false
       })
       .map(component => {
+        // @ts-expect-error Suppress any declaration
         const dependencyVersion = component.attributes.versions[dependencyType][dependencyName]
 
         return {

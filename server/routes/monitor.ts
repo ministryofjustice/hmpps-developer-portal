@@ -119,6 +119,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       const lastMessageTime = relativeTimeFromNow(new Date(dateAdded))
       const healthStatus = getHealthStatus(json)
 
+      // @ts-expect-error Suppress any declaration
       acc[key] = { version, lastMessageTime, healthStatus }
       return acc
     }, {})

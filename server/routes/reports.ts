@@ -35,6 +35,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
         component.attributes.veracode_results_summary?.severity?.forEach(severity => {
           severity.category.forEach(category => {
+            // @ts-expect-error Suppress any declaration
             severityLevels[category.severity] += category.count
           })
         })
