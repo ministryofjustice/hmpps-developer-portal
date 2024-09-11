@@ -1,18 +1,5 @@
 dayjs.extend(window.dayjs_plugin_relativeTime)
 
-const lastIds = Object.fromEntries(components.flatMap(c => c.environments.map(e => [e.streamName, '0'])))
-const envs = Object.fromEntries(components.flatMap(c => c.environments.map(e => [e.id, e])))
-
-const tileLine = (label, value) => `<strong>${label}:</strong><span class="tile-value">${value}</span><br/>`
-const tileLink = (title, href) => `<a class="tile-value govuk-link--no-visited-state" href="${href}">${title}</a>`
-
-const getDaysDiff = (thisEnv, otherEnv) => {
-  const otherEnvDate = otherEnv.version.date
-  const thisEnvDate = thisEnv.version.date
-
-  return parseInt(thisEnv.version.sha === otherEnv.version.sha ? -1 : dayjs(otherEnvDate).diff(thisEnvDate, 'day'), 10)
-}
-
 const getIndicatorColour = daysDiff => {
   // Decrease denominator to increase rate of change , increase daysDiff to increase initial jump
   const diffScore = (daysDiff + 6) / 15
@@ -21,89 +8,74 @@ const getIndicatorColour = daysDiff => {
   return `hsl(${hue},50%,50%)`
 }
 
-const updateVersion = (env, devEnv, prodEnv) => {
-  $(`#${env.id}_name`).html(tileLine(env.name, 'Most recent build deployed'))
-  $(`#${env.id}_details`).html(tileLine('Version', env.version.full))
-
-  if (env.id !== devEnv.id && devEnv.version) {
-    const devEnvSha = devEnv.version.sha
-    const thisEnvSha = env.version.sha
-    const daysDiff = getDaysDiff(env, devEnv)
-
-    $(`#${env.id}_indicator`).css('background-color', getIndicatorColour(daysDiff))
-
-    const gitDiffUrl = `https://github.com/ministryofjustice/${env.componentName}/compare/${thisEnvSha}...${devEnvSha}`
-
-    if (devEnvSha !== thisEnvSha) {
-      const diffDescription =
-        daysDiff > 0 ? `${daysDiff} day${daysDiff !== 1 ? 's' : ''} behind dev` : 'A newer build exists'
-
-      $(`#${env.id}_name`).html(tileLine(env.name, diffDescription))
-      $(`#${env.id}_details`).html(`
-        ${tileLine('Version', `${env.version.full}`)}
-        ${tileLink(
-          env.name === prodEnv.name ? 'View unreleased changes in Github' : 'View difference to dev in GitHub',
-          gitDiffUrl,
-        )}
-    `)
-    }
-  }
-  if (env.id === devEnv.id) {
-    const daysDiff = dayjs(new Date()).diff(env.version.date, 'day')
-    if (daysDiff > 20) {
-      $(`#${env.id}_indicator`).css('background-color', getIndicatorColour(daysDiff))
-    }
-    const diffDescription = `Last build ${Math.max(0, daysDiff)} day${daysDiff != 1 ? 's' : ''} ago`
-    $(`#${devEnv.id}_name`).html(tileLine(devEnv.name, diffDescription))
-  }
-}
-
-const fetchMessages = async queryStringOptions => {
-  const queryString = new URLSearchParams(queryStringOptions).toString()
-  const csrfToken = $('#csrf').val()
-  const response = await fetch('/drift-radiator/queue', {
-    method: 'POST',
-    credentials: 'same-origin',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'X-CSRF-Token': csrfToken,
-    },
-    body: JSON.stringify({ streams: lastIds }),
-  })
-
-  if (!response.ok) {
-    throw new Error('There was a problem fetching the component data')
+class DeploymentRenderer {
+  constructor(csrfToken, viewMode) {
+    this.csrfToken = csrfToken
+    this.viewMode = viewMode
   }
 
-  try {
-    const streamJson = await response.json()
-
-    streamJson.forEach(({ name, messages }) => {
-      const streamName = name.split(':')
-      const {
-        id,
-        message: { v: version },
-      } = messages[messages.length - 1]
-      lastIds[streamName] = id
-
-      const [date, build, sha] = version.split('.')
-      const envId = streamName.slice(streamName.length - 2).join('_')
-      const thisEnv = envs[envId]
-      thisEnv.version = { full: version, date, build, sha }
-
-      updateVersion(thisEnv, envs[thisEnv.devEnvId], envs[thisEnv.prodEnvId])
+  post = async (url, body) => {
+    const response = await fetch(url, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': this.csrfToken,
+      },
+      body: JSON.stringify(body),
     })
-  } catch (e) {
-    console.error(e)
+    if (!response.ok) {
+      throw new Error(`There was a problem calling: ${url}`)
+    }
+    return response.json()
+  }
+
+  fetchMessages = async componentNames => {
+    const components = await this.post('/drift-radiator/components.json', { componentNames })
+    $('#dependencyDriftRows').empty()
+
+    components.forEach(component => {
+      const environments = component.environments
+        .map(environment => {
+          const gitDiffUrl = `https://github.com/ministryofjustice/${component.repo}/compare/${environment.sha}...${component.devEnvSha}`
+          const showDiff =
+            environment.type !== 'dev' && Boolean(component.devEnvSha) && environment.sha !== component.devEnvSha
+          const diffAnchor = showDiff ? `(<a class="govuk-link--no-visited-state" href="${gitDiffUrl}">diff</a>)` : ''
+          return `
+        <li>
+          <a class="env govuk-link--no-visited-state" href="/components/${component.name}/environment/${environment.name}">
+              ${environment.name}
+          </a> 
+              ${environment.version}
+              ${diffAnchor}
+        </li>`
+        })
+        .join('')
+
+      $('#dependencyDriftRows').append(`<tr class= "govuk-table__row">
+        <td class="govuk-table__cell"><a href="/components/${component.name}" class="govuk-link--no-visited-state">${component.name}</a></td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="${component.staleness.days}">
+          <div id="radiator-${component.name}-staleness" class="radiator-indicator">&nbsp;</div>
+          ${component.staleness.description}
+        </td>
+        <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="${component.drift.days}">
+          <div id="radiator-${component.name}-drift" class="radiator-indicator">&nbsp;</div>
+          ${component.drift.description === 'no difference' && component.prodEnvSha !== component.devEnvSha ? 'less than 1 day' : component.drift.description}
+        </td>
+        <td class="govuk-table__cell">Environments:<ul class="govuk-!-margin-top-0">${environments}</ul></td>
+        </tr>`)
+      // red after around 30 days
+      $(`#radiator-${component.name}-staleness`).css(
+        'background-color',
+        getIndicatorColour(component.staleness.days * 0.3),
+      )
+      // red after around 10 days
+      $(`#radiator-${component.name}-drift`).css('background-color', getIndicatorColour(component.drift.days * 0.8))
+    })
+  }
+
+  start = async componentNames => {
+    await this.fetchMessages(componentNames)
   }
 }
-
-const watch = async () => {
-  await fetchMessages(lastIds)
-  setTimeout(watch, 10000)
-}
-
-jQuery(function () {
-  watch()
-})

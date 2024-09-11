@@ -27,6 +27,30 @@
   }
 }
 
+#graph-svg {
+  border: black;
+  overflow: hidden;
+  border-style: solid;
+  padding-top: govuk-spacing(5);
+}
+
+#dependencyDriftTable {
+  width: 100%;
+  thead {
+    tr {
+      background-color: grey;
+    }
+    button, th {
+      color: white;
+    }
+  }
+
+  .env {
+    display: inline-block;
+    width: 92px;
+  }
+}
+
 .monitor-selectors {
   align-items: flex-end;
 
@@ -83,15 +107,30 @@
  }
 }
 
-.componentData {
-  th, td {
+.wide-screen {
+  max-width: 96%;
+}
+
+#teamsTable {
+  th, td, img{
     padding: govuk-spacing(1);
+    vertical-align: middle;
+  }
+}
+
+.componentData {
+  th, td, img{
+    padding: govuk-spacing(1);
+    vertical-align: middle;
   }
 
   th {
     text-align: right;
-    vertical-align: top;
     background-color: govuk-colour('light-grey');
+
+    &.govuk-table__header {
+      text-align: left;
+    }
   }
 
   tr td {
@@ -155,4 +194,25 @@
 .veracode--failed {
   color: white;
   background-color: govuk-colour('red');
+}
+
+.td-nowrap {
+  white-space: nowrap;
+}
+
+.monitor .govuk-form-group {
+  margin: 0;
+}
+
+.monitor-filter-block {
+  display: flex;
+  align-items: center;
+}
+
+.monitor-filter-block > :first-child.govuk-heading-s {
+  margin: 0 govuk-spacing(2) 0 0;
+}
+
+#trivyTable .govuk-details {
+  margin-bottom: 0;
 }

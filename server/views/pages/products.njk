@@ -4,7 +4,7 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-
+{{ breadCrumb("Products", []) }}
   <h1>Products</h1>
 
   <table id="productsTable" class="stripe">
@@ -21,8 +21,8 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script src="/assets/govuk/all.js"></script>
-  <script src="/assets/govukFrontendInit.js"></script>
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
-  <script src="/assets/js/productsTable.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/products.js"></script>
 {% endblock %}

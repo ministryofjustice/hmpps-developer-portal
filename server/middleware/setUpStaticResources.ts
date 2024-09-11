@@ -17,13 +17,15 @@ export default function setUpStaticResources(): Router {
     '/assets',
     '/assets/stylesheets',
     '/assets/js',
-    '/node_modules/govuk-frontend/govuk/assets',
-    '/node_modules/govuk-frontend',
+    '/node_modules/govuk-frontend/dist/govuk/assets',
+    '/node_modules/govuk-frontend/dist',
     '/node_modules/@ministryofjustice/frontend/moj/assets',
     '/node_modules/@ministryofjustice/frontend',
     '/node_modules/jquery/dist',
     '/node_modules/datatables.net',
     '/node_modules/datatables.net-dt',
+    '/node_modules/mermaid/dist',
+    '/node_modules/svg-pan-zoom/dist',
   ).forEach(dir => {
     router.use('/assets', express.static(path.join(process.cwd(), dir), cacheControl))
   })

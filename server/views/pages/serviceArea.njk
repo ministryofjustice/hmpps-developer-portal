@@ -5,6 +5,8 @@
 
 {% block content %}
 
+{{ breadCrumb(serviceArea.name, [{title: "Service Areas", href: "/service-areas"}]) }}
+
 <h1 data-test="detail-page-title">{{ serviceArea.name }}</h1>
 
 <table class="componentData">
@@ -23,12 +25,35 @@
         {% if serviceArea.products | length %}
         <ul>
           {% for product in serviceArea.products %}
-            <li><a href="/products/{{ product.id }}" data-test="product-{{ product.id }}">{{ product.attributes.name }}</a></li>
+            <li>
+              <a class="govuk-link--no-visited-state govuk-!-margin-bottom-0 govuk-!-margin-top-3 govuk-heading-s" href="/products/{{ product.attributes.slug }}" data-test="product-{{ product.id }}">{{ product.attributes.name }}</a>
+              <ul>
+              {% for component in product.attributes.components.data %}
+                <li><a class="govuk-link--no-visited-state" href="/components/{{component.attributes.name}}" data-test="product-{{ product.id }}-component-{{ component.id }}">{{component.attributes.name}}</a></li>
+              {% endfor %} 
+              </ul>
+            </li>
           {% endfor %}
         </ul>
         {% else %}
         <p data-test="no-products">None</p>
         {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>Links</th>
+      <td>
+       <ul>
+         <li><a class="govuk-link--no-visited-state" href="/service-areas/{{  serviceArea.slug }}/diagram">
+             View product diagram
+          </a></li>
+          <li><a class="govuk-link--no-visited-state" href="/monitor/serviceArea/{{  serviceArea.name | toMonitorName }}">
+             Health Monitor
+          </a></li>
+          <li><a class="govuk-link--no-visited-state" href="/drift-radiator/service-areas/{{ serviceArea.name | toMonitorName }}">
+             Deployment drift
+          </a></li>
+        </ul>
       </td>
     </tr>
   </tbody>
@@ -37,7 +62,6 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script src="/assets/govuk/all.js"></script>
-  <script src="/assets/govukFrontendInit.js"></script>
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
 {% endblock %}

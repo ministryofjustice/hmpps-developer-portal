@@ -1,7 +1,7 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { getNumericId } from '../utils/utils'
+import { getFormattedName } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -18,14 +18,16 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.send(teams)
   })
 
-  get('/:teamId', async (req, res) => {
-    const teamId = getNumericId(req, 'teamId')
-    const team = await serviceCatalogueService.getTeam({ teamId })
+  get('/:teamSlug', async (req, res) => {
+    const teamSlug = getFormattedName(req, 'teamSlug')
+    const team = await serviceCatalogueService.getTeam({ teamSlug })
     const products = team.products?.data?.map(product => product)
 
     const displayTeam = {
       id: team.t_id,
       name: team.name,
+      slackChannelId: team.slack_channel_id,
+      slackChannelName: team.slack_channel_name,
       products,
     }
 

@@ -1,0 +1,94 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{%- set serviceAreas = [] -%}
+{%- set teams = [] -%}
+{%- set products = [] -%}
+{%- set customComponents = [] -%}
+{%- for serviceArea in serviceAreaList -%}
+  {%- set serviceAreas = (serviceAreas.push({
+    value: serviceArea.value,
+    text: serviceArea.text,
+    selected: serviceArea.selected
+  }), serviceAreas) -%}
+{%- endfor -%}
+{%- for team in teamList -%}
+  {%- set teams = (teams.push({
+    value: team.value,
+    text: team.text,
+    selected: team.selected
+  }), teams) -%}
+{%- endfor -%}
+{%- for product in productList -%}
+  {%- set products = (products.push({
+    value: product.value,
+    text: product.text,
+    selected: product.selected
+  }), products) -%}
+{%- endfor -%}
+{%- for customComponentView in customComponentsList -%}
+  {%- set customComponents = (customComponents.push({
+    value: customComponentView.value,
+    text: customComponentView.text,
+    selected: customComponentView.selected
+  }), customComponents) -%}
+{%- endfor -%}
+
+<div class="monitor-selectors govuk-button-group">
+{{- govukSelect({
+  id: "serviceArea",
+  name: "serviceArea",
+  label: {
+    text: "Service Area"
+  },
+  items: serviceAreas
+}) -}}
+{{ govukButton({
+  id: "updateServiceArea",
+  name: "updateServiceArea",
+  text: "Update",
+  element: "button"
+}) }}
+{{ govukSelect({
+  id: "team",
+  name: "team",
+  label: {
+    text: "Team"
+  },
+  items: teams
+}) }}
+{{ govukButton({
+  id: "updateTeam",
+  name: "updateTeam",
+  text: "Update",
+  element: "button"
+}) }}
+{{ govukSelect({
+  id: "product",
+  name: "product",
+  label: {
+    text: "Product"
+  },
+  items: products
+}) }}
+{{ govukButton({
+  id: "updateProduct",
+  name: "updateProduct",
+  text: "Update",
+  element: "button"
+}) }}
+{{ govukSelect({
+  id: "customComponentView",
+  name: "customComponentView",
+  label: {
+    text: "Custom View"
+  },
+  items: customComponents
+}) }}
+{{ govukButton({
+  id: "updateCustomComponentView",
+  name: "updateCustomComponentView",
+  text: "Update",
+  element: "button"
+}) }}
+</div>

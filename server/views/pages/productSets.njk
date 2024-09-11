@@ -5,6 +5,8 @@
 
 {% block content %}
 
+{{ breadCrumb("Product Sets", []) }}
+
   <h1>Product Sets</h1>
 
   <table id="productSetsTable" class="stripe">
@@ -19,8 +21,8 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script src="/assets/govuk/all.js"></script>
-  <script src="/assets/govukFrontendInit.js"></script>
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
-  <script src="/assets/js/productSetsTable.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/productSets.js"></script>
 {% endblock %}

@@ -5,12 +5,15 @@
 
 {% block content %}
 
+{{ breadCrumb("Teams", []) }}
+
   <h1>Teams</h1>
 
   <table id="teamsTable" class="stripe">
   	<thead>
 	  <tr>
 		<th>Name</th>
+		<th><image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image> Slack (opens app)</th>
 	  </tr>
   	</thead>
   </table>
@@ -18,8 +21,8 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script src="/assets/govuk/all.js"></script>
-  <script src="/assets/govukFrontendInit.js"></script>
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
-  <script src="/assets/js/teamsTable.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/teams.js"></script>
 {% endblock %}

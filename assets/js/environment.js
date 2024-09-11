@@ -12,96 +12,190 @@ let streamData = []
 let streamVersionData = []
 
 function drawHealthChart(stream) {
-  const container = document.getElementById('healthTimeline')
-  const chart = new google.visualization.Timeline(container)
-  const dataTable = new google.visualization.DataTable()
-
-  dataTable.addColumn({ type: 'string', id: 'Status' })
-  dataTable.addColumn({ type: 'string', id: 'DummyLabel' })
-  dataTable.addColumn({ type: 'string', role: 'tooltip' })
-  dataTable.addColumn({ type: 'string', id: 'style', role: 'style' })
-  dataTable.addColumn({ type: 'date', id: 'Start' })
-  dataTable.addColumn({ type: 'date', id: 'End' })
-
-  // Start from last 25
-  const offset = 25
-
-  for (let i = stream.length - offset; i < stream.length; i++) {
-    const eventEpochTime = parseInt(stream[i].id.split('-')[0])
+  // Start with null's in the the arrays so all traces appear in the legend.
+  const traceUpX = [null]
+  const traceUpY = [null]
+  const traceUpText = [null]
+  const traceDownX = [null]
+  const traceDownY = [null]
+  const traceDownText = [null]
+  const traceUnknownX = [null]
+  const traceUnknownY = [null]
+  const traceUnknownText = [null]
+  let rangeStart
+  stream.forEach((streamItem, i) => {
+    const eventEpochTime = parseInt(streamItem.id.split('-')[0])
     const eventTimeStart = new Date(eventEpochTime)
-    let eventTimeEnd = new Date(eventEpochTime + 120000) // make events 2 min long by default
-
-    // This makes the time line look better if each block butts up to the next,
-    // however we need to see the big gaps, e.g. if there are missing data.
-    if (stream[i + 1]) {
-      const nextEventEpochTime = parseInt(stream[i + 1].id.split('-')[0])
-      // Only if it's less than 5 mins apart, so show big gaps, e.g. when no data collected.
-      if (nextEventEpochTime - eventEpochTime < 300000) {
-        eventTimeEnd = new Date(nextEventEpochTime)
-      }
+    if (i == 0) {
+      rangeStart = eventTimeStart
     }
-
     let healthOutput = null
-    if (stream[i].message.hasOwnProperty('error')) {
-      healthOutput = stream[i].message.error
-    } else if (stream[i].message.hasOwnProperty('json')) {
+    if (streamItem.message.hasOwnProperty('error')) {
+      healthOutput = streamItem.message.error
+    } else if (streamItem.message.hasOwnProperty('json')) {
       try {
-        const messageJson = JSON.parse(stream[i].message.json)
+        const messageJson = JSON.parse(streamItem.message.json)
         healthOutput = JSON.stringify(messageJson, null, 2)
       } catch (err) {
         console.error(err)
       }
     }
 
-    let rowColour = '#d4351c'
-
-    if (stream[i].message.http_s === '200') {
-      rowColour = '#00703c'
-    } else if (stream[i].message.http_s === '0') {
-      rowColour = '#000000'
+    const eventStatus = parseInt(streamItem.message.http_s)
+    if (eventStatus == 200) {
+      traceUpX.push(eventTimeStart)
+      traceUpY.push(eventStatus)
+      traceUpText.push(healthOutput)
+    } else if (eventStatus == 0) {
+      traceUnknownX.push(eventTimeStart)
+      traceUnknownY.push(eventStatus)
+      traceUnknownText.push(healthOutput)
+    } else {
+      traceDownX.push(eventTimeStart)
+      traceDownY.push(eventStatus)
+      traceDownText.push(healthOutput)
     }
+  })
 
-    dataTable.addRows([['Status', stream[i].message.http_s, healthOutput, rowColour, eventTimeStart, eventTimeEnd]])
+  const traceUp = {
+    type: 'scatter',
+    mode: 'markers',
+    marker: {
+      color: '#00703c',
+      size: 10,
+      symbol: 'circle',
+    },
+    name: 'Up',
+    x: traceUpX,
+    y: traceUpY,
+    text: traceUpText,
+    hovertemplate: '%{x}' + '<br><b>HTTP</b>: %{y}',
+    connectgaps: false,
   }
 
-  const options = {
-    height: 100,
-    avoidOverlappingGridLines: false,
-    tooltip: {
-      trigger: 'none',
+  const traceDown = {
+    type: 'scatter',
+    mode: 'markers',
+    marker: {
+      color: '#d4351c',
+      size: 15,
+      symbol: 'triangle-up',
     },
-    timeline: {
-      groupByRowLabel: true,
-      colorByRowLabel: false,
+    name: 'Down',
+    x: traceDownX,
+    y: traceDownY,
+    text: traceDownText,
+    hovertemplate: '%{x}' + '<br><b>HTTP</b>: %{y}',
+    connectgaps: false,
+  }
+
+  const traceUnknown = {
+    type: 'scatter',
+    mode: 'markers',
+    marker: {
+      color: '#000000',
+      size: 15,
+      symbol: 'star-square',
+    },
+    name: 'Connection Error',
+    x: traceUnknownX,
+    y: traceUnknownY,
+    text: traceUnknownText,
+    hovertemplate: '%{x}' + '<br><b>HTTP</b>: %{y}',
+    connectgaps: false,
+  }
+
+  const statusData = [traceUp, traceDown, traceUnknown]
+
+  const dateNow = new Date()
+  const rangeSelectorStart = new Date()
+  rangeSelectorStart.setHours(rangeSelectorStart.getHours() - 1)
+
+  const layout = {
+    //autosize: true,
+    xaxis: {
+      maxallowed: dateNow,
+      minallowed: rangeStart,
+      range: [rangeSelectorStart, dateNow],
+      automargin: false,
+      rangeselector: {
+        buttons: [
+          {
+            count: 1,
+            label: '1h',
+            step: 'hour',
+            stepmode: 'backward',
+          },
+          {
+            count: 6,
+            label: '6h',
+            step: 'hour',
+            stepmode: 'backward',
+          },
+          {
+            count: 12,
+            label: '12h',
+            step: 'hour',
+            stepmode: 'backward',
+          },
+          {
+            count: 1,
+            label: '1d',
+            step: 'day',
+            stepmode: 'backward',
+          },
+          {
+            count: 2,
+            label: '2d',
+            step: 'day',
+            stepmode: 'backward',
+          },
+          { step: 'all' }, // this doesn't work, possible bug.
+        ],
+      },
+      rangeslider: { range: [rangeStart, dateNow] },
+      type: 'date',
+    },
+    yaxis: {
+      type: 'category',
+      title: 'http status',
     },
   }
 
-  function selectHandler() {
-    var selectedItem = chart.getSelection()[0]
-    if (selectedItem) {
-      var value = dataTable.getValue(selectedItem.row, 2)
-      $(`#healthOutputSelected`).text(value)
+  Plotly.newPlot('healthChart', statusData, layout, { displayModeBar: false })
+  let myPlot = document.getElementById('healthChart')
+  myPlot.on('plotly_click', function (data) {
+    let healthText = data.points.pop().text
+    if (healthText) {
+      $(`#healthOutputSelected`).text(healthText)
     }
-  }
-  google.visualization.events.addListener(chart, 'select', selectHandler)
-
-  chart.draw(dataTable, options)
+  })
 }
 
 function drawVersionChart(stream) {
   const container = document.getElementById('versionTimeline')
   const versionChart = new google.visualization.Timeline(container)
+  const dataVersionTimeline = new google.visualization.DataTable()
+
+  const tableContainer = document.getElementById('versionTable')
+  const tableChart = new google.visualization.Table(tableContainer)
   const dataVersionTable = new google.visualization.DataTable()
 
-  dataVersionTable.addColumn({ type: 'string', id: 'Status' })
-  dataVersionTable.addColumn({ type: 'string', id: 'DummyLabel' })
-  dataVersionTable.addColumn({ type: 'date', id: 'Start' })
-  dataVersionTable.addColumn({ type: 'date', id: 'End' })
+  dataVersionTimeline.addColumn({ type: 'string', id: 'Status' })
+  dataVersionTimeline.addColumn({ type: 'string', id: 'DummyLabel' })
+  dataVersionTimeline.addColumn({ type: 'string', role: 'tooltip' })
+  dataVersionTimeline.addColumn({ type: 'date', id: 'Start' })
+  dataVersionTimeline.addColumn({ type: 'date', id: 'End' })
+
+  dataVersionTable.addColumn({ type: 'string', label: 'Build' })
+  dataVersionTable.addColumn({ type: 'date', label: 'Deploy Time' })
 
   for (let i = 0; i < stream.length; i++) {
     const eventEpochTime = parseInt(stream[i].id.split('-')[0])
     const eventTimeStart = new Date(eventEpochTime)
-    let eventTimeEnd = new Date(Date.now()) // Default endtime for events
+    // Set default endtime, this is used for the latest event
+    // Increase size of the latest event so it's more visible + 7 days)
+    let eventTimeEnd = new Date(Date.now() + 60 * 60 * 24 * 7 * 1000)
 
     // This makes the time line look better if each block butts up to the next,
     // however we need to see the big gaps, e.g. if there are missing data.
@@ -119,7 +213,17 @@ function drawVersionChart(stream) {
       }
     }
 
-    dataVersionTable.addRows([['Status', versionOutput, eventTimeStart, eventTimeEnd]])
+    let gitCompare = '[]'
+    if (stream[i].message.hasOwnProperty('git_compare')) {
+      try {
+        gitCompare = stream[i].message.git_compare
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    dataVersionTimeline.addRows([['Build', versionOutput, gitCompare, eventTimeStart, eventTimeEnd]])
+    dataVersionTable.addRows([[versionOutput, eventTimeStart]])
   }
 
   const options = {
@@ -129,18 +233,121 @@ function drawVersionChart(stream) {
       groupByRowLabel: true,
       colorByRowLabel: false,
     },
+    tooltip: {
+      trigger: 'none',
+    },
   }
 
-  function selectHandler() {
-    var selectedItem = versionChart.getSelection()[0]
-    if (selectedItem) {
-      var version = dataVersionTable.getValue(selectedItem.row, 1)
-      var time = dataVersionTable.getValue(selectedItem.row, 2)
-      $(`#versionOutputSelected`).text(`Version: ${version} - Deployed @ ${time}`)
+  const tableOptions = {
+    showRowNumber: false,
+    width: '100%',
+    height: '200px',
+    sortAscending: false,
+    sortColumn: 1,
+  }
+
+  function selectHandlerTable(arg) {
+    if (arg.length > 0) {
+      tableChart.setSelection(arg)
+    }
+    selected = tableChart.getSelection()
+    console.log(selected)
+    if (selected.length > 0) {
+      const selectedItem = selected[0]
+      const version = dataVersionTable.getValue(selectedItem.row, 0)
+      result = dataVersionTimeline.getFilteredRows([{ column: 1, value: version }])
+      google.visualization.events.trigger(versionChart, 'select', [{ row: result[0], column: null }])
+    } else {
+      $(`#versionOutputSelected`).html(`<p>&#128295 Click the timeline above to display build details.</p>`)
     }
   }
+
+  function selectHandler(arg) {
+    console.log('selectHandler fired')
+    if (arg) {
+      versionChart.setSelection(arg)
+    }
+    selected = versionChart.getSelection()
+    if (selected[0].row != null) {
+      const selectedItem = selected[0]
+      const version = dataVersionTimeline.getValue(selectedItem.row, 1)
+      const gitCompareRaw = dataVersionTimeline.getValue(selectedItem.row, 2)
+      const time = dataVersionTimeline.getValue(selectedItem.row, 3)
+
+      const commitSha = version.split('.').pop()
+      let previousCommitSha = ''
+      // First item in the chart should not refer to the previous row which does not exist.
+      if (selectedItem.row != 0) {
+        const previousVersion = dataVersionTimeline.getValue(selectedItem.row - 1, 1)
+        previousCommitSha = previousVersion.split('.').pop()
+      } else {
+        // Just use the git shortcut for the previous commit.
+        previousCommitSha = `${commitSha}^`
+      }
+
+      const gitCommits = JSON.parse(gitCompareRaw)
+
+      let gitCommitsHTML = ''
+
+      gitCommits.forEach(commit => {
+        let message = commit.message
+        // Replace newlines with html break.
+        message = message.replace(/(\n)/gm, '<br>')
+        // Try to find Jira tickets and create links
+        message = message.replace(
+          /([A-Z][A-Z0-9]+-[0-9]+)/gm,
+          '<a href="https://dsdmoj.atlassian.net/browse/$1" target="_blank">$1</a>',
+        )
+        // Try to find PR numbers and create links
+        message = message.replace(
+          /[\(]?#([0-9]{1,5})[\)]?/gm,
+          ` <a href="https://github.com/ministryofjustice/${componentName}/pull/$1" target="_blank">$&</a> `,
+        )
+        gitCommitsHTML = gitCommitsHTML.concat(
+          `<tr><td><a href="${commit.html_url}" target="_blank">${commit.sha.substring(0, 6)}</a></td><td>${message}</td></tr>`,
+        )
+      })
+      const githubCompareURL = `https://github.com/ministryofjustice/${componentName}/compare/${previousCommitSha}...${commitSha}`
+
+      let versionOutputSelectedHTML = ''
+      if (gitCommitsHTML) {
+        versionOutputSelectedHTML = `
+        <table class="componentData">
+          <tbody>
+            <tr><th>Commit</th><th>Commit Message</th></tr>
+            ${gitCommitsHTML}
+          </tbody>
+        </table>
+        `
+      }
+
+      $(`#versionOutputSelected`)
+        .html(`<p><i>&#128295 Click the timeline or table above to display build details.</i></p>
+        <p><b>Selected build:</b> ${version}</br><b>Deployed at</b>: ${time}</p>
+        <p><a href=${githubCompareURL} target="_blank">View git compare from previous version.</a> (opens in new window).</p>
+        ${versionOutputSelectedHTML}
+        `)
+
+      result = dataVersionTable.getFilteredRows([{ column: 0, value: version }])
+      tableChart.setSelection([{ row: result[0], column: null }])
+    } else {
+      $(`#versionOutputSelected`).html(`<p>&#128295 Click the timeline above to display build details.</p>`)
+    }
+  }
+
   google.visualization.events.addListener(versionChart, 'select', selectHandler)
-  versionChart.draw(dataVersionTable, options)
+  google.visualization.events.addOneTimeListener(versionChart, 'ready', function () {
+    // Get the last item in the table - the last deployed build
+    let selectedItem = dataVersionTimeline.getNumberOfRows() - 1
+    // Set the current selection to the last deployed buildz
+    google.visualization.events.trigger(versionChart, 'select', [{ row: selectedItem, column: null }])
+  })
+  google.visualization.events.addListener(tableChart, 'select', selectHandlerTable)
+  const dateFormatter = new google.visualization.DateFormat({ pattern: "MMMM d  'at'  h:mm a" })
+  dateFormatter.format(dataVersionTable, 1)
+
+  tableChart.draw(dataVersionTable, tableOptions)
+  versionChart.draw(dataVersionTimeline, options)
 }
 
 const fetchMessages = async queryStringOptions => {
@@ -241,6 +448,9 @@ const watch = async () => {
 }
 
 jQuery(function () {
+  google.charts.load('current', { packages: ['corechart'] })
   google.charts.load('current', { packages: ['timeline'] })
+  google.charts.load('current', { packages: ['table'] })
+
   google.charts.setOnLoadCallback(watch)
 })

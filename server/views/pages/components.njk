@@ -5,6 +5,8 @@
 
 {% block content %}
 
+{{ breadCrumb("Components", []) }}
+
   <h1>Components</h1>
 
   <table id="componentsTable" class="stripe">
@@ -20,8 +22,8 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script src="/assets/govuk/all.js"></script>
-  <script src="/assets/govukFrontendInit.js"></script>
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
-  <script src="/assets/js/componentsTable.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/components.js"></script>
 {% endblock %}

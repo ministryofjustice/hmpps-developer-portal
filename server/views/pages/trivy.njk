@@ -1,0 +1,33 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set pageTitle = applicationName + " - Trivy" %}
+{% set mainClasses = "app-container govuk-body" %}
+{% set containerClasses = "wide-screen" %}
+
+{% block content %}
+
+  <h1>Trivy Scan Results</h1>
+
+  <table id="trivyTable" class="stripe">
+  	<thead>
+	  <tr>
+		<th>Component</th>
+		<th>Title</th>
+		<th>Last Scan</th>
+		<th>Vulnerability</th>
+		<th>Severity</th>
+		<th>References</th>
+	  </tr>
+  	</thead>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/trivy.js"></script>
+{% endblock %}

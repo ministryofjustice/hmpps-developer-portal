@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { getComponentName, getEnvironmentName } from '../utils/utils'
+import { formatActiveAgencies, getComponentName, getEnvironmentName } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -19,46 +19,10 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     return res.send(components)
   })
 
-  get('/veracode', async (req, res) => {
-    return res.render('pages/veracode')
-  })
-
-  get('/veracode/data', async (req, res) => {
-    const components = await serviceCatalogueService.getComponents()
-
-    const rows = components
-      .filter(component => !component.attributes.veracode_exempt)
-      .map(component => {
-        const hasVeracode = !!component.attributes.veracode_results_summary
-        const severityLevels = {
-          LOW: 0,
-          MEDIUM: 0,
-          HIGH: 0,
-          VERY_HIGH: 0,
-        }
-
-        component.attributes.veracode_results_summary?.severity?.forEach(severity => {
-          severity.category.forEach(category => {
-            severityLevels[category.severity] += category.count
-          })
-        })
-
-        return {
-          name: component.attributes.name,
-          hasVeracode,
-          result: component.attributes.veracode_policy_rules_status === 'Pass' ? 'Passed' : 'Failed',
-          report: hasVeracode ? component.attributes.veracode_results_url : 'N/A',
-          codeScore: hasVeracode ? component.attributes.veracode_results_summary['static-analysis'].score : 0,
-          severityLevels,
-        }
-      })
-
-    return res.send(rows)
-  })
-
   get('/:componentName', async (req, res) => {
     const componentName = getComponentName(req)
-    const component = await serviceCatalogueService.getComponent(componentName)
+    const component = await serviceCatalogueService.getComponent({ componentName })
+    const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { environments } = component
 
     const displayComponent = {
@@ -78,6 +42,9 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       language: component.language,
       product: component.product?.data,
       versions: component.versions,
+      dependencyTypes: dependencies.categories,
+      dependents: dependencies.dependents,
+      dependencies: dependencies.dependencies,
       environments,
     }
 
@@ -88,13 +55,41 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const componentName = getComponentName(req)
     const environmentName = getEnvironmentName(req)
 
-    const component = await serviceCatalogueService.getComponent(componentName)
+    const component = await serviceCatalogueService.getComponent({ componentName })
     const environments = component.environments?.filter(environment => environment.name === environmentName)
+    const activeAgencies =
+      environments.length === 0 ? '' : formatActiveAgencies(environments[0].active_agencies as Array<string>)
+    const allowList = new Map()
+
+    if (environments[0].ip_allow_list && environments[0].ip_allow_list_enabled) {
+      const ipAllowListFiles = Object.keys(environments[0].ip_allow_list)
+
+      ipAllowListFiles.forEach(fileName => {
+        Object.keys(environments[0].ip_allow_list[fileName]).forEach(item => {
+          if (item === 'generic-service') {
+            allowList.set('groups', [])
+            const genericService = environments[0].ip_allow_list[fileName]['generic-service']
+            Object.keys(genericService).forEach(ipName => {
+              if (ipName !== 'groups') {
+                allowList.set(ipName, genericService[ipName])
+              } else {
+                allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...genericService[ipName]])]))
+              }
+            })
+          } else {
+            allowList.set(item, environments[0].ip_allow_list[fileName][item])
+          }
+        })
+      })
+    }
 
     const displayComponent = {
       name: componentName,
+      product: component.product?.data,
       api: component.api,
       environment: environments[0],
+      activeAgencies,
+      allowList,
     }
 
     return res.render('pages/environment', { component: displayComponent })
@@ -108,7 +103,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     logger.info(`Queue call for ${componentName} with ${queueInformation}`)
 
-    const component = await serviceCatalogueService.getComponent(componentName)
+    const component = await serviceCatalogueService.getComponent({ componentName })
     const streams = [
       {
         key: `health:${component.name}:${environmentName}`,

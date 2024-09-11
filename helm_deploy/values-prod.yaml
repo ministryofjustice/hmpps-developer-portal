@@ -10,7 +10,7 @@ generic-service:
     SERVICE_CATALOGUE_URL: "https://service-catalogue.hmpps.service.justice.gov.uk"
 
   namespace_secrets:
-    elasticache-redis-dev:
+    elasticache-redis:
       REDIS_HOST: "primary_endpoint_address"
       REDIS_AUTH_TOKEN: "auth_token"
 

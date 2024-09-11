@@ -1,0 +1,74 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + rdsInstance.tf_label %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb(rdsInstance.tf_label, [{title: "RDS Instances", href: "/reports/rds"}]) }}
+
+<h1 data-test="detail-page-title">{{ rdsInstance.tf_label }}</h1>
+
+<table class="componentData">
+  <tbody>
+    <tr>
+      <th>tf_label</th>
+      <td>{{ rdsInstance.tf_label }}</td>
+    </tr>
+    <tr>
+      <th>namespace</th>
+      <td>{{ rdsInstance.namespace }}</td>
+    </tr>
+    <tr>
+      <th>db_instance_class</th>
+      <td>{{ rdsInstance.db_instance_class }}</td>
+    </tr>
+    <tr>
+      <th>db_engine_version</th>
+      <td>{{ rdsInstance.db_engine_version }}</td>
+    </tr>
+    <tr>
+      <th>rds_family</th>
+      <td>{{ rdsInstance.rds_family }}</td>
+    </tr>
+    <tr>
+      <th>db_max_allocated_storage</th>
+      <td>{{ rdsInstance.db_max_allocated_storage }}</td>
+    </tr>
+    <tr>
+      <th>allow_major_version_upgrade</th>
+      <td>{{ rdsInstance.allow_major_version_upgrade }}</td>
+    </tr>
+    <tr>
+      <th>allow_minor_version_upgrade</th>
+      <td>{{ rdsInstance.allow_minor_version_upgrade }}</td>
+    </tr>
+    <tr>
+      <th>deletion_protection</th>
+      <td>{{ rdsInstance.deletion_protection }}</td>
+    </tr>
+    <tr>
+      <th>maintenance_window</th>
+      <td>{{ rdsInstance.maintenance_window }}</td>
+    </tr>
+    <tr>
+      <th>performance_insights_enabled</th>
+      <td>{{ rdsInstance.performance_insights_enabled }}</td>
+    </tr>
+    <tr>
+      <th>is_production</th>
+      <td>{{ rdsInstance.is_production }}</td>
+    </tr>
+    <tr>
+      <th>environment_name</th>
+      <td>{{ rdsInstance.environment_name }}</td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+{% endblock %}

@@ -1,144 +1,118 @@
 {% extends "../partials/layout.njk" %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% set pageTitle = applicationName + " - Monitor" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-  {% set serviceAreas = [] %}
-  {% for serviceArea in serviceAreaList %}
-    {%- set serviceAreas = (serviceAreas.push({
-      value: serviceArea.value,
-      text: serviceArea.text,
-      selected: serviceArea.selected
-    }), serviceAreas) %}
-  {% endfor %}
-
-  {% set teams = [] %}
-  {% for team in teamList %}
-    {%- set teams = (teams.push({
-      value: team.value,
-      text: team.text,
-      selected: team.selected
-    }), teams) %}
-  {% endfor %}
-
-  {% set products = [] %}
-  {% for product in productList %}
-    {%- set products = (products.push({
-      value: product.value,
-      text: product.text,
-      selected: product.selected
-    }), products) %}
-  {% endfor %}
-
   <h1>Monitor</h1>
 
   <form>
     <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
     <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-    <div class="monitor-selectors govuk-button-group">
-    {{ govukSelect({
-      id: "serviceArea",
-      name: "serviceArea",
-      label: {
-        text: "Service Area"
-      },
-      items: serviceAreas
-    }) }}
-    {{ govukButton({
-      id: "updateServiceArea",
-      name: "updateServiceArea",
-      text: "Update",
-      element: "button"
-    }) }}
-    {{ govukSelect({
-      id: "team",
-      name: "team",
-      label: {
-        text: "Team"
-      },
-      items: teams
-    }) }}
-    {{ govukButton({
-      id: "updateTeam",
-      name: "updateTeam",
-      text: "Update",
-      element: "button"
-    }) }}
-    {{ govukSelect({
-      id: "product",
-      name: "product",
-      label: {
-        text: "Product"
-      },
-      items: products
-    }) }}
-    {{ govukButton({
-      id: "updateProduct",
-      name: "updateProduct",
-      text: "Update",
-      element: "button"
-    }) }}
+
+    {% include "../partials/filterDropDowns.njk" %}
+
+    <div class="monitor">
+
+      <div class="monitor-filter-block">
+        <div class="govuk-heading-s">Environments</div>
+        {{ govukCheckboxes({
+          classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+          name: "environment",
+          items: [
+            {
+              id: "environment-dev",
+              value: "dev",
+              text: "Dev",
+              checked: true
+            },
+            {
+              id: "environment-stage",
+              value: "stage",
+              text: "Stage",
+              checked: true
+            },
+            {
+              id: "environment-test",
+              value: "test",
+              text: "Test",
+              checked: true
+            },
+            {
+              id: "environment-preprod",
+              value: "preprod",
+              text: "PreProd",
+              checked: true
+            },
+            {
+              id: "environment-prod",
+              value: "prod",
+              text: "Prod",
+              checked: true
+            }
+          ]
+        }) }}
+      </div>
+
+      <div class="monitor-filter-block">
+        <div class="govuk-heading-s">Status</div>
+        {{ govukCheckboxes({
+          classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+          name: "status",
+          items: [
+            {
+              id: "status-up",
+              value: "up",
+              text: "Up",
+              checked: true
+            },
+            {
+              id: "status-down",
+              value: "down",
+              text: "Down",
+              checked: true
+            },
+            {
+              id: "status-missing",
+              value: "missing",
+              text: "Missing",
+              checked: true
+            }
+          ]
+        }) }}
+      </div>
+
+      <div class="monitor-filter-block">
+        <div class="govuk-heading-s">Area</div>
+        {{ govukCheckboxes({
+          classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+          name: "area",
+          items: [
+            {
+              id: "hmpps-area-probation",
+              value: "probation",
+              text: "Probation",
+              checked: true
+            },
+            {
+              id: "hmpps-area-prisons",
+              value: "prisons",
+              text: "Prisons",
+              checked: true
+            }
+          ]
+        }) }}
+      </div>
     </div>
-    {{ govukCheckboxes({
-      classes: "govuk-checkboxes--inline environments",
-      name: "environment",
-      items: [
-        {
-          id: "environment-dev",
-          value: "dev",
-          text: "Dev",
-          checked: true
-        },
-        {
-          id: "environment-stage",
-          value: "stage",
-          text: "Stage",
-          checked: true
-        },
-        {
-          id: "environment-test",
-          value: "test",
-          text: "Test",
-          checked: true
-        },
-        {
-          id: "environment-preprod",
-          value: "preprod",
-          text: "PreProd",
-          checked: true
-        },
-        {
-          id: "environment-prod",
-          value: "prod",
-          text: "Prod",
-          checked: true
-        },
-        {
-          id: "status-up",
-          value: "up",
-          text: "UP",
-          checked: true
-        },
-        {
-          id: "status-down",
-          value: "down",
-          text: "DOWN",
-          checked: true
-        }
-      ]
-    }) }}
   </form>
 
   <table id="statusTable">
     <thead>
       <tr>
         <th>Component</th>
-        <th>Env</th>
+        <th>Env Name (Type)</th>
         <th>Health</th>
         <th>Build</th>
         <th>Up/Down</th>
@@ -152,8 +126,7 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script src="/assets/govuk/all.js"></script>
-  <script src="/assets/govukFrontendInit.js"></script>
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
   <script src="/assets/js/dayjs/dayjs.min.js"></script>
   <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>

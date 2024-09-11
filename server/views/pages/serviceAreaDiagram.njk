@@ -1,0 +1,97 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + product.name %}
+{% set mainClasses = "app-container govuk-body" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% set containerClasses = "wide-screen" %}
+
+{% block content %}
+    {% macro serviceAreaDiagram(serviceArea) %}
+        graph {{orientation}} 
+          {{serviceArea.id}}["{{serviceArea.name}}"]
+          {% for product in serviceArea.products %}
+            subgraph {{product.productCode}}["{{product.productName}}"]
+                direction TB
+                {% for component in product.components %}
+                    {{component.name}}-prod-comp["{{component.name}}"]
+                    click {{component.name}}-prod-comp href "/components/{{component.name}}"
+                {% endfor %}
+            end
+            {{serviceArea.id}} --> {{product.productCode}}
+          {% endfor %}
+    {% endmacro %}
+
+    <h1 id="detailPageTitle">{{serviceArea.name}}</h1>  
+    <input type="hidden" id="serviceAreaSlug" name="serviceAreaSlug" value="{{serviceArea.slug}}">
+    <div class="monitor-selectors govuk-button-group">
+        {{ govukSelect({
+            id: "serviceArea",
+            name: "serviceArea",
+            label: {
+                text: "Service Areas"
+            },
+            items: serviceAreas | sort(false, false, 'name') | toSelect('slug', 'name', serviceArea.slug)
+        }) }}
+        {{ govukButton({
+            id: "updateServiceArea",
+            name: "updateServiceArea",
+            text: "Update",
+            element: "button"
+        }) }}
+        {{ govukButton({
+            id: "toggleOrientation",
+            name: "toggleOrientation",
+            text: "Toggle Orientation",
+            element: "button"
+            }) }}
+        {{ govukButton({
+            id: "viewImage",
+            text: "View as image",
+            href: "https://mermaid.ink/img/pako:" + serviceAreaDiagram(serviceArea) | toMermaidEncodedString
+        }) }}
+    </div>
+  
+  {% set source %}
+    <a class="govuk-link--no-visited-state" href="https://mermaid.live/edit#pako:{{ serviceAreaDiagram(serviceArea) | toMermaidEncodedString }}">View in mermaid js editor</a>
+    <br/>
+    <textarea class="govuk-!-margin-top-4" cols="160" rows=50>{{ serviceAreaDiagram(serviceArea) }}</textarea>
+  {% endset %}
+
+  {{ govukDetails({
+    summaryText: "View source",
+    html: source,
+    classes: "govuk-!-margin-top-9"
+   }) }}
+ 
+   <div class="service-area-diagram"></div>
+  
+    <div>
+       <h2 id="serviceAreaName">{{serviceArea.name}}</h2>
+       <h3>Contains</h3>
+          <ul>
+           {% for product in serviceArea.products %}
+            <li>{{product.productName}}
+              <ul>
+                {% for component in product.components %}
+                    <li>{{component.name }}</li>
+                {% endfor %}
+              </ul>  
+            </li>
+            {% else %}
+                <p>No other services</p>
+            {% endfor %}
+          </ul>
+    </div>
+{% endblock %}
+
+{% block bodyEnd %}
+    <script id="graph-source" type="text/x-mermaid">{{ serviceAreaDiagram(serviceArea) }}</script>
+
+    <script type="module" src="/assets/govukFrontendInit.js"></script>
+    <script type="module" src="/assets/svg-pan-zoom.min.js"></script>
+    <script src="/assets/moj/all.js"></script>
+    <script type="module" src="/assets/js/serviceAreaDiagram.js"></script>
+{% endblock %}

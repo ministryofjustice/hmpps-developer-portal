@@ -1,0 +1,30 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - RDS Instances" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb("RDS Instances", []) }}
+
+  <h1>RDS Instances</h1>
+
+  <table id="rdsInstancesTable" class="stripe">
+  	<thead>
+      <tr>
+        <th>Label</th>
+        <th>Namespace</th>
+        <th>Instance</th>
+        <th>Family (Version)</th>
+      </tr>
+  	</thead>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/rds.js"></script>
+{% endblock %}

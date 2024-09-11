@@ -4,7 +4,7 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-
+{{ breadCrumb(product.name, [{title: "Products", href: "/products"}]) }}
 <h1 id="detailPageTitle">{{ product.name }}</h1>
 
 <table class="componentData">
@@ -23,15 +23,19 @@
     </tr>
     <tr>
       <th>ID</th>
-      <td>{{ product.id }}</p></td>
+      <td>{{ product.id }}</td>
     </tr>
     <tr>
       <th>Product Manager</th>
-      <td>{{ product.productManager }}</td>
+      <td data-test="product-manager">{{ product.productManager }}</td>
     </tr>
     <tr>
       <th>Delivery Manager</th>
-      <td>{{ product.deliveryManager }}</td>
+      <td data-test="delivery-manager">{{ product.deliveryManager }}</td>
+    </tr>
+    <tr>
+      <th>Lead developer</th>
+      <td data-test="lead-developer">{{ product.leadDeveloper }}</td>
     </tr>
     <tr>
       <th>Subproduct?</th>
@@ -47,12 +51,54 @@
     </tr>
     <tr>
       <th>Team</th>
-      <td><a href="/teams/{{ product.team.id }}">{{ product.team.attributes.name }} ({{ product.team.attributes.t_id }})</a></td>
+      <td>
+        {% if product.team.attributes.name | length %}
+        <a href="/teams/{{ product.team.attributes.slug }}">{{ product.team.attributes.name }} ({{ product.team.attributes.t_id }})</a>
+        {% else %}
+        No team associated with this product &#129301;
+        {% endif %}
+        </td>
     </tr>
+    <tr>
+      <th>Team Slack</th>
+      <td>
+        {% if product.team.attributes.slack_channel_id | length %}
+        <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.team.attributes.slack_channel_id }}">
+        <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+          {% if product.team.attributes.slack_channel_name | length %}
+          #{{ product.team.attributes.slack_channel_name }}
+          {% else %}
+          Link
+          {% endif %}
+          (opens slack)</a>
+        {% else %}
+        No team slack &#129301; - please provide one.
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>Product Slack</th>
+      <td>
+      {% if product.slackChannelId | length %}
+        <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">
+        <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+        {% if product.slackChannelName | length %}
+        #{{ product.slackChannelName }}
+        {% else %}
+        Link
+        {% endif %}
+        (opens slack)</a>
+      {% else %}
+        No product slack &#129301; - please provide one.
+      {% endif %}
+      </td>
+    </tr>
+    {% if product.productSet.id | length %}
     <tr>
       <th>Product Set</th>
       <td><a href="/product-sets/{{ product.productSet.id }}">{{ product.productSet.attributes.name }} ({{ product.productSet.attributes.ps_id }})</a></td>
     </tr>
+    {% endif %}
     <tr>
       <th>Components</th>
       <td>
@@ -67,6 +113,19 @@
         {% endif %}
       </td>
     </tr>
+    <tr>
+      <th>Links</th>
+      <td>
+       <ul>
+          <li><a class="govuk-link--no-visited-state" href="/monitor/product/{{  product.name | toMonitorName }}">
+             Health monitor
+          </a></li>
+          <li><a class="govuk-link--no-visited-state" href="/drift-radiator/products/{{ product.name | toMonitorName }}">
+             Deployment drift
+          </a></li>
+        </ul>
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -74,7 +133,6 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script src="/assets/govuk/all.js"></script>
-  <script src="/assets/govukFrontendInit.js"></script>
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
   <script src="/assets/moj/all.js"></script>
 {% endblock %}

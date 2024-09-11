@@ -1,7 +1,3 @@
-const lastIds = {}
-const data = {}
-dayjs.extend(window.dayjs_plugin_relativeTime)
-
 jQuery(async function () {
   const monitorType = $('#monitorType').val()
 
@@ -13,7 +9,7 @@ jQuery(async function () {
     updateEnvironmentList()
   }
 
-  $('#updateProduct,#updateTeam,#updateServiceArea').on('click', async e => {
+  $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponentView').on('click', async e => {
     e.preventDefault(e)
 
     let dropDownType = ''
@@ -27,6 +23,9 @@ jQuery(async function () {
         break
       case 'updateServiceArea':
         dropDownType = 'serviceArea'
+        break
+      case 'updateCustomComponentView':
+        dropDownType = 'customComponentView'
         break
       default:
         return false
@@ -48,49 +47,87 @@ jQuery(async function () {
     updateEnvironmentList()
   })
 
-  $('.environments .govuk-checkboxes__input').on('change', e => {
-    updateEnvironmentList()
-  })
+  $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
+    'change',
+    e => {
+      updateEnvironmentList()
+    },
+  )
 })
 
 function updateEnvironmentList() {
   const validEnvironments = ['prod', 'preprod', 'test', 'stage', 'dev']
+  const selectedEnvironments = []
+  let showProbation = false
+  let showPrisons = false
+  let showStatusUp = false
+  let showStatusDown = false
+  let showStatusMissing = false
 
-  $('#statusRows tr').show()
-
-  if (!$('#status-up').is(':checked')) {
-    $('.statusTileUp').hide()
-  }
-  if (!$('#status-down').is(':checked')) {
-    $('.statusTileDown').hide()
-  }
-
-  $('.environments .govuk-checkboxes__input:not(:checked)').each((index, e) => {
+  $('.environments .govuk-checkboxes__input:checked').each((index, e) => {
     const environment = $(e).val()
 
     if (validEnvironments.includes(environment)) {
-      $(`.${environment}`).hide()
+      selectedEnvironments.push(environment)
     }
   })
+
+  if ($('#status-up').is(':checked')) {
+    showStatusUp = true
+  }
+
+  if ($('#status-down').is(':checked')) {
+    showStatusDown = true
+  }
+
+  if ($('#status-missing').is(':checked')) {
+    showStatusMissing = true
+  }
+
+  if ($('#hmpps-area-probation').is(':checked')) {
+    showProbation = true
+  }
+
+  if ($('#hmpps-area-prisons').is(':checked')) {
+    showPrisons = true
+  }
+
+  $('#statusRows tr')
+    .hide()
+    .each(function () {
+      const isPrisons = $(this).data('prisons')
+      const isProbation = $(this).data('probation')
+      const environmentType = $(this).data('environment-type')
+      const status = $(this).data('status')
+
+      if (
+        ((showPrisons && isPrisons) || (showProbation && isProbation)) &&
+        ((showStatusUp && isUp(status)) ||
+          (showStatusDown && status === 'DOWN') ||
+          (showStatusMissing && !isUp(status) && status !== 'DOWN')) &&
+        selectedEnvironments.includes(environmentType)
+      ) {
+        $(this).show()
+      }
+    })
 }
 
 const watch = async () => {
-  await fetchMessages(lastIds)
+  await fetchMessages()
 
   setTimeout(watch, 30000)
 }
 
-const fetchMessages = async streams => {
+const fetchMessages = async () => {
   const csrfToken = $('#csrf').val()
   const response = await fetch('/monitor/queue', {
-    method: 'POST',
+    method: 'GET',
     credentials: 'same-origin',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       'X-CSRF-Token': csrfToken,
     },
-    body: JSON.stringify({ streams }),
   })
 
   if (!response.ok) {
@@ -98,58 +135,21 @@ const fetchMessages = async streams => {
   }
 
   try {
-    const streamJson = await response.json()
+    const envs = await response.json()
+    envs.forEach(([streamName, env]) => {
+      const [component, environment] = streamName.split(':')
+      const { version, lastMessageTime, healthStatus } = env
+      const tileName = `#tile-${component}-${environment}`
 
-    streamJson.forEach(stream => {
-      const streamName = stream.name
-      const streamNameParts = streamName.split(':')
-      const streamType = streamNameParts[0].charAt(0)
-      const component = streamNameParts[1]
-      const environment = streamNameParts[2]
-      const lastMessage = stream.messages[stream.messages.length - 1]
+      if ($(tileName).length > 0) {
+        $(`${tileName} .statusTileBuild`).text(version)
+        $(`${tileName} .statusTileLastRefresh`).text(lastMessageTime)
+        $(`${tileName} .statusTileStatus`).text(healthStatus)
+        $(tileName).removeClass('statusTileUp statusTileDown')
 
-      if (lastIds[streamName]) {
-        lastIds[streamName] = lastMessage.id
-      }
-
-      if (data.hasOwnProperty(streamName)) {
-        data[streamName] = lastMessage.message
-
-        switch (streamType) {
-          case 'v':
-            $(`#tile-${component}-${environment} .statusTileBuild`).text(data[streamName].v)
-            break
-          case 'h':
-            const lastMessageTime = new Date(parseInt(lastMessage.id.split('-')[0]))
-            const dateString = dayjs().to(dayjs(lastMessageTime))
-            $(`#tile-${component}-${environment} .statusTileLastRefresh`).text(dateString)
-            try {
-              if (data[streamName].json) {
-                const jsonData = data[streamName].json
-
-                let status = 'UNK'
-                health = JSON.parse(jsonData)
-
-                if (health.hasOwnProperty('status')) {
-                  status = health.status
-                } else {
-                  status = health.healthy === true ? 'UP' : 'DOWN'
-                }
-
-                $(`#tile-${component}-${environment} .statusTileStatus`).text(status)
-                $(`#tile-${component}-${environment}`).removeClass('statusTileUp statusTileDown')
-
-                const statusClass = status === 'UP' ? 'statusTileUp' : 'statusTileDown'
-
-                $(`#tile-${component}-${environment}`).addClass(statusClass)
-              }
-            } catch (e) {
-              console.error('Error parsing JSON data')
-              console.error(e)
-            }
-
-            break
-        }
+        const statusClass = isUp(healthStatus) ? 'statusTileUp' : 'statusTileDown'
+        $(tileName).addClass(statusClass)
+        $(tileName).attr('data-status', healthStatus)
       }
     })
   } catch (e) {
@@ -183,16 +183,10 @@ async function populateComponentTable(monitorType, monitorTypeId) {
       const healthLink = environment.environmentHealth
         ? `<a href="${environment.environmentUrl}${environment.environmentHealth}" class="statusTileHealth">View</a>`
         : 'N/A'
-      lastIds[`health:${environment.componentName}:${environment.environmentName}`] = '0'
-      lastIds[`info:${environment.componentName}:${environment.environmentName}`] = '0'
-      lastIds[`version:${environment.componentName}:${environment.environmentName}`] = '0'
-      data[`health:${environment.componentName}:${environment.environmentName}`] = ''
-      data[`info:${environment.componentName}:${environment.environmentName}`] = ''
-      data[`version:${environment.componentName}:${environment.environmentName}`] = ''
       $('#statusRows')
-        .append(`<tr data-test="tile-${environment.componentName}" id="tile-${environment.componentName}-${environment.environmentName}" class="${environment.environmentType}">
+        .append(`<tr data-prisons="${environment.isPrisons}" data-probation="${environment.isProbation}" data-environment="${environment.environmentName}" data-environment-type="${environment.environmentType}" id="tile-${environment.componentName}-${environment.environmentName}">
           <td><a href="/components/${environment.componentName}" class="statusTileName">${environment.componentName}</a></td>
-          <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment">${environment.environmentName}</a></td>
+          <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment">${environment.environmentName} (${environment.environmentType})</a></td>
           <td>${healthLink}</td>
           <td class="statusTileBuild"></td>
           <td class="statusTileStatus"></td>
@@ -213,4 +207,8 @@ function formatMonitorName(name) {
     .replace(/ /g, '-')
     .replace(/[^-a-z0-9]/g, '')
     .replace(/-+/g, '-')
+}
+
+function isUp(status) {
+  return status && ['UP', 'GREEN', 'SERVING'].includes(status.toUpperCase())
 }
