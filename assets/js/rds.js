@@ -31,5 +31,5 @@ jQuery(function () {
     },
   ]
 
-  createTable('rdsInstancesTable', '/reports/rds/data', 0, 'asc', columns)
+  createTable({ id: 'rdsInstancesTable', ajaxUrl: '/reports/rds/data', orderColumn: 0, orderType: 'asc', columns })
 })

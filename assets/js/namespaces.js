@@ -8,5 +8,5 @@ jQuery(function () {
     },
   ]
 
-  createTable('namespacesTable', '/namespaces/data', 0, 'asc', columns)
+  createTable({ id: 'namespacesTable', ajaxUrl: '/namespaces/data', orderColumn: 0, orderType: 'asc', columns })
 })

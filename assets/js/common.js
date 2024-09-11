@@ -3,7 +3,7 @@ function cleanColumnOutput(data) {
   return data.replace(unsafeOutputPattern, '')
 }
 
-function createTable(id, ajaxUrl, orderColumn, orderType, columns, pageLength = 10) {
+function createTable({ id, ajaxUrl, orderColumn, orderType, columns, pageLength = 10, columnDropdowns = false }) {
   const semverTidy = semVer => {
     // sometimes comes through as a number which has no match method
     const semVerString = `${semVer}`
@@ -48,5 +48,33 @@ function createTable(id, ajaxUrl, orderColumn, orderType, columns, pageLength = 
       },
     },
     columns,
+    initComplete: function () {
+      if (columnDropdowns) {
+        this.api()
+          .columns()
+          .every(function () {
+            const column = this
+
+            // Create select element
+            const select = document.createElement('select')
+            select.add(new Option(''))
+            column.footer().replaceChildren(select)
+
+            // Apply listener for user change in value
+            select.addEventListener('change', function () {
+              column.search(select.value, { exact: true }).draw()
+            })
+
+            // Add list of options
+            column
+              .data()
+              .unique()
+              .sort()
+              .each(function (d, j) {
+                select.add(new Option(d))
+              })
+          })
+      }
+    },
   })
 }

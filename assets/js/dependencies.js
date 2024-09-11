@@ -30,5 +30,11 @@ jQuery(function () {
     },
   ]
 
-  createTable('dependenciesTable', `/dependencies/data/${dataDependencyType}/${dataDependencyName}`, 1, 'asc', columns)
+  createTable({
+    id: 'dependenciesTable',
+    ajaxUrl: `/dependencies/data/${dataDependencyType}/${dataDependencyName}`,
+    orderColumn: 1,
+    orderType: 'asc',
+    columns,
+  })
 })
