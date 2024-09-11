@@ -53,10 +53,10 @@ function createTable({ id, ajaxUrl, orderColumn, orderType, columns, pageLength 
         this.api()
           .columns()
           .every(function () {
-            let column = this
+            const column = this
 
             // Create select element
-            let select = document.createElement('select')
+            const select = document.createElement('select')
             select.add(new Option(''))
             column.footer().replaceChildren(select)
 
