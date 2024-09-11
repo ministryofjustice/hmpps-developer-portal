@@ -57,6 +57,7 @@ export default class ServiceCatalogueService {
       .forEach(component => {
         if (component.attributes.versions) {
           Object.keys(component.attributes.versions).forEach(versionType => {
+            // @ts-expect-error Suppress any declaration
             Object.keys(component.attributes.versions[versionType]).forEach(dependency => {
               dependencies = [...new Set([...dependencies, `${versionType}::${dependency}`])]
             })
@@ -144,6 +145,7 @@ export default class ServiceCatalogueService {
   }): Promise<Product> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const productData = await strapiApiClient.getProduct({ productSlug, productId, withEnvironments })
+    // @ts-expect-error Suppress any declaration
     const product = productSlug ? productData.data[0].attributes : productData.data?.attributes
 
     return product
@@ -160,7 +162,7 @@ export default class ServiceCatalogueService {
   }): Promise<Team> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const teamData = await strapiApiClient.getTeam({ teamId, teamSlug, withEnvironments })
-
+    // @ts-expect-error Suppress any declaration
     const team = teamSlug ? teamData.data[0].attributes : teamData.data?.attributes
 
     return team
@@ -175,6 +177,7 @@ export default class ServiceCatalogueService {
   }): Promise<Namespace> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const namespaceData = await strapiApiClient.getNamespace({ namespaceId, namespaceSlug })
+    // @ts-expect-error Suppress any declaration
     const namespace = namespaceSlug ? namespaceData.data[0].attributes : namespaceData.data?.attributes
 
     return namespace
@@ -185,6 +188,7 @@ export default class ServiceCatalogueService {
     const componentItem = await strapiApiClient.getComponent({ componentName })
     const componentData = componentItem.data as ComponentListResponseDataItem[]
 
+    // @ts-expect-error Suppress any declaration
     const component = componentData.length > 0 ? componentItem.data[0]?.attributes : {}
 
     return component
@@ -202,6 +206,7 @@ export default class ServiceCatalogueService {
     const strapiApiClient = this.strapiApiClientFactory('')
     const serviceAreaData = await strapiApiClient.getServiceArea({ serviceAreaId, serviceAreaSlug, withProducts })
 
+    // @ts-expect-error Suppress any declaration
     const serviceArea = serviceAreaSlug ? serviceAreaData.data[0]?.attributes : serviceAreaData.data?.attributes
 
     return serviceArea
