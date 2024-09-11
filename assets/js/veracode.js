@@ -72,7 +72,13 @@ jQuery(function () {
     },
   ]
 
-  const veracodeTable = createTable('veracodeTable', `${rootDataUrl}?results=failed`, 6, 'desc', columns)
+  const veracodeTable = createTable({
+    id: 'veracodeTable',
+    ajaxUrl: `${rootDataUrl}?results=failed`,
+    orderColumn: 6,
+    orderType: 'desc',
+    columns,
+  })
 
   $('#updateVeracodeFilters').on('click', async e => {
     e.preventDefault(e)

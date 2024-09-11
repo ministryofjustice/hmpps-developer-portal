@@ -34,5 +34,12 @@ jQuery(function () {
     },
   ]
 
-  createTable('componentsTable', '/components/data', 0, 'asc', columns)
+  createTable({
+    id: 'componentsTable',
+    ajaxUrl: '/components/data',
+    orderColumn: 0,
+    orderType: 'asc',
+    columns,
+    columnDropdowns: true,
+  })
 })

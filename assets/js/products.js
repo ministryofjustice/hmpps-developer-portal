@@ -29,5 +29,12 @@ jQuery(function () {
     },
   ]
 
-  createTable('productsTable', '/products/data', 1, 'asc', columns)
+  createTable({
+    id: 'productsTable',
+    ajaxUrl: '/products/data',
+    orderColumn: 1,
+    orderType: 'asc',
+    columns,
+    columnDropdowns: true,
+  })
 })
