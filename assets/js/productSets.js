@@ -14,5 +14,5 @@ jQuery(function () {
     },
   ]
 
-  createTable('productSetsTable', '/product-sets/data', 1, 'asc', columns)
+  createTable({ id: 'productSetsTable', ajaxUrl: '/product-sets/data', orderColumn: 1, orderType: 'asc', columns })
 })

@@ -17,5 +17,5 @@ jQuery(function () {
     },
   ]
 
-  createTable('teamsTable', '/teams/data', 0, 'asc', columns)
+  createTable({ id: 'teamsTable', ajaxUrl: '/teams/data', orderColumn: 0, orderType: 'asc', columns })
 })

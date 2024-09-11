@@ -8,5 +8,12 @@ jQuery(function () {
     },
   ]
 
-  createTable('serviceAreasTable', '/service-areas/data', 0, 'asc', columns, 25)
+  createTable({
+    id: 'serviceAreasTable',
+    ajaxUrl: '/service-areas/data',
+    orderColumn: 0,
+    orderType: 'asc',
+    columns,
+    pageLength: 25,
+  })
 })
