@@ -3,7 +3,16 @@ function cleanColumnOutput(data) {
   return data.replace(unsafeOutputPattern, '')
 }
 
-function createTable({ id, ajaxUrl, orderColumn, orderType, columns, pageLength = 10, columnDropdowns = false }) {
+function createTable({
+  id,
+  ajaxUrl,
+  orderColumn,
+  orderType,
+  columns,
+  pageLength = 10,
+  columnDropdowns = false,
+  columnSearchText = true,
+}) {
   const semverTidy = semVer => {
     // sometimes comes through as a number which has no match method
     const semVerString = `${semVer}`
@@ -31,6 +40,25 @@ function createTable({ id, ajaxUrl, orderColumn, orderType, columns, pageLength 
   })
 
   return new DataTable(`#${id}`, {
+    layout: {
+      bottomStart: {
+        buttons: [
+          'colvis',
+          {
+            extend: 'copy',
+            exportOptions: {
+              columns: ':visible',
+            },
+          },
+          {
+            extend: 'csv',
+            exportOptions: {
+              columns: ':visible',
+            },
+          },
+        ],
+      },
+    },
     lengthMenu: [
       [10, 25, 50, 75, 100, -1],
       [10, 25, 50, 75, 100, 'All'],
@@ -73,6 +101,26 @@ function createTable({ id, ajaxUrl, orderColumn, orderType, columns, pageLength 
               .each(function (d, j) {
                 select.add(new Option(d))
               })
+          })
+      }
+      if (columnSearchText) {
+        this.api()
+          .columns()
+          .every(function () {
+            const column = this
+            const title = column.footer().textContent
+
+            // Create input element
+            const input = document.createElement('input')
+            input.placeholder = title
+            column.footer().replaceChildren(input)
+
+            // Event listener for user input
+            input.addEventListener('keyup', () => {
+              if (column.search() !== this.value) {
+                column.search(input.value).draw()
+              }
+            })
           })
       }
     },

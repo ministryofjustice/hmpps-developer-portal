@@ -35,6 +35,5 @@ jQuery(function () {
     orderColumn: 1,
     orderType: 'asc',
     columns,
-    columnDropdowns: true,
   })
 })

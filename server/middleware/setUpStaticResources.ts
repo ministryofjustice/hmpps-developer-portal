@@ -24,6 +24,10 @@ export default function setUpStaticResources(): Router {
     '/node_modules/jquery/dist',
     '/node_modules/datatables.net',
     '/node_modules/datatables.net-dt',
+    // '/node_modules/datatables.net-searchpanes',
+    '/node_modules/datatables.net-select',
+    '/node_modules/datatables.net-buttons',
+    '/node_modules/datatables.net-buttons-dt',
     '/node_modules/mermaid/dist',
     '/node_modules/svg-pan-zoom/dist',
   ).forEach(dir => {

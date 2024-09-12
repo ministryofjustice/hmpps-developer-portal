@@ -5,12 +5,16 @@ jQuery(function () {
       createdCell: function (td, _cellData, rowData) {
         $(td).html(`<a href="/components/${cleanColumnOutput(rowData.name)}">${cleanColumnOutput(rowData.name)}</a>`)
       },
+      title: 'Component',
+      footer: 'Component',
     },
     {
       data: 'title',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(`${cleanColumnOutput(rowData.title)}`)
       },
+      title: 'Title',
+      footer: 'Title',
     },
     {
       data: 'lastScan',
@@ -19,6 +23,8 @@ jQuery(function () {
         const formattedDate = date.toLocaleString('en-GB', { timeZone: 'UTC' })
         $(td).html(formattedDate)
       },
+      title: 'Last Scan',
+      footer: 'Last Scan',
     },
     {
       data: 'vulnerability',
@@ -29,20 +35,32 @@ jQuery(function () {
           $(td).html(`${cleanColumnOutput(rowData.vulnerability)}`)
         }
       },
+      title: 'Vulnerability',
+      footer: 'Vulnerability',
     },
     {
       data: 'severity',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(`${cleanColumnOutput(rowData.severity)}`)
       },
+      title: 'Severity',
+      footer: 'Severity',
     },
     {
       data: 'references',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(rowData.references)
       },
+      title: 'References',
+      footer: 'References',
     },
   ]
 
-  createTable({ id: 'trivyTable', ajaxUrl: '/reports/trivy/data', orderColumn: 2, orderType: 'desc', columns })
+  createTable({
+    id: 'trivyTable',
+    ajaxUrl: '/reports/trivy/data',
+    orderColumn: 2,
+    orderType: 'desc',
+    columns,
+  })
 })
