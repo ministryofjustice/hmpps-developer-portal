@@ -108,7 +108,7 @@ function createTable({
           .columns()
           .every(function () {
             const column = this
-            const title = column.footer().textContent
+            const title = column.footer().textContent + ' (regex)'
 
             // Create input element
             const input = document.createElement('input')
@@ -118,7 +118,9 @@ function createTable({
             // Event listener for user input
             input.addEventListener('keyup', () => {
               if (column.search() !== this.value) {
-                column.search(input.value).draw()
+                const regex = true
+                const smart = false
+                column.search(input.value, regex, smart).draw()
               }
             })
           })
