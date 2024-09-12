@@ -125,4 +125,24 @@ function createTable({
       }
     },
   })
+
+  const anchorBlock = document.createElement('div')
+  anchorBlock.setAttribute('id', 'showHideBlock')
+  const tableElement = document.querySelector(`#${id}`)
+  tableElement.insertAdjacentElement('beforebegin', anchorBlock)
+
+  document.querySelectorAll(`#${id} thead th`).forEach((columnNameElement, columnIndex) => {
+    const name = columnNameElement.textContent
+    const anchor = document.createElement('a')
+    anchor.appendChild(document.createTextNode(`Show/Hide ${name}`))
+    anchorBlock.appendChild(anchor)
+
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault()
+      const column = table.column(columnIndex)
+      column.visible(!column.visible())
+    })
+  })
+
+  return table
 }
