@@ -47,6 +47,11 @@ function createTable({ id, ajaxUrl, orderColumn, orderType, columns, pageLength 
         alert('An error occurred when loading table data.') // eslint-disable-line no-undef
       },
     },
+    layout: {
+      topStart: {
+        buttons: ['copy', 'csv', 'print'],
+      },
+    },
     columns,
     initComplete: function () {
       if (columnDropdowns) {

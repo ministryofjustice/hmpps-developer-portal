@@ -104,6 +104,7 @@
     "connect-redis": "^7.1.1",
     "csurf": "^1.11.0",
     "datatables.net": "^2.1.6",
+    "datatables.net-buttons": "^3.1.2",
     "datatables.net-dt": "^2.1.6",
     "dayjs": "^1.11.13",
     "express": "^4.20.0",
