@@ -23,6 +23,7 @@ export default function setUpStaticResources(): Router {
     '/node_modules/@ministryofjustice/frontend',
     '/node_modules/jquery/dist',
     '/node_modules/datatables.net',
+    '/node_modules/datatables.net-buttons',
     '/node_modules/datatables.net-dt',
     // '/node_modules/datatables.net-searchpanes',
     '/node_modules/datatables.net-select',
