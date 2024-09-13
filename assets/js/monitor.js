@@ -137,6 +137,8 @@ const fetchMessages = async () => {
   try {
     const envs = await response.json()
     envs.forEach(([streamName, env]) => {
+      console.log(`streamName: ${streamName}`)
+      console.log(`env: ${JSON.stringify(env)}`)
       const [component, environment] = streamName.split(':')
       const { version, lastMessageTime, healthStatus } = env
       const tileName = `#tile-${component}-${environment}`
@@ -154,7 +156,6 @@ const fetchMessages = async () => {
     })
   } catch (e) {
     console.error(e)
-    console.error(`${streamName}, version=${version}, lastMessageTime=${lastMessageTime}, healthStatus=${healthStatus}`)
   }
 }
 
