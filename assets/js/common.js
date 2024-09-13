@@ -75,11 +75,6 @@ function createTable({
         alert('An error occurred when loading table data.') // eslint-disable-line no-undef
       },
     },
-    layout: {
-      topStart: {
-        buttons: ['copy', 'csv', 'print'],
-      },
-    },
     columns,
     initComplete: function () {
       if (columnDropdowns) {
