@@ -137,23 +137,27 @@ const fetchMessages = async () => {
   try {
     const envs = await response.json()
     envs.forEach(([streamName, env]) => {
-      const [component, environment] = streamName.split(':')
-      const { version, lastMessageTime, healthStatus } = env
-      const tileName = `#tile-${component}-${environment}`
+      try {
+        const [component, environment] = streamName.split(':')
+        const { version, lastMessageTime, healthStatus } = env
+        const tileName = `#tile-${component}-${environment}`
 
-      if ($(tileName).length > 0) {
-        $(`${tileName} .statusTileBuild`).text(version)
-        $(`${tileName} .statusTileLastRefresh`).text(lastMessageTime)
-        $(`${tileName} .statusTileStatus`).text(healthStatus)
-        $(tileName).removeClass('statusTileUp statusTileDown')
+        if ($(tileName).length > 0) {
+          $(`${tileName} .statusTileBuild`).text(version)
+          $(`${tileName} .statusTileLastRefresh`).text(lastMessageTime)
+          $(`${tileName} .statusTileStatus`).text(healthStatus)
+          $(tileName).removeClass('statusTileUp statusTileDown')
 
-        const statusClass = isUp(healthStatus) ? 'statusTileUp' : 'statusTileDown'
-        $(tileName).addClass(statusClass)
-        $(tileName).attr('data-status', healthStatus)
+          const statusClass = isUp(healthStatus) ? 'statusTileUp' : 'statusTileDown'
+          $(tileName).addClass(statusClass)
+          $(tileName).attr('data-status', healthStatus)
+        }
+      } catch (forEachError) {
+        console.error(forEachError)
       }
     })
-  } catch (e) {
-    console.error(e)
+  } catch (jsonResponseError) {
+    console.error(jsonResponseError)
   }
 }
 
