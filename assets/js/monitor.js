@@ -137,8 +137,6 @@ const fetchMessages = async () => {
   try {
     const envs = await response.json()
     envs.forEach(([streamName, env]) => {
-      console.log(`streamName: ${streamName}`)
-      console.log(`env: ${JSON.stringify(env)}`)
       const [component, environment] = streamName.split(':')
       const { version, lastMessageTime, healthStatus } = env
       const tileName = `#tile-${component}-${environment}`
@@ -212,5 +210,5 @@ function formatMonitorName(name) {
 }
 
 function isUp(status) {
-  return status && ['UP', 'GREEN', 'SERVING'].includes(status.toUpperCase())
+  return status && ['UP', 'GREEN', 'SERVING'].includes(`${status}`.toUpperCase())
 }
