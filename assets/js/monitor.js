@@ -1,6 +1,3 @@
-const { environments } = require('eslint-plugin-prettier')
-const { version } = require('os')
-
 jQuery(async function () {
   const monitorType = $('#monitorType').val()
 
