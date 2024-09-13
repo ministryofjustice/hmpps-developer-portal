@@ -3,7 +3,16 @@ function cleanColumnOutput(data) {
   return data.replace(unsafeOutputPattern, '')
 }
 
-function createTable({ id, ajaxUrl, orderColumn, orderType, columns, pageLength = 10, columnDropdowns = false }) {
+function createTable({
+  id,
+  ajaxUrl,
+  orderColumn,
+  orderType,
+  columns,
+  pageLength = 10,
+  columnDropdowns = false,
+  columnSearchText = true,
+}) {
   const semverTidy = semVer => {
     // sometimes comes through as a number which has no match method
     const semVerString = `${semVer}`
@@ -30,7 +39,26 @@ function createTable({ id, ajaxUrl, orderColumn, orderType, columns, pageLength 
     },
   })
 
-  const table = new DataTable(`#${id}`, {
+  return new DataTable(`#${id}`, {
+    layout: {
+      bottomStart: {
+        buttons: [
+          'colvis',
+          {
+            extend: 'copy',
+            exportOptions: {
+              columns: ':visible',
+            },
+          },
+          {
+            extend: 'csv',
+            exportOptions: {
+              columns: ':visible',
+            },
+          },
+        ],
+      },
+    },
     lengthMenu: [
       [10, 25, 50, 75, 100, -1],
       [10, 25, 50, 75, 100, 'All'],
@@ -80,26 +108,28 @@ function createTable({ id, ajaxUrl, orderColumn, orderType, columns, pageLength 
               })
           })
       }
+      if (columnSearchText) {
+        this.api()
+          .columns()
+          .every(function () {
+            const column = this
+            const title = column.footer().textContent + ' (regex)'
+
+            // Create input element
+            const input = document.createElement('input')
+            input.placeholder = title
+            column.footer().replaceChildren(input)
+
+            // Event listener for user input
+            input.addEventListener('keyup', () => {
+              if (column.search() !== this.value) {
+                const regex = true
+                const smart = false
+                column.search(input.value, regex, smart).draw()
+              }
+            })
+          })
+      }
     },
   })
-
-  const anchorBlock = document.createElement('div')
-  anchorBlock.setAttribute('id', 'showHideBlock')
-  const tableElement = document.querySelector(`#${id}`)
-  tableElement.insertAdjacentElement('beforebegin', anchorBlock)
-
-  document.querySelectorAll(`#${id} thead th`).forEach((columnNameElement, columnIndex) => {
-    const name = columnNameElement.textContent
-    const anchor = document.createElement('a')
-    anchor.appendChild(document.createTextNode(`Show/Hide ${name}`))
-    anchorBlock.appendChild(anchor)
-
-    anchor.addEventListener('click', function (e) {
-      e.preventDefault()
-      const column = table.column(columnIndex)
-      column.visible(!column.visible())
-    })
-  })
-
-  return table
 }
