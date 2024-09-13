@@ -13,8 +13,11 @@
 
   <script src="/assets/js/jquery.min.js"></script> 
   <script src="/assets/js/dataTables.min.js"></script>
+  {# <script src="/assets/js/dataTables.searchPanes.min.js"></script> #}
+  <script src="/assets/js/dataTables.select.min.js"></script>
   <script src="/assets/js/dataTables.buttons.min.js"></script>
   <script src="/assets/js/buttons.html5.min.js"></script>
+  <script src="/assets/js/buttons.colVis.min.js"></script>
   <script src="/assets/js/buttons.print.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
           integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
@@ -22,7 +25,7 @@
           crossorigin="anonymous"></script>
   <link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel="stylesheet" nonce="{{ cspNonce }}" crossorigin>
   <link href="/assets/css/dataTables.dataTables.min.css" media="screen" rel="stylesheet" nonce="{{ cspNonce }}" type="text/css" />
-
+  <link href="/assets/css/buttons.dataTables.min.css" media="screen" rel="stylesheet" nonce="{{ cspNonce }}" type="text/css" />
 {% endblock %}
 
 {% block pageTitle %}{{pageTitle | default(applicationName)}}{% endblock %}

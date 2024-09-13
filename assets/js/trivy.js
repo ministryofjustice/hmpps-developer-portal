@@ -44,5 +44,11 @@ jQuery(function () {
     },
   ]
 
-  createTable({ id: 'trivyTable', ajaxUrl: '/reports/trivy/data', orderColumn: 2, orderType: 'desc', columns })
+  createTable({
+    id: 'trivyTable',
+    ajaxUrl: '/reports/trivy/data',
+    orderColumn: 2,
+    orderType: 'desc',
+    columns,
+  })
 })
