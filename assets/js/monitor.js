@@ -1,3 +1,6 @@
+const { environments } = require('eslint-plugin-prettier')
+const { version } = require('os')
+
 jQuery(async function () {
   const monitorType = $('#monitorType').val()
 
@@ -154,6 +157,9 @@ const fetchMessages = async () => {
     })
   } catch (e) {
     console.error(e)
+    console.error(
+      `${component}:${environment}, version=${version}, lastMessageTime=${lastMessageTime}, healthStatus=${healthStatus}`,
+    )
   }
 }
 
