@@ -154,9 +154,7 @@ const fetchMessages = async () => {
     })
   } catch (e) {
     console.error(e)
-    console.error(
-      `${component}:${environment}, version=${version}, lastMessageTime=${lastMessageTime}, healthStatus=${healthStatus}`,
-    )
+    console.error(`${streamName}, version=${version}, lastMessageTime=${lastMessageTime}, healthStatus=${healthStatus}`)
   }
 }
 
