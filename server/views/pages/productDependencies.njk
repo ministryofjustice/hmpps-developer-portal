@@ -9,6 +9,9 @@
 {% set containerClasses = "wide-screen" %}
 
 {% block content %}
+
+{{ breadCrumb("Product Dependencies", []) }}
+
     {% macro productDiagram(product) %}
         graph {{orientation}} 
             subgraph {{product.productCode}}["{{product.productName}}"]
