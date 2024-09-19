@@ -3,10 +3,13 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
-{% set pageTitle = applicationName + " - Monitor" %}
+{% set pageTitle = applicationName + " - Component Dependencies" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
+
+{{ breadCrumb("Component Dependencies", []) }}
+
   <h1>Dependencies</h1>
 
   <form>
