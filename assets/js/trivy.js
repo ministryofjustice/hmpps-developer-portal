@@ -65,6 +65,7 @@ jQuery(function () {
     const dropDownText = $(`#${dropDownType} option:selected`).text()
     const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
     const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
+    const response = await fetch(`/trivy/${dropDownType}/${formatTrivyName(dropDownText)}`)
     window.location = `/trivy/${dropDownType}/${formatTrivyName(dropDownText)}`
   })
 })
