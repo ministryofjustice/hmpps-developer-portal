@@ -6,6 +6,7 @@ function cleanColumnOutput(data) {
 function createTable({
   id,
   ajaxUrl,
+  data,
   orderColumn,
   orderType,
   columns,
@@ -72,9 +73,12 @@ function createTable({
       url: ajaxUrl,
       dataSrc: '',
       error: function () {
-        alert('An error occurred when loading table data.') // eslint-disable-line no-undef
+        if (ajaxUrl !== undefined) {
+          alert('An error occurred when loading table data.') // eslint-disable-line no-undef
+        }
       },
     },
+    data,
     columns,
     initComplete: function () {
       if (columnDropdowns) {
