@@ -23,7 +23,7 @@ class TrivyRenderer {
 
   fetchMessages = async componentNames => {
     const vulnerabilities = await this.post('/reports/trivy/data', { componentNames })
-    console.log(vulnerabilities)
+    //console.log(vulnerabilities)
     createTable({
       id: 'trivyTable',
       data: vulnerabilities,
@@ -39,12 +39,44 @@ class TrivyRenderer {
 }
 
 jQuery(function () {
-  $('#updateProduct').on('click', async e => {
-    e.preventDefault(e)
-    const productCode = document.getElementById('product').value
-    window.location = `/trivy/products/${productCode}`
+  $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponentView').on('click', async e => {
+    // e.preventDefault(e)
+    // const productCode = document.getElementById('product').value
+    // window.location = `/trivy/products/${productCode}`
+    let dropDownType = ''
+
+    switch (e.target.id) {
+      case 'updateProduct':
+        dropDownType = 'product'
+        break
+      case 'updateTeam':
+        dropDownType = 'team'
+        break
+      case 'updateServiceArea':
+        dropDownType = 'serviceArea'
+        break
+      case 'updateCustomComponentView':
+        dropDownType = 'customComponentView'
+        break
+      default:
+        return false
+    }
+
+    const dropDownText = $(`#${dropDownType} option:selected`).text()
+    const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
+    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
+    window.location = `/trivy/${dropDownType}/${formatTrivyName(dropDownText)}`
   })
 })
+
+function formatTrivyName(name) {
+  return `${name} `
+    .trim()
+    .toLowerCase()
+    .replace(/ /g, '-')
+    .replace(/[^-a-z0-9]/g, '')
+    .replace(/-+/g, '-')
+}
 
 const columns = [
   {
