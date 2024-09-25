@@ -7,7 +7,7 @@ export default function routes({ componentNameService, dataFilterService }: Serv
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
+  // const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
     if (req.query.updateServiceArea === '' && isValidDropDown(req, 'serviceArea')) {
