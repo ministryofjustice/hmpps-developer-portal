@@ -39,7 +39,6 @@ class TrivyRenderer {
 
 jQuery(function () {
   $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponentView').on('click', async e => {
-    // e.preventDefault(e)
     let dropDownType = ''
 
     switch (e.target.id) {
