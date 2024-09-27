@@ -23,7 +23,6 @@ class TrivyRenderer {
 
   fetchMessages = async componentNames => {
     const vulnerabilities = await this.post('/reports/trivy/data', { componentNames })
-    // console.log(vulnerabilities)
     createTable({
       id: 'trivyTable',
       data: vulnerabilities,
@@ -41,8 +40,6 @@ class TrivyRenderer {
 jQuery(function () {
   $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponentView').on('click', async e => {
     // e.preventDefault(e)
-    // const productCode = document.getElementById('product').value
-    // window.location = `/trivy/products/${productCode}`
     let dropDownType = ''
 
     switch (e.target.id) {

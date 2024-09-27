@@ -46,7 +46,7 @@
   <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
   <script src="/assets/js/common.js"></script>
   <script src="/assets/js/trivy.js"></script>
-<script nonce="{{ cspNonce }}">
+  <script nonce="{{ cspNonce }}">
     jQuery(function () {
       const components = {{components | toJson(2) | safe }}
       const csrfToken = "{{ csrfToken }}"

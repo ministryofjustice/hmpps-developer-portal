@@ -71,8 +71,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   post('/trivy/data', async (req, res) => {
     const componentsToInclude = req.body.componentNames
-    // console.log(componentsToInclude)
-
     const components = (await serviceCatalogueService.getComponents())
       .filter(component => componentsToInclude.includes(component.attributes.name))
       .map(component => {
