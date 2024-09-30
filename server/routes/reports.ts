@@ -9,6 +9,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/veracode', async (req, res) => {
     return res.render('pages/veracode')
@@ -68,8 +69,10 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.render('pages/trivy')
   })
 
-  get('/trivy/data', async (req, res) => {
+  post('/trivy/data', async (req, res) => {
+    const componentsToInclude = req.body.componentNames
     const components = (await serviceCatalogueService.getComponents())
+      .filter(component => componentsToInclude.includes(component.attributes.name))
       .map(component => {
         const hasResults = component.attributes.trivy_scan_summary !== null
 

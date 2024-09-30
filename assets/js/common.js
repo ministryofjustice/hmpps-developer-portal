@@ -6,6 +6,7 @@ function cleanColumnOutput(data) {
 function createTable({
   id,
   ajaxUrl,
+  data,
   orderColumn,
   orderType,
   columns,
@@ -25,7 +26,15 @@ function createTable({
 
     return `0000${major}`.slice(-4) + `0000${minor}`.slice(-4) + `0000${patch}`.slice(-4)
   }
-
+  const ajax = ajaxUrl && {
+    url: ajaxUrl,
+    dataSrc: '',
+    error: function () {
+      if (ajaxUrl !== undefined) {
+        alert('An error occurred when loading table data.') // eslint-disable-line no-undef
+      }
+    },
+  }
   $.extend($.fn.dataTable.ext.type.order, {
     'semver-asc': function (a, b) {
       a = semverTidy(a)
@@ -68,13 +77,8 @@ function createTable({
     pagingType: 'simple_numbers',
     order: [[orderColumn, orderType]],
     sortable: true,
-    ajax: {
-      url: ajaxUrl,
-      dataSrc: '',
-      error: function () {
-        alert('An error occurred when loading table data.') // eslint-disable-line no-undef
-      },
-    },
+    ajax,
+    data,
     columns,
     initComplete: function () {
       if (columnDropdowns) {
