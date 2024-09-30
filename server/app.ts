@@ -23,6 +23,7 @@ import serviceAreaRoutes from './routes/serviceAreas'
 import monitorRoutes from './routes/monitor'
 import dependencyRoutes from './routes/dependencies'
 import driftRadiatorRoutes from './routes/driftRadiator'
+import trivyRoutes from './routes/trivy'
 import teamHealthRoutes from './routes/teamHealth'
 import missingFromCatalogueRoutes from './routes/missingFromCatalogue'
 import namespacesRoutes from './routes/namespaces'
@@ -54,6 +55,7 @@ export default function createApp(services: Services): express.Application {
   app.use('/monitor', monitorRoutes(services))
   app.use('/dependencies', dependencyRoutes(services))
   app.use('/drift-radiator', driftRadiatorRoutes(services))
+  app.use('/trivy', trivyRoutes(services))
   app.use('/team-health', teamHealthRoutes(services))
   app.use('/product-dependencies', productDependencyRoutes(services))
   app.use('/missing-from-catalogue', missingFromCatalogueRoutes(services))
