@@ -9,19 +9,6 @@ export default function routes({ componentNameService, dataFilterService }: Serv
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    if (req.query.updateServiceArea === '' && isValidDropDown(req, 'serviceArea')) {
-      return res.redirect(`/trivy/service-areas/${req.query.serviceArea}`)
-    }
-    if (req.query.updateTeam === '' && isValidDropDown(req, 'team')) {
-      return res.redirect(`/trivy/teams/${req.query.team}`)
-    }
-    if (req.query.updateProduct === '' && isValidDropDown(req, 'product')) {
-      return res.redirect(`/trivy/products/${req.query.product}`)
-    }
-    if (req.query.updateCustomComponentView === '' && isValidDropDown(req, 'customComponentView')) {
-      return res.redirect(`/trivy/custom-components/${req.query.customComponentView}`)
-    }
-
     const components = await componentNameService.getAllDeployedComponents()
     const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
       teamName: '',

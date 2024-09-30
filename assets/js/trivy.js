@@ -39,29 +39,16 @@ class TrivyRenderer {
 
 jQuery(function () {
   $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponentView').on('click', async e => {
-    let dropDownType = ''
+    e.preventDefault()
 
-    switch (e.target.id) {
-      case 'updateProduct':
-        dropDownType = 'product'
-        break
-      case 'updateTeam':
-        dropDownType = 'team'
-        break
-      case 'updateServiceArea':
-        dropDownType = 'serviceArea'
-        break
-      case 'updateCustomComponentView':
-        dropDownType = 'customComponentView'
-        break
-      default:
-        return false
+    const type = e.target.dataset.typeName
+    const dataId = e.target.dataset.associatedSelectId
+
+    const selectedItem = $(`#${dataId}`).val()
+    if (!selectedItem) {
+      return
     }
-
-    const dropDownText = $(`#${dropDownType} option:selected`).text()
-    const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
-    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
-    window.location = `/trivy/${dropDownType}/${formatTrivyName(dropDownText)}`
+    window.location = `/trivy/${type}/${formatTrivyName(selectedItem)}`
   })
 })
 
