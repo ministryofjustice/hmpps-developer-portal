@@ -15,6 +15,10 @@
     &.statusTileDown {
       background-color: govuk-colour('red');
     }
+
+    &.statusTileStale {
+      background-color: #999900;
+    }
   }
   
   th, td {

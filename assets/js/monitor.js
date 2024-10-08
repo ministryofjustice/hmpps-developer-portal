@@ -103,8 +103,8 @@ function updateEnvironmentList() {
       if (
         ((showPrisons && isPrisons) || (showProbation && isProbation)) &&
         ((showStatusUp && isUp(status)) ||
-          (showStatusDown && status === 'DOWN') ||
-          (showStatusMissing && !isUp(status) && status !== 'DOWN')) &&
+          (showStatusDown && isDown(status)) ||
+          (showStatusMissing && !isUp(status) && !isDown(status))) &&
         selectedEnvironments.includes(environmentType)
       ) {
         $(this).show()
@@ -139,7 +139,7 @@ const fetchMessages = async () => {
     envs.forEach(([streamName, env]) => {
       try {
         const [component, environment] = streamName.split(':')
-        const { version, lastMessageTime, healthStatus } = env
+        const { version, lastMessageTime, dateAdded, healthStatus } = env
         const tileName = `#tile-${component}-${environment}`
 
         if ($(tileName).length > 0) {
@@ -148,7 +148,15 @@ const fetchMessages = async () => {
           $(`${tileName} .statusTileStatus`).text(healthStatus)
           $(tileName).removeClass('statusTileUp statusTileDown')
 
-          const statusClass = isUp(healthStatus) ? 'statusTileUp' : 'statusTileDown'
+          let statusClass
+          // Check the last time we received data from this endpoint
+          // If older than 10 mins, mark as stale.
+          if (new Date() - new Date(dateAdded) > 60 * 10 * 1000) {
+            statusClass = 'statusTileStale'
+          } else {
+            statusClass = isUp(healthStatus) ? 'statusTileUp' : 'statusTileDown'
+          }
+
           $(tileName).addClass(statusClass)
           $(tileName).attr('data-status', healthStatus)
         }
@@ -215,4 +223,8 @@ function formatMonitorName(name) {
 
 function isUp(status) {
   return status && ['UP', 'GREEN', 'SERVING'].includes(`${status}`.toUpperCase())
+}
+
+function isDown(status) {
+  return status && ['DOWN', 'UNKNOWN', '500'].includes(`${status}`.toUpperCase())
 }
