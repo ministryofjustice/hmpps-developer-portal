@@ -103,8 +103,8 @@ function updateEnvironmentList() {
       if (
         ((showPrisons && isPrisons) || (showProbation && isProbation)) &&
         ((showStatusUp && isUp(status)) ||
-          (showStatusDown && status === 'DOWN') ||
-          (showStatusMissing && !isUp(status) && status !== 'DOWN')) &&
+          (showStatusDown && isDown(status)) ||
+          (showStatusMissing && !isUp(status) && !isDown(status))) &&
         selectedEnvironments.includes(environmentType)
       ) {
         $(this).show()
@@ -215,4 +215,8 @@ function formatMonitorName(name) {
 
 function isUp(status) {
   return status && ['UP', 'GREEN', 'SERVING'].includes(`${status}`.toUpperCase())
+}
+
+function isDown(status) {
+  return status && ['DOWN', 'UNKNOWN', '500'].includes(`${status}`.toUpperCase())
 }
