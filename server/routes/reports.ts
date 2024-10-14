@@ -62,7 +62,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         }
       })
 
-    return res.send(rows)
+    res.send(rows)
   })
 
   get('/trivy', async (req, res) => {
@@ -109,7 +109,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const uniqueRows = new Set(components)
 
-    return res.send(Array.from(uniqueRows).map(n => JSON.parse(n)))
+    res.send(Array.from(uniqueRows).map(n => JSON.parse(n)))
   })
 
   get('/rds', async (req, res) => {
@@ -119,7 +119,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   get('/rds/data', async (req, res) => {
     const rdsInstances = await serviceCatalogueService.getRdsInstances()
 
-    return res.send(rdsInstances)
+    res.send(rdsInstances)
   })
 
   get('/rds/:rdsInstanceSlug', async (req, res) => {
