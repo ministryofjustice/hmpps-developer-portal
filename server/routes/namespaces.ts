@@ -15,7 +15,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   get('/data', async (req, res) => {
     const namespaces = await serviceCatalogueService.getNamespaces()
 
-    return res.send(namespaces)
+    res.send(namespaces)
   })
 
   get('/:namespaceSlug', async (req, res) => {

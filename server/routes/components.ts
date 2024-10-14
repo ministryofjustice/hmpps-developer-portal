@@ -16,7 +16,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   get('/data', async (req, res) => {
     const components = await serviceCatalogueService.getComponents()
 
-    return res.send(components)
+    res.send(components)
   })
 
   get('/:componentName', async (req, res) => {
@@ -124,7 +124,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     const messages = await redisService.readStream(streams)
 
-    return res.send(messages)
+    res.send(messages)
   })
 
   return router

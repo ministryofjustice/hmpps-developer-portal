@@ -15,7 +15,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   get('/data', async (req, res) => {
     const products = await serviceCatalogueService.getProducts({})
 
-    return res.send(products)
+    res.send(products)
   })
 
   get('/:productSlug', async (req, res) => {
