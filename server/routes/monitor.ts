@@ -94,7 +94,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       })
     }
 
-    return res.json(environments)
+    res.json(environments)
   })
 
   const getHealthStatus = (json: string): string => {
@@ -124,7 +124,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       return acc
     }, {})
 
-    return res.send(JSON.stringify(Object.entries(result)))
+    res.send(JSON.stringify(Object.entries(result)))
   })
 
   return router

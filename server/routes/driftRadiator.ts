@@ -129,7 +129,7 @@ export default function routes({ teamHealthService, componentNameService, dataFi
   post('/components.json', async (req, res) => {
     const { componentNames } = req.body as Record<string, string[]>
     const driftData = await teamHealthService.getDriftData(componentNames)
-    return res.send(driftData)
+    res.send(driftData)
   })
 
   return router

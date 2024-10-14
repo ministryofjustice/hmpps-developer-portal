@@ -42,7 +42,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         }
       })
 
-    return res.send(displayComponents)
+    res.send(displayComponents)
   })
 
   return router
