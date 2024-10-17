@@ -15,6 +15,16 @@ jQuery(function () {
           )
       },
     },
+    {
+      data: 'attributes.products',
+      createdCell: function (td, _cellData, rowData) {
+        if (rowData.attributes.products.data.attributes.name) {
+          for (product in rowData.attributes.products.data) {
+            $(td).html(`${product.name}</a></li>`)
+          }
+        }
+      },
+    },
   ]
 
   createTable({ id: 'teamsTable', ajaxUrl: '/teams/data', orderColumn: 0, orderType: 'asc', columns })
