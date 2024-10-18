@@ -93,7 +93,7 @@ export default class StrapiApiClient {
   async getTeams(): Promise<TeamListResponse> {
     return this.restClient.get({
       path: '/v1/teams',
-      query: '',
+      query: 'populate=products',
     })
   }
 
