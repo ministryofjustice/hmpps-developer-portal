@@ -31,9 +31,9 @@ jQuery(function () {
     {
       data: 'attributes.slug',
       createdCell: function (td, _cellData, rowData) {
-        // var linkSummary='<li><a class="govuk-link--no-visited-state" href="/monitor/teams/${rowData.attributes.slug}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${rowData.attributes.slug}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" href="/trivy/teams/${rowData.attributes.slug}">Trivy</a></li>'
+        var monitor_name = `${formatMonitorName(rowData.attributes.name)}`
         $(td).html(
-          '<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Links</span></summary><li><a class="govuk-link--no-visited-state" href="/monitor/teams/${rowData.attributes.slug}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${rowData.attributes.slug}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" href="/trivy/teams/${rowData.attributes.slug}">Trivy</a></li>',
+          `<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Links</span></summary><li><a class="govuk-link--no-visited-state" href="/monitor/team/${monitor_name}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${monitor_name}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" href="/trivy/teams/${monitor_name}">Trivy</a></li>`,
         )
       },
     },
@@ -41,3 +41,12 @@ jQuery(function () {
 
   createTable({ id: 'teamsTable', ajaxUrl: '/teams/data', orderColumn: 0, orderType: 'asc', columns })
 })
+
+function formatMonitorName(name) {
+  return `${name} `
+    .trim()
+    .toLowerCase()
+    .replace(/ /g, '-')
+    .replace(/[^-a-z0-9]/g, '')
+    .replace(/-+/g, '-')
+}
