@@ -166,7 +166,7 @@ export default class StrapiApiClient {
   async getServiceAreas(): Promise<ServiceAreaListResponse> {
     return this.restClient.get({
       path: '/v1/service-areas',
-      query: '',
+      query: 'populate=products',
     })
   }
 
