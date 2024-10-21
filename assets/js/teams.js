@@ -31,10 +31,10 @@ jQuery(function () {
     {
       data: 'attributes.slug',
       createdCell: function (td, _cellData, rowData) {
-        $(td)
-          .html(`<li><a class="govuk-link--no-visited-state" href="/monitor/teams/${rowData.attributes.slug}">Health Monitor</a></li>
-              <li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${rowData.attributes.slug}">Deployment drift</a></li>
-              <li><a class="govuk-link--no-visited-state" href="/trivy/teams/${rowData.attributes.slug}">Trivy</a></li>`)
+        // var linkSummary='<li><a class="govuk-link--no-visited-state" href="/monitor/teams/${rowData.attributes.slug}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${rowData.attributes.slug}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" href="/trivy/teams/${rowData.attributes.slug}">Trivy</a></li>'
+        $(td).html(
+          '<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Links</span></summary><li><a class="govuk-link--no-visited-state" href="/monitor/teams/${rowData.attributes.slug}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${rowData.attributes.slug}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" href="/trivy/teams/${rowData.attributes.slug}">Trivy</a></li>',
+        )
       },
     },
   ]
