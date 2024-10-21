@@ -8,14 +8,19 @@ A portal to expose useful information to developers.
 ```mermaid
 graph TD
     service-catalogue
+    app-insights[(app-insights)]
     service-catalogue-db[(db)]
     service-catalogue <--> service-catalogue-db
+
+    classDef projectjson fill:#FFFFFF;
+    bootstrap[bootstrap]:::projectjson
 
     classDef redis fill:#FF0000;
     redis[(redis)]:::redis
     hmpps-health-ping --> redis
     hmpps-component-dependencies --> redis
-
+    bootstrap[bootstrap-process] --> service-catalogue
+    app-insights --> hmpps-component-dependencies
     redis -->  hmpps-developer-portal
     service-catalogue -->  hmpps-developer-portal
 
