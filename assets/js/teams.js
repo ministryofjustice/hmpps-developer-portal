@@ -15,6 +15,28 @@ jQuery(function () {
           )
       },
     },
+    {
+      data: 'attributes.products',
+      createdCell: function (td, _cellData, rowData) {
+        for (const key in rowData.attributes.products) {
+          var pList = ''
+          rowData.attributes.products[key].forEach(product => {
+            pList += `<li><a href="/products/${product.attributes.slug}" data-test="product-${product.id}">${product.attributes.name}</a></li>`
+          })
+        }
+        if (pList) $(td).html(pList)
+        else $(td).html('None')
+      },
+    },
+    {
+      data: 'attributes.slug',
+      createdCell: function (td, _cellData, rowData) {
+        // var linkSummary='<li><a class="govuk-link--no-visited-state" href="/monitor/teams/${rowData.attributes.slug}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${rowData.attributes.slug}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" href="/trivy/teams/${rowData.attributes.slug}">Trivy</a></li>'
+        $(td).html(
+          '<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Links</span></summary><li><a class="govuk-link--no-visited-state" href="/monitor/teams/${rowData.attributes.slug}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${rowData.attributes.slug}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" href="/trivy/teams/${rowData.attributes.slug}">Trivy</a></li>',
+        )
+      },
+    },
   ]
 
   createTable({ id: 'teamsTable', ajaxUrl: '/teams/data', orderColumn: 0, orderType: 'asc', columns })
