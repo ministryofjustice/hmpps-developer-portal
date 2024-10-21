@@ -1,12 +1,6 @@
 jQuery(function () {
   const columns = [
     {
-      data: 'attributes.t_id',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.attributes.t_id}`)
-      },
-    },
-    {
       data: 'attributes.name',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(`<a href="/teams/${rowData.attributes.slug}">${rowData.attributes.name}</a>`)
