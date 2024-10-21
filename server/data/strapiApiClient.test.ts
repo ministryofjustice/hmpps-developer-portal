@@ -158,7 +158,7 @@ describe('strapiApiClient', () => {
     describe('getProductSets', () => {
       it('should return all product sets', async () => {
         const allProductSets = { data: [{ attributes: { name: 'Product Set' } }] } as ProductSetListResponse
-        fakeStrapiApi.get('/product-sets').reply(200, allProductSets)
+        fakeStrapiApi.get('/product-sets?populate=products').reply(200, allProductSets)
         const output = await strapiApiClient.getProductSets()
         expect(output).toEqual(allProductSets)
       })

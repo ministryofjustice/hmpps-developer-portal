@@ -6,6 +6,37 @@ jQuery(function () {
         $(td).html(`<a href="/namespaces/${rowData.attributes.name}">${rowData.attributes.name}</a>`)
       },
     },
+    {
+      data: 'attributes.rds_instance.tf_label',
+      createdCell: function (td, _cellData, rowData) {
+        if (rowData.attributes.rds_instance.length === 0) {
+          $(td).html(`N/A`)
+          return
+        }
+        const rdsInstances = rowData.attributes.rds_instance
+          .map(rdsInstance => {
+            return `<a href="/reports/rds/${rdsInstance.tf_label}-${rdsInstance.namespace}">${rdsInstance.tf_label}</a>`
+          })
+          .join('')
+        $(td).html(`${rdsInstances}`)
+      },
+    },
+    {
+      data: 'attributes.elasticache_cluster.tf_label',
+      createdCell: function (td, _cellData, rowData) {
+        if (rowData.attributes.elasticache_cluster.length === 0) {
+          $(td).html(`N/A`)
+          return
+        }
+        const elasticache = rowData.attributes.elasticache_cluster
+          .map(cache => {
+            return `${cache.tf_label}`
+          })
+          .join('')
+        if (elasticache) $(td).html(`${elasticache}`)
+        else $(td).html(`N/A`)
+      },
+    },
   ]
 
   createTable({ id: 'namespacesTable', ajaxUrl: '/namespaces/data', orderColumn: 0, orderType: 'asc', columns })

@@ -15,14 +15,14 @@ jQuery(function () {
     {
       data: 'attributes.products',
       createdCell: function (td, _cellData, rowData) {
-        for (const key in rowData.attributes.products) {
-          var pList = ''
-          pList = `<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Product List</span></summary>`
-          rowData.attributes.products[key].forEach(product => {
-            pList += `<li><a href="/products/${product.attributes.slug}" data-test="product-${product.id}">${product.attributes.name}</a></li>`
+        const header = `<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Product List</span></summary>`
+        const products = rowData.attributes.products.data
+          .map(product => {
+            return `<li><a href="/products/${product.attributes.slug}" data-test="product-${product.id}">${product.attributes.name}</a></li>`
           })
-        }
-        if (pList) $(td).html(pList)
+          .join('')
+
+        if (products) $(td).html(`${header}${products}`)
         else $(td).html(`No Products`)
       },
     },
