@@ -119,18 +119,10 @@ export default class StrapiApiClient {
     return this.restClient.get({ path, query })
   }
 
-  async getNamespaces({ withRdsInstances = false }: { withRdsInstances?: boolean }): Promise<NamespaceListResponse> {
-    const populate = []
-
-    if (withRdsInstances) {
-      populate.push('rds_instance')
-    }
-
+  async getNamespaces(): Promise<NamespaceListResponse> {
     return this.restClient.get({
       path: '/v1/namespaces',
-      query: new URLSearchParams({
-        populate: populate.join(','),
-      }).toString(),
+      query: 'populate=rds_instance,elasticache_cluster',
     })
   }
 
@@ -153,6 +145,7 @@ export default class StrapiApiClient {
   async getProductSets(): Promise<ProductSetListResponse> {
     return this.restClient.get({
       path: '/v1/product-sets',
+      query: 'populate=products',
     })
   }
 
@@ -166,7 +159,7 @@ export default class StrapiApiClient {
   async getServiceAreas(): Promise<ServiceAreaListResponse> {
     return this.restClient.get({
       path: '/v1/service-areas',
-      query: '',
+      query: 'populate=products',
     })
   }
 

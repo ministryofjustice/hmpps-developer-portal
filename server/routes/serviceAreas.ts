@@ -13,7 +13,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   get('/data', async (req, res) => {
     const serviceAreas = await serviceCatalogueService.getServiceAreas()
-
     res.send(serviceAreas)
   })
 

@@ -32,6 +32,14 @@ jQuery(function () {
         $(td).html(link)
       },
     },
+    {
+      data: 'attributes.github_repo',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(
+          `<a class="govuk-link--no-visited-state" href="https://github.com/ministryofjustice/${rowData.attributes.github_repo}" target="_blank" data-test="github-repo"> ${rowData.attributes.github_repo}</a>`,
+        )
+      },
+    },
   ]
 
   createTable({

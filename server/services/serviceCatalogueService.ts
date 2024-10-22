@@ -79,7 +79,7 @@ export default class ServiceCatalogueService {
 
   async getRdsInstances(): Promise<RdsEntry[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const namespaceData = await strapiApiClient.getNamespaces({ withRdsInstances: true })
+    const namespaceData = await strapiApiClient.getNamespaces()
     const rdsInstances = namespaceData.data.reduce((existing, namespace) => {
       const instances = namespace.attributes.rds_instance.map(rdsInstance => {
         return {
@@ -109,7 +109,7 @@ export default class ServiceCatalogueService {
 
   async getNamespaces(): Promise<NamespaceListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const namespaceData = await strapiApiClient.getNamespaces({})
+    const namespaceData = await strapiApiClient.getNamespaces()
 
     const namespaces = namespaceData.data.sort(sortData)
 
