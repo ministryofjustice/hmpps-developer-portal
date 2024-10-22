@@ -19,13 +19,16 @@ jQuery(function () {
       data: 'attributes.products',
       createdCell: function (td, _cellData, rowData) {
         const products = rowData.attributes.products.data
-          .map(product => {
-            return `<li><a href="/products/${product.attributes.slug}" data-test="product-${product.id}">${product.attributes.name}</a></li>`
-          })
+          .map(
+            product =>
+              `<li><a href="/products/${product.attributes.slug}" data-test="product-${product.id}">${product.attributes.name}</a></li>`,
+          )
           .join('')
-
-        if (products) $(td).html(`${products}`)
-        else $(td).html(`No Products`)
+        if (products) {
+          $(td).html(`${products}`)
+        } else {
+          $(td).html(`No Products`)
+        }
       },
     },
     {

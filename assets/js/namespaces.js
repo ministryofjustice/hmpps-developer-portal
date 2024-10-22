@@ -9,32 +9,29 @@ jQuery(function () {
     {
       data: 'attributes.rds_instance',
       createdCell: function (td, _cellData, rowData) {
-        if (rowData.attributes.rds_instance.length === 0) {
-          $(td).html(`N/A`)
-          return
-        }
         const rdsInstances = rowData.attributes.rds_instance
-          .map(rdsInstance => {
-            return `<a href="/reports/rds/${rdsInstance.tf_label}-${rdsInstance.namespace}">${rdsInstance.tf_label}</a>`
-          })
+          .map(
+            rdsInstance =>
+              `<a href="/reports/rds/${rdsInstance.tf_label}-${rdsInstance.namespace}">${rdsInstance.tf_label}</a>`,
+          )
           .join('')
         $(td).html(`${rdsInstances}`)
+        if (elasticache) {
+          $(td).html(`${elasticache}`)
+        } else {
+          $(td).html(`N/A`)
+        }
       },
     },
     {
       data: 'attributes.elasticache_cluster',
       createdCell: function (td, _cellData, rowData) {
-        if (rowData.attributes.elasticache_cluster.length === 0) {
+        const elasticache = rowData.attributes.elasticache_cluster.map(cache => `${cache.tf_label}`).join('')
+        if (elasticache) {
+          $(td).html(`${elasticache}`)
+        } else {
           $(td).html(`N/A`)
-          return
         }
-        const elasticache = rowData.attributes.elasticache_cluster
-          .map(cache => {
-            return `${cache.tf_label}`
-          })
-          .join('')
-        if (elasticache) $(td).html(`${elasticache}`)
-        else $(td).html(`N/A`)
       },
     },
   ]
