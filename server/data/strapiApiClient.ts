@@ -119,21 +119,6 @@ export default class StrapiApiClient {
     return this.restClient.get({ path, query })
   }
 
-  // async getNamespaces({ withRdsInstances = false }: { withRdsInstances?: boolean }): Promise<NamespaceListResponse> {
-  //   const populate = []
-
-  //   if (withRdsInstances) {
-  //     populate.push('rds_instance')
-  //   }
-
-  //   return this.restClient.get({
-  //     path: '/v1/namespaces',
-  //     query: new URLSearchParams({
-  //       populate: populate.join(','),
-  //     }).toString(),
-  //   })
-  // }
-
   async getNamespaces(): Promise<NamespaceListResponse> {
     return this.restClient.get({
       path: '/v1/namespaces',
