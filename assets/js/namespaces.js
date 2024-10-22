@@ -7,7 +7,7 @@ jQuery(function () {
       },
     },
     {
-      data: 'attributes.rds_instance.tf_label',
+      data: 'attributes.rds_instance',
       createdCell: function (td, _cellData, rowData) {
         if (rowData.attributes.rds_instance.length === 0) {
           $(td).html(`N/A`)
@@ -22,7 +22,7 @@ jQuery(function () {
       },
     },
     {
-      data: 'attributes.elasticache_cluster.tf_label',
+      data: 'attributes.elasticache_cluster',
       createdCell: function (td, _cellData, rowData) {
         if (rowData.attributes.elasticache_cluster.length === 0) {
           $(td).html(`N/A`)
