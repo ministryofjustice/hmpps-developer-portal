@@ -16,8 +16,8 @@ jQuery(function () {
           )
           .join('')
         $(td).html(`${rdsInstances}`)
-        if (elasticache) {
-          $(td).html(`${elasticache}`)
+        if (rdsInstances) {
+          $(td).html(`${rdsInstances}`)
         } else {
           $(td).html(`N/A`)
         }
