@@ -60,6 +60,12 @@ COPY --from=build --chown=appuser:appgroup \
 COPY --from=build --chown=appuser:appgroup \
         /app/node_modules ./node_modules
 
+COPY --from=build --chown=appuser:appgroup \
+        /app/node_modules/applicationinsights/applicationinsights.dev.json ./applicationinsights.dev.json
+
+COPY --from=build --chown=appuser:appgroup \
+        /app/node_modules/applicationinsights/applicationinsights.json ./applicationinsights.json
+
 EXPOSE 3000
 ENV NODE_ENV='production'
 USER 2000
