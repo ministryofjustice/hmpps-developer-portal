@@ -252,7 +252,7 @@ describe('/components', () => {
           const $ = cheerio.load(res.text)
           expectEnvironmentScreenToBeFilled($, devEnvironment)
           const activeAgencies = devEnvironment.active_agencies as Array<string>
-          expect($('td[data-test="active-agencies"]').text()).toBe(activeAgencies.join(','))
+          expect($('td[data-test="active-agencies"]').text()).toBe(activeAgencies.join(', '))
         })
     })
   })
