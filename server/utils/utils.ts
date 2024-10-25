@@ -158,7 +158,7 @@ export const formatActiveAgencies = (activeAgencies: Array<string>) => {
   if (activeAgencies.includes('***')) {
     return 'All agencies'
   }
-  return activeAgencies.join(',')
+  return activeAgencies.join(', ')
 }
 
 export const relativeTimeFromNow = (date: Date): string => {
