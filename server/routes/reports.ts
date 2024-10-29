@@ -16,7 +16,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   post('/veracode/data', async (req, res) => {
-    const componentsToInclude = req.body.componentNames
+    // const componentsToInclude = req.body.componentNames
     const resultFilters = getResultFilters(req.query.results as string)
     const exemptionFilters = getExemptionFilters(req.query.exemption as string)
     const allComponents = await serviceCatalogueService.getComponents(exemptionFilters)
