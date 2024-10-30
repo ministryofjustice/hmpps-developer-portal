@@ -3,12 +3,12 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import { TrivyDisplayEntry, TrivyResult, TrivyScanResults, TrivyVulnerability } from '../@types'
 
-export default function routes({ componentNameService, dataFilterService }: Services): Router {
+export default function routes({ serviceCatalogueService, componentNameService, dataFilterService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
-  
+
   get('/', async (req, res) => {
     const components = await componentNameService.getAllDeployedComponents()
     const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
@@ -31,6 +31,7 @@ export default function routes({ componentNameService, dataFilterService }: Serv
 
   post('/data', async (req, res) => {
     const componentsToInclude = req.body.componentNames
+    console.log(`in post code`)
     const components = (await serviceCatalogueService.getComponents())
       .filter(component => componentsToInclude.includes(component.attributes.name))
       .map(component => {
