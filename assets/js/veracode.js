@@ -92,7 +92,9 @@ jQuery(function () {
     $('input:checkbox[name=exemption]:checked').each(function () {
       selectedExemptionFilters.push($(this).val())
     })
-
+    console.log(
+      `${rootDataUrl}?results=${selectedResultFilters.join(',')}&exemption=${selectedExemptionFilters.join(',')}`,
+    )
     const newDataUrl = `${rootDataUrl}?results=${selectedResultFilters.join(',')}&exemption=${selectedExemptionFilters.join(',')}`
 
     veracodeTable.ajax.url(newDataUrl).load()
