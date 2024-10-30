@@ -9,6 +9,9 @@
 {{ breadCrumb("Veracode", []) }}
 
   <h1>Veracode Scan Results</h1>
+  <form method="GET" action="/veracode">
+    {% include "../partials/filterDropDowns.njk" %}
+  </form>
   <form>
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
 		<div class="monitor-selectors govuk-button-group">

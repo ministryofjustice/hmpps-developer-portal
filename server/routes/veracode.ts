@@ -10,7 +10,23 @@ export default function routes({ serviceCatalogueService, componentNameService, 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    return res.render('pages/veracode')
+    const components = await componentNameService.getAllDeployedComponents()
+    const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
+      teamName: '',
+      productName: '',
+      serviceAreaName: '',
+      customComponentName: '',
+      useFormattedName: true,
+    })
+
+    return res.render('pages/veracode', {
+      title: 'Trivy',
+      components,
+      serviceAreaList,
+      teamList,
+      productList,
+      customComponentsList,
+    })
   })
 
   get('/data', async (req, res) => {
