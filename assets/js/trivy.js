@@ -22,7 +22,7 @@ class TrivyRenderer {
   }
 
   fetchMessages = async componentNames => {
-    const vulnerabilities = await this.post('/reports/trivy/data', { componentNames })
+    const vulnerabilities = await this.post('/trivy/data', { componentNames })
     createTable({
       id: 'trivyTable',
       data: vulnerabilities,
