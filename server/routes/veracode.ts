@@ -92,8 +92,8 @@ export default function routes({ serviceCatalogueService, componentNameService, 
       useFormattedName: true,
     })
 
-    return res.render('pages/trivy', {
-      title: `Trivy for ${teamName}`,
+    return res.render('pages/veracode', {
+      title: `Veracode for ${teamName}`,
       components,
       serviceAreaList,
       teamList,
@@ -113,8 +113,8 @@ export default function routes({ serviceCatalogueService, componentNameService, 
       useFormattedName: true,
     })
 
-    return res.render('pages/trivy', {
-      title: `Trivy for ${serviceAreaName}`,
+    return res.render('pages/veracode', {
+      title: `Veracode for ${serviceAreaName}`,
       components,
       serviceAreaList,
       teamList,
@@ -134,8 +134,8 @@ export default function routes({ serviceCatalogueService, componentNameService, 
       useFormattedName: true,
     })
 
-    return res.render('pages/trivy', {
-      title: `Trivy for ${productName}`,
+    return res.render('pages/veracode', {
+      title: `Veracode for ${productName}`,
       components,
       serviceAreaList,
       teamList,
@@ -155,8 +155,8 @@ export default function routes({ serviceCatalogueService, componentNameService, 
       useFormattedName: true,
     })
 
-    return res.render('pages/trivy', {
-      title: `Trivy for ${customComponentName}`,
+    return res.render('pages/veracode', {
+      title: `Veracode for ${customComponentName}`,
       components,
       serviceAreaList,
       teamList,
