@@ -8,7 +8,7 @@ export default function routes({ serviceCatalogueService, componentNameService, 
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
+
   get('/', async (req, res) => {
     const components = await componentNameService.getAllDeployedComponents()
     const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
@@ -29,9 +29,8 @@ export default function routes({ serviceCatalogueService, componentNameService, 
     })
   })
 
-  post('/data', async (req, res) => {
+  get('/data', async (req, res) => {
     const resultFilters = getResultFilters(req.query.results as string)
-    const componentsToInclude = req.body.componentNames
     const exemptionFilters = getExemptionFilters(req.query.exemption as string)
     const allComponents = await serviceCatalogueService.getComponents(exemptionFilters)
     const passed = resultFilters.includes('passed')
@@ -40,7 +39,6 @@ export default function routes({ serviceCatalogueService, componentNameService, 
 
     const rows = allComponents
       .filter(component => veracodeFilters(passed, failed, unknown, component.attributes.veracode_policy_rules_status))
-      .filter(component => componentsToInclude.includes(component.attributes.name))
       .map(component => {
         const hasVeracode = !!component.attributes.veracode_results_summary
         const severityLevels = {
