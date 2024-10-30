@@ -1,5 +1,5 @@
 jQuery(function () {
-  const rootDataUrl = '/reports/veracode/data'
+  const rootDataUrl = '/veracode/data'
   const columns = [
     {
       data: 'name',
