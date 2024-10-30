@@ -2,13 +2,12 @@ import { type RequestHandler, Router } from 'express'
 import dayjs from 'dayjs'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { getFormattedName, veracodeFilters } from '../utils/utils'
+import { veracodeFilters } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  // const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
     return res.render('pages/veracode')

@@ -1,9 +1,8 @@
 import { type RequestHandler, Router } from 'express'
-import dayjs from 'dayjs'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { getFormattedName, veracodeFilters } from '../utils/utils'
 import { TrivyDisplayEntry, TrivyResult, TrivyScanResults, TrivyVulnerability } from '../@types'
+import { getFormattedName } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -81,24 +80,4 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   return router
-}
-
-const getResultFilters = (resultFilters: string): string[] => {
-  if (!resultFilters) {
-    return []
-  }
-
-  const resultFiltersToCheck = resultFilters.split(',')
-
-  return resultFiltersToCheck.filter(resultFilter => ['passed', 'failed', 'unknown'].includes(resultFilter))
-}
-
-const getExemptionFilters = (exemptionFilters: string): string[] => {
-  if (!exemptionFilters) {
-    return []
-  }
-
-  const exemptionFiltersToCheck = exemptionFilters.split(',')
-
-  return exemptionFiltersToCheck.filter(exemptionFilter => ['true', 'false'].includes(exemptionFilter))
 }
