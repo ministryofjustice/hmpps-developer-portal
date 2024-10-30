@@ -4,16 +4,33 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import { veracodeFilters } from '../utils/utils'
 
-export default function routes({ serviceCatalogueService }: Services): Router {
+export default function routes({ serviceCatalogueService, componentNameService, dataFilterService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
+  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
   get('/', async (req, res) => {
-    return res.render('pages/veracode')
+    const components = await componentNameService.getAllDeployedComponents()
+    const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
+      teamName: '',
+      productName: '',
+      serviceAreaName: '',
+      customComponentName: '',
+      useFormattedName: true,
+    })
+
+    return res.render('pages/veracode', {
+      title: 'Veracode Scan Report',
+      components,
+      serviceAreaList,
+      teamList,
+      productList,
+      customComponentsList,
+    })
   })
 
-  get('/data', async (req, res) => {
+  post('/data', async (req, res) => {
+    const componentsToInclude = req.body.componentNames
     const resultFilters = getResultFilters(req.query.results as string)
     const exemptionFilters = getExemptionFilters(req.query.exemption as string)
     const allComponents = await serviceCatalogueService.getComponents(exemptionFilters)
@@ -23,6 +40,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const rows = allComponents
       .filter(component => veracodeFilters(passed, failed, unknown, component.attributes.veracode_policy_rules_status))
+      .filter(component => componentsToInclude.includes(component.attributes.name))
       .map(component => {
         const hasVeracode = !!component.attributes.veracode_results_summary
         const severityLevels = {
@@ -62,6 +80,91 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     res.send(rows)
   })
+  
+  get('/teams/:teamName', async (req, res) => {
+    const { teamName } = req.params
+    const components = await componentNameService.getAllDeployedComponentsForTeam(teamName)
+    const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
+      teamName,
+      productName: '',
+      serviceAreaName: '',
+      customComponentName: '',
+      useFormattedName: true,
+    })
+
+    return res.render('pages/trivy', {
+      title: `Trivy for ${teamName}`,
+      components,
+      serviceAreaList,
+      teamList,
+      productList,
+      customComponentsList,
+    })
+  })
+
+  get('/service-areas/:serviceAreaName', async (req, res) => {
+    const { serviceAreaName } = req.params
+    const components = await componentNameService.getAllDeployedComponentsForServiceArea(serviceAreaName)
+    const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
+      teamName: '',
+      productName: '',
+      serviceAreaName,
+      customComponentName: '',
+      useFormattedName: true,
+    })
+
+    return res.render('pages/trivy', {
+      title: `Trivy for ${serviceAreaName}`,
+      components,
+      serviceAreaList,
+      teamList,
+      productList,
+      customComponentsList,
+    })
+  })
+
+  get('/products/:productName', async (req, res) => {
+    const { productName } = req.params
+    const components = await componentNameService.getAllDeployedComponentsForProduct(productName)
+    const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
+      teamName: '',
+      productName,
+      serviceAreaName: '',
+      customComponentName: '',
+      useFormattedName: true,
+    })
+
+    return res.render('pages/trivy', {
+      title: `Trivy for ${productName}`,
+      components,
+      serviceAreaList,
+      teamList,
+      productList,
+      customComponentsList,
+    })
+  })
+
+  get('/custom-components/:customComponentName', async (req, res) => {
+    const { customComponentName } = req.params
+    const components = await componentNameService.getAllDeployedComponentsForCustomComponents(customComponentName)
+    const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
+      teamName: '',
+      productName: '',
+      serviceAreaName: '',
+      customComponentName,
+      useFormattedName: true,
+    })
+
+    return res.render('pages/trivy', {
+      title: `Trivy for ${customComponentName}`,
+      components,
+      serviceAreaList,
+      teamList,
+      productList,
+      customComponentsList,
+    })
+  })
+  
   return router
 }
 
