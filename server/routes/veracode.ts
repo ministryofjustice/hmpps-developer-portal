@@ -61,7 +61,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         }
       })
 
-    return rows
+    res.send(rows)
   })
   return router
 }
