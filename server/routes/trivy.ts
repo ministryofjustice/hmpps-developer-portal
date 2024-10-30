@@ -31,7 +31,6 @@ export default function routes({ serviceCatalogueService, componentNameService, 
 
   post('/data', async (req, res) => {
     const componentsToInclude = req.body.componentNames
-    console.log(`in post code`)
     const components = (await serviceCatalogueService.getComponents())
       .filter(component => componentsToInclude.includes(component.attributes.name))
       .map(component => {
