@@ -1,44 +1,77 @@
-class VeracodeRenderer {
-  constructor(csrfToken, viewMode) {
-    this.csrfToken = csrfToken
-    this.viewMode = viewMode
-  }
-
-  post = async (url, body) => {
-    const response = await fetch(url, {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': this.csrfToken,
-      },
-      body: JSON.stringify(body),
-    })
-    if (!response.ok) {
-      throw new Error(`There was a problem calling: ${url}`)
-    }
-    return response.json()
-  }
-
-  fetchMessages = async componentNames => {
-    const vulnerabilities = await this.post('/veracode/data', { componentNames })
-    createTable({
-      id: 'veracodeTable',
-      data: vulnerabilities,
-      orderColumn: 2,
-      orderType: 'desc',
-      columns,
-    })
-  }
-
-  start = async componentNames => {
-    await this.fetchMessages(componentNames)
-  }
-}
-
 jQuery(function () {
   const rootDataUrl = '/veracode/data'
+  const columns = [
+    {
+      data: 'name',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`<a href="/components/${cleanColumnOutput(rowData.name)}">${cleanColumnOutput(rowData.name)}</a>`)
+      },
+    },
+    {
+      data: 'result',
+      createdCell: function (td, _cellData, rowData) {
+        let className = 'veracode--missing'
+        let data = 'N/A'
+
+        if (rowData.hasVeracode) {
+          className = rowData.result === 'Passed' ? 'veracode--passed' : 'veracode--failed'
+          data = rowData.result
+        }
+
+        $(td).html(data).addClass(className)
+      },
+    },
+    {
+      data: 'date',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.date}`).addClass('td-nowrap')
+      },
+    },
+    {
+      data: 'severityLevels.VERY_HIGH',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? rowData.severityLevels.VERY_HIGH : 'N/A'
+        $(td).html(data)
+      },
+    },
+    {
+      data: 'severityLevels.HIGH',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? rowData.severityLevels.HIGH : 'N/A'
+        $(td).html(data)
+      },
+    },
+    {
+      data: 'severityLevels.MEDIUM',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? rowData.severityLevels.MEDIUM : 'N/A'
+        $(td).html(data)
+      },
+    },
+    {
+      data: 'severityLevels.LOW',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? rowData.severityLevels.LOW : 'N/A'
+        $(td).html(data)
+      },
+    },
+    {
+      data: 'codeScore',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? rowData.codeScore : 0
+        $(td).html(data)
+      },
+      type: 'num',
+    },
+    {
+      data: 'report',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? `<a href="${rowData.report}" target="_blank">View</a>` : 'N/A'
+        $(td).html(data)
+      },
+    },
+  ]
+
   const veracodeTable = createTable({
     id: 'veracodeTable',
     ajaxUrl: `${rootDataUrl}?results=failed`,
@@ -65,75 +98,3 @@ jQuery(function () {
     veracodeTable.ajax.url(newDataUrl).load()
   })
 })
-
-const columns = [
-  {
-    data: 'name',
-    createdCell: function (td, _cellData, rowData) {
-      $(td).html(`<a href="/components/${cleanColumnOutput(rowData.name)}">${cleanColumnOutput(rowData.name)}</a>`)
-    },
-  },
-  {
-    data: 'result',
-    createdCell: function (td, _cellData, rowData) {
-      let className = 'veracode--missing'
-      let data = 'N/A'
-
-      if (rowData.hasVeracode) {
-        className = rowData.result === 'Passed' ? 'veracode--passed' : 'veracode--failed'
-        data = rowData.result
-      }
-
-      $(td).html(data).addClass(className)
-    },
-  },
-  {
-    data: 'date',
-    createdCell: function (td, _cellData, rowData) {
-      $(td).html(`${rowData.date}`).addClass('td-nowrap')
-    },
-  },
-  {
-    data: 'severityLevels.VERY_HIGH',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? rowData.severityLevels.VERY_HIGH : 'N/A'
-      $(td).html(data)
-    },
-  },
-  {
-    data: 'severityLevels.HIGH',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? rowData.severityLevels.HIGH : 'N/A'
-      $(td).html(data)
-    },
-  },
-  {
-    data: 'severityLevels.MEDIUM',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? rowData.severityLevels.MEDIUM : 'N/A'
-      $(td).html(data)
-    },
-  },
-  {
-    data: 'severityLevels.LOW',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? rowData.severityLevels.LOW : 'N/A'
-      $(td).html(data)
-    },
-  },
-  {
-    data: 'codeScore',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? rowData.codeScore : 0
-      $(td).html(data)
-    },
-    type: 'num',
-  },
-  {
-    data: 'report',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? `<a href="${rowData.report}" target="_blank">View</a>` : 'N/A'
-      $(td).html(data)
-    },
-  },
-]
