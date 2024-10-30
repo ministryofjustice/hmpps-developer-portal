@@ -93,12 +93,4 @@
   <script src="/assets/moj/all.js"></script>
   <script src="/assets/js/common.js"></script>
   <script src="/assets/js/veracode.js"></script>
-  <script nonce="{{ cspNonce }}">
-    jQuery(function () {
-      const components = {{components | toJson(2) | safe }}
-      const csrfToken = "{{ csrfToken }}"
-      const renderer = new VeracodeRenderer(csrfToken, 'list')
-      renderer.start(components)
-    })
-  </script>
 {% endblock %}
