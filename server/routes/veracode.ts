@@ -10,11 +10,11 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   // const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
-  get('/veracode', async (req, res) => {
+  get('/', async (req, res) => {
     return res.render('pages/veracode')
   })
 
-  get('/veracode/data', async (req, res) => {
+  get('/data', async (req, res) => {
     const resultFilters = getResultFilters(req.query.results as string)
     const exemptionFilters = getExemptionFilters(req.query.exemption as string)
     const allComponents = await serviceCatalogueService.getComponents(exemptionFilters)
@@ -61,8 +61,9 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         }
       })
 
-    res.send(rows)
+    return rows
   })
+  return router
 }
 
 const getResultFilters = (resultFilters: string): string[] => {
