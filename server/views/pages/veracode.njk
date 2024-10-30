@@ -11,7 +11,6 @@
   <h1>Veracode Scan Results</h1>
   <form>
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-		{% include "../partials/filterDropDowns.njk" %}
 		<div class="monitor-selectors govuk-button-group">
 			{{ govukCheckboxes({
 				name: "results",
