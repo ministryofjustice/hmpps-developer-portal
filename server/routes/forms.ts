@@ -8,7 +8,6 @@ export default function routes({ componentNameService, dataFilterService }: Serv
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    const components = await componentNameService.getAllDeployedComponents()
     const [productList] = await dataFilterService.getDropDownLists({
       productName: '',
       useFormattedName: true,
@@ -22,22 +21,14 @@ export default function routes({ componentNameService, dataFilterService }: Serv
 
   get('/products/:productName', async (req, res) => {
     const { productName } = req.params
-    const components = await componentNameService.getAllDeployedComponentsForProduct(productName)
-    const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
-      teamName: '',
+    const [productList] = await dataFilterService.getDropDownLists({
       productName,
-      serviceAreaName: '',
-      customComponentName: '',
       useFormattedName: true,
     })
 
     return res.render('pages/githubreporequestform', {
       title: `Github repository Name for ${productName}`,
-      components,
-      serviceAreaList,
-      teamList,
       productList,
-      customComponentsList,
     })
   })
 
