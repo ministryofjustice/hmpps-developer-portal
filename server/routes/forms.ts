@@ -14,7 +14,7 @@ export default function routes({ componentNameService, dataFilterService }: Serv
       useFormattedName: true,
     })
 
-    return res.render('pages/componentrequest', {
+    return res.render('pages/githubreporequestform', {
       title: 'Github repository Name',
       productList,
     })
@@ -31,7 +31,7 @@ export default function routes({ componentNameService, dataFilterService }: Serv
       useFormattedName: true,
     })
 
-    return res.render('pages/componentrequest', {
+    return res.render('pages/githubreporequestform', {
       title: `Github repository Name for ${productName}`,
       components,
       serviceAreaList,

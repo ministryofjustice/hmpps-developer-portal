@@ -8,7 +8,8 @@
 {% block content %}
 <h1 class="govuk-heading-xl">Github repository Request Form</h1>
 
-After submitting the form, SRE team will run the bootstrap job to create the github repo and service catalog entries. 
+<h2>After submitting the form, SRE team will run the bootstrap job to create the github repo and service catalog entries. </h2>
+
 {%- set products = [] -%}
 {%- for product in productList -%}
   {%- set products = (products.push({
@@ -17,14 +18,7 @@ After submitting the form, SRE team will run the bootstrap job to create the git
     selected: product.selected
   }), products) -%}
 {%- endfor -%}
-{%- set teams = [] -%}
-{%- for team in teamList -%}
-  {%- set teams = (teams.push({
-    value: team.value,
-    text: team.text,
-    selected: team.selected
-  }), teams) -%}
-{%- endfor -%}
+
 <form validate>
   {{ govukInput({
     id: "repositoryname",
