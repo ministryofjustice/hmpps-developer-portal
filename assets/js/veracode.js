@@ -1,98 +1,77 @@
 jQuery(function () {
-  const monitorType = $('#monitorType').val()
-
-  if (monitorType !== '') {
-    const dropDownTypeIdValue = Number.parseInt($(`#${monitorType}`).val())
-    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
-
-    updateURL()
-  }
-
-  $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
-    'change',
-    e => {
-      e.preventDefault(e)
-      updateURL()
-    },
-  )
-})
-
-const columns = [
-  {
-    data: 'name',
-    createdCell: function (td, _cellData, rowData) {
-      $(td).html(`<a href="/components/${cleanColumnOutput(rowData.name)}">${cleanColumnOutput(rowData.name)}</a>`)
-    },
-  },
-  {
-    data: 'result',
-    createdCell: function (td, _cellData, rowData) {
-      let className = 'veracode--missing'
-      let data = 'N/A'
-
-      if (rowData.hasVeracode) {
-        className = rowData.result === 'Passed' ? 'veracode--passed' : 'veracode--failed'
-        data = rowData.result
-      }
-
-      $(td).html(data).addClass(className)
-    },
-  },
-  {
-    data: 'date',
-    createdCell: function (td, _cellData, rowData) {
-      $(td).html(`${rowData.date}`).addClass('td-nowrap')
-    },
-  },
-  {
-    data: 'severityLevels.VERY_HIGH',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? rowData.severityLevels.VERY_HIGH : 'N/A'
-      $(td).html(data)
-    },
-  },
-  {
-    data: 'severityLevels.HIGH',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? rowData.severityLevels.HIGH : 'N/A'
-      $(td).html(data)
-    },
-  },
-  {
-    data: 'severityLevels.MEDIUM',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? rowData.severityLevels.MEDIUM : 'N/A'
-      $(td).html(data)
-    },
-  },
-  {
-    data: 'severityLevels.LOW',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? rowData.severityLevels.LOW : 'N/A'
-      $(td).html(data)
-    },
-  },
-  {
-    data: 'codeScore',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? rowData.codeScore : 0
-      $(td).html(data)
-    },
-    type: 'num',
-  },
-  {
-    data: 'report',
-    createdCell: function (td, _cellData, rowData) {
-      const data = rowData.hasVeracode ? `<a href="${rowData.report}" target="_blank">View</a>` : 'N/A'
-      $(td).html(data)
-    },
-  },
-]
-
-function updateURL() {
   const rootDataUrl = '/veracode/data'
-  const selectedResultFilters = []
-  const selectedExemptionFilters = []
+  const columns = [
+    {
+      data: 'name',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`<a href="/components/${cleanColumnOutput(rowData.name)}">${cleanColumnOutput(rowData.name)}</a>`)
+      },
+    },
+    {
+      data: 'result',
+      createdCell: function (td, _cellData, rowData) {
+        let className = 'veracode--missing'
+        let data = 'N/A'
+
+        if (rowData.hasVeracode) {
+          className = rowData.result === 'Passed' ? 'veracode--passed' : 'veracode--failed'
+          data = rowData.result
+        }
+
+        $(td).html(data).addClass(className)
+      },
+    },
+    {
+      data: 'date',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.date}`).addClass('td-nowrap')
+      },
+    },
+    {
+      data: 'severityLevels.VERY_HIGH',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? rowData.severityLevels.VERY_HIGH : 'N/A'
+        $(td).html(data)
+      },
+    },
+    {
+      data: 'severityLevels.HIGH',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? rowData.severityLevels.HIGH : 'N/A'
+        $(td).html(data)
+      },
+    },
+    {
+      data: 'severityLevels.MEDIUM',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? rowData.severityLevels.MEDIUM : 'N/A'
+        $(td).html(data)
+      },
+    },
+    {
+      data: 'severityLevels.LOW',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? rowData.severityLevels.LOW : 'N/A'
+        $(td).html(data)
+      },
+    },
+    {
+      data: 'codeScore',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? rowData.codeScore : 0
+        $(td).html(data)
+      },
+      type: 'num',
+    },
+    {
+      data: 'report',
+      createdCell: function (td, _cellData, rowData) {
+        const data = rowData.hasVeracode ? `<a href="${rowData.report}" target="_blank">View</a>` : 'N/A'
+        $(td).html(data)
+      },
+    },
+  ]
+
   const veracodeTable = createTable({
     id: 'veracodeTable',
     ajaxUrl: `${rootDataUrl}?results=failed`,
@@ -101,18 +80,24 @@ function updateURL() {
     columns,
   })
 
-  $('input:checkbox[name=results]:checked').each(function () {
-    selectedResultFilters.push($(this).val())
-  })
+  $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
+    'change',
+    e => {
+      e.preventDefault(e)
+      const selectedResultFilters = []
+      const selectedExemptionFilters = []
 
-  $('input:checkbox[name=exemption]:checked').each(function () {
-    selectedExemptionFilters.push($(this).val())
-  })
+      $('input:checkbox[name=results]:checked').each(function () {
+        selectedResultFilters.push($(this).val())
+      })
 
-  console.log(
-    `${rootDataUrl}?results=${selectedResultFilters.join(',')}&exemption=${selectedExemptionFilters.join(',')}`,
+      $('input:checkbox[name=exemption]:checked').each(function () {
+        selectedExemptionFilters.push($(this).val())
+      })
+
+      const newDataUrl = `${rootDataUrl}?results=${selectedResultFilters.join(',')}&exemption=${selectedExemptionFilters.join(',')}`
+
+      veracodeTable.ajax.url(newDataUrl).load()
+    },
   )
-  const newDataUrl = `${rootDataUrl}?results=${selectedResultFilters.join(',')}&exemption=${selectedExemptionFilters.join(',')}`
-
-  veracodeTable.ajax.url(newDataUrl).load()
-}
+})
