@@ -9,51 +9,60 @@
 {{ breadCrumb("Veracode", []) }}
 
   <h1>Veracode Scan Results</h1>
-  <form>
+  <form method="GET" action="/veracode">
+    <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
+    <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-		<div class="monitor-selectors govuk-button-group">
-			{{ govukCheckboxes({
-				name: "results",
-				items: [
-					{
-						value: "passed",
-						text: "Passed",
-						checked: false
-					},
-					{
-						value: "failed",
-						text: "Failed",
-						checked: true
-					},
-					{
-						value: "unknown",
-						text: "Unknown",
-						checked: false
-					}
-				]
-			}) }}
-			{{ govukCheckboxes({
-				name: "exemption",
-				items: [
-					{
-						value: "true",
-						text: "Exempt",
-						checked: false
-					},
-					{
-						value: "false",
-						text: "Non Exempt",
-						checked: false
-					}
-				]
-			}) }}
-			{{ govukButton({
-				id: "updateVeracodeFilters",
-				name: "updateVeracodeFilters",
-				text: "Update",
-				element: "button"
-			}) }}
-		</div>
+		<div class="veracode">
+			<div class="veracode-filter-block">
+				<div class="govuk-heading-s">Results</div>
+				{{ govukCheckboxes({
+					classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+					name: "results",
+					items: [
+						{
+							id: "veracodepassed",
+							value: "passed",
+							text: "Passed",
+							checked: false
+						},
+						{
+							id: "veracodefailed",
+							value: "failed",
+							text: "Failed",
+							checked: true
+						},
+						{
+							id: "veracodeunknown",
+							value: "unknown",
+							text: "Unknown",
+							checked: false
+						}
+					]
+				}) }}
+			</div>
+			<div class="veracode-filter-block">
+				<div class="govuk-heading-s">Exempted</div>
+				{{ govukCheckboxes({
+					classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+					name: "exemption",
+					items: [
+						{
+							id: "veracodeexempt",
+							value: "true",
+							text: "Yes",
+							checked: false
+						},
+						{
+							id: "veracodenonexempt",
+							value: "false",
+							text: "No",
+							checked: false
+						}
+					]
+					}) }}
+				</div>
+			</div>
 	</form>
 
   <table id="veracodeTable" class="stripe">
