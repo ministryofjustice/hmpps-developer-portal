@@ -187,6 +187,19 @@
   white-space: pre-wrap;
 }
 
+.veracode .govuk-form-group {
+  margin: 0;
+}
+
+.veracode-filter-block {
+  display: flex;
+  align-items: center;
+}
+
+.veracode-filter-block > :first-child.govuk-heading-s {
+  margin: 0 govuk-spacing(2) 0 0;
+}
+
 .veracode--missing {
   background-color: govuk-colour('light-grey');
 }

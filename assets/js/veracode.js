@@ -80,21 +80,24 @@ jQuery(function () {
     columns,
   })
 
-  $('#updateVeracodeFilters').on('click', async e => {
-    e.preventDefault(e)
-    const selectedResultFilters = []
-    const selectedExemptionFilters = []
+  $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
+    'change',
+    e => {
+      e.preventDefault(e)
+      const selectedResultFilters = []
+      const selectedExemptionFilters = []
 
-    $('input:checkbox[name=results]:checked').each(function () {
-      selectedResultFilters.push($(this).val())
-    })
+      $('input:checkbox[name=results]:checked').each(function () {
+        selectedResultFilters.push($(this).val())
+      })
 
-    $('input:checkbox[name=exemption]:checked').each(function () {
-      selectedExemptionFilters.push($(this).val())
-    })
+      $('input:checkbox[name=exemption]:checked').each(function () {
+        selectedExemptionFilters.push($(this).val())
+      })
 
-    const newDataUrl = `${rootDataUrl}?results=${selectedResultFilters.join(',')}&exemption=${selectedExemptionFilters.join(',')}`
+      const newDataUrl = `${rootDataUrl}?results=${selectedResultFilters.join(',')}&exemption=${selectedExemptionFilters.join(',')}`
 
-    veracodeTable.ajax.url(newDataUrl).load()
-  })
+      veracodeTable.ajax.url(newDataUrl).load()
+    },
+  )
 })
