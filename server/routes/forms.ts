@@ -26,7 +26,7 @@ export default function routes({ dataFilterService }: Services): Router {
       useFormattedName: true,
     })
 
-    return res.render('pages/githubreporequestform', {
+    return res.render('pages/githubRepoRequestForm', {
       title: `Github repository Name for ${productName}`,
       productList,
     })
