@@ -1,4 +1,4 @@
 export type FieldValidationError = {
-    field: string
-    message: string
-  }
+  field: string
+  message: string
+}

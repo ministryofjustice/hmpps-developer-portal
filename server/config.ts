@@ -56,7 +56,7 @@ export default {
         deadline: Number(get('SERVICE_CATALOGUE_TIMEOUT_DEADLINE', 5000)),
       },
       agent: new AgentConfig(Number(get('SERVICE_CATALOGUE_TIMEOUT_RESPONSE', 5000))),
-      token: get('SERVICE_CATALOGUE_TOKEN','service-catalog-token',requiredInProduction),
+      token: get('SERVICE_CATALOGUE_TOKEN', 'service-catalog-token', requiredInProduction),
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),

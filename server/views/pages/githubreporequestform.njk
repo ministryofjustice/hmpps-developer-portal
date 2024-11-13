@@ -1,7 +1,7 @@
 {% extends "../partials/layout.njk" %}
-{%- from "govuk/components/input/macro.njk" import govukInput -%}
-{%- from "govuk/components/radios/macro.njk" import govukRadios -%}
-{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %} 
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
@@ -21,87 +21,28 @@
 {%- endfor -%}
 <form method=POST>
   <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-  {{ govukErrorSummary({
-    titleText: "There is a problem",
-    errorList: [
-      {
-        text: "Enter Repository Name",
-        href: "#repositoryname"
-      },
-      {
-        text: "Enter Repository desc",
-        href: "#repositorydesc"
-      },
-      {
-        text: "Select Github template",
-        href: "#githubtemplate"
-      },
-      {
-        text: "Select Repository Visbility option",
-        href: "#repovisibilty"
-      },
-      {
-        text: "Select product type for repository",
-        href: "#product"
-      },
-      {
-        text: "Enter Github Repository Admin Team",
-        href: "#githubrepoteamadmin"
-      },
-      {
-        text: "Enter Github Repository Teams with write permissions",
-        href: "#githubrepoteamwrite"
-      },
-      {
-        text: "Enter Github Repository Teams for Branch Protection",
-        href: "#repoteambranchprotectionteam"
-      },
-      {
-        text: "Enter Slack channel for Release notification",
-        href: "#slackchannelreleasenotify"
-      },
-      {
-        text: "Enter Slack channel for Pipeline failure notification",
-        href: "#slackchannelpipelinenotify"
-      },
-      {
-        text: "Non-prod k8s alerts. The severity label used by prometheus to route alert notifications to slack",
-        href: "#nonprodalertseverity"
-      },
-      {
-        text: "Production k8s alerts. The severity label used by prometheus to route alert notifications to slack",
-        href: "#prodalertseverity"
-      }
-    ]
-  }) }}
 
   <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukInput({
-      id: "repositoryname",
-      name: "repositoryname",
+      id: "github_repo",
+      name: "github_repo",
       classes: "govuk-input--width-100",
       label: {
         text: "Github Repository Name (Max 100 characters, only allowed special character Hyphen(-))"
-      },
-      errorMessage: {
-        text: "Enter Repository Name"
       }
     }) }}
     {{ govukInput({
-      id: "repositorydesc",
-      name: "repositorydesc",
+      id: "repo_description",
+      name: "repo_description",
       label: {
         text: "Github Repository Description",
         classes: "govuk-input--width-100"
-      },
-      errorMessage: {
-       text: "Enter Repository desc"
       }
     }) }}
     {{ govukRadios({
       classes: "govuk-radios--inline",
-      idPrefix: "githubtemplate",
-      name: "githubtemplate",
+      idPrefix: "base_template",
+      name: "base_template",
       fieldset: {
         legend: {
           text: "Github template repository",
@@ -121,15 +62,12 @@
         {
           value: "github_only",
           text: "Github only"
-        }],
-      errorMessage: {
-       text: "Select Github template"
-      }
+        }]
     }) }}
       {{ govukRadios({
       classes: "govuk-radios--inline",
-      idPrefix: "repovisibilty",
-      name: "repovisibilty",
+      idPrefix: "github_project_visibility",
+      name: "github_project_visibility",
       fieldset: {
         legend: {
           text: "Github Repositiory Visibility",
@@ -144,14 +82,11 @@
         {
           value: "public",
           text: "Public"
-        }],
-      errorMessage: {
-       text: "Select Repository Visbility option"
-      }
+        }]
     }) }}
     {{ govukInput({
-      id: "jiraprojectid",
-      name: "jiraprojectid",
+      id: "jira_project_keys",
+      name: "jira_project_keys",
       classes: "govuk-input--width-40",
       label: {
         text: "Jira Project Key"
@@ -162,89 +97,64 @@
     name: "product",
     label: {
       text: "Product"
-    },
-    items: products,
-    errorMessage: {
-      text: "Select product type for repository"
     }
   }) }}
       {{ govukInput({
-      id: "githubrepoteamadmin",
-      name: "githubrepoteamadmin",
+      id: "github_projects_teams_admin",
+      name: "github_projects_teams_admin",
       label: {
         text: "Github Repository Admin Teams (Seperated by comma without spaces eg: hmpps-sre,hmpps-developers)",
         classes: "govuk-input--width-100"
-      },
-    errorMessage: {
-      text: "Enter Github Repository Admin Team"
-    }
+      }
     }) }}
     {{ govukInput({
-      id: "githubrepoteamwrite",
-      name: "githubrepoteamwrite",
+      id: "github_project_teams_write",
+      name: "github_project_teams_write",
       label: {
         text: "Github Repository Teams with write permissions (seperated by comma without spaces eg: hmpps-sre,hmpps-developers)",
         classes: "govuk-input--width-100"
-      },
-    errorMessage: {
-      text: "Enter Github Repository Teams with write permissions"
-    }
+      }
     }) }}
     {{ govukInput({
-      id: "repoteambranchprotectionteam",
-      name: "repoteambranchprotectionteam",
+      id: "github_project_branch_protection_restricted_teams",
+      name: "github_project_branch_protection_restricted_teams",
       label: {
         text: "Github Project Teams Branch protection restricted teams (seperated by comma without spaces eg: hmpps-sre,hmpps-developers)",
         classes: "govuk-input--width-100"
-      },
-    errorMessage: {
-      text: "Enter Github Repository Teams for Branch Protection"
-    }
+      }
     }) }}
       {{ govukInput({
-      id: "slackchannelreleasenotify",
-      name: "slackchannelreleasenotify",
+      id: "slack_channel_release_notify",
+      name: "slack_channel_release_notify",
       label: {
         text: "Slack channel for release notifications",
         classes: "govuk-input--width-100"
-      },
-    errorMessage: {
-      text: "Enter Slack channel for Release notification"
-    }
+      }
     }) }}
     {{ govukInput({
-      id: "slackchannelpipelinenotify",
-      name: "slackchannelpipelinenotify",
+      id: "slack_channel_pipeline_notify",
+      name: "slack_channel_pipeline_notify",
       label: {
         text: "Slack channel for pipeline security notifications",
         classes: "govuk-input--width-100"
-      },
-    errorMessage: {
-      text: "Enter Slack channel for Pipeline failure notification"
-    }
+      }
     }) }}
-    <h3> For configurating alert severity labels, please first see <a hef="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts/">this document.</a></h3>
+    <h3> For configurating alert severity labels, please first see <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts/">this document.</a></h3>
     {{ govukInput({
-      id: "nonprodalertseverity",
-      name: "nonprodalertseverity",
+      id: "nonprod_alerts_severity_label",
+      name: "nonprod_alerts_severity_label",
       label: {
         text: "Non-prod k8s alerts. The severity label used by prometheus to route alert notifications to slack",
         classes: "govuk-input--width-100"
-      },
-    errorMessage: {
-      text: "Non-prod k8s alerts. The severity label used by prometheus to route alert notifications to slack"
-    }
+      }
     }) }}
       {{ govukInput({
-      id: "prodalertseverity",
-      name: "prodalertseverity",
+      id: "prod_alerts_severity_label",
+      name: "prod_alerts_severity_label",
       label: {
         text: "Production k8s alerts. The severity label used by prometheus to route alert notifications to slack",
         classes: "govuk-input--width-100"
-      },
-    errorMessage: {
-      text: "Production k8s alerts. The severity label used by prometheus to route alert notifications to slack"
-    }
+      }
     }) }}
 
     {{ govukButton({
@@ -257,9 +167,7 @@
     }) }}
 
 </form>
-<a hef="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts/">this document.</a></h3>
 {% endblock %}
-
 {% block bodyEnd %}
   <script src="/assets/js/githubrepoRequstForm.js"></script>
 {% endblock %}

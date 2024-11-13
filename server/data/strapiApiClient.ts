@@ -224,4 +224,18 @@ export default class StrapiApiClient {
       }).toString(),
     })
   }
+
+  async getGithubRepoRequests(): Promise<ServiceAreaListResponse> {
+    return this.restClient.get({
+      path: '/v1/github-repo-requests',
+      query: 'populate=github_repo',
+    })
+  }
+
+  async postGithubRepoRequests(): Promise<ServiceAreaListResponse> {
+    return this.restClient.post({
+      path: '/v1/github-repo-requests',
+      query: 'populate=github_repo',
+    })
+  }
 }
