@@ -17,7 +17,7 @@ export default function routes({ dataFilterService }: Services): Router {
       useFormattedName: true,
     })
 
-    return res.render('pages/githubreporequestform', {
+    return res.render('pages/githubRepoRequestForm', {
       title: 'Github repository Name',
       productList,
     })
@@ -53,7 +53,7 @@ export default function routes({ dataFilterService }: Services): Router {
     // const prod_alerts_severity_label = req.body.nonprod_alerts_severity_label
     console.log(`in post `)
     console.log(github_repo)
-    return res.redirect(`/new-github-repo-request-form`)
+    return res.redirect(`pages/githubRepoRequestForm`)
   })
 
 

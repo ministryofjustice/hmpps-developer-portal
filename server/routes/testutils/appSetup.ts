@@ -52,7 +52,7 @@ function appSetup(services: Services, production: boolean): Express {
   app.use('/monitor', monitorRoutes(services))
   app.use('/dependencies', dependencyRoutes(services))
   app.use('/product-dependencies', productDependenciesRoutes(services))
-  app.use('/componentrequest', formsRoutes(services))
+  app.use('/new-github-repo-request-form', formsRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(production))
