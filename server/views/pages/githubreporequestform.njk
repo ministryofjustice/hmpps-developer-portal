@@ -19,7 +19,7 @@
     selected: product.selected
   }), products) -%}
 {%- endfor -%}
-<form action="/new-github-repo-request-form" method=POST>
+<form action="/github-repo-request-form" method="POST">
   <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukInput({
       id: "github_repo",
@@ -29,6 +29,13 @@
         text: "Github Repository Name (Max 100 characters, only allowed special character Hyphen(-))"
       }
     }) }}
+      {{ govukSelect({
+    id: "product",
+    name: "product",
+    label: {
+      text: "Product"
+    }
+  }) }}
 <!--      {{ govukInput({
       id: "repo_description",
       name: "repo_description",
