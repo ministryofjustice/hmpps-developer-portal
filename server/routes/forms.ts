@@ -36,9 +36,9 @@ export default function routes({ dataFilterService }: Services): Router {
     })
   })
 
-  post('/github-repo-requests', async (req, res): Promise<void> => {
+  post('/new-github-repo-request-form', async (req, res): Promise<void> => {
     // const (github_repo,repo_description,base_template,github_project_visibility,jira_project_keys,product,github_projects_teams_admin,github_project_teams_writ,github_project_branch_protection_restricted_teams,slack_channel_release_notify,slack_channel_pipeline_notify,nonprod_alerts_severity_label,prod_alerts_severity_label) = req.body;
-    // const { github_repo } = req.body.github_repo
+    const { github_repo } = req.body.github_repo
     // const { repo_description } = req.body.repo_description
     // const { base_template } = req.body.base_template
     // const { github_project_visibility } = req.body.github_project_visibility
@@ -53,6 +53,9 @@ export default function routes({ dataFilterService }: Services): Router {
     // const prod_alerts_severity_label = req.body.nonprod_alerts_severity_label
     console.log(`in post `)
     console.log(github_repo)
+    return res.redirect(`/new-github-repo-request-form`)
   })
+
+
   return router
 }

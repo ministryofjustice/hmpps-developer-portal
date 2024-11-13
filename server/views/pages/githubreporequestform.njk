@@ -19,9 +19,7 @@
     selected: product.selected
   }), products) -%}
 {%- endfor -%}
-<form method=POST>
-  <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-
+<form action="/new-github-repo-request-form" method=POST>
   <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukInput({
       id: "github_repo",
@@ -167,7 +165,4 @@
     }) }}
 
 </form>
-{% endblock %}
-{% block bodyEnd %}
-  <script src="/assets/js/githubrepoRequstForm.js"></script>
 {% endblock %}
