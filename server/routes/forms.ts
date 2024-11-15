@@ -4,12 +4,13 @@ import type { Services } from '../services'
 import { FieldValidationError } from '../@types/FieldValidationError'
 import config from '../config'
 import type { AgentConfig } from '../config'
+import { BadRequest } from 'http-errors'
 
 export default function routes({ dataFilterService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const post = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
+  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/github-repo-request-form', async (req, res) => {
     console.log(`in get`)
