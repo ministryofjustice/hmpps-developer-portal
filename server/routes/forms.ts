@@ -4,6 +4,7 @@ import type { Services } from '../services'
 import { FieldValidationError } from '../@types/FieldValidationError'
 import config from '../config'
 import type { AgentConfig } from '../config'
+import {  tocreateFormData, FormData } from '../utils/utils'
 // import { BadRequest } from 'http-errors'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
@@ -54,12 +55,4 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   return router
 }
 
-export interface FormData {
-  github_repo: string
-}
 
-export const tocreateFormData= (formData: FormData ): FormData=> {
-  return {
-    github_repo: formData.github_repo,
-  }
-}

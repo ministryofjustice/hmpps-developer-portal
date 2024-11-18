@@ -235,6 +235,7 @@ export default class StrapiApiClient {
   }
 
   async postGithubRepoRequest(FormData: string): Promise<GithubRepoRequestResponse> {
+    console.log(`in strapi`)
     console.log(FormData)
     return this.restClient.post({
       path: '/v1/github-repo-requests',
@@ -242,3 +243,4 @@ export default class StrapiApiClient {
     })
   }
 }
+

@@ -17,7 +17,7 @@ import {
   Namespace,
   GithubRepoRequestRequest,
 } from '../data/strapiApiTypes'
-import { sortData, sortRdsInstances } from '../utils/utils'
+import { sortData, sortRdsInstances, tocreateFormData, FormData } from '../utils/utils'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -237,32 +237,16 @@ export default class ServiceCatalogueService {
     return customComponentView
   }
 
-  // async getGithubRepoRequests({
-  //   withEnvironments = false,
-  // }: {
-  //   withEnvironments?: boolean
-  // }): Promise<Product> {
-  //   const strapiApiClient = this.strapiApiClientFactory('')
-  //   const productData = await strapiApiClient.getProduct({ productSlug, productId, withEnvironments })
-  //   // @ts-expect-error Suppress any declaration
-  //   const product = productSlug ? productData.data[0].attributes : productData.data?.attributes
-
-  //   return product
-  // }
-
   async postGithubRepoRequest({
-    githubreponame = '',
-    // githubrepoid = 0,
-    // withEnvironments = false,
+    formdata = FormData
   }: {
-    githubreponame?: string
-    // githubrepoid?: number
-    // withEnvironments?: boolean
+    formdata?: FormData
   }): Promise<GithubRepoRequestRequest> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const GithubRepoRequestsData = await strapiApiClient.postGithubRepoRequest({ form_github_repo })
+    const GithubRepoRequestsData = await strapiApiClient.postGithubRepoRequest({ Formdata })
     // @ts-expect-error Suppress any declaration
 
     return GithubRepoRequest
   }
 }
+
