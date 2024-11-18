@@ -15,6 +15,7 @@ import {
   CustomComponentView,
   NamespaceListResponseDataItem,
   Namespace,
+  GithubRepoRequestRequest,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances } from '../utils/utils'
 
@@ -234,5 +235,34 @@ export default class ServiceCatalogueService {
     const customComponentView = customComponentData.data?.attributes
 
     return customComponentView
+  }
+
+  // async getGithubRepoRequests({
+  //   withEnvironments = false,
+  // }: {
+  //   withEnvironments?: boolean
+  // }): Promise<Product> {
+  //   const strapiApiClient = this.strapiApiClientFactory('')
+  //   const productData = await strapiApiClient.getProduct({ productSlug, productId, withEnvironments })
+  //   // @ts-expect-error Suppress any declaration
+  //   const product = productSlug ? productData.data[0].attributes : productData.data?.attributes
+
+  //   return product
+  // }
+
+  async postGithubRepoRequest({
+    githubreponame = '',
+    // githubrepoid = 0,
+    // withEnvironments = false,
+  }: {
+    githubreponame?: string
+    // githubrepoid?: number
+    // withEnvironments?: boolean
+  }): Promise<GithubRepoRequestRequest> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const GithubRepoRequestsData = await strapiApiClient.postGithubRepoRequest({ form_github_repo })
+    // @ts-expect-error Suppress any declaration
+
+    return GithubRepoRequest
   }
 }

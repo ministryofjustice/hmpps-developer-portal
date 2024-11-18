@@ -234,9 +234,11 @@ export default class StrapiApiClient {
     })
   }
 
-  async postGithubRepoRequests(): Promise<GithubRepoRequestResponse> {
+  async postGithubRepoRequest(FormData: string): Promise<GithubRepoRequestResponse> {
+    console.log(FormData)
     return this.restClient.post({
       path: '/v1/github-repo-requests',
+      data: { FormData },
     })
   }
 }
