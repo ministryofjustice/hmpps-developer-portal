@@ -222,13 +222,3 @@ export const median = (values: number[]): number => {
 
   return sortedValues.length % 2 ? sortedValues[half] : (sortedValues[half - 1] + sortedValues[half]) / 2
 }
-
-export interface FormData {
-  github_repo: string
-}
-
-export const tocreateFormData= (formData: FormData ): FormData=> {
-  return {
-    github_repo: formData.github_repo,
-  }
-}

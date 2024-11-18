@@ -15,8 +15,8 @@ import {
   CustomComponentListResponse,
   CustomComponentResponse,
   NamespaceListResponse,
-  GithubRepoRequestRequest,
   GithubRepoRequestResponse,
+  GithubRepoRequestRequest,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
@@ -234,12 +234,11 @@ export default class StrapiApiClient {
     })
   }
 
-  async postGithubRepoRequest(FormData: string): Promise<GithubRepoRequestResponse> {
+  async postGithubRepoRequest (request: GithubRepoRequestRequest ): Promise<GithubRepoRequestResponse> {
     console.log(`in strapi`)
-    console.log(FormData)
     return this.restClient.post({
       path: '/v1/github-repo-requests',
-      data: { FormData },
+      data: request,
     })
   }
 }

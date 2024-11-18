@@ -12,6 +12,7 @@ import {
   ProductResponse,
   ServiceAreaListResponse,
   ServiceAreaResponse,
+  GithubRepoRequestResponse,
 } from './strapiApiTypes'
 
 describe('strapiApiClient', () => {
@@ -197,4 +198,34 @@ describe('strapiApiClient', () => {
       })
     })
   })
+
+  describe('postGithubRepoRequest', () => {
+    it('should insert a single form request', async () => {
+      const response = {
+        data: { id: 1, attributes: { name: 'GIthub repo request form' } },
+      } as GithubRepoRequestResponse
+      fakeStrapiApi.post('/github-repo-requests').reply(200, response)
+
+      const output = await strapiApiClient.postGithubRepoRequest( {
+        "data": {
+          "github_repo": "string",
+          "repo_description": "string",
+          "base_template": "string",
+          "jira_project_keys": "string",
+          "github_project_visibility": true,
+          "product": "string",
+          "github_project_teams_write": "string",
+          "github_projects_teams_admin": "string",
+          "github_project_branch_protection_restricted_teams": "string",
+          "slack_channel_release_notify": "string",
+          "slack_channel_pipeline_notify": "string",
+          "prod_alerts_severity_label": "string",
+          "nonprod_alerts_severity_label": "string"
+        }
+      })
+
+      expect(output).toEqual(response)
+    })
+  })
 })
+

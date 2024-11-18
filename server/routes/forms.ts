@@ -4,7 +4,8 @@ import type { Services } from '../services'
 import { FieldValidationError } from '../@types/FieldValidationError'
 import config from '../config'
 import type { AgentConfig } from '../config'
-import {  tocreateFormData, FormData } from '../utils/utils'
+import { components } from '../@types/strapi-api'
+import { GithubRepoRequestRequest } from '../data/strapiApiTypes'
 // import { BadRequest } from 'http-errors'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
@@ -19,8 +20,8 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   post('/github-repo-request-form', async (req, res): Promise<void> => {
-    const formdata = req.body
-    const github_repo =formdata.github_repo
+    const formData = req.body
+    const github_repo =formData.github_repo
     // const repo_description = formdata.repo_description
     // const base_template=formdata.base_template
     // const github_project_visibility = formdata.github_project_visibility
@@ -45,14 +46,20 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     // const prod_alerts_severity_label = req.body.nonprod_alerts_severity_label
     console.log(`in post `)
     console.log(github_repo)
-    const requestformData = tocreateFormData(formdata) 
-    console.log(requestformData)
-    const components = await serviceCatalogueService.postGithubRepoRequest(requestformData)
-    return res.render('pages/githubRepoRequestForm')
+    const requestFormData = toCreateFormData(formData) 
+    console.log(requestFormData)
+    const components = await serviceCatalogueService.postGithubRepoRequest(requestFormData)
+    // disable submit page 
+    return res.redirect('/forms/github-repo-request-form')
   })
-
 
   return router
 }
 
-
+export const toCreateFormData= ( formData: Record<string, unknown> ): GithubRepoRequestRequest=> {
+  return {
+    data: {
+      github_repo: formData.github_repo?.toString(),
+    }    
+  }
+}

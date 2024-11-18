@@ -15,9 +15,10 @@ import {
   CustomComponentView,
   NamespaceListResponseDataItem,
   Namespace,
-  GithubRepoRequestRequest,
+  GithubRepoRequestResponse,
+  GithubRepoRequestRequest
 } from '../data/strapiApiTypes'
-import { sortData, sortRdsInstances, tocreateFormData, FormData } from '../utils/utils'
+import { sortData, sortRdsInstances } from '../utils/utils'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -237,16 +238,11 @@ export default class ServiceCatalogueService {
     return customComponentView
   }
 
-  async postGithubRepoRequest({
-    formdata = FormData
-  }: {
-    formdata?: FormData
-  }): Promise<GithubRepoRequestRequest> {
+  async postGithubRepoRequest (request: GithubRepoRequestRequest ): Promise<GithubRepoRequestResponse> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const GithubRepoRequestsData = await strapiApiClient.postGithubRepoRequest({ Formdata })
-    // @ts-expect-error Suppress any declaration
+    const response = await strapiApiClient.postGithubRepoRequest(request)
 
-    return GithubRepoRequest
+    return response
   }
 }
 
