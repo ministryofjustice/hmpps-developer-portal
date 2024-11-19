@@ -21,19 +21,6 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
     })
   })
 
-  get('/products/:productName', async (req, res) => {
-    const { productName } = req.params
-    const [productList] = await dataFilterService.getDropDownLists({
-      productName,
-      useFormattedName: true,
-    })
-
-    return res.render('pages/githubRepoRequestForm', {
-      title: 'Github Repository Requst Form',
-      productList,
-    })
-  })
-
   post('/github-repo-request-form', async (req, res): Promise<void> => {
     const formData = req.body
     const requestFormData = toCreateFormData(formData)
