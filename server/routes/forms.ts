@@ -2,8 +2,6 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import { GithubRepoRequestRequest } from '../data/strapiApiTypes'
-// import { BadRequest } from 'http-errors'
-// import { FieldValidationError } from '../@types/FieldValidationError'
 
 export default function routes({ serviceCatalogueService, componentNameService, dataFilterService }: Services): Router {
   const router = Router()
@@ -12,7 +10,6 @@ export default function routes({ serviceCatalogueService, componentNameService, 
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/github-repo-request-form', async (req, res) => {
-    const components = await componentNameService.getAllDeployedComponents()
     const [productList] = await dataFilterService.getDropDownLists({
       productName: '',
       useFormattedName: true,
@@ -24,28 +21,8 @@ export default function routes({ serviceCatalogueService, componentNameService, 
     })
   })
 
-  // get('/products/:productName', async (req, res) => {
-  //   const { productName } = req.params
-  //   const components = await componentNameService.getAllDeployedComponentsForProduct(productName)
-  //   const [ productList ] = await dataFilterService.getDropDownLists({
-  //     teamName: '',
-  //     productName,
-  //     serviceAreaName: '',
-  //     customComponentName: '',
-  //     useFormattedName: true,
-  //   })
-
-  //   console.log(`product list`)
-
-  //   return res.render('pages/githubRepoRequestForm', {
-  //     title: 'Github Repository Requst Form',
-  //     productList,
-  //   })
-  // })
-
   get('/products/:productName', async (req, res) => {
     const { productName } = req.params
-    const components = await componentNameService.getAllDeployedComponentsForProduct(productName)
     const [productList] = await dataFilterService.getDropDownLists({
       productName,
       useFormattedName: true,
@@ -59,7 +36,6 @@ export default function routes({ serviceCatalogueService, componentNameService, 
 
   post('/github-repo-request-form', async (req, res): Promise<void> => {
     const formData = req.body
-    console.log(formData.github_project_branch_protection_restricted_teams?.toString().split(','))
     const requestFormData = toCreateFormData(formData)
     const response = await serviceCatalogueService.postGithubRepoRequest(requestFormData)
     // disable submit page, give confirmation and stay on page or redirect to new page with summary of requested data pushed to strapi
