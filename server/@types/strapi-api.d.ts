@@ -1486,7 +1486,19 @@ export interface components {
         container_image?: string
         veracode_results_url?: string
         veracode_last_completed_scan_date?: string
-        veracode_results_summary?: unknown
+        veracode_results_summary?: {
+          'static-analysis': {
+            score: number
+          }
+          severity: {
+            level: number
+            category: {
+              count: number
+              severity: string
+              categoryname: string
+            }[]
+          }[]
+        }
         veracode_exempt?: boolean
         veracode_policy_rules_status?: string
         trivy_last_completed_scan_date?: string
@@ -1717,7 +1729,19 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: unknown
+                  veracode_results_summary?: {
+                    'static-analysis': {
+                      score: number
+                    }
+                    severity: {
+                      level: number
+                      category: {
+                        count: number
+                        severity: string
+                        categoryname: string
+                      }[]
+                    }[]
+                  }
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   trivy_last_completed_scan_date?: string
@@ -1788,7 +1812,19 @@ export interface components {
       container_image?: string
       veracode_results_url?: string
       veracode_last_completed_scan_date?: string
-      veracode_results_summary?: unknown
+      veracode_results_summary?: {
+        'static-analysis': {
+          score: number
+        }
+        severity: {
+          level: number
+          category: {
+            count: number
+            severity: string
+            categoryname: string
+          }[]
+        }[]
+      }
       veracode_exempt?: boolean
       veracode_policy_rules_status?: string
       trivy_last_completed_scan_date?: string
@@ -2454,7 +2490,19 @@ export interface components {
             container_image?: string
             veracode_results_url?: string
             veracode_last_completed_scan_date?: string
-            veracode_results_summary?: unknown
+            veracode_results_summary?: {
+              'static-analysis': {
+                score: number
+              }
+              severity: {
+                level: number
+                category: {
+                  count: number
+                  severity: string
+                  categoryname: string
+                }[]
+              }[]
+            }
             veracode_exempt?: boolean
             veracode_policy_rules_status?: string
             trivy_last_completed_scan_date?: string
@@ -2677,6 +2725,29 @@ export interface components {
     GithubRepoRequestResponse: {
       data?: components['schemas']['GithubRepoRequestResponseDataObject']
       meta?: Record<string, never>
+    }
+    TerraformModulesRdsComponent: {
+      allow_major_version_upgrade: string
+      allow_minor_version_upgrade: string
+      deletion_protection: string
+      maintenance_window: string
+      performance_insights_enabled: string
+      id?: number
+      tf_label?: string
+      db_instance_class?: string
+      db_engine_version?: string
+      rds_family?: string
+      is_production?: string
+      namespace?: string
+      environment_name?: string
+      application?: string
+      tf_filename?: string
+      tf_path?: string
+      tf_line_start?: number
+      tf_line_end?: number
+      db_max_allocated_storage?: string
+      infrastructure_support?: string
+      business_unit?: string
     }
     NamespaceRequest: {
       data: {
@@ -3841,7 +3912,19 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: unknown
+                  veracode_results_summary?: {
+                    'static-analysis': {
+                      score: number
+                    }
+                    severity: {
+                      level: number
+                      category: {
+                        count: number
+                        severity: string
+                        categoryname: string
+                      }[]
+                    }[]
+                  }
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   trivy_last_completed_scan_date?: string
