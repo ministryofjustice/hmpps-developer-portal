@@ -206,26 +206,25 @@ describe('strapiApiClient', () => {
       } as GithubRepoRequestResponse
       fakeStrapiApi.post('/github-repo-requests').reply(200, response)
 
-      const output = await strapiApiClient.postGithubRepoRequest( {
-        "data": {
-          "github_repo": "string",
-          "repo_description": "string",
-          "base_template": "string",
-          "jira_project_keys": "string",
-          "github_project_visibility": true,
-          "product": "string",
-          "github_project_teams_write": "string",
-          "github_projects_teams_admin": "string",
-          "github_project_branch_protection_restricted_teams": "string",
-          "slack_channel_release_notify": "string",
-          "slack_channel_pipeline_notify": "string",
-          "prod_alerts_severity_label": "string",
-          "nonprod_alerts_severity_label": "string"
-        }
+      const output = await strapiApiClient.postGithubRepoRequest({
+        data: {
+          github_repo: 'Test01',
+          repo_description: 'Test Data',
+          base_template: 'abc',
+          jira_project_keys: 'abc',
+          github_project_visibility: true,
+          product: 'abc',
+          github_project_teams_write: 'hmpps-sre',
+          github_projects_teams_admin: 'hmpps-sre',
+          github_project_branch_protection_restricted_teams: 'hmpps-sre',
+          slack_channel_release_notify: 'hmpps-sre-nonprod-slack-channel',
+          slack_channel_pipeline_notify: 'hmpps-sre-nonprod-slack-channel',
+          prod_alerts_severity_label: 'hmpps-sre-prod-slack-channel',
+          nonprod_alerts_severity_label: 'hmpps-sre-nonprod-slack-channel',
+        },
       })
 
       expect(output).toEqual(response)
     })
   })
 })
-

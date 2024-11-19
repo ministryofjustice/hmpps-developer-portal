@@ -234,12 +234,10 @@ export default class StrapiApiClient {
     })
   }
 
-  async postGithubRepoRequest (request: GithubRepoRequestRequest ): Promise<GithubRepoRequestResponse> {
-    console.log(`in strapi`)
+  async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<GithubRepoRequestResponse> {
     return this.restClient.post({
       path: '/v1/github-repo-requests',
       data: request,
     })
   }
 }
-
