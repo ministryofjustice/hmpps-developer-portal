@@ -23,7 +23,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
 
   post('/github-repo-request-form', async (req, res): Promise<void> => {
     const formData = req.body
-    const requestFormData = toCreateFormData(formData)
+    const requestFormData = buildFormData(formData)
     await serviceCatalogueService.postGithubRepoRequest(requestFormData)
 
     // disable submit page, give confirmation and stay on page or redirect to new page with summary of requested data pushed to strapi
@@ -33,7 +33,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
   return router
 }
 
-export const toCreateFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
+export const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
   return {
     data: {
       github_repo: formData.github_repo?.toString(),
