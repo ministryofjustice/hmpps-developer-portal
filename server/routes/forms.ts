@@ -3,7 +3,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import { GithubRepoRequestRequest } from '../data/strapiApiTypes'
 
-export default function routes({ serviceCatalogueService, componentNameService, dataFilterService }: Services): Router {
+export default function routes({ serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -38,6 +38,7 @@ export default function routes({ serviceCatalogueService, componentNameService, 
     const formData = req.body
     const requestFormData = toCreateFormData(formData)
     const response = await serviceCatalogueService.postGithubRepoRequest(requestFormData)
+
     // disable submit page, give confirmation and stay on page or redirect to new page with summary of requested data pushed to strapi
     return res.redirect('/forms/github-repo-request-form')
   })
