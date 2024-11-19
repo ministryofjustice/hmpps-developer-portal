@@ -2571,10 +2571,12 @@ export interface components {
         github_project_teams_write?: unknown
         github_projects_teams_admin?: unknown
         github_project_branch_protection_restricted_teams?: unknown
-        slack_channel_release_notify?: string
+        slack_channel_nonprod_release_notify?: string
         slack_channel_pipeline_notify?: string
         prod_alerts_severity_label?: string
         nonprod_alerts_severity_label?: string
+        alerts_nonprod_slack_channel?: string
+        alerts_prod_slack_channel?: string
       }
     }
     GithubRepoRequestListResponseDataItem: {
@@ -2602,10 +2604,12 @@ export interface components {
       github_project_teams_write?: unknown
       github_projects_teams_admin?: unknown
       github_project_branch_protection_restricted_teams?: unknown
-      slack_channel_release_notify?: string
+      slack_channel_nonprod_release_notify?: string
       slack_channel_pipeline_notify?: string
       prod_alerts_severity_label?: string
       nonprod_alerts_severity_label?: string
+      slack_channel_pipeline_notify?: string
+      prod_alerts_severity_label?: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */

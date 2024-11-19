@@ -59,6 +59,7 @@ export default function routes({ serviceCatalogueService, componentNameService, 
 
   post('/github-repo-request-form', async (req, res): Promise<void> => {
     const formData = req.body
+    console.log(formData.github_project_branch_protection_restricted_teams?.toString().split(','))
     const requestFormData = toCreateFormData(formData)
     const response = await serviceCatalogueService.postGithubRepoRequest(requestFormData)
     // disable submit page, give confirmation and stay on page or redirect to new page with summary of requested data pushed to strapi
@@ -77,15 +78,17 @@ export const toCreateFormData = (formData: Record<string, unknown>): GithubRepoR
       jira_project_keys: formData.jira_project_keys?.toString(),
       product: formData.product?.toString(),
       github_project_visibility: JSON.parse(formData.github_project_visibility.toString()),
-      github_project_teams_write: JSON.stringify(formData.github_project_teams_write?.toString()),
-      github_projects_teams_admin: JSON.stringify(formData.github_projects_teams_admin?.toString()),
-      github_project_branch_protection_restricted_teams: JSON.stringify(
-        formData.github_project_branch_protection_restricted_teams?.toString(),
-      ),
-      slack_channel_release_notify: formData.slack_channel_release_notify?.toString(),
+      github_project_teams_write: formData.github_project_teams_write?.toString().split(','),
+      github_projects_teams_admin: formData.github_projects_teams_admin?.toString().split(','),
+      github_project_branch_protection_restricted_teams: formData.github_project_branch_protection_restricted_teams
+        ?.toString()
+        .split(','),
+      slack_channel_nonprod_release_notify: formData.slack_channel_nonprod_release_notify?.toString(),
       slack_channel_pipeline_notify: formData.slack_channel_pipeline_notify?.toString(),
       prod_alerts_severity_label: formData.prod_alerts_severity_label?.toString(),
       nonprod_alerts_severity_label: formData.nonprod_alerts_severity_label?.toString(),
+      alerts_prod_slack_channel: formData.alerts_prod_slack_channel?.toString(),
+      alerts_nonprod_slack_channel: formData.alerts_nonprod_slack_channel?.toString(),
     },
   }
 }

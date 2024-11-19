@@ -119,8 +119,8 @@
       }
     }) }}
       {{ govukInput({
-      id: "slack_channel_release_notify",
-      name: "slack_channel_release_notify",
+      id: "slack_channel_nonprod_release_notify",
+      name: "slack_channel_nonprod_release_notify",
       label: {
         text: "Slack channel for release notifications",
         classes: "govuk-!-width-three-quarters"
@@ -148,6 +148,22 @@
       name: "prod_alerts_severity_label",
       label: {
         text: "Production k8s alerts. The severity label used by prometheus to route alert notifications to slack",
+        classes: "govuk-!-width-three-quarters"
+      }
+    }) }}
+    {{ govukInput({
+      id: "alerts_prod_slack_channel",
+      name: "alerts_prod_slack_channel",
+      label: {
+        text: "Slack channel to report Production alerts",
+        classes: "govuk-!-width-three-quarters"
+      }
+    }) }}
+    {{ govukInput({
+      id: "alerts_nonprod_slack_channel",
+      name: "alerts_nonprod_slack_channel",
+      label: {
+        text: "Slack channel to report Non-production alerts",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
