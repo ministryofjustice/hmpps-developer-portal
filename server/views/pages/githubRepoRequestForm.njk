@@ -11,15 +11,15 @@
 
 <h2>After submitting this form, SRE team will run the bootstrap job to create the github repo and service catalog entries. </h2>
 
-{%- set products = [] -%}
-{%- for product in productList -%}
-  {%- set products = (products.push({
-    value: product.value,
-    text: product.text,
-    selected: product.selected
-  }), products) -%}
-{%- endfor -%}
 <form action="/forms/github-repo-request-form" method="POST">
+    {%- set products = [] -%}
+    {%- for product in productList -%}
+    {%- set products = (products.push({
+      value: product.value,
+      text: product.text,
+      selected: product.selected
+    }), products) -%}
+    {%- endfor -%}
   <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukInput({
       id: "github_repo",
@@ -29,14 +29,15 @@
         text: "Github Repository Name (Max 100 characters, only allowed special character Hyphen(-))"
       }
     }) }}
-      {{ govukSelect({
+  {{ govukSelect({
     id: "product",
     name: "product",
     label: {
       text: "Product"
-    }
+    },
+    items: products
   }) }}
-<!--      {{ govukInput({
+  {{ govukInput({
       id: "repo_description",
       name: "repo_description",
       label: {
@@ -63,10 +64,6 @@
         {
           value: "typescript",
           text: "hmpps-template-typescript"
-        },
-        {
-          value: "github_only",
-          text: "Github only"
         }]
     }) }}
       {{ govukRadios({
@@ -81,12 +78,12 @@
       },
       items: [
         {
-          id: "internal",
-          text: "Internal"
+          text: "Internal",
+          value: "false"
         },
         {
-          value: "public",
-          text: "Public"
+          text: "Public",
+          value: "true"
         }]
     }) }}
     {{ govukInput({
@@ -97,14 +94,7 @@
         text: "Jira Project Key"
       }
     }) }}
-  {{ govukSelect({
-    id: "product",
-    name: "product",
-    label: {
-      text: "Product"
-    }
-  }) }}
-      {{ govukInput({
+    {{ govukInput({
       id: "github_projects_teams_admin",
       name: "github_projects_teams_admin",
       label: {
@@ -161,7 +151,6 @@
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
--->
     {{ govukButton({
       id: "submitdata",
       name: "submitdata",

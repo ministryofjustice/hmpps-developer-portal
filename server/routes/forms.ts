@@ -1,65 +1,91 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { FieldValidationError } from '../@types/FieldValidationError'
-import config from '../config'
-import type { AgentConfig } from '../config'
-import { components } from '../@types/strapi-api'
 import { GithubRepoRequestRequest } from '../data/strapiApiTypes'
 // import { BadRequest } from 'http-errors'
+// import { FieldValidationError } from '../@types/FieldValidationError'
 
-export default function routes({ serviceCatalogueService }: Services): Router {
+export default function routes({ serviceCatalogueService, componentNameService, dataFilterService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/github-repo-request-form', async (req, res) => {
-    console.log(`in get`)
-    return res.render('pages/githubRepoRequestForm')
+    const components = await componentNameService.getAllDeployedComponents()
+    const [productList] = await dataFilterService.getDropDownLists({
+      productName: '',
+      useFormattedName: true,
+    })
+
+    return res.render('pages/githubRepoRequestForm', {
+      title: 'Github Repository Requst Form',
+      productList,
+    })
+  })
+
+  // get('/products/:productName', async (req, res) => {
+  //   const { productName } = req.params
+  //   const components = await componentNameService.getAllDeployedComponentsForProduct(productName)
+  //   const [ productList ] = await dataFilterService.getDropDownLists({
+  //     teamName: '',
+  //     productName,
+  //     serviceAreaName: '',
+  //     customComponentName: '',
+  //     useFormattedName: true,
+  //   })
+
+  //   console.log(`product list`)
+
+  //   return res.render('pages/githubRepoRequestForm', {
+  //     title: 'Github Repository Requst Form',
+  //     productList,
+  //   })
+  // })
+
+  get('/products/:productName', async (req, res) => {
+    const { productName } = req.params
+    const components = await componentNameService.getAllDeployedComponentsForProduct(productName)
+    const [productList] = await dataFilterService.getDropDownLists({
+      productName,
+      useFormattedName: true,
+    })
+
+    return res.render('pages/githubRepoRequestForm', {
+      title: 'Github Repository Requst Form',
+      productList,
+    })
   })
 
   post('/github-repo-request-form', async (req, res): Promise<void> => {
     const formData = req.body
-    const github_repo =formData.github_repo
-    // const repo_description = formdata.repo_description
-    // const base_template=formdata.base_template
-    // const github_project_visibility = formdata.github_project_visibility
-    // const jira_project_keys =formdata.jira_project_keys
-    // const product = formdata.product
-    // const github_projects_teams_admin = formdata.github_projects_teams_admin
-    // const github_project_teams_write = formdata.github_project_teams_write
-    // const github_project_branch_protection_restricted_teams = formdata.github_project_branch_protection_restricted_teams
-    // const slack_channel_release_notify = formdata.slack_channel_release_notify
-    // const slack_channel_pipeline_notify = formdata.slack_channel_pipeline_notify
-    // const nonprod_alerts_severity_label = formdata.nonprod_alerts_severity_label
-    // const prod_alerts_severity_label = formdata.prod_alerts_severity_label
-    // const { github_project_visibility } = req.body.github_project_visibility
-    // const { jira_project_keys } = req.body.jira_project_keys
-    // const { product } = req.body.product
-    // const { github_projects_teams_admin } = req.body.github_projects_teams_admin
-    // const { github_project_teams_write } = req.body
-    // const { github_project_branch_protection_restricted_teams } = req.body.github_project_branch_protection_restricted_teams
-    // const { slack_channel_release_notify } = req.body.slack_channel_release_notify
-    // const { slack_channel_pipeline_notify } = req.body.slack_channel_pipeline_notify
-    // const { nonprod_alerts_severity_label } = req.body.nonprod_alerts_severity_label
-    // const prod_alerts_severity_label = req.body.nonprod_alerts_severity_label
-    console.log(`in post `)
-    console.log(github_repo)
-    const requestFormData = toCreateFormData(formData) 
-    console.log(requestFormData)
-    const components = await serviceCatalogueService.postGithubRepoRequest(requestFormData)
-    // disable submit page 
+    const requestFormData = toCreateFormData(formData)
+    const response = await serviceCatalogueService.postGithubRepoRequest(requestFormData)
+    // disable submit page, give confirmation and stay on page or redirect to new page with summary of requested data pushed to strapi
     return res.redirect('/forms/github-repo-request-form')
   })
 
   return router
 }
 
-export const toCreateFormData= ( formData: Record<string, unknown> ): GithubRepoRequestRequest=> {
+export const toCreateFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
   return {
     data: {
       github_repo: formData.github_repo?.toString(),
-    }    
+      repo_description: formData.repo_description?.toString(),
+      base_template: formData.base_template?.toString(),
+      jira_project_keys: formData.jira_project_keys?.toString(),
+      product: formData.product?.toString(),
+      github_project_visibility: JSON.parse(formData.github_project_visibility.toString()),
+      github_project_teams_write: JSON.stringify(formData.github_project_teams_write?.toString()),
+      github_projects_teams_admin: JSON.stringify(formData.github_projects_teams_admin?.toString()),
+      github_project_branch_protection_restricted_teams: JSON.stringify(
+        formData.github_project_branch_protection_restricted_teams?.toString(),
+      ),
+      slack_channel_release_notify: formData.slack_channel_release_notify?.toString(),
+      slack_channel_pipeline_notify: formData.slack_channel_pipeline_notify?.toString(),
+      prod_alerts_severity_label: formData.prod_alerts_severity_label?.toString(),
+      nonprod_alerts_severity_label: formData.nonprod_alerts_severity_label?.toString(),
+    },
   }
 }
