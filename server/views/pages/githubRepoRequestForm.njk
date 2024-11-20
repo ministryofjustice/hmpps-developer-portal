@@ -29,14 +29,6 @@
         text: "Github Repository Name (Max 100 characters, only allowed special character Hyphen(-))"
       }
     }) }}
-  {{ govukSelect({
-    id: "product",
-    name: "product",
-    label: {
-      text: "Product"
-    },
-    items: products
-  }) }}
   {{ govukInput({
       id: "repo_description",
       name: "repo_description",
@@ -84,6 +76,14 @@
           text: "Public",
           value: "true"
         }]
+    }) }}
+    {{ govukSelect({
+      id: "product",
+      name: "product",
+      label: {
+        text: "Product"
+      },
+      items: products
     }) }}
     {{ govukInput({
       id: "jira_project_keys",
