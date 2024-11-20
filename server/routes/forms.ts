@@ -10,14 +10,10 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/github-repo-request-form', async (req, res) => {
-    const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
-      teamName: '',
+    const [productList] = await dataFilterService.getOnlyProductLists({
       productName: '',
-      serviceAreaName: '',
-      customComponentName: '',
       useFormattedName: true,
     })
-
     return res.render('pages/githubRepoRequestForm', {
       title: 'Github Repository Requst Form',
       productList,
