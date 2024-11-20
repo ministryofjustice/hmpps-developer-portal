@@ -20,7 +20,7 @@
       selected: product.selected
     }), products) -%}
     {%- endfor -%}
-  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukInput({
       id: "github_repo",
       name: "github_repo",
@@ -29,6 +29,14 @@
         text: "Github Repository Name (Max 100 characters, only allowed special character Hyphen(-))"
       }
     }) }}
+    {% if validationResults.github_repo and validationResults.github_repo %}
+        <div class="govuk-error-message">
+            {% for error in validationResults.github_repo %}
+                <p>{{ error.message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+<!--
   {{ govukInput({
       id: "repo_description",
       name: "repo_description",
@@ -166,6 +174,7 @@
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
+-->
     {{ govukButton({
       id: "submitdata",
       name: "submitdata",
