@@ -32,7 +32,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
   return router
 }
 
-export const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
+const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
   return {
     data: {
       github_repo: formData.github_repo?.toString(),
