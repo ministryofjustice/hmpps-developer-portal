@@ -29,6 +29,14 @@
         text: "Github Repository Name (Max 100 characters, only allowed special character Hyphen(-))"
       }
     }) }}
+    {% if validationResults.github_repo and validationResults.github_repo %}
+      <div class="govuk-error-message">
+          {% for error in validationResults.github_repo %}
+              <p>{{ error.message }}</p>
+          {% endfor %}
+      </div>
+    {% endif %}
+<!--
   {{ govukInput({
       id: "repo_description",
       name: "repo_description",
@@ -117,11 +125,19 @@
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
+    {{ govukInput({
+      id: "slack_channel_prod_release_notify",
+      name: "slack_channel_prod_release_notify",
+      label: {
+        text: "Slack channel for Production release notifications",
+        classes: "govuk-!-width-three-quarters"
+      }
+    }) }}
       {{ govukInput({
       id: "slack_channel_nonprod_release_notify",
       name: "slack_channel_nonprod_release_notify",
       label: {
-        text: "Slack channel for release notifications",
+        text: "Slack channel for Non-Production release notifications",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
@@ -150,6 +166,8 @@
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
+-->
+<!--
     {{ govukInput({
       id: "alerts_prod_slack_channel",
       name: "alerts_prod_slack_channel",
@@ -166,6 +184,7 @@
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
+-->
     {{ govukButton({
       id: "submitdata",
       name: "submitdata",
