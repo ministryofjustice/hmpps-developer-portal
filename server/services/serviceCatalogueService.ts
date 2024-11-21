@@ -15,6 +15,8 @@ import {
   CustomComponentView,
   NamespaceListResponseDataItem,
   Namespace,
+  GithubRepoRequestResponse,
+  GithubRepoRequestRequest,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances } from '../utils/utils'
 
@@ -234,5 +236,12 @@ export default class ServiceCatalogueService {
     const customComponentView = customComponentData.data?.attributes
 
     return customComponentView
+  }
+
+  async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<GithubRepoRequestResponse> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const response = await strapiApiClient.postGithubRepoRequest(request)
+
+    return response
   }
 }

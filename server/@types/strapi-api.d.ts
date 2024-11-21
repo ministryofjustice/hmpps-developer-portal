@@ -22,54 +22,192 @@ export interface paths {
     put: operations['put/custom-component-views/{id}']
     delete: operations['delete/custom-component-views/{id}']
   }
+  '/github-repo-requests': {
+    get: operations['get/github-repo-requests']
+    post: operations['post/github-repo-requests']
+  }
+  '/github-repo-requests/{id}': {
+    get: operations['get/github-repo-requests/{id}']
+    put: operations['put/github-repo-requests/{id}']
+    delete: operations['delete/github-repo-requests/{id}']
+  }
   '/namespaces': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/namespaces']
+    put?: never
     post: operations['post/namespaces']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/namespaces/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/namespaces/{id}']
     put: operations['put/namespaces/{id}']
+    post?: never
     delete: operations['delete/namespaces/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/products': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/products']
+    put?: never
     post: operations['post/products']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/products/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/products/{id}']
     put: operations['put/products/{id}']
+    post?: never
     delete: operations['delete/products/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/product-sets': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/product-sets']
+    put?: never
     post: operations['post/product-sets']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/product-sets/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/product-sets/{id}']
     put: operations['put/product-sets/{id}']
+    post?: never
     delete: operations['delete/product-sets/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/service-areas': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/service-areas']
+    put?: never
     post: operations['post/service-areas']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/service-areas/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/service-areas/{id}']
     put: operations['put/service-areas/{id}']
+    post?: never
     delete: operations['delete/service-areas/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/teams': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/teams']
+    put?: never
     post: operations['post/teams']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/teams/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/teams/{id}']
     put: operations['put/teams/{id}']
+    post?: never
     delete: operations['delete/teams/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/upload': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** @description Upload files */
     post: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
       /** @description Upload files */
       requestBody: {
         content: {
@@ -89,14 +227,30 @@ export interface paths {
       responses: {
         /** @description response */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['UploadFile'][]
           }
         }
       }
     }
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/upload?id={id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** @description Upload file information */
     post: {
       parameters: {
@@ -104,6 +258,9 @@ export interface paths {
           /** @description File id */
           id: string
         }
+        header?: never
+        path?: never
+        cookie?: never
       }
       /** @description Upload files */
       requestBody: {
@@ -122,97 +279,189 @@ export interface paths {
       responses: {
         /** @description response */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['UploadFile'][]
           }
         }
       }
     }
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/upload/files': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
+      requestBody?: never
       responses: {
         /** @description Get a list of files */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['UploadFile'][]
           }
         }
       }
     }
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/upload/files/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: {
       parameters: {
+        query?: never
+        header?: never
         path: {
           id: string
         }
+        cookie?: never
       }
+      requestBody?: never
       responses: {
         /** @description Get a specific file */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['UploadFile']
           }
         }
       }
     }
+    put?: never
+    post?: never
     delete: {
       parameters: {
+        query?: never
+        header?: never
         path: {
           id: string
         }
+        cookie?: never
       }
+      requestBody?: never
       responses: {
         /** @description Delete a file */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['UploadFile']
           }
         }
       }
     }
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/connect/{provider}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Login with a provider
      * @description Redirects to provider login before being redirect to /auth/{provider}/callback
      */
     get: {
       parameters: {
+        query?: never
+        header?: never
         path: {
           /** @description Provider name */
           provider: string
         }
+        cookie?: never
       }
+      requestBody?: never
       responses: {
         /** @description Redirect response */
         301: {
-          content: never
+          headers: {
+            [name: string]: unknown
+          }
+          content?: never
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/auth/local': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Local login
      * @description Returns a jwt token and user info
      */
     post: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
       requestBody: {
         content: {
-          /**
-           * @example {
-           *   "identifier": "foobar",
-           *   "password": "Test1234"
-           * }
-           */
+          /** @example {
+           *       "identifier": "foobar",
+           *       "password": "Test1234"
+           *     } */
           'application/json': {
             identifier?: string
             password?: string
@@ -222,34 +471,57 @@ export interface paths {
       responses: {
         /** @description Connection */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Users-Permissions-UserRegistration']
           }
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/auth/local/register': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Register a user
      * @description Returns a jwt token and user info
      */
     post: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
       requestBody: {
         content: {
-          /**
-           * @example {
-           *   "username": "foobar",
-           *   "email": "foo.bar@strapi.io",
-           *   "password": "Test1234"
-           * }
-           */
+          /** @example {
+           *       "username": "foobar",
+           *       "email": "foo.bar@strapi.io",
+           *       "password": "Test1234"
+           *     } */
           'application/json': {
             username?: string
             email?: string
@@ -260,54 +532,100 @@ export interface paths {
       responses: {
         /** @description Successful registration */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Users-Permissions-UserRegistration']
           }
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/auth/{provider}/callback': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /** Default Callback from provider auth */
     get: {
       parameters: {
+        query?: never
+        header?: never
         path: {
           /** @description Provider name */
           provider: string
         }
+        cookie?: never
       }
+      requestBody?: never
       responses: {
         /** @description Returns a jwt token and user info */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Users-Permissions-UserRegistration']
           }
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/auth/forgot-password': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** Send rest password email */
     post: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
       requestBody: {
         content: {
-          /**
-           * @example {
-           *   "email": "foo.bar@strapi.io"
-           * }
-           */
+          /** @example {
+           *       "email": "foo.bar@strapi.io"
+           *     } */
           'application/json': {
             email?: string
           }
@@ -316,6 +634,9 @@ export interface paths {
       responses: {
         /** @description Returns ok */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': {
               /** @enum {string} */
@@ -325,25 +646,45 @@ export interface paths {
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/auth/reset-password': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** Rest user password */
     post: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
       requestBody: {
         content: {
-          /**
-           * @example {
-           *   "password": "Test1234",
-           *   "passwordConfirmation": "Test1234",
-           *   "code": "zertyoaizndoianzodianzdonaizdoinaozdnia"
-           * }
-           */
+          /** @example {
+           *       "password": "Test1234",
+           *       "passwordConfirmation": "Test1234",
+           *       "code": "zertyoaizndoianzodianzdonaizdoinaozdnia"
+           *     } */
           'application/json': {
             password?: string
             passwordConfirmation?: string
@@ -354,22 +695,47 @@ export interface paths {
       responses: {
         /** @description Returns a jwt token and user info */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Users-Permissions-UserRegistration']
           }
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/auth/change-password': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** Update user's own password */
     post: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
       requestBody: {
         content: {
           'application/json': {
@@ -382,20 +748,37 @@ export interface paths {
       responses: {
         /** @description Returns a jwt token and user info */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Users-Permissions-UserRegistration']
           }
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/auth/email-confirmation': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /** Confirm user email */
     get: {
       parameters: {
@@ -403,24 +786,55 @@ export interface paths {
           /** @description confirmation token received by email */
           confirmation?: string
         }
+        header?: never
+        path?: never
+        cookie?: never
       }
+      requestBody?: never
       responses: {
         /** @description Redirects to the configure email confirmation redirect url */
         301: {
-          content: never
+          headers: {
+            [name: string]: unknown
+          }
+          content?: never
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/auth/send-email-confirmation': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /** Send confirmation email */
     post: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
       requestBody: {
         content: {
           'application/json': {
@@ -431,6 +845,9 @@ export interface paths {
       responses: {
         /** @description Returns email and boolean to confirm email was sent */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': {
               email?: string
@@ -441,19 +858,43 @@ export interface paths {
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users-permissions/permissions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /** Get default generated permissions */
     get: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
+      requestBody?: never
       responses: {
         /** @description Returns the permissions tree */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': {
               permissions?: components['schemas']['Users-Permissions-PermissionsTree']
@@ -462,19 +903,45 @@ export interface paths {
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users-permissions/roles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /** List roles */
     get: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
+      requestBody?: never
       responses: {
         /** @description Returns list of roles */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': {
               roles?: (components['schemas']['Users-Permissions-Role'] & {
@@ -485,18 +952,31 @@ export interface paths {
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    put?: never
     /** Create a role */
     post: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
       requestBody: components['requestBodies']['Users-Permissions-RoleRequest']
       responses: {
         /** @description Returns ok if the role was create */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': {
               /** @enum {string} */
@@ -506,25 +986,46 @@ export interface paths {
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users-permissions/roles/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /** Get a role */
     get: {
       parameters: {
+        query?: never
+        header?: never
         path: {
           /** @description role Id */
           id: string
         }
+        cookie?: never
       }
+      requestBody?: never
       responses: {
         /** @description Returns the role */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': {
               role?: components['schemas']['Users-Permissions-Role']
@@ -533,26 +1034,49 @@ export interface paths {
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users-permissions/roles/{role}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /** Update a role */
     put: {
       parameters: {
+        query?: never
+        header?: never
         path: {
           /** @description role Id */
           role: string
         }
+        cookie?: never
       }
       requestBody: components['requestBodies']['Users-Permissions-RoleRequest']
       responses: {
         /** @description Returns ok if the role was udpated */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': {
               /** @enum {string} */
@@ -562,23 +1086,34 @@ export interface paths {
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    post?: never
     /** Delete a role */
     delete: {
       parameters: {
+        query?: never
+        header?: never
         path: {
           /** @description role Id */
           role: string
         }
+        cookie?: never
       }
+      requestBody?: never
       responses: {
         /** @description Returns ok if the role was delete */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': {
               /** @enum {string} */
@@ -588,42 +1123,73 @@ export interface paths {
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /** Get list of users */
     get: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
+      requestBody?: never
       responses: {
         /** @description Returns an array of users */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Users-Permissions-User'][]
           }
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    put?: never
     /** Create a user */
     post: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
       requestBody: {
         content: {
-          /**
-           * @example {
-           *   "username": "foo",
-           *   "email": "foo@strapi.io",
-           *   "password": "foo-password"
-           * }
-           */
+          /** @example {
+           *       "username": "foo",
+           *       "email": "foo@strapi.io",
+           *       "password": "foo-password"
+           *     } */
           'application/json': {
             email: string
             username: string
@@ -634,6 +1200,9 @@ export interface paths {
       responses: {
         /** @description Returns created user info */
         201: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Users-Permissions-User'] & {
               role?: components['schemas']['Users-Permissions-Role']
@@ -642,31 +1211,55 @@ export interface paths {
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /** Get a user */
     get: {
       parameters: {
+        query?: never
+        header?: never
         path: {
           /** @description user Id */
           id: string
         }
+        cookie?: never
       }
+      requestBody?: never
       responses: {
         /** @description Returns a user */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Users-Permissions-User']
           }
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
@@ -676,20 +1269,21 @@ export interface paths {
     /** Update a user */
     put: {
       parameters: {
+        query?: never
+        header?: never
         path: {
           /** @description user Id */
           id: string
         }
+        cookie?: never
       }
       requestBody: {
         content: {
-          /**
-           * @example {
-           *   "username": "foo",
-           *   "email": "foo@strapi.io",
-           *   "password": "foo-password"
-           * }
-           */
+          /** @example {
+           *       "username": "foo",
+           *       "email": "foo@strapi.io",
+           *       "password": "foo-password"
+           *     } */
           'application/json': {
             email: string
             username: string
@@ -700,6 +1294,9 @@ export interface paths {
       responses: {
         /** @description Returns updated user info */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Users-Permissions-User'] & {
               role?: components['schemas']['Users-Permissions-Role']
@@ -708,82 +1305,150 @@ export interface paths {
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    post?: never
     /** Delete a user */
     delete: {
       parameters: {
+        query?: never
+        header?: never
         path: {
           /** @description user Id */
           id: string
         }
+        cookie?: never
       }
+      requestBody?: never
       responses: {
         /** @description Returns deleted user info */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Users-Permissions-User']
           }
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users/me': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /** Get authenticated user info */
     get: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
+      requestBody?: never
       responses: {
         /** @description Returns user info */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Users-Permissions-User']
           }
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users/count': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /** Get user count */
     get: {
+      parameters: {
+        query?: never
+        header?: never
+        path?: never
+        cookie?: never
+      }
+      requestBody?: never
       responses: {
         /** @description Returns a number */
         200: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': number
           }
         }
         /** @description Error */
         default: {
+          headers: {
+            [name: string]: unknown
+          }
           content: {
             'application/json': components['schemas']['Error']
           }
         }
       }
     }
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
 }
-
 export type webhooks = Record<string, never>
-
 export interface components {
   schemas: {
     Error: {
-      data?: Record<string, never> | Record<string, never>[] | null
+      data?: (Record<string, never> | Record<string, never>[]) | null
       error: {
         status?: number
         name?: string
@@ -807,6 +1472,8 @@ export interface components {
         github_project_visibility?: 'public' | 'internal' | 'private'
         /** @example string or id */
         product?: number | string
+        alerts_prod_slack_channel?: string
+        alerts_nonprod_slack_channel?: string
         app_insights_cloud_role_name?: string
         api?: boolean
         frontend?: boolean
@@ -836,6 +1503,9 @@ export interface components {
         veracode_policy_rules_status?: string
         trivy_last_completed_scan_date?: string
         trivy_scan_summary?: unknown
+        path_to_project?: string
+        path_to_helm_dir?: string
+        github_repo_is_template?: boolean
       }
     }
     ComponentListResponseDataItem: {
@@ -910,100 +1580,7 @@ export interface components {
                   createdBy?: {
                     data?: {
                       id?: number
-                      attributes?: {
-                        firstname?: string
-                        lastname?: string
-                        username?: string
-                        /** Format: email */
-                        email?: string
-                        resetPasswordToken?: string
-                        registrationToken?: string
-                        isActive?: boolean
-                        roles?: {
-                          data?: {
-                            id?: number
-                            attributes?: {
-                              name?: string
-                              code?: string
-                              description?: string
-                              users?: {
-                                data?: {
-                                  id?: number
-                                  attributes?: Record<string, never>
-                                }[]
-                              }
-                              permissions?: {
-                                data?: {
-                                  id?: number
-                                  attributes?: {
-                                    action?: string
-                                    actionParameters?: unknown
-                                    subject?: string
-                                    properties?: unknown
-                                    conditions?: unknown
-                                    role?: {
-                                      data?: {
-                                        id?: number
-                                        attributes?: Record<string, never>
-                                      }
-                                    }
-                                    /** Format: date-time */
-                                    createdAt?: string
-                                    /** Format: date-time */
-                                    updatedAt?: string
-                                    createdBy?: {
-                                      data?: {
-                                        id?: number
-                                        attributes?: Record<string, never>
-                                      }
-                                    }
-                                    updatedBy?: {
-                                      data?: {
-                                        id?: number
-                                        attributes?: Record<string, never>
-                                      }
-                                    }
-                                  }
-                                }[]
-                              }
-                              /** Format: date-time */
-                              createdAt?: string
-                              /** Format: date-time */
-                              updatedAt?: string
-                              createdBy?: {
-                                data?: {
-                                  id?: number
-                                  attributes?: Record<string, never>
-                                }
-                              }
-                              updatedBy?: {
-                                data?: {
-                                  id?: number
-                                  attributes?: Record<string, never>
-                                }
-                              }
-                            }
-                          }[]
-                        }
-                        blocked?: boolean
-                        preferedLanguage?: string
-                        /** Format: date-time */
-                        createdAt?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        createdBy?: {
-                          data?: {
-                            id?: number
-                            attributes?: Record<string, never>
-                          }
-                        }
-                        updatedBy?: {
-                          data?: {
-                            id?: number
-                            attributes?: Record<string, never>
-                          }
-                        }
-                      }
+                      attributes?: Record<string, never>
                     }
                   }
                   updatedBy?: {
@@ -1029,6 +1606,7 @@ export interface components {
                   }
                   ps_id?: string
                   slug?: string
+                  lead_developer?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1112,6 +1690,16 @@ export interface components {
                     ip_allow_list_enabled?: boolean
                     ip_allow_list?: unknown
                     include_in_subject_access_requests?: boolean
+                    ns?: {
+                      data?: {
+                        id?: number
+                        attributes?: Record<string, never>
+                      }
+                    }
+                    modsecurity_enabled?: boolean
+                    modsecurity_audit_enabled?: boolean
+                    modsecurity_snippet?: string
+                    build_image_tag?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -1127,6 +1715,8 @@ export interface components {
                       attributes?: Record<string, never>
                     }
                   }
+                  alerts_prod_slack_channel?: string
+                  alerts_nonprod_slack_channel?: string
                   app_insights_cloud_role_name?: string
                   api?: boolean
                   frontend?: boolean
@@ -1156,6 +1746,9 @@ export interface components {
                   veracode_policy_rules_status?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
+                  path_to_project?: string
+                  path_to_helm_dir?: string
+                  github_repo_is_template?: boolean
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1180,7 +1773,10 @@ export interface components {
             p_id?: string
             slack_channel_id?: string
             slack_channel_name?: string
+            alerts_prod_slack_channel?: string
+            alerts_nonprod_slack_channel?: string
             slug?: string
+            lead_developer?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -1202,6 +1798,8 @@ export interface components {
           }
         }
       }
+      alerts_prod_slack_channel?: string
+      alerts_nonprod_slack_channel?: string
       app_insights_cloud_role_name?: string
       api?: boolean
       frontend?: boolean
@@ -1231,6 +1829,9 @@ export interface components {
       veracode_policy_rules_status?: string
       trivy_last_completed_scan_date?: string
       trivy_scan_summary?: unknown
+      path_to_project?: string
+      path_to_helm_dir?: string
+      github_repo_is_template?: boolean
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -1274,6 +1875,196 @@ export interface components {
       ip_allow_list_enabled?: boolean
       ip_allow_list?: unknown
       include_in_subject_access_requests?: boolean
+      ns?: {
+        data?: {
+          id?: number
+          attributes?: {
+            name?: string
+            rds_instance?: {
+              id?: number
+              tf_label?: string
+              db_instance_class?: string
+              db_engine_version?: string
+              rds_family?: string
+              is_production?: string
+              namespace?: string
+              environment_name?: string
+              application?: string
+              tf_filename?: string
+              tf_path?: string
+              tf_line_start?: number
+              tf_line_end?: number
+              db_max_allocated_storage?: string
+              infrastructure_support?: string
+              business_unit?: string
+              team_name?: string
+              tf_mod_version?: string
+              performance_insights_enabled?: boolean
+              allow_major_version_upgrade?: boolean
+              allow_minor_version_upgrade?: boolean
+              deletion_protection?: boolean
+              maintenance_window?: string
+              backup_window?: string
+              db_parameter?: unknown
+            }[]
+            elasticache_cluster?: {
+              id?: number
+              application?: string
+              business_unit?: string
+              engine_version?: string
+              environment_name?: string
+              infrastructure_support?: string
+              is_production?: boolean
+              namespace?: string
+              node_type?: string
+              number_cache_clusters?: number
+              parameter_group_name?: string
+              team_name?: string
+              tf_label?: string
+              tf_filename?: string
+              tf_path?: string
+              tf_line_end?: number
+              tf_line_start?: number
+              tf_mod_version?: string
+            }[]
+            pingdom_check?: {
+              id?: number
+              tf_label?: string
+              tf_filename?: string
+              tf_path?: string
+              tf_line_start?: number
+              tf_line_end?: number
+              type?: string
+              name?: string
+              host?: string
+              url?: string
+              probefilters?: string
+              encryption?: boolean
+              resolution?: number
+              notifywhenbackup?: boolean
+              sendnotificationwhendown?: number
+              notifyagainevery?: number
+              port?: number
+              integrationids?: unknown
+            }[]
+            /** Format: date-time */
+            createdAt?: string
+            /** Format: date-time */
+            updatedAt?: string
+            /** Format: date-time */
+            publishedAt?: string
+            createdBy?: {
+              data?: {
+                id?: number
+                attributes?: {
+                  firstname?: string
+                  lastname?: string
+                  username?: string
+                  /** Format: email */
+                  email?: string
+                  resetPasswordToken?: string
+                  registrationToken?: string
+                  isActive?: boolean
+                  roles?: {
+                    data?: {
+                      id?: number
+                      attributes?: {
+                        name?: string
+                        code?: string
+                        description?: string
+                        users?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }[]
+                        }
+                        permissions?: {
+                          data?: {
+                            id?: number
+                            attributes?: {
+                              action?: string
+                              actionParameters?: unknown
+                              subject?: string
+                              properties?: unknown
+                              conditions?: unknown
+                              role?: {
+                                data?: {
+                                  id?: number
+                                  attributes?: Record<string, never>
+                                }
+                              }
+                              /** Format: date-time */
+                              createdAt?: string
+                              /** Format: date-time */
+                              updatedAt?: string
+                              createdBy?: {
+                                data?: {
+                                  id?: number
+                                  attributes?: Record<string, never>
+                                }
+                              }
+                              updatedBy?: {
+                                data?: {
+                                  id?: number
+                                  attributes?: Record<string, never>
+                                }
+                              }
+                            }
+                          }[]
+                        }
+                        /** Format: date-time */
+                        createdAt?: string
+                        /** Format: date-time */
+                        updatedAt?: string
+                        createdBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                        updatedBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                      }
+                    }[]
+                  }
+                  blocked?: boolean
+                  preferedLanguage?: string
+                  /** Format: date-time */
+                  createdAt?: string
+                  /** Format: date-time */
+                  updatedAt?: string
+                  createdBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                  updatedBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                }
+              }
+            }
+            updatedBy?: {
+              data?: {
+                id?: number
+                attributes?: Record<string, never>
+              }
+            }
+          }
+        }
+      }
+      modsecurity_enabled?: boolean
+      modsecurity_audit_enabled?: boolean
+      modsecurity_snippet?: string
+      build_image_tag?: string
     }
     CustomComponentViewRequest: {
       data: {
@@ -1321,6 +2112,196 @@ export interface components {
               ip_allow_list_enabled?: boolean
               ip_allow_list?: unknown
               include_in_subject_access_requests?: boolean
+              ns?: {
+                data?: {
+                  id?: number
+                  attributes?: {
+                    name?: string
+                    rds_instance?: {
+                      id?: number
+                      tf_label?: string
+                      db_instance_class?: string
+                      db_engine_version?: string
+                      rds_family?: string
+                      is_production?: string
+                      namespace?: string
+                      environment_name?: string
+                      application?: string
+                      tf_filename?: string
+                      tf_path?: string
+                      tf_line_start?: number
+                      tf_line_end?: number
+                      db_max_allocated_storage?: string
+                      infrastructure_support?: string
+                      business_unit?: string
+                      team_name?: string
+                      tf_mod_version?: string
+                      performance_insights_enabled?: boolean
+                      allow_major_version_upgrade?: boolean
+                      allow_minor_version_upgrade?: boolean
+                      deletion_protection?: boolean
+                      maintenance_window?: string
+                      backup_window?: string
+                      db_parameter?: unknown
+                    }[]
+                    elasticache_cluster?: {
+                      id?: number
+                      application?: string
+                      business_unit?: string
+                      engine_version?: string
+                      environment_name?: string
+                      infrastructure_support?: string
+                      is_production?: boolean
+                      namespace?: string
+                      node_type?: string
+                      number_cache_clusters?: number
+                      parameter_group_name?: string
+                      team_name?: string
+                      tf_label?: string
+                      tf_filename?: string
+                      tf_path?: string
+                      tf_line_end?: number
+                      tf_line_start?: number
+                      tf_mod_version?: string
+                    }[]
+                    pingdom_check?: {
+                      id?: number
+                      tf_label?: string
+                      tf_filename?: string
+                      tf_path?: string
+                      tf_line_start?: number
+                      tf_line_end?: number
+                      type?: string
+                      name?: string
+                      host?: string
+                      url?: string
+                      probefilters?: string
+                      encryption?: boolean
+                      resolution?: number
+                      notifywhenbackup?: boolean
+                      sendnotificationwhendown?: number
+                      notifyagainevery?: number
+                      port?: number
+                      integrationids?: unknown
+                    }[]
+                    /** Format: date-time */
+                    createdAt?: string
+                    /** Format: date-time */
+                    updatedAt?: string
+                    /** Format: date-time */
+                    publishedAt?: string
+                    createdBy?: {
+                      data?: {
+                        id?: number
+                        attributes?: {
+                          firstname?: string
+                          lastname?: string
+                          username?: string
+                          /** Format: email */
+                          email?: string
+                          resetPasswordToken?: string
+                          registrationToken?: string
+                          isActive?: boolean
+                          roles?: {
+                            data?: {
+                              id?: number
+                              attributes?: {
+                                name?: string
+                                code?: string
+                                description?: string
+                                users?: {
+                                  data?: {
+                                    id?: number
+                                    attributes?: Record<string, never>
+                                  }[]
+                                }
+                                permissions?: {
+                                  data?: {
+                                    id?: number
+                                    attributes?: {
+                                      action?: string
+                                      actionParameters?: unknown
+                                      subject?: string
+                                      properties?: unknown
+                                      conditions?: unknown
+                                      role?: {
+                                        data?: {
+                                          id?: number
+                                          attributes?: Record<string, never>
+                                        }
+                                      }
+                                      /** Format: date-time */
+                                      createdAt?: string
+                                      /** Format: date-time */
+                                      updatedAt?: string
+                                      createdBy?: {
+                                        data?: {
+                                          id?: number
+                                          attributes?: Record<string, never>
+                                        }
+                                      }
+                                      updatedBy?: {
+                                        data?: {
+                                          id?: number
+                                          attributes?: Record<string, never>
+                                        }
+                                      }
+                                    }
+                                  }[]
+                                }
+                                /** Format: date-time */
+                                createdAt?: string
+                                /** Format: date-time */
+                                updatedAt?: string
+                                createdBy?: {
+                                  data?: {
+                                    id?: number
+                                    attributes?: Record<string, never>
+                                  }
+                                }
+                                updatedBy?: {
+                                  data?: {
+                                    id?: number
+                                    attributes?: Record<string, never>
+                                  }
+                                }
+                              }
+                            }[]
+                          }
+                          blocked?: boolean
+                          preferedLanguage?: string
+                          /** Format: date-time */
+                          createdAt?: string
+                          /** Format: date-time */
+                          updatedAt?: string
+                          createdBy?: {
+                            data?: {
+                              id?: number
+                              attributes?: Record<string, never>
+                            }
+                          }
+                          updatedBy?: {
+                            data?: {
+                              id?: number
+                              attributes?: Record<string, never>
+                            }
+                          }
+                        }
+                      }
+                    }
+                    updatedBy?: {
+                      data?: {
+                        id?: number
+                        attributes?: Record<string, never>
+                      }
+                    }
+                  }
+                }
+              }
+              modsecurity_enabled?: boolean
+              modsecurity_audit_enabled?: boolean
+              modsecurity_snippet?: string
+              build_image_tag?: string
             }[]
             github_template_repo?: string
             github_only?: boolean
@@ -1374,100 +2355,7 @@ export interface components {
                         createdBy?: {
                           data?: {
                             id?: number
-                            attributes?: {
-                              firstname?: string
-                              lastname?: string
-                              username?: string
-                              /** Format: email */
-                              email?: string
-                              resetPasswordToken?: string
-                              registrationToken?: string
-                              isActive?: boolean
-                              roles?: {
-                                data?: {
-                                  id?: number
-                                  attributes?: {
-                                    name?: string
-                                    code?: string
-                                    description?: string
-                                    users?: {
-                                      data?: {
-                                        id?: number
-                                        attributes?: Record<string, never>
-                                      }[]
-                                    }
-                                    permissions?: {
-                                      data?: {
-                                        id?: number
-                                        attributes?: {
-                                          action?: string
-                                          actionParameters?: unknown
-                                          subject?: string
-                                          properties?: unknown
-                                          conditions?: unknown
-                                          role?: {
-                                            data?: {
-                                              id?: number
-                                              attributes?: Record<string, never>
-                                            }
-                                          }
-                                          /** Format: date-time */
-                                          createdAt?: string
-                                          /** Format: date-time */
-                                          updatedAt?: string
-                                          createdBy?: {
-                                            data?: {
-                                              id?: number
-                                              attributes?: Record<string, never>
-                                            }
-                                          }
-                                          updatedBy?: {
-                                            data?: {
-                                              id?: number
-                                              attributes?: Record<string, never>
-                                            }
-                                          }
-                                        }
-                                      }[]
-                                    }
-                                    /** Format: date-time */
-                                    createdAt?: string
-                                    /** Format: date-time */
-                                    updatedAt?: string
-                                    createdBy?: {
-                                      data?: {
-                                        id?: number
-                                        attributes?: Record<string, never>
-                                      }
-                                    }
-                                    updatedBy?: {
-                                      data?: {
-                                        id?: number
-                                        attributes?: Record<string, never>
-                                      }
-                                    }
-                                  }
-                                }[]
-                              }
-                              blocked?: boolean
-                              preferedLanguage?: string
-                              /** Format: date-time */
-                              createdAt?: string
-                              /** Format: date-time */
-                              updatedAt?: string
-                              createdBy?: {
-                                data?: {
-                                  id?: number
-                                  attributes?: Record<string, never>
-                                }
-                              }
-                              updatedBy?: {
-                                data?: {
-                                  id?: number
-                                  attributes?: Record<string, never>
-                                }
-                              }
-                            }
+                            attributes?: Record<string, never>
                           }
                         }
                         updatedBy?: {
@@ -1493,6 +2381,7 @@ export interface components {
                         }
                         ps_id?: string
                         slug?: string
+                        lead_developer?: string
                         /** Format: date-time */
                         createdAt?: string
                         /** Format: date-time */
@@ -1562,7 +2451,10 @@ export interface components {
                   p_id?: string
                   slack_channel_id?: string
                   slack_channel_name?: string
+                  alerts_prod_slack_channel?: string
+                  alerts_nonprod_slack_channel?: string
                   slug?: string
+                  lead_developer?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1584,6 +2476,8 @@ export interface components {
                 }
               }
             }
+            alerts_prod_slack_channel?: string
+            alerts_nonprod_slack_channel?: string
             app_insights_cloud_role_name?: string
             api?: boolean
             frontend?: boolean
@@ -1613,6 +2507,9 @@ export interface components {
             veracode_policy_rules_status?: string
             trivy_last_completed_scan_date?: string
             trivy_scan_summary?: unknown
+            path_to_project?: string
+            path_to_helm_dir?: string
+            github_repo_is_template?: boolean
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -1663,10 +2560,205 @@ export interface components {
       data?: components['schemas']['CustomComponentViewResponseDataObject']
       meta?: Record<string, never>
     }
+    GithubRepoRequestRequest: {
+      data: {
+        github_repo?: string
+        repo_description?: string
+        base_template?: string
+        jira_project_keys?: string
+        github_project_visibility?: boolean
+        product?: string
+        github_project_teams_write?: unknown
+        github_projects_teams_admin?: unknown
+        github_project_branch_protection_restricted_teams?: unknown
+        slack_channel_nonprod_release_notify?: string
+        slack_channel_pipeline_notify?: string
+        prod_alerts_severity_label?: string
+        nonprod_alerts_severity_label?: string
+        alerts_nonprod_slack_channel?: string
+        alerts_prod_slack_channel?: string
+      }
+    }
+    GithubRepoRequestListResponseDataItem: {
+      id?: number
+      attributes?: components['schemas']['GithubRepoRequest']
+    }
+    GithubRepoRequestListResponse: {
+      data?: components['schemas']['GithubRepoRequestListResponseDataItem'][]
+      meta?: {
+        pagination?: {
+          page?: number
+          pageSize?: number
+          pageCount?: number
+          total?: number
+        }
+      }
+    }
+    GithubRepoRequest: {
+      github_repo?: string
+      repo_description?: string
+      base_template?: string
+      jira_project_keys?: string
+      github_project_visibility?: boolean
+      product?: string
+      github_project_teams_write?: unknown
+      github_projects_teams_admin?: unknown
+      github_project_branch_protection_restricted_teams?: unknown
+      slack_channel_nonprod_release_notify?: string
+      slack_channel_pipeline_notify?: string
+      prod_alerts_severity_label?: string
+      nonprod_alerts_severity_label?: string
+      slack_channel_pipeline_notify?: string
+      prod_alerts_severity_label?: string
+      /** Format: date-time */
+      createdAt?: string
+      /** Format: date-time */
+      updatedAt?: string
+      /** Format: date-time */
+      publishedAt?: string
+      createdBy?: {
+        data?: {
+          id?: number
+          attributes?: {
+            firstname?: string
+            lastname?: string
+            username?: string
+            /** Format: email */
+            email?: string
+            resetPasswordToken?: string
+            registrationToken?: string
+            isActive?: boolean
+            roles?: {
+              data?: {
+                id?: number
+                attributes?: {
+                  name?: string
+                  code?: string
+                  description?: string
+                  users?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }[]
+                  }
+                  permissions?: {
+                    data?: {
+                      id?: number
+                      attributes?: {
+                        action?: string
+                        actionParameters?: unknown
+                        subject?: string
+                        properties?: unknown
+                        conditions?: unknown
+                        role?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                        /** Format: date-time */
+                        createdAt?: string
+                        /** Format: date-time */
+                        updatedAt?: string
+                        createdBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                        updatedBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                      }
+                    }[]
+                  }
+                  /** Format: date-time */
+                  createdAt?: string
+                  /** Format: date-time */
+                  updatedAt?: string
+                  createdBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                  updatedBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                }
+              }[]
+            }
+            blocked?: boolean
+            preferedLanguage?: string
+            /** Format: date-time */
+            createdAt?: string
+            /** Format: date-time */
+            updatedAt?: string
+            createdBy?: {
+              data?: {
+                id?: number
+                attributes?: Record<string, never>
+              }
+            }
+            updatedBy?: {
+              data?: {
+                id?: number
+                attributes?: Record<string, never>
+              }
+            }
+          }
+        }
+      }
+      updatedBy?: {
+        data?: {
+          id?: number
+          attributes?: Record<string, never>
+        }
+      }
+    }
+    GithubRepoRequestResponseDataObject: {
+      id?: number
+      attributes?: components['schemas']['GithubRepoRequest']
+    }
+    GithubRepoRequestResponse: {
+      data?: components['schemas']['GithubRepoRequestResponseDataObject']
+      meta?: Record<string, never>
+    }
+    TerraformModulesRdsComponent: {
+      allow_major_version_upgrade: string
+      allow_minor_version_upgrade: string
+      deletion_protection: string
+      maintenance_window: string
+      performance_insights_enabled: string
+      id?: number
+      tf_label?: string
+      db_instance_class?: string
+      db_engine_version?: string
+      rds_family?: string
+      is_production?: string
+      namespace?: string
+      environment_name?: string
+      application?: string
+      tf_filename?: string
+      tf_path?: string
+      tf_line_start?: number
+      tf_line_end?: number
+      db_max_allocated_storage?: string
+      infrastructure_support?: string
+      business_unit?: string
+    }
     NamespaceRequest: {
       data: {
         name: string
-        rds_instance?: components['schemas']['TerraformModulesRdsComponent'][]
+        rds_instance?: components['schemas']['TfModulesRdsInstanceComponent'][]
+        elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
+        pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
       }
     }
     NamespaceListResponseDataItem: {
@@ -1686,7 +2778,9 @@ export interface components {
     }
     Namespace: {
       name: string
-      rds_instance?: components['schemas']['TerraformModulesRdsComponent'][]
+      rds_instance?: components['schemas']['TfModulesRdsInstanceComponent'][]
+      elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
+      pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -1807,12 +2901,7 @@ export interface components {
       data?: components['schemas']['NamespaceResponseDataObject']
       meta?: Record<string, never>
     }
-    TerraformModulesRdsComponent: {
-      allow_major_version_upgrade: string
-      allow_minor_version_upgrade: string
-      deletion_protection: string
-      maintenance_window: string
-      performance_insights_enabled: string
+    TfModulesRdsInstanceComponent: {
       id?: number
       tf_label?: string
       db_instance_class?: string
@@ -1829,6 +2918,55 @@ export interface components {
       db_max_allocated_storage?: string
       infrastructure_support?: string
       business_unit?: string
+      team_name?: string
+      tf_mod_version?: string
+      performance_insights_enabled?: boolean
+      allow_major_version_upgrade?: boolean
+      allow_minor_version_upgrade?: boolean
+      deletion_protection?: boolean
+      maintenance_window?: string
+      backup_window?: string
+      db_parameter?: unknown
+    }
+    TfModulesElasticacheClusterComponent: {
+      id?: number
+      application?: string
+      business_unit?: string
+      engine_version?: string
+      environment_name?: string
+      infrastructure_support?: string
+      is_production?: boolean
+      namespace?: string
+      node_type?: string
+      number_cache_clusters?: number
+      parameter_group_name?: string
+      team_name?: string
+      tf_label?: string
+      tf_filename?: string
+      tf_path?: string
+      tf_line_end?: number
+      tf_line_start?: number
+      tf_mod_version?: string
+    }
+    TfModulesPingdomCheckComponent: {
+      id?: number
+      tf_label?: string
+      tf_filename?: string
+      tf_path?: string
+      tf_line_start?: number
+      tf_line_end?: number
+      type?: string
+      name?: string
+      host?: string
+      url?: string
+      probefilters?: string
+      encryption?: boolean
+      resolution?: number
+      notifywhenbackup?: boolean
+      sendnotificationwhendown?: number
+      notifyagainevery?: number
+      port?: number
+      integrationids?: unknown
     }
     ProductRequest: {
       data: {
@@ -1854,7 +2992,10 @@ export interface components {
         p_id: string
         slack_channel_id?: string
         slack_channel_name?: string
+        alerts_prod_slack_channel?: string
+        alerts_nonprod_slack_channel?: string
         slug?: string
+        lead_developer?: string
       }
     }
     ProductListResponseDataItem: {
@@ -2038,6 +3179,7 @@ export interface components {
                   }
                   ps_id?: string
                   slug?: string
+                  lead_developer?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2121,6 +3263,103 @@ export interface components {
                     ip_allow_list_enabled?: boolean
                     ip_allow_list?: unknown
                     include_in_subject_access_requests?: boolean
+                    ns?: {
+                      data?: {
+                        id?: number
+                        attributes?: {
+                          name?: string
+                          rds_instance?: {
+                            id?: number
+                            tf_label?: string
+                            db_instance_class?: string
+                            db_engine_version?: string
+                            rds_family?: string
+                            is_production?: string
+                            namespace?: string
+                            environment_name?: string
+                            application?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_start?: number
+                            tf_line_end?: number
+                            db_max_allocated_storage?: string
+                            infrastructure_support?: string
+                            business_unit?: string
+                            team_name?: string
+                            tf_mod_version?: string
+                            performance_insights_enabled?: boolean
+                            allow_major_version_upgrade?: boolean
+                            allow_minor_version_upgrade?: boolean
+                            deletion_protection?: boolean
+                            maintenance_window?: string
+                            backup_window?: string
+                            db_parameter?: unknown
+                          }[]
+                          elasticache_cluster?: {
+                            id?: number
+                            application?: string
+                            business_unit?: string
+                            engine_version?: string
+                            environment_name?: string
+                            infrastructure_support?: string
+                            is_production?: boolean
+                            namespace?: string
+                            node_type?: string
+                            number_cache_clusters?: number
+                            parameter_group_name?: string
+                            team_name?: string
+                            tf_label?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_end?: number
+                            tf_line_start?: number
+                            tf_mod_version?: string
+                          }[]
+                          pingdom_check?: {
+                            id?: number
+                            tf_label?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_start?: number
+                            tf_line_end?: number
+                            type?: string
+                            name?: string
+                            host?: string
+                            url?: string
+                            probefilters?: string
+                            encryption?: boolean
+                            resolution?: number
+                            notifywhenbackup?: boolean
+                            sendnotificationwhendown?: number
+                            notifyagainevery?: number
+                            port?: number
+                            integrationids?: unknown
+                          }[]
+                          /** Format: date-time */
+                          createdAt?: string
+                          /** Format: date-time */
+                          updatedAt?: string
+                          /** Format: date-time */
+                          publishedAt?: string
+                          createdBy?: {
+                            data?: {
+                              id?: number
+                              attributes?: Record<string, never>
+                            }
+                          }
+                          updatedBy?: {
+                            data?: {
+                              id?: number
+                              attributes?: Record<string, never>
+                            }
+                          }
+                        }
+                      }
+                    }
+                    modsecurity_enabled?: boolean
+                    modsecurity_audit_enabled?: boolean
+                    modsecurity_snippet?: string
+                    build_image_tag?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -2136,6 +3375,8 @@ export interface components {
                       attributes?: Record<string, never>
                     }
                   }
+                  alerts_prod_slack_channel?: string
+                  alerts_nonprod_slack_channel?: string
                   app_insights_cloud_role_name?: string
                   api?: boolean
                   frontend?: boolean
@@ -2148,23 +3389,14 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: {
-                    'static-analysis': {
-                      score: number
-                    }
-                    severity: {
-                      level: number
-                      category: {
-                        count: number
-                        severity: string
-                        categoryname: string
-                      }[]
-                    }[]
-                  }
+                  veracode_results_summary?: unknown
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
+                  path_to_project?: string
+                  path_to_helm_dir?: string
+                  github_repo_is_template?: boolean
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2189,7 +3421,10 @@ export interface components {
             p_id?: string
             slack_channel_id?: string
             slack_channel_name?: string
+            alerts_prod_slack_channel?: string
+            alerts_nonprod_slack_channel?: string
             slug?: string
+            lead_developer?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -2234,7 +3469,6 @@ export interface components {
       }
       delivery_manager?: string
       product_manager?: string
-      lead_developer?: string
       confluence_link?: string
       gdrive_link?: string
       service_area?: {
@@ -2252,7 +3486,10 @@ export interface components {
       p_id: string
       slack_channel_id?: string
       slack_channel_name?: string
+      alerts_prod_slack_channel?: string
+      alerts_nonprod_slack_channel?: string
       slug?: string
+      lead_developer?: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -2286,6 +3523,7 @@ export interface components {
         products?: (number | string)[]
         ps_id: string
         slug?: string
+        lead_developer?: string
       }
     }
     ProductSetListResponseDataItem: {
@@ -2468,6 +3706,7 @@ export interface components {
                   }
                   ps_id?: string
                   slug?: string
+                  lead_developer?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2551,6 +3790,103 @@ export interface components {
                     ip_allow_list_enabled?: boolean
                     ip_allow_list?: unknown
                     include_in_subject_access_requests?: boolean
+                    ns?: {
+                      data?: {
+                        id?: number
+                        attributes?: {
+                          name?: string
+                          rds_instance?: {
+                            id?: number
+                            tf_label?: string
+                            db_instance_class?: string
+                            db_engine_version?: string
+                            rds_family?: string
+                            is_production?: string
+                            namespace?: string
+                            environment_name?: string
+                            application?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_start?: number
+                            tf_line_end?: number
+                            db_max_allocated_storage?: string
+                            infrastructure_support?: string
+                            business_unit?: string
+                            team_name?: string
+                            tf_mod_version?: string
+                            performance_insights_enabled?: boolean
+                            allow_major_version_upgrade?: boolean
+                            allow_minor_version_upgrade?: boolean
+                            deletion_protection?: boolean
+                            maintenance_window?: string
+                            backup_window?: string
+                            db_parameter?: unknown
+                          }[]
+                          elasticache_cluster?: {
+                            id?: number
+                            application?: string
+                            business_unit?: string
+                            engine_version?: string
+                            environment_name?: string
+                            infrastructure_support?: string
+                            is_production?: boolean
+                            namespace?: string
+                            node_type?: string
+                            number_cache_clusters?: number
+                            parameter_group_name?: string
+                            team_name?: string
+                            tf_label?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_end?: number
+                            tf_line_start?: number
+                            tf_mod_version?: string
+                          }[]
+                          pingdom_check?: {
+                            id?: number
+                            tf_label?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_start?: number
+                            tf_line_end?: number
+                            type?: string
+                            name?: string
+                            host?: string
+                            url?: string
+                            probefilters?: string
+                            encryption?: boolean
+                            resolution?: number
+                            notifywhenbackup?: boolean
+                            sendnotificationwhendown?: number
+                            notifyagainevery?: number
+                            port?: number
+                            integrationids?: unknown
+                          }[]
+                          /** Format: date-time */
+                          createdAt?: string
+                          /** Format: date-time */
+                          updatedAt?: string
+                          /** Format: date-time */
+                          publishedAt?: string
+                          createdBy?: {
+                            data?: {
+                              id?: number
+                              attributes?: Record<string, never>
+                            }
+                          }
+                          updatedBy?: {
+                            data?: {
+                              id?: number
+                              attributes?: Record<string, never>
+                            }
+                          }
+                        }
+                      }
+                    }
+                    modsecurity_enabled?: boolean
+                    modsecurity_audit_enabled?: boolean
+                    modsecurity_snippet?: string
+                    build_image_tag?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -2566,6 +3902,8 @@ export interface components {
                       attributes?: Record<string, never>
                     }
                   }
+                  alerts_prod_slack_channel?: string
+                  alerts_nonprod_slack_channel?: string
                   app_insights_cloud_role_name?: string
                   api?: boolean
                   frontend?: boolean
@@ -2595,6 +3933,9 @@ export interface components {
                   veracode_policy_rules_status?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
+                  path_to_project?: string
+                  path_to_helm_dir?: string
+                  github_repo_is_template?: boolean
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2619,7 +3960,10 @@ export interface components {
             p_id?: string
             slack_channel_id?: string
             slack_channel_name?: string
+            alerts_prod_slack_channel?: string
+            alerts_nonprod_slack_channel?: string
             slug?: string
+            lead_developer?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -2643,6 +3987,7 @@ export interface components {
       }
       ps_id: string
       slug?: string
+      lead_developer?: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -2860,6 +4205,7 @@ export interface components {
                   }
                   ps_id?: string
                   slug?: string
+                  lead_developer?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -2943,6 +4289,103 @@ export interface components {
                     ip_allow_list_enabled?: boolean
                     ip_allow_list?: unknown
                     include_in_subject_access_requests?: boolean
+                    ns?: {
+                      data?: {
+                        id?: number
+                        attributes?: {
+                          name?: string
+                          rds_instance?: {
+                            id?: number
+                            tf_label?: string
+                            db_instance_class?: string
+                            db_engine_version?: string
+                            rds_family?: string
+                            is_production?: string
+                            namespace?: string
+                            environment_name?: string
+                            application?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_start?: number
+                            tf_line_end?: number
+                            db_max_allocated_storage?: string
+                            infrastructure_support?: string
+                            business_unit?: string
+                            team_name?: string
+                            tf_mod_version?: string
+                            performance_insights_enabled?: boolean
+                            allow_major_version_upgrade?: boolean
+                            allow_minor_version_upgrade?: boolean
+                            deletion_protection?: boolean
+                            maintenance_window?: string
+                            backup_window?: string
+                            db_parameter?: unknown
+                          }[]
+                          elasticache_cluster?: {
+                            id?: number
+                            application?: string
+                            business_unit?: string
+                            engine_version?: string
+                            environment_name?: string
+                            infrastructure_support?: string
+                            is_production?: boolean
+                            namespace?: string
+                            node_type?: string
+                            number_cache_clusters?: number
+                            parameter_group_name?: string
+                            team_name?: string
+                            tf_label?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_end?: number
+                            tf_line_start?: number
+                            tf_mod_version?: string
+                          }[]
+                          pingdom_check?: {
+                            id?: number
+                            tf_label?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_start?: number
+                            tf_line_end?: number
+                            type?: string
+                            name?: string
+                            host?: string
+                            url?: string
+                            probefilters?: string
+                            encryption?: boolean
+                            resolution?: number
+                            notifywhenbackup?: boolean
+                            sendnotificationwhendown?: number
+                            notifyagainevery?: number
+                            port?: number
+                            integrationids?: unknown
+                          }[]
+                          /** Format: date-time */
+                          createdAt?: string
+                          /** Format: date-time */
+                          updatedAt?: string
+                          /** Format: date-time */
+                          publishedAt?: string
+                          createdBy?: {
+                            data?: {
+                              id?: number
+                              attributes?: Record<string, never>
+                            }
+                          }
+                          updatedBy?: {
+                            data?: {
+                              id?: number
+                              attributes?: Record<string, never>
+                            }
+                          }
+                        }
+                      }
+                    }
+                    modsecurity_enabled?: boolean
+                    modsecurity_audit_enabled?: boolean
+                    modsecurity_snippet?: string
+                    build_image_tag?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -2958,6 +4401,8 @@ export interface components {
                       attributes?: Record<string, never>
                     }
                   }
+                  alerts_prod_slack_channel?: string
+                  alerts_nonprod_slack_channel?: string
                   app_insights_cloud_role_name?: string
                   api?: boolean
                   frontend?: boolean
@@ -2970,23 +4415,14 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: {
-                    'static-analysis': {
-                      score: number
-                    }
-                    severity: {
-                      level: number
-                      category: {
-                        count: number
-                        severity: string
-                        categoryname: string
-                      }[]
-                    }[]
-                  }
+                  veracode_results_summary?: unknown
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
+                  path_to_project?: string
+                  path_to_helm_dir?: string
+                  github_repo_is_template?: boolean
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -3011,7 +4447,10 @@ export interface components {
             p_id?: string
             slack_channel_id?: string
             slack_channel_name?: string
+            alerts_prod_slack_channel?: string
+            alerts_nonprod_slack_channel?: string
             slug?: string
+            lead_developer?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -3252,6 +4691,7 @@ export interface components {
                   }
                   ps_id?: string
                   slug?: string
+                  lead_developer?: string
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -3335,6 +4775,103 @@ export interface components {
                     ip_allow_list_enabled?: boolean
                     ip_allow_list?: unknown
                     include_in_subject_access_requests?: boolean
+                    ns?: {
+                      data?: {
+                        id?: number
+                        attributes?: {
+                          name?: string
+                          rds_instance?: {
+                            id?: number
+                            tf_label?: string
+                            db_instance_class?: string
+                            db_engine_version?: string
+                            rds_family?: string
+                            is_production?: string
+                            namespace?: string
+                            environment_name?: string
+                            application?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_start?: number
+                            tf_line_end?: number
+                            db_max_allocated_storage?: string
+                            infrastructure_support?: string
+                            business_unit?: string
+                            team_name?: string
+                            tf_mod_version?: string
+                            performance_insights_enabled?: boolean
+                            allow_major_version_upgrade?: boolean
+                            allow_minor_version_upgrade?: boolean
+                            deletion_protection?: boolean
+                            maintenance_window?: string
+                            backup_window?: string
+                            db_parameter?: unknown
+                          }[]
+                          elasticache_cluster?: {
+                            id?: number
+                            application?: string
+                            business_unit?: string
+                            engine_version?: string
+                            environment_name?: string
+                            infrastructure_support?: string
+                            is_production?: boolean
+                            namespace?: string
+                            node_type?: string
+                            number_cache_clusters?: number
+                            parameter_group_name?: string
+                            team_name?: string
+                            tf_label?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_end?: number
+                            tf_line_start?: number
+                            tf_mod_version?: string
+                          }[]
+                          pingdom_check?: {
+                            id?: number
+                            tf_label?: string
+                            tf_filename?: string
+                            tf_path?: string
+                            tf_line_start?: number
+                            tf_line_end?: number
+                            type?: string
+                            name?: string
+                            host?: string
+                            url?: string
+                            probefilters?: string
+                            encryption?: boolean
+                            resolution?: number
+                            notifywhenbackup?: boolean
+                            sendnotificationwhendown?: number
+                            notifyagainevery?: number
+                            port?: number
+                            integrationids?: unknown
+                          }[]
+                          /** Format: date-time */
+                          createdAt?: string
+                          /** Format: date-time */
+                          updatedAt?: string
+                          /** Format: date-time */
+                          publishedAt?: string
+                          createdBy?: {
+                            data?: {
+                              id?: number
+                              attributes?: Record<string, never>
+                            }
+                          }
+                          updatedBy?: {
+                            data?: {
+                              id?: number
+                              attributes?: Record<string, never>
+                            }
+                          }
+                        }
+                      }
+                    }
+                    modsecurity_enabled?: boolean
+                    modsecurity_audit_enabled?: boolean
+                    modsecurity_snippet?: string
+                    build_image_tag?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -3350,6 +4887,8 @@ export interface components {
                       attributes?: Record<string, never>
                     }
                   }
+                  alerts_prod_slack_channel?: string
+                  alerts_nonprod_slack_channel?: string
                   app_insights_cloud_role_name?: string
                   api?: boolean
                   frontend?: boolean
@@ -3362,23 +4901,14 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: {
-                    'static-analysis': {
-                      score: number
-                    }
-                    severity: {
-                      level: number
-                      category: {
-                        count: number
-                        severity: string
-                        categoryname: string
-                      }[]
-                    }[]
-                  }
+                  veracode_results_summary?: unknown
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
+                  path_to_project?: string
+                  path_to_helm_dir?: string
+                  github_repo_is_template?: boolean
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -3403,7 +4933,10 @@ export interface components {
             p_id?: string
             slack_channel_id?: string
             slack_channel_name?: string
+            alerts_prod_slack_channel?: string
+            alerts_nonprod_slack_channel?: string
             slug?: string
+            lead_developer?: string
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -3538,23 +5071,21 @@ export interface components {
   requestBodies: {
     'Users-Permissions-RoleRequest': {
       content: {
-        /**
-         * @example {
-         *   "name": "foo",
-         *   "description": "role foo",
-         *   "permissions": {
-         *     "api::content-type.content-type": {
-         *       "controllers": {
-         *         "controllerA": {
-         *           "find": {
-         *             "enabled": true
+        /** @example {
+         *       "name": "foo",
+         *       "description": "role foo",
+         *       "permissions": {
+         *         "api::content-type.content-type": {
+         *           "controllers": {
+         *             "controllerA": {
+         *               "find": {
+         *                 "enabled": true
+         *               }
+         *             }
          *           }
          *         }
          *       }
-         *     }
-         *   }
-         * }
-         */
+         *     } */
         'application/json': {
           name?: string
           description?: string
@@ -3567,11 +5098,7 @@ export interface components {
   headers: never
   pathItems: never
 }
-
 export type $defs = Record<string, never>
-
-export type external = Record<string, never>
-
 export interface operations {
   'get/components': {
     parameters: {
@@ -3593,44 +5120,68 @@ export interface operations {
         /** @description Relations to return */
         populate?: string
         /** @description Filters to apply */
-        filters?: Record<string, never>
+        filters?: {
+          [key: string]: unknown
+        }
         /** @description Locale to apply */
         locale?: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ComponentListResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -3638,6 +5189,12 @@ export interface operations {
     }
   }
   'post/components': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['ComponentRequest']
@@ -3646,36 +5203,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ComponentResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -3684,43 +5259,65 @@ export interface operations {
   }
   'get/components/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ComponentResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -3729,9 +5326,12 @@ export interface operations {
   }
   'put/components/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -3741,36 +5341,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ComponentResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -3779,43 +5397,65 @@ export interface operations {
   }
   'delete/components/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': number
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -3842,44 +5482,68 @@ export interface operations {
         /** @description Relations to return */
         populate?: string
         /** @description Filters to apply */
-        filters?: Record<string, never>
+        filters?: {
+          [key: string]: unknown
+        }
         /** @description Locale to apply */
         locale?: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['CustomComponentViewListResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -3887,6 +5551,12 @@ export interface operations {
     }
   }
   'post/custom-component-views': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CustomComponentViewRequest']
@@ -3895,36 +5565,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['CustomComponentViewResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -3933,43 +5621,65 @@ export interface operations {
   }
   'get/custom-component-views/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['CustomComponentViewResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -3978,9 +5688,12 @@ export interface operations {
   }
   'put/custom-component-views/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -3990,36 +5703,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['CustomComponentViewResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4028,43 +5759,427 @@ export interface operations {
   }
   'delete/custom-component-views/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': number
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/github-repo-requests': {
+    parameters: {
+      query?: {
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
+        sort?: string
+        /** @description Return page/pageSize (default: true) */
+        'pagination[withCount]'?: boolean
+        /** @description Page number (default: 0) */
+        'pagination[page]'?: number
+        /** @description Page size (default: 25) */
+        'pagination[pageSize]'?: number
+        /** @description Offset value (default: 0) */
+        'pagination[start]'?: number
+        /** @description Number of entities to return (default: 25) */
+        'pagination[limit]'?: number
+        /** @description Fields to return (ex: title,author) */
+        fields?: string
+        /** @description Relations to return */
+        populate?: string
+        /** @description Filters to apply */
+        filters?: {
+          [key: string]: unknown
+        }
+        /** @description Locale to apply */
+        locale?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubRepoRequestListResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'post/github-repo-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GithubRepoRequestRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubRepoRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/github-repo-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubRepoRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'put/github-repo-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GithubRepoRequestRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubRepoRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'delete/github-repo-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': number
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4091,44 +6206,68 @@ export interface operations {
         /** @description Relations to return */
         populate?: string
         /** @description Filters to apply */
-        filters?: Record<string, never>
+        filters?: {
+          [key: string]: unknown
+        }
         /** @description Locale to apply */
         locale?: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['NamespaceListResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4136,6 +6275,12 @@ export interface operations {
     }
   }
   'post/namespaces': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['NamespaceRequest']
@@ -4144,36 +6289,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['NamespaceResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4182,43 +6345,65 @@ export interface operations {
   }
   'get/namespaces/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['NamespaceResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4227,9 +6412,12 @@ export interface operations {
   }
   'put/namespaces/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -4239,36 +6427,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['NamespaceResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4277,43 +6483,65 @@ export interface operations {
   }
   'delete/namespaces/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': number
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4340,44 +6568,68 @@ export interface operations {
         /** @description Relations to return */
         populate?: string
         /** @description Filters to apply */
-        filters?: Record<string, never>
+        filters?: {
+          [key: string]: unknown
+        }
         /** @description Locale to apply */
         locale?: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ProductListResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4385,6 +6637,12 @@ export interface operations {
     }
   }
   'post/products': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['ProductRequest']
@@ -4393,36 +6651,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ProductResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4431,43 +6707,65 @@ export interface operations {
   }
   'get/products/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ProductResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4476,9 +6774,12 @@ export interface operations {
   }
   'put/products/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -4488,36 +6789,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ProductResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4526,43 +6845,65 @@ export interface operations {
   }
   'delete/products/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': number
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4589,44 +6930,68 @@ export interface operations {
         /** @description Relations to return */
         populate?: string
         /** @description Filters to apply */
-        filters?: Record<string, never>
+        filters?: {
+          [key: string]: unknown
+        }
         /** @description Locale to apply */
         locale?: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ProductSetListResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4634,6 +6999,12 @@ export interface operations {
     }
   }
   'post/product-sets': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['ProductSetRequest']
@@ -4642,36 +7013,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ProductSetResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4680,43 +7069,65 @@ export interface operations {
   }
   'get/product-sets/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ProductSetResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4725,9 +7136,12 @@ export interface operations {
   }
   'put/product-sets/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -4737,36 +7151,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ProductSetResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4775,43 +7207,65 @@ export interface operations {
   }
   'delete/product-sets/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': number
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4838,44 +7292,68 @@ export interface operations {
         /** @description Relations to return */
         populate?: string
         /** @description Filters to apply */
-        filters?: Record<string, never>
+        filters?: {
+          [key: string]: unknown
+        }
         /** @description Locale to apply */
         locale?: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ServiceAreaListResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4883,6 +7361,12 @@ export interface operations {
     }
   }
   'post/service-areas': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['ServiceAreaRequest']
@@ -4891,36 +7375,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ServiceAreaResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4929,43 +7431,65 @@ export interface operations {
   }
   'get/service-areas/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ServiceAreaResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -4974,9 +7498,12 @@ export interface operations {
   }
   'put/service-areas/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -4986,36 +7513,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ServiceAreaResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -5024,43 +7569,65 @@ export interface operations {
   }
   'delete/service-areas/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': number
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -5087,44 +7654,68 @@ export interface operations {
         /** @description Relations to return */
         populate?: string
         /** @description Filters to apply */
-        filters?: Record<string, never>
+        filters?: {
+          [key: string]: unknown
+        }
         /** @description Locale to apply */
         locale?: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['TeamListResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -5132,6 +7723,12 @@ export interface operations {
     }
   }
   'post/teams': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['TeamRequest']
@@ -5140,36 +7737,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['TeamResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -5178,43 +7793,65 @@ export interface operations {
   }
   'get/teams/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['TeamResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -5223,9 +7860,12 @@ export interface operations {
   }
   'put/teams/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -5235,36 +7875,54 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['TeamResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
@@ -5273,43 +7931,65 @@ export interface operations {
   }
   'delete/teams/{id}': {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: number
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': number
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Forbidden */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Not Found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }
       }
       /** @description Internal Server Error */
       500: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['Error']
         }

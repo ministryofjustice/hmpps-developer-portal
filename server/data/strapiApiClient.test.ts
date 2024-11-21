@@ -12,6 +12,7 @@ import {
   ProductResponse,
   ServiceAreaListResponse,
   ServiceAreaResponse,
+  GithubRepoRequestResponse,
 } from './strapiApiTypes'
 
 describe('strapiApiClient', () => {
@@ -195,6 +196,35 @@ describe('strapiApiClient', () => {
         const output = await strapiApiClient.getServiceArea({ serviceAreaId: 1 })
         expect(output).toEqual(serviceArea)
       })
+    })
+  })
+
+  describe('postGithubRepoRequest', () => {
+    it('should insert a single form request', async () => {
+      const response = {
+        data: { id: 1, attributes: { name: 'GIthub repo request form' } },
+      } as GithubRepoRequestResponse
+      fakeStrapiApi.post('/github-repo-requests').reply(200, response)
+
+      const output = await strapiApiClient.postGithubRepoRequest({
+        data: {
+          github_repo: 'Test01',
+          repo_description: 'Test Data',
+          base_template: 'abc',
+          jira_project_keys: 'abc',
+          github_project_visibility: true,
+          product: 'abc',
+          github_project_teams_write: 'hmpps-sre',
+          github_projects_teams_admin: 'hmpps-sre',
+          github_project_branch_protection_restricted_teams: 'hmpps-sre',
+          slack_channel_nonprod_release_notify: 'hmpps-sre-nonprod-slack-channel',
+          slack_channel_pipeline_notify: 'hmpps-sre-nonprod-slack-channel',
+          prod_alerts_severity_label: 'hmpps-sre-prod-slack-channel',
+          nonprod_alerts_severity_label: 'hmpps-sre-nonprod-slack-channel',
+        },
+      })
+
+      expect(output).toEqual(response)
     })
   })
 })

@@ -15,6 +15,8 @@ import {
   CustomComponentListResponse,
   CustomComponentResponse,
   NamespaceListResponse,
+  GithubRepoRequestResponse,
+  GithubRepoRequestRequest,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
@@ -222,6 +224,20 @@ export default class StrapiApiClient {
       query: new URLSearchParams({
         populate: populate.join(','),
       }).toString(),
+    })
+  }
+
+  async getGithubRepoRequests(): Promise<GithubRepoRequestResponse> {
+    return this.restClient.get({
+      path: '/v1/github-repo-requests',
+      query: 'populate=github_repo',
+    })
+  }
+
+  async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<GithubRepoRequestResponse> {
+    return this.restClient.post({
+      path: '/v1/github-repo-requests',
+      data: request,
     })
   }
 }
