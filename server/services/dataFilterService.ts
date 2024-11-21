@@ -121,4 +121,14 @@ export default class DataFilterService {
       await this.getCustomComponentsDropDownList({ customComponentName, useFormattedName }),
     ])
   }
+
+  async getOnlyProductLists({
+    productName = '',
+    useFormattedName = false,
+  }: {
+    productName?: string
+    useFormattedName?: boolean
+  }) {
+    return Promise.all([await this.getProductsDropDownList({ productName, useFormattedName })])
+  }
 }

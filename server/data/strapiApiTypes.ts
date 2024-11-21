@@ -36,3 +36,8 @@ export type Namespace = components['schemas']['Namespace']
 export type NamespaceResponse = components['schemas']['NamespaceResponse']
 export type NamespaceListResponse = components['schemas']['NamespaceListResponse']
 export type NamespaceListResponseDataItem = components['schemas']['NamespaceListResponseDataItem']
+
+export type GithubRepoRequestRequest = components['schemas']['GithubRepoRequestRequest']
+export type GithubRepoRequestResponse = components['schemas']['GithubRepoRequestResponse']
+export type GithubRepoRequestListResponse = components['schemas']['GithubRepoRequestListResponse']
+export type GithubRepoRequestListResponseDataItem = components['schemas']['GithubRepoRequestListResponseDataItem']
