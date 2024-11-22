@@ -1,13 +1,13 @@
-{% set mainClasses = "govuk-main-wrapper--l" %}
-
+{% extends "../partials/layout.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% set mainClasses = "govuk-main-wrapper--l" %}
 
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: "Request submitted.",
-        html: "Your request for <br><strong>{{ repoName }}</strong> submitted successfully."
+        html: "Your request for <br><strong> {{ repoName }} </strong> submitted successfully."
       }) }}
 
 
@@ -19,6 +19,7 @@
       <p class="govuk-body">
         Please contact SRE team in #ask-prisons-digital-sre slack channel.
       </p>
+       <a class="govuk-button" href="/">Return to Home</a>
 
     </div>
   </div>
