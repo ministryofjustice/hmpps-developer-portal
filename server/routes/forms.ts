@@ -141,7 +141,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
         const requesterEmail = body.requester_email?.toString()
         if (!requesterEmail.endsWith('@digital.justice.gov.uk')) {
           validationErrors.push({
-            field: 'github_repo',
+            field: 'requesterEmail',
             message: 'Valid email address is only with @digital.justice.gov.uk',
           })
         }
