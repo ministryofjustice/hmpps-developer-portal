@@ -14,6 +14,7 @@
 <h2>After submitting this form, SRE team will run the bootstrap job to create the github repo and service catalog entries. </h2>
 
 <form action="/forms/github-repo-request-form" method="POST">
+    {%- set teams = [] -%}
     {%- set products = [] -%}
     {%- for product in productList -%}
     {%- set products = (products.push({
@@ -21,6 +22,13 @@
       text: product.text,
       selected: product.selected
     }), products) -%}
+    {%- endfor -%}
+    {%- for team in teamList -%}
+      {%- set teams = (teams.push({
+        value: team.value,
+        text: team.text,
+        selected: team.selected
+      }), teams) -%}
     {%- endfor -%}
     
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -33,7 +41,6 @@
       },
       errorMessage: validationErrors | findError('github_repo')
     }) }}
-<!--
       {{ govukInput({
       id: "repo_description",
       name: "repo_description",
@@ -43,11 +50,11 @@
       },
       errorMessage: validationErrors | findError('repo_description')
     }) }}
-
     {{ govukRadios({
       classes: "govuk-radios--inline",
       idPrefix: "base_template",
       name: "base_template",
+      errorMessage: validationErrors | findError('base_template'),
       fieldset: {
         legend: {
           text: "Github template repository",
@@ -68,6 +75,7 @@
       classes: "govuk-radios--inline",
       idPrefix: "github_project_visibility",
       name: "github_project_visibility",
+      errorMessage: validationErrors | findError('github_project_visibility'),
       fieldset: {
         legend: {
           text: "Github Repositiory Visibility",
@@ -90,7 +98,8 @@
       label: {
         text: "Product"
       },
-      items: products
+      items: products,
+      errorMessage: validationErrors | findError('product')
     }) }}
     {{ govukInput({
       id: "jira_project_keys",
@@ -103,6 +112,7 @@
     {{ govukInput({
       id: "github_projects_teams_admin",
       name: "github_projects_teams_admin",
+      errorMessage: validationErrors | findError('github_projects_teams_admin'),
       label: {
         text: "Github Repository Admin Teams (Seperated by comma without spaces eg: hmpps-sre,hmpps-developers)",
         classes: "govuk-!-width-three-quarters"
@@ -111,6 +121,7 @@
     {{ govukInput({
       id: "github_project_teams_write",
       name: "github_project_teams_write",
+      errorMessage: validationErrors | findError('github_project_teams_write'),
       label: {
         text: "Github Repository Teams with write permissions (seperated by comma without spaces eg: hmpps-sre,hmpps-developers)",
         classes: "govuk-!-width-three-quarters"
@@ -119,6 +130,7 @@
     {{ govukInput({
       id: "github_project_branch_protection_restricted_teams",
       name: "github_project_branch_protection_restricted_teams",
+      errorMessage: validationErrors | findError('github_project_branch_protection_restricted_teams'),
       label: {
         text: "Github Project Teams Branch protection restricted teams (seperated by comma without spaces eg: hmpps-sre,hmpps-developers)",
         classes: "govuk-!-width-three-quarters"
@@ -127,6 +139,7 @@
     {{ govukInput({
       id: "slack_channel_prod_release_notify",
       name: "slack_channel_prod_release_notify",
+      errorMessage: validationErrors | findError('slack_channel_prod_release_notify'),
       label: {
         text: "Slack channel for Production release notifications",
         classes: "govuk-!-width-three-quarters"
@@ -135,14 +148,16 @@
       {{ govukInput({
       id: "slack_channel_nonprod_release_notify",
       name: "slack_channel_nonprod_release_notify",
+      errorMessage: validationErrors | findError('slack_channel_nonprod_release_notify'),
       label: {
         text: "Slack channel for Non-Production release notifications",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
     {{ govukInput({
-      id: "slack_channel_pipeline_notify",
-      name: "slack_channel_pipeline_notify",
+      id: "slack_channel_security_scans_notify",
+      name: "slack_channel_security_scans_notify",
+      errorMessage: validationErrors | findError('slack_channel_security_scans_notify'),
       label: {
         text: "Slack channel for pipeline security notifications",
         classes: "govuk-!-width-three-quarters"
@@ -152,6 +167,7 @@
     {{ govukInput({
       id: "nonprod_alerts_severity_label",
       name: "nonprod_alerts_severity_label",
+      errorMessage: validationErrors | findError('nonprod_alerts_severity_label'),
       label: {
         text: "Non-prod k8s alerts. The severity label used by prometheus to route alert notifications to slack",
         classes: "govuk-!-width-three-quarters"
@@ -160,30 +176,40 @@
       {{ govukInput({
       id: "prod_alerts_severity_label",
       name: "prod_alerts_severity_label",
+      errorMessage: validationErrors | findError('prod_alerts_severity_label'),
       label: {
         text: "Production k8s alerts. The severity label used by prometheus to route alert notifications to slack",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
--->
-<!--
+    <h3> Please Enter your contact details to send notification after processing request. </a></h3>
     {{ govukInput({
-      id: "alerts_prod_slack_channel",
-      name: "alerts_prod_slack_channel",
+      id: "requester_name",
+      name: "requester_name",
+      errorMessage: validationErrors | findError('requester_name'),
       label: {
-        text: "Slack channel to report Production alerts",
+        text: "Name",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
     {{ govukInput({
-      id: "alerts_nonprod_slack_channel",
-      name: "alerts_nonprod_slack_channel",
+      id: "requester_email",
+      name: "requester_email",
+      errorMessage: validationErrors | findError('requester_email'),
       label: {
-        text: "Slack channel to report Non-production alerts",
+        text: "Email ID",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
--->
+    {{ govukSelect({
+      id: "team",
+      name: "team",
+      label: {
+        text: "Team"
+      },
+      items: teams,
+      errorMessage: validationErrors | findError('requester_team')
+    }) }}
     {{ govukButton({
       id: "submitdata",
       name: "submitdata",

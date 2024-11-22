@@ -2569,7 +2569,7 @@ export interface components {
         github_project_visibility?: boolean
         product?: string
         slack_channel_prod_release_notify?: string
-        slack_channel_pipeline_notify?: string
+        slack_channel_security_scans_notify?: string
         prod_alerts_severity_label?: string
         nonprod_alerts_severity_label?: string
         github_project_teams_write?: unknown
@@ -2578,6 +2578,10 @@ export interface components {
         alerts_nonprod_slack_channel?: string
         alerts_prod_slack_channel?: string
         slack_channel_nonprod_release_notify?: string
+        request_processed_status?: boolean
+        requester_name?: string
+        requester_email?: string
+        requester_team?: string
       }
     }
     GithubRepoRequestListResponseDataItem: {
@@ -2603,7 +2607,7 @@ export interface components {
       github_project_visibility?: boolean
       product?: string
       slack_channel_prod_release_notify?: string
-      slack_channel_pipeline_notify?: string
+      slack_channel_security_scans_notify?: string
       prod_alerts_severity_label?: string
       nonprod_alerts_severity_label?: string
       github_project_teams_write?: unknown
@@ -2612,6 +2616,10 @@ export interface components {
       alerts_nonprod_slack_channel?: string
       alerts_prod_slack_channel?: string
       slack_channel_nonprod_release_notify?: string
+      request_processed_status?: boolean
+      requester_name?: string
+      requester_email?: string
+      requester_team?: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */

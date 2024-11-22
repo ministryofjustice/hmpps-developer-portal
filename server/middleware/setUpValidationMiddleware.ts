@@ -1,4 +1,5 @@
 import express, { Router, Request, Response, NextFunction } from 'express'
+import flash from 'connect-flash'
 import { FieldValidationError } from '../@types/FieldValidationError'
 
 export type Validator = (body: Record<string, unknown>) => FieldValidationError[]
@@ -30,6 +31,7 @@ export function validationMiddleware(req: Request, res: Response, next: NextFunc
 
 export default function setUpValidationMiddleware(): Router {
   const router = express.Router()
+  router.use(flash())
   router.use(validationMiddleware)
   return router
 }

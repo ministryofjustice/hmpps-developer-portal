@@ -11,6 +11,7 @@ import setUpStaticResources from './middleware/setUpStaticResources'
 import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
+import setUpValidationMiddleware from './middleware/setUpValidationMiddleware'
 
 import indexRoutes from './routes'
 import productRoutes from './routes/products'
@@ -63,6 +64,7 @@ export default function createApp(services: Services): express.Application {
   app.use('/product-dependencies', productDependencyRoutes(services))
   app.use('/missing-from-catalogue', missingFromCatalogueRoutes(services))
   app.use('/namespaces', namespacesRoutes(services))
+  app.use(setUpValidationMiddleware())
   app.use('/forms', formsRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))

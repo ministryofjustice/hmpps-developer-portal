@@ -50,16 +50,16 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
         text: item.message,
       }
     }
-      return null
-    })
-  
+    return null
+  })
+
   njkEnv.addFilter('errorSummaryList', (array: FieldValidationError[] = []) => {
     return array.map(error => ({
       text: error.message,
       href: `#${error.field}`,
     }))
   })
-  
+
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('toJson', (val: unknown, depth = 0) => JSON.stringify(val, null, depth))
   njkEnv.addFilter(
