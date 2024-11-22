@@ -9,7 +9,7 @@ export default function createErrorHandler(production: boolean) {
 
     if (error instanceof ValidationError) {
       logger.info(`validation error on: ${req.originalUrl}`)
-      return res.redirect(req.originalUrl)
+      return res.render(req.originalUrl)
     }
 
     res.locals.message = production

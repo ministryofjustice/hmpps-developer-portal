@@ -176,7 +176,11 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
     })
     const requestFormData = buildFormData(formData)
     await serviceCatalogueService.postGithubRepoRequest(requestFormData)
-    return res.redirect('/forms/github-repo-request-form')
+    // return res.redirect('/forms/github-repo-request-form')
+    return res.render('pages/githubRepoRequestConfirmation', {
+      title: 'Github Repository Request Confirmation',
+      repoName: formData.github_repo,
+    })
   })
 
   return router
