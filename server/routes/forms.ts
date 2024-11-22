@@ -2,7 +2,8 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import { GithubRepoRequestRequest } from '../data/strapiApiTypes'
-import * as Validation from './formValidation'
+import { validateRequest } from '../middleware/setUpValidationMiddleware'
+import { FieldValidationError } from '../@types/FieldValidationError'
 
 export default function routes({ serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
@@ -23,40 +24,24 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
 
   post('/github-repo-request-form', async (req, res): Promise<void> => {
     const formData = req.body
-    const formValidators: { [key: string]: Validation.Validator[] } = {
-      github_repo: [
-        {
-          validatorType: Validation.ValidationType.NAMEVALIDATE,
-          message: 'Repository Name should be Alphanumeric and only allowed special character is - (hyphen)',
-        },
-      ],
-      github_description: [
-        { validatorType: Validation.ValidationType.REQUIRED, message: 'Enter Github Repository Description' },
-      ],
-      // alerts_prod_slack_channel: [
-      //   { validatorType: Validation.ValidationType.REQUIRED, message: 'Production Slack channel is required' }
-      // ],
-      // alerts_nonprod_slack_channel: [
-      //     { validatorType: Validation.ValidationType.REQUIRED, message: 'Non-production Slack channel is required' }
-      // ]
-    }
-    const validationResults = Validation.validateFormFields(formData, formValidators)
-    console.log('formData', formData)
-    console.log('validationResults', validationResults)
-    const hasErrors = Object.values(validationResults).some(result => !result.valid)
-    console.log('hasErrors', hasErrors)
-    if (hasErrors) {
-      return res.render('pages/githubRepoRequestForm', {
-        formData,
-        validationResults,
-      })
-    }
-
     const requestFormData = buildFormData(formData)
-    await serviceCatalogueService.postGithubRepoRequest(requestFormData)
+    validateRequest(req, body => {
+      const validationErrors: FieldValidationError[] = []
 
-    // disable submit page, give confirmation and stay on page or redirect to new page with summary of requested data pushed to strapi
-    return res.redirect('/forms/github-repo-request-form')
+      if (!body.github_repo) {
+        validationErrors.push({ field: 'optOutReason', message: 'Enter Repository Name' })
+      }
+
+      // if (body.github_repo === OptOutReasonType.OTHER && !body.otherReason) {
+      //   validationErrors.push({ field: 'otherReason', message: 'Enter the reason for opting out' })
+      // }
+
+      return validationErrors
+    })
+    // await serviceCatalogueService.postGithubRepoRequest(requestFormData)
+
+    // // disable submit page, give confirmation and stay on page or redirect to new page with summary of requested data pushed to strapi
+    // return res.redirect('/forms/github-repo-request-form')
   })
 
   return router

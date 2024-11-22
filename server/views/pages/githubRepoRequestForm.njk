@@ -7,6 +7,8 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block content %}
+  <div class="govuk-grid-row govuk-body">
+    {% include 'partials/errorSummary.njk' %}
 <h1 class="govuk-heading-xl">Github repository Request Form</h1>
 
 <h2>After submitting this form, SRE team will run the bootstrap job to create the github repo and service catalog entries. </h2>
@@ -20,6 +22,7 @@
       selected: product.selected
     }), products) -%}
     {%- endfor -%}
+    
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukInput({
       id: "github_repo",
@@ -27,24 +30,20 @@
       classes: "govuk-!-width-three-quarters",
       label: {
         text: "Github Repository Name (Max 100 characters, only allowed special character Hyphen(-))"
-      }
+      },
+      errorMessage: validationErrors | findError('github_repo')
     }) }}
-    {% if validationResults.github_repo and validationResults.github_repo %}
-      <div class="govuk-error-message">
-          {% for error in validationResults.github_repo %}
-              <p>{{ error.message }}</p>
-          {% endfor %}
-      </div>
-    {% endif %}
 <!--
-  {{ govukInput({
+      {{ govukInput({
       id: "repo_description",
       name: "repo_description",
       label: {
         text: "Github Repository Description",
         classes: "govuk-!-width-three-quarters"
-      }
+      },
+      errorMessage: validationErrors | findError('repo_description')
     }) }}
+
     {{ govukRadios({
       classes: "govuk-radios--inline",
       idPrefix: "base_template",
