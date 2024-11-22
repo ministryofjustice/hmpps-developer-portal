@@ -32,6 +32,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
         validationErrors.push({
           field: 'github_repo',
           message: 'Enter Repository Name',
+          href: '#github_repo',
         })
       } else {
         const repoName = body.github_repo?.toString()
@@ -39,18 +40,21 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
           validationErrors.push({
             field: 'github_repo',
             message: 'Repository name should start with "hmpps"',
+            href: '#github_repo',
           })
         }
         if (repoName.length >= 100) {
           validationErrors.push({
             field: 'github_repo',
             message: 'Repository name should be less than 100 characters',
+            href: '#github_repo',
           })
         }
         if (!/^[a-zA-Z0-9-]+$/.test(repoName)) {
           validationErrors.push({
             field: 'github_repo',
             message: 'Repository name should only contain alphanumeric characters and hyphens',
+            href: '#github_repo',
           })
         }
       }
@@ -58,84 +62,98 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
         validationErrors.push({
           field: 'repo_description',
           message: 'Enter Repository Description',
+          href: '#repo_description',
         })
       }
       if (!body.base_template) {
         validationErrors.push({
           field: 'base_template',
           message: 'Select a Base Template',
+          href: '#base_template',
         })
       }
       if (!body.product) {
         validationErrors.push({
           field: 'product',
           message: 'Select a Product',
+          href: '#product',
         })
       }
       if (!body.slack_channel_prod_release_notify) {
         validationErrors.push({
           field: 'slack_channel_prod_release_notify',
           message: 'Enter Slack Channel for Production Release Notifications',
+          href: '#slack_channel_prod_release_notify',
         })
       }
       if (!body.slack_channel_nonprod_release_notify) {
         validationErrors.push({
           field: 'slack_channel_nonprod_release_notify',
           message: 'Enter Slack Channel for Non-Production Release Notifications',
+          href: '#slack_channel_nonprod_release_notify',
         })
       }
       if (!body.slack_channel_security_scans_notify) {
         validationErrors.push({
           field: 'slack_channel_security_scans_notify',
           message: 'Enter Slack Channel for Pipeline Notifications',
+          href: '#slack_channel_security_scans_notify',
         })
       }
       if (!body.prod_alerts_severity_label) {
         validationErrors.push({
           field: 'prod_alerts_severity_label',
           message: 'Enter Production Alerts Severity Label',
+          href: '#prod_alerts_severity_label',
         })
       }
       if (!body.nonprod_alerts_severity_label) {
         validationErrors.push({
           field: 'nonprod_alerts_severity_label',
           message: 'Enter Non-Production Alerts Severity Label',
+          href: '#nonprod_alerts_severity_label',
         })
       }
       if (!body.github_project_visibility) {
         validationErrors.push({
           field: 'github_project_visibility',
           message: 'Select Github Project Visibility',
+          href: '#github_project_visibility',
         })
       }
       if (!body.github_project_teams_write) {
         validationErrors.push({
           field: 'github_project_teams_write',
           message: 'Enter Github Project Teams with Write Access',
+          href: '#github_project_teams_write',
         })
       }
       if (!body.github_projects_teams_admin) {
         validationErrors.push({
           field: 'github_projects_teams_admin',
           message: 'Enter Github Project Teams with Admin Access',
+          href: '#github_projects_teams_admin',
         })
       }
       if (!body.github_project_branch_protection_restricted_teams) {
         validationErrors.push({
           field: 'github_project_branch_protection_restricted_teams',
           message: 'Enter Github Project Branch Protection Restricted Teams',
+          href: '#github_project_branch_protection_restricted_teams',
         })
       }
       if (!body.requester_name) {
         validationErrors.push({
           field: 'requester_name',
           message: 'Enter Requester Name',
+          href: '#requester_name',
         })
       }
       if (!body.requester_email) {
         validationErrors.push({
           field: 'requester_email',
           message: 'Enter Requesters Email Address',
+          href: '#requester_email',
         })
       } else {
         const requesterEmail = body.requester_email?.toString()
@@ -143,6 +161,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
           validationErrors.push({
             field: 'requesterEmail',
             message: 'Valid email address is only with @digital.justice.gov.uk',
+            href: '#requester_email',
           })
         }
       }
@@ -150,6 +169,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
         validationErrors.push({
           field: 'requester_team',
           message: 'Select Requesting Team',
+          href: '#requester_team',
         })
       }
       return validationErrors
