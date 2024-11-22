@@ -26,11 +26,13 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
 
   post('/github-repo-request-form', async (req, res): Promise<void> => {
     const formData = req.body
-    const requestFormData = buildFormData(formData)
     validateRequest(req, body => {
       const validationErrors: FieldValidationError[] = []
       if (!body.github_repo) {
-        validationErrors.push({ field: 'optOutReason', message: 'Enter Repository Name' })
+        validationErrors.push({
+          field: 'github_repo',
+          message: 'Enter Repository Name',
+        })
       } else {
         const repoName = body.github_repo?.toString()
         if (!repoName.startsWith('hmpps')) {
@@ -152,8 +154,8 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
       }
       return validationErrors
     })
+    const requestFormData = buildFormData(formData)
     await serviceCatalogueService.postGithubRepoRequest(requestFormData)
-
     return res.redirect('/forms/github-repo-request-form')
   })
 
