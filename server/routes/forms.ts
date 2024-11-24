@@ -5,7 +5,7 @@ import { GithubRepoRequestRequest } from '../data/strapiApiTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
 import { FieldValidationError } from '../@types/FieldValidationError'
 
-export default function routes({ serviceCatalogueService, dataFilterService }: Services): Router {
+export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -28,6 +28,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
     const formData = req.body
     validateRequest(req, body => {
       const validationErrors: FieldValidationError[] = []
+
       if (!body.github_repo) {
         validationErrors.push({
           field: 'github_repo',
@@ -36,6 +37,15 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
         })
       } else {
         const repoName = body.github_repo?.toString()
+        // const repoExists = await componentNameService.checkComponentExists(repoName)
+        // console.log('repoExists', repoExists)
+        // if (repoExists) {
+        //   validationErrors.push({
+        //     field: 'github_repo',
+        //     message: 'Repository name already exists in components collection, please choose a different name',
+        //     href: '#github_repo',
+        //   })
+        // }
         if (!repoName.startsWith('hmpps')) {
           validationErrors.push({
             field: 'github_repo',
