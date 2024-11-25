@@ -189,7 +189,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         title: 'Github Repository Request Confirmation',
         repoName: formData.github_repo,
       })
-    } catch (error) {
+    } catch {
       const validationErrors: FieldValidationError[] = []
       validationErrors.push({
         field: 'form',
