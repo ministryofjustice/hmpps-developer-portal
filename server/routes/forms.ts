@@ -190,7 +190,6 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         repoName: formData.github_repo,
       })
     } catch (error) {
-      console.error('Error posting GitHub repo request:', error)
       const validationErrors: FieldValidationError[] = []
       validationErrors.push({
         field: 'form',
