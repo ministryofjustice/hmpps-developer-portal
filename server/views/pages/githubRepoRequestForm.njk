@@ -73,27 +73,28 @@
           text: "hmpps-template-typescript"
         }]
     }) }}
-      {{ govukRadios({
-      classes: "govuk-radios--inline",
-      idPrefix: "github_project_visibility",
+    {{ govukSelect({
+      id: "github_project_visibility",
       name: "github_project_visibility",
       value: submittedForm.github_project_visibility,
-      errorMessage: validationErrors | findError('github_project_visibility'),
-      fieldset: {
-        legend: {
-          text: "Github Repository Visibility",
-          classes: 'govuk-fieldset__legend--s'
-        }
+      label: {
+        text: "Github project visbility"
       },
       items: [
         {
-          text: "Internal",
-          value: "false"
+          value: "public",
+          text: "public"
         },
         {
-          text: "Public",
-          value: "true"
-        }]
+          value: "private",
+          text: "private"
+        },
+        {
+          value: "internal",
+          text: "internal"
+        }
+      ],
+      errorMessage: validationErrors | findError('github_project_visibility')
     }) }}
 
     {{ govukSelect({

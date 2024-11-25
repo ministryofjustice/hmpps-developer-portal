@@ -2566,7 +2566,7 @@ export interface components {
         repo_description?: string
         base_template?: string
         jira_project_keys?: unknown
-        github_project_visibility?: boolean
+        github_project_visibility?: string
         product?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
@@ -2578,7 +2578,8 @@ export interface components {
         alerts_nonprod_slack_channel?: string
         alerts_prod_slack_channel?: string
         slack_channel_nonprod_release_notify?: string
-        request_processed_status?: boolean
+        request_github_pr_status?: string
+        request_github_pr_number?: string
         requester_name?: string
         requester_email?: string
         requester_team?: string
@@ -2604,7 +2605,7 @@ export interface components {
       repo_description?: string
       base_template?: string
       jira_project_keys?: unknown
-      github_project_visibility?: boolean
+      github_project_visibility?: string
       product?: string
       slack_channel_prod_release_notify?: string
       slack_channel_security_scans_notify?: string
@@ -2616,7 +2617,8 @@ export interface components {
       alerts_nonprod_slack_channel?: string
       alerts_prod_slack_channel?: string
       slack_channel_nonprod_release_notify?: string
-      request_processed_status?: boolean
+      request_github_pr_status?: string
+      request_github_pr_number?: string
       requester_name?: string
       requester_email?: string
       requester_team?: string
