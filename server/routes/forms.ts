@@ -26,7 +26,9 @@ export default function routes({ componentNameService, serviceCatalogueService, 
 
   post('/github-repo-request-form', async (req, res): Promise<void> => {
     const formData = req.body
-    const repoExists = await componentNameService.checkComponentExists(formData.github_repo)
+    const repoExists = formData.github_repo
+      ? await componentNameService.checkComponentExists(formData.github_repo)
+      : false
     validateRequest(req, body => {
       const validationErrors: FieldValidationError[] = []
       if (!body.github_repo) {
