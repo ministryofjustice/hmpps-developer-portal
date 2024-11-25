@@ -26,9 +26,9 @@ export default function routes({ componentNameService, serviceCatalogueService, 
 
   post('/github-repo-request-form', async (req, res): Promise<void> => {
     const formData = req.body
+    const repoExists = await componentNameService.checkComponentExists(formData.github_repo)
     validateRequest(req, body => {
       const validationErrors: FieldValidationError[] = []
-
       if (!body.github_repo) {
         validationErrors.push({
           field: 'github_repo',
@@ -37,15 +37,13 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         })
       } else {
         const repoName = body.github_repo?.toString()
-        // const repoExists = await componentNameService.checkComponentExists(repoName)
-        // console.log('repoExists', repoExists)
-        // if (repoExists) {
-        //   validationErrors.push({
-        //     field: 'github_repo',
-        //     message: 'Repository name already exists in components collection, please choose a different name',
-        //     href: '#github_repo',
-        //   })
-        // }
+        if (repoExists) {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'Repository name already exists in components collection, please choose a different name',
+            href: '#github_repo',
+          })
+        }
         if (!repoName.startsWith('hmpps')) {
           validationErrors.push({
             field: 'github_repo',
@@ -185,12 +183,25 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       return validationErrors
     })
     const requestFormData = buildFormData(formData)
-    await serviceCatalogueService.postGithubRepoRequest(requestFormData)
-    // return res.redirect('/forms/github-repo-request-form')
-    return res.render('pages/githubRepoRequestConfirmation', {
-      title: 'Github Repository Request Confirmation',
-      repoName: formData.github_repo,
-    })
+    try {
+      await serviceCatalogueService.postGithubRepoRequest(requestFormData)
+      return res.render('pages/githubRepoRequestConfirmation', {
+        title: 'Github Repository Request Confirmation',
+        repoName: formData.github_repo,
+      })
+    } catch (error) {
+      console.error('Error posting GitHub repo request:', error)
+      const validationErrors: FieldValidationError[] = []
+      validationErrors.push({
+        field: 'form',
+        message: 'There was an error submitting your request. Please try again later.',
+        href: '',
+      })
+      return res.render('pages/githubRepoRequestForm', {
+        validationErrors,
+        formData,
+      })
+    }
   })
 
   return router
