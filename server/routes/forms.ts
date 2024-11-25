@@ -11,20 +11,31 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
-  get('/github-repo-request-form', async (req, res) => {
+  get('/component-request-form', async (req, res) => {
     const [teamList, productList] = await dataFilterService.getFormsDropdownLists({
       teamName: '',
       productName: '',
       useFormattedName: true,
     })
-    return res.render('pages/githubRepoRequestForm', {
+    return res.render('pages/componentRequestForm', {
       title: 'Github Repository Requst Form',
       teamList,
       productList,
     })
   })
 
-  post('/github-repo-request-form', async (req, res): Promise<void> => {
+  get('/copmponentRequests', async (req, res) => {
+    console.log(`in routes componentRequests`)
+    return res.render('pages/componentRequests')
+  })
+
+  get('/componentRequests/data', async (req, res) => {
+    const componentRequests = await serviceCatalogueService.getGithubRepoRequests()
+
+    res.send(componentRequests)
+  })
+
+  post('/component-request-form', async (req, res): Promise<void> => {
     const formData = req.body
     const repoExists = formData.github_repo
       ? await componentNameService.checkComponentExists(formData.github_repo)
@@ -187,7 +198,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     const requestFormData = buildFormData(formData)
     try {
       await serviceCatalogueService.postGithubRepoRequest(requestFormData)
-      return res.render('pages/githubRepoRequestConfirmation', {
+      return res.render('pages/componentRequestConfirmation', {
         title: 'Github Repository Request Confirmation',
         repoName: formData.github_repo,
       })
@@ -198,7 +209,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         message: 'There was an error submitting your request. Please try again later.',
         href: '',
       })
-      return res.render('pages/githubRepoRequestForm', {
+      return res.render('pages/componentRequestForm', {
         validationErrors,
         formData,
       })
