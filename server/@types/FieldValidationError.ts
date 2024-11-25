@@ -1,4 +1,5 @@
-export type FieldValidationError = {
-  field: string
+export interface FieldValidationError {
   message: string
+  field: string
+  href: string
 }

@@ -7,40 +7,56 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block content %}
+  <div class="govuk-grid-row govuk-body">
+    {% include 'partials/errorSummary.njk' %}
 <h1 class="govuk-heading-xl">Github repository Request Form</h1>
 
 <h2>After submitting this form, SRE team will run the bootstrap job to create the github repo and service catalog entries. </h2>
 
 <form action="/forms/github-repo-request-form" method="POST">
+    {%- set teams = [] -%}
     {%- set products = [] -%}
     {%- for product in productList -%}
     {%- set products = (products.push({
       value: product.value,
       text: product.text,
-      selected: product.selected
+      selected: product.value == submittedForm.product
     }), products) -%}
+    {%- endfor -%}
+    {%- for team in teamList -%}
+      {%- set teams = (teams.push({
+        value: team.value,
+        text: team.text,
+        selected: team.value == submittedForm.requester_team
+      }), teams) -%}
     {%- endfor -%}
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukInput({
       id: "github_repo",
       name: "github_repo",
+      value: submittedForm.github_repo,
       classes: "govuk-!-width-three-quarters",
       label: {
-        text: "Github Repository Name (Max 100 characters, only allowed special character Hyphen(-))"
-      }
+        text: "Github Repository Name (Should start with (hmpps-), allowed characters alphanumeric and Hyphen(-))"
+      },
+      errorMessage: validationErrors | findError('github_repo')
     }) }}
-  {{ govukInput({
+      {{ govukInput({
       id: "repo_description",
       name: "repo_description",
+      value: submittedForm.repo_description,
       label: {
         text: "Github Repository Description",
         classes: "govuk-!-width-three-quarters"
-      }
+      },
+      errorMessage: validationErrors | findError('repo_description')
     }) }}
     {{ govukRadios({
       classes: "govuk-radios--inline",
       idPrefix: "base_template",
       name: "base_template",
+      value: submittedForm.base_template,
+      errorMessage: validationErrors | findError('base_template'),
       fieldset: {
         legend: {
           text: "Github template repository",
@@ -61,9 +77,11 @@
       classes: "govuk-radios--inline",
       idPrefix: "github_project_visibility",
       name: "github_project_visibility",
+      value: submittedForm.github_project_visibility,
+      errorMessage: validationErrors | findError('github_project_visibility'),
       fieldset: {
         legend: {
-          text: "Github Repositiory Visibility",
+          text: "Github Repository Visibility",
           classes: 'govuk-fieldset__legend--s'
         }
       },
@@ -77,17 +95,21 @@
           value: "true"
         }]
     }) }}
+
     {{ govukSelect({
       id: "product",
       name: "product",
+      value: submittedForm.product,
       label: {
         text: "Product"
       },
-      items: products
+      items: products,
+      errorMessage: validationErrors | findError('product')
     }) }}
     {{ govukInput({
       id: "jira_project_keys",
       name: "jira_project_keys",
+      value: submittedForm.jira_project_keys,
       classes: "govuk-input--width-40",
       label: {
         text: "Jira Project Key"
@@ -96,6 +118,8 @@
     {{ govukInput({
       id: "github_projects_teams_admin",
       name: "github_projects_teams_admin",
+      value: submittedForm.github_projects_teams_admin,
+      errorMessage: validationErrors | findError('github_projects_teams_admin'),
       label: {
         text: "Github Repository Admin Teams (Seperated by comma without spaces eg: hmpps-sre,hmpps-developers)",
         classes: "govuk-!-width-three-quarters"
@@ -104,6 +128,8 @@
     {{ govukInput({
       id: "github_project_teams_write",
       name: "github_project_teams_write",
+      value: submittedForm.github_project_teams_write,
+      errorMessage: validationErrors | findError('github_project_teams_write'),
       label: {
         text: "Github Repository Teams with write permissions (seperated by comma without spaces eg: hmpps-sre,hmpps-developers)",
         classes: "govuk-!-width-three-quarters"
@@ -112,22 +138,38 @@
     {{ govukInput({
       id: "github_project_branch_protection_restricted_teams",
       name: "github_project_branch_protection_restricted_teams",
+      value: submittedForm.github_project_branch_protection_restricted_teams,
+      errorMessage: validationErrors | findError('github_project_branch_protection_restricted_teams'),
       label: {
         text: "Github Project Teams Branch protection restricted teams (seperated by comma without spaces eg: hmpps-sre,hmpps-developers)",
+        classes: "govuk-!-width-three-quarters"
+      }
+    }) }}
+    {{ govukInput({
+      id: "slack_channel_prod_release_notify",
+      name: "slack_channel_prod_release_notify",
+      value: submittedForm.slack_channel_prod_release_notify,
+      errorMessage: validationErrors | findError('slack_channel_prod_release_notify'),
+      label: {
+        text: "Slack channel for Production release notifications",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
       {{ govukInput({
       id: "slack_channel_nonprod_release_notify",
       name: "slack_channel_nonprod_release_notify",
+      value: submittedForm.slack_channel_nonprod_release_notify,
+      errorMessage: validationErrors | findError('slack_channel_nonprod_release_notify'),
       label: {
-        text: "Slack channel for release notifications",
+        text: "Slack channel for Non-Production release notifications",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
     {{ govukInput({
-      id: "slack_channel_pipeline_notify",
-      name: "slack_channel_pipeline_notify",
+      id: "slack_channel_security_scans_notify",
+      name: "slack_channel_security_scans_notify",
+      value: submittedForm.slack_channel_security_scans_notify,
+      errorMessage: validationErrors | findError('slack_channel_security_scans_notify'),
       label: {
         text: "Slack channel for pipeline security notifications",
         classes: "govuk-!-width-three-quarters"
@@ -137,6 +179,8 @@
     {{ govukInput({
       id: "nonprod_alerts_severity_label",
       name: "nonprod_alerts_severity_label",
+      value: submittedForm.nonprod_alerts_severity_label,
+      errorMessage: validationErrors | findError('nonprod_alerts_severity_label'),
       label: {
         text: "Non-prod k8s alerts. The severity label used by prometheus to route alert notifications to slack",
         classes: "govuk-!-width-three-quarters"
@@ -145,26 +189,44 @@
       {{ govukInput({
       id: "prod_alerts_severity_label",
       name: "prod_alerts_severity_label",
+      value: submittedForm.prod_alerts_severity_label,
+      errorMessage: validationErrors | findError('prod_alerts_severity_label'),
       label: {
         text: "Production k8s alerts. The severity label used by prometheus to route alert notifications to slack",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
+    <h3> Please Enter your contact details to send notification after processing request. </a></h3>
     {{ govukInput({
-      id: "alerts_prod_slack_channel",
-      name: "alerts_prod_slack_channel",
+      id: "requester_name",
+      name: "requester_name",
+      value: submittedForm.requester_name,
+      errorMessage: validationErrors | findError('requester_name'),
       label: {
-        text: "Slack channel to report Production alerts",
+        text: "Name",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
     {{ govukInput({
-      id: "alerts_nonprod_slack_channel",
-      name: "alerts_nonprod_slack_channel",
+      id: "requester_email",
+      name: "requester_email",
+      value: submittedForm.requester_email,
+      errorMessage: validationErrors | findError('requester_email'),
       label: {
-        text: "Slack channel to report Non-production alerts",
+        text: "Email ID (should be your @digital.justice.gov.uk)",
         classes: "govuk-!-width-three-quarters"
       }
+    }) }}
+    {{ govukSelect({
+      id: "requester_team",
+      name: "requester_team",
+      value: submittedForm.requester_team,
+      selected: true,
+      label: {
+        text: "Team"
+      },
+      items: teams,
+      errorMessage: validationErrors | findError('requester_team')
     }) }}
     {{ govukButton({
       id: "submitdata",
