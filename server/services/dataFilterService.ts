@@ -122,13 +122,28 @@ export default class DataFilterService {
     ])
   }
 
-  async getOnlyProductLists({
+  async getFormsDropdownLists({
+    teamName = '',
     productName = '',
     useFormattedName = false,
   }: {
+    teamName?: string
     productName?: string
     useFormattedName?: boolean
   }) {
-    return Promise.all([await this.getProductsDropDownList({ productName, useFormattedName })])
+    return Promise.all([
+      await this.getTeamsDropDownList({ teamName, useFormattedName }),
+      await this.getProductsDropDownList({ productName, useFormattedName }),
+    ])
+  }
+
+  async getOnlyTeamsLists({
+    teamName = '',
+    useFormattedName = false,
+  }: {
+    teamName?: string
+    useFormattedName?: boolean
+  }) {
+    return Promise.all([await this.getTeamsDropDownList({ teamName, useFormattedName })])
   }
 }

@@ -218,7 +218,7 @@ describe('strapiApiClient', () => {
           github_projects_teams_admin: 'hmpps-sre',
           github_project_branch_protection_restricted_teams: 'hmpps-sre',
           slack_channel_nonprod_release_notify: 'hmpps-sre-nonprod-slack-channel',
-          slack_channel_pipeline_notify: 'hmpps-sre-nonprod-slack-channel',
+          slack_channel_security_scans_notify: 'hmpps-sre-nonprod-slack-channel',
           prod_alerts_severity_label: 'hmpps-sre-prod-slack-channel',
           nonprod_alerts_severity_label: 'hmpps-sre-nonprod-slack-channel',
         },
