@@ -212,7 +212,7 @@ describe('strapiApiClient', () => {
           repo_description: 'Test Data',
           base_template: 'abc',
           jira_project_keys: 'abc',
-          github_project_visibility: true,
+          github_project_visibility: 'public',
           product: 'abc',
           github_project_teams_write: 'hmpps-sre',
           github_projects_teams_admin: 'hmpps-sre',
