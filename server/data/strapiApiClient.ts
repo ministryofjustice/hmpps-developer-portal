@@ -234,6 +234,13 @@ export default class StrapiApiClient {
     })
   }
 
+  async getGithubRepoRequest ({ repoName }: { repoName: string }): Promise<GithubRepoRequestResponse> {
+    return this.restClient.get({
+      path: '/v1/github-repo-requests',
+      query: `filters[github_repo][$eq]=${repoName}`,
+    })
+  }
+
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<GithubRepoRequestResponse> {
     return this.restClient.post({
       path: '/v1/github-repo-requests',

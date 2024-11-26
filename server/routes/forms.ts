@@ -24,15 +24,27 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     })
   })
 
-  get('/copmponentRequests', async (req, res) => {
+  get('/copmponent-requests', async (req, res) => {
     console.log(`in routes componentRequests`)
     return res.render('pages/componentRequests')
   })
 
-  get('/componentRequests/data', async (req, res) => {
+  get('/component-requests/data', async (req, res) => {
     const componentRequests = await serviceCatalogueService.getGithubRepoRequests()
 
     res.send(componentRequests)
+  })
+
+  get('/:component-request', async (req, res) => {
+    const componentName = getComponentName(req)
+    const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ componentName })
+
+    const displayComponent = {
+      github_repo: componentRequest.github_repo,
+      repo_description: componentRequest.repo_description,
+    }
+
+    return res.render('pages/componentRequest', { component: displayComponent })
   })
 
   post('/component-request-form', async (req, res): Promise<void> => {

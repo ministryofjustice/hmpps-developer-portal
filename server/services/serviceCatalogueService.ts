@@ -17,6 +17,7 @@ import {
   Namespace,
   GithubRepoRequestResponse,
   GithubRepoRequestRequest,
+  GithubRepoRequestListResponse,
   GithubRepoRequestListResponseDataItem,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances } from '../utils/utils'
@@ -239,7 +240,7 @@ export default class ServiceCatalogueService {
     return customComponentView
   }
 
-  async getGithubRepoRequests(): Promise<GithubRepoRequestListResponseDataItem[]> {
+  async getGithubRepoRequests(): Promise<GithubRepoRequestListResponse[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentRequestsData = await strapiApiClient.getGithubRepoRequests()
     console.log(`in serviceCatalogueService getGithubRepoRequests`)
@@ -247,6 +248,17 @@ export default class ServiceCatalogueService {
     const componentRequests = componentRequestsData.data.sort(sortData)
 
     return componentRequests
+  }
+
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequestRequest> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const componentRequestItem = await strapiApiClient.getGithubRepoRequest({ repoName })
+    const componentRequestData = componentRequestItem.data as GithubRepoRequestListResponseDataItem[]
+
+    // @ts-expect-error Suppress any declaration
+    const componentRequest = componentRequestData.length > 0 ? componentItem.data[0]?.attributes : {}
+
+    return componentRequest
   }
 
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<GithubRepoRequestResponse> {
