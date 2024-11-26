@@ -4,6 +4,7 @@ import type { Services } from '../services'
 import { GithubRepoRequestRequest, GithubProjectVisibility } from '../data/strapiApiTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
 import { FieldValidationError } from '../@types/FieldValidationError'
+import { getComponentName } from '../utils/utils'
 
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
@@ -36,12 +37,12 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   })
 
   get('/:component-request', async (req, res) => {
-    const componentName = getComponentName(req)
-    const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ componentName })
+    const repoName = getComponentName(req)
+    const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName })
 
     const displayComponent = {
-      github_repo: componentRequest.github_repo,
-      repo_description: componentRequest.repo_description,
+      github_repo: componentRequest.data.github_repo,
+      repo_description: componentRequest.data.repo_description,
     }
 
     return res.render('pages/componentRequest', { component: displayComponent })
