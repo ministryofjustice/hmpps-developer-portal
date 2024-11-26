@@ -41,3 +41,5 @@ export type GithubRepoRequestRequest = components['schemas']['GithubRepoRequestR
 export type GithubRepoRequestResponse = components['schemas']['GithubRepoRequestResponse']
 export type GithubRepoRequestListResponse = components['schemas']['GithubRepoRequestListResponse']
 export type GithubRepoRequestListResponseDataItem = components['schemas']['GithubRepoRequestListResponseDataItem']
+export type GithubProjectVisibility =
+  components['schemas']['GithubRepoRequestRequest']['data']['github_project_visibility']

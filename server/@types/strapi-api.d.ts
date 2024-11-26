@@ -5,31 +5,100 @@
 
 export interface paths {
   '/components': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/components']
+    put?: never
     post: operations['post/components']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/components/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/components/{id}']
     put: operations['put/components/{id}']
+    post?: never
     delete: operations['delete/components/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/custom-component-views': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/custom-component-views']
+    put?: never
     post: operations['post/custom-component-views']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/custom-component-views/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/custom-component-views/{id}']
     put: operations['put/custom-component-views/{id}']
+    post?: never
     delete: operations['delete/custom-component-views/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/github-repo-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/github-repo-requests']
+    put?: never
     post: operations['post/github-repo-requests']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/github-repo-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['get/github-repo-requests/{id}']
     put: operations['put/github-repo-requests/{id}']
+    post?: never
     delete: operations['delete/github-repo-requests/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/namespaces': {
     parameters: {
@@ -459,9 +528,9 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "identifier": "foobar",
-           *       "password": "Test1234"
-           *     } */
+           *     'identifier': 'foobar',
+           *     'password': 'Test1234'
+           *   } */
           'application/json': {
             identifier?: string
             password?: string
@@ -518,10 +587,10 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "username": "foobar",
-           *       "email": "foo.bar@strapi.io",
-           *       "password": "Test1234"
-           *     } */
+           *     'username': 'foobar',
+           *     'email': 'foo.bar@strapi.io',
+           *     'password': 'Test1234'
+           *   } */
           'application/json': {
             username?: string
             email?: string
@@ -624,8 +693,8 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "email": "foo.bar@strapi.io"
-           *     } */
+           *     'email': 'foo.bar@strapi.io'
+           *   } */
           'application/json': {
             email?: string
           }
@@ -681,10 +750,10 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "password": "Test1234",
-           *       "passwordConfirmation": "Test1234",
-           *       "code": "zertyoaizndoianzodianzdonaizdoinaozdnia"
-           *     } */
+           *     'password': 'Test1234',
+           *     'passwordConfirmation': 'Test1234',
+           *     'code': 'zertyoaizndoianzodianzdonaizdoinaozdnia'
+           *   } */
           'application/json': {
             password?: string
             passwordConfirmation?: string
@@ -1186,10 +1255,10 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "username": "foo",
-           *       "email": "foo@strapi.io",
-           *       "password": "foo-password"
-           *     } */
+           *     'username': 'foo',
+           *     'email': 'foo@strapi.io',
+           *     'password': 'foo-password'
+           *   } */
           'application/json': {
             email: string
             username: string
@@ -1280,10 +1349,10 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "username": "foo",
-           *       "email": "foo@strapi.io",
-           *       "password": "foo-password"
-           *     } */
+           *     'username': 'foo',
+           *     'email': 'foo@strapi.io',
+           *     'password': 'foo-password'
+           *   } */
           'application/json': {
             email: string
             username: string
@@ -2566,7 +2635,8 @@ export interface components {
         repo_description?: string
         base_template?: string
         jira_project_keys?: unknown
-        github_project_visibility?: boolean
+        /** @enum {string} */
+        github_project_visibility?: 'public' | 'internal' | 'private'
         product?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
@@ -2578,7 +2648,8 @@ export interface components {
         alerts_nonprod_slack_channel?: string
         alerts_prod_slack_channel?: string
         slack_channel_nonprod_release_notify?: string
-        request_processed_status?: boolean
+        request_github_pr_status?: string
+        request_github_pr_number?: number
         requester_name?: string
         requester_email?: string
         requester_team?: string
@@ -2604,7 +2675,8 @@ export interface components {
       repo_description?: string
       base_template?: string
       jira_project_keys?: unknown
-      github_project_visibility?: boolean
+      /** @enum {string} */
+      github_project_visibility?: 'public' | 'internal' | 'private'
       product?: string
       slack_channel_prod_release_notify?: string
       slack_channel_security_scans_notify?: string
@@ -2616,7 +2688,8 @@ export interface components {
       alerts_nonprod_slack_channel?: string
       alerts_prod_slack_channel?: string
       slack_channel_nonprod_release_notify?: string
-      request_processed_status?: boolean
+      request_github_pr_status?: string
+      request_github_pr_number?: number
       requester_name?: string
       requester_email?: string
       requester_team?: string
@@ -2739,29 +2812,6 @@ export interface components {
     GithubRepoRequestResponse: {
       data?: components['schemas']['GithubRepoRequestResponseDataObject']
       meta?: Record<string, never>
-    }
-    TerraformModulesRdsComponent: {
-      allow_major_version_upgrade: string
-      allow_minor_version_upgrade: string
-      deletion_protection: string
-      maintenance_window: string
-      performance_insights_enabled: string
-      id?: number
-      tf_label?: string
-      db_instance_class?: string
-      db_engine_version?: string
-      rds_family?: string
-      is_production?: string
-      namespace?: string
-      environment_name?: string
-      application?: string
-      tf_filename?: string
-      tf_path?: string
-      tf_line_start?: number
-      tf_line_end?: number
-      db_max_allocated_storage?: string
-      infrastructure_support?: string
-      business_unit?: string
     }
     NamespaceRequest: {
       data: {
@@ -3399,7 +3449,19 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: unknown
+                  veracode_results_summary?: {
+                    'static-analysis': {
+                      score: number
+                    }
+                    severity: {
+                      level: number
+                      category: {
+                        count: number
+                        severity: string
+                        categoryname: string
+                      }[]
+                    }[]
+                  }
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   trivy_last_completed_scan_date?: string
@@ -4425,7 +4487,19 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: unknown
+                  veracode_results_summary?: {
+                    'static-analysis': {
+                      score: number
+                    }
+                    severity: {
+                      level: number
+                      category: {
+                        count: number
+                        severity: string
+                        categoryname: string
+                      }[]
+                    }[]
+                  }
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   trivy_last_completed_scan_date?: string
@@ -4911,7 +4985,19 @@ export interface components {
                   container_image?: string
                   veracode_results_url?: string
                   veracode_last_completed_scan_date?: string
-                  veracode_results_summary?: unknown
+                  veracode_results_summary?: {
+                    'static-analysis': {
+                      score: number
+                    }
+                    severity: {
+                      level: number
+                      category: {
+                        count: number
+                        severity: string
+                        categoryname: string
+                      }[]
+                    }[]
+                  }
                   veracode_exempt?: boolean
                   veracode_policy_rules_status?: string
                   trivy_last_completed_scan_date?: string
@@ -5082,20 +5168,20 @@ export interface components {
     'Users-Permissions-RoleRequest': {
       content: {
         /** @example {
-         *       "name": "foo",
-         *       "description": "role foo",
-         *       "permissions": {
-         *         "api::content-type.content-type": {
-         *           "controllers": {
-         *             "controllerA": {
-         *               "find": {
-         *                 "enabled": true
-         *               }
-         *             }
-         *           }
+         *     'name': 'foo',
+         *     'description': 'role foo',
+         *     'permissions': {
+         *     'api::content-type.content-type': {
+         *       'controllers': {
+         *       'controllerA': {
+         *         'find': {
+         *         'enabled': true
          *         }
          *       }
-         *     } */
+         *       }
+         *     }
+         *     }
+         *   } */
         'application/json': {
           name?: string
           description?: string
