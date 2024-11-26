@@ -1,7 +1,7 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { GithubRepoRequestRequest } from '../data/strapiApiTypes'
+import { GithubRepoRequestRequest, GithubProjectVisibility } from '../data/strapiApiTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
 import { FieldValidationError } from '../@types/FieldValidationError'
 
@@ -215,7 +215,7 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       repo_description: formData.repo_description?.toString(),
       base_template: formData.base_template?.toString(),
       jira_project_keys: formData.jira_project_keys?.toString().split(','),
-      github_project_visibility: JSON.parse(formData.github_project_visibility.toString()),
+      github_project_visibility: formData.github_project_visibility as GithubProjectVisibility,
       product: formData.product?.toString(),
       slack_channel_prod_release_notify: formData.slack_channel_prod_release_notify?.toString(),
       slack_channel_nonprod_release_notify: formData.slack_channel_nonprod_release_notify?.toString(),
@@ -230,7 +230,6 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       requester_name: formData.requester_name?.toString(),
       requester_email: formData.requester_email?.toString(),
       requester_team: formData.requester_team?.toString(),
-      request_processed_status: false,
     },
   }
 }
