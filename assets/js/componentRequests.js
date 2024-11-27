@@ -3,7 +3,7 @@ jQuery(function () {
       {
         data: 'attributes.github_repo',
         createdCell: function (td, _cellData, rowData) {
-          $(td).html(`${rowData.attributes.github_repo}</a>`)
+          $(td).html(`<a href="/forms/component-requests/${rowData.attributes.github_repo}">${rowData.attributes.github_repo}</a>`)
         },
       },
       {

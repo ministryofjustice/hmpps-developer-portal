@@ -6017,7 +6017,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['GithubRepoRequestRequest']
+        'application/json': components['schemas']['GithubRepoRequest']
       }
     }
     responses: {
@@ -6155,7 +6155,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['GithubRepoRequestRequest']
+        'application/json': components['schemas']['GithubRepoRequest']
       }
     }
     responses: {

@@ -1,4 +1,4 @@
-import { RdsEntry } from '../@types'
+import { RdsEntry, GithubRepoRequestEntry } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
 import {
   Product,
@@ -16,11 +16,11 @@ import {
   NamespaceListResponseDataItem,
   Namespace,
   GithubRepoRequestResponse,
-  GithubRepoRequestRequest,
+  GithubRepoRequest,
   GithubRepoRequestListResponse,
-  GithubRepoRequestListResponseDataItem,
+  GithubRepoRequestRequest,
 } from '../data/strapiApiTypes'
-import { sortData, sortRdsInstances } from '../utils/utils'
+import { sortData, sortRdsInstances, sortGithubRepo } from '../utils/utils'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -240,24 +240,19 @@ export default class ServiceCatalogueService {
     return customComponentView
   }
 
-  async getGithubRepoRequests(): Promise<GithubRepoRequestListResponse[]> {
+  async getGithubRepoRequests(): Promise<GithubRepoRequestEntry> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentRequestsData = await strapiApiClient.getGithubRepoRequests()
-    console.log(`in serviceCatalogueService getGithubRepoRequests`)
-    console.log(componentRequestsData)
-    const componentRequests = componentRequestsData.data.sort(sortData)
+    const componentRequests = componentRequestsData.data.sort(sortGithubRepo)
 
     return componentRequests
   }
 
-  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequestRequest> {
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const componentRequestItem = await strapiApiClient.getGithubRepoRequest({ repoName })
-    const componentRequestData = componentRequestItem.data as GithubRepoRequestListResponseDataItem[]
-
-    // @ts-expect-error Suppress any declaration
-    const componentRequest = componentRequestData.length > 0 ? componentItem.data[0]?.attributes : {}
-
+    const componentRequestData = await strapiApiClient.getGithubRepoRequest({ repoName })
+    const componentRequest = Array.isArray(componentRequestData.data) && componentRequestData.data.length > 0 ?
+      componentRequestData.data[0].attributes : componentRequestData.data?.attributes
     return componentRequest
   }
 

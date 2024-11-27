@@ -2,7 +2,7 @@ import { type Request } from 'express'
 import { BadRequest } from 'http-errors'
 import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
-import { RdsEntry } from '../@types'
+import { RdsEntry, GithubRepoRequestEntry } from '../@types'
 
 dayjs.extend(relativeTime.default)
 
@@ -81,6 +81,17 @@ export const sortRdsInstances = (rdsInstance: RdsEntry, compareRdsInstance: RdsE
     return -1
   }
   if (rdsInstance.tf_label > compareRdsInstance.tf_label) {
+    return 1
+  }
+
+  return 0
+}
+
+export const sortGithubRepo = (githubRepo: GithubRepoRequestEntry, compareGithubRepo: GithubRepoRequestEntry) => {
+  if (githubRepo.github_repo < compareGithubRepo.github_repo) {
+    return -1
+  }
+  if (githubRepo.github_repo > compareGithubRepo.github_repo) {
     return 1
   }
 

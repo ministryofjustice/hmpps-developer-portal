@@ -17,6 +17,7 @@ import {
   NamespaceListResponse,
   GithubRepoRequestResponse,
   GithubRepoRequestRequest,
+  GithubRepoRequest,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
