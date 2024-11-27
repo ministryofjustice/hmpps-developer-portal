@@ -23,9 +23,13 @@ jQuery(function () {
     {
       data: 'attributes.request_github_pr_number',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(
-          `<a href="https://github.com/ministryofjustice/hmpps-project-bootstrap/pull/${rowData.attributes.request_github_pr_number}">${rowData.attributes.request_github_pr_number}</a>`,
-        )
+        if (rowData.attributes.request_github_pr_number) {
+          $(td).html(
+            `<a href="https://github.com/ministryofjustice/hmpps-project-bootstrap/pull/${rowData.attributes.request_github_pr_number}">${rowData.attributes.request_github_pr_number}</a>`,
+          )
+        } else {
+          $(td).html('Waiting for PR job to run')
+        }
       },
     },
   ]
