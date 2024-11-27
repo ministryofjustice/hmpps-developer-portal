@@ -278,6 +278,7 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       requester_name: formData.requester_name?.toString(),
       requester_email: formData.requester_email?.toString(),
       requester_team: formData.requester_team?.toString(),
+      request_github_pr_status: 'Pending',
     },
   }
 }
