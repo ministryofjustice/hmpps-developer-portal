@@ -28,7 +28,7 @@ jQuery(function () {
             `<a href="https://github.com/ministryofjustice/hmpps-project-bootstrap/pull/${rowData.attributes.request_github_pr_number}">${rowData.attributes.request_github_pr_number}</a>`,
           )
         } else {
-          $(td).html('Waiting for PR job to run')
+          $(td).html('')
         }
       },
     },
