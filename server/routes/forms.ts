@@ -24,7 +24,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     })
   })
 
-  get('/copmponent-requests', async (req, res) => {
+  get('/component-requests', async (req, res) => {
     return res.render('pages/componentRequests')
   })
 
@@ -59,7 +59,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       request_github_pr_status: componentRequest.request_github_pr_status,
       request_github_pr_number: componentRequest.request_github_pr_number,
     }
-    return res.render('pages/componentRequst', { componentRequest: displayComponent })
+    return res.render('pages/componentRequest', { componentRequest: displayComponent })
   })
 
   post('/component-request-form', async (req, res): Promise<void> => {

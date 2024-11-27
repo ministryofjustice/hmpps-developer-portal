@@ -105,9 +105,6 @@ export default class ComponentNameService {
     const components = componentData.data.find(
       repoName => formatMonitorName(repoName.attributes.github_repo) === repositoryName,
     )
-    if (!components) {
-      return false
-    }
-    return true
+    return !!components
   }
 }
