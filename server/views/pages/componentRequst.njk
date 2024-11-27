@@ -11,13 +11,7 @@
   {% endfor %} 
 {% endmacro %}
 
-{% set breadCrumbList = [
-    {title: "Products", href: "/products"},
-    {title: componentRequest.Products, href: "/products/" + componentRequest.products}
-  ]
-%}
-
-{{ breadCrumb(componentRequest.name, breadCrumbList) }}
+{{ breadCrumb(componentRequest.github_repo, [{title: "Component Requests", href: "/forms/copmponent-requests"}]) }}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -26,16 +20,88 @@
       <tbody>
         <tr>
           <th>Description</th>
-          <td data-test="description">{{ componentRequest.repo_description }}</td>
+          <td>{{ componentRequest.repo_description }}</td>
         </tr>
         <tr>
-          <th>Requester Name</th>
-          <td data-test="description">{{ componentRequest.requester_name }}</td>
+          <th>Base Template</th>
+          <td>{{ componentRequest.base_template }}</td>
         </tr>
         <tr>
-          <th>Requester email</th>
-          <td data-test="description">{{ componentRequest.requester_email }}</td>
+          <th>Jira Project Keys</th>
+          <td data-test="jira-project-keys">
+          {% if componentRequest.jira_project_keys | length %}
+            {% for jira in componentRequest.jira_project_keys %}
+            <a class="govuk-link--no-visited-state" target="_blank" href="https://dsdmoj.atlassian.net/browse/{{ jira }}?searchContentType=project">
+            <image src="/assets/images/jira_favicon.ico" width="32" height="32"></image>
+            {{ jira }} (opens Jira)
+            </a>
+            {% endfor %}
+          {% else %}
+            No Jira &#129301; - please provide one.
+          {% endif %}
+          </td>
         </tr>
+        <tr>
+          <th>Product</th>
+          <td>{{ componentRequest.product }}</td>
+        </tr>
+        <tr>
+          <th>GitHub Write</th>
+          <td>{{ githubTeams(componentRequest.github_project_teams_write) }}</td>
+        </tr>
+        <tr>
+          <th>GitHub Admin</th>
+          <td>{{ githubTeams(componentRequest.github_projects_teams_admin) }}</td>
+        </tr>
+        <tr>
+          <th>GitHub Restricted</th>
+          <td>{{ githubTeams(componentRequest.github_project_branch_protection_restricted_teams) }}</td>
+        </tr>
+        <tr>
+          <th>GitHub Visibility</th>
+          <td>{{ componentRequest.github_project_visibility }}</td>
+        </tr>
+        <tr>
+          <th>Slack channel for security notification</th>
+          <td>{{ componentRequest.slack_channel_security_scans_notify }}</td>
+        </tr>
+        <tr>
+          <th>Slack channel for Production release notification</th>
+          <td>{{ componentRequest.slack_channel_prod_release_notify }}</td>
+        </tr>
+        <tr>
+          <th>Slack channel for Non-Production release notification</th>
+          <td>{{ componentRequest.slack_channel_nonprod_release_notify }}</td>
+        </tr>
+        <tr>
+          <th>Production alert severity label</th>
+          <td>{{ componentRequest.prod_alerts_severity_label }}</td>
+        </tr>
+        <tr>
+          <th>Non-Production alert severity label</th>
+          <td>{{ componentRequest.nonprod_alerts_severity_label }}</td>
+        </tr>
+        <tr>
+          <th>Request Status</th>
+          <td>{{ componentRequest.request_github_pr_status }}</td>
+        </tr>
+        <tr>
+          <th>Deployment PR</th>
+          <td><a href="https://github.com/ministryofjustice/hmpps-project-bootstrap/pull/{{ componentRequest.request_github_pr_number}}">{{ componentRequest.request_github_pr_number}}</a></td>
+        </tr>
+        <tr>
+          <th>Requester By</th>
+          <td>{{ componentRequest.requester_name }}</td>
+        </tr>
+        <tr>
+          <th>Requester's Email-ID</th>
+          <td>{{ componentRequest.requester_email }}</td>
+        </tr>
+        <tr>
+          <th>Requesting Team</th>
+          <td>{{ componentRequest.requester_team }}</td>
+        </tr>
+
       </tbody>
     </table>
   </div>
