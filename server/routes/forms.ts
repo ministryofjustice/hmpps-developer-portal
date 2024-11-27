@@ -1,7 +1,7 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { GithubRepoRequestRequest, GithubRepoRequest, GithubProjectVisibility } from '../data/strapiApiTypes'
+import { GithubRepoRequestRequest, GithubProjectVisibility } from '../data/strapiApiTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
 import { FieldValidationError } from '../@types/FieldValidationError'
 
@@ -35,7 +35,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   })
 
   get('/component-requests/:repo_name', async (req, res) => {
-    const repoName =req.params['repo_name']
+    const repoName = req.params.repo_name
     const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName })
     const displayComponent = {
       github_repo: componentRequest.github_repo,
@@ -51,7 +51,8 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       nonprod_alerts_severity_label: componentRequest.nonprod_alerts_severity_label,
       github_project_teams_write: componentRequest.github_project_teams_write,
       github_projects_teams_admin: componentRequest.github_projects_teams_admin,
-      github_project_branch_protection_restricted_teams: componentRequest.github_project_branch_protection_restricted_teams,
+      github_project_branch_protection_restricted_teams:
+        componentRequest.github_project_branch_protection_restricted_teams,
       requester_name: componentRequest.requester_name,
       requester_email: componentRequest.requester_email,
       requester_team: componentRequest.requester_team,
@@ -65,6 +66,9 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     const formData = req.body
     const repoExists = formData.github_repo
       ? await componentNameService.checkComponentExists(formData.github_repo)
+      : false
+    const repoRequestExists = formData.github_repo
+      ? await componentNameService.checkComponentRequestExists(formData.github_repo)
       : false
     validateRequest(req, body => {
       const validationErrors: FieldValidationError[] = []
@@ -80,6 +84,13 @@ export default function routes({ componentNameService, serviceCatalogueService, 
           validationErrors.push({
             field: 'github_repo',
             message: 'Repository name already exists in components collection, please choose a different name',
+            href: '#github_repo',
+          })
+        }
+        if (repoRequestExists) {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'Request for this component already exists in queue, please choose a different name',
             href: '#github_repo',
           })
         }
@@ -245,7 +256,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   return router
 }
 
-const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest  => {
+const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
   return {
     data: {
       github_repo: formData.github_repo?.toString(),

@@ -2,11 +2,12 @@ import { type Request } from 'express'
 import { BadRequest } from 'http-errors'
 import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
-import { RdsEntry, GithubRepoRequestEntry } from '../@types'
+import { RdsEntry } from '../@types'
 
 dayjs.extend(relativeTime.default)
 
 type HasName = { attributes?: { name: string } }
+type HasRepoName = { attributes?: { github_repo: string } }
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -87,11 +88,11 @@ export const sortRdsInstances = (rdsInstance: RdsEntry, compareRdsInstance: RdsE
   return 0
 }
 
-export const sortGithubRepo = (githubRepo: GithubRepoRequestEntry, compareGithubRepo: GithubRepoRequestEntry) => {
-  if (githubRepo.github_repo < compareGithubRepo.github_repo) {
+export const sortComponentRequestData = (dataItem: HasRepoName, compareDataItem: HasRepoName) => {
+  if (dataItem.attributes.github_repo < compareDataItem.attributes.github_repo) {
     return -1
   }
-  if (githubRepo.github_repo > compareGithubRepo.github_repo) {
+  if (dataItem.attributes.github_repo > compareDataItem.attributes.github_repo) {
     return 1
   }
 

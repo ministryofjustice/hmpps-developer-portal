@@ -12,7 +12,6 @@ import {
   ProductResponse,
   ServiceAreaListResponse,
   ServiceAreaResponse,
-  GithubRepoRequestResponse,
   GithubRepoRequestRequest,
 } from './strapiApiTypes'
 
@@ -204,7 +203,7 @@ describe('strapiApiClient', () => {
     it('should insert a single form request', async () => {
       const response = {
         data: { id: 1, attributes: { name: 'GIthub repo request form' } },
-      } as  GithubRepoRequestRequest
+      } as GithubRepoRequestRequest
       fakeStrapiApi.post('/github-repo-requests').reply(200, response)
 
       const output = await strapiApiClient.postGithubRepoRequest({

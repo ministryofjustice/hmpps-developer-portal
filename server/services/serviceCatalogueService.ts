@@ -1,4 +1,4 @@
-import { RdsEntry, GithubRepoRequestEntry } from '../@types'
+import { RdsEntry } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
 import {
   Product,
@@ -17,10 +17,10 @@ import {
   Namespace,
   GithubRepoRequestResponse,
   GithubRepoRequest,
-  GithubRepoRequestListResponse,
   GithubRepoRequestRequest,
+  GithubRepoRequestListResponseDataItem,
 } from '../data/strapiApiTypes'
-import { sortData, sortRdsInstances, sortGithubRepo } from '../utils/utils'
+import { sortData, sortRdsInstances, sortComponentRequestData } from '../utils/utils'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -240,10 +240,10 @@ export default class ServiceCatalogueService {
     return customComponentView
   }
 
-  async getGithubRepoRequests(): Promise<GithubRepoRequestEntry> {
+  async getGithubRepoRequests(): Promise<GithubRepoRequestListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentRequestsData = await strapiApiClient.getGithubRepoRequests()
-    const componentRequests = componentRequestsData.data.sort(sortGithubRepo)
+    const componentRequests = componentRequestsData.data.sort(sortComponentRequestData)
 
     return componentRequests
   }
@@ -251,8 +251,10 @@ export default class ServiceCatalogueService {
   async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentRequestData = await strapiApiClient.getGithubRepoRequest({ repoName })
-    const componentRequest = Array.isArray(componentRequestData.data) && componentRequestData.data.length > 0 ?
-      componentRequestData.data[0].attributes : componentRequestData.data?.attributes
+    const componentRequest =
+      Array.isArray(componentRequestData.data) && componentRequestData.data.length > 0
+        ? componentRequestData.data[0].attributes
+        : componentRequestData.data?.attributes
     return componentRequest
   }
 
