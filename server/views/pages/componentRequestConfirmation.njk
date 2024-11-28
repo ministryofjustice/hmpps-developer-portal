@@ -7,7 +7,7 @@
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: "Request submitted.",
-        html: 'Your request for component <br><strong>'+ repoName + '</strong> submitted successfully.'
+        html: 'Your request for component <br><strong><a href="/forms/component-requests/' + repoName + '">' + repoName + '</a></strong> submitted successfully.'
       }) }}
 
 
