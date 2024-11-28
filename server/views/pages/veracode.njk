@@ -10,8 +10,59 @@
 
   <h1>Veracode Scan Results</h1>
   <form method="GET" action="/veracode">
+    <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
+    <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-	{% include "../partials/filterDropDowns.njk" %}
+		<div class="veracode">
+			<div class="veracode-filter-block">
+				<div class="govuk-heading-s">Results</div>
+				{{ govukCheckboxes({
+					classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+					name: "results",
+					items: [
+						{
+							id: "veracodepassed",
+							value: "passed",
+							text: "Passed",
+							checked: false
+						},
+						{
+							id: "veracodefailed",
+							value: "failed",
+							text: "Failed",
+							checked: true
+						},
+						{
+							id: "veracodeunknown",
+							value: "unknown",
+							text: "Unknown",
+							checked: false
+						}
+					]
+				}) }}
+			</div>
+			<div class="veracode-filter-block">
+				<div class="govuk-heading-s">Exempted</div>
+				{{ govukCheckboxes({
+					classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+					name: "exemption",
+					items: [
+						{
+							id: "veracodeexempt",
+							value: "true",
+							text: "Yes",
+							checked: false
+						},
+						{
+							id: "veracodenonexempt",
+							value: "false",
+							text: "No",
+							checked: false
+						}
+					]
+					}) }}
+				</div>
+			</div>
 	</form>
 
   <table id="veracodeTable" class="stripe">
@@ -50,12 +101,4 @@
   <script src="/assets/moj/all.js"></script>
   <script src="/assets/js/common.js"></script>
   <script src="/assets/js/veracode.js"></script>
-  <script nonce="{{ cspNonce }}">
-    jQuery(function () {
-      const components = {{components | toJson(2) | safe }}
-      const csrfToken = "{{ csrfToken }}"
-      const renderer = new VeracodeRenderer(csrfToken, 'list')
-      renderer.start(components)
-    })
-  </script>
 {% endblock %}
