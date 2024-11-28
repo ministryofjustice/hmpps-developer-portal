@@ -1575,6 +1575,7 @@ export interface components {
         path_to_project?: string
         path_to_helm_dir?: string
         github_repo_is_template?: boolean
+        latest_commit?: components['schemas']['PropertiesCommitComponent']
       }
     }
     ComponentListResponseDataItem: {
@@ -1818,6 +1819,12 @@ export interface components {
                   path_to_project?: string
                   path_to_helm_dir?: string
                   github_repo_is_template?: boolean
+                  latest_commit?: {
+                    id?: number
+                    sha?: string
+                    /** Format: date-time */
+                    date_time?: string
+                  }
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1901,6 +1908,7 @@ export interface components {
       path_to_project?: string
       path_to_helm_dir?: string
       github_repo_is_template?: boolean
+      latest_commit?: components['schemas']['PropertiesCommitComponent']
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -2134,6 +2142,12 @@ export interface components {
       modsecurity_audit_enabled?: boolean
       modsecurity_snippet?: string
       build_image_tag?: string
+    }
+    PropertiesCommitComponent: {
+      id?: number
+      sha?: string
+      /** Format: date-time */
+      date_time?: string
     }
     CustomComponentViewRequest: {
       data: {
@@ -2579,6 +2593,12 @@ export interface components {
             path_to_project?: string
             path_to_helm_dir?: string
             github_repo_is_template?: boolean
+            latest_commit?: {
+              id?: number
+              sha?: string
+              /** Format: date-time */
+              date_time?: string
+            }
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -3469,6 +3489,12 @@ export interface components {
                   path_to_project?: string
                   path_to_helm_dir?: string
                   github_repo_is_template?: boolean
+                  latest_commit?: {
+                    id?: number
+                    sha?: string
+                    /** Format: date-time */
+                    date_time?: string
+                  }
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -4008,6 +4034,12 @@ export interface components {
                   path_to_project?: string
                   path_to_helm_dir?: string
                   github_repo_is_template?: boolean
+                  latest_commit?: {
+                    id?: number
+                    sha?: string
+                    /** Format: date-time */
+                    date_time?: string
+                  }
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -4507,6 +4539,12 @@ export interface components {
                   path_to_project?: string
                   path_to_helm_dir?: string
                   github_repo_is_template?: boolean
+                  latest_commit?: {
+                    id?: number
+                    sha?: string
+                    /** Format: date-time */
+                    date_time?: string
+                  }
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -5005,6 +5043,12 @@ export interface components {
                   path_to_project?: string
                   path_to_helm_dir?: string
                   github_repo_is_template?: boolean
+                  latest_commit?: {
+                    id?: number
+                    sha?: string
+                    /** Format: date-time */
+                    date_time?: string
+                  }
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
