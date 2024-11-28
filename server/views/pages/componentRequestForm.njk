@@ -37,7 +37,7 @@
       value: submittedForm.github_repo,
       classes: "govuk-!-width-three-quarters",
       label: {
-        text: "Github Repository Name (Should start with (hmpps-), allowed characters alphanumeric and Hyphen(-))"
+        text: "Github Repository Name (Should start with (hmpps-), allowed characters alphanumeric and Hyphen(-)) *"
       },
       errorMessage: validationErrors | findError('github_repo')
     }) }}
@@ -46,7 +46,7 @@
       name: "repo_description",
       value: submittedForm.repo_description,
       label: {
-        text: "Github Repository Description",
+        text: "Github Repository Description *",
         classes: "govuk-!-width-three-quarters"
       },
       errorMessage: validationErrors | findError('repo_description')
@@ -59,7 +59,7 @@
       errorMessage: validationErrors | findError('base_template'),
       fieldset: {
         legend: {
-          text: "Github template repository",
+          text: "Github template repository *",
           classes: 'govuk-fieldset__legend--s'
         }
       },
@@ -78,7 +78,7 @@
       name: "github_project_visibility",
       value: submittedForm.github_project_visibility,
       label: {
-        text: "Github project visbility"
+        text: "Github project visbility *"
       },
       items: [
         {
@@ -102,7 +102,7 @@
       name: "product",
       value: submittedForm.product,
       label: {
-        text: "Product"
+        text: "Product *"
       },
       items: products,
       errorMessage: validationErrors | findError('product')
@@ -122,7 +122,7 @@
       value: submittedForm.github_projects_teams_admin,
       errorMessage: validationErrors | findError('github_projects_teams_admin'),
       label: {
-        text: "Github Repository Admin Teams (Seperated by comma without spaces eg: hmpps-developers,haha)",
+        text: "Github Repository Admin Teams (Seperated by comma without spaces eg: hmpps-developers,haha) *",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
@@ -152,7 +152,7 @@
       value: submittedForm.slack_channel_prod_release_notify,
       errorMessage: validationErrors | findError('slack_channel_prod_release_notify'),
       label: {
-        text: "Slack channel for Production release notifications",
+        text: "Slack channel for Production release notifications *",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
@@ -162,7 +162,7 @@
       value: submittedForm.slack_channel_nonprod_release_notify,
       errorMessage: validationErrors | findError('slack_channel_nonprod_release_notify'),
       label: {
-        text: "Slack channel for Non-Production release notifications",
+        text: "Slack channel for Non-Production release notifications *",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
@@ -172,7 +172,7 @@
       value: submittedForm.slack_channel_security_scans_notify,
       errorMessage: validationErrors | findError('slack_channel_security_scans_notify'),
       label: {
-        text: "Slack channel for pipeline security notifications",
+        text: "Slack channel for pipeline security notifications *",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
@@ -183,7 +183,7 @@
       value: submittedForm.nonprod_alerts_severity_label,
       errorMessage: validationErrors | findError('nonprod_alerts_severity_label'),
       label: {
-        text: "Non-prod k8s alerts. The severity label used by prometheus to route alert notifications to slack",
+        text: "Non-prod k8s alerts. The severity label used by prometheus to route alert notifications to slack *",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
@@ -193,7 +193,7 @@
       value: submittedForm.prod_alerts_severity_label,
       errorMessage: validationErrors | findError('prod_alerts_severity_label'),
       label: {
-        text: "Production k8s alerts. The severity label used by prometheus to route alert notifications to slack",
+        text: "Production k8s alerts. The severity label used by prometheus to route alert notifications to slack *",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
@@ -204,7 +204,7 @@
       value: submittedForm.requester_name,
       errorMessage: validationErrors | findError('requester_name'),
       label: {
-        text: "Name",
+        text: "Name *",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
@@ -214,7 +214,7 @@
       value: submittedForm.requester_email,
       errorMessage: validationErrors | findError('requester_email'),
       label: {
-        text: "Email ID (should be your @digital.justice.gov.uk)",
+        text: "Email ID (should be your @digital.justice.gov.uk) *",
         classes: "govuk-!-width-three-quarters"
       }
     }) }}
@@ -224,7 +224,7 @@
       value: submittedForm.requester_team,
       selected: true,
       label: {
-        text: "Team"
+        text: "Team *"
       },
       items: teams,
       errorMessage: validationErrors | findError('requester_team')
