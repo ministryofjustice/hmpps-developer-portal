@@ -14,7 +14,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   get('/component-request-form', async (req, res) => {
     const [teamList, productList] = await dataFilterService.getFormsDropdownLists({
       teamName: '',
-      productName: '',
+      productId: '',
       useFormattedName: true,
     })
     return res.render('pages/componentRequestForm', {
@@ -179,25 +179,11 @@ export default function routes({ componentNameService, serviceCatalogueService, 
           href: '#github_project_visibility',
         })
       }
-      if (!body.github_project_teams_write) {
-        validationErrors.push({
-          field: 'github_project_teams_write',
-          message: 'Enter Github Project Teams with Write Access',
-          href: '#github_project_teams_write',
-        })
-      }
       if (!body.github_projects_teams_admin) {
         validationErrors.push({
           field: 'github_projects_teams_admin',
           message: 'Enter Github Project Teams with Admin Access',
           href: '#github_projects_teams_admin',
-        })
-      }
-      if (!body.github_project_branch_protection_restricted_teams) {
-        validationErrors.push({
-          field: 'github_project_branch_protection_restricted_teams',
-          message: 'Enter Github Project Branch Protection Restricted Teams',
-          href: '#github_project_branch_protection_restricted_teams',
         })
       }
       if (!body.requester_name) {

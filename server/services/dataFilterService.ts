@@ -1,6 +1,6 @@
 import { MoJSelectDataItem } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { formatMonitorName, sortData } from '../utils/utils'
+import { formatMonitorName, sortData, sortProductIdData } from '../utils/utils'
 
 export default class DataFilterService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -101,6 +101,30 @@ export default class DataFilterService {
     return productsList
   }
 
+  async getProductsIdDropDownList({
+    productId,
+    useFormattedName = false,
+  }: {
+    productId: string
+    useFormattedName?: boolean
+  }): Promise<MoJSelectDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const productsData = await strapiApiClient.getProducts({})
+    const products = productsData.data.sort(sortProductIdData)
+    const productsIdList = products.map(product => {
+      const formattedName = formatMonitorName(product.attributes.p_id)
+
+      return {
+        value: useFormattedName ? formattedName : product.id.toString(),
+        text: product.attributes.p_id,
+        selected: formattedName === productId,
+      }
+    })
+    productsIdList.unshift({ value: '', text: '', selected: false })
+
+    return productsIdList
+  }
+
   async getDropDownLists({
     teamName = '',
     productName = '',
@@ -124,16 +148,16 @@ export default class DataFilterService {
 
   async getFormsDropdownLists({
     teamName = '',
-    productName = '',
+    productId = '',
     useFormattedName = false,
   }: {
     teamName?: string
-    productName?: string
+    productId?: string
     useFormattedName?: boolean
   }) {
     return Promise.all([
       await this.getTeamsDropDownList({ teamName, useFormattedName }),
-      await this.getProductsDropDownList({ productName, useFormattedName }),
+      await this.getProductsIdDropDownList({ productId, useFormattedName }),
     ])
   }
 
