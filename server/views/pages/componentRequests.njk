@@ -1,0 +1,38 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Components" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb("Component Requests", []) }}
+
+  <h1>Component Requests</h1>
+
+  <table id="componentRequestsTable" class="stripe">
+		<thead>
+			<tr>
+				<th>Component Name</th>
+				<th>Requested By</th>
+				<th>Status</th>
+				<th>Request PR</th>
+				</tr>
+			</thead>
+			<tfoot>
+			<tr>
+				<th>Component Name</th>
+				<th>Requested By</th>
+				<th>Status</th>
+				<th>Request PR</th>
+			</tr>
+		</tfoot>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/componentRequests.js"></script>
+{% endblock %}

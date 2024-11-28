@@ -7,6 +7,7 @@ import { RdsEntry } from '../@types'
 dayjs.extend(relativeTime.default)
 
 type HasName = { attributes?: { name: string } }
+type HasRepoName = { attributes?: { github_repo: string } }
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -81,6 +82,17 @@ export const sortRdsInstances = (rdsInstance: RdsEntry, compareRdsInstance: RdsE
     return -1
   }
   if (rdsInstance.tf_label > compareRdsInstance.tf_label) {
+    return 1
+  }
+
+  return 0
+}
+
+export const sortComponentRequestData = (dataItem: HasRepoName, compareDataItem: HasRepoName) => {
+  if (dataItem.attributes.github_repo < compareDataItem.attributes.github_repo) {
+    return -1
+  }
+  if (dataItem.attributes.github_repo > compareDataItem.attributes.github_repo) {
     return 1
   }
 

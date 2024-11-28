@@ -17,6 +17,7 @@ import {
   NamespaceListResponse,
   GithubRepoRequestResponse,
   GithubRepoRequestRequest,
+  GithubRepoRequestListResponse,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
@@ -227,10 +228,17 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubRepoRequests(): Promise<GithubRepoRequestResponse> {
+  async getGithubRepoRequests(): Promise<GithubRepoRequestListResponse> {
     return this.restClient.get({
       path: '/v1/github-repo-requests',
       query: 'populate=github_repo',
+    })
+  }
+
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequestResponse> {
+    return this.restClient.get({
+      path: '/v1/github-repo-requests',
+      query: `filters[github_repo][$eq]=${repoName}`,
     })
   }
 

@@ -37,9 +37,10 @@ export type NamespaceResponse = components['schemas']['NamespaceResponse']
 export type NamespaceListResponse = components['schemas']['NamespaceListResponse']
 export type NamespaceListResponseDataItem = components['schemas']['NamespaceListResponseDataItem']
 
-export type GithubRepoRequestRequest = components['schemas']['GithubRepoRequestRequest']
+export type GithubRepoRequest = components['schemas']['GithubRepoRequest']
 export type GithubRepoRequestResponse = components['schemas']['GithubRepoRequestResponse']
 export type GithubRepoRequestListResponse = components['schemas']['GithubRepoRequestListResponse']
 export type GithubRepoRequestListResponseDataItem = components['schemas']['GithubRepoRequestListResponseDataItem']
+export type GithubRepoRequestRequest = components['schemas']['GithubRepoRequestRequest']
 export type GithubProjectVisibility =
   components['schemas']['GithubRepoRequestRequest']['data']['github_project_visibility']
