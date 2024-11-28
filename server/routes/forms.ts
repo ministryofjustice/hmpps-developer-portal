@@ -11,23 +11,64 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
-  get('/github-repo-request-form', async (req, res) => {
+  get('/component-request-form', async (req, res) => {
     const [teamList, productList] = await dataFilterService.getFormsDropdownLists({
       teamName: '',
       productName: '',
       useFormattedName: true,
     })
-    return res.render('pages/githubRepoRequestForm', {
+    return res.render('pages/componentRequestForm', {
       title: 'Github Repository Requst Form',
       teamList,
       productList,
     })
   })
 
-  post('/github-repo-request-form', async (req, res): Promise<void> => {
+  get('/component-requests', async (req, res) => {
+    return res.render('pages/componentRequests')
+  })
+
+  get('/component-requests/data', async (req, res) => {
+    const componentRequests = await serviceCatalogueService.getGithubRepoRequests()
+
+    res.send(componentRequests)
+  })
+
+  get('/component-requests/:repo_name', async (req, res) => {
+    const repoName = req.params.repo_name
+    const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName })
+    const displayComponent = {
+      github_repo: componentRequest.github_repo,
+      repo_description: componentRequest.repo_description,
+      base_template: componentRequest.base_template,
+      jira_project_keys: componentRequest.jira_project_keys,
+      github_project_visibility: componentRequest.github_project_visibility,
+      product: componentRequest.product,
+      slack_channel_prod_release_notify: componentRequest.slack_channel_prod_release_notify,
+      slack_channel_nonprod_release_notify: componentRequest.slack_channel_nonprod_release_notify,
+      slack_channel_security_scans_notify: componentRequest.slack_channel_security_scans_notify,
+      prod_alerts_severity_label: componentRequest.prod_alerts_severity_label,
+      nonprod_alerts_severity_label: componentRequest.nonprod_alerts_severity_label,
+      github_project_teams_write: componentRequest.github_project_teams_write,
+      github_projects_teams_admin: componentRequest.github_projects_teams_admin,
+      github_project_branch_protection_restricted_teams:
+        componentRequest.github_project_branch_protection_restricted_teams,
+      requester_name: componentRequest.requester_name,
+      requester_email: componentRequest.requester_email,
+      requester_team: componentRequest.requester_team,
+      request_github_pr_status: componentRequest.request_github_pr_status,
+      request_github_pr_number: componentRequest.request_github_pr_number,
+    }
+    return res.render('pages/componentRequest', { componentRequest: displayComponent })
+  })
+
+  post('/component-request-form', async (req, res): Promise<void> => {
     const formData = req.body
     const repoExists = formData.github_repo
       ? await componentNameService.checkComponentExists(formData.github_repo)
+      : false
+    const repoRequestExists = formData.github_repo
+      ? await componentNameService.checkComponentRequestExists(formData.github_repo)
       : false
     validateRequest(req, body => {
       const validationErrors: FieldValidationError[] = []
@@ -43,6 +84,13 @@ export default function routes({ componentNameService, serviceCatalogueService, 
           validationErrors.push({
             field: 'github_repo',
             message: 'Repository name already exists in components collection, please choose a different name',
+            href: '#github_repo',
+          })
+        }
+        if (repoRequestExists) {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'Request for this component already exists in queue, please choose a different name',
             href: '#github_repo',
           })
         }
@@ -187,7 +235,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     const requestFormData = buildFormData(formData)
     try {
       await serviceCatalogueService.postGithubRepoRequest(requestFormData)
-      return res.render('pages/githubRepoRequestConfirmation', {
+      return res.render('pages/componentRequestConfirmation', {
         title: 'Github Repository Request Confirmation',
         repoName: formData.github_repo,
       })
@@ -198,7 +246,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         message: 'There was an error submitting your request. Please try again later.',
         href: '',
       })
-      return res.render('pages/githubRepoRequestForm', {
+      return res.render('pages/componentRequestForm', {
         validationErrors,
         formData,
       })
@@ -230,6 +278,7 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       requester_name: formData.requester_name?.toString(),
       requester_email: formData.requester_email?.toString(),
       requester_team: formData.requester_team?.toString(),
+      request_github_pr_status: 'Pending',
     },
   }
 }

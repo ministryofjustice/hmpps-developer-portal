@@ -16,9 +16,11 @@ import {
   NamespaceListResponseDataItem,
   Namespace,
   GithubRepoRequestResponse,
+  GithubRepoRequest,
   GithubRepoRequestRequest,
+  GithubRepoRequestListResponseDataItem,
 } from '../data/strapiApiTypes'
-import { sortData, sortRdsInstances } from '../utils/utils'
+import { sortData, sortRdsInstances, sortComponentRequestData } from '../utils/utils'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -236,6 +238,24 @@ export default class ServiceCatalogueService {
     const customComponentView = customComponentData.data?.attributes
 
     return customComponentView
+  }
+
+  async getGithubRepoRequests(): Promise<GithubRepoRequestListResponseDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const componentRequestsData = await strapiApiClient.getGithubRepoRequests()
+    const componentRequests = componentRequestsData.data.sort(sortComponentRequestData)
+
+    return componentRequests
+  }
+
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const componentRequestData = await strapiApiClient.getGithubRepoRequest({ repoName })
+    const componentRequest =
+      Array.isArray(componentRequestData.data) && componentRequestData.data.length > 0
+        ? componentRequestData.data[0].attributes
+        : componentRequestData.data?.attributes
+    return componentRequest
   }
 
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<GithubRepoRequestResponse> {
