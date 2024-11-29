@@ -281,6 +281,8 @@ describe('veracodeFilters', () => {
         description: 'not available',
         hours: 0,
         millis: 0,
+        present: false,
+        sortValue: Number.MIN_SAFE_INTEGER,
       })
     })
 
@@ -290,6 +292,8 @@ describe('veracodeFilters', () => {
         description: 'not available',
         hours: 0,
         millis: 0,
+        present: false,
+        sortValue: Number.MIN_SAFE_INTEGER,
       })
     })
 
@@ -299,6 +303,8 @@ describe('veracodeFilters', () => {
         description: 'not available',
         hours: 0,
         millis: 0,
+        present: false,
+        sortValue: Number.MIN_SAFE_INTEGER,
       })
     })
 
@@ -309,6 +315,8 @@ describe('veracodeFilters', () => {
         description: 'no difference',
         hours: 0,
         millis: 0,
+        present: true,
+        sortValue: 0,
       })
     })
 
@@ -320,6 +328,8 @@ describe('veracodeFilters', () => {
         description: 'a few seconds',
         hours: 0,
         millis: -1000,
+        present: true,
+        sortValue: 0,
       })
     })
 
@@ -332,6 +342,8 @@ describe('veracodeFilters', () => {
         description: 'a day',
         hours: -28,
         millis: -100800000,
+        present: true,
+        sortValue: -1,
       })
     })
   })
