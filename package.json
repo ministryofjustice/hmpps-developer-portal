@@ -111,6 +111,7 @@
     "datatables.net-dt": "^2.1.8",
     "datatables.net-searchpanes": "^2.3.3",
     "datatables.net-select": "^2.1.0",
+    "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
     "express": "^4.21.1",
     "express-session": "^1.18.1",

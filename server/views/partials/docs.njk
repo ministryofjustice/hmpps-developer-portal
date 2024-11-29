@@ -2,8 +2,8 @@
 {% macro drift() %}
     <h2>Drift</h2>
     <p>
-    Drift is a measure of how far the production version of a service has diverged from a version of the service deployed to a development environment. 
-    This is measured in real days and is calculated by comparing dates present in the build version as exposed via `/info` endpoint on the deployed service. 
+    Drift is a measure of how far behind the production version of a service is compared to the head of development of a component. 
+    This is measured in real days and is calculated by comparing dates present in the build version as exposed via `/info` endpoint on the deployed service and the most recent commit to the repository. 
     </p>
     <h3>Why do we measure drift?</h3>
     <p>
@@ -19,6 +19,13 @@
     </p>
     It is also a very rough indicator and can't take into account complexity/scale of changes, it assumes that risk builds up linearly over time.
     </p>
+    <h3>Repos containing multiple components</h3>
+    <p>
+    The way that drift is calculated for components that reside in repos containing multiple components is handled a little bit differently. 
+    This is due to how components are released independently - changes in one component should not contribute to the drift of peer components. 
+    For these components we calculate drift based on the difference between the release date of the production deployment and the release date of the development deployment.     
+    </p>
+    <p>If one of these components is using PR based deployments then it will report drift incorrectly</p>
 {% endmacro %}
 
 
@@ -26,7 +33,7 @@
     <h2>Staleness</h2>
     <p>
     Staleness is a measure of whether an application is under active development. 
-    This is measured in real days and is calculated by comparing the current date to the date present in the build version as exposed via `/info` endpoint on the deployed service. 
+    This is measured in real days and is calculated by comparing the current date and the date of the most recent commit to the repository. 
     </p>
     <h3>Why do we measure staleness?</h3>
     <p>

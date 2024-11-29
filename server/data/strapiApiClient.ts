@@ -72,8 +72,14 @@ export default class StrapiApiClient {
     return this.restClient.get({ path, query })
   }
 
-  async getComponents(exemptionFilters: string[] = [], includeTeams: boolean = false): Promise<ComponentListResponse> {
-    const populate = new URLSearchParams({ populate: `product${includeTeams ? '.team' : ''},environments` }).toString()
+  async getComponents(
+    exemptionFilters: string[] = [],
+    includeTeams: boolean = false,
+    includeLatestCommit: boolean = false,
+  ): Promise<ComponentListResponse> {
+    const populate = new URLSearchParams({
+      populate: `product${includeTeams ? '.team' : ''},environments${includeLatestCommit ? ',latest_commit' : ''}`,
+    }).toString()
     const filters = exemptionFilters.map((filterValue, index) => {
       return `filters[veracode_exempt][$in][${index}]=${filterValue}`
     })

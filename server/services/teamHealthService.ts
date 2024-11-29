@@ -1,6 +1,15 @@
 import dayjs from 'dayjs'
 
-import { DateDifference, associateBy, differenceInDate, formatMonitorName, groupBy, median } from '../utils/utils'
+import { startOfDay } from 'date-fns'
+import {
+  DateDifference,
+  associateBy,
+  differenceInDate,
+  formatMonitorName,
+  groupBy,
+  median,
+  utcTimestampToUtcDate,
+} from '../utils/utils'
 import RedisService from './redisService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { Component } from '../data/strapiApiTypes'
@@ -88,10 +97,6 @@ export default class TeamHealthService {
     if (envMissingVersion) {
       return `Build Version in correct format: ${envMissingVersion.version}`
     }
-    const missingDev = !envs.find(({ type }) => type === 'dev')
-    if (missingDev) {
-      return 'Missing Dev Environment'
-    }
     return undefined
   }
 
@@ -145,7 +150,7 @@ export default class TeamHealthService {
 
   async getDriftData(componentNames: string[], now?: Date) {
     const versionDetailsByComponent = await this.getVersionDetailsByComponent()
-    const allComponents = await this.serviceCatalogueService.getComponents()
+    const allComponents = await this.serviceCatalogueService.getComponents([], false, true)
     const components = allComponents
       .filter(component => componentNames.includes(component.attributes.name))
       .map(component => {
@@ -272,6 +277,7 @@ export default class TeamHealthService {
           return undefined
         }
         const { buildDate, dateAdded, sha, version } = versionDetailByEnv[env.name]
+        const daysSinceUpdated = differenceInDate(now, dateAdded).days
         return {
           name: env.name,
           buildDate,
@@ -279,6 +285,7 @@ export default class TeamHealthService {
           sha,
           version,
           type: env.type,
+          daysSinceUpdated,
           componentName: component.name,
         }
       })
@@ -297,13 +304,23 @@ export default class TeamHealthService {
       .filter(env => env.type === 'prod')
       .sort((e1, e2) => e1.buildDate.getTime() - e2.buildDate.getTime())[0]
 
+    const commitDate = component.latest_commit?.date_time && startOfDay(new Date(component.latest_commit?.date_time))
+    const commitSha = component.latest_commit?.sha?.slice(0, 7)
+
+    const baseSha = commitSha
+    const baseDate = component.part_of_monorepo ? latestDevEnvironment?.buildDate || commitDate : commitDate
+
     return {
       name: component.name,
       repo: component.github_repo,
-      devEnvSha: latestDevEnvironment?.sha,
+      latestCommit: {
+        date: utcTimestampToUtcDate(component.latest_commit?.date_time),
+        sha: commitSha,
+      },
+      baseSha,
       prodEnvSha: earliestProdEnvironment?.sha,
-      drift: differenceInDate(latestDevEnvironment?.buildDate, earliestProdEnvironment?.buildDate),
-      staleness: differenceInDate(now, latestDevEnvironment?.buildDate),
+      drift: differenceInDate(baseDate, earliestProdEnvironment?.buildDate),
+      staleness: differenceInDate(startOfDay(now), baseDate),
       environments: environmentsWithVersions,
     }
   }
