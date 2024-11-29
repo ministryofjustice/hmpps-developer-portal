@@ -2,6 +2,8 @@ import { type Request } from 'express'
 import { BadRequest } from 'http-errors'
 import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
+import { formatDate } from 'date-fns'
+
 import { RdsEntry } from '../@types'
 
 dayjs.extend(relativeTime.default)
@@ -194,6 +196,8 @@ export type DateDifference = {
   days: number
   hours: number
   description: string
+  present: boolean
+  sortValue: number
 }
 
 export const differenceInDate = (from: Date, to: Date): DateDifference => {
@@ -203,15 +207,21 @@ export const differenceInDate = (from: Date, to: Date): DateDifference => {
       days: 0,
       hours: 0,
       description: 'not available',
+      present: false,
+      sortValue: Number.MIN_SAFE_INTEGER,
     }
   }
   const fromDayJs = dayjs.default(from)
   const toDayJs = dayjs.default(to)
+  const days = fromDayJs.diff(toDayJs, 'days')
+
   return {
     millis: fromDayJs.valueOf() - toDayJs.valueOf(),
-    days: fromDayJs.diff(toDayJs, 'days'),
+    days,
     hours: fromDayJs.diff(toDayJs, 'hours'),
     description: fromDayJs.valueOf() === toDayJs.valueOf() ? 'no difference' : fromDayJs.to(toDayJs, true),
+    present: true,
+    sortValue: days,
   }
 }
 
@@ -246,3 +256,5 @@ export const median = (values: number[]): number => {
 
   return sortedValues.length % 2 ? sortedValues[half] : (sortedValues[half - 1] + sortedValues[half]) / 2
 }
+
+export const utcTimestampToUtcDate = (str: string) => (str ? formatDate(new Date(str), 'yyyy-MM-dd') : undefined)
