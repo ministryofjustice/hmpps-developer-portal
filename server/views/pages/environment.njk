@@ -144,8 +144,9 @@
       <td><a href="https://app-logs.cloud-platform.service.justice.gov.uk/_dashboards/app/data-explorer/discover#?_a=(discover:(columns:!(_source),isDirty:!t,sort:!()),metadata:(indexPattern:ef705d70-0d2e-11ef-afac-8f79b1004d33,view:discover))&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-1h,to:now))&_q=(filters:!(('$state':(store:appState),meta:(alias:!n,disabled:!f,index:ef705d70-0d2e-11ef-afac-8f79b1004d33,key:log_processed.http_host,negate:!f,params:(query:{{ component.environment.url | replace('https://', '') }}),type:phrase),query:(match_phrase:(log_processed.http_host:{{ component.environment.url | replace('https://', '') }}))),('$state':(store:appState),meta:(alias:!n,disabled:!f,index:ef705d70-0d2e-11ef-afac-8f79b1004d33,key:log_processed.kubernetes_namespace,negate:!f,params:(query:{{ component.environment.namespace }}),type:phrase),query:(match_phrase:(log_processed.kubernetes_namespace:{{ component.environment.namespace }})))),query:(language:kuery,query:''))" target="_blank">View</a> (opens OpenSearch in new window)</td>
     </tr>
     <tr>
-      <th>Alert Security Label for prometheus alerting</th>
+      <th>Alert Severity Label</th>
       <td>{{ component.environment.alert_severity_label }}</td>
+    </tr>
   </tbody>
 </table>
 
