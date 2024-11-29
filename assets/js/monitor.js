@@ -193,12 +193,12 @@ async function populateComponentTable(monitorType, monitorTypeId) {
 
     environments.sort(sortEnvironments).forEach(environment => {
       const healthLink = environment.environmentHealth
-        ? `<a href="${environment.environmentUrl}${environment.environmentHealth}" class="statusTileHealth">View</a>`
+        ? `<a href="${environment.environmentUrl}${environment.environmentHealth}" class="statusTileHealth" target="_blank">View</a>`
         : 'N/A'
       $('#statusRows')
         .append(`<tr data-prisons="${environment.isPrisons}" data-probation="${environment.isProbation}" data-environment="${environment.environmentName}" data-environment-type="${environment.environmentType}" id="tile-${environment.componentName}-${environment.environmentName}">
-          <td><a href="/components/${environment.componentName}" class="statusTileName">${environment.componentName}</a></td>
-          <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment">${environment.environmentName} (${environment.environmentType})</a></td>
+          <td><a href="/components/${environment.componentName}" class="statusTileName" target="_blank">${environment.componentName}</a></td>
+          <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment" target="_blank">${environment.environmentName} (${environment.environmentType})</a></td>
           <td>${healthLink}</td>
           <td class="statusTileBuild"></td>
           <td class="statusTileStatus"></td>
