@@ -4,7 +4,6 @@ import type { Services } from '../services'
 import { GithubRepoRequestRequest, GithubProjectVisibility } from '../data/strapiApiTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
 import { FieldValidationError } from '../@types/FieldValidationError'
-import logger from '../../logger'
 
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
