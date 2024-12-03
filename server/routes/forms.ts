@@ -264,6 +264,7 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       prod_alerts_severity_label: formData.prod_alerts_severity_label?.toString(),
       nonprod_alerts_severity_label: formData.nonprod_alerts_severity_label?.toString(),
       github_project_teams_write: githubProjectTeamsWrite,
+      github_projects_teams_admin: formData.github_projects_teams_admin?.toString().split(','),
       github_project_branch_protection_restricted_teams: githubProjectBranchProtectionRestrictedTeams,
       requester_name: formData.requester_name?.toString(),
       requester_email: formData.requester_email?.toString(),
