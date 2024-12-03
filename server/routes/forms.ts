@@ -249,13 +249,13 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
   const githubProjectBranchProtectionRestrictedTeams = formData.github_project_branch_protection_restricted_teams
     ? formData.github_project_branch_protection_restricted_teams.toString().split(',')
     : ''
-  const jiraRrojectKeys = formData.jira_project_keys ? formData.jira_project_keys.toString().split(',') : ''
+  const jiraProjectKeys = formData.jira_project_keys ? formData.jira_project_keys.toString().split(',') : ''
   return {
     data: {
       github_repo: formData.github_repo?.toString(),
       repo_description: formData.repo_description?.toString(),
       base_template: formData.base_template?.toString(),
-      jira_project_keys: jiraRrojectKeys,
+      jira_project_keys: jiraProjectKeys,
       github_project_visibility: formData.github_project_visibility as GithubProjectVisibility,
       product: formData.product?.toString(),
       slack_channel_prod_release_notify: formData.slack_channel_prod_release_notify?.toString(),
