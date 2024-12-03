@@ -248,7 +248,7 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       github_repo: formData.github_repo?.toString(),
       repo_description: formData.repo_description?.toString(),
       base_template: formData.base_template?.toString(),
-      jira_project_keys: formData.jira_project_keys?.toString().split(','),
+      ...(formData.jira_project_keys ? { jira_project_keys: formData.jira_project_keys.toString().split(',') } : {}),
       github_project_visibility: formData.github_project_visibility as GithubProjectVisibility,
       product: formData.product?.toString(),
       slack_channel_prod_release_notify: formData.slack_channel_prod_release_notify?.toString(),
@@ -256,11 +256,16 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       slack_channel_security_scans_notify: formData.slack_channel_security_scans_notify?.toString(),
       prod_alerts_severity_label: formData.prod_alerts_severity_label?.toString(),
       nonprod_alerts_severity_label: formData.nonprod_alerts_severity_label?.toString(),
-      github_project_teams_write: formData.github_project_teams_write?.toString().split(','),
+      ...(formData.github_project_teams_write
+        ? { github_project_teams_write: formData.github_project_teams_write.toString().split(',') }
+        : {}),
       github_projects_teams_admin: formData.github_projects_teams_admin?.toString().split(','),
-      github_project_branch_protection_restricted_teams: formData.github_project_branch_protection_restricted_teams
-        ?.toString()
-        .split(','),
+      ...(formData.github_project_branch_protection_restricted_teams
+        ? {
+            github_project_branch_protection_restricted_teams:
+              formData.github_project_branch_protection_restricted_teams.toString().split(','),
+          }
+        : {}),
       requester_name: formData.requester_name?.toString(),
       requester_email: formData.requester_email?.toString(),
       requester_team: formData.requester_team?.toString(),
