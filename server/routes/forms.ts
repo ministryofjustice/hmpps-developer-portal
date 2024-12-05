@@ -257,13 +257,14 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       prod_alerts_severity_label: formData.prod_alerts_severity_label?.toString(),
       nonprod_alerts_severity_label: formData.nonprod_alerts_severity_label?.toString(),
       ...(formData.github_project_teams_write
-        ? { github_project_teams_write: formData.github_project_teams_write.toString().split(',') }
+        ? { github_project_teams_write: convertTeamsStringToArray(formData.github_project_teams_write?.toString()) }
         : {}),
-      github_projects_teams_admin: formData.github_projects_teams_admin?.toString().split(','),
+      github_projects_teams_admin: convertTeamsStringToArray(formData.github_projects_teams_admin?.toString()),
       ...(formData.github_project_branch_protection_restricted_teams
         ? {
-            github_project_branch_protection_restricted_teams:
-              formData.github_project_branch_protection_restricted_teams.toString().split(','),
+            github_project_branch_protection_restricted_teams: convertTeamsStringToArray(
+              formData.github_project_branch_protection_restricted_teams?.toString(),
+            ),
           }
         : {}),
       requester_name: formData.requester_name?.toString(),
@@ -272,4 +273,11 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       request_github_pr_status: 'Pending',
     },
   }
+}
+
+function convertTeamsStringToArray(teams: string): string[] {
+  return teams
+    .split(',')
+    .map(team => team.trim())
+    .filter(team => Boolean(team))
 }

@@ -112,16 +112,16 @@ export default class DataFilterService {
     const productsData = await strapiApiClient.getProducts({})
     const products = productsData.data.sort(sortProductIdData)
     const productsIdList = products.map(product => {
-      const formattedName = formatMonitorName(product.attributes.p_id)
+      const formattedName = formatMonitorName(product.attributes.name)
+      const concatenatedformattedName = `${formattedName} [${product.attributes.p_id}]`
 
       return {
-        value: useFormattedName ? formattedName : product.id.toString(),
-        text: product.attributes.p_id,
-        selected: formattedName === productId,
+        value: product.attributes.p_id,
+        text: useFormattedName ? concatenatedformattedName : `${product.attributes.name} [${product.attributes.p_id}]`,
+        selected: product.attributes.p_id === productId,
       }
     })
     productsIdList.unshift({ value: '', text: '', selected: false })
-
     return productsIdList
   }
 
