@@ -25,7 +25,7 @@
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
-          text: "must start with hmpps-, contain only alphanumeric characters, the only special character allowed is a hyphen(-)"
+          text: "This must start with hmpps-, contain only alphanumeric characters, the only special character allowed is a hyphen(-)"
         },
         errorMessage: validationErrors | findError('github_repo')
       }) }}
@@ -217,7 +217,7 @@
         }
       }) }}
       <h2>Contact details</h2>
-      <p>Please enter your contact details to send notification after processing request.</p>
+      <p>Please enter your contact details to send notifications to after processing your request.</p>
       {{ govukInput({
         id: "requester_name",
         name: "requester_name",
@@ -240,7 +240,7 @@
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
-          text: "Must be @digital.justice.gov.uk"
+          text: "Must be an @digital.justice.gov.uk email account"
         }
       }) }}
       {{ govukSelect({
