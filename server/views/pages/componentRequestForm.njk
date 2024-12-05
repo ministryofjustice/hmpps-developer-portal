@@ -15,22 +15,6 @@
     <h2>After submitting this form, SRE team will run the bootstrap job to create the github repo and service catalog entries. </h2>
     <div class="govuk-grid-column-one-half">
     <form action="/forms/component-request-form" method="POST">
-      {%- set teams = [] -%}
-      {%- set products = [] -%}
-      {%- for product in productList -%}
-      {%- set products = (products.push({
-        value: product.value,
-        text: product.text,
-        selected: product.value == submittedForm.product
-      }), products) -%}
-      {%- endfor -%}
-      {%- for team in teamList -%}
-        {%- set teams = (teams.push({
-          value: team.value,
-          text: team.text,
-          selected: team.value == submittedForm.requester_team
-        }), teams) -%}
-      {%- endfor -%}
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ govukInput({
         id: "github_repo",
@@ -111,12 +95,11 @@
       {{ govukSelect({
         id: "product",
         name: "product",
-        value: submittedForm.product,
         label: {
           text: "Product *",
           classes: "govuk-fieldset__legend--s"
         },
-        items: products,
+        items: productList | toSelect("value", "text", submittedForm.product  ),
         errorMessage: validationErrors | findError('product')
       }) }}
       {{ govukInput({
@@ -268,7 +251,7 @@
           text: "Team *",
           classes: "govuk-fieldset__legend--s"
         },
-        items: teams,
+        items: teamList,
         errorMessage: validationErrors | findError('requester_team')
       }) }}
       {{ govukButton({
