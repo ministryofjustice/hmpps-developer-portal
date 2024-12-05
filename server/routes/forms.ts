@@ -243,21 +243,6 @@ export default function routes({ componentNameService, serviceCatalogueService, 
 }
 
 const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
-  const githubProjectTeamsWrite = formData.github_project_teams_write
-    .toString()
-    .split(',')
-    .map(team => team.trim())
-    .filter(team => Boolean(team))
-  const githubProjectBranchProtectionRestrictedTeams = formData.github_project_branch_protection_restricted_teams
-    .toString()
-    .split(',')
-    .map(team => team.trim())
-    .filter(team => Boolean(team))
-  const githubProjectsTeamsAdmin = formData.github_projects_teams_admin
-    .toString()
-    .split(',')
-    .map(team => team.trim())
-    .filter(team => Boolean(team))
   return {
     data: {
       github_repo: formData.github_repo?.toString(),
@@ -271,11 +256,15 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       slack_channel_security_scans_notify: formData.slack_channel_security_scans_notify?.toString(),
       prod_alerts_severity_label: formData.prod_alerts_severity_label?.toString(),
       nonprod_alerts_severity_label: formData.nonprod_alerts_severity_label?.toString(),
-      ...(formData.github_project_teams_write ? { github_project_teams_write: githubProjectTeamsWrite } : {}),
-      github_projects_teams_admin: githubProjectBranchProtectionRestrictedTeams,
+      ...(formData.github_project_teams_write
+        ? { github_project_teams_write: convertTeamsStringToArray(formData.github_project_teams_write?.toString()) }
+        : {}),
+      github_projects_teams_admin: convertTeamsStringToArray(formData.github_projects_teams_admin?.toString()),
       ...(formData.github_project_branch_protection_restricted_teams
         ? {
-            github_project_branch_protection_restricted_teams: githubProjectsTeamsAdmin,
+            github_project_branch_protection_restricted_teams: convertTeamsStringToArray(
+              formData.github_project_branch_protection_restricted_teams?.toString(),
+            ),
           }
         : {}),
       requester_name: formData.requester_name?.toString(),
@@ -284,4 +273,11 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       request_github_pr_status: 'Pending',
     },
   }
+}
+
+function convertTeamsStringToArray(teams: string): string[] {
+  return teams
+    .split(',')
+    .map(team => team.trim())
+    .filter(team => Boolean(team))
 }

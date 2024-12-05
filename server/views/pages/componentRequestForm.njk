@@ -36,7 +36,7 @@
         value: submittedForm.repo_description,
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github Repository Description *",
+          text: "Github repository description *",
           classes: "govuk-fieldset__legend--s"
         },
         errorMessage: validationErrors | findError('repo_description')
@@ -72,7 +72,7 @@
         name: "github_project_visibility",
         value: submittedForm.github_project_visibility,
         label: {
-          text: "Github project visbility *",
+          text: "Github project visibility *",
           classes: "govuk-fieldset__legend--s"
         },
         items: [
@@ -108,7 +108,7 @@
         value: submittedForm.jira_project_keys,
         classes: "govuk-!-width-one-third",
         label: {
-          text: "Jira Project Key",
+          text: "Jira project key",
           classes: "govuk-fieldset__legend--s"
         }
       }) }}
@@ -119,7 +119,7 @@
         errorMessage: validationErrors | findError('github_projects_teams_admin'),
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github Repository Admin Teams *",
+          text: "Github repository Admin teams *",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -133,7 +133,7 @@
         errorMessage: validationErrors | findError('github_project_teams_write'),
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github Repository Teams with write permissions",
+          text: "Github repository reams with Write permissions",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -147,7 +147,7 @@
         errorMessage: validationErrors | findError('github_project_branch_protection_restricted_teams'),
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github Project Teams Branch protection restricted teams",
+          text: "Github project branch protection restricted teams",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -195,7 +195,7 @@
         errorMessage: validationErrors | findError('nonprod_alerts_severity_label'),
         classes: "govuk-!-width-one-third",
         label: {
-          text: "Non-prod Severity label *",
+          text: "Non-prod Alertmanager severity label *",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -209,7 +209,7 @@
         errorMessage: validationErrors | findError('prod_alerts_severity_label'),
         classes: "govuk-!-width-one-third govuk-fieldset__legend--s",
         label: {
-          text: "Production k8s alerts *",
+          text: "Production Alertmanager severity label *",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -224,7 +224,7 @@
         errorMessage: validationErrors | findError('requester_name'),
         classes: "govuk-!-width-one-half govuk-fieldset__legend--s",
         label: {
-          text: "Requester Name *",
+          text: "Requester name *",
           classes: "govuk-fieldset__legend--s"
         }
       }) }}
@@ -235,7 +235,7 @@
         errorMessage: validationErrors | findError('requester_email'),
         classes: "govuk-!-width-two-third govuk-fieldset__legend--s",
         label: {
-          text: "Requester Email ID *",
+          text: "Requester Email address *",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
