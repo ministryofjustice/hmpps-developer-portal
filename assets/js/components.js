@@ -40,6 +40,12 @@ jQuery(function () {
         )
       },
     },
+    {
+      data: 'attributes.github_enforce_admins_enabled',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.attributes.github_enforce_admins_enabled}`)
+      },
+    },
   ]
 
   createTable({
