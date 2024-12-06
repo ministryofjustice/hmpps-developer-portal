@@ -46,6 +46,9 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       dependents: dependencies.dependents,
       dependencies: dependencies.dependencies,
       environments,
+      alerts_prod_slack_channel: component.alerts_prod_slack_channel,
+      alerts_nonprod_slack_channel: component.alerts_nonprod_slack_channel,
+      github_enforce_admins_enabled: component.github_enforce_admins_enabled,
     }
 
     return res.render('pages/component', { component: displayComponent })
