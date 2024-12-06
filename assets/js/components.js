@@ -42,6 +42,7 @@ jQuery(function () {
     },
     {
       data: 'attributes.github_enforce_admins_enabled',
+      visible: false,
       createdCell: function (td, _cellData, rowData) {
         $(td).html(`${rowData.attributes.github_enforce_admins_enabled}`)
       },
