@@ -130,6 +130,31 @@
             No Team slack &#129301; - please provide one.
           {% endif %}
           </td>
+        <tr>
+        <th>Production Alerts Slack Channel</th>
+          <td>
+          {% if component.alerts_prod_slack_channel | length %}
+            <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.alerts_prod_slack_channel }}">
+            <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+            {{ component.alerts_prod_slack_channel }}
+            (opens slack)</a>
+          {% else %}
+            No Production Alerts Slack Channel &#129301; - please provide one.
+          {% endif %}
+          </td>
+        </tr>
+        <tr>
+        <th>Non-Production Alerts Slack Channel</th>
+          <td>
+          {% if component.alerts_nonprod_slack_channel | length %}
+            <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.alerts_nonprod_slack_channel }}">
+            <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+            {{ component.alerts_nonprod_slack_channel }}
+            (opens slack)</a>
+          {% else %}
+            No Non-Production Alerts Slack Channel &#129301; - please provide one.
+          {% endif %}
+          </td>
         </tr>
         <tr>
           <th>Uses</th>

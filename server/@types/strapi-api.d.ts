@@ -1543,6 +1543,11 @@ export interface components {
         product?: number | string
         alerts_prod_slack_channel?: string
         alerts_nonprod_slack_channel?: string
+        alertmanager_prod_slack_channel?: string
+        alertmanager_nonprod_slack_channel?: string
+        slack_channel_prod_release_notify?: string
+        slack_channel_nonprod_release_notify?: string
+        slack_channel_security_scans_notify?: string
         app_insights_cloud_role_name?: string
         api?: boolean
         frontend?: boolean
@@ -1576,6 +1581,7 @@ export interface components {
         path_to_helm_dir?: string
         github_repo_is_template?: boolean
         latest_commit?: components['schemas']['PropertiesCommitComponent']
+        github_enforce_admins_enabled?: boolean
       }
     }
     ComponentListResponseDataItem: {
@@ -1770,6 +1776,7 @@ export interface components {
                     modsecurity_audit_enabled?: boolean
                     modsecurity_snippet?: string
                     build_image_tag?: string
+                    alert_severity_label?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -1787,6 +1794,11 @@ export interface components {
                   }
                   alerts_prod_slack_channel?: string
                   alerts_nonprod_slack_channel?: string
+                  alertmanager_prod_slack_channel?: string
+                  alertmanager_nonprod_slack_channel?: string
+                  slack_channel_prod_release_notify?: string
+                  slack_channel_nonprod_release_notify?: string
+                  slack_channel_security_scans_notify?: string
                   app_insights_cloud_role_name?: string
                   api?: boolean
                   frontend?: boolean
@@ -1825,6 +1837,7 @@ export interface components {
                     /** Format: date-time */
                     date_time?: string
                   }
+                  github_enforce_admins_enabled?: boolean
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -1876,6 +1889,11 @@ export interface components {
       }
       alerts_prod_slack_channel?: string
       alerts_nonprod_slack_channel?: string
+      alertmanager_prod_slack_channel?: string
+      alertmanager_nonprod_slack_channel?: string
+      slack_channel_prod_release_notify?: string
+      slack_channel_nonprod_release_notify?: string
+      slack_channel_security_scans_notify?: string
       app_insights_cloud_role_name?: string
       api?: boolean
       frontend?: boolean
@@ -1909,6 +1927,7 @@ export interface components {
       path_to_helm_dir?: string
       github_repo_is_template?: boolean
       latest_commit?: components['schemas']['PropertiesCommitComponent']
+      github_enforce_admins_enabled?: boolean
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -2142,6 +2161,7 @@ export interface components {
       modsecurity_audit_enabled?: boolean
       modsecurity_snippet?: string
       build_image_tag?: string
+      alert_severity_label?: string
     }
     PropertiesCommitComponent: {
       id?: number
@@ -2385,6 +2405,7 @@ export interface components {
               modsecurity_audit_enabled?: boolean
               modsecurity_snippet?: string
               build_image_tag?: string
+              alert_severity_label?: string
             }[]
             github_template_repo?: string
             github_only?: boolean
@@ -2561,6 +2582,11 @@ export interface components {
             }
             alerts_prod_slack_channel?: string
             alerts_nonprod_slack_channel?: string
+            alertmanager_prod_slack_channel?: string
+            alertmanager_nonprod_slack_channel?: string
+            slack_channel_prod_release_notify?: string
+            slack_channel_nonprod_release_notify?: string
+            slack_channel_security_scans_notify?: string
             app_insights_cloud_role_name?: string
             api?: boolean
             frontend?: boolean
@@ -2599,6 +2625,7 @@ export interface components {
               /** Format: date-time */
               date_time?: string
             }
+            github_enforce_admins_enabled?: boolean
             /** Format: date-time */
             createdAt?: string
             /** Format: date-time */
@@ -3440,6 +3467,7 @@ export interface components {
                     modsecurity_audit_enabled?: boolean
                     modsecurity_snippet?: string
                     build_image_tag?: string
+                    alert_severity_label?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -3457,6 +3485,11 @@ export interface components {
                   }
                   alerts_prod_slack_channel?: string
                   alerts_nonprod_slack_channel?: string
+                  alertmanager_prod_slack_channel?: string
+                  alertmanager_nonprod_slack_channel?: string
+                  slack_channel_prod_release_notify?: string
+                  slack_channel_nonprod_release_notify?: string
+                  slack_channel_security_scans_notify?: string
                   app_insights_cloud_role_name?: string
                   api?: boolean
                   frontend?: boolean
@@ -3495,6 +3528,7 @@ export interface components {
                     /** Format: date-time */
                     date_time?: string
                   }
+                  github_enforce_admins_enabled?: boolean
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -3985,6 +4019,7 @@ export interface components {
                     modsecurity_audit_enabled?: boolean
                     modsecurity_snippet?: string
                     build_image_tag?: string
+                    alert_severity_label?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -4002,6 +4037,11 @@ export interface components {
                   }
                   alerts_prod_slack_channel?: string
                   alerts_nonprod_slack_channel?: string
+                  alertmanager_prod_slack_channel?: string
+                  alertmanager_nonprod_slack_channel?: string
+                  slack_channel_prod_release_notify?: string
+                  slack_channel_nonprod_release_notify?: string
+                  slack_channel_security_scans_notify?: string
                   app_insights_cloud_role_name?: string
                   api?: boolean
                   frontend?: boolean
@@ -4040,6 +4080,7 @@ export interface components {
                     /** Format: date-time */
                     date_time?: string
                   }
+                  github_enforce_admins_enabled?: boolean
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -4490,6 +4531,7 @@ export interface components {
                     modsecurity_audit_enabled?: boolean
                     modsecurity_snippet?: string
                     build_image_tag?: string
+                    alert_severity_label?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -4507,6 +4549,11 @@ export interface components {
                   }
                   alerts_prod_slack_channel?: string
                   alerts_nonprod_slack_channel?: string
+                  alertmanager_prod_slack_channel?: string
+                  alertmanager_nonprod_slack_channel?: string
+                  slack_channel_prod_release_notify?: string
+                  slack_channel_nonprod_release_notify?: string
+                  slack_channel_security_scans_notify?: string
                   app_insights_cloud_role_name?: string
                   api?: boolean
                   frontend?: boolean
@@ -4545,6 +4592,7 @@ export interface components {
                     /** Format: date-time */
                     date_time?: string
                   }
+                  github_enforce_admins_enabled?: boolean
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -4994,6 +5042,7 @@ export interface components {
                     modsecurity_audit_enabled?: boolean
                     modsecurity_snippet?: string
                     build_image_tag?: string
+                    alert_severity_label?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -5011,6 +5060,11 @@ export interface components {
                   }
                   alerts_prod_slack_channel?: string
                   alerts_nonprod_slack_channel?: string
+                  alertmanager_prod_slack_channel?: string
+                  alertmanager_nonprod_slack_channel?: string
+                  slack_channel_prod_release_notify?: string
+                  slack_channel_nonprod_release_notify?: string
+                  slack_channel_security_scans_notify?: string
                   app_insights_cloud_role_name?: string
                   api?: boolean
                   frontend?: boolean
@@ -5049,6 +5103,7 @@ export interface components {
                     /** Format: date-time */
                     date_time?: string
                   }
+                  github_enforce_admins_enabled?: boolean
                   /** Format: date-time */
                   createdAt?: string
                   /** Format: date-time */
@@ -6061,7 +6116,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['GithubRepoRequest']
+        'application/json': components['schemas']['GithubRepoRequestRequest']
       }
     }
     responses: {
@@ -6199,7 +6254,7 @@ export interface operations {
     }
     requestBody: {
       content: {
-        'application/json': components['schemas']['GithubRepoRequest']
+        'application/json': components['schemas']['GithubRepoRequestRequest']
       }
     }
     responses: {
