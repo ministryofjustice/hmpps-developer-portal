@@ -94,7 +94,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
             href: '#github_repo',
           })
         }
-        if (!repoName.startsWith('hmpps')) {
+        if (!repoName.startsWith('hmpps') && formData.project_type === 'official') {
           validationErrors.push({
             field: 'github_repo',
             message: 'Repository name should start with "hmpps"',

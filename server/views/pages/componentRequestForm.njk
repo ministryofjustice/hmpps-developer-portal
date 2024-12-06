@@ -15,6 +15,29 @@
     <p>After submitting this form, SRE team will run the bootstrap job to create the github repo and service catalog entries. </p>
     <form action="/forms/component-request-form" method="POST">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      {{ govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: "project_type",
+        name: "project_type",
+        value: submittedForm.project_type,
+        errorMessage: validationErrors | findError('project_type'),
+        fieldset: {
+          legend: {
+            text: "Project Type *",
+            classes: 'govuk-fieldset__legend--s'
+          }
+        },
+        items: [
+          {
+            value: "official",
+            text: "official",
+            checked: true
+          },
+          {
+            value: "personal",
+            text: "personal"
+          }]
+      }) }}
       {{ govukInput({
         id: "github_repo",
         name: "github_repo",
@@ -25,7 +48,7 @@
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
-          text: "This must start with hmpps-, contain only alphanumeric characters, the only special character allowed is a hyphen(-)"
+          text: "Official requests must start with hmpps-, contain only alphanumeric characters, the only special character allowed is a hyphen(-)"
         },
         errorMessage: validationErrors | findError('github_repo')
       }) }}
