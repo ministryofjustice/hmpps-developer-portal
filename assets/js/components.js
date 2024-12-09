@@ -52,13 +52,19 @@ jQuery(function () {
       createdCell: function (td, _cellData, rowData) {
         const environments = rowData.attributes.environments
         const prodEnvironments = environments ? environments.filter(env => env.name === 'prod') : []
-        const prodSlackChannel =
-          prodEnvironments.length > 0
-            ? prodEnvironments.map(
-                env =>
-                  `<a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ env.alerts_slack_channel }}">${env.alerts_slack_channel}</a>`,
-              )
-            : null
+
+        let prodSlackChannel = ''
+        if (prodEnvironments.length === 0) {
+          prodSlackChannel = `N/A`
+        } else {
+          prodSlackChannel = prodEnvironments.map(env => {
+            if (env.alerts_slack_channel === null) {
+              return `Missing slack channel data`
+            } else {
+              return `<a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ env.alerts_slack_channel }}">${env.alerts_slack_channel}</a>`
+            }
+          })
+        }
         $(td).html(prodSlackChannel)
       },
     },
