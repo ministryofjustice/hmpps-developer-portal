@@ -1777,6 +1777,7 @@ export interface components {
                     modsecurity_snippet?: string
                     build_image_tag?: string
                     alert_severity_label?: string
+                    alerts_slack_channel?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -1792,10 +1793,6 @@ export interface components {
                       attributes?: Record<string, never>
                     }
                   }
-                  alerts_prod_slack_channel?: string
-                  alerts_nonprod_slack_channel?: string
-                  alertmanager_prod_slack_channel?: string
-                  alertmanager_nonprod_slack_channel?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_security_scans_notify?: string
@@ -2162,6 +2159,7 @@ export interface components {
       modsecurity_snippet?: string
       build_image_tag?: string
       alert_severity_label?: string
+      alerts_slack_channel?: string
     }
     PropertiesCommitComponent: {
       id?: number
@@ -2406,6 +2404,7 @@ export interface components {
               modsecurity_snippet?: string
               build_image_tag?: string
               alert_severity_label?: string
+              alerts_slack_channel?: string
             }[]
             github_template_repo?: string
             github_only?: boolean
@@ -3468,6 +3467,7 @@ export interface components {
                     modsecurity_snippet?: string
                     build_image_tag?: string
                     alert_severity_label?: string
+                    alerts_slack_channel?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -3483,10 +3483,6 @@ export interface components {
                       attributes?: Record<string, never>
                     }
                   }
-                  alerts_prod_slack_channel?: string
-                  alerts_nonprod_slack_channel?: string
-                  alertmanager_prod_slack_channel?: string
-                  alertmanager_nonprod_slack_channel?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_security_scans_notify?: string
@@ -4020,6 +4016,7 @@ export interface components {
                     modsecurity_snippet?: string
                     build_image_tag?: string
                     alert_severity_label?: string
+                    alerts_slack_channel?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -4035,10 +4032,6 @@ export interface components {
                       attributes?: Record<string, never>
                     }
                   }
-                  alerts_prod_slack_channel?: string
-                  alerts_nonprod_slack_channel?: string
-                  alertmanager_prod_slack_channel?: string
-                  alertmanager_nonprod_slack_channel?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_security_scans_notify?: string
@@ -4532,6 +4525,7 @@ export interface components {
                     modsecurity_snippet?: string
                     build_image_tag?: string
                     alert_severity_label?: string
+                    alerts_slack_channel?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -4547,10 +4541,6 @@ export interface components {
                       attributes?: Record<string, never>
                     }
                   }
-                  alerts_prod_slack_channel?: string
-                  alerts_nonprod_slack_channel?: string
-                  alertmanager_prod_slack_channel?: string
-                  alertmanager_nonprod_slack_channel?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_security_scans_notify?: string
@@ -5043,6 +5033,7 @@ export interface components {
                     modsecurity_snippet?: string
                     build_image_tag?: string
                     alert_severity_label?: string
+                    alerts_slack_channel?: string
                   }[]
                   github_template_repo?: string
                   github_only?: boolean
@@ -5058,10 +5049,6 @@ export interface components {
                       attributes?: Record<string, never>
                     }
                   }
-                  alerts_prod_slack_channel?: string
-                  alerts_nonprod_slack_channel?: string
-                  alertmanager_prod_slack_channel?: string
-                  alertmanager_nonprod_slack_channel?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_security_scans_notify?: string
