@@ -55,7 +55,7 @@ jQuery(function () {
 
         let prodSlackChannel = ''
         if (prodEnvironments.length === 0) {
-          prodSlackChannel = `N/A`
+          prodSlackChannel = `No Prod environment`
         } else {
           prodSlackChannel = prodEnvironments.map(env => {
             if (env.alerts_slack_channel === null) {
