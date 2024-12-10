@@ -73,6 +73,5 @@ jQuery(function () {
     orderColumn: 0,
     orderType: 'asc',
     columns,
-    columnDropdowns: true,
   })
 })
