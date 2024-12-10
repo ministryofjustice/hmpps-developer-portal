@@ -60,7 +60,7 @@ jQuery(function () {
               }
               return `${env.alerts_slack_channel}`
             })
-            .join(', ') // Join the array elements into a single string
+            .join(', ')
         }
 
         return prodSlackChannel
@@ -92,7 +92,6 @@ jQuery(function () {
         bottomStart: {
           buttons: ['colvis', 'copy', 'csv'],
         },
-        // topStart: 'paging',
         topEnd: 'search',
       },
     })
