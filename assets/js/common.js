@@ -113,7 +113,6 @@ function createTable({
           .every(function () {
             const column = this
             const title = column.footer().textContent + ' (regex)'
-            console.log(JSON.stringify(column.footer()))
 
             // Create input element
             const input = document.createElement('input')
