@@ -1,14 +1,12 @@
 jQuery(function () {
   const columns = [
     {
-      targets: 0,
       data: 'attributes.name',
       render: function (data, type, row, meta) {
         return `<a class="govuk-link--no-visited-state" href="/components/${cleanColumnOutput(data)}">${cleanColumnOutput(data)}</a>`
       },
     },
     {
-      targets: 1,
       data: 'attributes.product.data.attributes.p_id',
       render: function (data, type, row, meta) {
         if (row.attributes.product.data) {
@@ -18,7 +16,6 @@ jQuery(function () {
       },
     },
     {
-      targets: 2,
       data: 'attributes.product.data.attributes.name',
       render: function (data, type, row, meta) {
         if (row.attributes.product.data) {
@@ -28,14 +25,12 @@ jQuery(function () {
       },
     },
     {
-      targets: 3,
       data: 'attributes.github_repo',
       render: function (data, type, row, meta) {
         return `<a class="govuk-link--no-visited-state" href="https://github.com/ministryofjustice/${data}" target="_blank" data-test="github-repo">${data}</a>`
       },
     },
     {
-      targets: 4,
       data: 'attributes.github_enforce_admins_enabled',
       visible: false,
       render: function (data, type, row, meta) {
@@ -43,7 +38,6 @@ jQuery(function () {
       },
     },
     {
-      targets: 5,
       data: 'attributes.environments',
       render: function (data, type, row, meta) {
         const environments = row.attributes.environments
@@ -68,41 +62,12 @@ jQuery(function () {
     },
   ]
 
-  $(function () {
-    $('#componentsTable tfoot th').each(function () {
-      var title = $(this).text()
-      $(this).html('<input type="text" placeholder="Search ' + title + '" />')
-    })
-    var table = new DataTable('#componentsTable', {
-      ajax: {
-        url: '/components/data',
-        dataSrc: '',
-        error: function (xhr, error, thrown) {
-          console.error('Error fetching data:', error, thrown)
-          console.error('Response:', xhr.responseText)
-        },
-      },
-      order: [[0, 'asc']],
-      columnDefs: columns,
-      lengthMenu: [
-        [10, 25, 50, -1],
-        [10, 25, 50, 'All'],
-      ],
-      layout: {
-        bottomStart: {
-          buttons: ['colvis', 'copy', 'csv'],
-        },
-        topEnd: 'search',
-      },
-    })
-    table.columns().every(function () {
-      var that = this
-
-      $('input', this.footer()).on('keyup change', function () {
-        if (that.search() !== this.value) {
-          that.search(this.value, true, false).draw()
-        }
-      })
-    })
+  createTable({
+    id: 'componentsTable',
+    ajaxUrl: '/components/data',
+    orderColumn: 0,
+    orderType: 'asc',
+    columns,
+    columnDropdowns: true,
   })
 })
