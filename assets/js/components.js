@@ -55,14 +55,13 @@ jQuery(function () {
 
         let prodSlackChannel = ''
         if (prodEnvironments.length === 0) {
-          prodSlackChannel = `No Prod environment`
+          prodSlackChannel = 'No Prod environment'
         } else {
           prodSlackChannel = prodEnvironments.map(env => {
             if (env.alerts_slack_channel === null) {
-              return `Missing slack channel data`
-            } else {
-              return `<a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ env.alerts_slack_channel }}">${env.alerts_slack_channel}</a>`
+              return 'Missing slack channel data'
             }
+            return `${env.alerts_slack_channel}`
           })
         }
         $(td).html(prodSlackChannel)
