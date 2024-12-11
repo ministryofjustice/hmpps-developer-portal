@@ -47,6 +47,29 @@ jQuery(function () {
         $(td).html(`${rowData.attributes.github_enforce_admins_enabled}`)
       },
     },
+    {
+      data: 'attributes.environments',
+      render: function (data, type, row, meta) {
+        const environments = row.attributes.environments
+        const prodEnvironments = environments ? environments.filter(env => env.name === 'prod') : []
+
+        let prodSlackChannel = ''
+        if (prodEnvironments.length === 0) {
+          prodSlackChannel = 'N/A'
+        } else {
+          prodSlackChannel = prodEnvironments
+            .map(env => {
+              if (env.alerts_slack_channel === null) {
+                return 'Not set'
+              }
+              return `${env.alerts_slack_channel}`
+            })
+            .join(', ')
+        }
+
+        return prodSlackChannel
+      },
+    },
   ]
 
   createTable({
