@@ -112,7 +112,7 @@ function createTable({
           .columns()
           .every(function () {
             const column = this
-            const title = column.header().textContent + ' (regex)'
+            const title = column.footer().textContent + ' (regex)'
 
             // Create input element
             const input = document.createElement('input')

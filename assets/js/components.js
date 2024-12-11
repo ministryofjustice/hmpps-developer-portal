@@ -48,21 +48,27 @@ jQuery(function () {
       },
     },
     {
+      targets: 5,
       data: 'attributes.environments',
-      createdCell: function (td, _cellData, rowData) {
-        const environments = rowData.attributes.environments
+      render: function (data, type, row, meta) {
+        const environments = row.attributes.environments
         const prodEnvironments = environments ? environments.filter(env => env.name === 'prod') : []
-        let prodSlackChannel = 'No Prod environment'
 
-        if (prodEnvironments.length > 0) {
+        let prodSlackChannel = ''
+        if (prodEnvironments.length === 0) {
+          prodSlackChannel = 'No Prod environment'
+        } else {
           prodSlackChannel = prodEnvironments
             .map(env => {
-              return (env.alerts_slack_channel === null) ? 'Missing slack channel data' : `${env.alerts_slack_channel}`
+              if (env.alerts_slack_channel === null) {
+                return 'Missing slack channel data'
+              }
+              return `${env.alerts_slack_channel}`
             })
             .join(', ')
         }
 
-        $(td).html(prodSlackChannel)
+        return prodSlackChannel
       },
     },
   ]
