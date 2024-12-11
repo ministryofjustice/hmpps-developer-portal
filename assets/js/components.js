@@ -48,7 +48,6 @@ jQuery(function () {
       },
     },
     {
-      targets: 5,
       data: 'attributes.environments',
       render: function (data, type, row, meta) {
         const environments = row.attributes.environments
@@ -56,12 +55,12 @@ jQuery(function () {
 
         let prodSlackChannel = ''
         if (prodEnvironments.length === 0) {
-          prodSlackChannel = 'No Prod environment'
+          prodSlackChannel = 'N/A'
         } else {
           prodSlackChannel = prodEnvironments
             .map(env => {
               if (env.alerts_slack_channel === null) {
-                return 'Missing slack channel data'
+                return 'Not set'
               }
               return `${env.alerts_slack_channel}`
             })
