@@ -52,7 +52,7 @@ export default function createApp(services: Services): express.Application {
   app.use('/', indexRoutes(services))
   app.use('/products', productRoutes(services))
   app.use('/components', componentRoutes(services))
-  app.use('/components-alert-details-env', componentEnvRoutes(services))
+  app.use('/components-environments', componentEnvRoutes(services))
   app.use('/reports', reportRoutes(services))
   app.use('/teams', teamRoutes(services))
   app.use('/product-sets', productSetRoutes(services))
