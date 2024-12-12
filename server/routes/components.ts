@@ -24,7 +24,8 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const component = await serviceCatalogueService.getComponent({ componentName })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { environments } = component
-
+    const prodEnvData = component.environments?.filter(environment => environment.name === 'prod')
+    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].alerts_slack_channel
     const displayComponent = {
       name: component.name,
       description: component.description,
@@ -46,8 +47,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       dependents: dependencies.dependents,
       dependencies: dependencies.dependencies,
       environments,
-      alerts_prod_slack_channel: component.alerts_prod_slack_channel,
-      alerts_nonprod_slack_channel: component.alerts_nonprod_slack_channel,
+      alerts_slack_channel: alertsSlackChannel,
       github_enforce_admins_enabled: component.github_enforce_admins_enabled,
     }
 
