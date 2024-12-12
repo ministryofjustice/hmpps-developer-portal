@@ -55,17 +55,14 @@ jQuery(function () {
 
         let prodSlackChannel = ''
         if (prodEnvironments.length === 0) {
-          prodSlackChannel = 'N/A'
-        } else {
-          prodSlackChannel = prodEnvironments
-            .map(env => {
-              if (env.alerts_slack_channel === null) {
-                return 'Not set'
-              }
-              return `${env.alerts_slack_channel}`
-            })
-            .join(', ')
+          return 'N/A'
         }
+
+        prodSlackChannel = prodEnvironments
+          .map(env => {
+            return env.alerts_slack_channel === null ? 'Not set' : `${env.alerts_slack_channel}`
+          })
+          .join(', ')
 
         return prodSlackChannel
       },
