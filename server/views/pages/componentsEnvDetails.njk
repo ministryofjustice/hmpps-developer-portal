@@ -1,0 +1,40 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Components" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb("Components", []) }}
+
+  <h1>Components With Environment Details(Components which have no environments are not included in this page)</h1>
+
+  <table id="componentsEnvTable" class="stripe">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Environment</th>
+				<th>Namespace/th>
+				<th>Alert Severity Label</th>
+				<th>Alerts Slack channel</th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<th>Name</th>
+				<th>Environment</th>
+				<th>Namespace/th>
+				<th>Alert Severity Label</th>
+				<th>Alerts Slack channel</th>
+			</tr>
+		</tfoot>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/componentsEnvDetails.js"></script>
+{% endblock %}
