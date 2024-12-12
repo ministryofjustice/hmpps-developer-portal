@@ -16,7 +16,7 @@ import setUpValidationMiddleware from './middleware/setUpValidationMiddleware'
 import indexRoutes from './routes'
 import productRoutes from './routes/products'
 import componentRoutes from './routes/components'
-import componentEnvRoutes from './routes/componentsEnvDetails'
+import componentEnvironmentRoutes from './routes/componentsEnvDetails'
 import reportRoutes from './routes/reports'
 import teamRoutes from './routes/teams'
 import productSetRoutes from './routes/productSets'
@@ -52,7 +52,7 @@ export default function createApp(services: Services): express.Application {
   app.use('/', indexRoutes(services))
   app.use('/products', productRoutes(services))
   app.use('/components', componentRoutes(services))
-  app.use('/components-environments', componentEnvRoutes(services))
+  app.use('/components-environments', componentEnvironmentRoutes(services))
   app.use('/reports', reportRoutes(services))
   app.use('/teams', teamRoutes(services))
   app.use('/product-sets', productSetRoutes(services))
