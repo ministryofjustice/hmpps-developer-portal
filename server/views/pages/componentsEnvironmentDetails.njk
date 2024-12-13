@@ -1,0 +1,61 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Components" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb("Components Environment Details", []) }}
+
+  <h1>Components Environment Details</h1>
+  <h3>(Components without environments not included in this page)</h3>
+
+  <table id="componentsEnvironmentTable" class="stripe">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Environment</th>
+				<th>Namespace</th>
+				<th>Info Path</th>
+				<th>Health Path</th>
+				<th>URL</th>
+				<th>Monitor</th>
+				<th class="componentsActiveAgencies">Active Agencies</th>
+				<th>IP Allow list enabled</th>
+				<th>Include in SAR</th>
+				<th>Modsecurity Enabled</th>
+				<th>Modsecurity audit enabled</th>
+				<th>Build Image tag</th>
+				<th>Alert Severity Label</th>
+				<th>Alerts Slack channel</th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<th>Name</th>
+				<th>Environment</th>	
+				<th>Namespace</th>
+				<th>Info Path</th>
+				<th>Health Path</th>
+				<th>URL</th>
+				<th>Monitor</th>
+				<th>Active Agencies</th>
+				<th>IP Allow list enabled</th>
+				<th>Include in SAR</th>
+				<th>Modsecurity Enabled</th>
+				<th>Modsecurity audit enabled</th>
+				<th>Build Image tag</th>
+				<th>Alert Severity Label</th>
+				<th>Alerts Slack channel</th>
+			</tr>
+		</tfoot>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/componentsEnvironmentDetails.js"></script>
+{% endblock %}
