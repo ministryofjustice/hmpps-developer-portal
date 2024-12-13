@@ -10,7 +10,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    return res.render('pages/componentsEnvDetails')
+    return res.render('pages/componentsEnvironmentDetails')
   })
 
   get('/data', async (req, res) => {

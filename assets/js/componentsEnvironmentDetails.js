@@ -159,7 +159,7 @@ jQuery(function () {
     success: function (data) {
       const transformedData = transformData(data)
       createTable({
-        id: 'componentsEnvTable',
+        id: 'componentsEnvironmentTable',
         data: transformedData,
         orderColumn: 0,
         orderType: 'asc',
