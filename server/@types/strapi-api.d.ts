@@ -1541,10 +1541,6 @@ export interface components {
         github_project_visibility?: 'public' | 'internal' | 'private'
         /** @example string or id */
         product?: number | string
-        alerts_prod_slack_channel?: string
-        alerts_nonprod_slack_channel?: string
-        alertmanager_prod_slack_channel?: string
-        alertmanager_nonprod_slack_channel?: string
         slack_channel_prod_release_notify?: string
         slack_channel_nonprod_release_notify?: string
         slack_channel_security_scans_notify?: string
@@ -1859,8 +1855,6 @@ export interface components {
             p_id?: string
             slack_channel_id?: string
             slack_channel_name?: string
-            alerts_prod_slack_channel?: string
-            alerts_nonprod_slack_channel?: string
             slug?: string
             lead_developer?: string
             /** Format: date-time */
@@ -1884,10 +1878,6 @@ export interface components {
           }
         }
       }
-      alerts_prod_slack_channel?: string
-      alerts_nonprod_slack_channel?: string
-      alertmanager_prod_slack_channel?: string
-      alertmanager_nonprod_slack_channel?: string
       slack_channel_prod_release_notify?: string
       slack_channel_nonprod_release_notify?: string
       slack_channel_security_scans_notify?: string
@@ -2554,8 +2544,6 @@ export interface components {
                   p_id?: string
                   slack_channel_id?: string
                   slack_channel_name?: string
-                  alerts_prod_slack_channel?: string
-                  alerts_nonprod_slack_channel?: string
                   slug?: string
                   lead_developer?: string
                   /** Format: date-time */
@@ -2579,10 +2567,6 @@ export interface components {
                 }
               }
             }
-            alerts_prod_slack_channel?: string
-            alerts_nonprod_slack_channel?: string
-            alertmanager_prod_slack_channel?: string
-            alertmanager_nonprod_slack_channel?: string
             slack_channel_prod_release_notify?: string
             slack_channel_nonprod_release_notify?: string
             slack_channel_security_scans_notify?: string
@@ -3098,8 +3082,6 @@ export interface components {
         p_id: string
         slack_channel_id?: string
         slack_channel_name?: string
-        alerts_prod_slack_channel?: string
-        alerts_nonprod_slack_channel?: string
         slug?: string
         lead_developer?: string
       }
@@ -3549,8 +3531,6 @@ export interface components {
             p_id?: string
             slack_channel_id?: string
             slack_channel_name?: string
-            alerts_prod_slack_channel?: string
-            alerts_nonprod_slack_channel?: string
             slug?: string
             lead_developer?: string
             /** Format: date-time */
@@ -3614,8 +3594,6 @@ export interface components {
       p_id: string
       slack_channel_id?: string
       slack_channel_name?: string
-      alerts_prod_slack_channel?: string
-      alerts_nonprod_slack_channel?: string
       slug?: string
       lead_developer?: string
       /** Format: date-time */
@@ -4098,8 +4076,6 @@ export interface components {
             p_id?: string
             slack_channel_id?: string
             slack_channel_name?: string
-            alerts_prod_slack_channel?: string
-            alerts_nonprod_slack_channel?: string
             slug?: string
             lead_developer?: string
             /** Format: date-time */
@@ -4607,8 +4583,6 @@ export interface components {
             p_id?: string
             slack_channel_id?: string
             slack_channel_name?: string
-            alerts_prod_slack_channel?: string
-            alerts_nonprod_slack_channel?: string
             slug?: string
             lead_developer?: string
             /** Format: date-time */
@@ -5115,8 +5089,6 @@ export interface components {
             p_id?: string
             slack_channel_id?: string
             slack_channel_name?: string
-            alerts_prod_slack_channel?: string
-            alerts_nonprod_slack_channel?: string
             slug?: string
             lead_developer?: string
             /** Format: date-time */

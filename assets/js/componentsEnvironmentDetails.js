@@ -3,6 +3,8 @@ jQuery(function () {
     const transformed = []
     data.forEach(item => {
       item.attributes.environments.forEach(env => {
+        const productData = item.attributes?.product?.data?.attributes || {}
+        const teamData = productData.team?.data ? productData.team.data.attributes : null
         transformed.push({
           name: item.attributes.name,
           environment: env.name,
@@ -22,7 +24,13 @@ jQuery(function () {
             env.modsecurity_audit_enabled === null ? 'Not set' : env.modsecurity_audit_enabled.toString(),
           build_image_tag: env.build_image_tag,
           alert_severity_label: env.alert_severity_label === null ? 'Not set' : env.alert_severity_label,
-          alerts_slack_channel: env.alerts_slack_channel === null ? 'Not set' : env.alerts_slack_channel,
+          alerts_slack_channel:
+            env.alerts_slack_channel === null || env.alerts_slack_channel === '' ? 'Not set' : env.alerts_slack_channel,
+          product_id: productData ? productData.p_id : '',
+          product_name: productData ? productData.name : '',
+          product_slug: productData ? productData.slug : '',
+          team_name: teamData ? teamData.name : '',
+          team_slug: teamData ? teamData.slug : '',
         })
       })
     })
@@ -30,6 +38,15 @@ jQuery(function () {
   }
 
   const columns = [
+    {
+      data: 'environment',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(
+          `<a class="govuk-link--no-visited-state" href="/components/${rowData.name}/environment/${rowData.environment}" data-test="environment">${rowData.environment}</a>`,
+        )
+      },
+      title: 'Environment',
+    },
     {
       data: 'name',
       createdCell: function (td, _cellData, rowData) {
@@ -42,13 +59,43 @@ jQuery(function () {
       title: 'Name',
     },
     {
-      data: 'environment',
+      data: 'product_id',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(
-          `<a class="govuk-link--no-visited-state" href="/components/${rowData.name}/environment/${rowData.environment}" data-test="environment">${rowData.environment}</a>`,
-        )
+        if (rowData.product_id && rowData.product_slug) {
+          $(td).html(
+            `<a class="govuk-link--no-visited-state" href="/products/${rowData.product_slug}">${rowData.product_id}</a>`,
+          )
+        } else {
+          $(td).html('Not set')
+        }
       },
-      title: 'Environment',
+      title: 'Product ID',
+    },
+    {
+      data: 'product_name',
+      createdCell: function (td, _cellData, rowData) {
+        if (rowData.product_id && rowData.product_slug) {
+          $(td).html(
+            `<a class="govuk-link--no-visited-state" href="/products/${rowData.product_slug}">${rowData.product_name}</a>`,
+          )
+        } else {
+          $(td).html('Not set')
+        }
+      },
+      title: 'Product Name',
+    },
+    {
+      data: 'team_name',
+      createdCell: function (td, _cellData, rowData) {
+        if (rowData.team_name && rowData.team_slug) {
+          $(td).html(
+            `<a class="govuk-link--no-visited-state" href="/teams/${rowData.team_slug}">${rowData.team_name}</a>`,
+          )
+        } else {
+          $(td).html('Not set')
+        }
+      },
+      title: 'Team',
     },
     {
       data: 'namespace',

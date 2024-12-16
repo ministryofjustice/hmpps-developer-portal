@@ -49,13 +49,14 @@ jQuery(function () {
     },
     {
       data: 'attributes.environments',
+      visible: false,
       render: function (data, type, row, meta) {
         const environments = row.attributes.environments
         const prodEnvironments = environments ? environments.filter(env => env.name === 'prod') : []
 
         let prodSlackChannel = ''
         if (prodEnvironments.length === 0) {
-          return 'N/A'
+          return 'No Prod Environment'
         }
 
         prodSlackChannel = prodEnvironments
