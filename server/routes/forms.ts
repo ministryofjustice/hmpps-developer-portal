@@ -133,7 +133,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       if (!body.product) {
         validationErrors.push({
           field: 'product',
-          message: 'Please select a produc',
+          message: 'Please select a product',
           href: '#product',
         })
       }
