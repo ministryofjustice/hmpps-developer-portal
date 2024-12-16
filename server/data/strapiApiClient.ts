@@ -74,7 +74,7 @@ export default class StrapiApiClient {
 
   async getComponents(
     exemptionFilters: string[] = [],
-    includeTeams: boolean = false,
+    includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
   ): Promise<ComponentListResponse> {
     const populate = new URLSearchParams({

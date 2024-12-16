@@ -40,7 +40,7 @@ export default class ServiceCatalogueService {
 
   async getComponents(
     exemptionFilters: string[] = [],
-    includeTeams: boolean = false,
+    includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
   ): Promise<ComponentListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
