@@ -2,7 +2,6 @@ jQuery(function () {
   function transformData(data) {
     const transformed = []
     data.forEach(item => {
-      console.log(item)
       item.attributes.environments.forEach(env => {
         const productData = item.attributes?.product?.data?.attributes || {}
         const teamData = productData.team?.data ? productData.team.data.attributes : null
