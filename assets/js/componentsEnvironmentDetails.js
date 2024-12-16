@@ -34,7 +34,6 @@ jQuery(function () {
         })
       })
     })
-    console.log(transformed)
     return transformed
   }
 
