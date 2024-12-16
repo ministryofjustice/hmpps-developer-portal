@@ -140,21 +140,21 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       if (!body.slack_channel_prod_release_notify) {
         validationErrors.push({
           field: 'slack_channel_prod_release_notify',
-          message: 'Please enter a slack channel for production release notifications (without #)',
+          message: 'Please enter a slack channel for production release notifications',
           href: '#slack_channel_prod_release_notify',
         })
       }
       if (!body.slack_channel_nonprod_release_notify) {
         validationErrors.push({
           field: 'slack_channel_nonprod_release_notify',
-          message: 'Please enter a slack channel for non-production release notifications (without #)',
+          message: 'Please enter a slack channel for non-production release notifications',
           href: '#slack_channel_nonprod_release_notify',
         })
       }
       if (!body.slack_channel_security_scans_notify) {
         validationErrors.push({
           field: 'slack_channel_security_scans_notify',
-          message: 'Please enter a slack channel for security scans (without #)',
+          message: 'Please enter a slack channel for security scans',
           href: '#slack_channel_security_scans_notify',
         })
       }

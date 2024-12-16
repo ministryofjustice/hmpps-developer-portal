@@ -154,7 +154,7 @@
         }
       }) }}
       <h2>Slack channels</h2>
-      <p>Please enter the slack channel ID (preferred) or the Slack channel name without the leading '#'</p>
+      <p>Please enter the slack channel ID (preferred) or slack channel name (without '#')</p>
       {{ govukInput({
         id: "slack_channel_prod_release_notify",
         name: "slack_channel_prod_release_notify",
@@ -184,7 +184,7 @@
         errorMessage: validationErrors | findError('slack_channel_security_scans_notify'),
         classes: "govuk-!-width-one-half",
         label: {
-          text: "Slack channel for pipeline security notifications *",
+          text: "Slack channel for security scan notifications *",
           classes: "govuk-fieldset__legend--s"
         }
       }) }}
