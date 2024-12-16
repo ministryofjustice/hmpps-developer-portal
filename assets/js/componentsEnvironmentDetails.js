@@ -2,6 +2,7 @@ jQuery(function () {
   function transformData(data) {
     const transformed = []
     data.forEach(item => {
+      console.log(item)
       item.attributes.environments.forEach(env => {
         transformed.push({
           name: item.attributes.name,
@@ -23,6 +24,15 @@ jQuery(function () {
           build_image_tag: env.build_image_tag,
           alert_severity_label: env.alert_severity_label === null ? 'Not set' : env.alert_severity_label,
           alerts_slack_channel: env.alerts_slack_channel === null ? 'Not set' : env.alerts_slack_channel,
+          product_id: item.attributes.product.data.attributes.p_id,
+          product_name: item.attributes.product.data.attributes.name,
+          product_slug: item.attributes.product.data.attributes.slug,
+          team_name: item.attributes.product.data.attributes.team.data
+            ? item.attributes.product.data.attributes.team.data.attributes.name
+            : 'Not set',
+          team_slug: item.attributes.product.data.attributes.team.data
+            ? item.attributes.product.data.attributes.team.data.attributes.slug
+            : 'Not set',
         })
       })
     })
@@ -30,6 +40,15 @@ jQuery(function () {
   }
 
   const columns = [
+    {
+      data: 'environment',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(
+          `<a class="govuk-link--no-visited-state" href="/components/${rowData.name}/environment/${rowData.environment}" data-test="environment">${rowData.environment}</a>`,
+        )
+      },
+      title: 'Environment',
+    },
     {
       data: 'name',
       createdCell: function (td, _cellData, rowData) {
@@ -42,13 +61,43 @@ jQuery(function () {
       title: 'Name',
     },
     {
-      data: 'environment',
+      data: 'product_id',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(
-          `<a class="govuk-link--no-visited-state" href="/components/${rowData.name}/environment/${rowData.environment}" data-test="environment">${rowData.environment}</a>`,
-        )
+        if (rowData.product_id && rowData.product_slug) {
+          $(td).html(
+            `<a class="govuk-link--no-visited-state" href="/products/${rowData.product_slug}">${rowData.product_id}</a>`,
+          )
+        } else {
+          $(td).html('Not set')
+        }
       },
-      title: 'Environment',
+      title: 'Product ID',
+    },
+    {
+      data: 'product_name',
+      createdCell: function (td, _cellData, rowData) {
+        if (rowData.product && rowData.product_slu) {
+          $(td).html(
+            `<a class="govuk-link--no-visited-state" href="/products/${rowData.product_slug}">${rowData.product_name}</a>`,
+          )
+        } else {
+          $(td).html('Not set')
+        }
+      },
+      title: 'Product Name',
+    },
+    {
+      data: 'team_name',
+      createdCell: function (td, _cellData, rowData) {
+        if (rowData.team_name !== 'Not set' && rowData.team_slug !== 'Not set') {
+          $(td).html(
+            `<a class="govuk-link--no-visited-state" href="/teams/${rowData.team_slug}">${rowData.team_name}</a>`,
+          )
+        } else {
+          $(td).html('Not set')
+        }
+      },
+      title: 'Team',
     },
     {
       data: 'namespace',
