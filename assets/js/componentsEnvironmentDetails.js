@@ -5,7 +5,7 @@ jQuery(function () {
       console.log(item)
       item.attributes.environments.forEach(env => {
         const productData = item.attributes?.product?.data?.attributes || {}
-        const teamData = productData.team?.data?.attributes || (productData.team?.data === null ? {} : {})
+        const teamData = productData.team?.data ? productData.team.data.attributes : null
         transformed.push({
           name: item.attributes.name,
           environment: env.name,
@@ -86,7 +86,7 @@ jQuery(function () {
       title: 'Product Name',
     },
     {
-      data: 'name',
+      data: 'team_name',
       createdCell: function (td, _cellData, rowData) {
         if (rowData.team_name && rowData.team_slug) {
           $(td).html(
