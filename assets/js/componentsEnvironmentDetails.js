@@ -2,7 +2,6 @@ jQuery(function () {
   function transformData(data) {
     const transformed = []
     data.forEach(item => {
-      console.log(item)
       item.attributes.environments.forEach(env => {
         transformed.push({
           name: item.attributes.name,
