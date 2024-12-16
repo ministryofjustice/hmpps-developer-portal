@@ -2,7 +2,10 @@ jQuery(function () {
   function transformData(data) {
     const transformed = []
     data.forEach(item => {
+      console.log(item)
       item.attributes.environments.forEach(env => {
+        const productData = item.attributes?.product?.data?.attributes || {}
+        const teamData = productData.team?.data?.attributes || (productData.team?.data === null ? {} : {})
         transformed.push({
           name: item.attributes.name,
           environment: env.name,
@@ -23,18 +26,15 @@ jQuery(function () {
           build_image_tag: env.build_image_tag,
           alert_severity_label: env.alert_severity_label === null ? 'Not set' : env.alert_severity_label,
           alerts_slack_channel: env.alerts_slack_channel === null ? 'Not set' : env.alerts_slack_channel,
-          product_id: item.attributes.product.data.attributes.p_id,
-          product_name: item.attributes.product.data.attributes.name,
-          product_slug: item.attributes.product.data.attributes.slug,
-          team_name: item.attributes.product.data.attributes.team.data
-            ? item.attributes.product.data.attributes.team.data.attributes.name
-            : 'Not set',
-          team_slug: item.attributes.product.data.attributes.team.data
-            ? item.attributes.product.data.attributes.team.data.attributes.slug
-            : 'Not set',
+          product_id: productData ? productData.p_id : '',
+          product_name: productData ? productData.name : '',
+          product_slug: productData ? productData.slug : '',
+          team_name: teamData ? teamData.name : '',
+          team_slug: teamData ? teamData.slug : '',
         })
       })
     })
+    console.log(transformed)
     return transformed
   }
 
@@ -75,7 +75,7 @@ jQuery(function () {
     {
       data: 'product_name',
       createdCell: function (td, _cellData, rowData) {
-        if (rowData.product && rowData.product_slu) {
+        if (rowData.product_id && rowData.product_slug) {
           $(td).html(
             `<a class="govuk-link--no-visited-state" href="/products/${rowData.product_slug}">${rowData.product_name}</a>`,
           )
@@ -86,9 +86,9 @@ jQuery(function () {
       title: 'Product Name',
     },
     {
-      data: 'team_name',
+      data: 'name',
       createdCell: function (td, _cellData, rowData) {
-        if (rowData.team_name !== 'Not set' && rowData.team_slug !== 'Not set') {
+        if (rowData.team_name && rowData.team_slug) {
           $(td).html(
             `<a class="govuk-link--no-visited-state" href="/teams/${rowData.team_slug}">${rowData.team_name}</a>`,
           )
