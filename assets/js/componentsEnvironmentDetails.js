@@ -25,7 +25,8 @@ jQuery(function () {
             env.modsecurity_audit_enabled === null ? 'Not set' : env.modsecurity_audit_enabled.toString(),
           build_image_tag: env.build_image_tag,
           alert_severity_label: env.alert_severity_label === null ? 'Not set' : env.alert_severity_label,
-          alerts_slack_channel: env.alerts_slack_channel === null ? 'Not set' : env.alerts_slack_channel,
+          alerts_slack_channel:
+            env.alerts_slack_channel === null || env.alerts_slack_channel === '' ? 'Not set' : env.alerts_slack_channel,
           product_id: productData ? productData.p_id : '',
           product_name: productData ? productData.name : '',
           product_slug: productData ? productData.slug : '',
