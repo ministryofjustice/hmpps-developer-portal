@@ -75,7 +75,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       if (!body.github_repo) {
         validationErrors.push({
           field: 'github_repo',
-          message: 'Enter Repository Name',
+          message: 'Please enter a repository name',
           href: '#github_repo',
         })
       } else {
@@ -83,35 +83,35 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         if (repoExists) {
           validationErrors.push({
             field: 'github_repo',
-            message: 'Repository name already exists in components collection, please choose a different name',
+            message: 'This repository name already exists in components collection - please choose a different name',
             href: '#github_repo',
           })
         }
         if (repoRequestExists) {
           validationErrors.push({
             field: 'github_repo',
-            message: 'Request for this component already exists in queue, please choose a different name',
+            message: 'A request for this component already exists in queue, please choose a different name',
             href: '#github_repo',
           })
         }
         if (!repoName.startsWith('hmpps')) {
           validationErrors.push({
             field: 'github_repo',
-            message: 'Repository name should start with "hmpps"',
+            message: 'The repository name must start with "hmpps"',
             href: '#github_repo',
           })
         }
         if (repoName.length >= 100) {
           validationErrors.push({
             field: 'github_repo',
-            message: 'Repository name should be less than 100 characters',
+            message: 'The repository name must be less than 100 characters',
             href: '#github_repo',
           })
         }
         if (!/^[a-zA-Z0-9-]+$/.test(repoName)) {
           validationErrors.push({
             field: 'github_repo',
-            message: 'Repository name should only contain alphanumeric characters and hyphens',
+            message: 'The repository name must only contain alphanumeric characters and hyphens',
             href: '#github_repo',
           })
         }
@@ -119,42 +119,42 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       if (!body.repo_description) {
         validationErrors.push({
           field: 'repo_description',
-          message: 'Enter Repository Description',
+          message: 'Please enter a repository description',
           href: '#repo_description',
         })
       }
       if (!body.base_template) {
         validationErrors.push({
           field: 'base_template',
-          message: 'Select a Base Template',
+          message: 'Please select a base template',
           href: '#base_template',
         })
       }
       if (!body.product) {
         validationErrors.push({
           field: 'product',
-          message: 'Select a Product',
+          message: 'Please select a product',
           href: '#product',
         })
       }
       if (!body.slack_channel_prod_release_notify) {
         validationErrors.push({
           field: 'slack_channel_prod_release_notify',
-          message: 'Enter Slack Channel for Production Release Notifications',
+          message: 'Please enter a slack channel for production release notifications',
           href: '#slack_channel_prod_release_notify',
         })
       }
       if (!body.slack_channel_nonprod_release_notify) {
         validationErrors.push({
           field: 'slack_channel_nonprod_release_notify',
-          message: 'Enter Slack Channel for Non-Production Release Notifications',
+          message: 'Please enter a slack channel for non-production release notifications',
           href: '#slack_channel_nonprod_release_notify',
         })
       }
       if (!body.slack_channel_security_scans_notify) {
         validationErrors.push({
           field: 'slack_channel_security_scans_notify',
-          message: 'Enter Slack Channel for Pipeline Notifications',
+          message: 'Please enter a slack channel for security scans',
           href: '#slack_channel_security_scans_notify',
         })
       }
@@ -251,9 +251,9 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       ...(formData.jira_project_keys ? { jira_project_keys: formData.jira_project_keys.toString().split(',') } : {}),
       github_project_visibility: formData.github_project_visibility as GithubProjectVisibility,
       product: formData.product?.toString(),
-      slack_channel_prod_release_notify: formData.slack_channel_prod_release_notify?.toString(),
-      slack_channel_nonprod_release_notify: formData.slack_channel_nonprod_release_notify?.toString(),
-      slack_channel_security_scans_notify: formData.slack_channel_security_scans_notify?.toString(),
+      slack_channel_prod_release_notify: formData.slack_channel_prod_release_notify?.toString().replace('#', ''),
+      slack_channel_nonprod_release_notify: formData.slack_channel_nonprod_release_notify?.toString().replace('#', ''),
+      slack_channel_security_scans_notify: formData.slack_channel_security_scans_notify?.toString().replace('#', ''),
       prod_alerts_severity_label: formData.prod_alerts_severity_label?.toString(),
       nonprod_alerts_severity_label: formData.nonprod_alerts_severity_label?.toString(),
       ...(formData.github_project_teams_write
