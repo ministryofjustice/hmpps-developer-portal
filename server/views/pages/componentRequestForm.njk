@@ -13,6 +13,7 @@
     {% include 'partials/errorSummary.njk' %}
     <h1 class="govuk-heading-xl">Component Request Form</h1>
     <p>After submitting this form, the SRE team will run the bootstrap to create the github repo and service catalogue entries. </p>
+    <p><i><b>Note:</b> fields marked '*' are required.</i></p>
     <form action="/forms/component-request-form" method="POST">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ govukInput({
@@ -118,7 +119,7 @@
         errorMessage: validationErrors | findError('github_projects_teams_admin'),
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github repository Admin teams *",
+          text: "Github repository admin teams *",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -132,7 +133,7 @@
         errorMessage: validationErrors | findError('github_project_teams_write'),
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github repository reams with Write permissions",
+          text: "Github repository reams with write permissions",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -155,6 +156,7 @@
       }) }}
       <h2>Slack channels</h2>
       <p>Please enter a Slack channel ID (preferred) or Slack channel name (without '#')</p>
+      <p><i><b>Note:</b> If a Slack channel is private, please invite <b>@HMPPS SRE Slack Bot</b> to the channel</i></p>
       {{ govukInput({
         id: "slack_channel_prod_release_notify",
         name: "slack_channel_prod_release_notify",
@@ -162,7 +164,7 @@
         errorMessage: validationErrors | findError('slack_channel_prod_release_notify'),
         classes: "govuk-!-width-one-half",
         label: {
-          text: "Slack channel for Production release notifications *",
+          text: "Slack channel for production release notifications *",
           classes: "govuk-fieldset__legend--s"
         }
       }) }}
@@ -170,10 +172,9 @@
         id: "slack_channel_nonprod_release_notify",
         name: "slack_channel_nonprod_release_notify",
         value: submittedForm.slack_channel_nonprod_release_notify,
-        errorMessage: validationErrors | findError('slack_channel_nonprod_release_notify'),
         classes: "govuk-!-width-one-half",
         label: {
-          text: "Slack channel for Non-Production release notifications *",
+          text: "Slack channel for non-production release notifications",
           classes: "govuk-fieldset__legend--s"
         }
       }) }}
