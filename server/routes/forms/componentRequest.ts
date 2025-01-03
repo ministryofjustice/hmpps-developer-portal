@@ -1,9 +1,9 @@
 import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
-import type { Services } from '../services'
-import { GithubRepoRequestRequest, GithubProjectVisibility } from '../data/strapiApiTypes'
-import { validateRequest } from '../middleware/setUpValidationMiddleware'
-import { FieldValidationError } from '../@types/FieldValidationError'
+import asyncMiddleware from '../../middleware/asyncMiddleware'
+import type { Services } from '../../services'
+import { GithubRepoRequestRequest, GithubProjectVisibility } from '../../data/strapiApiTypes'
+import { validateRequest } from '../../middleware/setUpValidationMiddleware'
+import { FieldValidationError } from '../../@types/FieldValidationError'
 
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
@@ -17,7 +17,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       productId: '',
       useFormattedName: true,
     })
-    return res.render('pages/componentRequestForm', {
+    return res.render('pages/forms/componentRequestForm', {
       title: 'Github Repository Requst Form',
       teamList,
       productList,
@@ -214,7 +214,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     const requestFormData = buildFormData(formData)
     try {
       await serviceCatalogueService.postGithubRepoRequest(requestFormData)
-      return res.render('pages/componentRequestConfirmation', {
+      return res.render('pages/forms/componentRequestConfirmation', {
         title: 'Github Repository Request Confirmation',
         repoName: formData.github_repo,
       })
@@ -225,7 +225,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         message: 'There was an error submitting your request. Please try again later.',
         href: '',
       })
-      return res.render('pages/componentRequestForm', {
+      return res.render('pages/forms/componentRequestForm', {
         validationErrors,
         formData,
       })

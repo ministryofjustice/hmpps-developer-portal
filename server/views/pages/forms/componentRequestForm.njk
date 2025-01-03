@@ -1,4 +1,4 @@
-{% extends "../partials/layout.njk" %}
+{% extends "../../partials/layout.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
@@ -14,7 +14,7 @@
     <h1 class="govuk-heading-xl">Component Request Form</h1>
     <p>After submitting this form, the SRE team will run the bootstrap to create the github repo and service catalogue entries. </p>
     <p><i><b>Note:</b> fields marked '*' are required.</i></p>
-    <form action="/forms/component-request-form" method="POST">
+    <form action="/componentRequest/component-request-form" method="POST">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ govukInput({
         id: "github_repo",
