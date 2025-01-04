@@ -1,0 +1,42 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + githubTeam.team_name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb(githubTeam.github_team_name, [{title: "Team Requests", href: "/githubTeam/github-teams"}]) }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 data-test="detail-page-title">{{ githubTeam.github_team_name }}</h1>
+    <table class="formData">
+      <tbody>
+        <tr>
+          <th>Description</th>
+          <td>{{ githubTeam.team_description }}</td>
+        </tr>
+        <tr>
+          <th>Parent Team</th>
+          <td>{{ githubTeam.parent_team_name }}</td>
+        </tr>
+        <tr>
+          <th>Sub Teams</th>
+          <td>
+            <ul>
+              {% if subTeams.length == 0 %}
+                <li><p data-test="no-products">None</p></li>
+              {% else %}
+                {% for team in subTeams %}
+                  <li><a href="/teamRequest/github-teams/{{ team }}">{{ team }}</a></li>
+                {% endfor %}
+              {% endif %}
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

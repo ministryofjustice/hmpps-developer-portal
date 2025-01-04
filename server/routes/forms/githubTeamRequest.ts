@@ -45,6 +45,22 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     res.send(githubTeams)
   })
 
+  get('/github-teams/:github_team_name', async (req, res) => {
+    const teamName = req.params.github_team_name
+    const teamRequest = await serviceCatalogueService.getGithubTeam({ teamName })
+    const allGithubTeams = await serviceCatalogueService.getGithubTeams()
+    const subTeams = allGithubTeams
+      .filter(team => team.attributes.parent_team_name === teamName)
+      .map(team => team.attributes.team_name)
+
+    const displayTeam = {
+      github_team_name: teamRequest.team_name,
+      team_description: teamRequest.team_desc,
+      parent_team_name: teamRequest.parent_team_name,
+    }
+    return res.render('pages/githubTeam', { githubTeam: displayTeam, subTeams })
+  })
+
   get('/update-github-teams-requests/:github_team_name', async (req, res) => {
     const teamName = req.params.github_team_name
     const teamRequest = await serviceCatalogueService.getUpdateGithubTeamRequest({ teamName })
