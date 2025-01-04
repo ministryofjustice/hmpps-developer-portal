@@ -11,6 +11,7 @@ dayjs.extend(relativeTime.default)
 type HasName = { attributes?: { name: string } }
 type HasRepoName = { attributes?: { github_repo: string } }
 type hasProductId = { attributes?: { name: string } }
+type HasTeamName = { attributes?: { team_name: string } }
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -96,6 +97,17 @@ export const sortComponentRequestData = (dataItem: HasRepoName, compareDataItem:
     return -1
   }
   if (dataItem.attributes.github_repo > compareDataItem.attributes.github_repo) {
+    return 1
+  }
+
+  return 0
+}
+
+export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasTeamName) => {
+  if (dataItem.attributes.team_name < compareDataItem.attributes.team_name) {
+    return -1
+  }
+  if (dataItem.attributes.team_name > compareDataItem.attributes.team_name) {
     return 1
   }
 

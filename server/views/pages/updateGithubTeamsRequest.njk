@@ -1,0 +1,49 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + teamRequest.team_name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb(teamRequest.github_team_name, [{title: "Team Requests", href: "/teamRequest/update-github-teams-requests"}]) }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 data-test="detail-page-title">{{ teamRequest.github_team_name }}</h1>
+    <table class="formData">
+      <tbody>
+        <tr>
+          <th>Description</th>
+          <td>{{ teamRequest.team_description }}</td>
+        </tr>
+        <tr>
+          <th>Parent Team</th>
+          <td>{{ teamRequest.parent_team_name }}</td>
+        </tr>
+        <tr>
+          <th>Request Status</th>
+          <td>{{ teamRequest.request_github_pr_status }}</td>
+        </tr>
+        <tr>
+          <th>Deployment PR</th>
+          <td><a href="https://github.com/ministryofjustice/hmpps-github-teams/pull/{{ teamRequest.request_github_pr_number}}">{{ teamRequest.request_github_pr_number}}</a></td>
+        </tr>
+        <tr>
+          <th>Requester By</th>
+          <td>{{ teamRequest.requester_name }}</td>
+        </tr>
+        <tr>
+          <th>Requester's Email-ID</th>
+          <td>{{ teamRequest.requester_email }}</td>
+        </tr>
+        <tr>
+          <th>Requesting Team</th>
+          <td>{{ teamRequest.requester_team }}</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

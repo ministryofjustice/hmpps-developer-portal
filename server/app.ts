@@ -31,6 +31,7 @@ import teamHealthRoutes from './routes/teamHealth'
 import missingFromCatalogueRoutes from './routes/missingFromCatalogue'
 import namespacesRoutes from './routes/namespaces'
 import componentRequestFormsRoutes from './routes/forms/componentRequest'
+import teamRequestFormsRoutes from './routes/forms/githubTeamRequest'
 
 import type { Services } from './services'
 
@@ -68,6 +69,7 @@ export default function createApp(services: Services): express.Application {
   app.use('/namespaces', namespacesRoutes(services))
   app.use(setUpValidationMiddleware())
   app.use('/componentRequest', componentRequestFormsRoutes(services))
+  app.use('/teamRequest', teamRequestFormsRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

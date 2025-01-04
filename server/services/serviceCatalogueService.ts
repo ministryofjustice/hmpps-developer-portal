@@ -19,8 +19,14 @@ import {
   GithubRepoRequest,
   GithubRepoRequestRequest,
   GithubRepoRequestListResponseDataItem,
+  UpdatedGithubTeamRequest,
+  UpdateGithubTeamsRequestResponse,
+  UpdateGithubTeamsRequestListResponseDataItem,
+  UpdateGithubTeamsRequestRequest,
+  GithubTeam,
+  GithubTeamListResponseDataItem,
 } from '../data/strapiApiTypes'
-import { sortData, sortRdsInstances, sortComponentRequestData } from '../utils/utils'
+import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData } from '../utils/utils'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -262,6 +268,51 @@ export default class ServiceCatalogueService {
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<GithubRepoRequestResponse> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const response = await strapiApiClient.postGithubRepoRequest(request)
+
+    return response
+  }
+
+  async getGithubTeams(): Promise<GithubTeamListResponseDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const teamRequestsData = await strapiApiClient.getGithubTeams()
+    const teamRequests = teamRequestsData.data.sort(sortGithubTeamsData)
+
+    return teamRequests
+  }
+
+  async getGithubTeam({ teamName }: { teamName: string }): Promise<GithubTeam> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const teamRequestData = await strapiApiClient.getGithubTeam({ teamName })
+    const teamRequest =
+      Array.isArray(teamRequestData.data) && teamRequestData.data.length > 0
+        ? teamRequestData.data[0].attributes
+        : teamRequestData.data?.attributes
+    return teamRequest
+  }
+
+  async getUpdateGithubTeamRequests(): Promise<UpdateGithubTeamsRequestListResponseDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const teamRequestsData = await strapiApiClient.getUpdateGithubTeamRequests()
+    const teamRequests = teamRequestsData.data.sort(sortGithubTeamsData)
+
+    return teamRequests
+  }
+
+  async getUpdateGithubTeamRequest({ teamName }: { teamName: string }): Promise<UpdatedGithubTeamRequest> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const teamRequestData = await strapiApiClient.getUpdateGithubTeamRequest({ teamName })
+    const teamRequest =
+      Array.isArray(teamRequestData.data) && teamRequestData.data.length > 0
+        ? teamRequestData.data[0].attributes
+        : teamRequestData.data?.attributes
+    return teamRequest
+  }
+
+  async postUpdateGithubTeamRequest(
+    request: UpdateGithubTeamsRequestRequest,
+  ): Promise<UpdateGithubTeamsRequestResponse> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const response = await strapiApiClient.postUpdateGithubTeamRequest(request)
 
     return response
   }

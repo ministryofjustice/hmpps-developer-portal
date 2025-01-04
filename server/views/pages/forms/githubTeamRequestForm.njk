@@ -1,0 +1,127 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %} 
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% block content %}
+<div class="govuk-grid-row govuk-body">
+  <div class="govuk-grid-column-one-half">
+    {% include '../../partials/errorSummary.njk' %}
+    <h1 class="govuk-heading-xl">Github Team Request Form</h1>
+    <p>After submitting this form, PR will be created in hmpps-github-teams repository, <br>the SRE team will review this request and merge.  </p>
+    <p><i><b>Note:</b> fields marked '*' are required.</i></p>
+    <form action="/teamRequest/github-team-request-form" method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukInput({
+        id: "team_name",
+        name: "team_name",
+        value: submittedForm.team_name,
+        classes: "govuk-!-width-one-half",
+        label: {
+            text: "Team Name *",
+            classes: "govuk-fieldset__legend--s"
+        },
+        errorMessage: validationErrors | findError('team_name')
+        }) }}
+
+        {{ govukTextarea({
+        id: "team_description",
+        name: "team_description",
+        value: submittedForm.team_description,
+        classes: "govuk-!-width-three-quarters",
+        label: {
+            text: "Team Description *",
+            classes: "govuk-fieldset__legend--s"
+        },
+        errorMessage: validationErrors | findError('team_description')
+        }) }}
+        {{ govukRadios({
+          classes: "govuk-radios--inline",
+          idPrefix: "team_type",
+          name: "team_type",
+          value: submittedForm.team_type  or 'parent_team',
+          errorMessage: validationErrors | findError('team_type'),
+          fieldset: {
+            legend: {
+              text: "Team type * . If parent team option selected, hmpps-developers will be default parent.",
+              classes: 'govuk-fieldset__legend--s'
+            }
+          },
+          items: [
+            {
+              value: "parent_team",
+              text: "Parent team"
+            },
+            {
+              value: "sub_team",
+              text: "Sub team"
+            }]
+        }) }}
+        {{ govukSelect({
+          id: "parent_team_name",
+          name: "parent_team_name",
+          label: {
+            text: "Parent team *",
+            classes: "govuk-fieldset__legend--s"
+          },
+          items: subTeamList | toSelect("value", "text", submittedForm.parent_team_name),
+          errorMessage: validationErrors | findError('parent_team_name')
+        }) }}
+        <h2>Contact details</h2>
+        <p>Please enter your contact details to send notifications to after processing your request.</p>
+        {{ govukInput({
+        id: "requester_name",
+        name: "requester_name",
+        value: submittedForm.requester_name,
+        classes: "govuk-!-width-one-half",
+        label: {
+            text: "Requester Name *",
+            classes: "govuk-fieldset__legend--s"
+        },
+        errorMessage: validationErrors | findError('requester_name')
+        }) }}
+
+        {{ govukInput({
+        id: "requester_email",
+        name: "requester_email",
+        value: submittedForm.requester_email,
+        classes: "govuk-!-width-one-half",
+        label: {
+            text: "Requester Email *",
+            classes: "govuk-fieldset__legend--s"
+        },
+        errorMessage: validationErrors | findError('requester_email')
+        }) }}
+
+        {{ govukSelect({
+            id: "requester_team",
+            name: "requester_team",
+            value: submittedForm.requester_team,
+            selected: true,
+            label: {
+            text: "Team *",
+            classes: "govuk-fieldset__legend--s"
+            },
+            items: teamList,
+            errorMessage: validationErrors | findError('requester_team')
+        }) }}
+      {{ govukButton({
+        id: "submitdata",
+        name: "submitdata",
+        text: "Submit",
+        element: "button",
+        preventDoubleClick: true,
+        attributes: { "data-test": "submit" }
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/js/githubTeamRequestForm.js"></script>
+{% endblock %}

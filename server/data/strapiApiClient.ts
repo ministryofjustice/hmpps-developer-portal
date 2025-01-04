@@ -18,6 +18,11 @@ import {
   GithubRepoRequestResponse,
   GithubRepoRequestRequest,
   GithubRepoRequestListResponse,
+  GithubTeamListResponse,
+  GithubTeamResponse,
+  UpdateGithubTeamsRequestRequest,
+  UpdateGithubTeamsRequestListResponse,
+  UpdateGithubTeamsRequestResponse,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
@@ -251,6 +256,43 @@ export default class StrapiApiClient {
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<GithubRepoRequestResponse> {
     return this.restClient.post({
       path: '/v1/github-repo-requests',
+      data: request,
+    })
+  }
+
+  async getGithubTeams(): Promise<GithubTeamListResponse> {
+    return this.restClient.get({
+      path: '/v1/github-teams',
+      query: 'populate=team_name',
+    })
+  }
+
+  async getGithubTeam({ teamName }: { teamName: string }): Promise<GithubTeamResponse> {
+    return this.restClient.get({
+      path: '/v1/github-teams',
+      query: `filters[team_name][$eq]=${teamName}`,
+    })
+  }
+
+  async getUpdateGithubTeamRequests(): Promise<UpdateGithubTeamsRequestListResponse> {
+    return this.restClient.get({
+      path: '/v1/update-github-teams-requests',
+      query: 'populate=team_name',
+    })
+  }
+
+  async getUpdateGithubTeamRequest({ teamName }: { teamName: string }): Promise<UpdateGithubTeamsRequestResponse> {
+    return this.restClient.get({
+      path: '/v1/update-github-teams-requests',
+      query: `filters[team_name][$eq]=${teamName}`,
+    })
+  }
+
+  async postUpdateGithubTeamRequest(
+    request: UpdateGithubTeamsRequestRequest,
+  ): Promise<UpdateGithubTeamsRequestResponse> {
+    return this.restClient.post({
+      path: '/v1/update-github-teams-requests',
       data: request,
     })
   }

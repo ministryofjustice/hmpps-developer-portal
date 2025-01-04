@@ -100,6 +100,70 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/github-teams': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/github-teams']
+    put?: never
+    post: operations['post/github-teams']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/github-teams/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/github-teams/{id}']
+    put: operations['put/github-teams/{id}']
+    post?: never
+    delete: operations['delete/github-teams/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/github-users': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/github-users']
+    put?: never
+    post: operations['post/github-users']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/github-users/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/github-users/{id}']
+    put: operations['put/github-users/{id}']
+    post?: never
+    delete: operations['delete/github-users/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/namespaces': {
     parameters: {
       query?: never
@@ -255,6 +319,70 @@ export interface paths {
     put: operations['put/teams/{id}']
     post?: never
     delete: operations['delete/teams/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/update-github-teams-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/update-github-teams-requests']
+    put?: never
+    post: operations['post/update-github-teams-requests']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/update-github-teams-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/update-github-teams-requests/{id}']
+    put: operations['put/update-github-teams-requests/{id}']
+    post?: never
+    delete: operations['delete/update-github-teams-requests/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/update-github-users-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/update-github-users-requests']
+    put?: never
+    post: operations['post/update-github-users-requests']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/update-github-users-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/update-github-users-requests/{id}']
+    put: operations['put/update-github-users-requests/{id}']
+    post?: never
+    delete: operations['delete/update-github-users-requests/{id}']
     options?: never
     head?: never
     patch?: never
@@ -2683,6 +2811,7 @@ export interface components {
         requester_name?: string
         requester_email?: string
         requester_team?: string
+        namespace?: string
       }
     }
     GithubRepoRequestListResponseDataItem: {
@@ -2723,6 +2852,7 @@ export interface components {
       requester_name?: string
       requester_email?: string
       requester_team?: string
+      namespace?: string
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -2841,6 +2971,304 @@ export interface components {
     }
     GithubRepoRequestResponse: {
       data?: components['schemas']['GithubRepoRequestResponseDataObject']
+      meta?: Record<string, never>
+    }
+    GithubTeamRequest: {
+      data: {
+        github_team_id?: number
+        team_name?: string
+        parent_team_name?: string
+        team_desc?: string
+      }
+    }
+    GithubTeamListResponseDataItem: {
+      id?: number
+      attributes?: components['schemas']['GithubTeam']
+    }
+    GithubTeamListResponse: {
+      data?: components['schemas']['GithubTeamListResponseDataItem'][]
+      meta?: {
+        pagination?: {
+          page?: number
+          pageSize?: number
+          pageCount?: number
+          total?: number
+        }
+      }
+    }
+    GithubTeam: {
+      github_team_id?: number
+      team_name?: string
+      parent_team_name?: string
+      team_desc?: string
+      /** Format: date-time */
+      createdAt?: string
+      /** Format: date-time */
+      updatedAt?: string
+      /** Format: date-time */
+      publishedAt?: string
+      createdBy?: {
+        data?: {
+          id?: number
+          attributes?: {
+            firstname?: string
+            lastname?: string
+            username?: string
+            /** Format: email */
+            email?: string
+            resetPasswordToken?: string
+            registrationToken?: string
+            isActive?: boolean
+            roles?: {
+              data?: {
+                id?: number
+                attributes?: {
+                  name?: string
+                  code?: string
+                  description?: string
+                  users?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }[]
+                  }
+                  permissions?: {
+                    data?: {
+                      id?: number
+                      attributes?: {
+                        action?: string
+                        actionParameters?: unknown
+                        subject?: string
+                        properties?: unknown
+                        conditions?: unknown
+                        role?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                        /** Format: date-time */
+                        createdAt?: string
+                        /** Format: date-time */
+                        updatedAt?: string
+                        createdBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                        updatedBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                      }
+                    }[]
+                  }
+                  /** Format: date-time */
+                  createdAt?: string
+                  /** Format: date-time */
+                  updatedAt?: string
+                  createdBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                  updatedBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                }
+              }[]
+            }
+            blocked?: boolean
+            preferedLanguage?: string
+            /** Format: date-time */
+            createdAt?: string
+            /** Format: date-time */
+            updatedAt?: string
+            createdBy?: {
+              data?: {
+                id?: number
+                attributes?: Record<string, never>
+              }
+            }
+            updatedBy?: {
+              data?: {
+                id?: number
+                attributes?: Record<string, never>
+              }
+            }
+          }
+        }
+      }
+      updatedBy?: {
+        data?: {
+          id?: number
+          attributes?: Record<string, never>
+        }
+      }
+    }
+    GithubTeamResponseDataObject: {
+      id?: number
+      attributes?: components['schemas']['GithubTeam']
+    }
+    GithubTeamResponse: {
+      data?: components['schemas']['GithubTeamResponseDataObject']
+      meta?: Record<string, never>
+    }
+    GithubUserRequest: {
+      data: {
+        full_name?: string
+        user_email?: string
+        github_username: string
+        github_teams?: unknown
+        deleted?: boolean
+      }
+    }
+    GithubUserListResponseDataItem: {
+      id?: number
+      attributes?: components['schemas']['GithubUser']
+    }
+    GithubUserListResponse: {
+      data?: components['schemas']['GithubUserListResponseDataItem'][]
+      meta?: {
+        pagination?: {
+          page?: number
+          pageSize?: number
+          pageCount?: number
+          total?: number
+        }
+      }
+    }
+    GithubUser: {
+      full_name?: string
+      user_email?: string
+      github_username: string
+      github_teams?: unknown
+      deleted?: boolean
+      /** Format: date-time */
+      createdAt?: string
+      /** Format: date-time */
+      updatedAt?: string
+      /** Format: date-time */
+      publishedAt?: string
+      createdBy?: {
+        data?: {
+          id?: number
+          attributes?: {
+            firstname?: string
+            lastname?: string
+            username?: string
+            /** Format: email */
+            email?: string
+            resetPasswordToken?: string
+            registrationToken?: string
+            isActive?: boolean
+            roles?: {
+              data?: {
+                id?: number
+                attributes?: {
+                  name?: string
+                  code?: string
+                  description?: string
+                  users?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }[]
+                  }
+                  permissions?: {
+                    data?: {
+                      id?: number
+                      attributes?: {
+                        action?: string
+                        actionParameters?: unknown
+                        subject?: string
+                        properties?: unknown
+                        conditions?: unknown
+                        role?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                        /** Format: date-time */
+                        createdAt?: string
+                        /** Format: date-time */
+                        updatedAt?: string
+                        createdBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                        updatedBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                      }
+                    }[]
+                  }
+                  /** Format: date-time */
+                  createdAt?: string
+                  /** Format: date-time */
+                  updatedAt?: string
+                  createdBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                  updatedBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                }
+              }[]
+            }
+            blocked?: boolean
+            preferedLanguage?: string
+            /** Format: date-time */
+            createdAt?: string
+            /** Format: date-time */
+            updatedAt?: string
+            createdBy?: {
+              data?: {
+                id?: number
+                attributes?: Record<string, never>
+              }
+            }
+            updatedBy?: {
+              data?: {
+                id?: number
+                attributes?: Record<string, never>
+              }
+            }
+          }
+        }
+      }
+      updatedBy?: {
+        data?: {
+          id?: number
+          attributes?: Record<string, never>
+        }
+      }
+    }
+    GithubUserResponseDataObject: {
+      id?: number
+      attributes?: components['schemas']['GithubUser']
+    }
+    GithubUserResponse: {
+      data?: components['schemas']['GithubUserResponseDataObject']
       meta?: Record<string, never>
     }
     NamespaceRequest: {
@@ -5143,6 +5571,322 @@ export interface components {
       data?: components['schemas']['TeamResponseDataObject']
       meta?: Record<string, never>
     }
+    UpdateGithubTeamsRequestRequest: {
+      data: {
+        team_name?: string
+        team_desc?: string
+        parent_team_name?: string
+        requester_name?: string
+        requester_email?: string
+        requester_team?: string
+        request_github_pr_status?: string
+        request_github_pr_number?: number
+      }
+    }
+    UpdateGithubTeamsRequestListResponseDataItem: {
+      id?: number
+      attributes?: components['schemas']['UpdateGithubTeamsRequest']
+    }
+    UpdateGithubTeamsRequestListResponse: {
+      data?: components['schemas']['UpdateGithubTeamsRequestListResponseDataItem'][]
+      meta?: {
+        pagination?: {
+          page?: number
+          pageSize?: number
+          pageCount?: number
+          total?: number
+        }
+      }
+    }
+    UpdateGithubTeamsRequest: {
+      team_name?: string
+      team_desc?: string
+      parent_team_name?: string
+      requester_name?: string
+      requester_email?: string
+      requester_team?: string
+      request_github_pr_status?: string
+      request_github_pr_number?: number
+      /** Format: date-time */
+      createdAt?: string
+      /** Format: date-time */
+      updatedAt?: string
+      /** Format: date-time */
+      publishedAt?: string
+      createdBy?: {
+        data?: {
+          id?: number
+          attributes?: {
+            firstname?: string
+            lastname?: string
+            username?: string
+            /** Format: email */
+            email?: string
+            resetPasswordToken?: string
+            registrationToken?: string
+            isActive?: boolean
+            roles?: {
+              data?: {
+                id?: number
+                attributes?: {
+                  name?: string
+                  code?: string
+                  description?: string
+                  users?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }[]
+                  }
+                  permissions?: {
+                    data?: {
+                      id?: number
+                      attributes?: {
+                        action?: string
+                        actionParameters?: unknown
+                        subject?: string
+                        properties?: unknown
+                        conditions?: unknown
+                        role?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                        /** Format: date-time */
+                        createdAt?: string
+                        /** Format: date-time */
+                        updatedAt?: string
+                        createdBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                        updatedBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                      }
+                    }[]
+                  }
+                  /** Format: date-time */
+                  createdAt?: string
+                  /** Format: date-time */
+                  updatedAt?: string
+                  createdBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                  updatedBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                }
+              }[]
+            }
+            blocked?: boolean
+            preferedLanguage?: string
+            /** Format: date-time */
+            createdAt?: string
+            /** Format: date-time */
+            updatedAt?: string
+            createdBy?: {
+              data?: {
+                id?: number
+                attributes?: Record<string, never>
+              }
+            }
+            updatedBy?: {
+              data?: {
+                id?: number
+                attributes?: Record<string, never>
+              }
+            }
+          }
+        }
+      }
+      updatedBy?: {
+        data?: {
+          id?: number
+          attributes?: Record<string, never>
+        }
+      }
+    }
+    UpdateGithubTeamsRequestResponseDataObject: {
+      id?: number
+      attributes?: components['schemas']['UpdateGithubTeamsRequest']
+    }
+    UpdateGithubTeamsRequestResponse: {
+      data?: components['schemas']['UpdateGithubTeamsRequestResponseDataObject']
+      meta?: Record<string, never>
+    }
+    UpdateGithubUsersRequestRequest: {
+      data: {
+        full_name?: string
+        user_email?: string
+        github_username: string
+        github_teams?: unknown
+        requester_name?: string
+        requester_email?: string
+        requester_team?: string
+        request_github_pr_status?: string
+        request_github_pr_number?: number
+        user_deletion_request?: boolean
+      }
+    }
+    UpdateGithubUsersRequestListResponseDataItem: {
+      id?: number
+      attributes?: components['schemas']['UpdateGithubUsersRequest']
+    }
+    UpdateGithubUsersRequestListResponse: {
+      data?: components['schemas']['UpdateGithubUsersRequestListResponseDataItem'][]
+      meta?: {
+        pagination?: {
+          page?: number
+          pageSize?: number
+          pageCount?: number
+          total?: number
+        }
+      }
+    }
+    UpdateGithubUsersRequest: {
+      full_name?: string
+      user_email?: string
+      github_username: string
+      github_teams?: unknown
+      requester_name?: string
+      requester_email?: string
+      requester_team?: string
+      request_github_pr_status?: string
+      request_github_pr_number?: number
+      user_deletion_request?: boolean
+      /** Format: date-time */
+      createdAt?: string
+      /** Format: date-time */
+      updatedAt?: string
+      /** Format: date-time */
+      publishedAt?: string
+      createdBy?: {
+        data?: {
+          id?: number
+          attributes?: {
+            firstname?: string
+            lastname?: string
+            username?: string
+            /** Format: email */
+            email?: string
+            resetPasswordToken?: string
+            registrationToken?: string
+            isActive?: boolean
+            roles?: {
+              data?: {
+                id?: number
+                attributes?: {
+                  name?: string
+                  code?: string
+                  description?: string
+                  users?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }[]
+                  }
+                  permissions?: {
+                    data?: {
+                      id?: number
+                      attributes?: {
+                        action?: string
+                        actionParameters?: unknown
+                        subject?: string
+                        properties?: unknown
+                        conditions?: unknown
+                        role?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                        /** Format: date-time */
+                        createdAt?: string
+                        /** Format: date-time */
+                        updatedAt?: string
+                        createdBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                        updatedBy?: {
+                          data?: {
+                            id?: number
+                            attributes?: Record<string, never>
+                          }
+                        }
+                      }
+                    }[]
+                  }
+                  /** Format: date-time */
+                  createdAt?: string
+                  /** Format: date-time */
+                  updatedAt?: string
+                  createdBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                  updatedBy?: {
+                    data?: {
+                      id?: number
+                      attributes?: Record<string, never>
+                    }
+                  }
+                }
+              }[]
+            }
+            blocked?: boolean
+            preferedLanguage?: string
+            /** Format: date-time */
+            createdAt?: string
+            /** Format: date-time */
+            updatedAt?: string
+            createdBy?: {
+              data?: {
+                id?: number
+                attributes?: Record<string, never>
+              }
+            }
+            updatedBy?: {
+              data?: {
+                id?: number
+                attributes?: Record<string, never>
+              }
+            }
+          }
+        }
+      }
+      updatedBy?: {
+        data?: {
+          id?: number
+          attributes?: Record<string, never>
+        }
+      }
+    }
+    UpdateGithubUsersRequestResponseDataObject: {
+      id?: number
+      attributes?: components['schemas']['UpdateGithubUsersRequest']
+    }
+    UpdateGithubUsersRequestResponse: {
+      data?: components['schemas']['UpdateGithubUsersRequestResponseDataObject']
+      meta?: Record<string, never>
+    }
     UploadFile: {
       id?: number
       name?: string
@@ -6274,6 +7018,730 @@ export interface operations {
     }
   }
   'delete/github-repo-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': number
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/github-teams': {
+    parameters: {
+      query?: {
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
+        sort?: string
+        /** @description Return page/pageSize (default: true) */
+        'pagination[withCount]'?: boolean
+        /** @description Page number (default: 0) */
+        'pagination[page]'?: number
+        /** @description Page size (default: 25) */
+        'pagination[pageSize]'?: number
+        /** @description Offset value (default: 0) */
+        'pagination[start]'?: number
+        /** @description Number of entities to return (default: 25) */
+        'pagination[limit]'?: number
+        /** @description Fields to return (ex: title,author) */
+        fields?: string
+        /** @description Relations to return */
+        populate?: string
+        /** @description Filters to apply */
+        filters?: {
+          [key: string]: unknown
+        }
+        /** @description Locale to apply */
+        locale?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubTeamListResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'post/github-teams': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GithubTeamRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubTeamResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/github-teams/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubTeamResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'put/github-teams/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GithubTeamRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubTeamResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'delete/github-teams/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': number
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/github-users': {
+    parameters: {
+      query?: {
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
+        sort?: string
+        /** @description Return page/pageSize (default: true) */
+        'pagination[withCount]'?: boolean
+        /** @description Page number (default: 0) */
+        'pagination[page]'?: number
+        /** @description Page size (default: 25) */
+        'pagination[pageSize]'?: number
+        /** @description Offset value (default: 0) */
+        'pagination[start]'?: number
+        /** @description Number of entities to return (default: 25) */
+        'pagination[limit]'?: number
+        /** @description Fields to return (ex: title,author) */
+        fields?: string
+        /** @description Relations to return */
+        populate?: string
+        /** @description Filters to apply */
+        filters?: {
+          [key: string]: unknown
+        }
+        /** @description Locale to apply */
+        locale?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubUserListResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'post/github-users': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GithubUserRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubUserResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/github-users/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubUserResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'put/github-users/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GithubUserRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['GithubUserResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'delete/github-users/{id}': {
     parameters: {
       query?: never
       header?: never
@@ -8084,6 +9552,730 @@ export interface operations {
     }
   }
   'delete/teams/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': number
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/update-github-teams-requests': {
+    parameters: {
+      query?: {
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
+        sort?: string
+        /** @description Return page/pageSize (default: true) */
+        'pagination[withCount]'?: boolean
+        /** @description Page number (default: 0) */
+        'pagination[page]'?: number
+        /** @description Page size (default: 25) */
+        'pagination[pageSize]'?: number
+        /** @description Offset value (default: 0) */
+        'pagination[start]'?: number
+        /** @description Number of entities to return (default: 25) */
+        'pagination[limit]'?: number
+        /** @description Fields to return (ex: title,author) */
+        fields?: string
+        /** @description Relations to return */
+        populate?: string
+        /** @description Filters to apply */
+        filters?: {
+          [key: string]: unknown
+        }
+        /** @description Locale to apply */
+        locale?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UpdateGithubTeamsRequestListResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'post/update-github-teams-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateGithubTeamsRequestRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UpdateGithubTeamsRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/update-github-teams-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UpdateGithubTeamsRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'put/update-github-teams-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateGithubTeamsRequestRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UpdateGithubTeamsRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'delete/update-github-teams-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': number
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/update-github-users-requests': {
+    parameters: {
+      query?: {
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
+        sort?: string
+        /** @description Return page/pageSize (default: true) */
+        'pagination[withCount]'?: boolean
+        /** @description Page number (default: 0) */
+        'pagination[page]'?: number
+        /** @description Page size (default: 25) */
+        'pagination[pageSize]'?: number
+        /** @description Offset value (default: 0) */
+        'pagination[start]'?: number
+        /** @description Number of entities to return (default: 25) */
+        'pagination[limit]'?: number
+        /** @description Fields to return (ex: title,author) */
+        fields?: string
+        /** @description Relations to return */
+        populate?: string
+        /** @description Filters to apply */
+        filters?: {
+          [key: string]: unknown
+        }
+        /** @description Locale to apply */
+        locale?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UpdateGithubUsersRequestListResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'post/update-github-users-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateGithubUsersRequestRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UpdateGithubUsersRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/update-github-users-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UpdateGithubUsersRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'put/update-github-users-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateGithubUsersRequestRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UpdateGithubUsersRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'delete/update-github-users-requests/{id}': {
     parameters: {
       query?: never
       header?: never

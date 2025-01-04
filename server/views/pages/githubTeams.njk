@@ -1,0 +1,38 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Teams" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb("Github Teams", []) }}
+
+  <h1>Github Teams</h1>
+
+  <table id="githubTeamsTable" class="stripe">
+		<thead>
+			<tr>
+				<th>Github Team ID</th>
+				<th>Team Name</th>
+				<th>Parent Team</th>
+				<th>Team Description</th>
+				</tr>
+			</thead>
+			<tfoot>
+			<tr>
+				<th>Github Team ID</th>
+				<th>Team Name</th>
+				<th>Parent Team</th>
+				<th>Team Description</th>
+			</tr>
+		</tfoot>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/githubTeams.js"></script>
+{% endblock %}

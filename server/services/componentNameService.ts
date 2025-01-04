@@ -107,4 +107,20 @@ export default class ComponentNameService {
     )
     return !!components
   }
+
+  async checkGithubTeamExists(githubTeamName: string): Promise<boolean> {
+    const githubTeamData = await this.strapiApiClientFactory('').getGithubTeams()
+    const githubTeams = githubTeamData.data.find(
+      team => formatMonitorName(team.attributes.team_name) === githubTeamName,
+    )
+    return !!githubTeams
+  }
+
+  async checkGithubTeamRequestExists(githubTeamName: string): Promise<boolean> {
+    const githubTeamData = await this.strapiApiClientFactory('').getUpdateGithubTeamRequests()
+    const githubTeams = githubTeamData.data.find(
+      team => formatMonitorName(team.attributes.team_name) === githubTeamName,
+    )
+    return !!githubTeams
+  }
 }
