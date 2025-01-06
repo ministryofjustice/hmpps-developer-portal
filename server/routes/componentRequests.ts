@@ -236,32 +236,48 @@ export default function routes({ componentNameService, serviceCatalogueService, 
 }
 
 const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
+  const sanitiseString = (str: string | undefined) => str?.replace(/[\s\r\n]+$/g, '')
+
   return {
     data: {
-      github_repo: formData.github_repo?.toString(),
-      repo_description: formData.repo_description?.toString(),
-      base_template: formData.base_template?.toString(),
-      ...(formData.jira_project_keys ? { jira_project_keys: formData.jira_project_keys.toString().split(',') } : {}),
+      github_repo: sanitiseString(formData.github_repo?.toString()),
+      repo_description: sanitiseString(formData.repo_description?.toString()),
+      base_template: sanitiseString(formData.base_template?.toString()),
+      ...(formData.jira_project_keys
+        ? { jira_project_keys: sanitiseString(formData.jira_project_keys.toString()).split(',') }
+        : {}),
       github_project_visibility: formData.github_project_visibility as GithubProjectVisibility,
       product: formData.product?.toString(),
-      slack_channel_prod_release_notify: formData.slack_channel_prod_release_notify?.toString().replace('#', ''),
-      slack_channel_nonprod_release_notify: formData.slack_channel_nonprod_release_notify?.toString().replace('#', ''),
-      slack_channel_security_scans_notify: formData.slack_channel_security_scans_notify?.toString().replace('#', ''),
-      prod_alerts_severity_label: formData.prod_alerts_severity_label?.toString(),
-      nonprod_alerts_severity_label: formData.nonprod_alerts_severity_label?.toString(),
+      slack_channel_prod_release_notify: sanitiseString(
+        formData.slack_channel_prod_release_notify?.toString().replace('#', ''),
+      ),
+      slack_channel_nonprod_release_notify: sanitiseString(
+        formData.slack_channel_nonprod_release_notify?.toString().replace('#', ''),
+      ),
+      slack_channel_security_scans_notify: sanitiseString(
+        formData.slack_channel_security_scans_notify?.toString().replace('#', ''),
+      ),
+      prod_alerts_severity_label: sanitiseString(formData.prod_alerts_severity_label?.toString()),
+      nonprod_alerts_severity_label: sanitiseString(formData.nonprod_alerts_severity_label?.toString()),
       ...(formData.github_project_teams_write
-        ? { github_project_teams_write: convertTeamsStringToArray(formData.github_project_teams_write?.toString()) }
-        : {}),
-      github_projects_teams_admin: convertTeamsStringToArray(formData.github_projects_teams_admin?.toString()),
-      ...(formData.github_project_branch_protection_restricted_teams
         ? {
-            github_project_branch_protection_restricted_teams: convertTeamsStringToArray(
-              formData.github_project_branch_protection_restricted_teams?.toString(),
+            github_project_teams_write: convertTeamsStringToArray(
+              sanitiseString(formData.github_project_teams_write?.toString()),
             ),
           }
         : {}),
-      requester_name: formData.requester_name?.toString(),
-      requester_email: formData.requester_email?.toString(),
+      github_projects_teams_admin: convertTeamsStringToArray(
+        sanitiseString(formData.github_projects_teams_admin?.toString()),
+      ),
+      ...(formData.github_project_branch_protection_restricted_teams
+        ? {
+            github_project_branch_protection_restricted_teams: convertTeamsStringToArray(
+              sanitiseString(formData.github_project_branch_protection_restricted_teams?.toString()),
+            ),
+          }
+        : {}),
+      requester_name: sanitiseString(formData.requester_name?.toString()),
+      requester_email: sanitiseString(formData.requester_email?.toString()),
       requester_team: formData.requester_team?.toString(),
       request_github_pr_status: 'Pending',
     },
