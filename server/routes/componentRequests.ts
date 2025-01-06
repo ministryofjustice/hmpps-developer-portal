@@ -236,7 +236,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
 }
 
 const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
-  const sanitiseString = (str: string | undefined) => str?.replace(/[\s\r\n]+$/g, '')
+  const sanitiseString = (str: string | undefined) => str?.replace(/[\s\r\n]+/g, ' ').trim()
 
   return {
     data: {
