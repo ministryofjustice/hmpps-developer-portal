@@ -1,9 +1,9 @@
 import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../../middleware/asyncMiddleware'
-import type { Services } from '../../services'
-import { GithubRepoRequestRequest, GithubProjectVisibility } from '../../data/strapiApiTypes'
-import { validateRequest } from '../../middleware/setUpValidationMiddleware'
-import { FieldValidationError } from '../../@types/FieldValidationError'
+import asyncMiddleware from '../middleware/asyncMiddleware'
+import type { Services } from '../services'
+import { GithubRepoRequestRequest, GithubProjectVisibility } from '../data/strapiApiTypes'
+import { validateRequest } from '../middleware/setUpValidationMiddleware'
+import { FieldValidationError } from '../@types/FieldValidationError'
 
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
@@ -11,30 +11,30 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
-  get('/component-request-form', async (req, res) => {
+  get('/new', async (req, res) => {
     const [teamList, productList] = await dataFilterService.getFormsDropdownLists({
       teamName: '',
       productId: '',
       useFormattedName: true,
     })
-    return res.render('pages/forms/componentRequestForm', {
+    return res.render('pages/componentRequestForm', {
       title: 'Github Repository Requst Form',
       teamList,
       productList,
     })
   })
 
-  get('/component-requests', async (req, res) => {
+  get('/', async (req, res) => {
     return res.render('pages/componentRequests')
   })
 
-  get('/component-requests/data', async (req, res) => {
+  get('/data', async (req, res) => {
     const componentRequests = await serviceCatalogueService.getGithubRepoRequests()
 
     res.send(componentRequests)
   })
 
-  get('/component-requests/:repo_name', async (req, res) => {
+  get('/:repo_name', async (req, res) => {
     const repoName = req.params.repo_name
     const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName })
     const displayComponent = {
@@ -62,7 +62,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     return res.render('pages/componentRequest', { componentRequest: displayComponent })
   })
 
-  post('/component-request-form', async (req, res): Promise<void> => {
+  post('/new', async (req, res): Promise<void> => {
     const formData = req.body
     const repoExists = formData.github_repo
       ? await componentNameService.checkComponentExists(formData.github_repo)
@@ -214,7 +214,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     const requestFormData = buildFormData(formData)
     try {
       await serviceCatalogueService.postGithubRepoRequest(requestFormData)
-      return res.render('pages/forms/componentRequestConfirmation', {
+      return res.render('pages/componentRequestConfirmation', {
         title: 'Github Repository Request Confirmation',
         repoName: formData.github_repo,
       })
@@ -225,7 +225,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         message: 'There was an error submitting your request. Please try again later.',
         href: '',
       })
-      return res.render('pages/forms/componentRequestForm', {
+      return res.render('pages/componentRequestForm', {
         validationErrors,
         formData,
       })
@@ -236,32 +236,48 @@ export default function routes({ componentNameService, serviceCatalogueService, 
 }
 
 const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
+  const sanitiseString = (str: string | undefined) => str?.replace(/[\s\r\n]+/g, ' ').trim()
+
   return {
     data: {
-      github_repo: formData.github_repo?.toString(),
-      repo_description: formData.repo_description?.toString(),
-      base_template: formData.base_template?.toString(),
-      ...(formData.jira_project_keys ? { jira_project_keys: formData.jira_project_keys.toString().split(',') } : {}),
+      github_repo: sanitiseString(formData.github_repo?.toString()),
+      repo_description: sanitiseString(formData.repo_description?.toString()),
+      base_template: sanitiseString(formData.base_template?.toString()),
+      ...(formData.jira_project_keys
+        ? { jira_project_keys: sanitiseString(formData.jira_project_keys.toString()).split(',') }
+        : {}),
       github_project_visibility: formData.github_project_visibility as GithubProjectVisibility,
       product: formData.product?.toString(),
-      slack_channel_prod_release_notify: formData.slack_channel_prod_release_notify?.toString().replace('#', ''),
-      slack_channel_nonprod_release_notify: formData.slack_channel_nonprod_release_notify?.toString().replace('#', ''),
-      slack_channel_security_scans_notify: formData.slack_channel_security_scans_notify?.toString().replace('#', ''),
-      prod_alerts_severity_label: formData.prod_alerts_severity_label?.toString(),
-      nonprod_alerts_severity_label: formData.nonprod_alerts_severity_label?.toString(),
+      slack_channel_prod_release_notify: sanitiseString(
+        formData.slack_channel_prod_release_notify?.toString().replace('#', ''),
+      ),
+      slack_channel_nonprod_release_notify: sanitiseString(
+        formData.slack_channel_nonprod_release_notify?.toString().replace('#', ''),
+      ),
+      slack_channel_security_scans_notify: sanitiseString(
+        formData.slack_channel_security_scans_notify?.toString().replace('#', ''),
+      ),
+      prod_alerts_severity_label: sanitiseString(formData.prod_alerts_severity_label?.toString()),
+      nonprod_alerts_severity_label: sanitiseString(formData.nonprod_alerts_severity_label?.toString()),
       ...(formData.github_project_teams_write
-        ? { github_project_teams_write: convertTeamsStringToArray(formData.github_project_teams_write?.toString()) }
-        : {}),
-      github_projects_teams_admin: convertTeamsStringToArray(formData.github_projects_teams_admin?.toString()),
-      ...(formData.github_project_branch_protection_restricted_teams
         ? {
-            github_project_branch_protection_restricted_teams: convertTeamsStringToArray(
-              formData.github_project_branch_protection_restricted_teams?.toString(),
+            github_project_teams_write: convertTeamsStringToArray(
+              sanitiseString(formData.github_project_teams_write?.toString()),
             ),
           }
         : {}),
-      requester_name: formData.requester_name?.toString(),
-      requester_email: formData.requester_email?.toString(),
+      github_projects_teams_admin: convertTeamsStringToArray(
+        sanitiseString(formData.github_projects_teams_admin?.toString()),
+      ),
+      ...(formData.github_project_branch_protection_restricted_teams
+        ? {
+            github_project_branch_protection_restricted_teams: convertTeamsStringToArray(
+              sanitiseString(formData.github_project_branch_protection_restricted_teams?.toString()),
+            ),
+          }
+        : {}),
+      requester_name: sanitiseString(formData.requester_name?.toString()),
+      requester_email: sanitiseString(formData.requester_email?.toString()),
       requester_team: formData.requester_team?.toString(),
       request_github_pr_status: 'Pending',
     },

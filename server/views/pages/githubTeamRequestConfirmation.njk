@@ -1,21 +1,19 @@
-{% extends "../../partials/layout.njk" %}
+{% extends "../partials/layout.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 {% set mainClasses = "govuk-main-wrapper--l" %}
 
 {% block content %}
-  {{ breadCrumb(componentRequest.github_repo, [{title: "Component Requests", href: "/componentRequest/component-requests"}]) }}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ govukPanel({
         titleText: "Request submitted.",
-        html: 'Your request for component <br><strong><a href="/componentRequest/component-requests/' + repoName + '">' + repoName + '</a></strong> submitted successfully.'
+        html: 'Your request for team <br><strong><a href="/github-team-requests/' + teamName + '">' + teamName + '</a></strong> submitted successfully.'
       }) }}
-
 
       <h2 class="govuk-heading-m">What happens next</h2>
 
       <p class="govuk-body">
-        Shortly PR will be created in hmpps-project-bootstrap and SRE team will review and run bootstrap for this request.
+        Shortly PR will be created in hmpps-github-teams and SRE team will review and merge this request, you can check status <a href="/github-team-requests">here</a>.
       </p>
       <p class="govuk-body">
         Please contact SRE team in #ask-prisons-digital-sre slack channel.

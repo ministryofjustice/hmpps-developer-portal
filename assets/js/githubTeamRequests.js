@@ -4,7 +4,7 @@ jQuery(function () {
       data: 'attributes.team_name',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(
-          `<a href="/teamRequest/update-github-teams-requests/${rowData.attributes.team_name}">${rowData.attributes.team_name}</a>`,
+          `<a href="/github-team-requests/${rowData.attributes.team_name}">${rowData.attributes.team_name}</a>`,
         )
       },
     },
@@ -20,7 +20,7 @@ jQuery(function () {
         $(td).html(
           rowData.attributes.parent_team_name === 'hmpps-developers'
             ? `${rowData.attributes.parent_team_name}`
-            : `<a href="/teamRequest/update-github-teams-requests/${rowData.attributes.parent_team_name}">${rowData.attributes.parent_team_name}</a>`,
+            : `<a href="/github-team-requests/${rowData.attributes.parent_team_name}">${rowData.attributes.parent_team_name}</a>`,
         )
       },
     },
@@ -51,8 +51,8 @@ jQuery(function () {
   ]
 
   createTable({
-    id: 'updateGithubTeamsRequestsTable',
-    ajaxUrl: '/teamRequest/update-github-teams-requests/data',
+    id: 'githubTeamRequestsTable',
+    ajaxUrl: '/github-team-requests/data',
     orderColumn: 3,
     orderType: 'desc',
     columns,

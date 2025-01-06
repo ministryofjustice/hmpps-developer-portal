@@ -30,8 +30,9 @@ import veracodeRoutes from './routes/veracode'
 import teamHealthRoutes from './routes/teamHealth'
 import missingFromCatalogueRoutes from './routes/missingFromCatalogue'
 import namespacesRoutes from './routes/namespaces'
-import componentRequestFormsRoutes from './routes/forms/componentRequest'
-import teamRequestFormsRoutes from './routes/forms/githubTeamRequest'
+import componentRequestRoutes from './routes/componentRequests'
+import githubTeamRequestRoutes from './routes/githubTeamRequests'
+import githubTeamsRoutes from './routes/githubTeams'
 
 import type { Services } from './services'
 
@@ -68,8 +69,9 @@ export default function createApp(services: Services): express.Application {
   app.use('/missing-from-catalogue', missingFromCatalogueRoutes(services))
   app.use('/namespaces', namespacesRoutes(services))
   app.use(setUpValidationMiddleware())
-  app.use('/componentRequest', componentRequestFormsRoutes(services))
-  app.use('/teamRequest', teamRequestFormsRoutes(services))
+  app.use('/component-requests', componentRequestRoutes(services))
+  app.use('/github-team-requests', githubTeamRequestRoutes(services))
+  app.use('/github-teams', githubTeamsRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

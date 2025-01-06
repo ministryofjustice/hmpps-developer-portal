@@ -5,7 +5,7 @@
 
 {% block content %}
 
-{{ breadCrumb(githubTeam.github_team_name, [{title: "Github Teams", href: "/teamRequest/github-teams"}]) }}
+{{ breadCrumb(githubTeam.github_team_name, [{title: "Github Teams", href: "/github-teams"}]) }}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -28,7 +28,7 @@
               {% else %}
                 <ul>
                 {% for team in subTeams %}
-                  <li><a href="/teamRequest/github-teams/{{ team }}">{{ team }}</a></li>
+                  <li><a href="/github-teams/{{ team }}">{{ team }}</a></li>
                 {% endfor %}
                 </ul>
               {% endif %}

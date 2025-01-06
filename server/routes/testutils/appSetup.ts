@@ -11,7 +11,8 @@ import serviceAreaRoutes from '../serviceAreas'
 import monitorRoutes from '../monitor'
 import dependencyRoutes from '../dependencies'
 import productDependenciesRoutes from '../productDependencies'
-import componentRequestFormsRoutes from '../forms/componentRequest'
+import componentRequestRoutes from '../componentRequests'
+import githubTeamRequestRoutes from '../githubTeamRequests'
 
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -52,7 +53,8 @@ function appSetup(services: Services, production: boolean): Express {
   app.use('/monitor', monitorRoutes(services))
   app.use('/dependencies', dependencyRoutes(services))
   app.use('/product-dependencies', productDependenciesRoutes(services))
-  app.use('/componentRequest', componentRequestFormsRoutes(services))
+  app.use('/component-requests', componentRequestRoutes(services))
+  app.use('/github-team-requests', githubTeamRequestRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(production))

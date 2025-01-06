@@ -1,4 +1,4 @@
-{% extends "../../partials/layout.njk" %}
+{% extends "../partials/layout.njk" %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
@@ -10,11 +10,11 @@
 {% block content %}
 <div class="govuk-grid-row govuk-body">
   <div class="govuk-grid-column-one-half">
-    {% include '../../partials/errorSummary.njk' %}
+    {% include '../partials/errorSummary.njk' %}
     <h1 class="govuk-heading-xl">Github Team Request Form</h1>
     <p>After submitting this form, PR will be created in hmpps-github-teams repository, <br>the SRE team will review this request and merge.  </p>
     <p><i><b>Note:</b> fields marked '*' are required.</i></p>
-    <form action="/teamRequest/github-team-request-form" method="POST">
+    <form action="/github-team-requests/new" method="POST">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         {{ govukInput({
         id: "team_name",
