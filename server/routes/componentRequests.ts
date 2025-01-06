@@ -11,7 +11,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
-  get('/component-request-form', async (req, res) => {
+  get('/new', async (req, res) => {
     const [teamList, productList] = await dataFilterService.getFormsDropdownLists({
       teamName: '',
       productId: '',
@@ -24,17 +24,17 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     })
   })
 
-  get('/component-requests', async (req, res) => {
+  get('/', async (req, res) => {
     return res.render('pages/componentRequests')
   })
 
-  get('/component-requests/data', async (req, res) => {
+  get('/data', async (req, res) => {
     const componentRequests = await serviceCatalogueService.getGithubRepoRequests()
 
     res.send(componentRequests)
   })
 
-  get('/component-requests/:repo_name', async (req, res) => {
+  get('/:repo_name', async (req, res) => {
     const repoName = req.params.repo_name
     const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName })
     const displayComponent = {
@@ -62,7 +62,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     return res.render('pages/componentRequest', { componentRequest: displayComponent })
   })
 
-  post('/component-request-form', async (req, res): Promise<void> => {
+  post('/new', async (req, res): Promise<void> => {
     const formData = req.body
     const repoExists = formData.github_repo
       ? await componentNameService.checkComponentExists(formData.github_repo)
