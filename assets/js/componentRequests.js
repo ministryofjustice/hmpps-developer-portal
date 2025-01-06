@@ -4,7 +4,7 @@ jQuery(function () {
       data: 'attributes.github_repo',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(
-          `<a href="/component-request/component-requests/${rowData.attributes.github_repo}">${rowData.attributes.github_repo}</a>`,
+          `<a href="/component-requests/${rowData.attributes.github_repo}">${rowData.attributes.github_repo}</a>`,
         )
       },
     },
@@ -36,7 +36,7 @@ jQuery(function () {
 
   createTable({
     id: 'componentRequestsTable',
-    ajaxUrl: '/component-request/component-requests/data',
+    ajaxUrl: '/component-requests/data',
     orderColumn: 3,
     orderType: 'desc',
     columns,

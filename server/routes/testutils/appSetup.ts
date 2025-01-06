@@ -11,7 +11,7 @@ import serviceAreaRoutes from '../serviceAreas'
 import monitorRoutes from '../monitor'
 import dependencyRoutes from '../dependencies'
 import productDependenciesRoutes from '../productDependencies'
-import componentRequestRoutes from '../forms/component-request'
+import componentRequestRoutes from '../forms/component-requests'
 
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -52,7 +52,7 @@ function appSetup(services: Services, production: boolean): Express {
   app.use('/monitor', monitorRoutes(services))
   app.use('/dependencies', dependencyRoutes(services))
   app.use('/product-dependencies', productDependenciesRoutes(services))
-  app.use('/component-request', componentRequestRoutes(services))
+  app.use('/component-requests', componentRequestRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(production))
