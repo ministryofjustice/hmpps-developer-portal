@@ -30,7 +30,7 @@ import veracodeRoutes from './routes/veracode'
 import teamHealthRoutes from './routes/teamHealth'
 import missingFromCatalogueRoutes from './routes/missingFromCatalogue'
 import namespacesRoutes from './routes/namespaces'
-import componentRequestRoutes from './routes/forms/component-requests'
+import componentRequestRoutes from './routes/componentRequests'
 
 import type { Services } from './services'
 

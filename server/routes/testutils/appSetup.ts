@@ -11,7 +11,7 @@ import serviceAreaRoutes from '../serviceAreas'
 import monitorRoutes from '../monitor'
 import dependencyRoutes from '../dependencies'
 import productDependenciesRoutes from '../productDependencies'
-import componentRequestRoutes from '../forms/component-requests'
+import componentRequestRoutes from '../componentRequests'
 
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'

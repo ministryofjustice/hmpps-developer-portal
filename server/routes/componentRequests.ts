@@ -1,9 +1,9 @@
 import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../../middleware/asyncMiddleware'
-import type { Services } from '../../services'
-import { GithubRepoRequestRequest, GithubProjectVisibility } from '../../data/strapiApiTypes'
-import { validateRequest } from '../../middleware/setUpValidationMiddleware'
-import { FieldValidationError } from '../../@types/FieldValidationError'
+import asyncMiddleware from '../middleware/asyncMiddleware'
+import type { Services } from '../services'
+import { GithubRepoRequestRequest, GithubProjectVisibility } from '../data/strapiApiTypes'
+import { validateRequest } from '../middleware/setUpValidationMiddleware'
+import { FieldValidationError } from '../@types/FieldValidationError'
 
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
