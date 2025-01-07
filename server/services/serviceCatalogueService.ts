@@ -290,6 +290,17 @@ export default class ServiceCatalogueService {
     return teamRequest
   }
 
+  async getTeamMembers({ teamName }: { teamName: string }): Promise<GithubTeam> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const teamRequestData = await strapiApiClient.getGithubTeam({ teamName })
+    const teamRequest =
+      Array.isArray(teamRequestData.data) && teamRequestData.data.length > 0
+        ? teamRequestData.data[0].attributes
+        : teamRequestData.data?.attributes
+    const memberList = teamRequest?.members || []
+    return memberList
+  }
+
   async getUpdateGithubTeamRequests(): Promise<UpdateGithubTeamsRequestListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const teamRequestsData = await strapiApiClient.getUpdateGithubTeamRequests()

@@ -57,3 +57,9 @@ export type UpdateGithubTeamsRequestListResponse = components['schemas']['Update
 export type UpdateGithubTeamsRequestListResponseDataItem =
   components['schemas']['UpdateGithubTeamsRequestListResponseDataItem']
 export type UpdateGithubTeamsRequestRequest = components['schemas']['UpdateGithubTeamsRequestRequest']
+
+export type GithubUser = components['schemas']['GithubUser']
+export type GithubUserResponse = components['schemas']['GithubUserResponse']
+export type GithubUserListResponse = components['schemas']['GithubUserListResponse']
+export type GithubUserListResponseDataItem = components['schemas']['GithubUserListResponseDataItem']
+export type GithubUserRequest = components['schemas']['GithubUserRequest']

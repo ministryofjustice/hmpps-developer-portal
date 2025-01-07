@@ -2979,6 +2979,7 @@ export interface components {
         team_name?: string
         parent_team_name?: string
         team_desc?: string
+        members?: unknown
       }
     }
     GithubTeamListResponseDataItem: {
@@ -3001,6 +3002,7 @@ export interface components {
       team_name?: string
       parent_team_name?: string
       team_desc?: string
+      members?: unknown
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */
@@ -5581,6 +5583,7 @@ export interface components {
         requester_team?: string
         request_github_pr_status?: string
         request_github_pr_number?: number
+        members?: unknown
       }
     }
     UpdateGithubTeamsRequestListResponseDataItem: {
@@ -5607,6 +5610,7 @@ export interface components {
       requester_team?: string
       request_github_pr_status?: string
       request_github_pr_number?: number
+      members?: unknown
       /** Format: date-time */
       createdAt?: string
       /** Format: date-time */

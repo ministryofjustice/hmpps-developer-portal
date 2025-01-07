@@ -29,6 +29,13 @@ jQuery(function () {
         $(td).html(`${rowData.attributes.team_desc}`)
       },
     },
+    {
+      data: 'attributes.members',
+      visible: false,
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.attributes.members}`)
+      },
+    },
   ]
 
   createTable({

@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 
-export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
+export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -29,6 +29,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       github_team_name: teamRequest.team_name,
       team_description: teamRequest.team_desc,
       parent_team_name: teamRequest.parent_team_name,
+      members: teamRequest.members,
     }
     return res.render('pages/githubTeam', { githubTeam: displayTeam, subTeams })
   })

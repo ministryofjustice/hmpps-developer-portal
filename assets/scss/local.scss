@@ -227,6 +227,38 @@
   white-space: nowrap
 }
 
+#allgithub_users {
+  height: 200px;
+}
+
+#github_users {
+  height: 200px;
+  width: 400px;
+}
+
+.flex-row-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-item {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.flex-buttons {
+  flex: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.flex-button {
+  margin-right: 5px;
+}
+
 .formData {
   th, td, img{
     padding: govuk-spacing(1);

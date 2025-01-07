@@ -20,7 +20,7 @@ jQuery(function () {
         $(td).html(
           rowData.attributes.parent_team_name === 'hmpps-developers'
             ? `${rowData.attributes.parent_team_name}`
-            : `<a href="/github-team-requests/${rowData.attributes.parent_team_name}">${rowData.attributes.parent_team_name}</a>`,
+            : `<a href="/github-teams/${rowData.attributes.parent_team_name}">${rowData.attributes.parent_team_name}</a>`,
         )
       },
     },

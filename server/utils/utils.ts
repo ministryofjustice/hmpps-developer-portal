@@ -12,6 +12,7 @@ type HasName = { attributes?: { name: string } }
 type HasRepoName = { attributes?: { github_repo: string } }
 type hasProductId = { attributes?: { name: string } }
 type HasTeamName = { attributes?: { team_name: string } }
+type HasUserName = { attributes?: { github_username: string } }
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -108,6 +109,17 @@ export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasT
     return -1
   }
   if (dataItem.attributes.team_name > compareDataItem.attributes.team_name) {
+    return 1
+  }
+
+  return 0
+}
+
+export const sortGithubUsersData = (dataItem: HasUserName, compareDataItem: HasUserName) => {
+  if (dataItem.attributes.github_username < compareDataItem.attributes.github_username) {
+    return -1
+  }
+  if (dataItem.attributes.github_username > compareDataItem.attributes.github_username) {
     return 1
   }
 
@@ -270,3 +282,10 @@ export const median = (values: number[]): number => {
 }
 
 export const utcTimestampToUtcDate = (str: string) => (str ? formatDate(new Date(str), 'yyyy-MM-dd') : undefined)
+
+export function convertTeamsToArray(teams: string): string[] {
+  return teams
+    .split('\r\n')
+    .map(team => team.trim())
+    .filter(team => Boolean(team))
+}

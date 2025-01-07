@@ -18,7 +18,17 @@
         </tr>
         <tr>
           <th>Parent Team</th>
-          <td>{{ teamRequest.parent_team_name }}</td>
+          <td><a href="/github-teams/{{ teamRequest.parent_team_name }}">{{ teamRequest.parent_team_name }}</a></td>
+        </tr>
+        <tr>
+          <th>Members</th>
+          <td>
+            <ul>
+              {% for member in teamRequest.members %}
+                <li>{{ member }}</li>
+              {% endfor %}
+            </ul>
+          </td>
         </tr>
         <tr>
           <th>Request Status</th>

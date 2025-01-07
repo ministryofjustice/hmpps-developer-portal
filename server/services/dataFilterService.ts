@@ -1,6 +1,12 @@
 import { MoJSelectDataItem } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { formatMonitorName, sortData, sortProductIdData, sortGithubTeamsData } from '../utils/utils'
+import {
+  formatMonitorName,
+  sortData,
+  sortProductIdData,
+  sortGithubTeamsData,
+  sortGithubUsersData,
+} from '../utils/utils'
 
 export default class DataFilterService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -75,6 +81,30 @@ export default class DataFilterService {
     teamsList.unshift({ value: '', text: '', selected: false })
 
     return teamsList
+  }
+
+  async getUsersDropDownList({
+    userName,
+    useFormattedName = false,
+  }: {
+    userName: string
+    useFormattedName?: boolean
+  }): Promise<MoJSelectDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const usersData = await strapiApiClient.getGithubUsers()
+    const users = usersData.data.sort(sortGithubUsersData)
+    const usersList = users.map(user => {
+      const formattedName = formatMonitorName(user.attributes.github_username)
+
+      return {
+        value: useFormattedName ? formattedName : user.id.toString(),
+        text: user.attributes.github_username,
+        selected: formattedName === userName,
+      }
+    })
+    usersList.unshift({ value: '', text: '', selected: false })
+
+    return usersList
   }
 
   async getProductsDropDownList({
@@ -189,18 +219,21 @@ export default class DataFilterService {
     return subTeamsList
   }
 
-  async getOnlyTeamsLists({
+  async getTeamsFormsLists({
     subTeamName = '',
     teamName = '',
+    userName = '',
     useFormattedName = false,
   }: {
     subTeamName?: string
     teamName?: string
+    userName?: string
     useFormattedName?: boolean
   }) {
     return Promise.all([
       await this.getSubTeamsDropDownList({ subTeamName, useFormattedName }),
       await this.getTeamsDropDownList({ teamName, useFormattedName }),
+      await this.getUsersDropDownList({ userName, useFormattedName }),
     ])
   }
 }

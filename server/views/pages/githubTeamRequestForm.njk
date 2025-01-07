@@ -27,7 +27,31 @@
         },
         errorMessage: validationErrors | findError('team_name')
         }) }}
-
+        {{ govukRadios({
+          classes: "govuk-radios--inline",
+          idPrefix: "user_action",
+          name: "user_action",
+          value: submittedForm.user_type or "Add",
+          fieldset: {
+            legend: {
+              text: "Action *",
+              classes: 'govuk-fieldset__legend--s'
+            }
+          },
+          items: [
+            {
+              value: "Add",
+              text: "Add Team"
+            },
+            {
+              value: "Update",
+              text: "Add member"
+            },
+            {
+              value: "Remove",
+              text: "Remove member"
+            }]
+        }) }}
         {{ govukTextarea({
         id: "team_description",
         name: "team_description",
@@ -61,7 +85,7 @@
               text: "Sub team"
             }]
         }) }}
-        {{ govukSelect({
+        {{ govukSelect({  
           id: "parent_team_name",
           name: "parent_team_name",
           label: {
@@ -69,8 +93,47 @@
             classes: "govuk-fieldset__legend--s"
           },
           items: subTeamList | toSelect("value", "text", submittedForm.parent_team_name),
+          attributes: {
+            disabled: "disabled"
+          },
           errorMessage: validationErrors | findError('parent_team_name')
         }) }}
+        <div class="flex-row-center">
+          <div class="flex-item">
+            {{ govukSelect({
+              id: "allgithub_users",
+              name: "allgithub_users",
+              label: {
+                text: "Github users *",
+                classes: "govuk-fieldset__legend--s"
+              },
+              items: userList | toSelect("value", "text", submittedForm.allgithub_users),
+              errorMessage: validationErrors | findError('allgithub_users'),
+              attributes: {
+                multiple: "multiple"
+              }
+            }) }}
+          </div>
+          <div class="flex-buttons">
+            <button type="button" id="add-user" class="govuk-button flex-button">→</button>
+            <button type="button" id="remove-user" class="govuk-button">←</button>
+          </div>
+          <div class="flex-item">
+            {{ govukTextarea({
+              id: "github_users",
+              name: "github_users",
+              value: submittedForm.github_users,
+              classes: "govuk-!-width-two-third",
+              label: {
+                text: "Selected Users",
+                classes: "govuk-fieldset__legend--s"
+              },
+              attributes: {
+                readonly: "readonly"
+              }
+            }) }}
+          </div>
+        </div>
         <h2>Contact details</h2>
         <p>Please enter your contact details to send notifications to after processing your request.</p>
         {{ govukInput({

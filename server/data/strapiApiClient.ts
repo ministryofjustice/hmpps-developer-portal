@@ -23,6 +23,8 @@ import {
   UpdateGithubTeamsRequestRequest,
   UpdateGithubTeamsRequestListResponse,
   UpdateGithubTeamsRequestResponse,
+  GithubUserListResponse,
+  GithubUserResponse,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
@@ -294,6 +296,20 @@ export default class StrapiApiClient {
     return this.restClient.post({
       path: '/v1/update-github-teams-requests',
       data: request,
+    })
+  }
+
+  async getGithubUsers(): Promise<GithubUserListResponse> {
+    return this.restClient.get({
+      path: '/v1/github-users',
+      query: 'populate=github_username',
+    })
+  }
+
+  async getGithubUser({ githubUserName }: { githubUserName: string }): Promise<GithubUserResponse> {
+    return this.restClient.get({
+      path: '/v1/github-users',
+      query: `filters[github_username][$eq]=${githubUserName}`,
     })
   }
 }
