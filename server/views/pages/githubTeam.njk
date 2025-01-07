@@ -34,6 +34,20 @@
               {% endif %}
           </td>
         </tr>
+        <tr>
+          <th>Members</th>
+          <td>
+              {% if githubTeam.members == 0 %}
+                <p data-test="no-products">None</p>
+              {% else %}
+                <ul>
+                {% for member in githubTeam.members %}
+                  <li>{{ member }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
