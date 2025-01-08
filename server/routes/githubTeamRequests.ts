@@ -63,6 +63,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
 
   post('/new', async (req, res): Promise<void> => {
     const formData = req.body
+    const isAdd = formData.user_action === 'Add'
     const teamRequestExists = formData.team_name
       ? await componentNameService.checkGithubTeamRequestExists(formData.team_name)
       : false
@@ -77,14 +78,14 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         })
       } else {
         const teamName = formatMonitorName(body.team_name?.toString())
-        if (teamExists) {
+        if (teamExists && isAdd) {
           validationErrors.push({
             field: 'team_name',
             message: 'This team already exists in github teams - please choose a different name',
             href: '#team_name',
           })
         }
-        if (teamRequestExists) {
+        if (teamRequestExists && !isAdd) {
           validationErrors.push({
             field: 'team_name',
             message: 'A request for this team already exists in queue, please choose a different name',
@@ -99,14 +100,14 @@ export default function routes({ componentNameService, serviceCatalogueService, 
           })
         }
       }
-      if (!body.team_description) {
+      if (!body.team_description && isAdd) {
         validationErrors.push({
           field: 'team_description',
           message: 'Please enter a team description',
           href: '#team_description',
         })
       }
-      if (body.team_type === 'sub_team' && !body.parent_team_name) {
+      if (body.team_type === 'sub_team' && !body.parent_team_name && isAdd) {
         validationErrors.push({
           field: 'parent_team_name',
           message: 'Please select a parent team name',

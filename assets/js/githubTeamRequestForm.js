@@ -31,23 +31,31 @@ jQuery(function () {
       teamTypeRadios.forEach(radio => {
         radio.disabled = true
       })
-      // updateMemberList()
+      updateMemberList()
     }
 
     updateRemoveButtonState()
   }
 
-  // async function getTeamMembers() {
-  //   const githubTeamName = teamNameField.value
-  //   const response = await fetch(`/${githubTeamName}/members`)
-  //   const memberList = await response.json()
-  //   return memberList
-  // }
+  async function getTeamMembers() {
+    const githubTeamName = teamNameField.value
+    const response = await fetch(`/github-team-requests/${githubTeamName}/members`)
+    const memberList = await response.json()
+    return memberList
+  }
 
-  // async function updateMemberList() {
-  //   const memberList = await getTeamMembers()
-  //   githubUsersField.value = memberList.join('\n')
-  // }
+  async function updateMemberList() {
+    const memberList = await getTeamMembers()
+    while (githubUsersField.options.length > 0) {
+      githubUsersField.remove(0)
+    }
+    memberList.forEach(member => {
+      const option = document.createElement('option')
+      option.value = member
+      option.text = member
+      githubUsersField.add(option)
+    })
+  }
 
   function updateRemoveButtonState() {
     const selectedUsers = selectedUsersTextarea.value.split('\n').filter(Boolean)
@@ -69,7 +77,7 @@ jQuery(function () {
     radio.addEventListener('change', function () {
       const selectedValue = document.querySelector('input[name="team_type"]:checked').value
       const isAdd = teamActionSelect.value === 'Add'
-      console.log(selectedValue)
+
       if (isAdd && selectedValue === 'sub_team') {
         parentTeamSelect.disabled = false
       } else if (isAdd && selectedValue !== 'sub_team') {
