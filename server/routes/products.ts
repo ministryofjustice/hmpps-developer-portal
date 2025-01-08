@@ -23,7 +23,17 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const product = await serviceCatalogueService.getProduct({ productSlug })
     const productSet = product.product_set?.data
     const team = product.team?.data
-    const components = product.components?.data?.map(component => component)
+    const components = product.components?.data
+      ?.map(component => component)
+      .sort((a, b) => {
+        if (a.attributes.name > b.attributes.name) {
+          return 1
+        }
+        if (a.attributes.name < b.attributes.name) {
+          return -1
+        }
+        return 0
+      })
 
     const displayProduct = {
       name: product.name,
