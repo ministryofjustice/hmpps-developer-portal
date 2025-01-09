@@ -1,0 +1,42 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + githubUser.user_name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb(githubUser.github_username, [{title: "Github Users", href: "/github-users"}]) }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 data-test="detail-page-title">{{ githubUser.github_username }}</h1>
+    <table class="formData">
+      <tbody>
+        <tr>
+          <th>Name</th>
+          <td>{{ githubUser.full_name }}</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td>{{ githubUser.user_email }}</td>
+        </tr>
+        <tr>
+          <th>Teams</th>
+          <td>
+              {% if githubUser.github_teams.length == 0 %}
+                <p data-test="no-products">None</p>
+              {% else %}
+                <ul>
+                {% for team in githubUser.github_teams %}
+                  <li><a href="/github-teams/{{team }}">{{ team }}</a></li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

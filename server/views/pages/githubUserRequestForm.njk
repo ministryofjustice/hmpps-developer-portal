@@ -1,0 +1,166 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %} 
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% block content %}
+<div class="govuk-grid-row govuk-body">
+  <div class="govuk-grid-column-one-half">
+    {% include '../partials/errorSummary.njk' %}
+    <h1 class="govuk-heading-xl">Github User Request Form</h1>
+    <p>After submitting this form, PR will be created in hmpps-github-teams repository, <br>the SRE team will review this request and merge.  </p>
+    <p><i><b>Note:</b> fields marked '*' are required.</i></p>
+    <form action="/github-user-requests/new" method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        {{ govukInput({
+        id: "github_username",
+        name: "github_username",
+        value: submittedForm.github_username,
+        classes: "govuk-!-width-one-half",
+        label: {
+            text: "Github User Name *",
+            classes: "govuk-fieldset__legend--s"
+        },
+        errorMessage: validationErrors | findError('team_name')
+        }) }}
+        {{ govukRadios({
+          classes: "govuk-radios--inline",
+          idPrefix: "user_action",
+          name: "user_action",
+          value: submittedForm.user_type or "Add",
+          fieldset: {
+            legend: {
+              text: "Action *",
+              classes: 'govuk-fieldset__legend--s'
+            }
+          },
+          items: [
+            {
+              value: "Add",
+              text: "Add User"
+            },
+            {
+              value: "Update",
+              text: "Add team"
+            },
+            {
+              value: "Remove",
+              text: "Remove team"
+            }]
+        }) }}
+        {{ govukInput({
+        id: "full_name",
+        name: "full_name",
+        value: submittedForm.full_name,
+        classes: "govuk-!-width-three-quarters",
+        label: {
+            text: "Full Name *",
+            classes: "govuk-fieldset__legend--s"
+        },
+        errorMessage: validationErrors | findError('full_name')
+        }) }}
+        {{ govukInput({
+        id: "user_email",
+        name: "user_email",
+        value: submittedForm.user_email,
+        classes: "govuk-!-width-three-quarters",
+        label: {
+            text: "User Email *",
+            classes: "govuk-fieldset__legend--s"
+        },
+        errorMessage: validationErrors | findError('user_email')
+        }) }}
+        <div class="flex-row-center">
+          <div class="flex-item">
+            {{ govukSelect({
+              id: "allgithub_teams",
+              name: "allgithub_teams",
+              label: {
+                text: "Github Teams *",
+                classes: "govuk-fieldset__legend--s"
+              },
+              items: githubTeamList | toSelect("value", "text", submittedForm.allgithub_teams),
+              errorMessage: validationErrors | findError('allgithub_teams'),
+              attributes: {
+                multiple: "multiple"
+              }
+            }) }}
+          </div>
+          <div class="flex-buttons">
+            <button type="button" id="add-team" class="govuk-button flex-button">→</button>
+            <button type="button" id="remove-team" class="govuk-button">←</button>
+          </div>
+          <div class="flex-item">
+            {{ govukTextarea({
+              id: "github_teams",
+              name: "github_teams",
+              value: submittedForm.github_teams,
+              classes: "govuk-!-width-two-third",
+              label: {
+                text: "Selected Teams",
+                classes: "govuk-fieldset__legend--s"
+              },
+              attributes: {
+                readonly: "readonly"
+              }
+            }) }}
+          </div>
+        </div>
+        <h2>Contact details</h2>
+        <p>Please enter your contact details to send notifications to after processing your request.</p>
+        {{ govukInput({
+        id: "requester_name",
+        name: "requester_name",
+        value: submittedForm.requester_name,
+        classes: "govuk-!-width-one-half",
+        label: {
+            text: "Requester Name *",
+            classes: "govuk-fieldset__legend--s"
+        },
+        errorMessage: validationErrors | findError('requester_name')
+        }) }}
+
+        {{ govukInput({
+        id: "requester_email",
+        name: "requester_email",
+        value: submittedForm.requester_email,
+        classes: "govuk-!-width-one-half",
+        label: {
+            text: "Requester Email *",
+            classes: "govuk-fieldset__legend--s"
+        },
+        errorMessage: validationErrors | findError('requester_email')
+        }) }}
+
+        {{ govukSelect({
+            id: "requester_team",
+            name: "requester_team",
+            value: submittedForm.requester_team,
+            selected: true,
+            label: {
+            text: "Team *",
+            classes: "govuk-fieldset__legend--s"
+            },
+            items: teamList,
+            errorMessage: validationErrors | findError('requester_team')
+        }) }}
+      {{ govukButton({
+        id: "submitdata",
+        name: "submitdata",
+        text: "Submit",
+        element: "button",
+        preventDoubleClick: true,
+        attributes: { "data-test": "submit" }
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/js/githubUserRequestForm.js"></script>
+{% endblock %}

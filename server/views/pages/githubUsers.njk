@@ -1,0 +1,38 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Github Users" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb("Github Users", []) }}
+
+  <h1>Github Users</h1>
+
+  <table id="githubUsersTable" class="stripe">
+		<thead>
+			<tr>
+				<th>Github Login</th>
+				<th>User Name</th>
+				<th>Email</th>
+				<th>Teams</th>
+				</tr>
+			</thead>
+			<tfoot>
+			<tr>
+				<th>Github Login</th>
+				<th>User Name</th>
+				<th>Email</th>
+				<th>Teams</th>
+			</tr>
+		</tfoot>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/githubUsers.js"></script>
+{% endblock %}

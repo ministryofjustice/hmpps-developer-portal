@@ -1,0 +1,59 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + userRequest.user_name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb(userRequest.github_user_name, [{title: "User Requests", href: "/github-user-requests"}]) }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 data-test="detail-page-title">{{ userRequest.github_username }}</h1>
+    <table class="formData">
+      <tbody>
+        <tr>
+          <th>Name</th>
+          <td>{{ userRequest.full_name }}</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td>{{ userRequest.user_email }}</a></td>
+        </tr>
+        <tr>
+          <th>Teams</th>
+          <td>
+            <ul>
+              {% for team in userRequest.github_teams %}
+                <li>{{ team }}</li>
+              {% endfor %}
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <th>Request Status</th>
+          <td>{{ userRequest.request_github_pr_status }}</td>
+        </tr>
+        <tr>
+          <th>Deployment PR</th>
+          <td><a href="https://github.com/ministryofjustice/hmpps-github-users/pull/{{ userRequest.request_github_pr_number}}">{{ userRequest.request_github_pr_number}}</a></td>
+        </tr>
+        <tr>
+          <th>Requester By</th>
+          <td>{{ userRequest.requester_name }}</td>
+        </tr>
+        <tr>
+          <th>Requester's Email-ID</th>
+          <td>{{ userRequest.requester_email }}</td>
+        </tr>
+        <tr>
+          <th>Requesting Team</th>
+          <td>{{ userRequest.requester_team }}</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
