@@ -242,7 +242,7 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
     data: {
       github_repo: sanitiseString(formData.github_repo?.toString()),
       repo_description: sanitiseString(formData.repo_description?.toString()),
-      base_template: sanitiseString(formData.base_template?.toString()),
+      base_template: sanitiseString(formData.base_template?.toString().replace('none', '')),
       ...(formData.jira_project_keys
         ? { jira_project_keys: sanitiseString(formData.jira_project_keys.toString()).split(',') }
         : {}),
