@@ -63,3 +63,10 @@ export type GithubUserResponse = components['schemas']['GithubUserResponse']
 export type GithubUserListResponse = components['schemas']['GithubUserListResponse']
 export type GithubUserListResponseDataItem = components['schemas']['GithubUserListResponseDataItem']
 export type GithubUserRequest = components['schemas']['GithubUserRequest']
+
+export type UpdatedGithubUserRequest = components['schemas']['UpdateGithubUsersRequest']
+export type UpdateGithubUsersRequestResponse = components['schemas']['UpdateGithubUsersRequestResponse']
+export type UpdateGithubUsersRequestListResponse = components['schemas']['UpdateGithubUsersRequestListResponse']
+export type UpdateGithubUsersRequestListResponseDataItem =
+  components['schemas']['UpdateGithubUsersRequestListResponseDataItem']
+export type UpdateGithubUsersRequestRequest = components['schemas']['UpdateGithubUsersRequestRequest']

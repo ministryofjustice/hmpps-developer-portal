@@ -123,4 +123,20 @@ export default class ComponentNameService {
     )
     return !!githubTeams
   }
+
+  async checkGithubUserExists(githubUserName: string): Promise<boolean> {
+    const githubUserData = await this.strapiApiClientFactory('').getGithubUsers()
+    const githubUsers = githubUserData.data.find(
+      team => formatMonitorName(team.attributes.github_username) === githubUserName,
+    )
+    return !!githubUsers
+  }
+
+  async checkGithubUserRequestExists(githubUserName: string): Promise<boolean> {
+    const githubUserData = await this.strapiApiClientFactory('').getUpdateGithubUserRequests()
+    const githubUsers = githubUserData.data.find(
+      team => formatMonitorName(team.attributes.github_username) === githubUserName,
+    )
+    return !!githubUsers
+  }
 }

@@ -107,6 +107,30 @@ export default class DataFilterService {
     return usersList
   }
 
+  async getGithubTeamsDropDownList({
+    githubTeamName,
+    useFormattedName = false,
+  }: {
+    githubTeamName: string
+    useFormattedName?: boolean
+  }): Promise<MoJSelectDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const teamsData = await strapiApiClient.getGithubTeams()
+    const teams = teamsData.data.sort(sortGithubTeamsData)
+    const teamsList = teams.map(team => {
+      const formattedName = formatMonitorName(team.attributes.team_name)
+
+      return {
+        value: useFormattedName ? formattedName : team.id.toString(),
+        text: team.attributes.team_name,
+        selected: formattedName === githubTeamName,
+      }
+    })
+    teamsList.unshift({ value: '', text: '', selected: false })
+
+    return teamsList
+  }
+
   async getProductsDropDownList({
     productName,
     useFormattedName = false,
@@ -223,17 +247,20 @@ export default class DataFilterService {
     subTeamName = '',
     teamName = '',
     userName = '',
+    githubTeamName = '',
     useFormattedName = false,
   }: {
     subTeamName?: string
     teamName?: string
     userName?: string
+    githubTeamName?: string
     useFormattedName?: boolean
   }) {
     return Promise.all([
       await this.getSubTeamsDropDownList({ subTeamName, useFormattedName }),
       await this.getTeamsDropDownList({ teamName, useFormattedName }),
       await this.getUsersDropDownList({ userName, useFormattedName }),
+      await this.getGithubTeamsDropDownList({ githubTeamName, useFormattedName }),
     ])
   }
 }
