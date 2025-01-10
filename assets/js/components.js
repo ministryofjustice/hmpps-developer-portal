@@ -69,6 +69,36 @@ jQuery(function () {
       },
     },
     {
+      data: null,
+      createdCell: function (td, _cellData, rowData) {
+        const adminTeams = rowData.attributes.github_project_teams_admin
+          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+          .join('')
+
+        const writeTeams = rowData.attributes.github_project_teams_write
+          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+          .join('')
+        const maintainTeams = rowData.attributes.github_project_teams_maintain
+          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+          .join('')
+
+        const detailsContent = `<details class="govuk-details">
+            <summary class="govuk-details__summary">
+              <span class="govuk-details__summary-text">Links</span>
+            </summary>
+            <div class="govuk-details__text">
+              <strong>Admin Teams:</strong>
+              <ul>${adminTeams || '<li>No Teams with Admin Access</li>'}</ul>
+              <strong>Write Teams:</strong>
+              <ul>${writeTeams || '<li>No Teams with Write Access</li>'}</ul>
+              <strong>Maintain Teams:</strong>
+              <ul>${writeTeams || '<li>No Teams with Write Access</li>'}</ul>
+            </div>
+          </details>`
+        $(td).html(detailsContent)
+      },
+    },
+    {
       data: 'attributes.github_project_teams_admin',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
@@ -95,6 +125,21 @@ jQuery(function () {
           $(td).html(githubTeams)
         } else {
           $(td).html('No Teams with Write Access')
+        }
+      },
+    },
+    {
+      data: 'attributes.github_project_teams_maintain',
+      visible: false,
+      createdCell: function (td, _cellData, rowData) {
+        const githubTeams = rowData.attributes.github_project_teams_maintain
+          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+          .join('')
+
+        if (githubTeams) {
+          $(td).html(githubTeams)
+        } else {
+          $(td).html('No Teams with maintain Access')
         }
       },
     },

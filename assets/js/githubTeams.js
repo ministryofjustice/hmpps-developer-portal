@@ -43,6 +43,12 @@ jQuery(function () {
         }
       },
     },
+    {
+      data: 'attributes.terraform_managed',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.attributes.terraform_managed}`)
+      },
+    },
   ]
 
   createTable({

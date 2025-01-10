@@ -95,11 +95,31 @@
 
 #githubTeamsTable {
   width: 100%;
-  table-layout: auto;
-  th, td, img{
+  
+  th, td {
     padding: govuk-spacing(1);
     vertical-align: middle;
-    white-space: nowrap;
+    &.description {
+      width: 20%;
+    }
+    &.members {
+      width: 20%;
+    }
+    &.terraform {
+      width: 5%;
+    }
+  }
+}
+
+#componentsTable {
+  width: 100%;
+
+  th, td {
+    padding: govuk-spacing(1);
+    vertical-align: middle;
+    &.githubteams {
+      width: 20%;
+    }
   }
 }
 
