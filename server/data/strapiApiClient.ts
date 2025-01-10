@@ -18,6 +18,8 @@ import {
   GithubRepoRequestResponse,
   GithubRepoRequestRequest,
   GithubRepoRequestListResponse,
+  GithubTeamListResponse,
+  GithubTeamResponse,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
@@ -252,6 +254,20 @@ export default class StrapiApiClient {
     return this.restClient.post({
       path: '/v1/github-repo-requests',
       data: request,
+    })
+  }
+
+  async getGithubTeams(): Promise<GithubTeamListResponse> {
+    return this.restClient.get({
+      path: '/v1/github-teams',
+      query: 'populate=team_name',
+    })
+  }
+
+  async getGithubTeam({ teamName }: { teamName: string }): Promise<GithubTeamResponse> {
+    return this.restClient.get({
+      path: '/v1/github-teams',
+      query: `filters[team_name][$eq]=${teamName}`,
     })
   }
 }
