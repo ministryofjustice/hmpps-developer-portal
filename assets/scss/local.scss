@@ -93,6 +93,16 @@
   }
 }
 
+#githubTeamsTable {
+  width: 100%;
+  table-layout: auto;
+  th, td, img{
+    padding: govuk-spacing(1);
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+}
+
 .componentData {
   th, td, img{
     padding: govuk-spacing(1);

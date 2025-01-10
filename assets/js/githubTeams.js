@@ -31,9 +31,16 @@ jQuery(function () {
     },
     {
       data: 'attributes.members',
-      visible: false,
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.attributes.members}`)
+        const members = rowData.attributes.members
+          .map(member => `<li><a href="https://github.com/orgs/ministryofjustice/people/${member}">${member}</a></li>`)
+          .join('')
+
+        if (members) {
+          $(td).html(members)
+        } else {
+          $(td).html('No members in this team')
+        }
       },
     },
   ]

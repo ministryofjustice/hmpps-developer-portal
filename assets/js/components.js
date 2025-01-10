@@ -68,6 +68,36 @@ jQuery(function () {
         return prodSlackChannel
       },
     },
+    {
+      data: 'attributes.github_project_teams_admin',
+      visible: false,
+      createdCell: function (td, _cellData, rowData) {
+        const githubTeams = rowData.attributes.github_project_teams_admin
+          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+          .join('')
+
+        if (githubTeams) {
+          $(td).html(githubTeams)
+        } else {
+          $(td).html('No Teams with Admin Access')
+        }
+      },
+    },
+    {
+      data: 'attributes.github_project_teams_write',
+      visible: false,
+      createdCell: function (td, _cellData, rowData) {
+        const githubTeams = rowData.attributes.github_project_teams_write
+          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+          .join('')
+
+        if (githubTeams) {
+          $(td).html(githubTeams)
+        } else {
+          $(td).html('No Teams with Write Access')
+        }
+      },
+    },
   ]
 
   createTable({
