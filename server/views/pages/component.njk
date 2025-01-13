@@ -8,7 +8,7 @@
 
 {% macro githubTeams(teams) %}
   {% for team in teams %}
-   <a href="https://github.com/orgs/ministryofjustice/teams/{{team}}" target="_blank" class="govuk-link--no-visited-state">{{team}}</a>{%if not loop.last%},&nbsp;{% endif %} 
+   <a href="/github-teams/{{team}}" target="_blank" class="govuk-link--no-visited-state">{{team}}</a>{%if not loop.last%},&nbsp;{% endif %} 
   {% endfor %} 
 {% endmacro %}
 
