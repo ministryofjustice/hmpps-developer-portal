@@ -20,5 +20,5 @@
     "ignoreDeprecations": "5.0"
   },
   "exclude": ["node_modules", "assets/**/*.js", "integration_tests", "dist", "cypress.config.ts", "eslint.config.mjs"],
-  "include": ["**/*.js", "**/*.ts", "server/views/pages/githubTeam.njk"]
+  "include": ["**/*.js", "**/*.ts"]
 }
