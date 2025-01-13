@@ -32,7 +32,7 @@ import missingFromCatalogueRoutes from './routes/missingFromCatalogue'
 import namespacesRoutes from './routes/namespaces'
 import componentRequestRoutes from './routes/componentRequests'
 import githubTeamstRoutes from './routes/githubTeams'
-
+import namespaceRequestRoutes from './routes/namespaceRequests'
 import type { Services } from './services'
 
 export default function createApp(services: Services): express.Application {
@@ -70,6 +70,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpValidationMiddleware())
   app.use('/component-requests', componentRequestRoutes(services))
   app.use('/github-teams', githubTeamstRoutes(services))
+  app.use('/namespace-requests', namespaceRequestRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

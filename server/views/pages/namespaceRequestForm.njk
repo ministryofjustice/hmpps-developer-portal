@@ -1,0 +1,526 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %} 
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% block content %}
+<div class="govuk-grid-row govuk-body">
+  <div class="govuk-grid-column-one-half">
+    {% include 'partials/errorSummary.njk' %}
+    <h1 class="govuk-heading-xl">Namespace Request Form</h1>
+    <p>After submitting this form, PR will be raised shortly in cloud platfor team will run the bootstrap to create the github repo and service catalogue entries. </p>
+    <p><i><b>Note:</b> fields marked '*' are required.</i></p>
+    <form action="/component-requests/new" method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      {{ govukInput({
+        id: "namespace_name",
+        name: "namespace_name",
+        value: submittedForm.namespace_name,
+        classes: "govuk-!-width-one-half",
+        label: {
+          text: "Namespace name *",
+          classes: "govuk-fieldset__legend--s"
+        },
+        errorMessage: validationErrors | findError('github_repo')
+      }) }}
+      {{ govukRadios({
+        classes: "govuk-radios--inline",
+        idPrefix: "environment_type",
+        name: "environment_type",
+        value: submittedForm.environment_type,
+        errorMessage: validationErrors | findError('environment_type'),
+        fieldset: {
+          legend: {
+            text: "Github template repository *",
+            classes: 'govuk-fieldset__legend--s'
+          }
+        },
+        items: [
+          {
+            value: "dev",
+            text: "development"
+          },
+          {
+            value: "uat",
+            text: "uat"
+          },
+          {
+            value: "stage",
+            text: "stage"
+          },
+          {
+            value: "preprod",
+            text: "preprod"
+          },
+          {
+            value: "prod",
+            text: "prod"
+          }]
+      }) }}
+        <div class="flex-row-center">
+          <div class="flex-item">
+            {{ govukSelect({
+              id: "allgithub_teams",
+              name: "allgithub_teams",
+              label: {
+                text: "Github Teams *",
+                classes: "govuk-fieldset__legend--s"
+              },
+              items: githubTeamList | toSelect("value", "text", submittedForm.allgithub_teams),
+              errorMessage: validationErrors | findError('allgithub_teams'),
+              attributes: {
+                multiple: "multiple"
+              }
+            }) }}
+          </div>
+          <div class="flex-buttons">
+            <button type="button" id="add-team" class="govuk-button flex-button">→</button>
+            <button type="button" id="remove-team" class="govuk-button">←</button>
+          </div>
+          <div class="flex-item">
+            {{ govukTextarea({
+              id: "github_teams",
+              name: "github_teams",
+              value: submittedForm.github_teams,
+              classes: "govuk-!-width-two-third",
+              label: {
+                text: "Selected Teams",
+                classes: "govuk-fieldset__legend--s"
+              },
+              attributes: {
+                readonly: "readonly"
+              }
+            }) }}
+          </div>
+        </div>
+            
+      {{ govukCheckboxes({
+        idPrefix: "limitrange_checkbox",
+        name: "limitrange_checkbox",
+        classes: "govuk-form-group",
+        items: [
+          {
+            value: "update_limit_range",
+            html: "<strong>Update Limit Range</strong>",
+            checked: submittedForm.limitrange_checkbox
+          }
+        ]
+      }) }}
+
+      <div id="limitrange_frame" style="border: 3px solid #000; padding: 10px;">
+            {{ govukInput({
+              id: "limit_default_cpu",
+              name: "limit_default_cpu",
+              value: submittedForm.limit_default_cpu or "2000", 
+              classes: "govuk-!-width-one-half",
+              label: {
+                text: "Default CPU (milliCPU equivalent to 2 full CPU cores)*",
+                classes: "govuk-fieldset__legend--s"
+              },
+              errorMessage: validationErrors | findError('limit_default_cpu'),
+              attributes: {
+                required: "required"  
+              }
+            }) }}
+            {{ govukInput({
+              id: "limit_default_memory",
+              name: "limit_default_memory",
+              value: submittedForm.limit_default_memory or "1024Mi", 
+              classes: "govuk-!-width-one-half",
+              label: {
+                text: "Default Memory (Mebibytes)*",
+                classes: "govuk-fieldset__legend--s"
+              },
+              errorMessage: validationErrors | findError('limit_default_memory'),
+              attributes: {
+                required: "required"  
+              }
+            }) }}
+            {{ govukInput({
+              id: "default_request_cpu",
+              name: "default_request_cpu",
+              value: submittedForm.default_request_cpu or "10m",
+              classes: "govuk-!-width-one-half",
+              label: {
+                text: "Default Request CPU (milliCPU)*",
+                classes: "govuk-fieldset__legend--s"
+              },
+              errorMessage: validationErrors | findError('default_request_cpu'),
+              attributes: {
+                required: "required"  
+              }
+            }) }}
+            {{ govukInput({
+              id: "default_request_memory",
+              name: "default_request_memory",
+              value: submittedForm.default_request_memory or "512Mi", 
+              classes: "govuk-!-width-one-half",
+              label: {
+                text: "Default Request Memory (Mebibytes)*",
+                classes: "govuk-fieldset__legend--s"
+              },
+              errorMessage: validationErrors | findError('default_request_memory'),
+              attributes: {
+                required: "required"  
+              }
+            }) }}
+        </div>
+      <br>
+      {{ govukInput({
+        id: "resource_quota",
+        name: "resource_quota",
+        value: submittedForm.resource_quota or "50", 
+          classes: "govuk-!-width-one-half",
+          label: {
+            text: "Hard limit for number of pods in namespace *",
+            classes: "govuk-fieldset__legend--s"
+          },
+          errorMessage: validationErrors | findError('resource_quota'),
+          attributes: {
+            required: "required"  
+          }
+        }) }}
+        <label class="govuk-label govuk-label--s" for="network_policy">Network policy (*)</label>
+        <div class="govuk-checkboxes govuk-checkboxes--inline">
+          {{ govukCheckboxes({
+            idPrefix: "network_policy",
+            name: "network_policy",
+            classes: "govuk-form-group",
+            items: [
+              {
+                value: "default",
+                text: "Default",
+                checked: true,
+                classes: "govuk-checkboxes__item--inline"
+              },
+              {
+                value: "allow-ingress-controllers",
+                text: "Allow Ingress Controllers",
+                checked: true,
+                classes: "govuk-checkboxes__item--inline"
+              }
+            ]
+          }) }}
+        </div>
+      {{ govukInput({
+        id: "secret_name",
+        name: "secret_name",
+        value: submittedForm.secret_name or "", 
+        classes: "govuk-!-width-two-third",
+        label: {
+          text: "Kubernetes Secret Name *",
+          classes: "govuk-label--s"
+        },
+        errorMessage: validationErrors | findError('secret_name'),
+        attributes: {
+          required: "required"  
+        }
+      }) }}
+
+      {{ govukInput({
+        id: "dns_name",
+        name: "dns_name",
+        value: submittedForm.dns_name or "", 
+        classes: "govuk-!-width-two-third",
+        label: {
+          text: "DNS Name *",
+          classes: "govuk-label--s"
+        },
+        errorMessage: validationErrors | findError('dns_name'),
+        attributes: {
+          required: "required"  
+        }
+      }) }}
+      {{ govukCheckboxes({
+        idPrefix: "rds_instance_checkbox",
+        name: "rds_instance_checkbox",
+        classes: "govuk-form-group",
+        items: [
+          {
+            value: "rds_instance_checkbox",
+            html: "<strong>Add RDS Instance</strong>",
+            checked: submittedForm.rds_instance_checkbox
+          }
+        ]
+      }) }}
+      <div id="rds_instance_frame" style="border: 3px solid #000; padding: 10px;">
+          {{ govukSelect({
+            id: "rds_family",
+            name: "rds_family",
+            classes: "govuk-!-width-one-half",
+            label: {
+              text: "RDS Family *",
+              classes: "govuk-label--s"
+            },
+            items: [
+              { value: "oracle", text: "Oracle" },
+              { value: "mysql", text: "MySQL" },
+              { value: "postgres", text: "Postgres" },
+              { value: "mariadb", text: "MariaDB" },
+              { value: "sqlserver", text: "SQL Server" }
+            ]
+          }) }}
+          
+          {{ govukSelect({
+            id: "db_engine_version",
+            name: "db_engine_version",
+            classes: "govuk-!-width-one-half",
+            label: {
+              text: "DB Engine Version *",
+              classes: "govuk-label--s"
+            },
+            items: [
+              { value: "version1", text: "Version 1" },
+              { value: "version2", text: "Version 2" },
+              { value: "version3", text: "Version 3" }
+            ]
+          }) }}
+          
+          {{ govukSelect({
+            id: "db_instance_class",
+            name: "db_instance_class",
+            classes: "govuk-!-width-one-half",
+            label: {
+              text: "DB Instance Class *",
+              classes: "govuk-label--s"
+            },
+            items: [
+              { value: "db.t2.micro", text: "db.t2.micro" },
+              { value: "db.t2.small", text: "db.t2.small" },
+              { value: "db.t2.medium", text: "db.t2.medium" }
+            ]
+          }) }}
+          
+          {{ govukInput({
+            id: "db_max_allocated_storage",
+            name: "db_max_allocated_storage",
+            value: submittedForm.db_max_allocated_storage or "", 
+            classes: "govuk-!-width-one-half",
+            label: {
+              text: "DB Max Allocated Storage *",
+              classes: "govuk-label--s"
+            },
+            errorMessage: validationErrors | findError('db_max_allocated_storage'),
+            attributes: {
+              required: "required"  
+            }
+          }) }}
+          
+          {{ govukCheckboxes({
+            idPrefix: "allow_major_version_upgrade",
+            name: "allow_major_version_upgrade",
+            classes: "govuk-form-group",
+            items: [
+              {
+                value: "true",
+                text: "Allow Major Version Upgrade",
+                checked: submittedForm.allow_major_version_upgrade == "true"
+              }
+            ]
+          }) }}
+          
+          {{ govukCheckboxes({
+            idPrefix: "allow_minor_version_upgrade",
+            name: "allow_minor_version_upgrade",
+            classes: "govuk-form-group",
+            items: [
+              {
+                value: "true",
+                text: "Allow Minor Version Upgrade",
+                checked: submittedForm.allow_minor_version_upgrade == "true"
+              }
+            ]
+          }) }}
+          
+          {{ govukCheckboxes({
+            idPrefix: "deletion_protection",
+            name: "deletion_protection",
+            classes: "govuk-form-group",
+            items: [
+              {
+                value: "true",
+                text: "Deletion Protection",
+                checked: submittedForm.deletion_protection == "true"
+              }
+            ]
+          }) }}
+        </div>
+        {{ govukCheckboxes({
+          idPrefix: "elasticache_checkbox",
+          name: "elasticache_checkbox",
+          items: [
+            {
+              value: "elasticache_checkbox",
+              html: "<strong>Add ElastiCache</strong>",
+              checked: submittedForm.elasticache_checkbox
+            }
+          ]
+        }) }}
+        <div id="elasticache_frame" style="border: 3px solid #000; padding: 10px;">
+          {{ govukSelect({
+            id: "cache_engine",
+            name: "cache_engine",
+            classes: "govuk-!-width-one-half",
+            label: {
+              text: "Cache Engine *",
+              classes: "govuk-label--s"
+            },
+            items: [
+              { value: "redis", text: "Redis" },
+              { value: "memcached", text: "Memcached" }
+            ]
+          }) }}
+          
+          {{ govukSelect({
+            id: "cache_engine_version",
+            name: "cache_engine_version",
+            classes: "govuk-!-width-one-half",
+            label: {
+              text: "Cache Engine Version *",
+              classes: "govuk-label--s"
+            },
+            items: [
+              { value: "version1", text: "Version 1" },
+              { value: "version2", text: "Version 2" },
+              { value: "version3", text: "Version 3" }
+            ]
+          }) }}
+        </div>
+      {{ govukCheckboxes({
+          idPrefix: "appinsight_add",
+          name: "appinsight_add",
+          items: [
+            {
+              value: "appinsight_add",
+              html: "<strong>Add Appinsight</strong>",
+              checked: submittedForm.appinsight_add
+            }
+          ]
+        }) }}
+        {{ govukCheckboxes({
+          idPrefix: "github_serviceaccount_add",
+          name: "github_serviceaccount_add",
+          items: [
+            {
+              value: "github_serviceaccount_add",
+              html: "<strong>Add Github service account</strong>",
+              checked: submittedForm.github_serviceaccount_add
+            }
+          ]
+        }) }}
+      <h2>Terraform Configuration</h2>
+      <div id="terraform_configuration" style="border: 3px solid #000; padding: 10px;">
+        {{ govukInput({
+          id: "terraform_version",
+          name: "terraform_version",
+          classes: "govuk-!-width-one-half",
+          label: {
+            text: "Terraform Version *",
+            classes: "govuk-label--s"
+          },
+          value: submittedForm.terraform_version or ">= 1.2.5"
+        }) }}
+        
+        {{ govukInput({
+          id: "aws_provider_version",
+          name: "aws_provider_version",
+          classes: "govuk-!-width-one-half",
+          label: {
+            text: "AWS Provider Version *",
+            classes: "govuk-label--s"
+          },
+          value: submittedForm.aws_provider_version or "~> 5.78.0"
+        }) }}
+        
+        {{ govukInput({
+          id: "github_provider_version",
+          name: "github_provider_version",
+          classes: "govuk-!-width-one-half",
+          label: {
+            text: "GitHub Provider Version *",
+            classes: "govuk-label--s"
+          },
+          value: submittedForm.github_provider_version or "~> 5.39.0"
+        }) }}
+        
+        {{ govukInput({
+          id: "time_provider_version",
+          name: "time_provider_version",
+          classes: "govuk-!-width-one-half",
+          label: {
+            text: "Time Provider Version *",
+            classes: "govuk-label--s"
+          },
+          value: submittedForm.time_provider_version or "~> 0.9.0"
+        }) }}
+        
+        {{ govukInput({
+          id: "kubernetes_provider_version",
+          name: "kubernetes_provider_version",
+          classes: "govuk-!-width-one-half",
+          label: {
+            text: "Kubernetes Provider Version *",
+            classes: "govuk-label--s"
+          },
+          value: submittedForm.kubernetes_provider_version or "~> 2.23.0"
+        }) }}
+      </div>
+      <h2>Contact details</h2>
+      <p>Please enter your contact details to send notifications to after processing your request.</p>
+      {{ govukInput({
+        id: "requester_name",
+        name: "requester_name",
+        value: submittedForm.requester_name,
+        errorMessage: validationErrors | findError('requester_name'),
+        classes: "govuk-!-width-one-half govuk-fieldset__legend--s",
+        label: {
+          text: "Requester name *",
+          classes: "govuk-fieldset__legend--s"
+        }
+      }) }}
+      {{ govukInput({
+        id: "requester_email",
+        name: "requester_email",
+        value: submittedForm.requester_email,
+        errorMessage: validationErrors | findError('requester_email'),
+        classes: "govuk-!-width-two-third govuk-fieldset__legend--s",
+        label: {
+          text: "Requester Email address *",
+          classes: "govuk-fieldset__legend--s"
+        },
+        hint: {
+          text: "Must be an @digital.justice.gov.uk email account"
+        }
+      }) }}
+      {{ govukSelect({
+        id: "requester_team",
+        name: "requester_team",
+        value: submittedForm.requester_team,
+        selected: true,
+        label: {
+          text: "Team *",
+          classes: "govuk-fieldset__legend--s"
+        },
+        items: teamList,
+        errorMessage: validationErrors | findError('requester_team')
+      }) }}
+      {{ govukButton({
+        id: "submitdata",
+        name: "submitdata",
+        text: "Submit",
+        element: "button",
+        preventDoubleClick: true,
+        attributes: { "data-test": "submit" }
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="/assets/js/namespaceRequestForm.js"></script>
+{% endblock %}

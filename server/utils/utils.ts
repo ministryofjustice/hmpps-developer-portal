@@ -103,22 +103,22 @@ export const sortComponentRequestData = (dataItem: HasRepoName, compareDataItem:
   return 0
 }
 
-export const sortProductIdData = (dataItem: hasProductId, compareDataItem: hasProductId) => {
-  if (dataItem.attributes.name < compareDataItem.attributes.name) {
+export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasTeamName) => {
+  if (dataItem.attributes.team_name < compareDataItem.attributes.team_name) {
     return -1
   }
-  if (dataItem.attributes.name > compareDataItem.attributes.name) {
+  if (dataItem.attributes.team_name > compareDataItem.attributes.team_name) {
     return 1
   }
 
   return 0
 }
 
-export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasTeamName) => {
-  if (dataItem.attributes.team_name < compareDataItem.attributes.team_name) {
+export const sortProductIdData = (dataItem: hasProductId, compareDataItem: hasProductId) => {
+  if (dataItem.attributes.name < compareDataItem.attributes.name) {
     return -1
   }
-  if (dataItem.attributes.team_name > compareDataItem.attributes.team_name) {
+  if (dataItem.attributes.name > compareDataItem.attributes.name) {
     return 1
   }
 
