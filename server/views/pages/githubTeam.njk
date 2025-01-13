@@ -1,0 +1,60 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + githubTeam.team_name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb(githubTeam.github_team_name, [{title: "Github Teams", href: "/github-teams"}]) }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 data-test="detail-page-title">{{ githubTeam.github_team_name }}</h1>
+    <table class="componentData">
+      <tbody>
+        <tr>
+          <th>Description</th>
+          <td>{{ githubTeam.team_description }}</td>
+        </tr>
+        <tr>
+          <th>Parent Team</th>
+          <td>
+            {% if githubTeam.parent_team_name %}
+              <a href="/github-teams/{{ githubTeam.parent_team_name }}">{{ githubTeam.parent_team_name }}</a>
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>Sub Teams</th>
+          <td>
+              {% if subTeams.length == 0 %}
+                <p data-test="no-products">None</p>
+              {% else %}
+                <ul>
+                {% for team in subTeams %}
+                  <li><a href="/github-teams/{{ team }}">{{ team }}</a></li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <th>Members</th>
+          <td>
+              {% if githubTeam.members == 0 %}
+                <p data-test="no-products">None</p>
+              {% else %}
+                <ul>
+                {% for member in githubTeam.members %}
+                  <li><a href="https://github.com/orgs/ministryofjustice/people/{{ member }}">{{ member }}</a></li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

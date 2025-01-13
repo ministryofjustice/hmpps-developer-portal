@@ -93,6 +93,36 @@
   }
 }
 
+#githubTeamsTable {
+  width: 100%;
+  
+  th, td {
+    padding: govuk-spacing(1);
+    vertical-align: middle;
+    &.description {
+      width: 20%;
+    }
+    &.members {
+      width: 20%;
+    }
+    &.terraform {
+      width: 5%;
+    }
+  }
+}
+
+#componentsTable {
+  width: 100%;
+
+  th, td {
+    padding: govuk-spacing(1);
+    vertical-align: middle;
+    &.githubTeams {
+      width: 20%;
+    }
+  }
+}
+
 .componentData {
   th, td, img{
     padding: govuk-spacing(1);

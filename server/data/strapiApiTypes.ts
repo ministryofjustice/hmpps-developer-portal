@@ -44,3 +44,9 @@ export type GithubRepoRequestListResponseDataItem = components['schemas']['Githu
 export type GithubRepoRequestRequest = components['schemas']['GithubRepoRequestRequest']
 export type GithubProjectVisibility =
   components['schemas']['GithubRepoRequestRequest']['data']['github_project_visibility']
+
+export type GithubTeam = components['schemas']['GithubTeam']
+export type GithubTeamResponse = components['schemas']['GithubTeamResponse']
+export type GithubTeamListResponse = components['schemas']['GithubTeamListResponse']
+export type GithubTeamListResponseDataItem = components['schemas']['GithubTeamListResponseDataItem']
+export type GithubTeamRequest = components['schemas']['GithubTeamRequest']
