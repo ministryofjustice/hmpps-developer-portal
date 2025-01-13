@@ -160,7 +160,7 @@ const renderGithubTeams = (teams, noTeamsMessage) => {
     teams
       .map(
         githubTeam =>
-          `<li><a href="/github-teams/${githubTeam}  class="govuk-link govuk-link--no-visited-state">${githubTeam}</a></li>`,
+          `<li><a href="/github-teams/${githubTeam}"  class="govuk-link govuk-link--no-visited-state">${githubTeam}</a></li>`,
       )
       .join('') || `<li>${noTeamsMessage}</li>`
   )
