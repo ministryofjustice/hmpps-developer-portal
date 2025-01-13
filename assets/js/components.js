@@ -71,30 +71,31 @@ jQuery(function () {
     {
       data: null,
       createdCell: function (td, _cellData, rowData) {
-        const adminTeams = rowData.attributes.github_project_teams_admin
-          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
-          .join('')
-
-        const writeTeams = rowData.attributes.github_project_teams_write
-          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
-          .join('')
-        const maintainTeams = rowData.attributes.github_project_teams_maintain
-          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
-          .join('')
-
+        const adminTeams = renderGithubTeams(
+          rowData.attributes.github_project_teams_admin,
+          'No Teams with Admin Access',
+        )
+        const writeTeams = renderGithubTeams(
+          rowData.attributes.github_project_teams_write,
+          'No Teams with Write Access',
+        )
+        const maintainTeams = renderGithubTeams(
+          rowData.attributes.github_project_teams_maintain,
+          'No Teams with Maintain Access',
+        )
         const detailsContent = `<details class="govuk-details">
-            <summary class="govuk-details__summary">
-              <span class="govuk-details__summary-text">Links</span>
-            </summary>
-            <div class="govuk-details__text">
-              <strong>Admin Teams:</strong>
-              <ul>${adminTeams || '<li>No Teams with Admin Access</li>'}</ul>
-              <strong>Write Teams:</strong>
-              <ul>${writeTeams || '<li>No Teams with Write Access</li>'}</ul>
-              <strong>Maintain Teams:</strong>
-              <ul>${writeTeams || '<li>No Teams with Write Access</li>'}</ul>
-            </div>
-          </details>`
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">Links</span>
+          </summary>
+          <div class="govuk-details__text">
+            <strong>Admin Teams:</strong>
+            <ul>${adminTeams}</ul>
+            <strong>Write Teams:</strong>
+            <ul>${writeTeams}</ul>
+            <strong>Maintain Teams:</strong>
+            <ul>${maintainTeams}</ul>
+          </div>
+        </details>`
         $(td).html(detailsContent)
       },
     },
@@ -153,3 +154,14 @@ jQuery(function () {
     columns,
   })
 })
+
+const renderGithubTeams = (teams, noTeamsMessage) => {
+  return (
+    teams
+      .map(
+        githubTeam =>
+          `<li><a href="/github-teams/${githubTeam}  class="govuk-link govuk-link--no-visited-state">${githubTeam}</a></li>`,
+      )
+      .join('') || `<li>${noTeamsMessage}</li>`
+  )
+}

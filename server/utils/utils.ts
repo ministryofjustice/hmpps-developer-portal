@@ -71,58 +71,23 @@ export const formatMonitorName = (name: string): string => {
 }
 
 export const sortData = (dataItem: HasName, compareDataItem: HasName) => {
-  if (dataItem.attributes.name < compareDataItem.attributes.name) {
-    return -1
-  }
-  if (dataItem.attributes.name > compareDataItem.attributes.name) {
-    return 1
-  }
-
-  return 0
+  return dataItem.attributes.name.localeCompare(compareDataItem.attributes.name)
 }
 
 export const sortRdsInstances = (rdsInstance: RdsEntry, compareRdsInstance: RdsEntry) => {
-  if (rdsInstance.tf_label < compareRdsInstance.tf_label) {
-    return -1
-  }
-  if (rdsInstance.tf_label > compareRdsInstance.tf_label) {
-    return 1
-  }
-
-  return 0
+  return rdsInstance.tf_label.localeCompare(compareRdsInstance.tf_label)
 }
 
 export const sortComponentRequestData = (dataItem: HasRepoName, compareDataItem: HasRepoName) => {
-  if (dataItem.attributes.github_repo < compareDataItem.attributes.github_repo) {
-    return -1
-  }
-  if (dataItem.attributes.github_repo > compareDataItem.attributes.github_repo) {
-    return 1
-  }
-
-  return 0
-}
-
-export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasTeamName) => {
-  if (dataItem.attributes.team_name < compareDataItem.attributes.team_name) {
-    return -1
-  }
-  if (dataItem.attributes.team_name > compareDataItem.attributes.team_name) {
-    return 1
-  }
-
-  return 0
+  return dataItem.attributes.github_repo.localeCompare(compareDataItem.attributes.github_repo)
 }
 
 export const sortProductIdData = (dataItem: hasProductId, compareDataItem: hasProductId) => {
-  if (dataItem.attributes.name < compareDataItem.attributes.name) {
-    return -1
-  }
-  if (dataItem.attributes.name > compareDataItem.attributes.name) {
-    return 1
-  }
+  return dataItem.attributes.name.localeCompare(compareDataItem.attributes.name)
+}
 
-  return 0
+export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasTeamName) => {
+  return dataItem.attributes.team_name.localeCompare(compareDataItem.attributes.team_name)
 }
 
 export const getFormattedName = (req: Request, param: string): string => {
