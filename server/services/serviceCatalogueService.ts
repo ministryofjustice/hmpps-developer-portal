@@ -19,8 +19,10 @@ import {
   GithubRepoRequest,
   GithubRepoRequestRequest,
   GithubRepoRequestListResponseDataItem,
+  GithubTeamListResponseDataItem,
+  GithubTeam,
 } from '../data/strapiApiTypes'
-import { sortData, sortRdsInstances, sortComponentRequestData } from '../utils/utils'
+import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData } from '../utils/utils'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -264,5 +266,23 @@ export default class ServiceCatalogueService {
     const response = await strapiApiClient.postGithubRepoRequest(request)
 
     return response
+  }
+
+  async getGithubTeams(): Promise<GithubTeamListResponseDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const teamRequestsData = await strapiApiClient.getGithubTeams()
+    const teamRequests = teamRequestsData.data.sort(sortGithubTeamsData)
+
+    return teamRequests
+  }
+
+  async getGithubTeam({ teamName }: { teamName: string }): Promise<GithubTeam> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const teamRequestData = await strapiApiClient.getGithubTeam({ teamName })
+    const teamRequest =
+      Array.isArray(teamRequestData.data) && teamRequestData.data.length > 0
+        ? teamRequestData.data[0].attributes
+        : teamRequestData.data?.attributes
+    return teamRequest
   }
 }

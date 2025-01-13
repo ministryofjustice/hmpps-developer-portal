@@ -68,6 +68,82 @@ jQuery(function () {
         return prodSlackChannel
       },
     },
+    {
+      data: null,
+      createdCell: function (td, _cellData, rowData) {
+        const adminTeams = renderGithubTeams(
+          rowData.attributes.github_project_teams_admin,
+          'No Teams with Admin Access',
+        )
+        const writeTeams = renderGithubTeams(
+          rowData.attributes.github_project_teams_write,
+          'No Teams with Write Access',
+        )
+        const maintainTeams = renderGithubTeams(
+          rowData.attributes.github_project_teams_maintain,
+          'No Teams with Maintain Access',
+        )
+        const detailsContent = `<details class="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">Links</span>
+          </summary>
+          <div class="govuk-details__text">
+            <strong>Admin Teams:</strong>
+            <ul>${adminTeams}</ul>
+            <strong>Write Teams:</strong>
+            <ul>${writeTeams}</ul>
+            <strong>Maintain Teams:</strong>
+            <ul>${maintainTeams}</ul>
+          </div>
+        </details>`
+        $(td).html(detailsContent)
+      },
+    },
+    {
+      data: 'attributes.github_project_teams_admin',
+      visible: false,
+      createdCell: function (td, _cellData, rowData) {
+        const githubTeams = rowData.attributes.github_project_teams_admin
+          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+          .join('')
+
+        if (githubTeams) {
+          $(td).html(githubTeams)
+        } else {
+          $(td).html('No Teams with Admin Access')
+        }
+      },
+    },
+    {
+      data: 'attributes.github_project_teams_write',
+      visible: false,
+      createdCell: function (td, _cellData, rowData) {
+        const githubTeams = rowData.attributes.github_project_teams_write
+          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+          .join('')
+
+        if (githubTeams) {
+          $(td).html(githubTeams)
+        } else {
+          $(td).html('No Teams with Write Access')
+        }
+      },
+    },
+    {
+      data: 'attributes.github_project_teams_maintain',
+      visible: false,
+      createdCell: function (td, _cellData, rowData) {
+        const githubTeams = rowData.attributes.github_project_teams_maintain
+          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+          .join('')
+
+        if (githubTeams) {
+          $(td).html(githubTeams)
+        } else {
+          $(td).html('No Teams with maintain Access')
+        }
+      },
+    },
   ]
 
   createTable({
@@ -78,3 +154,14 @@ jQuery(function () {
     columns,
   })
 })
+
+const renderGithubTeams = (teams, noTeamsMessage) => {
+  return (
+    teams
+      .map(
+        githubTeam =>
+          `<li><a href="/github-teams/${githubTeam}  class="govuk-link govuk-link--no-visited-state">${githubTeam}</a></li>`,
+      )
+      .join('') || `<li>${noTeamsMessage}</li>`
+  )
+}
