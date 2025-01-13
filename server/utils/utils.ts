@@ -115,14 +115,7 @@ export const sortProductIdData = (dataItem: hasProductId, compareDataItem: hasPr
 }
 
 export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasTeamName) => {
-  if (dataItem.attributes.team_name < compareDataItem.attributes.team_name) {
-    return -1
-  }
-  if (dataItem.attributes.team_name > compareDataItem.attributes.team_name) {
-    return 1
-  }
-
-  return 0
+  return dataItem.attributes.team_name.localeCompare(compareDataItem.attributes.team_name)
 }
 
 export const getFormattedName = (req: Request, param: string): string => {

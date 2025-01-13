@@ -17,7 +17,7 @@ jQuery(function () {
       data: 'attributes.parent_team_name',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(
-          rowData.attributes.parent_team_name === 'hmpps-developers'
+          rowData.attributes.parent_team_name === 'hmpps-developers' || rowData.attributes.parent_team_name === null
             ? `${rowData.attributes.parent_team_name}`
             : `<a href="/github-teams/${rowData.attributes.parent_team_name}">${rowData.attributes.parent_team_name}</a>`,
         )
@@ -32,12 +32,9 @@ jQuery(function () {
     {
       data: 'attributes.members',
       createdCell: function (td, _cellData, rowData) {
-        const members = rowData.attributes.members
-          .map(member => `<li><a href="https://github.com/orgs/ministryofjustice/people/${member}">${member}</a></li>`)
-          .join('')
-
-        if (members) {
-          $(td).html(members)
+        const membersList = renderGithubTeams(rowData)
+        if (membersList) {
+          $(td).html(membersList)
         } else {
           $(td).html('No members in this team')
         }
@@ -54,8 +51,18 @@ jQuery(function () {
   createTable({
     id: 'githubTeamsTable',
     ajaxUrl: '/github-teams/data',
-    orderColumn: 2,
+    orderColumn: 1,
     orderType: 'asc',
     columns,
   })
 })
+
+function renderGithubTeams(rowData) {
+  const members = rowData.attributes.members
+    .map(
+      member =>
+        `<li><a href="https://github.com/orgs/ministryofjustice/people/${member}" class="govuk-link govuk-link--no-visited-state">${member}</a></li>`,
+    )
+    .join('')
+  return members
+}

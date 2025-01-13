@@ -18,7 +18,11 @@
         </tr>
         <tr>
           <th>Parent Team</th>
-          <td>{{ githubTeam.parent_team_name }}</td>
+          <td>
+            {% if githubTeam.parent_team_name %}
+              <a href="/github-teams/{{ githubTeam.parent_team_name }}">>{{ githubTeam.parent_team_name }}</a>
+            {% endif %}
+          </td>
         </tr>
         <tr>
           <th>Sub Teams</th>
@@ -42,7 +46,7 @@
               {% else %}
                 <ul>
                 {% for member in githubTeam.members %}
-                  <li>{{ member }}</li>
+                  <li><a href="https://github.com/orgs/ministryofjustice/people/{{ member }}">{{ member }}</a></li>
                 {% endfor %}
                 </ul>
               {% endif %}
