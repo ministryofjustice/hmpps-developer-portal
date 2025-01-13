@@ -1,18 +1,15 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { GithubRepoRequestRequest, GithubProjectVisibility } from '../data/strapiApiTypes'
-import { validateRequest } from '../middleware/setUpValidationMiddleware'
-import { FieldValidationError } from '../@types/FieldValidationError'
 
-export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
+export default function routes({ dataFilterService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
+  // const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/new', async (req, res) => {
-    const [teamList, productList, githubTeamList] = await dataFilterService.getFormsDropdownLists({
+    const [teamList, , githubTeamList] = await dataFilterService.getFormsDropdownLists({
       teamName: '',
       productId: '',
       githubTeamName: '',
