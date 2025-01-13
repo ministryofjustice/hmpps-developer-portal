@@ -1,6 +1,6 @@
 import { MoJSelectDataItem } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { formatMonitorName, sortData, sortProductIdData } from '../utils/utils'
+import { formatMonitorName, sortData, sortProductIdData, sortGithubTeamsData } from '../utils/utils'
 
 export default class DataFilterService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -70,6 +70,30 @@ export default class DataFilterService {
         value: useFormattedName ? formattedName : team.id.toString(),
         text: team.attributes.name,
         selected: formattedName === teamName,
+      }
+    })
+    teamsList.unshift({ value: '', text: '', selected: false })
+
+    return teamsList
+  }
+
+  async getGithubTeamsDropDownList({
+    githubTeamName,
+    useFormattedName = false,
+  }: {
+    githubTeamName: string
+    useFormattedName?: boolean
+  }): Promise<MoJSelectDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const teamsData = await strapiApiClient.getGithubTeams()
+    const teams = teamsData.data.sort(sortGithubTeamsData)
+    const teamsList = teams.map(team => {
+      const formattedName = formatMonitorName(team.attributes.team_name)
+
+      return {
+        value: useFormattedName ? formattedName : team.id.toString(),
+        text: team.attributes.team_name,
+        selected: formattedName === githubTeamName,
       }
     })
     teamsList.unshift({ value: '', text: '', selected: false })
@@ -149,15 +173,18 @@ export default class DataFilterService {
   async getFormsDropdownLists({
     teamName = '',
     productId = '',
+    githubTeamName = '',
     useFormattedName = false,
   }: {
     teamName?: string
     productId?: string
+    githubTeamName?: string
     useFormattedName?: boolean
   }) {
     return Promise.all([
       await this.getTeamsDropDownList({ teamName, useFormattedName }),
       await this.getProductsIdDropDownList({ productId, useFormattedName }),
+      await this.getGithubTeamsDropDownList({ githubTeamName, useFormattedName }),
     ])
   }
 
