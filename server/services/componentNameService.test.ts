@@ -6,6 +6,8 @@ import {
   ServiceAreaListResponse,
   ServiceAreaResponse,
   ProductListResponse,
+  CustomComponentListResponse,
+  GithubRepoRequestListResponse,
 } from '../data/strapiApiTypes'
 import ComponentNameService from './componentNameService'
 
@@ -162,6 +164,91 @@ describe('Component name service', () => {
 
       expect(strapiApiClient.getProducts).toHaveBeenCalledWith({ withEnvironments: true })
       expect(results).toStrictEqual(['comp-1', 'comp-3'])
+    })
+  })
+
+  describe('Custom Components', () => {
+    const customComponentsResponse = {
+      data: [
+        {
+          id: 2,
+          attributes: {
+            name: 'custom-component-1',
+            components: {
+              data: [
+                { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
+                { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
+                { attributes: { name: 'comp-2' } },
+              ],
+            },
+          },
+        },
+      ],
+    } as unknown as CustomComponentListResponse
+
+    it('should return deployed components sorted for the selected custom component', async () => {
+      strapiApiClient.getCustomComponentViews.mockResolvedValue(customComponentsResponse)
+
+      const results = await componentNameService.getAllDeployedComponentsForCustomComponents('custom-component-1')
+
+      expect(strapiApiClient.getCustomComponentViews).toHaveBeenCalledWith({ withEnvironments: true })
+      expect(results).toStrictEqual(['comp-1', 'comp-3'])
+    })
+  })
+
+  describe('checkComponentExists()', () => {
+    const testComponentsResponse = {
+      data: [
+        { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
+        { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
+        { attributes: { name: 'comp-2' } },
+      ],
+    } as ComponentListResponse
+
+    it('should return true if component exists', async () => {
+      strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
+
+      const results = await componentNameService.checkComponentExists('comp-3')
+
+      expect(strapiApiClient.getComponents).toHaveBeenCalledTimes(1)
+      expect(results).toBe(true)
+    })
+
+    it('should return false if component does not exist', async () => {
+      strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
+
+      const results = await componentNameService.checkComponentExists('comp-4')
+
+      expect(strapiApiClient.getComponents).toHaveBeenCalledTimes(1)
+      expect(results).toBe(false)
+    })
+  })
+
+  describe('checkComponentRequestExists()', () => {
+    const testComponentsResponse = {
+      data: [
+        { attributes: { github_repo: 'comp-3' } },
+        { attributes: { github_repo: 'comp-1' } },
+        { attributes: { github_repo: 'comp-2' } },
+      ],
+    } as GithubRepoRequestListResponse
+
+    it('should return true if component exists', async () => {
+      strapiApiClient.getGithubRepoRequests.mockResolvedValue(testComponentsResponse)
+
+      const results = await componentNameService.checkComponentRequestExists('comp-3')
+
+      expect(strapiApiClient.getGithubRepoRequests).toHaveBeenCalledTimes(1)
+      expect(results).toBe(true)
+    })
+
+    it('should return false if component does not exist', async () => {
+      strapiApiClient.getGithubRepoRequests.mockResolvedValue(testComponentsResponse)
+
+      const results = await componentNameService.checkComponentRequestExists('comp-4')
+
+      expect(strapiApiClient.getGithubRepoRequests).toHaveBeenCalledTimes(1)
+      expect(results).toBe(false)
     })
   })
 })
