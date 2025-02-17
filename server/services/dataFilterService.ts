@@ -21,7 +21,9 @@ export default class DataFilterService {
       return {
         value: useFormattedName ? formattedName : customComponentView.id.toString(),
         text: customComponentView.attributes.name,
-        selected: formattedName === customComponentName,
+        selected: useFormattedName
+          ? formattedName === customComponentName
+          : customComponentView.attributes.name === customComponentName,
       }
     })
     customComponentsList.unshift({ value: '', text: '', selected: false })
@@ -45,7 +47,9 @@ export default class DataFilterService {
       return {
         value: useFormattedName ? formattedName : serviceArea.id.toString(),
         text: serviceArea.attributes.name,
-        selected: formattedName === serviceAreaName,
+        selected: useFormattedName
+          ? formattedName === serviceAreaName
+          : serviceArea.attributes.name === serviceAreaName,
       }
     })
     serviceAreaList.unshift({ value: '', text: '', selected: false })
@@ -69,7 +73,7 @@ export default class DataFilterService {
       return {
         value: useFormattedName ? formattedName : team.id.toString(),
         text: team.attributes.name,
-        selected: formattedName === teamName,
+        selected: useFormattedName ? formattedName === teamName : team.attributes.name === teamName,
       }
     })
     teamsList.unshift({ value: '', text: '', selected: false })
@@ -93,7 +97,7 @@ export default class DataFilterService {
       return {
         value: useFormattedName ? formattedName : product.id.toString(),
         text: product.attributes.name,
-        selected: formattedName === productName,
+        selected: useFormattedName ? formattedName === productName : product.attributes.name === productName,
       }
     })
     productsList.unshift({ value: '', text: '', selected: false })
@@ -159,15 +163,5 @@ export default class DataFilterService {
       await this.getTeamsDropDownList({ teamName, useFormattedName }),
       await this.getProductsIdDropDownList({ productId, useFormattedName }),
     ])
-  }
-
-  async getOnlyTeamsLists({
-    teamName = '',
-    useFormattedName = false,
-  }: {
-    teamName?: string
-    useFormattedName?: boolean
-  }) {
-    return Promise.all([await this.getTeamsDropDownList({ teamName, useFormattedName })])
   }
 }
