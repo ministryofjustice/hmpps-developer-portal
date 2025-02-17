@@ -48,7 +48,7 @@ describe('Data Filter service', () => {
           value: '',
         },
         {
-          selected: false,
+          selected: true,
           text: 'Custom Component 1',
           value: '1',
         },
@@ -76,7 +76,7 @@ describe('Data Filter service', () => {
           value: '',
         },
         {
-          selected: false,
+          selected: true,
           text: 'Custom Component 1',
           value: 'custom-component-1',
         },
@@ -89,7 +89,7 @@ describe('Data Filter service', () => {
       strapiApiClient.getCustomComponentViews.mockResolvedValue(testCustomComponentsResponse)
 
       const results = await dataFilterService.getCustomComponentsDropDownList({
-        customComponentName: 'Custom Component 1',
+        customComponentName: 'custom-component-1',
         useFormattedName: true,
       })
 
@@ -120,7 +120,7 @@ describe('Data Filter service', () => {
           value: '',
         },
         {
-          selected: false,
+          selected: true,
           text: 'Service Area 1',
           value: '1',
         },
@@ -146,7 +146,7 @@ describe('Data Filter service', () => {
           value: '',
         },
         {
-          selected: false,
+          selected: true,
           text: 'Service Area 1',
           value: 'service-area-1',
         },
@@ -159,7 +159,7 @@ describe('Data Filter service', () => {
       strapiApiClient.getServiceAreas.mockResolvedValue(testServiceAreasResponse)
 
       const results = await dataFilterService.getServiceAreasDropDownList({
-        serviceAreaName: 'Service Area 1',
+        serviceAreaName: 'service-area-1',
         useFormattedName: true,
       })
 
@@ -190,7 +190,7 @@ describe('Data Filter service', () => {
           value: '',
         },
         {
-          selected: false,
+          selected: true,
           text: 'Team 1',
           value: '1',
         },
@@ -216,7 +216,7 @@ describe('Data Filter service', () => {
           value: '',
         },
         {
-          selected: false,
+          selected: true,
           text: 'Team 1',
           value: 'team-1',
         },
@@ -228,7 +228,7 @@ describe('Data Filter service', () => {
       ]
       strapiApiClient.getTeams.mockResolvedValue(testTeamsResponse)
 
-      const results = await dataFilterService.getTeamsDropDownList({ teamName: 'Team 1', useFormattedName: true })
+      const results = await dataFilterService.getTeamsDropDownList({ teamName: 'team-1', useFormattedName: true })
 
       expect(strapiApiClient.getTeams).toHaveBeenCalledTimes(1)
       expect(results).toStrictEqual(sortedDropDownList)
@@ -257,7 +257,7 @@ describe('Data Filter service', () => {
           value: '',
         },
         {
-          selected: false,
+          selected: true,
           text: 'Product 1',
           value: '1',
         },
@@ -283,7 +283,7 @@ describe('Data Filter service', () => {
           value: '',
         },
         {
-          selected: false,
+          selected: true,
           text: 'Product 1',
           value: 'product-1',
         },
@@ -296,7 +296,7 @@ describe('Data Filter service', () => {
       strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
 
       const results = await dataFilterService.getProductsDropDownList({
-        productName: 'Product 1',
+        productName: 'product-1',
         useFormattedName: true,
       })
 
@@ -383,7 +383,7 @@ describe('Data Filter service', () => {
         value: '',
       },
       {
-        selected: false,
+        selected: true,
         text: 'Team 1',
         value: '1',
       },
@@ -400,7 +400,7 @@ describe('Data Filter service', () => {
         value: '',
       },
       {
-        selected: false,
+        selected: true,
         text: 'Product 1',
         value: '1',
       },
@@ -417,7 +417,7 @@ describe('Data Filter service', () => {
         value: '',
       },
       {
-        selected: false,
+        selected: true,
         text: 'Service Area 1',
         value: '1',
       },
@@ -434,7 +434,7 @@ describe('Data Filter service', () => {
         value: '',
       },
       {
-        selected: false,
+        selected: true,
         text: 'Custom Component 1',
         value: '1',
       },
@@ -451,7 +451,7 @@ describe('Data Filter service', () => {
         value: '',
       },
       {
-        selected: false,
+        selected: true,
         text: 'Team 1',
         value: 'team-1',
       },
@@ -468,7 +468,7 @@ describe('Data Filter service', () => {
         value: '',
       },
       {
-        selected: false,
+        selected: true,
         text: 'Product 1',
         value: 'product-1',
       },
@@ -485,7 +485,7 @@ describe('Data Filter service', () => {
         value: '',
       },
       {
-        selected: false,
+        selected: true,
         text: 'Service Area 1',
         value: 'service-area-1',
       },
@@ -502,7 +502,7 @@ describe('Data Filter service', () => {
         value: '',
       },
       {
-        selected: false,
+        selected: true,
         text: 'Custom Component 1',
         value: 'custom-component-1',
       },
@@ -543,7 +543,7 @@ describe('Data Filter service', () => {
       expect(productsDropDownListMock).toHaveBeenCalledTimes(1)
       expect(serviceAreasDropDownListMock).toHaveBeenCalledTimes(1)
       expect(customComponentsDropDownListMock).toHaveBeenCalledTimes(1)
-      expect(results).toEqual([
+      expect(results).toStrictEqual([
         teamsDropDownList,
         productsDropDownList,
         serviceAreasDropDownList,
@@ -562,10 +562,10 @@ describe('Data Filter service', () => {
       dataFilterService.getCustomComponentsDropDownList = customComponentsDropDownListMock
 
       const results = await dataFilterService.getDropDownLists({
-        teamName: 'Team 1',
-        productName: 'Product 1',
-        serviceAreaName: 'Service Area 1',
-        customComponentName: 'Custom Component 1',
+        teamName: 'team-1',
+        productName: 'product-1',
+        serviceAreaName: 'service-area-1',
+        customComponentName: 'custom-component-1',
         useFormattedName: true,
       })
 
@@ -573,7 +573,7 @@ describe('Data Filter service', () => {
       expect(productsDropDownListMock).toHaveBeenCalledTimes(1)
       expect(serviceAreasDropDownListMock).toHaveBeenCalledTimes(1)
       expect(customComponentsDropDownListMock).toHaveBeenCalledTimes(1)
-      expect(results).toEqual([
+      expect(results).toStrictEqual([
         formattedTeamsDropDownList,
         formattedProductsDropDownList,
         formattedServiceAreasDropDownList,
@@ -624,7 +624,7 @@ describe('Data Filter service', () => {
         value: '',
       },
       {
-        selected: false,
+        selected: true,
         text: 'Team 1',
         value: '1',
       },
@@ -641,7 +641,7 @@ describe('Data Filter service', () => {
         value: '',
       },
       {
-        selected: false,
+        selected: true,
         text: 'Team 1',
         value: 'team-1',
       },
@@ -669,7 +669,7 @@ describe('Data Filter service', () => {
 
       expect(getProductsIdDropDownListMock).toHaveBeenCalledTimes(1)
       expect(teamsDropDownListMock).toHaveBeenCalledTimes(1)
-      expect(results).toEqual([teamsDropDownList, productIdsDropDownList])
+      expect(results).toStrictEqual([teamsDropDownList, productIdsDropDownList])
     })
 
     it('should return all products with id and teams as a sorted list for Select component with value set to the cleaned monitor name when useFormattedName is set', async () => {
@@ -680,13 +680,13 @@ describe('Data Filter service', () => {
 
       const results = await dataFilterService.getFormsDropdownLists({
         productId: '1',
-        teamName: 'Team 1',
+        teamName: 'team-1',
         useFormattedName: true,
       })
 
       expect(getProductsIdDropDownListMock).toHaveBeenCalledTimes(1)
       expect(teamsDropDownListMock).toHaveBeenCalledTimes(1)
-      expect(results).toEqual([formattedTeamsDropDownList, formattedProductIdsDropDownList])
+      expect(results).toStrictEqual([formattedTeamsDropDownList, formattedProductIdsDropDownList])
     })
   })
 })
