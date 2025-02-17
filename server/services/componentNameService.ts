@@ -91,13 +91,12 @@ export default class ComponentNameService {
       .map(component => component.attributes.name)
   }
 
-  async checkComponentExists(repoName: string): Promise<boolean> {
+  async checkComponentExists(componentName: string): Promise<boolean> {
     const componentData = await this.strapiApiClientFactory('').getComponents()
-    const components = componentData.data.find(component => formatMonitorName(component.attributes.name) === repoName)
-    if (!components) {
-      return false
-    }
-    return true
+    const components = componentData.data.find(
+      component => formatMonitorName(component.attributes.name) === componentName,
+    )
+    return !!components
   }
 
   async checkComponentRequestExists(repositoryName: string): Promise<boolean> {
