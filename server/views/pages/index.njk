@@ -4,41 +4,49 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-
   <h1>Developer Portal</h1>
-  <p>
-    <h2>Areas</h2>
-    <ul>
-      <li><a class="govuk-link--no-visited-state" href="/service-areas">Service Areas</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/teams">Teams</a></li>
-    </ul>
-    <h2>Services</h2>
-    <ul> 
-      <li><a class="govuk-link--no-visited-state" href="/product-sets">Product Sets</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/products">Products</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/components">Components</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/components-environments">Components (With Environments)</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/namespaces">Namespaces</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/github-teams">Github Teams</a></li>
-    </ul>
-    <h2>Reports</h2>
-    <ul>
-      <li><a class="govuk-link--no-visited-state" href="/veracode">Veracode</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/trivy">Trivy</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/reports/rds">RDS</a></li>
-    </ul>
-    <h2>Tools</h2>
-    <ul>
-      <li><a class="govuk-link--no-visited-state" href="/monitor">Monitor</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/dependencies">Component Dependencies</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/product-dependencies">Product Dependencies</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/drift-radiator">Deployment Drift Radiator</a></li>
-    </ul>
-    <h2>Request Forms</h2>
-    <ul>
-      <li><a class="govuk-link--no-visited-state" href="/component-requests/new">Component request form (Replacing hmpps-projects-bootstrap projects.json)</a></li>
-      <li><a class="govuk-link--no-visited-state" href="/component-requests">Component requests</a></li>
-    </ul>
-  </p>
-
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-one-half">
+      <h2>Services</h2>
+      <ul> 
+        <li><a class="govuk-link--no-visited-state" href="/service-areas">Service Areas</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/teams">Teams</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/product-sets">Product Sets</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/products">Products</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/components">Components</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/environments">Environments</a></li>
+      </ul>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <h2>Tools</h2>
+      <ul>
+        <li><a class="govuk-link--no-visited-state" href="/monitor">Health Monitor</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/dependencies">View Component Dependencies</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/product-dependencies">View Product Dependencies</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/drift-radiator">View Component Drift</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/namespaces">Namespaces</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/github-teams">Github Teams</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-one-half">
+      <h2>Reports</h2>
+      <ul>
+        <li><a class="govuk-link--no-visited-state" href="/veracode">Veracode</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/trivy">Trivy</a></li>
+        <li><a class="govuk-link--no-visited-state" href="/reports/rds">RDS</a></li>
+      </ul>
+    </div>
+    <div class="govuk-grid-column-one-half">
+      <h2>Request Forms</h2>
+      <ul>
+        <li><a class="govuk-link--no-visited-state" href="/component-requests/new">Component request form</a> 
+          <ul>
+            <li>View <a class="govuk-link--no-visited-state" href="/component-requests">previous requests</a></li>
+            </ul>
+        </li>
+      </ul>
+    </div>
+  </div>  
 {% endblock %}

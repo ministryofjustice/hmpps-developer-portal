@@ -60,6 +60,7 @@ jQuery(function () {
     },
     {
       data: 'product_id',
+      visible: false,
       createdCell: function (td, _cellData, rowData) {
         if (rowData.product_id && rowData.product_slug) {
           $(td).html(
@@ -73,6 +74,7 @@ jQuery(function () {
     },
     {
       data: 'product_name',
+      visible: false,
       createdCell: function (td, _cellData, rowData) {
         if (rowData.product_id && rowData.product_slug) {
           $(td).html(
@@ -208,7 +210,7 @@ jQuery(function () {
       createTable({
         id: 'componentsEnvironmentTable',
         data: transformedData,
-        orderColumn: 0,
+        orderColumn: 1,
         orderType: 'asc',
         columns,
       })
