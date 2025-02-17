@@ -12,8 +12,8 @@
   <div class="govuk-grid-column-one-half">
     {% include 'partials/errorSummary.njk' %}
     <h1 class="govuk-heading-xl">Component Request Form</h1>
+    <p>Documentation for creating new services is located <a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/creating-new-services/">here</a>. If this is the first time you're creating a service please make sure you read that first. 
     <p>After submitting this form, the SRE team will run the bootstrap to create the github repo and service catalogue entries. </p>
-    <p><i><b>Note:</b> fields marked '*' are required.</i></p>
     <form action="/component-requests/new" method="POST">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
       {{ govukInput({
@@ -22,11 +22,11 @@
         value: submittedForm.github_repo,
         classes: "govuk-!-width-one-half",
         label: {
-          text: "Github repository name *",
+          text: "Github repository name",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
-          text: "This must start with 'hmpps-' and contain only alphanumeric characters and hyphens (-)"
+          html: "This must start with 'hmpps-' and contain only alphanumeric characters and hyphens (-). Ensure that new components meet the " + '<a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/service-standard/service-naming/">guidance around service naming</a>.'
         },
         errorMessage: validationErrors | findError('github_repo')
       }) }}
@@ -36,7 +36,7 @@
         value: submittedForm.repo_description,
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github repository description *",
+          text: "Github repository description",
           classes: "govuk-fieldset__legend--s"
         },
         errorMessage: validationErrors | findError('repo_description')
@@ -49,7 +49,7 @@
         errorMessage: validationErrors | findError('base_template'),
         fieldset: {
           legend: {
-            text: "Github template repository *",
+            text: "Github template repository",
             classes: 'govuk-fieldset__legend--s'
           }
         },
@@ -72,7 +72,7 @@
         name: "github_project_visibility",
         value: submittedForm.github_project_visibility,
         label: {
-          text: "Github project visibility *",
+          text: "Github project visibility",
           classes: "govuk-fieldset__legend--s"
         },
         items: [
@@ -89,18 +89,20 @@
             text: "Internal"
           }
         ],
-        errorMessage: validationErrors | findError('github_project_visibility')
+        errorMessage: validationErrors | findError('github_project_visibility'),
+        hint: { html : "Most projects should be public, unless there is a specific reason not to be." }
       }) }}
 
       {{ govukSelect({
         id: "product",
         name: "product",
         label: {
-          text: "Product *",
+          text: "Product",
           classes: "govuk-fieldset__legend--s"
         },
         items: productList | toSelect("value", "text", submittedForm.product  ),
-        errorMessage: validationErrors | findError('product')
+        errorMessage: validationErrors | findError('product'),
+        hint: { html : "This links the component to its product and team in the service catalogue." }
       }) }}
       {{ govukInput({
         id: "jira_project_keys",
@@ -108,9 +110,10 @@
         value: submittedForm.jira_project_keys,
         classes: "govuk-!-width-one-third",
         label: {
-          text: "Jira project key",
+          text: "Jira project key (optional)",
           classes: "govuk-fieldset__legend--s"
-        }
+        },
+        hint: { html : "This is the project shortcode in Jira and allows commits and PRs to be linked to tickets." }
       }) }}
       {{ govukInput({
         id: "github_projects_teams_admin",
@@ -119,7 +122,7 @@
         errorMessage: validationErrors | findError('github_projects_teams_admin'),
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github repository admin teams *",
+          text: "Github repository admin teams",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -133,7 +136,7 @@
         errorMessage: validationErrors | findError('github_project_teams_write'),
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github repository teams with write permissions",
+          text: "Github repository teams with write permissions (optional)",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -147,16 +150,17 @@
         errorMessage: validationErrors | findError('github_project_branch_protection_restricted_teams'),
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github project branch protection restricted teams",
+          text: "Github project branch protection restricted teams (optional)",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
           text: "Separated by comma eg: hmpps-developers,haha"
         }
       }) }}
-      <h2>Slack channels</h2>
-      <p>Please enter a Slack channel ID (preferred) or Slack channel name (without '#')</p>
-      <p><i><b>Note:</b> If a Slack channel is private, please invite <b>@HMPPS SRE Slack Bot</b> to the channel</i></p>
+      <h2>Slack notification channels</h2>
+      <p>There is some guidance around selecting slack channels <a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/creating-new-services/prerequisites/#team-slack-channels">here</a>.</p> 
+      <p>You'll need to ensure that notifications are not sent to the channel that receives production alerts.</p>
+      <p><b>Note:</b> If a Slack channel is private, please invite <b>@HMPPS SRE Slack Bot</b> to the channel</p>
       {{ govukInput({
         id: "slack_channel_prod_release_notify",
         name: "slack_channel_prod_release_notify",
@@ -164,9 +168,10 @@
         errorMessage: validationErrors | findError('slack_channel_prod_release_notify'),
         classes: "govuk-!-width-one-half",
         label: {
-          text: "Slack channel for production release notifications *",
+          text: "Slack channel for production release notifications",
           classes: "govuk-fieldset__legend--s"
-        }
+        },
+        hint: { text: "Please enter a Slack channel ID (preferred) or Slack channel name (without '#')"}
       }) }}
         {{ govukInput({
         id: "slack_channel_nonprod_release_notify",
@@ -174,9 +179,10 @@
         value: submittedForm.slack_channel_nonprod_release_notify,
         classes: "govuk-!-width-one-half",
         label: {
-          text: "Slack channel for non-production release notifications",
+          text: "Slack channel for non-production release notifications (optional)",
           classes: "govuk-fieldset__legend--s"
-        }
+        },
+        hint: { text: "Please enter a Slack channel ID (preferred) or Slack channel name (without '#')"}
       }) }}
       {{ govukInput({
         id: "slack_channel_security_scans_notify",
@@ -185,9 +191,10 @@
         errorMessage: validationErrors | findError('slack_channel_security_scans_notify'),
         classes: "govuk-!-width-one-half",
         label: {
-          text: "Slack channel for security scan notifications *",
+          text: "Slack channel for security scan notifications",
           classes: "govuk-fieldset__legend--s"
-        }
+        },
+        hint: { text: "Please enter a Slack channel ID (preferred) or Slack channel name (without '#')"}
       }) }}
       <h2>Alert severity</h2>
       <p>For configuring alert severity labels, please first see <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts/">this document.</a></p>
@@ -198,7 +205,7 @@
         errorMessage: validationErrors | findError('nonprod_alerts_severity_label'),
         classes: "govuk-!-width-one-third",
         label: {
-          text: "Non-prod Alertmanager severity label *",
+          text: "Non-prod Alertmanager severity label",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -212,7 +219,7 @@
         errorMessage: validationErrors | findError('prod_alerts_severity_label'),
         classes: "govuk-!-width-one-third govuk-fieldset__legend--s",
         label: {
-          text: "Production Alertmanager severity label *",
+          text: "Production Alertmanager severity label",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -228,7 +235,7 @@
         errorMessage: validationErrors | findError('requester_name'),
         classes: "govuk-!-width-one-half govuk-fieldset__legend--s",
         label: {
-          text: "Requester name *",
+          text: "Requester name",
           classes: "govuk-fieldset__legend--s"
         }
       }) }}
@@ -239,24 +246,26 @@
         errorMessage: validationErrors | findError('requester_email'),
         classes: "govuk-!-width-two-third govuk-fieldset__legend--s",
         label: {
-          text: "Requester Email address *",
+          text: "Requester Email address",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
-          text: "Must be an @digital.justice.gov.uk email account"
+          text: "Must be an @digital.justice.gov.uk or @justice.gov.uk email account"
         }
       }) }}
-      {{ govukSelect({
+      {{ govukInput({
         id: "requester_team",
         name: "requester_team",
         value: submittedForm.requester_team,
-        selected: true,
+        classes: "govuk-!-width-two-third govuk-fieldset__legend--s",
         label: {
-          text: "Team *",
+          text: "Requester team",
           classes: "govuk-fieldset__legend--s"
         },
-        items: teamList,
-        errorMessage: validationErrors | findError('requester_team')
+        errorMessage: validationErrors | findError('requester_team'),
+        hint: {
+          text: "The name of the requesting team"
+        }
       }) }}
       {{ govukButton({
         id: "submitdata",
