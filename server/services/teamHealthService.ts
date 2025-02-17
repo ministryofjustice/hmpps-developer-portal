@@ -92,7 +92,7 @@ export default class TeamHealthService {
     return groupBy(versionDetails, details => details.component)
   }
 
-  private getIncalcableReason(envs: { type: string; version: string; buildDate?: Date }[]): string {
+  private getIncalculableReason(envs: { type: string; version: string; buildDate?: Date }[]): string {
     const envMissingVersion = envs.find(env => !env.buildDate)
     if (envMissingVersion) {
       return `Build Version in correct format: ${envMissingVersion.version}`
@@ -116,7 +116,7 @@ export default class TeamHealthService {
       }))
 
     const componentsWithReasons = Object.entries(versionDetailsByComponent).flatMap(([name, envs]) => {
-      const reason = this.getIncalcableReason(envs)
+      const reason = this.getIncalculableReason(envs)
       return reason
         ? [
             {
@@ -291,7 +291,7 @@ export default class TeamHealthService {
       })
       .filter(env => env)
 
-    const reason = this.getIncalcableReason(environmentsWithVersions)
+    const reason = this.getIncalculableReason(environmentsWithVersions)
     if (reason) {
       return undefined
     }

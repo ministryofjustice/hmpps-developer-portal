@@ -81,7 +81,7 @@
  {% endset %}
 
 
-  {% set incalcableHealthComponents %}
+  {% set incalculableHealthComponents %}
     {% set rows = [] %}
     {% for component in componentsWeCannotCalculateTeamHealthFor %}
         {% set rows = (rows.push(
@@ -134,9 +134,9 @@
     
     {
       label: "Components we cannot calculate team health for",
-      id: "incalcable-health-components",
+      id: "incalculable-health-components",
       panel: {
-        html: incalcableHealthComponents
+        html: incalculableHealthComponents
       }
     }
   ]
