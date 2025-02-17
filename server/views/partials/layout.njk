@@ -1,4 +1,5 @@
 {% extends "govuk/template.njk" %}
+{% from "govuk/components/footer/macro.njk" import govukFooter %}
 {% from "../partials/breadCrumb.njk" import breadCrumb %}
 
 {% block head %}
@@ -35,6 +36,23 @@
 {% endblock %}
 
 {% block bodyStart %}
+{% endblock %}
+
+{% block footer %}
+  {{ govukFooter({
+    meta: {
+      items: [
+        {
+          href: "https://tech-docs.hmpps.service.justice.gov.uk/",
+          text: "HMPPP Tech Documentation"
+        },
+        {
+          href: "slack://channel?team=T02DYEB3A&amp;id=C06MWP0UKDE",
+          text: "#ask-prisons-digital-sre (opens slack)"
+        }
+      ]
+    }
+  }) }}
 {% endblock %}
 
 {% block bodyEnd %}
