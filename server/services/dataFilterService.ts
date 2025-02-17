@@ -160,14 +160,4 @@ export default class DataFilterService {
       await this.getProductsIdDropDownList({ productId, useFormattedName }),
     ])
   }
-
-  async getOnlyTeamsLists({
-    teamName = '',
-    useFormattedName = false,
-  }: {
-    teamName?: string
-    useFormattedName?: boolean
-  }) {
-    return Promise.all([await this.getTeamsDropDownList({ teamName, useFormattedName })])
-  }
 }
