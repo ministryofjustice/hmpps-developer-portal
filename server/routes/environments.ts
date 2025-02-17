@@ -10,7 +10,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    return res.render('pages/componentsEnvironmentDetails')
+    return res.render('pages/environments')
   })
 
   get('/data', async (req, res) => {
@@ -91,7 +91,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     const displayComponent = {
       name: componentName,
-      product: component.product?.data,
       api: component.api,
       environment: environments[0],
       activeAgencies,
