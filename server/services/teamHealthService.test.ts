@@ -399,4 +399,93 @@ describe('teamHealthService', () => {
       })
     })
   })
+
+  describe('getComponentsMissingTeams', () => {
+    it('should return components with missing teams', async () => {
+      serviceCatalogueService.getComponents.mockResolvedValue([
+        {
+          attributes: {
+            name: 'some-service',
+            github_repo: 'some-service-repo',
+            environments: [
+              { name: 'dev', type: 'dev' },
+              { name: 'preprod', type: 'preprod' },
+              { name: 'prod', type: 'prod' },
+            ],
+            product: {
+              data: {
+                attributes: {
+                  name: 'product-1',
+                  slug: 'product-1-slug',
+                  team: {
+                    data: { attributes: { name: 'team-1', slug: 'team-1-slug' } },
+                  },
+                  service_area: {
+                    data: { attributes: { name: 'service-area-1', slug: 'service-area-1-slug' } },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          attributes: {
+            name: 'another-service',
+            github_repo: 'another-service-repo',
+            environments: [
+              { name: 'preprod', type: 'preprod' },
+              { name: 'prod', type: 'prod' },
+            ],
+            product: {
+              data: {
+                attributes: {
+                  name: 'product-1',
+                  slug: 'product-1-slug',
+                  team: {
+                    data: { attributes: { name: 'team-1', slug: 'team-1-slug' } },
+                  },
+                  service_area: {
+                    data: { attributes: { name: 'service-area-1', slug: 'service-area-1-slug' } },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          attributes: {
+            name: 'yet-another-service',
+            github_repo: 'yet-another-service-repo',
+            api: true,
+            environments: [
+              { name: 'dev', type: 'dev' },
+              { name: 'preprod', type: 'preprod' },
+              { name: 'prod', type: 'prod' },
+            ],
+            product: {
+              data: {
+                attributes: {
+                  name: 'product-2',
+                  slug: 'product-2-slug',
+                  team: {},
+                  service_area: {
+                    data: { attributes: { name: 'service-area-1', slug: 'service-area-1-slug' } },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ])
+
+      const driftData = await teamHealthService.getComponentsMissingTeams()
+      expect(driftData).toStrictEqual([
+        {
+          product: 'product-2',
+          productSlug: 'product-2-slug',
+          component: 'yet-another-service',
+        },
+      ])
+    })
+  })
 })
