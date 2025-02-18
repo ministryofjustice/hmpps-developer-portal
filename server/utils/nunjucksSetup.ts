@@ -14,7 +14,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
-  app.locals.applicationName = 'Hmpps Developer Portal (beta)'
+  app.locals.applicationName = 'Developer Portal'
   app.locals.isDev = !production
 
   // Cachebusting version string
