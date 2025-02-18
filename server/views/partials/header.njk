@@ -35,12 +35,12 @@
 
       <a class="moj-header__link moj-header__link--organisation-name" href="#">HMPPS</a>
 
-      <a class="moj-header__link moj-header__link--service-name" href="#">{{ applicationName }}{% if isDev %} (DEVELOPMENT){% endif %}</a>
-   
+      <a class="moj-header__link moj-header__link--service-name" href="#">{{ applicationName }}</a>
+      {% if isDev %}
       {{govukTag({
-          text: "Beta",
-          classes: "govuk-tag--yellow"
+          text: "Dev"
         })}} 
+      {% endif %}
     </div>
 
     <div class="moj-header__content">
