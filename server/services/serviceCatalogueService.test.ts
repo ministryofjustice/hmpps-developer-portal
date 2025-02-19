@@ -1,3 +1,4 @@
+import { RdsEntry } from '../@types'
 import StrapiApiClient from '../data/strapiApiClient'
 import {
   Component,
@@ -20,6 +21,19 @@ import {
   TeamResponse,
   TeamListResponse,
   TeamListResponseDataItem,
+  NamespaceListResponse,
+  NamespaceListResponseDataItem,
+  Namespace,
+  GithubTeamResponse,
+  GithubTeam,
+  GithubTeamListResponse,
+  GithubTeamListResponseDataItem,
+  CustomComponentResponse,
+  CustomComponentView,
+  GithubRepoRequestListResponse,
+  GithubRepoRequestListResponseDataItem,
+  GithubRepoRequest,
+  GithubRepoRequestResponse,
 } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
@@ -382,6 +396,206 @@ describe('Strapi service', () => {
 
         expect(strapiApiClient.getProductSet).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testProductSet)
+      })
+    })
+  })
+
+  describe('Namespaces', () => {
+    describe('getNamespaces', () => {
+      const testNamespacesResponse = {
+        data: [
+          {
+            id: 1,
+            attributes: { name: 'Namespace 1' },
+          },
+          {
+            id: 2,
+            attributes: { name: 'Namespace 2' },
+          },
+        ],
+      } as NamespaceListResponse
+      const testNamespaces = [
+        { id: 1, attributes: { name: 'Namespace 1' } },
+        { id: 2, attributes: { name: 'Namespace 2' } },
+      ] as NamespaceListResponseDataItem[]
+
+      it('should return an ordered array of namespaces', async () => {
+        strapiApiClient.getNamespaces.mockResolvedValue(testNamespacesResponse)
+
+        const results = await serviceCatalogueService.getNamespaces()
+
+        expect(strapiApiClient.getNamespaces).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testNamespaces)
+      })
+    })
+
+    describe('getNamespace', () => {
+      const testNamespaceResponse = {
+        data: {
+          id: 1,
+          attributes: { name: 'Namespace 1' },
+        },
+      } as TeamResponse
+      const testNamespace = { name: 'Namespace 1' } as Namespace
+
+      it('should return the selected namespace', async () => {
+        strapiApiClient.getNamespace.mockResolvedValue(testNamespaceResponse)
+
+        const results = await serviceCatalogueService.getNamespace({ namespaceId: 1 })
+
+        expect(strapiApiClient.getNamespace).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testNamespace)
+      })
+    })
+
+    describe('getRdsInstances', () => {
+      const testNamespacesResponse = {
+        data: [
+          {
+            id: 1,
+            attributes: {
+              rds_instance: [
+                {
+                  tf_label: 'test 2',
+                },
+                {
+                  tf_label: 'test 1',
+                },
+              ],
+            },
+          },
+        ],
+      } as NamespaceListResponse
+      const testRdsInstances = [{ tf_label: 'test 1' }, { tf_label: 'test 2' }] as RdsEntry[]
+
+      it('should return an ordered array of rds instances', async () => {
+        strapiApiClient.getNamespaces.mockResolvedValue(testNamespacesResponse)
+
+        const results = await serviceCatalogueService.getRdsInstances()
+
+        expect(strapiApiClient.getNamespaces).toHaveBeenCalledTimes(1)
+        expect(results).toStrictEqual(testRdsInstances)
+      })
+    })
+  })
+
+  describe('GithubTeams', () => {
+    describe('getGithubTeams', () => {
+      const testGithubTeamResponse = {
+        data: [
+          {
+            id: 1,
+            attributes: { team_name: 'Github Team 1' },
+          },
+          {
+            id: 2,
+            attributes: { team_name: 'Github Team 2' },
+          },
+        ],
+      } as GithubTeamListResponse
+      const testGithubTeams = [
+        { id: 1, attributes: { team_name: 'Github Team 1' } },
+        { id: 2, attributes: { team_name: 'Github Team 2' } },
+      ] as GithubTeamListResponseDataItem[]
+
+      it('should return an ordered array of github teams', async () => {
+        strapiApiClient.getGithubTeams.mockResolvedValue(testGithubTeamResponse)
+
+        const results = await serviceCatalogueService.getGithubTeams()
+
+        expect(strapiApiClient.getGithubTeams).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testGithubTeams)
+      })
+    })
+
+    describe('getGithubTeam', () => {
+      const testGithubTeamResponse = {
+        data: {
+          id: 1,
+          attributes: { team_name: 'Github Team 1' },
+        },
+      } as GithubTeamResponse
+      const testGithubTeam = { team_name: 'Github Team 1' } as GithubTeam
+
+      it('should return the selected github team', async () => {
+        strapiApiClient.getGithubTeam.mockResolvedValue(testGithubTeamResponse)
+
+        const results = await serviceCatalogueService.getGithubTeam({ teamName: 'Github Team 1' })
+
+        expect(strapiApiClient.getGithubTeam).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testGithubTeam)
+      })
+    })
+  })
+
+  describe('getCustomComponentView', () => {
+    const testCustomComponentResponse = {
+      data: {
+        id: 1,
+        attributes: {
+          name: 'custom component 1',
+        },
+      },
+    } as CustomComponentResponse
+    const testCustomComponentView = {
+      name: 'custom component 1',
+    } as CustomComponentView
+
+    it('should return the selected github team', async () => {
+      strapiApiClient.getCustomComponentView.mockResolvedValue(testCustomComponentResponse)
+
+      const results = await serviceCatalogueService.getCustomComponentView({ customComponentId: 1 })
+
+      expect(strapiApiClient.getCustomComponentView).toHaveBeenCalledTimes(1)
+      expect(results).toEqual(testCustomComponentView)
+    })
+  })
+
+  describe('Repo Requests', () => {
+    describe('getGithubRepoRequests', () => {
+      const testGithubRepoRequestsResponse = {
+        data: [
+          {
+            id: 1,
+            attributes: { github_repo: 'github_repo-1' },
+          },
+          {
+            id: 2,
+            attributes: { github_repo: 'github_repo-2' },
+          },
+        ],
+      } as GithubRepoRequestListResponse
+      const testGithubRepoRequests = [
+        { id: 1, attributes: { github_repo: 'github_repo-1' } },
+        { id: 2, attributes: { github_repo: 'github_repo-2' } },
+      ] as GithubRepoRequestListResponseDataItem[]
+
+      it('should return an ordered array of repo requests', async () => {
+        strapiApiClient.getGithubRepoRequests.mockResolvedValue(testGithubRepoRequestsResponse)
+
+        const results = await serviceCatalogueService.getGithubRepoRequests()
+
+        expect(strapiApiClient.getGithubRepoRequests).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testGithubRepoRequests)
+      })
+    })
+
+    describe('getGithubRepoRequest', () => {
+      const testGithubRepoRequestResponse = {
+        data: {
+          id: 1,
+          attributes: { name: 'github_repo-1' },
+        },
+      } as GithubRepoRequestResponse
+      const testGithubRepoRequest = { name: 'github_repo-1' } as GithubRepoRequest
+
+      it('should return the selected repo request', async () => {
+        strapiApiClient.getGithubRepoRequest.mockResolvedValue(testGithubRepoRequestResponse)
+
+        const results = await serviceCatalogueService.getGithubRepoRequest({ repoName: 'github_repo-1' })
+
+        expect(strapiApiClient.getGithubRepoRequest).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testGithubRepoRequest)
       })
     })
   })
