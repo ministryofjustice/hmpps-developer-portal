@@ -12,7 +12,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
 
   get('/new', async (req, res) => {
-    const [productList] = await dataFilterService.getFormsDropdownLists({
+    const [, productList] = await dataFilterService.getFormsDropdownLists({
       teamName: '',
       productId: '',
       useFormattedName: true,
