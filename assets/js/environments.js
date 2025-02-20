@@ -60,7 +60,7 @@ jQuery(function () {
     },
     {
       data: 'product_id',
-      visible: false,
+      visible: true,
       createdCell: function (td, _cellData, rowData) {
         if (rowData.product_id && rowData.product_slug) {
           $(td).html(
