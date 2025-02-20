@@ -46,7 +46,7 @@
               {% else %}
                 <ul>
                 {% for member in githubTeam.members %}
-                  <li><a href="https://github.com/orgs/ministryofjustice/people/{{ member }}">{{ member }}</a></li>
+                  <li><a href="https://github.com/orgs/ministryofjustice/people/?query={{ member }}">{{ member }}</a></li>
                 {% endfor %}
                 </ul>
               {% endif %}
