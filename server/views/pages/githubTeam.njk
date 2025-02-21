@@ -5,7 +5,7 @@
 
 {% block content %}
 
-{{ breadCrumb(githubTeam.github_team_name, [{title: "Github Teams", href: "/github-teams"}]) }}
+{{ breadCrumb(githubTeam.github_team_name, [{title: "GitHub Teams", href: "/github-teams"}]) }}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -46,14 +46,14 @@
               {% else %}
                 <ul>
                 {% for member in githubTeam.members %}
-                  <li><a href="https://github.com/orgs/ministryofjustice/people/{{ member }}">{{ member }}</a></li>
+                  <li><a href="https://github.com/orgs/ministryofjustice/people/?query={{ member }}">{{ member }}</a></li>
                 {% endfor %}
                 </ul>
               {% endif %}
           </td>
         </tr>
         <tr>
-          <th>Github Team Link</th>
+          <th>GitHub Team Link</th>
           <td><a href="https://github.com/orgs/ministryofjustice/teams/{{ githubTeam.github_team_name  }}" class="govuk-link govuk-link--no-visited-state">{{ githubTeam.github_team_name }}</a></td>
         </tr>
       </tbody>

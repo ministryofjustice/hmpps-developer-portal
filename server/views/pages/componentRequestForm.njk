@@ -22,7 +22,7 @@
         value: submittedForm.github_repo,
         classes: "govuk-!-width-one-half",
         label: {
-          text: "Github repository name",
+          text: "GitHub repository name",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -36,7 +36,7 @@
         value: submittedForm.repo_description,
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github repository description",
+          text: "GitHub repository description",
           classes: "govuk-fieldset__legend--s"
         },
         errorMessage: validationErrors | findError('repo_description')
@@ -49,7 +49,7 @@
         errorMessage: validationErrors | findError('base_template'),
         fieldset: {
           legend: {
-            text: "Github template repository",
+            text: "GitHub template repository",
             classes: 'govuk-fieldset__legend--s'
           }
         },
@@ -72,7 +72,7 @@
         name: "github_project_visibility",
         value: submittedForm.github_project_visibility,
         label: {
-          text: "Github project visibility",
+          text: "GitHub project visibility",
           classes: "govuk-fieldset__legend--s"
         },
         items: [
@@ -122,7 +122,7 @@
         errorMessage: validationErrors | findError('github_projects_teams_admin'),
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github repository admin teams",
+          text: "GitHub repository admin teams",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -136,7 +136,7 @@
         errorMessage: validationErrors | findError('github_project_teams_write'),
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github repository teams with write permissions (optional)",
+          text: "GitHub repository teams with write permissions (optional)",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
@@ -150,7 +150,7 @@
         errorMessage: validationErrors | findError('github_project_branch_protection_restricted_teams'),
         classes: "govuk-!-width-two-third",
         label: {
-          text: "Github project branch protection restricted teams (optional)",
+          text: "GitHub project branch protection restricted teams (optional)",
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
