@@ -16,17 +16,13 @@ jQuery(function () {
     {
       data: 'attributes.parent_team_name',
       createdCell: function (td, _cellData, rowData) {
-        const parentTeamName = rowData.attributes.parent_team_name 
-          ? rowData.attributes.parent_team_name.replace(/\s+/g, '-') 
-          : null;
-    
         $(td).html(
-          parentTeamName === null
-            ? `${parentTeamName}`
-            : `<a href="/github-teams/${parentTeamName}">${parentTeamName}</a>`,
-        );
+          rowData.attributes.parent_team_name === 'hmpps-developers' || rowData.attributes.parent_team_name === null
+            ? `${rowData.attributes.parent_team_name}`
+            : `<a href="/github-teams/${rowData.attributes.parent_team_name}">${rowData.attributes.parent_team_name}</a>`,
+        )
       },
-    },    
+    },
     {
       data: 'attributes.team_desc',
       createdCell: function (td, _cellData, rowData) {
@@ -63,9 +59,10 @@ jQuery(function () {
 
 function renderGithubTeams(rowData) {
   const members = rowData.attributes.members
-    .map(member =>
-      `<li><a href="https://github.com/orgs/ministryofjustice/people/?query=${encodeURIComponent(member)}" class="govuk-link govuk-link--no-visited-state">${member}</a></li>`
+    .map(
+      member =>
+        `<li><a href="https://github.com/orgs/ministryofjustice/people/?query=${member}" class="govuk-link govuk-link--no-visited-state">${member}</a></li>`,
     )
-    .join('');
-  return members;
+    .join('')
+  return members
 }
