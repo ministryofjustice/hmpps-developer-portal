@@ -61,7 +61,7 @@ function renderGithubTeams(rowData) {
   const members = rowData.attributes.members
     .map(
       member =>
-        `<li><a href="https://github.com/orgs/ministryofjustice/people/${member}" class="govuk-link govuk-link--no-visited-state">${member}</a></li>`,
+        `<li><a href="https://github.com/orgs/ministryofjustice/people/?query=${member}" class="govuk-link govuk-link--no-visited-state">${member}</a></li>`,
     )
     .join('')
   return members
