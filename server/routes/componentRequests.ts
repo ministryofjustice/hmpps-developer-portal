@@ -193,10 +193,10 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         })
       } else {
         const requesterEmail = body.requester_email?.toString()
-        if (!requesterEmail.endsWith('@digital.justice.gov.uk')) {
+        if (!requesterEmail.endsWith('@digital.justice.gov.uk') && !requesterEmail.endsWith('@justice.gov.uk')) {
           validationErrors.push({
             field: 'requesterEmail',
-            message: 'Valid email address is only with @digital.justice.gov.uk',
+            message: 'Valid email address is only with @digital.justice.gov.uk or @justice.gov.uk',
             href: '#requester_email',
           })
         }
