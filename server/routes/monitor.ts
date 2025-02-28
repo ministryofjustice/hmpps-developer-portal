@@ -147,17 +147,17 @@ const getEnvironmentData = (
   const environments: MonitorEnvironment[] = []
 
   typedEnvironments.forEach(environment => {
-    // if (environment.monitor) {
-    environments.push({
-      componentName: component.attributes.name as string,
-      environmentName: environment.name as string,
-      environmentUrl: environment.url as string,
-      environmentHealth: environment.health_path as string,
-      environmentType: environment.type as string,
-      isPrisons,
-      isProbation,
-    })
-    // }
+    if (environment.monitor) {
+      environments.push({
+        componentName: component.attributes.name as string,
+        environmentName: environment.name as string,
+        environmentUrl: environment.url as string,
+        environmentHealth: environment.health_path as string,
+        environmentType: environment.type as string,
+        isPrisons,
+        isProbation,
+      })
+    }
   })
 
   return environments
