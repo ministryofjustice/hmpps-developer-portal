@@ -12,6 +12,7 @@ import setUpWebRequestParsing from './middleware/setupRequestParsing'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setUpWebSession from './middleware/setUpWebSession'
 import setUpValidationMiddleware from './middleware/setUpValidationMiddleware'
+import { appInsightsMiddleware } from './utils/azureAppInsights'
 
 import indexRoutes from './routes'
 import productRoutes from './routes/products'
@@ -42,6 +43,7 @@ export default function createApp(services: Services): express.Application {
   app.set('trust proxy', true)
   app.set('port', process.env.PORT || 3000)
 
+  app.use(appInsightsMiddleware())
   app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())
   app.use(setUpWebSession())
