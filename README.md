@@ -144,3 +144,43 @@ export REDIS_TLS_ENABLED=true
 export REDIS_TLS_VERIFICATION=false
 export REDIS_AUTH_TOKEN=[access token]
 ```
+
+
+### Port forward to alertmanager endpoint hosted in Cloud-platform
+
+For local developement and testing connections the alertmanager API endpoint.
+
+Create a port forward pod:
+
+```bash
+kubectl \
+  -n hmpps-portfolio-management-dev \
+  run port-forward-alertmanager-pod \
+  --image=ministryofjustice/port-forward \
+  --port=8080 \
+  --env="REMOTE_HOST=monitoring-alerts-service.cloud-platform-monitoring-alerts" \
+  --env="LOCAL_PORT=8080" \
+  --env="REMOTE_PORT=8080"
+```
+
+Use kubectl to port-forward to it:
+
+```bash
+kubectl \
+  -n hmpps-portfolio-management-dev \
+  port-forward \
+  port-forward-alertmanager-pod 8080:8080
+```
+
+Suggested environment vars to use:
+
+```bash
+export ALERTMANAGER_API_URL=http://localhost:8080/alertmanager
+export PROMETHEUS_API_URL=http://localhost:8080/prometheus
+```
+
+Usage with curl e.g:
+
+```bash
+curl -v 'http://localhost:8080/alertmanager/alerts?filter=businessUnit="hmpps"'
+```
