@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import { veracodeFilters } from '../utils/utils'
+import { VeracodeResultsSummary } from '../data/strapiApiTypes'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -32,7 +33,9 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           VERY_HIGH: 0,
         }
 
-        component.attributes.veracode_results_summary?.severity?.forEach(severity => {
+        const veracodeSummary = component.attributes.veracode_results_summary as VeracodeResultsSummary
+
+        veracodeSummary?.severity?.forEach(severity => {
           severity.category.forEach(category => {
             // @ts-expect-error Suppress any declaration
             severityLevels[category.severity] += category.count
@@ -55,7 +58,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           date: hasVeracode
             ? dayjs(component.attributes.veracode_last_completed_scan_date).format('YYYY-MM-DD HH:mm')
             : 'N/A',
-          codeScore: hasVeracode ? component.attributes.veracode_results_summary['static-analysis'].score : 0,
+          codeScore: hasVeracode ? veracodeSummary['static-analysis'].score : 0,
           severityLevels,
         }
       })
