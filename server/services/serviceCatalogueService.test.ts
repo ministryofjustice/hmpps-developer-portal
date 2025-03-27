@@ -3,37 +3,31 @@ import StrapiApiClient from '../data/strapiApiClient'
 import {
   Component,
   ComponentResponse,
-  ComponentListResponse,
   ComponentListResponseDataItem,
   Product,
   ProductResponse,
-  ProductListResponse,
   ProductListResponseDataItem,
   ProductSet,
   ProductSetResponse,
-  ProductSetListResponse,
   ProductSetListResponseDataItem,
   ServiceArea,
   ServiceAreaResponse,
-  ServiceAreaListResponse,
   ServiceAreaListResponseDataItem,
   Team,
   TeamResponse,
-  TeamListResponse,
   TeamListResponseDataItem,
-  NamespaceListResponse,
   NamespaceListResponseDataItem,
   Namespace,
   GithubTeamResponse,
   GithubTeam,
-  GithubTeamListResponse,
   GithubTeamListResponseDataItem,
   CustomComponentResponse,
   CustomComponentView,
-  GithubRepoRequestListResponse,
   GithubRepoRequestListResponseDataItem,
   GithubRepoRequest,
   GithubRepoRequestResponse,
+  ListResponse,
+  CustomComponentListResponseDataItem,
 } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
@@ -68,7 +62,7 @@ describe('Strapi service', () => {
             attributes: { name: 'Product 2', p_id: '2' },
           },
         ],
-      } as ProductListResponse
+      } as ListResponse<ProductListResponseDataItem>
       const testProducts = [
         {
           id: 1,
@@ -125,7 +119,7 @@ describe('Strapi service', () => {
             attributes: { name: 'Team 2' },
           },
         ],
-      } as TeamListResponse
+      } as ListResponse<TeamListResponseDataItem>
       const testTeams = [
         {
           id: 1,
@@ -199,7 +193,7 @@ describe('Strapi service', () => {
             attributes: { name: 'Component 2' },
           },
         ],
-      } as ComponentListResponse
+      } as ListResponse<CustomComponentListResponseDataItem>
       const testComponents = [
         { id: 1, attributes: { name: 'Component 1' } },
         { id: 2, attributes: { name: 'Component 2' } },
@@ -264,7 +258,7 @@ describe('Strapi service', () => {
             },
           },
         ],
-      } as ComponentListResponse
+      } as ListResponse<CustomComponentListResponseDataItem>
       const dependencies = [
         'circleci::hmpps',
         'dockerfile::base_image',
@@ -296,7 +290,7 @@ describe('Strapi service', () => {
             attributes: { name: 'Service Area 2' },
           },
         ],
-      } as ServiceAreaListResponse
+      } as ListResponse<ServiceAreaListResponseDataItem>
       const testServiceAreas = [
         { id: 1, attributes: { name: 'Service Area 1' } },
         { id: 2, attributes: { name: 'Service Area 2' } },
@@ -364,7 +358,7 @@ describe('Strapi service', () => {
             attributes: { name: 'Product Set 2' },
           },
         ],
-      } as ProductSetListResponse
+      } as ListResponse<ProductSetListResponseDataItem>
       const testProductSets = [
         { id: 1, attributes: { name: 'Product Set 1' } },
         { id: 2, attributes: { name: 'Product Set 2' } },
@@ -413,7 +407,7 @@ describe('Strapi service', () => {
             attributes: { name: 'Namespace 2' },
           },
         ],
-      } as NamespaceListResponse
+      } as ListResponse<NamespaceListResponseDataItem>
       const testNamespaces = [
         { id: 1, attributes: { name: 'Namespace 1' } },
         { id: 2, attributes: { name: 'Namespace 2' } },
@@ -465,7 +459,7 @@ describe('Strapi service', () => {
             },
           },
         ],
-      } as NamespaceListResponse
+      } as ListResponse<NamespaceListResponseDataItem>
       const testRdsInstances = [{ tf_label: 'test 1' }, { tf_label: 'test 2' }] as RdsEntry[]
 
       it('should return an ordered array of rds instances', async () => {
@@ -492,7 +486,7 @@ describe('Strapi service', () => {
             attributes: { team_name: 'Github Team 2' },
           },
         ],
-      } as GithubTeamListResponse
+      } as ListResponse<GithubTeamListResponseDataItem>
       const testGithubTeams = [
         { id: 1, attributes: { team_name: 'Github Team 1' } },
         { id: 2, attributes: { team_name: 'Github Team 2' } },
@@ -564,7 +558,7 @@ describe('Strapi service', () => {
             attributes: { github_repo: 'github_repo-2' },
           },
         ],
-      } as GithubRepoRequestListResponse
+      } as ListResponse<GithubRepoRequestListResponseDataItem>
       const testGithubRepoRequests = [
         { id: 1, attributes: { github_repo: 'github_repo-1' } },
         { id: 2, attributes: { github_repo: 'github_repo-2' } },

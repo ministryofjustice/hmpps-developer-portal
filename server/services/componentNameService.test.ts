@@ -1,13 +1,14 @@
 import StrapiApiClient from '../data/strapiApiClient'
 import {
-  ComponentListResponse,
   TeamResponse,
-  TeamListResponse,
-  ServiceAreaListResponse,
   ServiceAreaResponse,
-  ProductListResponse,
-  CustomComponentListResponse,
-  GithubRepoRequestListResponse,
+  TeamListResponseDataItem,
+  ListResponse,
+  ServiceAreaListResponseDataItem,
+  ProductListResponseDataItem,
+  CustomComponentListResponseDataItem,
+  ComponentListResponseDataItem,
+  GithubRepoRequestListResponseDataItem,
 } from '../data/strapiApiTypes'
 import ComponentNameService from './componentNameService'
 
@@ -36,7 +37,7 @@ describe('Component name service', () => {
         { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
         { attributes: { name: 'comp-2' } },
       ],
-    } as ComponentListResponse
+    } as ListResponse<ComponentListResponseDataItem>
 
     it('should return all deployed components sorted', async () => {
       strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
@@ -56,7 +57,7 @@ describe('Component name service', () => {
           attributes: { name: 'testteam' },
         },
       ],
-    } as TeamListResponse
+    } as ListResponse<TeamListResponseDataItem>
 
     const testTeamResponse = {
       data: {
@@ -101,7 +102,7 @@ describe('Component name service', () => {
           attributes: { name: 'service-area-1' },
         },
       ],
-    } as ServiceAreaListResponse
+    } as ListResponse<ServiceAreaListResponseDataItem>
 
     const serviceAreaResponse = {
       data: {
@@ -155,7 +156,7 @@ describe('Component name service', () => {
           },
         },
       ],
-    } as unknown as ProductListResponse
+    } as unknown as ListResponse<ProductListResponseDataItem>
 
     it('should return deployed components sorted for the selected product', async () => {
       strapiApiClient.getProducts.mockResolvedValue(productsResponse)
@@ -184,7 +185,7 @@ describe('Component name service', () => {
           },
         },
       ],
-    } as unknown as CustomComponentListResponse
+    } as unknown as ListResponse<CustomComponentListResponseDataItem>
 
     it('should return deployed components sorted for the selected custom component', async () => {
       strapiApiClient.getCustomComponentViews.mockResolvedValue(customComponentsResponse)
@@ -203,7 +204,7 @@ describe('Component name service', () => {
         { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
         { attributes: { name: 'comp-2' } },
       ],
-    } as ComponentListResponse
+    } as ListResponse<ComponentListResponseDataItem>
 
     it('should return true if component exists', async () => {
       strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
@@ -231,7 +232,7 @@ describe('Component name service', () => {
         { attributes: { github_repo: 'comp-1' } },
         { attributes: { github_repo: 'comp-2' } },
       ],
-    } as GithubRepoRequestListResponse
+    } as ListResponse<GithubRepoRequestListResponseDataItem>
 
     it('should return true if component exists', async () => {
       strapiApiClient.getGithubRepoRequests.mockResolvedValue(testComponentsResponse)
