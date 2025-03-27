@@ -1,10 +1,11 @@
 import StrapiApiClient from '../data/strapiApiClient'
 import { MoJSelectDataItem } from '../@types'
 import {
-  TeamListResponse,
-  ServiceAreaListResponse,
-  ProductListResponse,
-  CustomComponentListResponse,
+  CustomComponentListResponseDataItem,
+  ListResponse,
+  ProductListResponseDataItem,
+  ServiceAreaListResponseDataItem,
+  TeamListResponseDataItem,
 } from '../data/strapiApiTypes'
 import DataFilterService from './dataFilterService'
 
@@ -38,7 +39,7 @@ describe('Data Filter service', () => {
           attributes: { name: 'Custom Component 2' },
         },
       ],
-    } as CustomComponentListResponse
+    } as ListResponse<CustomComponentListResponseDataItem>
 
     it('should return all custom compoentns as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -110,7 +111,7 @@ describe('Data Filter service', () => {
           attributes: { name: 'Service Area 2' },
         },
       ],
-    } as ServiceAreaListResponse
+    } as ListResponse<ServiceAreaListResponseDataItem>
 
     it('should return all service areas as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -180,7 +181,7 @@ describe('Data Filter service', () => {
           attributes: { name: 'Team 2' },
         },
       ],
-    } as TeamListResponse
+    } as ListResponse<TeamListResponseDataItem>
 
     it('should return all teams as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -247,7 +248,7 @@ describe('Data Filter service', () => {
           attributes: { name: 'Product 2', p_id: '2' },
         },
       ],
-    } as ProductListResponse
+    } as ListResponse<ProductListResponseDataItem>
 
     it('should return all products as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -317,7 +318,7 @@ describe('Data Filter service', () => {
           attributes: { name: 'Product 2', p_id: '2' },
         },
       ],
-    } as ProductListResponse
+    } as ListResponse<ProductListResponseDataItem>
 
     it('should return all products with id as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [

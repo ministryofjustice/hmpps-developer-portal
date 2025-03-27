@@ -11,7 +11,6 @@ import {
   ComponentListResponseDataItem,
   ServiceAreaListResponseDataItem,
   ProductSetListResponseDataItem,
-  ComponentListResponse,
   CustomComponentView,
   NamespaceListResponseDataItem,
   Namespace,
@@ -109,7 +108,7 @@ export default class ServiceCatalogueService {
 
   async getDependencies(): Promise<string[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const componentData = (await strapiApiClient.getComponents()) as ComponentListResponse
+    const componentData = await strapiApiClient.getComponents()
     const components = componentData.data.sort(sortData)
     let dependencies: string[] = []
 

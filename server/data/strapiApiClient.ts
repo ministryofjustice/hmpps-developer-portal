@@ -2,24 +2,25 @@ import { URLSearchParams } from 'url'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import {
-  ProductListResponse,
-  ComponentListResponse,
-  TeamListResponse,
-  ProductSetListResponse,
-  ServiceAreaListResponse,
   ProductResponse,
   TeamResponse,
   ComponentResponse,
   ServiceAreaResponse,
   ProductSetResponse,
-  CustomComponentListResponse,
   CustomComponentResponse,
-  NamespaceListResponse,
   GithubRepoRequestResponse,
   GithubRepoRequestRequest,
-  GithubRepoRequestListResponse,
-  GithubTeamListResponse,
   GithubTeamResponse,
+  ListResponse,
+  ProductListResponseDataItem,
+  ComponentListResponseDataItem,
+  NamespaceListResponseDataItem,
+  ProductSetListResponseDataItem,
+  ServiceAreaListResponseDataItem,
+  CustomComponentListResponseDataItem,
+  GithubRepoRequestListResponseDataItem,
+  GithubTeamListResponseDataItem,
+  TeamListResponseDataItem,
 } from './strapiApiTypes'
 
 export default class StrapiApiClient {
@@ -35,7 +36,7 @@ export default class StrapiApiClient {
   }: {
     withEnvironments?: boolean
     withComponents?: boolean
-  }): Promise<ProductListResponse> {
+  }): Promise<ListResponse<ProductListResponseDataItem>> {
     const populate = ['product_set']
 
     if (withComponents) {
@@ -78,7 +79,7 @@ export default class StrapiApiClient {
     exemptionFilters: string[] = [],
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
-  ): Promise<ComponentListResponse> {
+  ): Promise<ListResponse<ComponentListResponseDataItem>> {
     const populate = new URLSearchParams({
       populate: `product${includeTeams ? '.team' : ''},environments${includeLatestCommit ? ',latest_commit' : ''}`,
     }).toString()
@@ -101,7 +102,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getTeams(): Promise<TeamListResponse> {
+  async getTeams(): Promise<ListResponse<TeamListResponseDataItem>> {
     return this.restClient.get({
       path: '/v1/teams',
       query: 'populate=products',
@@ -130,7 +131,7 @@ export default class StrapiApiClient {
     return this.restClient.get({ path, query })
   }
 
-  async getNamespaces(): Promise<NamespaceListResponse> {
+  async getNamespaces(): Promise<ListResponse<NamespaceListResponseDataItem>> {
     return this.restClient.get({
       path: '/v1/namespaces',
       query: 'populate=rds_instance,elasticache_cluster',
@@ -153,7 +154,7 @@ export default class StrapiApiClient {
     return this.restClient.get({ path, query })
   }
 
-  async getProductSets(): Promise<ProductSetListResponse> {
+  async getProductSets(): Promise<ListResponse<ProductSetListResponseDataItem>> {
     return this.restClient.get({
       path: '/v1/product-sets',
       query: 'populate=products',
@@ -167,7 +168,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getServiceAreas(): Promise<ServiceAreaListResponse> {
+  async getServiceAreas(): Promise<ListResponse<ServiceAreaListResponseDataItem>> {
     return this.restClient.get({
       path: '/v1/service-areas',
       query: 'populate=products',
@@ -200,7 +201,7 @@ export default class StrapiApiClient {
     withEnvironments = false,
   }: {
     withEnvironments?: boolean
-  }): Promise<CustomComponentListResponse> {
+  }): Promise<ListResponse<CustomComponentListResponseDataItem>> {
     const populate = ['components']
 
     if (withEnvironments) {
@@ -236,7 +237,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubRepoRequests(): Promise<GithubRepoRequestListResponse> {
+  async getGithubRepoRequests(): Promise<ListResponse<GithubRepoRequestListResponseDataItem>> {
     return this.restClient.get({
       path: '/v1/github-repo-requests',
       query: 'populate=github_repo',
@@ -257,7 +258,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubTeams(): Promise<GithubTeamListResponse> {
+  async getGithubTeams(): Promise<ListResponse<GithubTeamListResponseDataItem>> {
     return this.restClient.get({
       path: '/v1/github-teams',
       query: 'populate=team_name',
