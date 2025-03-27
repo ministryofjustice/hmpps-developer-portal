@@ -27,7 +27,6 @@ import {
   GithubRepoRequest,
   GithubRepoRequestResponse,
   ListResponse,
-  CustomComponentListResponseDataItem,
 } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
@@ -193,7 +192,7 @@ describe('Strapi service', () => {
             attributes: { name: 'Component 2' },
           },
         ],
-      } as ListResponse<CustomComponentListResponseDataItem>
+      } as ListResponse<ComponentListResponseDataItem>
       const testComponents = [
         { id: 1, attributes: { name: 'Component 1' } },
         { id: 2, attributes: { name: 'Component 2' } },
@@ -258,7 +257,7 @@ describe('Strapi service', () => {
             },
           },
         ],
-      } as ListResponse<CustomComponentListResponseDataItem>
+      } as ListResponse<ComponentListResponseDataItem>
       const dependencies = [
         'circleci::hmpps',
         'dockerfile::base_image',

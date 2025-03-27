@@ -11,14 +11,22 @@ export type ListResponse<T> = {
     }
   }
 }
+type HasComponents = { components: { data: ComponentListResponseDataItem[] } }
+type HasTeam = { team: TeamResponse }
+type HasServiceArea = { service_area: ServiceAreaResponse }
+type HasProduct = { attributes: { product?: { data: { attributes: ProductWithTeamAndServiceArea } } } }
 
-export type Product = components['schemas']['Product']
+type ProductWithTeamAndServiceArea = Omit<Omit<ProductResponse['data']['attributes'], 'team'>, 'serviceArea'> &
+  HasTeam &
+  HasServiceArea
+
+export type Product = Omit<components['schemas']['Product'], 'components'> & HasComponents
 export type ProductResponse = components['schemas']['ProductResponse']
 export type ProductListResponseDataItem = components['schemas']['ProductListResponseDataItem']
 
 export type Component = components['schemas']['Component']
 export type ComponentResponse = components['schemas']['ComponentResponse']
-export type ComponentListResponseDataItem = components['schemas']['ComponentListResponseDataItem']
+export type ComponentListResponseDataItem = components['schemas']['ComponentListResponseDataItem'] & HasProduct
 
 export type Team = components['schemas']['Team']
 export type TeamResponse = components['schemas']['TeamResponse']
