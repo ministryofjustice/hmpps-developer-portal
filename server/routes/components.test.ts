@@ -129,7 +129,7 @@ const testComponent = {
       swagger_docs: '/swagger-ui.html',
     },
   ],
-} as Component
+} as unknown as Component
 
 beforeEach(() => {
   serviceCatalogueService.getComponents.mockResolvedValue(testComponents)
