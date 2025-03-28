@@ -1,4 +1,5 @@
 import { RdsEntry } from '../@types'
+import { createModelServiceArea } from '../data/converters/serviceArea.test'
 import StrapiApiClient from '../data/strapiApiClient'
 import {
   Component,
@@ -12,7 +13,6 @@ import {
   ProductSetListResponseDataItem,
   ServiceArea,
   ServiceAreaResponse,
-  ServiceAreaListResponseDataItem,
   Team,
   TeamResponse,
   TeamListResponseDataItem,
@@ -278,30 +278,14 @@ describe('Strapi service', () => {
 
   describe('Service Areas', () => {
     describe('getServiceAreas', () => {
-      const testServiceAreasResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { name: 'Service Area 1' },
-          },
-          {
-            id: 2,
-            attributes: { name: 'Service Area 2' },
-          },
-        ],
-      } as ListResponse<ServiceAreaListResponseDataItem>
-      const testServiceAreas = [
-        { id: 1, attributes: { name: 'Service Area 1' } },
-        { id: 2, attributes: { name: 'Service Area 2' } },
-      ] as ServiceAreaListResponseDataItem[]
-
       it('should return an ordered array of product sets', async () => {
-        strapiApiClient.getServiceAreas.mockResolvedValue(testServiceAreasResponse)
+        const serviceAreas = [createModelServiceArea(123, 'service-1'), createModelServiceArea(234, 'service-2')]
+        strapiApiClient.getServiceAreas.mockResolvedValue(serviceAreas)
 
         const results = await serviceCatalogueService.getServiceAreas()
 
         expect(strapiApiClient.getServiceAreas).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testServiceAreas)
+        expect(results).toEqual(serviceAreas)
       })
     })
 

@@ -10,7 +10,6 @@ dayjs.extend(relativeTime.default)
 
 type HasName = { attributes?: { name: string } }
 type HasRepoName = { attributes?: { github_repo: string } }
-type hasProductId = { attributes?: { name: string } }
 type HasTeamName = { attributes?: { team_name: string } }
 
 const properCase = (word: string): string =>
@@ -74,16 +73,16 @@ export const sortData = (dataItem: HasName, compareDataItem: HasName) => {
   return dataItem.attributes.name.localeCompare(compareDataItem.attributes.name)
 }
 
+export const sortByName = (dataItem: { name: string }, compareDataItem: { name: string }) => {
+  return dataItem.name.localeCompare(compareDataItem.name)
+}
+
 export const sortRdsInstances = (rdsInstance: RdsEntry, compareRdsInstance: RdsEntry) => {
   return rdsInstance.tf_label.localeCompare(compareRdsInstance.tf_label)
 }
 
 export const sortComponentRequestData = (dataItem: HasRepoName, compareDataItem: HasRepoName) => {
   return dataItem.attributes.github_repo.localeCompare(compareDataItem.attributes.github_repo)
-}
-
-export const sortProductIdData = (dataItem: hasProductId, compareDataItem: hasProductId) => {
-  return dataItem.attributes.name.localeCompare(compareDataItem.attributes.name)
 }
 
 export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasTeamName) => {

@@ -22,6 +22,8 @@ import {
   GithubTeamListResponseDataItem,
   TeamListResponseDataItem,
 } from './strapiApiTypes'
+import { convertServiceArea } from './converters/serviceArea'
+import type { ServiceArea } from './converters/modelTypes'
 
 export default class StrapiApiClient {
   private restClient: RestClient
@@ -168,11 +170,13 @@ export default class StrapiApiClient {
     })
   }
 
-  async getServiceAreas(): Promise<ListResponse<ServiceAreaListResponseDataItem>> {
-    return this.restClient.get({
+  async getServiceAreas(): Promise<ServiceArea[]> {
+    const results = await this.restClient.get<ListResponse<ServiceAreaListResponseDataItem>>({
       path: '/v1/service-areas',
       query: 'populate=products',
     })
+
+    return results.data.map(convertServiceArea)
   }
 
   async getServiceArea({
@@ -261,7 +265,6 @@ export default class StrapiApiClient {
   async getGithubTeams(): Promise<ListResponse<GithubTeamListResponseDataItem>> {
     return this.restClient.get({
       path: '/v1/github-teams',
-      query: 'populate=team_name',
     })
   }
 

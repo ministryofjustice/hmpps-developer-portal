@@ -4,10 +4,10 @@ import {
   CustomComponentListResponseDataItem,
   ListResponse,
   ProductListResponseDataItem,
-  ServiceAreaListResponseDataItem,
   TeamListResponseDataItem,
 } from '../data/strapiApiTypes'
 import DataFilterService from './dataFilterService'
+import { createModelServiceArea } from '../data/converters/serviceArea.test'
 
 jest.mock('../data/strapiApiClient')
 
@@ -100,18 +100,10 @@ describe('Data Filter service', () => {
   })
 
   describe('getServiceAreasDropDownList', () => {
-    const testServiceAreasResponse = {
-      data: [
-        {
-          id: 1,
-          attributes: { name: 'Service Area 1' },
-        },
-        {
-          id: 2,
-          attributes: { name: 'Service Area 2' },
-        },
-      ],
-    } as ListResponse<ServiceAreaListResponseDataItem>
+    const testServiceAreasResponse = [
+      createModelServiceArea(1, 'Service Area 1'),
+      createModelServiceArea(2, 'Service Area 2'),
+    ]
 
     it('should return all service areas as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
