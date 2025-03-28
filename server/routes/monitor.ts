@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { ComponentListResponseDataItem, Environment } from '../data/strapiApiTypes'
+import { Environment } from '../data/strapiApiTypes'
 import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow } from '../utils/utils'
 
 type MonitorEnvironment = {
@@ -13,6 +13,20 @@ type MonitorEnvironment = {
   environmentType: string
   isPrisons: boolean
   isProbation: boolean
+}
+
+type ComponentToMonitor = {
+  attributes?: {
+    name?: string
+    environments?: Environment[]
+    product?: {
+      data?: {
+        attributes?: {
+          p_id?: string
+        }
+      }
+    }
+  }
 }
 
 export default function routes({ serviceCatalogueService, redisService, dataFilterService }: Services): Router {
@@ -53,7 +67,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         withEnvironments: true,
       })
       customComponentView.components.data.forEach(component => {
-        environments = environments.concat(getEnvironmentData(component as ComponentListResponseDataItem))
+        environments = environments.concat(getEnvironmentData(component))
       })
     } else if (monitorType === 'product') {
       const product = await serviceCatalogueService.getProduct({
@@ -62,18 +76,14 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       })
 
       product.components.data.forEach(component => {
-        environments = environments.concat(
-          getEnvironmentData(component as unknown as ComponentListResponseDataItem, product.p_id),
-        )
+        environments = environments.concat(getEnvironmentData(component, product.p_id))
       })
     } else if (monitorType === 'team') {
       const team = await serviceCatalogueService.getTeam({ teamId: monitorId, withEnvironments: true })
 
       team.products.data.forEach(product => {
         product.attributes.components.data.forEach(component => {
-          environments = environments.concat(
-            getEnvironmentData(component as ComponentListResponseDataItem, product.attributes.p_id),
-          )
+          environments = environments.concat(getEnvironmentData(component, product.attributes.p_id))
         })
       })
     } else if (monitorType === 'serviceArea') {
@@ -81,16 +91,14 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
       serviceArea.products.data.forEach(product => {
         product.attributes.components.data.forEach(component => {
-          environments = environments.concat(
-            getEnvironmentData(component as ComponentListResponseDataItem, product.attributes.p_id),
-          )
+          environments = environments.concat(getEnvironmentData(component, product.attributes.p_id))
         })
       })
     } else {
       const components = await serviceCatalogueService.getComponents()
 
       components.forEach(component => {
-        environments = environments.concat(getEnvironmentData(component as ComponentListResponseDataItem))
+        environments = environments.concat(getEnvironmentData(component))
       })
     }
 
@@ -130,10 +138,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   return router
 }
 
-const getEnvironmentData = (
-  component: ComponentListResponseDataItem,
-  selectedProductId?: string,
-): MonitorEnvironment[] => {
+const getEnvironmentData = (component: ComponentToMonitor, selectedProductId?: string): MonitorEnvironment[] => {
   const typedEnvironments = component.attributes.environments as Environment[]
   let productId
   if (selectedProductId) {

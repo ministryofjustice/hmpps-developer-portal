@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import RedisService from './redisService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import TeamHealthService from './teamHealthService'
+import { ComponentListResponseDataItem } from '../data/strapiApiTypes'
 
 jest.mock('./redisService')
 jest.mock('./serviceCatalogueService')
@@ -268,7 +269,7 @@ describe('teamHealthService', () => {
             },
           },
         },
-      ])
+      ] as ComponentListResponseDataItem[])
 
       const driftData = await teamHealthService.getTeamHealth(now)
       expect(driftData).toStrictEqual({
@@ -476,7 +477,7 @@ describe('teamHealthService', () => {
             },
           },
         },
-      ])
+      ] as ComponentListResponseDataItem[])
 
       const driftData = await teamHealthService.getComponentsMissingTeams()
       expect(driftData).toStrictEqual([
