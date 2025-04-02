@@ -13,8 +13,8 @@ import {
   ComponentListResponseDataItem,
   TeamListResponseDataItem,
   ProductSetListResponseDataItem,
-  ServiceAreaListResponseDataItem,
 } from './strapiApiTypes'
+import { createModelServiceArea, exampleStrapiServiceArea } from './converters/serviceArea.test'
 
 describe('strapiApiClient', () => {
   let fakeStrapiApi: nock.Scope
@@ -185,12 +185,12 @@ describe('strapiApiClient', () => {
   describe('Service Areas', () => {
     describe('getServiceAreas', () => {
       it('should return all service areas', async () => {
-        const allServiceAreas = {
-          data: [{ attributes: { name: 'Service Area' } }],
-        } as ListResponse<ServiceAreaListResponseDataItem>
+        const allServiceAreas = { data: [exampleStrapiServiceArea] }
         fakeStrapiApi.get('/service-areas?populate=products').reply(200, allServiceAreas)
         const output = await strapiApiClient.getServiceAreas()
-        expect(output).toEqual(allServiceAreas)
+        expect(output).toContainEqual(
+          createModelServiceArea(exampleStrapiServiceArea.id, exampleStrapiServiceArea.attributes.name),
+        )
       })
     })
 

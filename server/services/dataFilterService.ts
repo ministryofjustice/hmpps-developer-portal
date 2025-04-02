@@ -1,6 +1,6 @@
 import { MoJSelectDataItem } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { formatMonitorName, sortData, sortProductIdData } from '../utils/utils'
+import { formatMonitorName, sortByName, sortData } from '../utils/utils'
 
 export default class DataFilterService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -40,16 +40,14 @@ export default class DataFilterService {
   }): Promise<MoJSelectDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const serviceAreasData = await strapiApiClient.getServiceAreas()
-    const serviceAreas = serviceAreasData.data.sort(sortData)
+    const serviceAreas = serviceAreasData.sort(sortByName)
     const serviceAreaList = serviceAreas.map(serviceArea => {
-      const formattedName = formatMonitorName(serviceArea.attributes.name)
+      const formattedName = formatMonitorName(serviceArea.name)
 
       return {
         value: useFormattedName ? formattedName : serviceArea.id.toString(),
-        text: serviceArea.attributes.name,
-        selected: useFormattedName
-          ? formattedName === serviceAreaName
-          : serviceArea.attributes.name === serviceAreaName,
+        text: serviceArea.name,
+        selected: useFormattedName ? formattedName === serviceAreaName : serviceArea.name === serviceAreaName,
       }
     })
     serviceAreaList.unshift({ value: '', text: '', selected: false })
@@ -114,7 +112,7 @@ export default class DataFilterService {
   }): Promise<MoJSelectDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const productsData = await strapiApiClient.getProducts({})
-    const products = productsData.data.sort(sortProductIdData)
+    const products = productsData.data.sort(sortData)
     const productsIdList = products.map(product => {
       const formattedName = formatMonitorName(product.attributes.name)
       const concatenatedformattedName = `${formattedName} [${product.attributes.p_id}]`

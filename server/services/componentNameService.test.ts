@@ -1,10 +1,10 @@
+import { createModelServiceArea } from '../data/converters/serviceArea.test'
 import StrapiApiClient from '../data/strapiApiClient'
 import {
   TeamResponse,
   ServiceAreaResponse,
   TeamListResponseDataItem,
   ListResponse,
-  ServiceAreaListResponseDataItem,
   ProductListResponseDataItem,
   CustomComponentListResponseDataItem,
   ComponentListResponseDataItem,
@@ -95,14 +95,7 @@ describe('Component name service', () => {
   })
 
   describe('Service area', () => {
-    const serviceAreasResponse = {
-      data: [
-        {
-          id: 2,
-          attributes: { name: 'service-area-1' },
-        },
-      ],
-    } as ListResponse<ServiceAreaListResponseDataItem>
+    const serviceAreasResponse = [createModelServiceArea(2, 'service-area-1')]
 
     const serviceAreaResponse = {
       data: {

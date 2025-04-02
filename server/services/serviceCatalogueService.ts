@@ -1,15 +1,14 @@
 import { RdsEntry } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
+import type { ServiceArea } from '../data/converters/modelTypes'
 import {
   Product,
   Component,
   Team,
   ProductSet,
-  ServiceArea,
   ProductListResponseDataItem,
   TeamListResponseDataItem,
   ComponentListResponseDataItem,
-  ServiceAreaListResponseDataItem,
   ProductSetListResponseDataItem,
   CustomComponentView,
   NamespaceListResponseDataItem,
@@ -20,8 +19,9 @@ import {
   GithubRepoRequestListResponseDataItem,
   GithubTeamListResponseDataItem,
   GithubTeam,
+  ServiceArea as StrapiServiceArea,
 } from '../data/strapiApiTypes'
-import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData } from '../utils/utils'
+import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -128,13 +128,10 @@ export default class ServiceCatalogueService {
     return dependencies.sort()
   }
 
-  async getServiceAreas(): Promise<ServiceAreaListResponseDataItem[]> {
+  async getServiceAreas(): Promise<ServiceArea[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const serviceAreaData = await strapiApiClient.getServiceAreas()
-
-    const serviceAreas = serviceAreaData.data.sort(sortData)
-
-    return serviceAreas
+    return serviceAreaData.sort(sortByName)
   }
 
   async getServiceArea({
@@ -145,7 +142,7 @@ export default class ServiceCatalogueService {
     serviceAreaId?: number
     serviceAreaSlug?: string
     withProducts?: boolean
-  }): Promise<ServiceArea> {
+  }): Promise<StrapiServiceArea> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const serviceAreaData = await strapiApiClient.getServiceArea({ serviceAreaId, serviceAreaSlug, withProducts })
 
