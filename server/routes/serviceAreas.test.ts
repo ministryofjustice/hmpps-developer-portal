@@ -3,14 +3,15 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { ServiceArea, ServiceAreaListResponseDataItem } from '../data/strapiApiTypes'
+import { ServiceArea } from '../data/strapiApiTypes'
+import { createModelServiceArea } from '../data/converters/serviceArea.test'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testServiceAreas = [{ id: 1, attributes: { name: 'testServiceArea' } }] as ServiceAreaListResponseDataItem[]
+const testServiceAreas = [createModelServiceArea(1, 'testServiceArea')]
 const testServiceArea = {
   sa_id: 'testServiceAreaId',
   name: 'testServiceAreaName',
