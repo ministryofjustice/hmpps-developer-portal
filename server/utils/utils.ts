@@ -58,10 +58,9 @@ export const getMonitorName = (req: Request): string => {
   return monitorName.replace(/[^-a-z0-9]/g, '')
 }
 
-export const formatMonitorName = (name: string): string => {
-  const monitorName = name || ''
-
-  return `${monitorName}`
+export function formatMonitorName(name: string): string {
+  if (!name) return ''
+  return `${name}`
     .trim()
     .toLowerCase()
     .replace(/ /g, '-')
