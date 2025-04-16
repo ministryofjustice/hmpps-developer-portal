@@ -37,9 +37,8 @@ jQuery(async function () {
     }
 
     const dropDownText = $(`#${dropDownType} option:selected`).text()
-    const dropDownTypeIdValue = $(`#${dropDownType}`).val()
-    const parsedId = parseInt(dropDownTypeIdValue, 10)
-    const dropDownTypeId = !dropDownTypeIdValue || isNaN(parsedId) ? 0 : parsedId
+    const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
+    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
     let pushStateUrl = `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`
 
     if (dropDownTypeId === 0) {
