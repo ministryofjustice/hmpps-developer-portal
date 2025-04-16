@@ -47,16 +47,9 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         logger.info(`Looking for product with name that matches: ${monitorName}`)
 
         // Try to match by name, slug, or formatted name
-        const matchingProduct = products.find(p => {
-          // Try exact name match
-          if (p.attributes.name === monitorName) return true
-
-          // Try slug match
-          const slug = formatMonitorName(p.attributes.name)
-          if (slug === monitorName) return true
-
-          return false
-        })
+        const matchingProduct = products.find(
+          p => p.attributes.name === monitorName || formatMonitorName(p.attributes.name) === monitorName,
+        )
 
         if (matchingProduct?.id) {
           monitorId = matchingProduct.id
@@ -81,15 +74,14 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     // Update the selected item in the product list
     if (monitorType === 'product' && monitorId > 0) {
       // Mark the matching product as selected without reassigning the array
-      for (let i = 0; i < productList.length; i += 1) {
-        if (productList[i].value === monitorId.toString()) {
-          productList[i] = {
-            ...productList[i],
+      productList.forEach((product, index) => {
+        if (product.value === monitorId.toString()) {
+          productList[index] = {
+            ...product,
             selected: true,
           }
-          break
         }
-      }
+      })
     }
 
     return res.render('pages/monitor', {
@@ -119,16 +111,11 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           logger.info(`Looking up product by name: ${productName}`)
 
           // Try to match by name, slug, or formatted name
-          const matchingProduct = products.find(p => {
-            // Try exact name match
-            if (p.attributes.name === productName) return true
-
-            // Try slug match
-            const slug = formatMonitorName(p.attributes.name)
-            if (slug === formatMonitorName(productName)) return true
-
-            return false
-          })
+          const matchingProduct = products.find(
+            p =>
+              p.attributes.name === productName ||
+              formatMonitorName(p.attributes.name) === formatMonitorName(productName),
+          )
 
           if (matchingProduct?.id) {
             monitorId = matchingProduct.id

@@ -38,7 +38,8 @@ jQuery(async function () {
 
     const dropDownText = $(`#${dropDownType} option:selected`).text()
     const dropDownTypeIdValue = $(`#${dropDownType}`).val()
-    const dropDownTypeId = dropDownTypeIdValue ? parseInt(dropDownTypeIdValue, 10) : 0
+    const parsedId = parseInt(dropDownTypeIdValue, 10)
+    const dropDownTypeId = !dropDownTypeIdValue || isNaN(parsedId) ? 0 : parsedId
     let pushStateUrl = `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`
 
     if (dropDownTypeId === 0) {
@@ -184,7 +185,7 @@ async function populateComponentTable(monitorType, monitorTypeId, monitorName) {
   // If we have a product name in the URL but no ID, add it as a query parameter
   if (monitorType === 'product' && monitorTypeId === 0) {
     if (monitorName) {
-      url += `?name=${encodeURIComponent(monitorName)}`
+      url = `${url}?name=${encodeURIComponent(monitorName)}`
     }
   }
 
