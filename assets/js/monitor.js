@@ -1,14 +1,10 @@
 jQuery(async function () {
-  console.log('Monitor page initialized')
   const monitorType = $('#monitorType').val()
   const monitorName = $('#monitorName').val()
   const monitorId = $('#monitorId').val()
 
-  console.log(`Monitor type: ${monitorType}, Monitor name: ${monitorName}, Monitor ID: ${monitorId}`)
-
   if (monitorType !== '') {
     const dropDownTypeId = monitorId && monitorId !== '0' ? parseInt(monitorId, 10) : 0
-    console.log(`Using dropDownTypeId: ${dropDownTypeId} for type: ${monitorType}`)
 
     try {
       await populateComponentTable(monitorType, dropDownTypeId, monitorName)
@@ -183,18 +179,15 @@ const fetchMessages = async () => {
 }
 
 async function populateComponentTable(monitorType, monitorTypeId, monitorName) {
-  console.log(`Fetching components for ${monitorType}/${monitorTypeId}`)
   let url = `/monitor/components/${monitorType}/${monitorTypeId}`
 
   // If we have a product name in the URL but no ID, add it as a query parameter
   if (monitorType === 'product' && monitorTypeId === 0) {
     if (monitorName) {
-      console.log(`Adding name parameter: ${monitorName}`)
       url += `?name=${encodeURIComponent(monitorName)}`
     }
   }
 
-  console.log(`Request URL: ${url}`)
   const response = await fetch(url)
 
   if (!response.ok) {
