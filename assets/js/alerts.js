@@ -2,72 +2,42 @@ const applicationFilter = document.getElementById('application')
 const environmentFilter = document.getElementById('environment')
 const namespaceFilter = document.getElementById('namespace')
 const severityFilter = document.getElementById('severity')
-
-// let currentFilters = {
-//   application: "",
-//   environment: "",
-//   namespace: "",
-//   severity: ""
-// }
+let previousDataJSON = ''
 
 jQuery(async function () {
-  // const alertType = $('#alertType').val()
-
-  // console.log("alertType: ", alertType)
-  // if (alertType !== '') {
-  //   console.log("dropDownText")
-
-  //   const dropDownText = $(`#${alertType} option:selected`).text()
   let currentFilters = getFiltersFromURL()
-  console.log('currentFilters: ', currentFilters)
   const alerts = await getAlerts()
   updateAll(alerts, currentFilters)
-  //await populateAlertTable(alerts)//alertType, dropDownText)
-  //populateAlertFilters(dropDownFilters)
-
-  //}
 
   $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel').on('click', async e => {
     e.preventDefault(e)
 
-    console.log('e: ', e.target)
+    // let dropDownType = ''
+    // console.log('JS even.target.id: ', e.target.id)
+    // switch (e.target.id) {
+    //   case 'updateApplicationName':
+    //     dropDownType = 'application'
+    //     break
+    //   case 'updateEnvironment':
+    //     dropDownType = 'environment'
+    //     break
+    //   case 'updateNamespace':
+    //     dropDownType = 'namespace'
+    //     break
+    //   case 'updateSeverityLabel':
+    //     dropDownType = 'severity'
+    //     break
+    //   default:
+    //     return false
+    // }
+    // const dropDownText = $(`#${dropDownType} option:selected`).text()
 
-    let dropDownType = ''
-    console.log('JS even.target.id: ', e.target.id)
-    switch (e.target.id) {
-      case 'updateApplicationName':
-        dropDownType = 'application'
-        break
-      case 'updateEnvironment':
-        dropDownType = 'environment'
-        break
-      case 'updateNamespace':
-        dropDownType = 'namespace'
-        break
-      case 'updateSeverityLabel':
-        dropDownType = 'severity'
-        break
-      default:
-        return false
-    }
-    const dropDownText = $(`#${dropDownType} option:selected`).text()
-
-    currentFilters[`${dropDownType}`] = dropDownText
-    console.log('currentFilters: ', currentFilters)
+    // currentFilters[`${dropDownType}`] = dropDownText
+    // console.log('currentFilters: ', currentFilters)
     updateAll(alerts, currentFilters)
 
-    // let pushStateUrl = `/alerts/${dropDownType}/${formatMonitorName(dropDownText)}`
-
-    // if (dropDownText === '') {
-    //   dropDownType = 'all'
-    //   pushStateUrl = '/alerts'
-    // }
-
-    // history.pushState({ info: 'dropdown change' }, '', pushStateUrl)
-    // console.log('TRIGGER 2')
-    // watch()
-
-    //await populateAlertTable(dropDownType, dropDownText)
+    // Watch function updates Alerts on a timeout
+    watch()
   })
 
   $('#resetFilters').on('click', async e => {
@@ -80,32 +50,32 @@ jQuery(async function () {
       severity: '',
     }
     updateDropdowns(alerts, currentFilters)
-    updateAll()
+    updateAll(alerts, currentFilters)
   })
   //await populateAlertTable()
 })
 
 const watch = async () => {
-  await getAlerts()
+  await updateAlerts()
 
   setTimeout(watch, 50000)
 }
 
-const fetchAlerts = async () => {
-  const csrfToken = $('#csrf').val()
-  const response = await fetch('/alerts/all', {
-    method: 'GET',
-    credentials: 'same-origin',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'X-CSRF-Token': csrfToken,
-    },
-  })
-  if (!response.ok) {
-    throw new Error('There was a problem fetching the alert data')
+const updateAlerts = async () => {
+  try {
+    const currentData = await getAlerts() // Replace with your actual API URL
+
+    if (currentData !== previousDataJSON) {
+      alerts = currentData
+      previousDataJSON = currentData
+      let filters = getFiltersFromURL()
+      updateAll(currentData, filters)
+    }
+  } catch (error) {
+    console.error('Failed to fetch alerts:', error)
   }
 }
+
 async function getAlerts() {
   const response = await fetch(`/alerts/all`)
   if (!response.ok) {
@@ -120,7 +90,6 @@ function updateURLParams(filters) {
   if (filters.environment) params.set('environment', filters.environment)
   if (filters.namespace) params.set('namespace', filters.namespace)
   if (filters.severity) params.set('severity', filters.severity)
-  console.log('url params: ', params)
   history.replaceState(null, '', '?' + params.toString())
 }
 
