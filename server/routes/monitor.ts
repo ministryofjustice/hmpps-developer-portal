@@ -22,7 +22,10 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
   get(['/', '/:monitorType/:monitorName'], async (req, res) => {
     const monitorType = getMonitorType(req)
+    console.log('monitorType: ', monitorType)
     const monitorName = getMonitorName(req)
+    console.log('monitorName: ', monitorName)
+
     logger.info(`Request for /monitor/${monitorType}/${monitorName}`)
 
     const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
@@ -31,7 +34,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       serviceAreaName: monitorName,
       customComponentName: monitorName,
     })
-
+    console.log('serviceAreaList: ', serviceAreaList)
     return res.render('pages/monitor', {
       serviceAreaList,
       teamList,
@@ -60,7 +63,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         productId: monitorId,
         withEnvironments: true,
       })
-
       product.components.data.forEach(component => {
         environments = environments.concat(
           getEnvironmentData(component as unknown as ComponentListResponseDataItem, product.p_id),
@@ -68,7 +70,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       })
     } else if (monitorType === 'team') {
       const team = await serviceCatalogueService.getTeam({ teamId: monitorId, withEnvironments: true })
-
+      console.log('Team: ', team)
       team.products.data.forEach(product => {
         product.attributes.components.data.forEach(component => {
           environments = environments.concat(
@@ -123,10 +125,8 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       acc[key] = { version, lastMessageTime, dateAdded, healthStatus }
       return acc
     }, {})
-
     res.send(JSON.stringify(Object.entries(result)))
   })
-
   return router
 }
 

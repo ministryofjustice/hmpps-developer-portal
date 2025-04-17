@@ -239,7 +239,6 @@ export default class ServiceCatalogueService {
     const customComponentData = await strapiApiClient.getCustomComponentView({ customComponentId, withEnvironments })
 
     const customComponentView = customComponentData.data?.attributes
-
     return customComponentView
   }
 

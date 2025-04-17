@@ -1,0 +1,141 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% set pageTitle = applicationName + " - Alerts" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{%- set applicationNames = [{text: '', selected: false}] -%}
+{%- set environments = [{text: '', selected: false}] -%}
+{%- set namespaces = [{text: '', selected: false}] -%}
+{%- set severityLabels = [{text: '', selected: false}] -%}
+{%- for applicationName in applicationNameList -%}
+  {%- set applicationNames = (applicationNames.push({
+    text: applicationName.text,
+    selected: applicationName.selected
+  }), applicationNames) -%}
+{%- endfor -%}
+{%- for environment in environmentList -%}
+  {%- set environments = (environments.push({
+    text: environment.text,
+    selected: environment.selected
+  }), environments) -%}
+{%- endfor -%}
+{%- for namespace in namespaceList -%}
+  {%- set namespaces = (namespaces.push({
+    text: namespace.text,
+    selected: namespace.selected
+  }), namespaces) -%}
+{%- endfor -%}
+{%- for severityLabel in severityList -%}
+  {%- set severityLabels = (severityLabels.push({
+    text: severityLabel.text,
+    selected: severityLabel.selected
+  }), severityLabels) -%}
+{%- endfor -%}
+
+{% block content %}
+{{ breadCrumb("Alerts", []) }}
+  <h1>Alerts</h1>
+
+  <form>
+    <input type="hidden" name="alertName" id="alertName" value="{{ alertName }}">
+    <input type="hidden" name="alertType" id="alertType" value="{{ alertType }}">
+    <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
+
+    <div class="alert-selectors govuk-button-group">
+        {{- govukSelect({
+          id: "application",
+          name: "application",
+          label: {
+            text: "Application Name"
+          },
+          items: applicationNames
+        }) -}}
+        {{ govukButton({
+          id: "updateApplicationName",
+          name: "updateApplicationName",
+          text: "Update",
+          element: "button",
+          attributes: { "data-associated-select-id": "applicationName", "data-type-name": "application-name"}
+        }) }}
+        {{ govukSelect({
+          id: "environment",
+          name: "environment",
+          label: {
+            text: "Environment"
+          },
+          items: environments
+        }) }}
+        {{ govukButton({
+          id: "updateEnvironment",
+          name: "updateEnvironment",
+          text: "Update",
+          element: "button",
+          attributes: { "data-associated-select-id": "environment", "data-type-name": "environments"}
+        }) }}
+        {{ govukSelect({
+          id: "namespace",
+          name: "namespace",
+          label: {
+            text: "Namespace"
+          },
+          items: namespaces
+        }) }}
+        {{ govukButton({
+          id: "updateNamespace",
+          name: "updateNamespace",
+          text: "Update",
+          element: "button",
+          attributes: { "data-associated-select-id": "namespace", "data-type-name": "namespaces"}
+        }) }}
+        {{ govukSelect({
+          id: "severity",
+          name: "severity",
+          label: {
+            text: "Severity Label"
+          },
+          items: severityLabels
+        }) }}
+        {{ govukButton({
+          id: "updateSeverityLabel",
+          name: "updateSeverityLabel",
+          text: "Update",
+          element: "button",
+          attributes: { "data-associated-select-id": "severityLabel", "data-type-name": "severity-labels"}
+        }) }}
+        {{ govukButton({
+          id: "resetFilters",
+          name: "resetFilters",
+          text: "Reset Filters",
+          element: "button"
+        }) }}
+    </div>
+
+
+  </form>
+
+  <table id="statusTable">
+    <thead>
+      <tr>
+        <th>Application</th>
+        <th>Environment</th>
+        <th>Namespace</th>
+        <th>Severity</th>
+      </tr>
+    </thead>
+    <tbody id="statusRows">
+    </tbody>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/govukFrontendInit.js"></script>
+  <script src="/assets/moj/all.js"></script>
+  <script src="/assets/js/dayjs/dayjs.min.js"></script>
+  <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
+  <script src="/assets/js/alerts.js"></script>
+{% endblock %}

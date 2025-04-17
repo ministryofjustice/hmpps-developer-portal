@@ -1,5 +1,6 @@
 jQuery(async function () {
   const monitorType = $('#monitorType').val()
+  console.log('MonitorType: ', monitorType)
 
   if (monitorType !== '') {
     const dropDownTypeIdValue = Number.parseInt($(`#${monitorType}`).val())
@@ -13,7 +14,7 @@ jQuery(async function () {
     e.preventDefault(e)
 
     let dropDownType = ''
-
+    console.log('JS even.target.id: ', e.target.id)
     switch (e.target.id) {
       case 'updateProduct':
         dropDownType = 'product'
@@ -33,7 +34,9 @@ jQuery(async function () {
 
     const dropDownText = $(`#${dropDownType} option:selected`).text()
     const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
+
     const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
+
     let pushStateUrl = `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`
 
     if (dropDownTypeId === 0) {
