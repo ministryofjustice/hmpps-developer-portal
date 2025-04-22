@@ -71,17 +71,12 @@ export const formatMonitorName = (name: string): string => {
 }
 
 export const getAlertType = (req: Request): string => {
-  console.log('getAlertType req.params: ', req.params)
   const { alertType } = req.params
-
   return ['application', 'environment', 'namespace', 'severity'].includes(alertType) ? alertType : 'all'
 }
 
 export const getAlertName = (req: Request): string => {
-  console.log('getAlertName req.params: ', req.params)
-
   const alertName = req.params?.alertName || ''
-
   return alertName // .replace(/[^-a-z0-9]/g, '')
 }
 

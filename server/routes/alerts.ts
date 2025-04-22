@@ -2,7 +2,6 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import RestClient from '../data/restClient'
 import { getAlertName, getAlertType } from '../utils/utils'
 
 interface AlertListResponseDataItem {
@@ -40,22 +39,7 @@ interface AlertListResponseDataItem {
   }
 }
 
-type AlertData = {
-  alertName: string
-  applicationName: string
-  environmentName: string
-  alertUrl: string
-  severityLabel: string
-  summary: string
-  namespace: string
-}
-
-type ListItem = {
-  text: string
-  selected: boolean
-}
-
-export default function routes({ serviceCatalogueService, dataFilterService }: Services): Router {
+export default function routes(_: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))

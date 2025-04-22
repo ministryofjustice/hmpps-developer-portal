@@ -122,13 +122,9 @@ export default class StrapiApiClient {
     if (withEnvironments) {
       populateList.push('products.components.environments')
     }
-    console.log('populateList: ', populateList)
     const populate = new URLSearchParams({ populate: populateList }).toString()
-    console.log('populate: ', populate)
     const query = teamSlug ? `filters[slug][$eq]=${teamSlug}&${populate}` : populate
-    console.log('query: ', query)
     const path = teamSlug ? '/v1/teams' : `/v1/teams/${teamId}`
-    console.log('path: ', path)
 
     return this.restClient.get({ path, query })
   }
