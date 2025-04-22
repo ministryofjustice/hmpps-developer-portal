@@ -69,6 +69,16 @@ export const formatMonitorName = (name: string): string => {
     .replace(/-+/g, '-')
 }
 
+export const getAlertType = (req: Request): string => {
+  const { alertType } = req.params
+  return ['application', 'environment', 'namespace', 'severity'].includes(alertType) ? alertType : 'all'
+}
+
+export const getAlertName = (req: Request): string => {
+  const alertName = req.params?.alertName || ''
+  return alertName // .replace(/[^-a-z0-9]/g, '')
+}
+
 export const sortData = (dataItem: HasName, compareDataItem: HasName) => {
   return dataItem.attributes.name.localeCompare(compareDataItem.attributes.name)
 }
