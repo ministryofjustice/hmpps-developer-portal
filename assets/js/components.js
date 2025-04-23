@@ -49,23 +49,37 @@ jQuery(function () {
     },
     {
       data: 'attributes.environments',
-      visible: false,
       render: function (data, type, row, meta) {
-        const environments = row.attributes.environments
-        const prodEnvironments = environments ? environments.filter(env => env.name === 'prod') : []
+        const prodEnvironments = (data || []).filter(env => env.name === 'prod')
 
-        let prodSlackChannel = ''
         if (prodEnvironments.length === 0) {
-          return 'No Prod Environment'
+          const displayVal = 'No Prod Environment'
+          const filterVal = displayVal
+          const sortVal = 'zzzzz'
+          if (type === 'display') return displayVal
+          if (type === 'filter') return filterVal
+          return sortVal
         }
 
-        prodSlackChannel = prodEnvironments
+        const displayList = prodEnvironments.map(env =>
+          env.alerts_slack_channel === null ? 'Not set' : env.alerts_slack_channel,
+        )
+        const filterList = prodEnvironments.map(env => env.alerts_slack_channel || 'Not set')
+        const sortList = prodEnvironments
           .map(env => {
-            return env.alerts_slack_channel === null ? 'Not set' : `${env.alerts_slack_channel}`
+            const channel = env.alerts_slack_channel
+            return channel === null ? 'zzzz' : channel.toLowerCase().replace(/[^a-z0-9]/g, '')
           })
-          .join(', ')
+          .sort()
 
-        return prodSlackChannel
+        switch (type) {
+          case 'display':
+            return displayList.join(', ')
+          case 'filter':
+            return filterList.join(' ')
+          default:
+            return sortList.join(' ')
+        }
       },
     },
     {
