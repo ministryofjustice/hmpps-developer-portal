@@ -1942,6 +1942,7 @@ export interface components {
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_security_scans_notify?: string
+                  standards_compliance?: string
                   title?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
@@ -2067,6 +2068,7 @@ export interface components {
       slack_channel_nonprod_release_notify?: string
       slack_channel_prod_release_notify?: string
       slack_channel_security_scans_notify?: string
+      standards_compliance?: string
       title?: string
       trivy_last_completed_scan_date?: string
       trivy_scan_summary?: unknown
@@ -2133,6 +2135,7 @@ export interface components {
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
+        standards_compliance?: string
         title?: string
         trivy_last_completed_scan_date?: string
         trivy_scan_summary?: unknown
@@ -2658,6 +2661,7 @@ export interface components {
             slack_channel_nonprod_release_notify?: string
             slack_channel_prod_release_notify?: string
             slack_channel_security_scans_notify?: string
+            standards_compliance?: string
             title?: string
             trivy_last_completed_scan_date?: string
             trivy_scan_summary?: unknown
@@ -3241,6 +3245,7 @@ export interface components {
             slack_channel_nonprod_release_notify?: string
             slack_channel_prod_release_notify?: string
             slack_channel_security_scans_notify?: string
+            standards_compliance?: string
             title?: string
             trivy_last_completed_scan_date?: string
             trivy_scan_summary?: unknown
@@ -3499,6 +3504,7 @@ export interface components {
       slack_channel_nonprod_release_notify?: string
       slack_channel_prod_release_notify?: string
       slack_channel_security_scans_notify?: string
+      standards_compliance?: string
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
@@ -3548,6 +3554,7 @@ export interface components {
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
+        standards_compliance?: string
       }
     }
     GithubRepoRequestResponse: {
@@ -4309,6 +4316,7 @@ export interface components {
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_security_scans_notify?: string
+                  standards_compliance?: string
                   title?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
@@ -4932,6 +4940,7 @@ export interface components {
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_security_scans_notify?: string
+                  standards_compliance?: string
                   title?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
@@ -5882,6 +5891,7 @@ export interface components {
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_security_scans_notify?: string
+                  standards_compliance?: string
                   title?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
@@ -6463,6 +6473,7 @@ export interface components {
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_security_scans_notify?: string
+                  standards_compliance?: string
                   title?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown

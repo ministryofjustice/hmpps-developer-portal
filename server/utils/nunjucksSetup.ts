@@ -65,7 +65,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   njkEnv.addFilter('snakeToTitle', function (str) {
     return str
       .split('_') // Split by underscores
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+      .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
       .join(' ') // Join with spaces
   })
 
