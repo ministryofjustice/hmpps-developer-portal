@@ -15,23 +15,43 @@ jQuery(function () {
               `<a href="/reports/rds/${rdsInstance.tf_label}-${rdsInstance.namespace}">${rdsInstance.tf_label}</a>`,
           )
           .join('')
-        $(td).html(`${rdsInstances}`)
-        if (rdsInstances) {
-          $(td).html(`${rdsInstances}`)
-        } else {
-          $(td).html(`N/A`)
+        $(td).html(rdsInstances || 'N/A')
+      },
+      render: function (data, type) {
+        if (type === 'display') {
+          return data && data.length
+            ? data
+                .map(
+                  rdsInstance =>
+                    `<a href="/reports/rds/${rdsInstance.tf_label}-${rdsInstance.namespace}">${rdsInstance.tf_label}</a>`,
+                )
+                .join('')
+            : 'N/A'
         }
+        // sort and filter
+        if (!data || !data.length) return 'zzzzz'
+        return data
+          .map(rdsInstance => rdsInstance.tf_label)
+          .join(' ')
+          .toLowerCase()
       },
     },
     {
       data: 'attributes.elasticache_cluster',
       createdCell: function (td, _cellData, rowData) {
         const elasticache = rowData.attributes.elasticache_cluster.map(cache => `${cache.tf_label}`).join('')
-        if (elasticache) {
-          $(td).html(`${elasticache}`)
-        } else {
-          $(td).html(`N/A`)
+        $(td).html(elasticache || 'N/A')
+      },
+      render: function (data, type) {
+        if (type === 'display') {
+          return data && data.length ? data.map(cache => cache.tf_label).join('') : 'N/A'
         }
+        // sort and filter
+        if (!data || !data.length) return 'zzzzz'
+        return data
+          .map(cache => cache.tf_label)
+          .join(' ')
+          .toLowerCase()
       },
     },
   ]
