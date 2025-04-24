@@ -3,7 +3,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { Environment } from '../data/strapiApiTypes'
-import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow } from '../utils/utils'
+import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow, formatMonitorName } from '../utils/utils'
 
 type MonitorEnvironment = {
   componentName: string
@@ -39,12 +39,50 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     const monitorName = getMonitorName(req)
     logger.info(`Request for /monitor/${monitorType}/${monitorName}`)
 
+    // If we have a product name, look up its ID
+    let monitorId = 0
+    if (monitorType === 'product' && monitorName) {
+      try {
+        const products = await serviceCatalogueService.getProducts({})
+        logger.info(`Looking for product with name that matches: ${monitorName}`)
+
+        // Try to match by name, slug, or formatted name
+        const matchingProduct = products.find(
+          p => p.attributes.name === monitorName || formatMonitorName(p.attributes.name) === monitorName,
+        )
+
+        if (matchingProduct?.id) {
+          monitorId = matchingProduct.id
+          logger.info(`Found product ID: ${monitorId} for name: ${monitorName}`)
+        } else {
+          logger.warn(`No product found matching name: ${monitorName}`)
+          // List all available products for debugging
+          logger.info(`Available products: ${products.map(p => p.attributes.name).join(', ')}`)
+        }
+      } catch (error) {
+        logger.warn(`Failed to find product by name ${monitorName}`, error)
+      }
+    }
+
     const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
       teamName: monitorName,
       productName: monitorName,
       serviceAreaName: monitorName,
       customComponentName: monitorName,
     })
+
+    // Update the selected item in the product list
+    if (monitorType === 'product' && monitorId > 0) {
+      // Mark the matching product as selected without reassigning the array
+      productList.forEach((product, index) => {
+        if (product.value === monitorId.toString()) {
+          productList[index] = {
+            ...product,
+            selected: true,
+          }
+        }
+      })
+    }
 
     return res.render('pages/monitor', {
       serviceAreaList,
@@ -53,56 +91,95 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       customComponentsList,
       monitorName,
       monitorType,
+      monitorId: monitorId.toString(),
     })
   })
 
   get('/components/:monitorType/:monitorId?', async (req, res) => {
-    const monitorType = getMonitorType(req)
-    const monitorId = getNumericId(req, 'monitorId')
-    let environments: MonitorEnvironment[] = []
+    try {
+      const monitorType = getMonitorType(req)
+      let monitorId = getNumericId(req, 'monitorId')
+      logger.info(`Request for /monitor/components/${monitorType}/${monitorId}, query: ${JSON.stringify(req.query)}`)
 
-    if (monitorType === 'customComponentView') {
-      const customComponentView = await serviceCatalogueService.getCustomComponentView({
-        customComponentId: monitorId,
-        withEnvironments: true,
-      })
-      customComponentView.components.data.forEach(component => {
-        environments = environments.concat(getEnvironmentData(component))
-      })
-    } else if (monitorType === 'product') {
-      const product = await serviceCatalogueService.getProduct({
-        productId: monitorId,
-        withEnvironments: true,
-      })
+      let environments: MonitorEnvironment[] = []
 
-      product.components.data.forEach(component => {
-        environments = environments.concat(getEnvironmentData(component, product.p_id))
-      })
-    } else if (monitorType === 'team') {
-      const team = await serviceCatalogueService.getTeam({ teamId: monitorId, withEnvironments: true })
+      // If we have no ID but have a product name in query, look it up
+      if (monitorType === 'product' && monitorId === 0 && req.query.name) {
+        try {
+          const products = await serviceCatalogueService.getProducts({})
+          const productName = req.query.name as string
+          logger.info(`Looking up product by name: ${productName}`)
 
-      team.products.data.forEach(product => {
-        product.attributes.components.data.forEach(component => {
-          environments = environments.concat(getEnvironmentData(component, product.attributes.p_id))
+          // Try to match by name, slug, or formatted name
+          const matchingProduct = products.find(
+            p =>
+              p.attributes.name === productName ||
+              formatMonitorName(p.attributes.name) === formatMonitorName(productName),
+          )
+
+          if (matchingProduct?.id) {
+            monitorId = matchingProduct.id
+            logger.info(`Found product ID: ${monitorId} for name: ${productName}`)
+          } else {
+            logger.warn(`No product found with name: ${productName}`)
+            logger.info(`Available products: ${products.map(p => p.attributes.name).join(', ')}`)
+          }
+        } catch (error) {
+          logger.warn(`Failed to find product by name ${req.query.name}`, error)
+        }
+      }
+
+      logger.info(`Using monitorId: ${monitorId} for type: ${monitorType}`)
+
+      if (monitorType === 'customComponentView') {
+        const customComponentView = await serviceCatalogueService.getCustomComponentView({
+          customComponentId: monitorId,
+          withEnvironments: true,
         })
-      })
-    } else if (monitorType === 'serviceArea') {
-      const serviceArea = await serviceCatalogueService.getServiceArea({ serviceAreaId: monitorId, withProducts: true })
-
-      serviceArea.products.data.forEach(product => {
-        product.attributes.components.data.forEach(component => {
-          environments = environments.concat(getEnvironmentData(component, product.attributes.p_id))
+        customComponentView.components.data.forEach(component => {
+          environments = environments.concat(getEnvironmentData(component))
         })
-      })
-    } else {
-      const components = await serviceCatalogueService.getComponents()
+      } else if (monitorType === 'product') {
+        const product = await serviceCatalogueService.getProduct({
+          productId: monitorId,
+          withEnvironments: true,
+        })
 
-      components.forEach(component => {
-        environments = environments.concat(getEnvironmentData(component))
-      })
+        product.components.data.forEach(component => {
+          environments = environments.concat(getEnvironmentData(component, product.p_id))
+        })
+      } else if (monitorType === 'team') {
+        const team = await serviceCatalogueService.getTeam({ teamId: monitorId, withEnvironments: true })
+
+        team.products.data.forEach(product => {
+          product.attributes.components.data.forEach(component => {
+            environments = environments.concat(getEnvironmentData(component, product.attributes.p_id))
+          })
+        })
+      } else if (monitorType === 'serviceArea') {
+        const serviceArea = await serviceCatalogueService.getServiceArea({
+          serviceAreaId: monitorId,
+          withProducts: true,
+        })
+
+        serviceArea.products.data.forEach(product => {
+          product.attributes.components.data.forEach(component => {
+            environments = environments.concat(getEnvironmentData(component, product.attributes.p_id))
+          })
+        })
+      } else {
+        const components = await serviceCatalogueService.getComponents()
+
+        components.forEach(component => {
+          environments = environments.concat(getEnvironmentData(component))
+        })
+      }
+
+      res.json(environments)
+    } catch (error) {
+      logger.error('Error fetching component environments', error)
+      res.status(500).json({ error: 'Failed to fetch component environments' })
     }
-
-    res.json(environments)
   })
 
   const getHealthStatus = (json: string): string => {
