@@ -522,6 +522,38 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/cp-namespace-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/cp-namespace-requests']
+    put?: never
+    post: operations['post/cp-namespace-requests']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/cp-namespace-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/cp-namespace-requests/{id}']
+    put: operations['put/cp-namespace-requests/{id}']
+    post?: never
+    delete: operations['delete/cp-namespace-requests/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/custom-component-views': {
     parameters: {
       query?: never
@@ -645,38 +677,6 @@ export interface paths {
     put: operations['put/github-teams/{id}']
     post?: never
     delete: operations['delete/github-teams/{id}']
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/namespace-requests': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['get/namespace-requests']
-    put?: never
-    post: operations['post/namespace-requests']
-    delete?: never
-    options?: never
-    head?: never
-    patch?: never
-    trace?: never
-  }
-  '/namespace-requests/{id}': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    get: operations['get/namespace-requests/{id}']
-    put: operations['put/namespace-requests/{id}']
-    post?: never
-    delete: operations['delete/namespace-requests/{id}']
     options?: never
     head?: never
     patch?: never
@@ -1942,7 +1942,7 @@ export interface components {
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_security_scans_notify?: string
-                  standards_compliance?: string
+                  standards_compliance?: unknown
                   title?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
@@ -2008,6 +2008,8 @@ export interface components {
                   name?: string
                   /** Format: date-time */
                   publishedAt?: string
+                  /** @enum {string} */
+                  scan_status?: 'Failed' | 'Succeeded'
                   trivy_scan_results?: unknown
                   trivy_scan_timestamp?: string
                   /** Format: date-time */
@@ -2068,7 +2070,7 @@ export interface components {
       slack_channel_nonprod_release_notify?: string
       slack_channel_prod_release_notify?: string
       slack_channel_security_scans_notify?: string
-      standards_compliance?: string
+      standards_compliance?: unknown
       title?: string
       trivy_last_completed_scan_date?: string
       trivy_scan_summary?: unknown
@@ -2135,7 +2137,7 @@ export interface components {
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
-        standards_compliance?: string
+        standards_compliance?: unknown
         title?: string
         trivy_last_completed_scan_date?: string
         trivy_scan_summary?: unknown
@@ -2153,6 +2155,172 @@ export interface components {
     }
     ComponentResponseDataObject: {
       attributes?: components['schemas']['Component']
+      id?: number
+    }
+    CpNamespaceRequest: {
+      certificate_dns_name?: string
+      /** Format: date-time */
+      createdAt?: string
+      createdBy?: {
+        data?: {
+          attributes?: {
+            blocked?: boolean
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              data?: {
+                attributes?: Record<string, never>
+                id?: number
+              }
+            }
+            /** Format: email */
+            email?: string
+            firstname?: string
+            isActive?: boolean
+            lastname?: string
+            preferedLanguage?: string
+            registrationToken?: string
+            resetPasswordToken?: string
+            roles?: {
+              data?: {
+                attributes?: {
+                  code?: string
+                  /** Format: date-time */
+                  createdAt?: string
+                  createdBy?: {
+                    data?: {
+                      attributes?: Record<string, never>
+                      id?: number
+                    }
+                  }
+                  description?: string
+                  name?: string
+                  permissions?: {
+                    data?: {
+                      attributes?: {
+                        action?: string
+                        actionParameters?: unknown
+                        conditions?: unknown
+                        /** Format: date-time */
+                        createdAt?: string
+                        createdBy?: {
+                          data?: {
+                            attributes?: Record<string, never>
+                            id?: number
+                          }
+                        }
+                        properties?: unknown
+                        role?: {
+                          data?: {
+                            attributes?: Record<string, never>
+                            id?: number
+                          }
+                        }
+                        subject?: string
+                        /** Format: date-time */
+                        updatedAt?: string
+                        updatedBy?: {
+                          data?: {
+                            attributes?: Record<string, never>
+                            id?: number
+                          }
+                        }
+                      }
+                      id?: number
+                    }[]
+                  }
+                  /** Format: date-time */
+                  updatedAt?: string
+                  updatedBy?: {
+                    data?: {
+                      attributes?: Record<string, never>
+                      id?: number
+                    }
+                  }
+                  users?: {
+                    data?: {
+                      attributes?: Record<string, never>
+                      id?: number
+                    }[]
+                  }
+                }
+                id?: number
+              }[]
+            }
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              data?: {
+                attributes?: Record<string, never>
+                id?: number
+              }
+            }
+            username?: string
+          }
+          id?: number
+        }
+      }
+      env_name?: string
+      is_production?: boolean
+      namespace?: string
+      /** Format: date-time */
+      publishedAt?: string
+      request_github_pr_number?: number
+      request_github_pr_status?: string
+      requester_email?: string
+      requester_name?: string
+      requester_team?: string
+      secret_name?: string
+      source_code?: string
+      /** @enum {string} */
+      type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
+      /** Format: date-time */
+      updatedAt?: string
+      updatedBy?: {
+        data?: {
+          attributes?: Record<string, never>
+          id?: number
+        }
+      }
+    }
+    CpNamespaceRequestListResponse: {
+      data?: components['schemas']['CpNamespaceRequestListResponseDataItem'][]
+      meta?: {
+        pagination?: {
+          page?: number
+          pageCount?: number
+          pageSize?: number
+          total?: number
+        }
+      }
+    }
+    CpNamespaceRequestListResponseDataItem: {
+      attributes?: components['schemas']['CpNamespaceRequest']
+      id?: number
+    }
+    CpNamespaceRequestRequest: {
+      data: {
+        certificate_dns_name?: string
+        env_name?: string
+        is_production?: boolean
+        namespace?: string
+        request_github_pr_number?: number
+        request_github_pr_status?: string
+        requester_email?: string
+        requester_name?: string
+        requester_team?: string
+        secret_name?: string
+        source_code?: string
+        /** @enum {string} */
+        type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
+      }
+    }
+    CpNamespaceRequestResponse: {
+      data?: components['schemas']['CpNamespaceRequestResponseDataObject']
+      meta?: Record<string, never>
+    }
+    CpNamespaceRequestResponseDataObject: {
+      attributes?: components['schemas']['CpNamespaceRequest']
       id?: number
     }
     CustomComponentView: {
@@ -2439,6 +2607,8 @@ export interface components {
                         name?: string
                         /** Format: date-time */
                         publishedAt?: string
+                        /** @enum {string} */
+                        scan_status?: 'Failed' | 'Succeeded'
                         trivy_scan_results?: unknown
                         trivy_scan_timestamp?: string
                         /** Format: date-time */
@@ -2661,7 +2831,7 @@ export interface components {
             slack_channel_nonprod_release_notify?: string
             slack_channel_prod_release_notify?: string
             slack_channel_security_scans_notify?: string
-            standards_compliance?: string
+            standards_compliance?: unknown
             title?: string
             trivy_last_completed_scan_date?: string
             trivy_scan_summary?: unknown
@@ -3023,6 +3193,8 @@ export interface components {
                         name?: string
                         /** Format: date-time */
                         publishedAt?: string
+                        /** @enum {string} */
+                        scan_status?: 'Failed' | 'Succeeded'
                         trivy_scan_results?: unknown
                         trivy_scan_timestamp?: string
                         /** Format: date-time */
@@ -3245,7 +3417,7 @@ export interface components {
             slack_channel_nonprod_release_notify?: string
             slack_channel_prod_release_notify?: string
             slack_channel_security_scans_notify?: string
-            standards_compliance?: string
+            standards_compliance?: unknown
             title?: string
             trivy_last_completed_scan_date?: string
             trivy_scan_summary?: unknown
@@ -3504,7 +3676,6 @@ export interface components {
       slack_channel_nonprod_release_notify?: string
       slack_channel_prod_release_notify?: string
       slack_channel_security_scans_notify?: string
-      standards_compliance?: string
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
@@ -3554,7 +3725,6 @@ export interface components {
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
-        standards_compliance?: string
       }
     }
     GithubRepoRequestResponse: {
@@ -3850,170 +4020,12 @@ export interface components {
       id?: number
     }
     NamespaceRequest: {
-      certificate_dns_name?: string
-      /** Format: date-time */
-      createdAt?: string
-      createdBy?: {
-        data?: {
-          attributes?: {
-            blocked?: boolean
-            /** Format: date-time */
-            createdAt?: string
-            createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
-            }
-            /** Format: email */
-            email?: string
-            firstname?: string
-            isActive?: boolean
-            lastname?: string
-            preferedLanguage?: string
-            registrationToken?: string
-            resetPasswordToken?: string
-            roles?: {
-              data?: {
-                attributes?: {
-                  code?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  name?: string
-                  permissions?: {
-                    data?: {
-                      attributes?: {
-                        action?: string
-                        actionParameters?: unknown
-                        conditions?: unknown
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        properties?: unknown
-                        role?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        subject?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  users?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                }
-                id?: number
-              }[]
-            }
-            /** Format: date-time */
-            updatedAt?: string
-            updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
-            }
-            username?: string
-          }
-          id?: number
-        }
-      }
-      env_name?: string
-      is_production?: boolean
-      namespace?: string
-      /** Format: date-time */
-      publishedAt?: string
-      request_github_pr_number?: number
-      request_github_pr_status?: string
-      requester_email?: string
-      requester_name?: string
-      requester_team?: string
-      secret_name?: string
-      source_code?: string
-      /** @enum {string} */
-      type?: 'dev' | 'test' | 'stage' | 'prod' | 'preprod'
-      /** Format: date-time */
-      updatedAt?: string
-      updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
-      }
-    }
-    NamespaceRequestListResponse: {
-      data?: components['schemas']['NamespaceRequestListResponseDataItem'][]
-      meta?: {
-        pagination?: {
-          page?: number
-          pageCount?: number
-          pageSize?: number
-          total?: number
-        }
-      }
-    }
-    NamespaceRequestListResponseDataItem: {
-      attributes?: components['schemas']['NamespaceRequest']
-      id?: number
-    }
-    NamespaceRequestRequest: {
       data: {
-        certificate_dns_name?: string
-        env_name?: string
-        is_production?: boolean
-        namespace?: string
-        request_github_pr_number?: number
-        request_github_pr_status?: string
-        requester_email?: string
-        requester_name?: string
-        requester_team?: string
-        secret_name?: string
-        source_code?: string
-        /** @enum {string} */
-        type?: 'dev' | 'test' | 'stage' | 'prod' | 'preprod'
+        elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
+        name: string
+        pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
+        rds_instance?: components['schemas']['TfModulesRdsInstanceComponent'][]
       }
-    }
-    NamespaceRequestResponse: {
-      data?: components['schemas']['NamespaceRequestResponseDataObject']
-      meta?: Record<string, never>
-    }
-    NamespaceRequestResponseDataObject: {
-      attributes?: components['schemas']['NamespaceRequest']
-      id?: number
     }
     NamespaceResponse: {
       data?: components['schemas']['NamespaceResponseDataObject']
@@ -4251,6 +4263,8 @@ export interface components {
                               name?: string
                               /** Format: date-time */
                               publishedAt?: string
+                              /** @enum {string} */
+                              scan_status?: 'Failed' | 'Succeeded'
                               trivy_scan_results?: unknown
                               trivy_scan_timestamp?: string
                               /** Format: date-time */
@@ -4316,7 +4330,7 @@ export interface components {
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_security_scans_notify?: string
-                  standards_compliance?: string
+                  standards_compliance?: unknown
                   title?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
@@ -4875,6 +4889,8 @@ export interface components {
                               name?: string
                               /** Format: date-time */
                               publishedAt?: string
+                              /** @enum {string} */
+                              scan_status?: 'Failed' | 'Succeeded'
                               trivy_scan_results?: unknown
                               trivy_scan_timestamp?: string
                               /** Format: date-time */
@@ -4940,7 +4956,7 @@ export interface components {
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_security_scans_notify?: string
-                  standards_compliance?: string
+                  standards_compliance?: unknown
                   title?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
@@ -5567,12 +5583,16 @@ export interface components {
         }
       }
       description?: string
-      last_run_successful?: boolean
+      error_details?: unknown
       /** Format: date-time */
       last_scheduled_run?: string
+      /** Format: date-time */
+      last_successful_run?: string
       name?: string
       /** Format: date-time */
       publishedAt?: string
+      /** @enum {string} */
+      result?: 'None' | 'Succeeded' | 'Failed' | 'Errors'
       schedule?: string
       /** Format: date-time */
       updatedAt?: string
@@ -5601,10 +5621,14 @@ export interface components {
     ScheduledJobRequest: {
       data: {
         description?: string
-        last_run_successful?: boolean
+        error_details?: unknown
         /** Format: date-time */
         last_scheduled_run?: string
+        /** Format: date-time */
+        last_successful_run?: string
         name?: string
+        /** @enum {string} */
+        result?: 'None' | 'Succeeded' | 'Failed' | 'Errors'
         schedule?: string
       }
     }
@@ -5826,6 +5850,8 @@ export interface components {
                               name?: string
                               /** Format: date-time */
                               publishedAt?: string
+                              /** @enum {string} */
+                              scan_status?: 'Failed' | 'Succeeded'
                               trivy_scan_results?: unknown
                               trivy_scan_timestamp?: string
                               /** Format: date-time */
@@ -5891,7 +5917,7 @@ export interface components {
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_security_scans_notify?: string
-                  standards_compliance?: string
+                  standards_compliance?: unknown
                   title?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
@@ -6408,6 +6434,8 @@ export interface components {
                               name?: string
                               /** Format: date-time */
                               publishedAt?: string
+                              /** @enum {string} */
+                              scan_status?: 'Failed' | 'Succeeded'
                               trivy_scan_results?: unknown
                               trivy_scan_timestamp?: string
                               /** Format: date-time */
@@ -6473,7 +6501,7 @@ export interface components {
                   slack_channel_nonprod_release_notify?: string
                   slack_channel_prod_release_notify?: string
                   slack_channel_security_scans_notify?: string
-                  standards_compliance?: string
+                  standards_compliance?: unknown
                   title?: string
                   trivy_last_completed_scan_date?: string
                   trivy_scan_summary?: unknown
@@ -6957,6 +6985,8 @@ export interface components {
       name?: string
       /** Format: date-time */
       publishedAt?: string
+      /** @enum {string} */
+      scan_status?: 'Failed' | 'Succeeded'
       trivy_scan_results?: unknown
       trivy_scan_timestamp?: string
       /** Format: date-time */
@@ -6987,6 +7017,8 @@ export interface components {
       data: {
         build_image_tag?: string
         name?: string
+        /** @enum {string} */
+        scan_status?: 'Failed' | 'Succeeded'
         trivy_scan_results?: unknown
         trivy_scan_timestamp?: string
       }
@@ -7406,6 +7438,368 @@ export interface operations {
     }
   }
   'delete/components/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': number
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/cp-namespace-requests': {
+    parameters: {
+      query?: {
+        /** @description Fields to return (ex: title,author) */
+        fields?: string
+        /** @description Filters to apply */
+        filters?: {
+          [key: string]: unknown
+        }
+        /** @description Locale to apply */
+        locale?: string
+        /** @description Number of entities to return (default: 25) */
+        'pagination[limit]'?: number
+        /** @description Page number (default: 0) */
+        'pagination[page]'?: number
+        /** @description Page size (default: 25) */
+        'pagination[pageSize]'?: number
+        /** @description Offset value (default: 0) */
+        'pagination[start]'?: number
+        /** @description Return page/pageSize (default: true) */
+        'pagination[withCount]'?: boolean
+        /** @description Relations to return */
+        populate?: string
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
+        sort?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CpNamespaceRequestListResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'post/cp-namespace-requests': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CpNamespaceRequestRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CpNamespaceRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/cp-namespace-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CpNamespaceRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'put/cp-namespace-requests/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CpNamespaceRequestRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CpNamespaceRequestResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'delete/cp-namespace-requests/{id}': {
     parameters: {
       query?: never
       header?: never
@@ -8854,368 +9248,6 @@ export interface operations {
     }
   }
   'delete/github-teams/{id}': {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        id: number
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': number
-        }
-      }
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-    }
-  }
-  'get/namespace-requests': {
-    parameters: {
-      query?: {
-        /** @description Fields to return (ex: title,author) */
-        fields?: string
-        /** @description Filters to apply */
-        filters?: {
-          [key: string]: unknown
-        }
-        /** @description Locale to apply */
-        locale?: string
-        /** @description Number of entities to return (default: 25) */
-        'pagination[limit]'?: number
-        /** @description Page number (default: 0) */
-        'pagination[page]'?: number
-        /** @description Page size (default: 25) */
-        'pagination[pageSize]'?: number
-        /** @description Offset value (default: 0) */
-        'pagination[start]'?: number
-        /** @description Return page/pageSize (default: true) */
-        'pagination[withCount]'?: boolean
-        /** @description Relations to return */
-        populate?: string
-        /** @description Sort by attributes ascending (asc) or descending (desc) */
-        sort?: string
-      }
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['NamespaceRequestListResponse']
-        }
-      }
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-    }
-  }
-  'post/namespace-requests': {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['NamespaceRequestRequest']
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['NamespaceRequestResponse']
-        }
-      }
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-    }
-  }
-  'get/namespace-requests/{id}': {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        id: number
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['NamespaceRequestResponse']
-        }
-      }
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-    }
-  }
-  'put/namespace-requests/{id}': {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        id: number
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['NamespaceRequestRequest']
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['NamespaceRequestResponse']
-        }
-      }
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Error']
-        }
-      }
-    }
-  }
-  'delete/namespace-requests/{id}': {
     parameters: {
       query?: never
       header?: never
