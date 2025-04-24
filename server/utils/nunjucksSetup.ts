@@ -62,6 +62,13 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('toJson', (val: unknown, depth = 0) => JSON.stringify(val, null, depth))
+  njkEnv.addFilter('snakeToTitle', function (str) {
+    return str
+      .split('_') // Split by underscores
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+      .join(' ') // Join with spaces
+  })
+
   njkEnv.addFilter(
     'toSelect',
     (arr: Record<string, unknown>[], valueKey: string, textKey: string, selectedValue: unknown) =>
