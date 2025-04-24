@@ -60,7 +60,6 @@ export const getMonitorName = (req: Request): string => {
 
 export const formatMonitorName = (name: string): string => {
   const monitorName = name || ''
-
   return `${monitorName}`
     .trim()
     .toLowerCase()

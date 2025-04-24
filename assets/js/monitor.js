@@ -1,12 +1,17 @@
 jQuery(async function () {
   const monitorType = $('#monitorType').val()
+  const monitorName = $('#monitorName').val()
+  const monitorId = $('#monitorId').val()
 
   if (monitorType !== '') {
-    const dropDownTypeIdValue = Number.parseInt($(`#${monitorType}`).val())
-    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
+    const dropDownTypeId = monitorId && monitorId !== '0' ? parseInt(monitorId, 10) : 0
 
-    await populateComponentTable(monitorType, dropDownTypeId)
-    updateEnvironmentList()
+    try {
+      await populateComponentTable(monitorType, dropDownTypeId, monitorName)
+      updateEnvironmentList()
+    } catch (error) {
+      console.error('Error populating component table:', error)
+    }
   }
 
   $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponentView').on('click', async e => {
@@ -43,8 +48,12 @@ jQuery(async function () {
 
     history.pushState({ info: 'dropdown change' }, '', pushStateUrl)
 
-    await populateComponentTable(dropDownType, dropDownTypeId)
-    updateEnvironmentList()
+    try {
+      await populateComponentTable(dropDownType, dropDownTypeId, dropDownText)
+      updateEnvironmentList()
+    } catch (error) {
+      console.error('Error updating selection:', error)
+    }
   })
 
   $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
@@ -169,10 +178,20 @@ const fetchMessages = async () => {
   }
 }
 
-async function populateComponentTable(monitorType, monitorTypeId) {
-  const response = await fetch(`/monitor/components/${monitorType}/${monitorTypeId}`)
+async function populateComponentTable(monitorType, monitorTypeId, monitorName) {
+  let url = `/monitor/components/${monitorType}/${monitorTypeId}`
+
+  // If we have a product name in the URL but no ID, add it as a query parameter
+  if (monitorType === 'product' && monitorTypeId === 0) {
+    if (monitorName) {
+      url = `${url}?name=${encodeURIComponent(monitorName)}`
+    }
+  }
+
+  const response = await fetch(url)
 
   if (!response.ok) {
+    console.error(`Error fetching component data: ${response.status} ${response.statusText}`)
     throw new Error('There was a problem fetching the component data')
   }
 
