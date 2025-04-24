@@ -62,7 +62,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('toJson', (val: unknown, depth = 0) => JSON.stringify(val, null, depth))
-  njkEnv.addFilter('snakeToTitleCase', function (str) {
+  njkEnv.addFilter('snakeToTitleCase', function snakeToTitleCase(str) {
     return str
       .split('_') // Split by underscores
       .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
