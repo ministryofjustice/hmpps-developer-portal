@@ -123,6 +123,17 @@
   }
 }
 
+.banner {
+  background-color: #f4f4f4;
+  text-align: left;
+  font-family: Arial, sans-serif; 
+  font-size: 40px;
+  font-weight: bold;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 20px;
+  border-top: 2px solid #ccc;
+}
+
 .componentData {
   th, td, img{
     padding: govuk-spacing(1);

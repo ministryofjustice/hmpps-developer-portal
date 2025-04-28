@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { formatActiveAgencies, getComponentName, getEnvironmentName } from '../utils/utils'
+import { formatActiveAgencies, getComponentName, getEnvironmentName, utcTimestampToUtcDateTime } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -10,7 +10,13 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    return res.render('pages/components')
+    const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({
+      name: 'hmpps-github-discovery-incremental',
+    })
+    return res.render('pages/components', {
+      jobName: scheduledJobRequest.name,
+      lastSuccessfulRun: utcTimestampToUtcDateTime(scheduledJobRequest.last_successful_run),
+    })
   })
 
   get('/data', async (req, res) => {
