@@ -3,41 +3,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { getAlertName, getAlertType } from '../utils/utils'
-
-interface AlertListResponseDataItem {
-  annotations?: {
-    dashboard_url?: string
-    message?: string
-    runbook_url?: string
-  }
-  endsAt?: string
-  fingerprint?: string
-  receivers?: [
-    {
-      name?: string
-    },
-  ]
-  startsAt?: string
-  status?: {
-    inhibitedBy?: Array<string>
-    silencedBy?: Array<string>
-    state?: string
-  }
-  updatedAt?: string
-  generatorURL?: string
-  labels?: {
-    alertname?: string
-    application?: string
-    businessUnit?: string
-    clusterName?: string
-    environment?: string
-    namespace?: string
-    productId?: string
-    prometheus?: string
-    queue_name?: string
-    severity?: string
-  }
-}
+import { AlertListResponseDataItem } from '../@types'
 
 export default function routes(_: Services): Router {
   const router = Router()

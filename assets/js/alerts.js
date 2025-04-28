@@ -2,21 +2,26 @@ const applicationFilter = document.getElementById('application')
 const environmentFilter = document.getElementById('environment')
 const namespaceFilter = document.getElementById('namespace')
 const severityFilter = document.getElementById('severity')
-let previousDataJSON = ''
 
 jQuery(async function () {
-  //check url to see if any filters are currently applied
+  // check url to see if any filters are currently applied
   let currentFilters = getFiltersFromURL()
-  //get alerts from the api
+  // get alerts from the api
   const alerts = await getAlerts()
-  //use filters and alerts to update alert table and filters
+  // use filters and alerts to update alert table and filters
   updateAll(alerts, currentFilters)
 
-  //on click of any 'Update' button to apply filters
+  let previousDataJSON
+
+  // Watch function updates Alerts on a timeout
+  setInterval(function () {
+    previousDataJSON = updateAlerts(alerts, previousDataJSON)
+  }, 5000)
+  // on click of any 'Update' button to apply filters
   $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel').on('click', async e => {
     e.preventDefault(e)
 
-    //check which filter has been updated
+    // check which filter has been updated
     let dropDownType = ''
     switch (e.target.id) {
       case 'updateApplicationName':
@@ -34,19 +39,16 @@ jQuery(async function () {
       default:
         return false
     }
-    //get the selectec dropdown option
+    // get the selectec dropdown option
     const dropDownText = $(`#${dropDownType} option:selected`).text()
 
-    //update current filters
+    // update current filters
     currentFilters[`${dropDownType}`] = dropDownText
-    //update alert table and filters
+    // update alert table and filters
     updateAll(alerts, currentFilters)
-
-    // Watch function updates Alerts on a timeout
-    watch()
   })
 
-  //on click of 'Reset Filters' button, clear filters, reset url params and update table and filters
+  // on click of 'Reset Filters' button, clear filters, reset url params and update table and filters
   $('#resetFilters').on('click', async e => {
     const params = new URLSearchParams()
     history.replaceState(null, '', '/alerts')
@@ -61,26 +63,15 @@ jQuery(async function () {
   })
 })
 
-//gets alerts every 5 seconds
-const watch = async () => {
-  await updateAlerts()
-
-  setTimeout(watch, 5000)
-}
-
-const updateAlerts = async () => {
-  try {
-    const currentData = await getAlerts()
-    //check against existing alerts
-    if (currentData !== previousDataJSON) {
-      alerts = currentData
-      previousDataJSON = currentData
-      let filters = getFiltersFromURL()
-      updateAll(currentData, filters)
-    }
-  } catch (error) {
-    console.error('Failed to fetch alerts:', error)
+// gets alerts every 5 seconds
+function updateAlerts(currentData, previousDataJSON) {
+  //check against existing alerts
+  if (currentData !== previousDataJSON) {
+    alerts = currentData
+    const filters = getFiltersFromURL()
+    updateAll(currentData, filters)
   }
+  return currentData
 }
 
 async function getAlerts() {
@@ -91,14 +82,14 @@ async function getAlerts() {
   return await response.json()
 }
 
-//add current filters to Url params
+// add current filters to Url params
 function updateURLParams(filters) {
   const params = new URLSearchParams()
   if (filters.application.length) params.set('application', filters.application)
   if (filters.environment) params.set('environment', filters.environment)
   if (filters.namespace) params.set('namespace', filters.namespace)
   if (filters.severity) params.set('severity', filters.severity)
-  history.replaceState(null, '', '?' + params.toString())
+  history.replaceState(null, '', `?${params.toString()}`)
 }
 // function checks url params for applied filters and builds filter object
 function getFiltersFromURL() {
@@ -111,8 +102,8 @@ function getFiltersFromURL() {
   }
 }
 
-//append tabledata to the #statusTable
-async function populateAlertTable(alerts) {
+//  append tabledata to the #statusTable
+function populateAlertTable(alerts) {
   try {
     $('#statusRows').empty()
     alerts.forEach(alert => {
@@ -146,11 +137,9 @@ function getOptions(data, key) {
 }
 
 function removeOptions(selectElement) {
-  var i,
-    L = selectElement.options.length - 1
-  for (i = L; i >= 0; i--) {
-    selectElement.remove(i)
-  }
+  Array.from(selectElement.options).forEach(() => {
+    selectElement.remove(0)
+  })
   const opt = document.createElement('option')
   opt.value = ''
   opt.textContent = ''
@@ -158,31 +147,24 @@ function removeOptions(selectElement) {
 }
 
 function renderDropdown(select, options, selectedValue, key) {
-  //clear dropDown options to prevent duplicates
+  //  clear dropDown options to prevent duplicates
   removeOptions(select)
-  if (selectedValue != '') {
-    //append selected option
-    options.forEach(option => {
-      const opt = document.createElement('option')
-      opt.value = option
-      opt.textContent = option
-      if (option === selectedValue) opt.selected = true
-      select.appendChild(opt)
-    })
-  } else {
-    options.forEach(option => {
-      const opt = document.createElement('option')
-      opt.value = option
-      opt.textContent = option
-      select.appendChild(opt)
-    })
-  }
+  // append options
+  options.forEach(option => {
+    const opt = document.createElement('option')
+    opt.value = option
+    opt.textContent = option
+    if (option === selectedValue) {
+      opt.selected = true
+    }
+    select.appendChild(opt)
+  })
 }
 
 function populateAlertFilters(dropDownFilters) {
   dropDownFilters.forEach(filter => {
     filter.forEach(item => {
-      let select = document.getElementById(`${item.type}`)
+      const select = document.getElementById(`${item.type}`)
       select.add(new Option(item.text, item.text, false, item.selected))
     })
   })
@@ -201,27 +183,27 @@ function updateDropdowns(filteredData, currentFilters) {
   renderDropdown(severityFilter, severities, currentFilters.severity, 'severity')
 }
 
-//filter alters by selected filters
+// filter alters by selected filters
 function applyFilters(alerts, filters) {
-  return alerts.filter(alert => {
-    if (filters.application && alert.labels.application !== filters.application) return false
-    if (filters.environment && alert.labels.environment !== filters.environment) return false
-    if (filters.namespace && alert.labels.namespace !== filters.namespace) return false
-    if (filters.severity && alert.labels.severity !== filters.severity) return false
-    return true
-  })
+  return alerts.filter(
+    alert =>
+      (!filters.application || alert.labels.application === filters.application) &&
+      (!filters.environment || alert.labels.environment === filters.environment) &&
+      (!filters.namespace || alert.labels.namespace === filters.namespace) &&
+      (!filters.severity || alert.labels.severity === filters.severity),
+  )
 }
 
-//return false if no filter is selected
+// return false if no filter is selected
 function isFiltersEmpty(filters) {
   return !filters.application && !filters.environment && !filters.namespace && !filters.severity
 }
 
-//update alert table, dropdowns and the url
+// update alert table, dropdowns and the url
 function updateAll(alerts, currentFilters) {
   const filtered = applyFilters(alerts, currentFilters)
   populateAlertTable(filtered)
-  //if no filters are selected populate dropdowns with all data, otherwise populate with an already filtered selection
+  // if no filters are selected populate dropdowns with all data, otherwise populate with an already filtered selection
   const dataForDropdowns = isFiltersEmpty(currentFilters) ? alerts : filtered
   updateDropdowns(dataForDropdowns, currentFilters)
   updateURLParams(currentFilters)
