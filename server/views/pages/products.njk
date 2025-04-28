@@ -5,6 +5,7 @@
 
 {% block content %}
 {{ breadCrumb("Products", []) }}
+
   <h1>Products</h1>
 
   <table id="productsTable" class="stripe">
@@ -25,12 +26,14 @@
 			</tr>
 		</tfoot>
   </table>
-
+  <div class="banner">
+    <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
+  </div>
 {% endblock %}
 
 {% block bodyEnd %}
-  <script type="module" src="/assets/govukFrontendInit.js"></script>
-  <script src="/assets/moj/all.js"></script>
+  <script type="module" src="/assets/frontendInit.js"></script>
+  
   <script src="/assets/js/common.js"></script>
   <script src="/assets/js/products.js"></script>
 {% endblock %}
