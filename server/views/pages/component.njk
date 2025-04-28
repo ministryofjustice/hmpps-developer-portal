@@ -23,6 +23,23 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 data-test="detail-page-title">{{ component.name }}</h1>
+    {% if component.alerts and component.alerts.length %}
+      {# eslint-disable @typescript-eslint/no-explicit-any #}
+      <div class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+        <h2 class="govuk-heading-m">Active alerts</h2>
+        <ul class="govuk-list">
+          {% for alert in component.alerts %}
+            <li>
+              <p>Name: <strong>{{ alert.alertname }}</strong></p>
+              <p>Environment: <strong>{{ alert.environment }}</strong></p>
+              <p>Summary: {{ alert.summary }}</p>
+              <p>Message: {{ alert.message }}</p>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {# eslint-enable @typescript-eslint/no-explicit-any #}
+    {% endif %}
     <table class="componentData">
       <tbody>
         <tr>
