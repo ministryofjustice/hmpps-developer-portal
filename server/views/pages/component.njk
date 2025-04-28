@@ -27,16 +27,33 @@
       {# eslint-disable @typescript-eslint/no-explicit-any #}
       <div class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts" style="border-left: 5px solid #d4351c; background-color: #fef1f0;">
         <h2 class="govuk-heading-m">Active alerts</h2>
-        <ul class="govuk-list">
-          {% for alert in component.alerts %}
-            <li>
-              <p>Alert Name: <strong>{{ alert.alertname }}</strong></p>
-              <p>Environment: <strong>{{ alert.environment }}</strong></p>
-              <p>Summary: <strong>{{ alert.summary }}</strong></p>
-              <p>Message: <strong>{{ alert.message }}</strong></p>
-            </li>
-          {% endfor %}
-        </ul>
+        <table class="govuk-table" style="table-layout: fixed; width: 100%;">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th class="govuk-table__header">Alert Name</th>
+              <th class="govuk-table__header">Environment</th>
+              <th class="govuk-table__header">Summary</th>
+              <th class="govuk-table__header">Message</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for alert in component.alerts %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ alert.alertname }}</td>
+              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ alert.environment }}</td>
+              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ alert.summary }}</td>
+              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">
+                <details class="govuk-details" data-module="govuk-details">
+                  <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">Show message</span>
+                  </summary>
+                  <div class="govuk-details__text">{{ alert.message }}</div>
+                </details>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
       {# eslint-enable @typescript-eslint/no-explicit-any #}
     {% endif %}
