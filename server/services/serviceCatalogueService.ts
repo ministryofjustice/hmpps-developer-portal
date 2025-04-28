@@ -214,7 +214,7 @@ export default class ServiceCatalogueService {
     return teamRequest
   }
 
-  async getScheduledJobs(): Promise<GithubTeamListResponseDataItem[]> {
+  async getScheduledJobs(): Promise<ScheduledJobListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const scheduledJobsData = await strapiApiClient.getScheduledJobs()
     const scheduledJobsRequests = scheduledJobsData.data.sort(sortData)
