@@ -21,6 +21,8 @@ import {
   GithubRepoRequestListResponseDataItem,
   GithubTeamListResponseDataItem,
   TeamListResponseDataItem,
+  ScheduledJobListResponseDataItem,
+  ScheduledJobResponse,
 } from './strapiApiTypes'
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea } from './converters/modelTypes'
@@ -272,6 +274,19 @@ export default class StrapiApiClient {
     return this.restClient.get({
       path: '/v1/github-teams',
       query: `filters[team_name][$eq]=${teamName}`,
+    })
+  }
+
+  async getScheduledJobs(): Promise<ListResponse<ScheduledJobListResponseDataItem>> {
+    return this.restClient.get({
+      path: '/v1/scheduled-jobs',
+    })
+  }
+
+  async getSchuledJobs({ name }: { name: string }): Promise<ScheduledJobResponse> {
+    return this.restClient.get({
+      path: '/v1/scheduled-jobs',
+      query: `filters[name][$eq]=${name}`,
     })
   }
 }

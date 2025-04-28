@@ -11,7 +11,12 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    return res.render('pages/veracode')
+    const name = 'hmpps-veracode-discovery'
+    const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name })
+    return res.render('pages/veracode', {
+      jobName: scheduledJobRequest.name,
+      lastSuccessfulRun: scheduledJobRequest.last_successful_run,
+    })
   })
 
   get('/data', async (req, res) => {

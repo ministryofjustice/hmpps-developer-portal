@@ -20,6 +20,8 @@ import {
   GithubTeamListResponseDataItem,
   GithubTeam,
   ServiceArea as StrapiServiceArea,
+  ScheduledJob,
+  ScheduledJobListResponseDataItem,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
@@ -210,6 +212,24 @@ export default class ServiceCatalogueService {
         ? teamRequestData.data[0].attributes
         : teamRequestData.data?.attributes
     return teamRequest
+  }
+
+  async getScheduledJobs(): Promise<GithubTeamListResponseDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const scheduledJobsData = await strapiApiClient.getScheduledJobs()
+    const scheduledJobsRequests = scheduledJobsData.data.sort(sortData)
+
+    return scheduledJobsRequests
+  }
+
+  async getScheduledJob({ name }: { name: string }): Promise<ScheduledJob> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const scheduledJobData = await strapiApiClient.getSchuledJobs({ name })
+    const scheduledJobsRequest =
+      Array.isArray(scheduledJobData.data) && scheduledJobData.data.length > 0
+        ? scheduledJobData.data[0].attributes
+        : scheduledJobData.data?.attributes
+    return scheduledJobsRequest
   }
 
   async getRdsInstances(): Promise<RdsEntry[]> {

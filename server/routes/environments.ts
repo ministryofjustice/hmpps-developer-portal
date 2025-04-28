@@ -10,7 +10,12 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    return res.render('pages/environments')
+    const name = 'hmpps-github-discovery-incremental'
+    const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name })
+    return res.render('pages/environments', {
+      jobName: scheduledJobRequest.name,
+      lastSuccessfulRun: scheduledJobRequest.last_successful_run,
+    })
   })
 
   get('/data', async (req, res) => {

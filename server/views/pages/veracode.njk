@@ -8,6 +8,9 @@
 {% block content %}
 {{ breadCrumb("Veracode", []) }}
 
+  <div class="banner">
+    <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
+  </div>
   <h1>Veracode Scan Results</h1>
   <form method="GET" action="/veracode">
     <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
