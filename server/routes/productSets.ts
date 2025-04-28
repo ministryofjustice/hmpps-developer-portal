@@ -1,7 +1,7 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { getNumericId } from '../utils/utils'
+import { getNumericId, utcTimestampToUtcDateTime } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -12,7 +12,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name: 'hmpps-sharepoint-discovery' })
     return res.render('pages/productSets', {
       jobName: scheduledJobRequest.name,
-      lastSuccessfulRun: scheduledJobRequest.last_successful_run,
+      lastSuccessfulRun: utcTimestampToUtcDateTime(scheduledJobRequest.last_successful_run),
     })
   })
 

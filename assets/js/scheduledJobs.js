@@ -21,7 +21,7 @@ jQuery(function () {
     {
       data: 'attributes.last_scheduled_run',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.attributes.last_scheduled_run}`)
+        $(td).html(formatDateToDDMONYYYYHH24MMSS(rowData.attributes.last_scheduled_run))
       },
     },
     {
@@ -33,7 +33,7 @@ jQuery(function () {
     {
       data: 'attributes.last_successful_run',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.attributes.last_successful_run}`)
+        $(td).html(formatDateToDDMONYYYYHH24MMSS(rowData.attributes.last_successful_run))
       },
     },
     {
@@ -72,3 +72,20 @@ jQuery(function () {
     columns,
   })
 })
+
+function formatDateToDDMONYYYYHH24MMSS(dateString) {
+  if (!dateString) return 'N/A'
+  const date = new Date(dateString)
+  return date
+    .toLocaleString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    })
+    .replace(',', '')
+    .toUpperCase()
+}

@@ -233,3 +233,6 @@ export const median = (values: number[]): number => {
 }
 
 export const utcTimestampToUtcDate = (str: string) => (str ? formatDate(new Date(str), 'yyyy-MM-dd') : undefined)
+
+export const utcTimestampToUtcDateTime = (str: string) =>
+  str ? formatDate(new Date(str), 'dd-MMM-yyyy HH:mm:ss').toUpperCase() : undefined

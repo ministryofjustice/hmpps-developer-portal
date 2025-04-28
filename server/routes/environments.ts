@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { formatActiveAgencies, getComponentName, getEnvironmentName } from '../utils/utils'
+import { formatActiveAgencies, getComponentName, getEnvironmentName, utcTimestampToUtcDateTime } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -15,7 +15,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     })
     return res.render('pages/environments', {
       jobName: scheduledJobRequest.name,
-      lastSuccessfulRun: scheduledJobRequest.last_successful_run,
+      lastSuccessfulRun: utcTimestampToUtcDateTime(scheduledJobRequest.last_successful_run),
     })
   })
 
