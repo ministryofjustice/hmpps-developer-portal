@@ -30,7 +30,7 @@
         <ul class="govuk-list">
           {% for alert in component.alerts %}
             <li>
-              <p>Name: <strong>{{ alert.alertname }}</strong></p>
+              <p>Alert Name: <strong>{{ alert.alertname }}</strong></p>
               <p>Environment: <strong>{{ alert.environment }}</strong></p>
               <p>Summary: {{ alert.summary }}</p>
               <p>Message: {{ alert.message }}</p>
