@@ -63,6 +63,11 @@ export type GithubTeamResponse = components['schemas']['GithubTeamResponse']
 export type GithubTeamListResponseDataItem = components['schemas']['GithubTeamListResponseDataItem']
 export type GithubTeamRequest = components['schemas']['GithubTeamRequest']
 
+export type ScheduledJob = components['schemas']['ScheduledJob']
+export type ScheduledJobResponse = components['schemas']['ScheduledJobResponse']
+export type ScheduledJobListResponseDataItem = components['schemas']['ScheduledJobListResponseDataItem']
+export type ScheduledJobRequest = components['schemas']['ScheduledJobRequest']
+
 export type VeracodeResultsSummary = {
   'static-analysis': {
     score: number

@@ -23,36 +23,62 @@ jQuery(function () {
     },
     {
       data: 'date',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.date}`).addClass('td-nowrap')
+      title: 'Date',
+      className: 'td-nowrap',
+      render: function (data, type) {
+        if (type === 'display' || type === 'filter') {
+          return data || ''
+        }
+        // sort: use timestamp
+        return Date.parse(data) || 0
       },
     },
     {
       data: 'severityLevels.VERY_HIGH',
-      createdCell: function (td, _cellData, rowData) {
-        const data = rowData.hasVeracode ? rowData.severityLevels.VERY_HIGH : 'N/A'
-        $(td).html(data)
+      title: 'Very High',
+      type: 'num',
+      render: function (data, type, row) {
+        const val = row.hasVeracode ? data : 0
+        if (type === 'display' || type === 'filter') {
+          return row.hasVeracode ? data : 'N/A'
+        }
+        return val
       },
     },
     {
       data: 'severityLevels.HIGH',
-      createdCell: function (td, _cellData, rowData) {
-        const data = rowData.hasVeracode ? rowData.severityLevels.HIGH : 'N/A'
-        $(td).html(data)
+      title: 'High',
+      type: 'num',
+      render: function (data, type, row) {
+        const val = row.hasVeracode ? data : 0
+        if (type === 'display' || type === 'filter') {
+          return row.hasVeracode ? data : 'N/A'
+        }
+        return val
       },
     },
     {
       data: 'severityLevels.MEDIUM',
-      createdCell: function (td, _cellData, rowData) {
-        const data = rowData.hasVeracode ? rowData.severityLevels.MEDIUM : 'N/A'
-        $(td).html(data)
+      title: 'Medium',
+      type: 'num',
+      render: function (data, type, row) {
+        const val = row.hasVeracode ? data : 0
+        if (type === 'display' || type === 'filter') {
+          return row.hasVeracode ? data : 'N/A'
+        }
+        return val
       },
     },
     {
       data: 'severityLevels.LOW',
-      createdCell: function (td, _cellData, rowData) {
-        const data = rowData.hasVeracode ? rowData.severityLevels.LOW : 'N/A'
-        $(td).html(data)
+      title: 'Low',
+      type: 'num',
+      render: function (data, type, row) {
+        const val = row.hasVeracode ? data : 0
+        if (type === 'display' || type === 'filter') {
+          return row.hasVeracode ? data : 'N/A'
+        }
+        return val
       },
     },
     {

@@ -181,6 +181,35 @@
         <p>No components rely on this component.</p>
       {% endfor %}
       </ul>
+
+      <h3>GitHub Compliance:</h3>
+      {% if component.standardsCompliance %}
+        {% from "govuk/components/task-list/macro.njk" import govukTaskList %}
+
+        {% set standardsComplianceList = [] %}
+        {% for key, value in component.standardsCompliance %}
+        {% if value == true %}
+          {% set statusHtml = "&#9989;" %}
+        {% else %}
+          {% set statusHtml = "&#10060;" %}
+        {% endif %}
+        {% set standardsComplianceItem =
+          {
+            title: {
+              text: key | snakeToTitleCase
+            },
+            status: {
+              html: statusHtml
+            }
+          }
+        %}
+        {% set standardsComplianceList = (standardsComplianceList.push(standardsComplianceItem), standardsComplianceList) %}
+        {% endfor %}
+        {{ govukTaskList({idPrefix: "github-compliance", items: standardsComplianceList }) }}
+      {% else %}
+        <p>No GitHub compliance data available.</p>
+      {% endif %}
+
   </div>
 </div>
 

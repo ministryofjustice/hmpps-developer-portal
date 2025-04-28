@@ -33,6 +33,7 @@ import missingFromCatalogueRoutes from './routes/missingFromCatalogue'
 import namespacesRoutes from './routes/namespaces'
 import componentRequestRoutes from './routes/componentRequests'
 import githubTeamsRoutes from './routes/githubTeams'
+import scheduledJobsRoutes from './routes/scheduledJobs'
 import alertsRoutes from './routes/alerts'
 
 import type { Services } from './services'
@@ -73,6 +74,7 @@ export default function createApp(services: Services): express.Application {
   app.use(setUpValidationMiddleware())
   app.use('/component-requests', componentRequestRoutes(services))
   app.use('/github-teams', githubTeamsRoutes(services))
+  app.use('/scheduled-jobs', scheduledJobsRoutes(services))
   app.use('/alerts', alertsRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
