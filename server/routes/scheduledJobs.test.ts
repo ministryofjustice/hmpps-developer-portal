@@ -5,25 +5,20 @@ import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import { ScheduledJob, ScheduledJobListResponseDataItem } from '../data/strapiApiTypes'
 
-jest.mock('../services/serviceCatalogueService.ts')
+jest.mock('../services/serviceCatalogueService')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
 const testScheduledJobs = [{ id: 1, attributes: { name: 'testScheduledJob ' } }] as ScheduledJobListResponseDataItem[]
 const testScheduledJob = {
-  ps_id: 'testScheduledJob Id',
-  name: 'testScheduledJob Name',
-  products: {
-    data: [
-      {
-        id: 23,
-        attributes: {
-          name: 'productName',
-        },
-      },
-    ],
-  },
+  name: 'jobName',
+  description: 'jobDescription',
+  schedule: 'jobSchedule',
+  last_scheduled_run: '2025-04-11T08:46:23.746Z',
+  result: 'Succeeded',
+  error_details: 'None',
+  last_successful_run: '2025-04-11T08:46:23.746Z',
 } as ScheduledJob
 
 beforeEach(() => {
@@ -43,9 +38,10 @@ describe('/scheduled-job', () => {
       return request(app)
         .get('/scheduled-jobs')
         .expect('Content-Type', /html/)
+        .expect(200)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('#ScheduledJob sTable').length).toBe(1)
+          expect($('#scheduledJobsTable').length).toBe(1)
         })
     })
   })
@@ -55,33 +51,14 @@ describe('/scheduled-job', () => {
       return request(app)
         .get('/scheduled-jobs/1')
         .expect('Content-Type', /html/)
+        .expect(200)
         .expect(res => {
+          console.log(testScheduledJob)
           const $ = cheerio.load(res.text)
           expect($('[data-test="detail-page-title"]').text()).toContain(testScheduledJob.name)
-          expect($('[data-test="product-set-id"]').text()).toBe(testScheduledJob.name)
-          expect($('[data-test="no-products"]').text()).toBe('')
-        })
-    })
-
-    it('should render service area page with none shown if there are no jobs', () => {
-      const testScheduledJobNoJobs = {
-        name: 'testScheduledJob Name',
-      } as ScheduledJob
-
-      serviceCatalogueService.getScheduledJob.mockResolvedValue(testScheduledJobNoJobs)
-
-      return request(app)
-        .get('/scheduled-jobs/1')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('[data-test="detail-page-title"]').text()).toContain(testScheduledJobNoJobs.name)
-          expect($('[data-test="product-set-id"]').text()).toBe(testScheduledJobNoJobs.name)
-          expect($('[data-test="no-products"]').text()).toBe('None')
         })
     })
   })
-
   describe('GET /data', () => {
     it('should output JSON data for scheduled jobs', () => {
       return request(app)
