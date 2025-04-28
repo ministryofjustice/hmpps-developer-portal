@@ -35,6 +35,10 @@ afterEach(() => {
 describe('/products', () => {
   describe('GET /', () => {
     it('should render products page', () => {
+      serviceCatalogueService.getScheduledJob.mockResolvedValue({
+        name: 'hmpps-github-discovery-incremental',
+        last_successful_run: '2023-10-01T12:00:00Z',
+      })
       return request(app)
         .get('/products')
         .expect('Content-Type', /html/)

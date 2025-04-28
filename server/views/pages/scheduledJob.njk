@@ -1,0 +1,44 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + scheduledJob.name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb(scheduledJob.name, [{title: "Scheduled Jobs", href: "/scheduled-jobs"}]) }}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 data-test="detail-page-title">{{ scheduledJob.name }}</h1>
+    <table class="componentData">
+      <tbody>
+        <tr>
+          <th>Description</th>
+          <td>{{ scheduledJob.description }}</td>
+        </tr>
+        <tr>
+          <th>Schedule</th>
+            <td>{{ scheduledJob.schedule }}</td>
+        </tr>
+        <tr>
+          <th>Last Successful run time</th>
+          <td>{{ scheduledJob.last_successful_run }}</td>
+        </tr>
+        <tr>
+          <th>Last Scheduled run time</th>
+          <td>{{ scheduledJob.last_scheduled_run }}</td>
+        </tr>
+        <tr>
+          <th>Last run result</th>
+          <td> {{ scheduledJob.result }} </td>
+        </tr>
+        <tr>
+          <th>Last run errors</th>
+          <td>{{ scheduledJob.error_details }}</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
