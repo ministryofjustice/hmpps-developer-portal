@@ -8,6 +8,7 @@ generic-service:
   env:
     INGRESS_URL: "https://developer-portal.hmpps.service.justice.gov.uk"
     SERVICE_CATALOGUE_URL: "https://service-catalogue.hmpps.service.justice.gov.uk"
+    ALERTMANAGER_URL: "https://alertmanager.live.cloud-platform.service.justice.gov.uk"
 
   namespace_secrets:
     elasticache-redis:
