@@ -9,8 +9,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    const name = 'hmpps-sharepoint-discovery'
-    const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name })
+    const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name: 'hmpps-sharepoint-discovery' })
     return res.render('pages/teams', {
       jobName: scheduledJobRequest.name,
       lastSuccessfulRun: scheduledJobRequest.last_successful_run,
