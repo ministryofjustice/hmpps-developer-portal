@@ -7,14 +7,15 @@ jQuery(async function () {
   // check url to see if any filters are currently applied
   let currentFilters = getFiltersFromURL()
   // get alerts from the api
-  const alerts = await getAlerts()
+  let alerts = await getAlerts()
   // use filters and alerts to update alert table and filters
   updateAll(alerts, currentFilters)
 
   let previousDataJSON
 
   // Watch function updates Alerts on a timeout
-  setInterval(function () {
+  setInterval(async function () {
+    alerts = await getAlerts()
     previousDataJSON = updateAlerts(alerts, previousDataJSON)
   }, 5000)
   // on click of any 'Update' button to apply filters
@@ -67,7 +68,6 @@ jQuery(async function () {
 function updateAlerts(currentData, previousDataJSON) {
   //check against existing alerts
   if (currentData !== previousDataJSON) {
-    alerts = currentData
     const filters = getFiltersFromURL()
     updateAll(currentData, filters)
   }
@@ -151,13 +151,14 @@ function renderDropdown(select, options, selectedValue, key) {
   removeOptions(select)
   // append options
   options.forEach(option => {
-    const opt = document.createElement('option')
-    opt.value = option
-    opt.textContent = option
+    const newOption = document.createElement('option')
+    newOption.value = option
+    newOption.textContent = option
     if (option === selectedValue) {
-      opt.selected = true
+      newOption.selected = true
     }
-    select.appendChild(opt)
+    // newOption.selected = (option === selectedValue)
+    select.appendChild(newOption)
   })
 }
 
