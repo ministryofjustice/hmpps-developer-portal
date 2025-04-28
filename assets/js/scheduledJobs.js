@@ -39,7 +39,27 @@ jQuery(function () {
     {
       data: 'attributes.error_details',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.attributes.error_details}`)
+        const result = rowData.attributes.result
+        const errorDetails = rowData.attributes.error_details
+
+        if (result === 'Failed' || result === 'Errors') {
+          if (Array.isArray(errorDetails) && errorDetails.length > 0) {
+            const errorList = errorDetails.map(error => `<li>${error}</li>`).join('')
+            const detailsContent = `<details class="govuk-details">
+              <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                  Error Details
+                </span>
+              </summary>
+              <div class="govuk-details__text">
+                <ul>${errorList}</ul>
+              </div>
+            </details>`
+            $(td).html(detailsContent)
+          } else {
+            $(td).html('')
+          }
+        }
       },
     },
   ]

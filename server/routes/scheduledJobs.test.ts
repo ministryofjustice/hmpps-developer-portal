@@ -53,7 +53,6 @@ describe('/scheduled-job', () => {
         .expect('Content-Type', /html/)
         .expect(200)
         .expect(res => {
-          console.log(testScheduledJob)
           const $ = cheerio.load(res.text)
           expect($('[data-test="detail-page-title"]').text()).toContain(testScheduledJob.name)
         })

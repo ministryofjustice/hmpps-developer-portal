@@ -6,9 +6,7 @@
 {% block content %}
 
 {{ breadCrumb("Environments", []) }}
-  <div class="banner">
-    <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
-  </div>
+
   <h1>Environments</h1>
 
   <table id="componentsEnvironmentTable" class="stripe">
@@ -57,7 +55,9 @@
 			</tr>
 		</tfoot>
   </table>
-
+  <div class="banner">
+    <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
+  </div>
 {% endblock %}
 
 {% block bodyEnd %}

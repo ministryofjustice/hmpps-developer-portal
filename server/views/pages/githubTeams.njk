@@ -6,9 +6,7 @@
 {% block content %}
 
 {{ breadCrumb("GitHub Teams", []) }}
-  <div class="banner">
-    <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
-  </div>
+
   <h1>GitHub Teams</h1>
 
   <table id="githubTeamsTable" class="stripe">
@@ -33,7 +31,9 @@
 			</tr>
 		</tfoot>
   </table>
-
+  <div class="banner">
+    <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
+  </div>
 {% endblock %}
 
 {% block bodyEnd %}
