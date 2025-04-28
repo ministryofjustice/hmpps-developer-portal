@@ -70,7 +70,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const alertManagerUrl = process.env.ALERTMANAGER_URL
     if (alertManagerUrl) {
       try {
-        const url = `${alertManagerUrl}/alerts?filter=application="${componentName}"`
+        const url = `${alertManagerUrl}?filter=application="${componentName}"`
         const resp = await fetch(url)
         const parsed = await resp.json()
         const dataArray = Array.isArray(parsed) ? (parsed as Alert[]) : []
