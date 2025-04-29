@@ -54,14 +54,6 @@
                 <details class="govuk-details" data-module="govuk-details">
                   <summary class="govuk-details__summary"><span class="govuk-details__summary-text">Show all {{ component.alerts.length }} alerts</span></summary>
                   <table class="govuk-table" style="table-layout: fixed; width: 100%;">
-                    <thead class="govuk-table__head">
-                      <tr class="govuk-table__row">
-                        <th class="govuk-table__header">Alert Name</th>
-                        <th class="govuk-table__header">Environment</th>
-                        <th class="govuk-table__header">Summary</th>
-                        <th class="govuk-table__header">Message</th>
-                      </tr>
-                    </thead>
                     <tbody class="govuk-table__body">
                       {% for alert in component.alerts %}
                         {% if not loop.first %}
