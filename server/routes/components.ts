@@ -3,6 +3,7 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { formatActiveAgencies, getComponentName, getEnvironmentName } from '../utils/utils'
+import config from '../config'
 
 interface Alert {
   status: { state: string }
@@ -67,25 +68,23 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     }
 
     let alerts: DisplayAlert[] = []
-    const alertManagerUrl = process.env.ALERTMANAGER_URL
-    if (alertManagerUrl) {
-      try {
-        const url = `${alertManagerUrl}?filter=application="${componentName}"`
-        const resp = await fetch(url)
-        const parsed = await resp.json()
-        const dataArray = Array.isArray(parsed) ? (parsed as Alert[]) : []
-        alerts = dataArray
-          .filter(a => a.status.state === 'active')
-          .map(a => ({
-            alertname: a.labels.alertname,
-            environment: a.labels.environment,
-            summary: a.annotations.summary,
-            message: a.annotations.message,
-          }))
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err)
-        logger.error(`Error fetching alerts for ${componentName}: ${msg}`)
-      }
+    // const alertManagerUrl = process.env.ALERTMANAGER_URL
+    try {
+      const url = `${config.apis.alertManager.url}?filter=application="${componentName}"`
+      const resp = await fetch(url)
+      const parsed = await resp.json()
+      const dataArray = Array.isArray(parsed) ? (parsed as Alert[]) : []
+      alerts = dataArray
+        .filter(a => a.status.state === 'active')
+        .map(a => ({
+          alertname: a.labels.alertname,
+          environment: a.labels.environment,
+          summary: a.annotations.summary,
+          message: a.annotations.message,
+        }))
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      logger.error(`Error fetching alerts for ${componentName}: ${msg}`)
     }
     displayComponent.alerts = alerts
     return res.render('pages/component', { component: displayComponent })

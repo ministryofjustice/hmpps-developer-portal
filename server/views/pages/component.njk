@@ -8,8 +8,8 @@
 
 {% macro githubTeams(teams) %}
   {% for team in teams %}
-   <a href="/github-teams/{{team}}" target="_blank" class="govuk-link--no-visited-state">{{team}}</a>{%if not loop.last%}, {% endif %} 
-  {% endfor %} 
+   <a href="/github-teams/{{team}}" target="_blank" class="govuk-link--no-visited-state">{{team}}</a>{%if not loop.last%}, {% endif %}
+  {% endfor %}
 {% endmacro %}
 
 {% set breadCrumbList = [
@@ -23,7 +23,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 data-test="detail-page-title">{{ component.name }}</h1>
-    {% if component.alerts and component.alerts.length %}
+    {% if component.alerts | length %}
       <div class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts" style="border-left: 5px solid #d4351c; background-color: #fef1f0;">
         <h2 class="govuk-heading-m">Active alerts</h2>
         <table class="govuk-table" style="table-layout: fixed; width: 100%;">
@@ -294,5 +294,5 @@
       renderer.start(components)
     })
   </script>
-  
+
 {% endblock %}
