@@ -80,12 +80,12 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       const parsed = await resp.json()
       const dataArray = Array.isArray(parsed) ? (parsed as Alert[]) : []
       alerts = dataArray
-        .filter(a => a.status.state === 'active')
-        .map(a => ({
-          alertname: a.labels.alertname,
-          environment: a.labels.environment,
-          summary: a.annotations.summary,
-          message: a.annotations.message,
+        .filter(alert => alert.status.state === 'active')
+        .map(alert => ({
+          alertname: alert.labels.alertname,
+          environment: alert.labels.environment,
+          summary: alert.annotations.summary,
+          message: alert.annotations.message,
         }))
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
