@@ -8,15 +8,17 @@ jQuery(async function () {
   let currentFilters = getFiltersFromURL()
   // get alerts from the api
   let alerts = await getAlerts()
+  // is the alert data being refreshed?
+  let isReset = false
   // use filters and alerts to update alert table and filters
-  updateAll(alerts, currentFilters)
+  updateAll(alerts, currentFilters, isReset)
 
   let previousDataJSON
 
   // Watch function updates Alerts on a timeout
   setInterval(async function () {
     alerts = await getAlerts()
-    previousDataJSON = updateAlerts(alerts, previousDataJSON)
+    previousDataJSON = updateAlerts(alerts, previousDataJSON, isReset)
   }, 5000)
   // on click of any 'Update' button to apply filters
   $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel').on('click', async e => {
@@ -46,12 +48,13 @@ jQuery(async function () {
     // update current filters
     currentFilters[`${dropDownType}`] = dropDownText
     // update alert table and filters
-    updateAll(alerts, currentFilters)
+    isReset = false
+    updateAll(alerts, currentFilters, isReset)
   })
 
   // on click of 'Reset Filters' button, clear filters, reset url params and update table and filters
   $('#resetFilters').on('click', async e => {
-    const params = new URLSearchParams()
+    e.preventDefault(e)
     history.replaceState(null, '', '/alerts')
     currentFilters = {
       application: '',
@@ -59,17 +62,83 @@ jQuery(async function () {
       namespace: '',
       severity: '',
     }
-    updateDropdowns(alerts, currentFilters)
-    updateAll(alerts, currentFilters)
+    isReset = true
+    dropdownHandler.clearPendingValues()
+    updateAll(alerts, currentFilters, isReset)
   })
 })
 
+const dropdownHandler = {
+  // values for unapplied dropdowns
+  pendingValues: {
+    application: '',
+    environment: '',
+    namespace: '',
+    severity: '',
+  },
+  clearPendingValues: function () {
+    this.pendingValues = {
+      application: '',
+      environment: '',
+      namespace: '',
+      severity: '',
+    }
+  },
+  updateDropdowns: function (filteredData, currentFilters, isReset) {
+    // Get dynamic options from filtered data
+    const applications = this.getOptions(filteredData, 'application')
+    const environments = this.getOptions(filteredData, 'environment')
+    const namespaces = this.getOptions(filteredData, 'namespace')
+    const severities = this.getOptions(filteredData, 'severity')
+
+    this.renderDropdown(applicationFilter, applications, currentFilters.application, 'application', isReset)
+    this.renderDropdown(environmentFilter, environments, currentFilters.environment, 'environment', isReset)
+    this.renderDropdown(namespaceFilter, namespaces, currentFilters.namespace, 'namespace', isReset)
+    this.renderDropdown(severityFilter, severities, currentFilters.severity, 'severity', isReset)
+  },
+  getOptions: function (data, key) {
+    const set = new Set(data.map(a => a.labels[`${key}`]))
+    return Array.from(set).sort()
+  },
+  removeOptions: function (selectElement) {
+    Array.from(selectElement.options).forEach(() => {
+      selectElement.remove(0)
+    })
+    const opt = document.createElement('option')
+    opt.value = ''
+    opt.textContent = ''
+    selectElement.appendChild(opt)
+  },
+  renderDropdown: function (select, options, selectedValue, key, isReset) {
+    if (isReset) {
+      this.pendingValues[key] = ''
+    }
+    selectedValue === select.value ? (this.pendingValues[key] = '') : (this.pendingValues[key] = select.value)
+    //  clear dropDown options to prevent duplicates
+    this.removeOptions(select)
+    // append options
+    options.forEach(option => {
+      const newOption = document.createElement('option')
+      newOption.value = option
+      newOption.textContent = option
+      selectedValue !== ''
+        ? (newOption.selected = option === selectedValue)
+        : (newOption.selected = option === this.pendingValues[key])
+      select.appendChild(newOption)
+    })
+    if (isReset) {
+      select.selectedIndex = 0
+    }
+  },
+}
+
 // gets alerts every 5 seconds
-function updateAlerts(currentData, previousDataJSON) {
+function updateAlerts(currentData, previousDataJSON, isReset) {
   //check against existing alerts
   if (currentData !== previousDataJSON) {
     const filters = getFiltersFromURL()
-    updateAll(currentData, filters)
+    isReset = false
+    updateAll(currentData, filters, isReset)
   }
   return currentData
 }
@@ -131,37 +200,6 @@ function populateAlertTable(alerts) {
   }
 }
 
-function getOptions(data, key) {
-  const set = new Set(data.map(a => a.labels[`${key}`]))
-  return Array.from(set).sort()
-}
-
-function removeOptions(selectElement) {
-  Array.from(selectElement.options).forEach(() => {
-    selectElement.remove(0)
-  })
-  const opt = document.createElement('option')
-  opt.value = ''
-  opt.textContent = ''
-  selectElement.appendChild(opt)
-}
-
-function renderDropdown(select, options, selectedValue, key) {
-  //  clear dropDown options to prevent duplicates
-  removeOptions(select)
-  // append options
-  options.forEach(option => {
-    const newOption = document.createElement('option')
-    newOption.value = option
-    newOption.textContent = option
-    if (option === selectedValue) {
-      newOption.selected = true
-    }
-    // newOption.selected = (option === selectedValue)
-    select.appendChild(newOption)
-  })
-}
-
 function populateAlertFilters(dropDownFilters) {
   dropDownFilters.forEach(filter => {
     filter.forEach(item => {
@@ -169,19 +207,6 @@ function populateAlertFilters(dropDownFilters) {
       select.add(new Option(item.text, item.text, false, item.selected))
     })
   })
-}
-
-function updateDropdowns(filteredData, currentFilters) {
-  // Get dynamic options from filtered data
-  const applications = getOptions(filteredData, 'application')
-  const environments = getOptions(filteredData, 'environment')
-  const namespaces = getOptions(filteredData, 'namespace')
-  const severities = getOptions(filteredData, 'severity')
-
-  renderDropdown(applicationFilter, applications, currentFilters.application, 'application')
-  renderDropdown(environmentFilter, environments, currentFilters.environment, 'environment')
-  renderDropdown(namespaceFilter, namespaces, currentFilters.namespace, 'namespace')
-  renderDropdown(severityFilter, severities, currentFilters.severity, 'severity')
 }
 
 // filter alters by selected filters
@@ -201,11 +226,11 @@ function isFiltersEmpty(filters) {
 }
 
 // update alert table, dropdowns and the url
-function updateAll(alerts, currentFilters) {
+function updateAll(alerts, currentFilters, isReset) {
   const filtered = applyFilters(alerts, currentFilters)
   populateAlertTable(filtered)
   // if no filters are selected populate dropdowns with all data, otherwise populate with an already filtered selection
   const dataForDropdowns = isFiltersEmpty(currentFilters) ? alerts : filtered
-  updateDropdowns(dataForDropdowns, currentFilters)
+  dropdownHandler.updateDropdowns(dataForDropdowns, currentFilters, isReset)
   updateURLParams(currentFilters)
 }
