@@ -3,6 +3,20 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { formatActiveAgencies, getComponentName, getEnvironmentName, utcTimestampToUtcDateTime } from '../utils/utils'
+import config from '../config'
+
+interface Alert {
+  status: { state: string }
+  labels: { alertname: string; environment: string }
+  annotations: { summary: string; message: string }
+}
+
+interface DisplayAlert {
+  alertname: string
+  environment: string
+  summary: string
+  message: string
+}
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -56,8 +70,28 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       alerts_slack_channel: alertsSlackChannel,
       github_enforce_admins_enabled: component.github_enforce_admins_enabled,
       standardsCompliance: component.standards_compliance,
+      alerts: [] as DisplayAlert[],
     }
 
+    let alerts: DisplayAlert[] = []
+    try {
+      const url = `${config.apis.alertManager.url}?filter=application="${componentName}"`
+      const resp = await fetch(url)
+      const parsed = await resp.json()
+      const dataArray = Array.isArray(parsed) ? (parsed as Alert[]) : []
+      alerts = dataArray
+        .filter(alert => alert.status.state === 'active')
+        .map(alert => ({
+          alertname: alert.labels.alertname,
+          environment: alert.labels.environment,
+          summary: alert.annotations.summary,
+          message: alert.annotations.message,
+        }))
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err)
+      logger.error(`Error fetching alerts for ${componentName}: ${msg}`)
+    }
+    displayComponent.alerts = alerts
     return res.render('pages/component', { component: displayComponent })
   })
 
