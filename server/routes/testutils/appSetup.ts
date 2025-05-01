@@ -13,6 +13,7 @@ import dependencyRoutes from '../dependencies'
 import productDependenciesRoutes from '../productDependencies'
 import componentRequestRoutes from '../componentRequests'
 import scheduledJobsRoutes from '../scheduledJobs'
+import alertsRoutes from '../alerts'
 
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -55,6 +56,7 @@ function appSetup(services: Services, production: boolean): Express {
   app.use('/product-dependencies', productDependenciesRoutes(services))
   app.use('/component-requests', componentRequestRoutes(services))
   app.use('/scheduled-jobs', scheduledJobsRoutes(services))
+  app.use('/alerts', alertsRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(production))
