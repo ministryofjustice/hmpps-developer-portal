@@ -113,7 +113,7 @@ const dropdownHandler = {
     if (isReset) {
       this.pendingValues[key] = ''
     }
-    selectedValue === select.value ? (this.pendingValues[key] = '') : (this.pendingValues[key] = select.value)
+    this.pendingValues[key] = selectedValue === select.value ? '' : select.value
     //  clear dropDown options to prevent duplicates
     this.removeOptions(select)
     // append options
@@ -121,9 +121,7 @@ const dropdownHandler = {
       const newOption = document.createElement('option')
       newOption.value = option
       newOption.textContent = option
-      selectedValue !== ''
-        ? (newOption.selected = option === selectedValue)
-        : (newOption.selected = option === this.pendingValues[key])
+      newOption.selected = selectedValue !== '' ? option === selectedValue : option === this.pendingValues[key]
       select.appendChild(newOption)
     })
     if (isReset) {
