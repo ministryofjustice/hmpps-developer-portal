@@ -28,7 +28,7 @@ export default function routes(_: Services): Router {
 }
 
 function getAlertsApi(): Promise<AlertListResponseDataItem[]> {
-  const alertManagerUrl = process.env.ALERTMANAGER_API_URL
+  const alertManagerUrl = process.env.ALERTMANAGER_URL
   const urlFilter = 'filter=businessUnit="hmpps"'
   return fetch(`${alertManagerUrl}alerts?${urlFilter}`)
     .then(res => res.json())
