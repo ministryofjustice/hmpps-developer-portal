@@ -2,6 +2,7 @@ context('Healthcheck', () => {
   context('All healthy', () => {
     beforeEach(() => {
       cy.task('stubServiceCataloguePing')
+      cy.task('stubAlertmanagerPing')
       cy.task('reset')
     })
 
@@ -22,6 +23,7 @@ context('Healthcheck', () => {
     it('Reports correctly when token verification down', () => {
       cy.task('reset')
       cy.task('stubServiceCataloguePing', 500)
+      cy.task('stubAlertmanagerPing', 500)
 
       cy.request({ url: '/health', method: 'GET', failOnStatusCode: false }).then(response => {
         expect(response.body.checks.strapi).to.contain({ status: 500, retries: 2 })
