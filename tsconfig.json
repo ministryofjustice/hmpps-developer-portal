@@ -1,6 +1,7 @@
 {
   "extends": "@tsconfig/node22/tsconfig.json",
   "compileOnSave": true,
+  "isolatedModules": true,
   "compilerOptions": {
     "target": "es2018",
     "module": "commonjs",

@@ -6,7 +6,7 @@ generic-service:
   replicaCount: 4
 
   image:
-    repository: quay.io/hmpps/hmpps-developer-portal
+    repository: ghcr.io/ministryofjustice/hmpps-developer-portal
     tag: app_version # override at deployment time
     port: 3000
 

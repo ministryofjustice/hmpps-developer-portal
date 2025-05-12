@@ -1,6 +1,7 @@
 import { defineConfig } from 'cypress'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
 import serviceCatalogue from './integration_tests/mockApis/serviceCatalogue'
+import alertManager from './integration_tests/mockApis/alertManager'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -20,6 +21,7 @@ export default defineConfig({
       on('task', {
         reset: resetStubs,
         ...serviceCatalogue,
+        ...alertManager,
       })
     },
     baseUrl: 'http://localhost:3007',
