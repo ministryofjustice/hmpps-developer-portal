@@ -75,7 +75,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     let alerts: DisplayAlert[] = []
     try {
-      // const url = `${config.apis.alertManager.url}?filter=application="${componentName}"`
+      // const url = `${config.apis.alertManager.url}/alerts/?filter=application="${componentName}"`
       // Temporarily disabling the fetch call to alert manager
       // const resp = await fetch(url)
       // const parsed = await resp.json()
