@@ -3,9 +3,8 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { getAlertName, getAlertType } from '../utils/utils'
-import { AlertListResponseDataItem } from '../@types'
 
-export default function routes(_: Services): Router {
+export default function routes({ alertsService }: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -20,19 +19,9 @@ export default function routes(_: Services): Router {
   })
 
   get('/all', async (req, res) => {
-    const alerts = await getAlertsApi()
+    const alerts = await alertsService.getAlerts()
     res.json(alerts)
   })
 
   return router
-}
-
-function getAlertsApi(): Promise<AlertListResponseDataItem[]> {
-  const alertManagerEndpoint = `${process.env.ALERTMANAGER_URL}/alerts`
-  const urlFilter = 'filter=businessUnit="hmpps"'
-  return fetch(`${alertManagerEndpoint}?${urlFilter}`)
-    .then(res => res.json())
-    .then(res => {
-      return res as AlertListResponseDataItem[]
-    })
 }
