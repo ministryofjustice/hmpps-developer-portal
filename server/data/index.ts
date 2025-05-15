@@ -11,14 +11,16 @@ initialiseAppInsights()
 buildAppInsightsClient(applicationInfo)
 
 import StrapiApiClient from './strapiApiClient'
+import AlertsApiClient from './alertsApiClient'
 
 type RestClientBuilder<T> = (token: string) => T
 
 export const dataAccess = () => ({
   applicationInfo,
   strapiApiClientBuilder: (() => new StrapiApiClient()) as RestClientBuilder<StrapiApiClient>,
+  alertsApiClient: (() => new AlertsApiClient()) as RestClientBuilder<AlertsApiClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
 
-export { StrapiApiClient, RestClientBuilder }
+export { StrapiApiClient, AlertsApiClient, RestClientBuilder }

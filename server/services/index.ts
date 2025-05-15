@@ -7,9 +7,10 @@ import logger from '../../logger'
 import ComponentNameService from './componentNameService'
 import DataFilterService from './dataFilterService'
 import TeamHealthService from './teamHealthService'
+import AlertsService from './alertsService'
 
 export const services = () => {
-  const { strapiApiClientBuilder, applicationInfo } = dataAccess()
+  const { strapiApiClientBuilder, applicationInfo, alertsApiClient } = dataAccess()
   const client = createRedisClient()
   client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
 
@@ -19,6 +20,7 @@ export const services = () => {
   const productDependenciesService = new ProductDependenciesService(strapiApiClientBuilder, redisService)
   const dataFilterService = new DataFilterService(strapiApiClientBuilder)
   const teamHealthService = new TeamHealthService(redisService, serviceCatalogueService)
+  const alertsService = new AlertsService(alertsApiClient)
 
   return {
     applicationInfo,
@@ -28,9 +30,10 @@ export const services = () => {
     dataFilterService,
     productDependenciesService,
     teamHealthService,
+    alertsService,
   }
 }
 
 export type Services = ReturnType<typeof services>
 
-export { ServiceCatalogueService, RedisService, ComponentNameService, DataFilterService }
+export { ServiceCatalogueService, RedisService, ComponentNameService, DataFilterService, AlertsService }
