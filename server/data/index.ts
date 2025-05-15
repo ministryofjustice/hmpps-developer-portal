@@ -18,7 +18,7 @@ type RestClientBuilder<T> = (token: string) => T
 export const dataAccess = () => ({
   applicationInfo,
   strapiApiClientBuilder: (() => new StrapiApiClient()) as RestClientBuilder<StrapiApiClient>,
-  alertsApiClient: new AlertsApiClient(),
+  alertsApiClient: (() => new AlertsApiClient()) as RestClientBuilder<AlertsApiClient>,
 })
 
 export type DataAccess = ReturnType<typeof dataAccess>
