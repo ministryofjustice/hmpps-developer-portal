@@ -50,8 +50,6 @@ export default class RestClient {
 
   async get<T>({ path = null, query = '', headers = {}, responseType = '', raw = false }: GetRequest): Promise<T> {
     logger.info(`Get calling ${this.name}: ${path} ${query}`)
-    console.log(`Get calling ${this.name}: ${path} ${query}`)
-
     try {
       const result = await superagent
         .get(`${this.apiUrl()}${path}`)

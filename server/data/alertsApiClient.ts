@@ -1,4 +1,4 @@
-import config, { ApiConfig } from '../config'
+import config from '../config'
 import { AlertListResponseDataItem } from '../@types'
 
 export default class AlertsApiClient {
