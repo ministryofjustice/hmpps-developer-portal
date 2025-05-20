@@ -46,38 +46,3 @@ describe('Alerts service', () => {
     })
   })
 })
-
-// const alert2 = {
-//   annotations: {
-//     dashboard_url: 'alert2.com',
-//     message: 'This is an alert',
-//     runbook_url: 'alert2.com',
-//   },
-//   endsAt: '2025-05-16T15:36:41.337Z',
-//   fingerprint: '000002a',
-//   receivers: [
-//     {
-//       name: 'none'
-//     },
-//   ],
-//   startsAt: '2025-05-12T17:05:41.337Z',
-//   status: {
-//     inhibitedBy: ['none'],
-//     silencedBy: ['none'],
-//     state: 'none'
-//   },
-//   updatedAt: '2025-05-16T15:32:41.344Z',
-//   generatorURL: 'string',
-//   labels: {
-//     alertname: 'Alert2',
-//     application: 'hmpps-service',
-//     businessUnit: 'hmpps',
-//     clusterName: 'hmpps-cluster',
-//     environment: 'prod',
-//     namespace: 'hmpps-namespace',
-//     productId: '002',
-//     prometheus: 'monitoring/prometheus',
-//     queue_name: 'none',
-//     severity: 'severe',
-//   }
-// }
