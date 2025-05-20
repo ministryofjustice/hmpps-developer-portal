@@ -9,7 +9,6 @@ describe('alertsApiClient', () => {
 
   beforeEach(() => {
     fakeAlertsApi = nock(`${config.apis.alertManager.url}`)
-    console.log('fakeAlertsApi: ', fakeAlertsApi)
     alertsApiClient = new AlertsApiClient()
   })
 

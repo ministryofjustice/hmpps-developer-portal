@@ -1,7 +1,6 @@
 import AlertsApiClient from '../data/alertsApiClient'
 import { AlertListResponseDataItem } from '../@types'
 import AlertsService from './alertsService'
-import { ListResponse } from '../data/strapiApiTypes'
 
 jest.mock('../data/alertsApiClient')
 
