@@ -21,6 +21,7 @@ export default function routes({ alertsService }: Services): Router {
   get('/all', async (req, res) => {
     try {
       const alerts = await alertsService.getAlerts()
+      console.log('alerts: ', alerts)
       res.json(alerts)
     } catch (error) {
       logger.warn(`Failed to get alerts`, error)
