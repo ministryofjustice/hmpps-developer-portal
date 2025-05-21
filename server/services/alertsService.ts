@@ -9,4 +9,9 @@ export default class AlertsService {
     const alertData = await alertsApiClient.getAlerts()
     return alertData
   }
+
+  async getAlertsForComponent(componentName: string): Promise<AlertListResponseDataItem[]> {
+    const alertsApiClient = this.alertsApiClientFactory('')
+    return alertsApiClient.getAlertsForComponent(componentName)
+  }
 }

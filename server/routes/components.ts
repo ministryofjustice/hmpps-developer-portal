@@ -3,13 +3,6 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { formatActiveAgencies, getComponentName, getEnvironmentName, utcTimestampToUtcDateTime } from '../utils/utils'
-import config from '../config'
-
-interface Alert {
-  status: { state: string }
-  labels: { alertname: string; environment: string }
-  annotations: { summary: string; message: string }
-}
 
 interface DisplayAlert {
   alertname: string
@@ -18,7 +11,7 @@ interface DisplayAlert {
   message: string
 }
 
-export default function routes({ serviceCatalogueService, redisService }: Services): Router {
+export default function routes({ serviceCatalogueService, redisService, alertsService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -75,17 +68,14 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     let alerts: DisplayAlert[] = []
     try {
-      const url = `${config.apis.alertManager.url}/alerts?filter=application="${componentName}"`
-      const resp = await fetch(url)
-      const parsed = await resp.json()
-      const dataArray = Array.isArray(parsed) ? (parsed as Alert[]) : []
-      alerts = dataArray
-        .filter(alert => alert.status.state === 'active')
+      const allAlerts = await alertsService.getAlertsForComponent(componentName)
+      alerts = allAlerts
+        .filter(alert => alert.status?.state === 'active')
         .map(alert => ({
-          alertname: alert.labels.alertname,
-          environment: alert.labels.environment,
-          summary: alert.annotations.summary,
-          message: alert.annotations.message,
+          alertname: alert.labels!.alertname!,
+          environment: alert.labels!.environment!,
+          summary: alert.annotations!.summary!,
+          message: alert.annotations!.message!,
         }))
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
