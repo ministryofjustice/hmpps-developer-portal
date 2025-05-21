@@ -1,5 +1,8 @@
 name: Security veracode policy scan
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
   schedule:
