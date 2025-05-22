@@ -72,10 +72,10 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       alerts = allAlerts
         .filter(alert => alert.status?.state === 'active')
         .map(alert => ({
-          alertname: alert.labels!.alertname!,
-          environment: alert.labels!.environment!,
-          summary: alert.annotations!.summary!,
-          message: alert.annotations!.message!,
+          alertname: alert.labels?.alertname ?? '',
+          environment: alert.labels?.environment ?? '',
+          summary: alert.annotations?.summary ?? '',
+          message: alert.annotations?.message ?? '',
         }))
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
