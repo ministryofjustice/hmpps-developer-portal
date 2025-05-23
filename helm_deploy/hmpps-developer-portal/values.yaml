@@ -29,8 +29,6 @@ generic-service:
     REDIS_TLS_ENABLED: 'true'
     APPLICATIONINSIGHTS_CONNECTION_STRING: 'InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY);IngestionEndpoint=https://northeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/'
     ALERTMANAGER_URL: "http://monitoring-alerts-service.cloud-platform-monitoring-alerts:8080/alertmanager"
-    SERVICE_CATALOGUE_TIMEOUT_RESPONSE: 5000
-    SERVICE_CATALOGUE_TIMEOUT_DEADLINE: 5000
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
