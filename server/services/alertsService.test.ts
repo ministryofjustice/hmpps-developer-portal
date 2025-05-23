@@ -44,5 +44,21 @@ describe('Alerts service', () => {
         expect(results).toEqual(testAlerts)
       })
     })
+
+    describe('getAlertsForComponent', () => {
+      it('should return only alerts matching the component name', async () => {
+        const compAlert = {
+          annotations: { message: 'Comp1 message' },
+          labels: { alertname: 'AlertComp1', application: 'comp1' },
+        } as AlertListResponseDataItem
+        const testAlertsComp = [compAlert]
+        alertsApiClient.getAlertsForComponent.mockResolvedValue(testAlertsComp)
+
+        const results = await alertsService.getAlertsForComponent('comp1')
+
+        expect(alertsApiClient.getAlertsForComponent).toHaveBeenCalledWith('comp1')
+        expect(results).toEqual(testAlertsComp)
+      })
+    })
   })
 })
