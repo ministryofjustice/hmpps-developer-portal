@@ -40,5 +40,17 @@ describe('alertsApiClient', () => {
         expect(output).toEqual(testAlerts)
       })
     })
+
+    describe('getAlertsForComponent', () => {
+      it('should return alerts for a specific component via API filter', async () => {
+        const testAlertsComp = [
+          { annotations: { message: 'Message1' }, labels: { alertname: 'A1', application: 'comp1' } },
+          { annotations: { message: 'Message2' }, labels: { alertname: 'A2', application: 'comp1' } },
+        ] as AlertListResponseDataItem[]
+        fakeAlertsApi.get('/alerts?filter=application="comp1"').reply(200, testAlertsComp)
+        const output = await alertsApiClient.getAlertsForComponent('comp1')
+        expect(output).toEqual(testAlertsComp)
+      })
+    })
   })
 })

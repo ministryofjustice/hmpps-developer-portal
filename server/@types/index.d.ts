@@ -54,6 +54,7 @@ export type RdsEntry = {
 interface AlertListResponseDataItem {
   annotations?: {
     dashboard_url?: string
+    summary?: string
     message?: string
     runbook_url?: string
   }
