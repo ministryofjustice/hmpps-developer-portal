@@ -17,4 +17,11 @@ export default class AlertsApiClient {
       query: `${new URLSearchParams(urlFilter).toString()}`,
     })
   }
+
+  async getAlertsForComponent(application: string): Promise<AlertListResponseDataItem[]> {
+    return this.restClient.get({
+      path: '/alerts',
+      query: `filter=application="${application}"`,
+    })
+  }
 }
