@@ -40,6 +40,7 @@ describe('alertsApiClient', () => {
         expect(output).toEqual(testAlerts)
       })
     })
+
     describe('getAlertsForComponent', () => {
       it('should return alerts for a specific component via API filter', async () => {
         const testAlertsComp = [
