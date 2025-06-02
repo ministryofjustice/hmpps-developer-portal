@@ -19,7 +19,7 @@ jQuery(async function () {
   setInterval(async function () {
     alerts = await getAlerts()
     previousDataJSON = updateAlerts(alerts, previousDataJSON, isReset)
-  }, 50000)
+  }, 5000)
   // on click of any 'Update' button to apply filters
   $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel').on('click', async e => {
     e.preventDefault(e)
