@@ -8,3 +8,11 @@
   margin-right: 10px;
 }
 
+// Silenced alerts are green and unsilenced are red
+[data-silenced="active"] {
+  background-color: govuk-colour('red') !important;
+}
+
+[data-silenced="suppressed"] {
+  background-color: #990 !important;
+}
