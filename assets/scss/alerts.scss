@@ -1,0 +1,35 @@
+// For dropdown name and selector
+.alert-selectors .label-and-button .govuk-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+// For update button alignment with selector
+.alert-selectors .label-and-button .govuk-button {
+  margin-top: 15px;
+}
+
+// For reset button
+.alert-selectors {
+  display: flex;
+  flex-direction: column;
+}
+
+.alert-selectors .alert-labels {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+// For update buttons when page is bigger than 640px
+@media(width > 640px) {
+  .alert-selectors .label-and-button {
+    display: flex;
+    align-items: center;
+  }
+}
+
+
+
+
+
+
