@@ -185,7 +185,7 @@ function populateAlertTable(alerts) {
         ? `<a href="${alert.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
         : 'N/A'
       $('#statusRows')
-        .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" id="tile-${alert.labels.application}-${alert.labels.environment}">
+        .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" data-silenced="${alert.status.state}" id="tile-${alert.labels.application}-${alert.labels.environment}">
           <td>${alert.labels.alertname}</td>
           <td>${alert.annotations.message} </td>
           <td>${dashboardLink}</td>
