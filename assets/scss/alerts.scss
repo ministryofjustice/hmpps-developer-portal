@@ -1,18 +1,75 @@
-
-.alert-selectors .govuk-form-group {
+// For dropdown name and selector
+.alert-selectors .label-and-button .govuk-form-group {
     display: flex;
-    align-items: baseline;
-  }
+    flex-direction: column;
+}
 
-.alert-selectors .govuk-form-group .govuk-label {
-  margin-right: 10px;
+// For update button alignment with selector
+.alert-selectors .label-and-button .govuk-button {
+  margin-top: 15px;
+}
+
+// For reset button
+.alert-selectors {
+  display: flex;
+  flex-direction: column;
+}
+
+.alert-selectors .alert-labels {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+// For update buttons when page is bigger than 640px
+@media(width > 640px) {
+  .alert-selectors .label-and-button {
+    display: flex;
+    align-items: center;
+  }
+}
+
+#statusTable {
+  width: 100%;
+
+  tr {
+    background-color: grey;
+
+    &.statusTileUp {
+      background-color: govuk-colour('green');
+    }
+
+    &.statusTileDown {
+      background-color: govuk-colour('red');
+    }
+
+    &.statusTileStale {
+      background-color: #999900;
+    }
+  }
+  
+  th, td {
+    color: white;
+    padding: govuk-spacing(1);
+
+    a:link, a:visited {
+      color: white;
+    }
+  }
 }
 
 // Silenced alerts are green and unsilenced are red
-[data-silenced="active"] {
-  background-color: govuk-colour('red') !important;
-}
+// [data-silenced="active"] {
+//   background-color: govuk-colour('red') !important;
+// }
 
-[data-silenced="suppressed"] {
-  background-color: #990 !important;
-}
+// [data-silenced="suppressed"] {
+//   background-color: #990 !important;
+// }
+
+// .silenced {
+//   background-color: purple !important;
+// }
+
+// .active {
+//   background-color: yellow !important;
+// }
