@@ -20,32 +20,23 @@
   flex-flow: row wrap;
 }
 
-// For update buttons when page is bigger than 640px
-@media(width > 640px) {
-  .alert-selectors .label-and-button {
-    display: flex;
-    align-items: center;
-  }
-}
 
-#statusTable {
+#alertsStatusTable {
   width: 100%;
 
   tr {
-    background-color: grey;
-
-    &.statusTileUp {
-      background-color: govuk-colour('green');
+    &.alert-headers {
+      background-color: grey;
     }
 
-    &.statusTileDown {
+    &.active-alert {
       background-color: govuk-colour('red');
     }
 
-    &.statusTileStale {
+    &.silenced-alert {
       background-color: #999900;
     }
-  }
+  } 
   
   th, td {
     color: white;
@@ -57,19 +48,10 @@
   }
 }
 
-// Silenced alerts are green and unsilenced are red
-// [data-silenced="active"] {
-//   background-color: govuk-colour('red') !important;
-// }
-
-// [data-silenced="suppressed"] {
-//   background-color: #990 !important;
-// }
-
-// .silenced {
-//   background-color: purple !important;
-// }
-
-// .active {
-//   background-color: yellow !important;
-// }
+// For update buttons when page is bigger than 640px
+@media(width > 640px) {
+  .alert-selectors .label-and-button {
+    display: flex;
+    align-items: center;
+  }
+}
