@@ -35,64 +35,72 @@
 {%- endfor -%}
 
 <div class="monitor-selectors govuk-button-group">
-{{- govukSelect({
-  id: "serviceArea",
-  name: "serviceArea",
-  label: {
-    text: "Service Area"
-  },
-  items: serviceAreas
-}) -}}
-{{ govukButton({
-  id: "updateServiceArea",
-  name: "updateServiceArea",
-  text: "Update",
-  element: "button",
-  attributes: { "data-associated-select-id": "serviceArea", "data-type-name": "service-areas"}
-}) }}
-{{ govukSelect({
-  id: "team",
-  name: "team",
-  label: {
-    text: "Team"
-  },
-  items: teams
-}) }}
-{{ govukButton({
-  id: "updateTeam",
-  name: "updateTeam",
-  text: "Update",
-  element: "button",
-  attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
-}) }}
-{{ govukSelect({
-  id: "product",
-  name: "product",
-  label: {
-    text: "Product"
-  },
-  items: products
-}) }}
-{{ govukButton({
-  id: "updateProduct",
-  name: "updateProduct",
-  text: "Update",
-  element: "button",
-   attributes: { "data-associated-select-id": "product", "data-type-name": "products"}
-}) }}
-{{ govukSelect({
-  id: "customComponentView",
-  name: "customComponentView",
-  label: {
-    text: "Custom View"
-  },
-  items: customComponents
-}) }}
-{{ govukButton({
-  id: "updateCustomComponentView",
-  name: "updateCustomComponentView",
-  text: "Update",
-  element: "button",
-   attributes: { "data-associated-select-id": "customComponentView", "data-type-name": "custom-components"}
-}) }}
+  <div class="monitor-dropdown-and-button">
+    {{- govukSelect({
+      id: "serviceArea",
+      name: "serviceArea",
+      label: {
+        text: "Service Area"
+      },
+      items: serviceAreas
+    }) -}}
+    {{ govukButton({
+      id: "updateServiceArea",
+      name: "updateServiceArea",
+      text: "Update",
+      element: "button",
+      attributes: { "data-associated-select-id": "serviceArea", "data-type-name": "service-areas"}
+    }) }}
+  </div>
+  <div class="monitor-dropdown-and-button">
+    {{ govukSelect({
+    id: "team",
+    name: "team",
+    label: {
+      text: "Team"
+    },
+    items: teams
+  }) }}
+  {{ govukButton({
+    id: "updateTeam",
+    name: "updateTeam",
+    text: "Update",
+    element: "button",
+    attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
+  }) }}
+  </div>
+  <div class="monitor-dropdown-and-button">
+    {{ govukSelect({
+      id: "product",
+      name: "product",
+      label: {
+        text: "Product"
+      },
+      items: products
+    }) }}
+    {{ govukButton({
+      id: "updateProduct",
+      name: "updateProduct",
+      text: "Update",
+      element: "button",
+       attributes: { "data-associated-select-id": "product", "data-type-name": "products"}
+    }) }}
+  </div>
+  <div class="monitor-dropdown-and-button">
+    {{ govukSelect({
+      id: "customComponentView",
+      name: "customComponentView",
+      label: {
+        text: "Custom View"
+      },
+      items: customComponents
+    }) }}
+    {{ govukButton({
+      id: "updateCustomComponentView",
+      name: "updateCustomComponentView",
+      text: "Update",
+      element: "button",
+       attributes: { "data-associated-select-id": "customComponentView", "data-type-name": "custom-components"}
+    }) }}
+  </div>
 </div>

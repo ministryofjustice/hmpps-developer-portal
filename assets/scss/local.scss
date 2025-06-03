@@ -56,16 +56,20 @@
 }
 
 .monitor-selectors {
-  align-items: flex-end;
-
   &.govuk-button-group .govuk-button {
     margin-bottom: 2px;
-    margin-left: govuk-spacing(1);
   }
 
-  & .govuk-form-group {
+  &.govuk-form-group {
     margin-bottom: 0;
     width: 15%;
+  }
+
+  &.govuk-button-group .monitor-dropdown-and-button {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    margin-top: govuk-spacing(3);
   }
 }
 
