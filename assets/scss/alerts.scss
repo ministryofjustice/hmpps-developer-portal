@@ -25,16 +25,14 @@
   width: 100%;
 
   tr {
-    &.alert-headers {
-      background-color: grey;
-    }
+    background-color: grey;
 
-    &.active-alert {
+    &[data-silenced="active"] {
       background-color: govuk-colour('red');
     }
 
-    &.silenced-alert {
-      background-color: #999900;
+    &[data-silenced="suppressed"] {
+      background-color: #990;
     }
   } 
   
