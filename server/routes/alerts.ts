@@ -3,11 +3,13 @@ import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
 import {
-  getAlertName,
   getAlertType,
+  getAlertName,
   getConsolidatedEnvironments,
   createEnvKeys,
   mapAlertEnvironments,
+  mapToCanonicalEnv,
+  isValidDropDown,
 } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, alertsService }: Services): Router {
@@ -20,10 +22,27 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
     const alertType = getAlertType(req)
     const alertName = getAlertName(req)
     const results = await serviceCatalogueService.getEnvironments()
-    const environments = await getConsolidatedEnvironments(results)
-    envMap = await createEnvKeys(environments)
+    const canonicalEnvs = await getConsolidatedEnvironments(results)
+    envMap = await createEnvKeys(canonicalEnvs)
+
+    // Get alerts to determine which environments actually have data
+    const alertsData = await alertsService.getAlerts()
+
+    // Extract unique canonical environment values from actual alerts
+    const alertEnvironments = alertsData
+      .map(alert => alert.labels?.environment || 'none')
+      .map(mapToCanonicalEnv) // Map to canonical form
+      .filter((env, index, self) => self.indexOf(env) === index) // Deduplicate
+      .sort()
+
+    // Format environments for dropdown with blank default option
+    const environments = [
+      { text: '', value: '', selected: true },
+      ...alertEnvironments.map(env => ({ text: env, value: env, selected: false })),
+    ]
+
     logger.info(`Request for /alerts/${alertType}/${alertName}`)
-    return res.render('pages/alerts')
+    return res.render('pages/alerts', { environments })
   })
 
   get('/all', async (req, res) => {

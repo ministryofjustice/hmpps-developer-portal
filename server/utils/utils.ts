@@ -118,11 +118,32 @@ export const getEnvironmentName = (req: Request): string => {
   return environmentName.replace(/[^-a-z0-9_]/g, '')
 }
 
-// returns shortlist set of environments in use
-export const getConsolidatedEnvironments = async (environments: Environments) => {
+// Environment types that match our existing type definition
+export type CanonicalEnv = 'dev' | 'test' | 'stage' | 'uat' | 'preprod' | 'prod' | 'none'
+
+// Map environment name to canonical form
+export function mapToCanonicalEnv(envName: string): CanonicalEnv {
+  if (!envName) return 'none'
+
+  // Normalize: trim whitespace, lowercase, remove trailing digits
+  const normalized = envName.trim().toLowerCase().replace(/\d+$/, '')
+
+  // Quick matching for common variants
+  if (normalized.startsWith('dev')) return 'dev'
+  if (normalized.startsWith('test')) return 'test'
+  if (normalized.startsWith('stag')) return 'stage'
+  if (normalized === 'uat' || normalized.includes('user')) return 'uat'
+  if (normalized.startsWith('pre')) return 'preprod'
+  if (normalized.startsWith('prod') || normalized === 'live' || normalized === 'prd') return 'prod'
+
+  return 'none'
+}
+
+// returns shortlist set of canonical environments in use
+export const getConsolidatedEnvironments = async (environments: Environments): Promise<CanonicalEnv[]> => {
   const list = environments.map((environment: { attributes: { name: string } }) => environment.attributes.name)
-  const environmentsReferences = [...new Set(list)]
-  return environmentsReferences
+  const mapped = list.map(mapToCanonicalEnv)
+  return Array.from(new Set(mapped)).sort()
 }
 
 // build a ref object to assign environment naming variation to a shorthand
@@ -175,13 +196,10 @@ export const mapAlertEnvironments = (
   const updatedAlerts = Array.isArray(alerts) ? [...alerts] : []
   return updatedAlerts.map(alert => {
     const updatedAlert = { ...alert }
+    // Map alert environment to canonical form
     if (updatedAlert.labels && alert.labels.environment) {
-      for (const key of Object.keys(envMap)) {
-        if (envMap[key].includes(updatedAlert.labels.environment)) {
-          updatedAlert.labels.environment = key
-          break
-        }
-      }
+      // Use the mapToCanonicalEnv function for consistent environment mapping
+      updatedAlert.labels.environment = mapToCanonicalEnv(updatedAlert.labels.environment)
     }
     return updatedAlert
   })

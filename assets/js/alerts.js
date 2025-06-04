@@ -88,12 +88,14 @@ const dropdownHandler = {
   updateDropdowns: function (filteredData, currentFilters, isReset) {
     // Get dynamic options from filtered data
     const applications = this.getOptions(filteredData, 'application')
-    const environments = this.getOptions(filteredData, 'environment')
+    // Don't rebuild the environments dropdown - preserve server-side canonical environments
+    // const environments = this.getOptions(filteredData, 'environment')
     const namespaces = this.getOptions(filteredData, 'namespace')
     const severities = this.getOptions(filteredData, 'severity')
 
     this.renderDropdown(applicationFilter, applications, currentFilters.application, 'application', isReset)
-    this.renderDropdown(environmentFilter, environments, currentFilters.environment, 'environment', isReset)
+    // Skip environment dropdown rebuilding - only update selected value
+    this.updateSelectedValue(environmentFilter, currentFilters.environment, 'environment', isReset)
     this.renderDropdown(namespaceFilter, namespaces, currentFilters.namespace, 'namespace', isReset)
     this.renderDropdown(severityFilter, severities, currentFilters.severity, 'severity', isReset)
   },
@@ -111,9 +113,7 @@ const dropdownHandler = {
     selectElement.appendChild(opt)
   },
   renderDropdown: function (select, options, selectedValue, key, isReset) {
-    if (isReset) {
-      this.pendingValues[key] = ''
-    }
+    // if there is a value pending apply that on click
     this.pendingValues[key] = selectedValue === select.value ? '' : select.value
     //  clear dropDown options to prevent duplicates
     this.removeOptions(select)
@@ -127,6 +127,32 @@ const dropdownHandler = {
     })
     if (isReset) {
       select.selectedIndex = 0
+    }
+  },
+  updateSelectedValue: function (select, selectedValue, key, isReset) {
+    // Only update selection without rebuilding the dropdown
+    if (isReset) {
+      select.selectedIndex = 0
+      this.pendingValues[key] = ''
+      return
+    }
+
+    if (selectedValue) {
+      // Find and select the option that matches the selectedValue
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === selectedValue) {
+          select.selectedIndex = i
+          break
+        }
+      }
+    } else if (this.pendingValues[key]) {
+      // Or select based on pending value
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === this.pendingValues[key]) {
+          select.selectedIndex = i
+          break
+        }
+      }
     }
   },
 }
