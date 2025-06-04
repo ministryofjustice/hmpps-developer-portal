@@ -169,7 +169,7 @@ function getFiltersFromURL() {
   }
 }
 
-//  append tabledata to the #statusTable
+//  append tabledata to the #alertsStatusTable
 function populateAlertTable(alerts) {
   try {
     $('#statusRows').empty()
