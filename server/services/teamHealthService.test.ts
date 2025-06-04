@@ -27,6 +27,91 @@ describe('teamHealthService', () => {
           attributes: {
             name: 'some-service',
             github_repo: 'some-service-repo',
+            part_of_monorepo: false,
+            latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-03T01:02:03.000Z' },
+            environments: [
+              { name: 'dev', type: 'dev' },
+              { name: 'preprod', type: 'preprod' },
+              { name: 'prod', type: 'prod' },
+            ],
+          },
+        },
+      ])
+
+      const driftData = await teamHealthService.getDriftData(['some-service'], now)
+      expect(driftData).toStrictEqual([
+        {
+          baseSha: '1234567',
+          drift: {
+            days: 19,
+            description: '19 days',
+            hours: 456,
+            millis: 1641600000,
+            present: true,
+            sortValue: 19,
+          },
+          environments: [
+            {
+              buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'dev',
+              sha: 'abc1234',
+              type: 'dev',
+              version: '2023-02-02.123.abc1234',
+            },
+            {
+              buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'preprod',
+              sha: 'abc1234',
+              type: 'preprod',
+              version: '2023-02-02.123.abc1234',
+            },
+            {
+              buildDate: dayjs('2023-01-15', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'prod',
+              sha: 'abc1230',
+              type: 'prod',
+              version: '2023-01-15.120.abc1230',
+            },
+          ],
+          latestCommit: { date: '2023-02-03', sha: '1234567' },
+          name: 'some-service',
+          prodEnvSha: 'abc1230',
+          repo: 'some-service-repo',
+          staleness: {
+            days: 8,
+            description: '8 days',
+            hours: 192,
+            millis: 691200000,
+            present: true,
+            sortValue: 8,
+          },
+        },
+      ])
+    })
+
+    it('missing latest commit', async () => {
+      const now = new Date('2023-02-11')
+
+      redisService.readLatest.mockResolvedValue({
+        'some-service:dev': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'some-service:preprod': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'some-service:prod': { v: '2023-01-15.120.abc1230', dateAdded: '2023-02-11' },
+      })
+
+      serviceCatalogueService.getComponents.mockResolvedValue([
+        {
+          attributes: {
+            name: 'some-service',
+            github_repo: 'some-service-repo',
             environments: [
               { name: 'dev', type: 'dev' },
               { name: 'preprod', type: 'preprod' },
@@ -96,6 +181,91 @@ describe('teamHealthService', () => {
       ])
     })
 
+    it('monorepo', async () => {
+      const now = new Date('2023-02-11')
+
+      redisService.readLatest.mockResolvedValue({
+        'some-service:dev': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'some-service:preprod': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'some-service:prod': { v: '2023-01-15.120.abc1230', dateAdded: '2023-02-11' },
+      })
+
+      serviceCatalogueService.getComponents.mockResolvedValue([
+        {
+          attributes: {
+            name: 'some-service',
+            github_repo: 'some-service-repo',
+            part_of_monorepo: true,
+            latest_commit: { id: 1, sha: '123456789', date_time: '2023-05-02T01:02:03.000Z' },
+            environments: [
+              { name: 'dev', type: 'dev' },
+              { name: 'preprod', type: 'preprod' },
+              { name: 'prod', type: 'prod' },
+            ],
+          },
+        },
+      ])
+
+      const driftData = await teamHealthService.getDriftData(['some-service'], now)
+      expect(driftData).toStrictEqual([
+        {
+          baseSha: 'abc1234',
+          drift: {
+            days: 18,
+            description: '18 days',
+            hours: 432,
+            millis: 1555200000,
+            present: true,
+            sortValue: 18,
+          },
+          environments: [
+            {
+              buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'dev',
+              sha: 'abc1234',
+              type: 'dev',
+              version: '2023-02-02.123.abc1234',
+            },
+            {
+              buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'preprod',
+              sha: 'abc1234',
+              type: 'preprod',
+              version: '2023-02-02.123.abc1234',
+            },
+            {
+              buildDate: dayjs('2023-01-15', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'prod',
+              sha: 'abc1230',
+              type: 'prod',
+              version: '2023-01-15.120.abc1230',
+            },
+          ],
+          latestCommit: { date: '2023-05-02', sha: '1234567' },
+          name: 'some-service',
+          prodEnvSha: 'abc1230',
+          repo: 'some-service-repo',
+          staleness: {
+            days: 9,
+            description: '9 days',
+            hours: 216,
+            millis: 777600000,
+            present: true,
+            sortValue: 9,
+          },
+        },
+      ])
+    })
+
     it('multiple dev envs', async () => {
       const now = new Date('2023-02-11')
 
@@ -125,8 +295,8 @@ describe('teamHealthService', () => {
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
       expect(driftData).toStrictEqual([
         {
-          baseSha: '1234567',
-          drift: { days: 18, description: '18 days', hours: 432, millis: 1555200000, present: true, sortValue: 18 },
+          baseSha: 'abc1235',
+          drift: { days: 24, description: '24 days', hours: 576, millis: 2073600000, present: true, sortValue: 24 },
           environments: [
             {
               buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
@@ -148,6 +318,64 @@ describe('teamHealthService', () => {
               type: 'dev',
               version: '2023-02-08.123.abc1235',
             },
+            {
+              buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'preprod',
+              sha: 'abc1234',
+              type: 'preprod',
+              version: '2023-02-02.123.abc1234',
+            },
+            {
+              buildDate: dayjs('2023-01-15', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'prod',
+              sha: 'abc1230',
+              type: 'prod',
+              version: '2023-01-15.120.abc1230',
+            },
+          ],
+          latestCommit: { date: '2023-02-02', sha: '1234567' },
+          name: 'some-service',
+          prodEnvSha: 'abc1230',
+          repo: 'some-service-repo',
+          staleness: { days: 3, description: '3 days', hours: 72, millis: 259200000, present: true, sortValue: 3 },
+        },
+      ])
+    })
+
+    it('no dev envs', async () => {
+      const now = new Date('2023-02-11')
+
+      redisService.readLatest.mockResolvedValue({
+        'some-service:preprod': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'some-service:prod': { v: '2023-01-15.120.abc1230', dateAdded: '2023-02-11' },
+      })
+
+      serviceCatalogueService.getComponents.mockResolvedValue([
+        {
+          attributes: {
+            name: 'some-service',
+            github_repo: 'some-service-repo',
+            latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-02T01:02:03.000Z' },
+            environments: [
+              { name: 'preprod', type: 'preprod' },
+              { name: 'prod', type: 'prod' },
+            ],
+          },
+        },
+      ])
+
+      const driftData = await teamHealthService.getDriftData(['some-service'], now)
+      expect(driftData).toStrictEqual([
+        {
+          baseSha: '1234567',
+          drift: { days: 18, description: '18 days', hours: 432, millis: 1555200000, present: true, sortValue: 18 },
+          environments: [
             {
               buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
               componentName: 'some-service',
