@@ -4,7 +4,6 @@ import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
-import e from 'connect-flash'
 import { AlertListResponseDataItem, RdsEntry } from '../@types'
 import type { EnvironmentForMapping } from '../data/strapiApiTypes'
 
