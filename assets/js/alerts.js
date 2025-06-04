@@ -10,6 +10,7 @@ jQuery(async function () {
   let alerts = await getAlerts()
   // is the alert data being refreshed?
   let isReset = false
+
   // use filters and alerts to update alert table and filters
   updateAll(alerts, currentFilters, isReset)
 
@@ -148,6 +149,14 @@ async function getAlerts() {
   }
   return await response.json()
 }
+
+// async function getEnvironments() {
+//   const response = await fetch(`/alerts/environments`)
+//   if (!response.ok) {
+//     throw new Error('There was a problem fetching the alert data')
+//   }
+//   return await response.json()
+// }
 
 // add current filters to Url params
 function updateURLParams(filters) {

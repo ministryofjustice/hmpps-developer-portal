@@ -5480,6 +5480,35 @@ export interface components {
       type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
       url?: string
     }
+    EnvironmentPropertiesForMapping: {
+      id?: number
+      attributes?: {
+        name?: string
+        type?: string
+        namespace?: string
+        info_path?: string
+        health_path?: string
+        url?: string
+        cluster?: string
+        monitor?: boolean
+        active_agencies?: unknown
+        swagger_docs?: string
+        ip_allow_list_enabled?: boolean
+        ip_allow_list?: unknown
+        include_in_subject_access_requests?: boolean
+        modsecurity_enabled?: boolean
+        modsecurity_audit_enabled?: boolean
+        modsecurity_snippet?: string
+        build_image_tag?: string
+        alert_severity_label?: string
+        alerts_slack_channel?: string
+        createdAt?: string
+        updatedAt?: string
+        publishedAt?: string
+        manually_managed?: boolean
+        component?: unknown
+      }
+    }
     ScheduledJob: {
       /** Format: date-time */
       createdAt?: string

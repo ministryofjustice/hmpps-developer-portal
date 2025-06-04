@@ -4,13 +4,16 @@ import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
-import { RdsEntry } from '../@types'
+import e from 'connect-flash'
+import { AlertListResponseDataItem, RdsEntry } from '../@types'
+import type { EnvironmentForMapping } from '../data/strapiApiTypes'
 
 dayjs.extend(relativeTime.default)
 
 type HasName = { attributes?: { name: string } }
 type HasRepoName = { attributes?: { github_repo: string } }
 type HasTeamName = { attributes?: { team_name: string } }
+type Environments = EnvironmentForMapping[]
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -114,6 +117,75 @@ export const getEnvironmentName = (req: Request): string => {
   const { environmentName } = req.params
 
   return environmentName.replace(/[^-a-z0-9_]/g, '')
+}
+
+// returns shortlist set of environments in use
+export const getConsolidatedEnvironments = async (environments: Environments) => {
+  const list = environments.map((environment: { attributes: { name: string } }) => environment.attributes.name)
+  const environmentsReferences = [...new Set(list)]
+  return environmentsReferences
+}
+
+// build a ref object to assign environment naming variation to a shorthand
+export const createEnvKeys = async (arr: string[], shorthandLength: number = 3): Promise<Record<string, string[]>> => {
+  const map: Record<string, string[]> = {}
+  // build map, grouping environments using the first 3 letters of the string
+  for (const item of arr) {
+    const shorthand = item.slice(0, shorthandLength).toLowerCase()
+    if (!map[shorthand]) {
+      map[shorthand] = []
+    }
+    map[shorthand].push(item)
+  }
+
+  // replace keys from the 3 letter shorthand to the shortest string in each group
+  const envMap: Record<string, string[]> = {}
+  for (const shorthand of Object.keys(map)) {
+    if (Object.prototype.hasOwnProperty.call(map, shorthand)) {
+      const group = map[shorthand]
+      const key = group.reduce((a, b) => (a.length <= b.length ? a : b))
+      envMap[key] = Array.from(new Set(group)).sort()
+    }
+  }
+  return envMap
+}
+
+// map the environment and alert object together to assign type rather than environment
+// export const mapAlertsToEnvironments = async (alerts: AlertListResponseDataItem[], environments: Environments) => {
+//   return alerts.map(alert => {
+//     const match = environments.find(env =>
+//       env.attributes.namespace === alert.labels.namespace && env.attributes.component.data.attributes.name === alert.labels.application
+//     )
+
+//     if (match) {
+//       return {
+//         ...alert,
+//         type: match.attributes.type,
+//       };
+//     }
+
+//     return alert
+//   })
+// }
+
+// map environment keys to the alert environment
+export const mapAlertEnvironments = (
+  alerts: AlertListResponseDataItem[],
+  envMap: { [x: string]: string | string[] },
+) => {
+  const updatedAlerts = Array.isArray(alerts) ? [...alerts] : []
+  return updatedAlerts.map(alert => {
+    const updatedAlert = { ...alert }
+    if (updatedAlert.labels && alert.labels.environment) {
+      for (const key of Object.keys(envMap)) {
+        if (envMap[key].includes(updatedAlert.labels.environment)) {
+          updatedAlert.labels.environment = key
+          break
+        }
+      }
+    }
+    return updatedAlert
+  })
 }
 
 export const getDependencyName = (req: Request): string => {

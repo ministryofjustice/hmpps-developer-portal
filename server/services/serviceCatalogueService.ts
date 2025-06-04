@@ -301,4 +301,12 @@ export default class ServiceCatalogueService {
 
     return response
   }
+
+  async getEnvironments() {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const environmentData = await strapiApiClient.getEnvironments()
+    const environmentList = environmentData.data
+
+    return environmentList
+  }
 }
