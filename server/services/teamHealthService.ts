@@ -307,8 +307,9 @@ export default class TeamHealthService {
     const commitDate = component.latest_commit?.date_time && startOfDay(new Date(component.latest_commit?.date_time))
     const commitSha = component.latest_commit?.sha?.slice(0, 7)
 
-    const baseSha = commitSha
-    const baseDate = component.part_of_monorepo ? latestDevEnvironment?.buildDate || commitDate : commitDate
+    const useLatestDevOverLastCommit = component.part_of_monorepo || latestDevEnvironment?.buildDate >= commitDate
+    const baseDate = useLatestDevOverLastCommit ? latestDevEnvironment?.buildDate || commitDate : commitDate
+    const baseSha = useLatestDevOverLastCommit ? latestDevEnvironment?.sha || commitSha : commitSha
 
     return {
       name: component.name,
