@@ -29,7 +29,6 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
   get('/all', async (req, res) => {
     try {
       const alerts = await alertsService.getAlerts()
-      console.log(envMap)
       const revisedAlerts = await mapAlertEnvironments(alerts, envMap)
       res.json(revisedAlerts)
     } catch (error) {
