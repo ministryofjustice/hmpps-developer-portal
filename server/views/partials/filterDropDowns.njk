@@ -35,7 +35,7 @@
 {%- endfor -%}
 
 <div class="monitor-selectors govuk-button-group">
-  <div class="monitor-dropdown-and-button">
+  <div>
     {{- govukSelect({
       id: "serviceArea",
       name: "serviceArea",
@@ -52,24 +52,24 @@
       attributes: { "data-associated-select-id": "serviceArea", "data-type-name": "service-areas"}
     }) }}
   </div>
-  <div class="monitor-dropdown-and-button">
+  <div>
     {{ govukSelect({
-    id: "team",
-    name: "team",
-    label: {
-      text: "Team"
-    },
-    items: teams
-  }) }}
-  {{ govukButton({
-    id: "updateTeam",
-    name: "updateTeam",
-    text: "Update",
-    element: "button",
-    attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
-  }) }}
+      id: "team",
+      name: "team",
+      label: {
+        text: "Team"
+      },
+      items: teams
+    }) }}
+    {{ govukButton({
+      id: "updateTeam",
+      name: "updateTeam",
+      text: "Update",
+      element: "button",
+      attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
+    }) }}
   </div>
-  <div class="monitor-dropdown-and-button">
+  <div>
     {{ govukSelect({
       id: "product",
       name: "product",
@@ -83,10 +83,10 @@
       name: "updateProduct",
       text: "Update",
       element: "button",
-       attributes: { "data-associated-select-id": "product", "data-type-name": "products"}
+      attributes: { "data-associated-select-id": "product", "data-type-name": "products"}
     }) }}
   </div>
-  <div class="monitor-dropdown-and-button">
+  <div>
     {{ govukSelect({
       id: "customComponentView",
       name: "customComponentView",
@@ -100,7 +100,7 @@
       name: "updateCustomComponentView",
       text: "Update",
       element: "button",
-       attributes: { "data-associated-select-id": "customComponentView", "data-type-name": "custom-components"}
+      attributes: { "data-associated-select-id": "customComponentView", "data-type-name": "custom-components"}
     }) }}
   </div>
 </div>
