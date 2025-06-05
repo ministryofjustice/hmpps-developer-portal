@@ -5,7 +5,6 @@ import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
 import { AlertListResponseDataItem, RdsEntry } from '../@types'
-import type { EnvironmentForMapping } from '../data/strapiApiTypes'
 
 dayjs.extend(relativeTime.default)
 
