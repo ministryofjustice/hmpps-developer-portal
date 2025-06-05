@@ -23,6 +23,8 @@ import {
   TeamListResponseDataItem,
   ScheduledJobListResponseDataItem,
   ScheduledJobResponse,
+  TrivyScanListResponseDataItem,
+  TrivyScanResponse,
 } from './strapiApiTypes'
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea } from './converters/modelTypes'
@@ -290,6 +292,19 @@ export default class StrapiApiClient {
   async getScheduledJob({ name }: { name: string }): Promise<ScheduledJobResponse> {
     return this.restClient.get({
       path: '/v1/scheduled-jobs',
+      query: `filters[name][$eq]=${name}`,
+    })
+  }
+
+  async getTrivyScans(): Promise<ListResponse<TrivyScanListResponseDataItem>> {
+    return this.restClient.get({
+      path: '/v1/trivy-scans',
+    })
+  }
+
+  async getTrivyScan({ name }: { name: string }): Promise<TrivyScanResponse> {
+    return this.restClient.get({
+      path: '/v1/trivy-scans',
       query: `filters[name][$eq]=${name}`,
     })
   }
