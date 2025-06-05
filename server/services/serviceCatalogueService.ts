@@ -22,6 +22,7 @@ import {
   ServiceArea as StrapiServiceArea,
   ScheduledJob,
   ScheduledJobListResponseDataItem,
+  EnvironmentListResponseDataItem,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
@@ -302,7 +303,7 @@ export default class ServiceCatalogueService {
     return response
   }
 
-  async getEnvironments() {
+  async getEnvironments(): Promise<EnvironmentListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const environmentData = await strapiApiClient.getEnvironments()
     const environmentList = environmentData.data

@@ -139,60 +139,8 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
   return 'none'
 }
 
-// returns shortlist set of canonical environments in use
-export const getConsolidatedEnvironments = async (environments: Environments): Promise<CanonicalEnv[]> => {
-  const list = environments.map((environment: { attributes: { name: string } }) => environment.attributes.name)
-  const mapped = list.map(mapToCanonicalEnv)
-  return Array.from(new Set(mapped)).sort()
-}
-
-// build a ref object to assign environment naming variation to a shorthand
-export const createEnvKeys = async (arr: string[], shorthandLength: number = 3): Promise<Record<string, string[]>> => {
-  const map: Record<string, string[]> = {}
-  // build map, grouping environments using the first 3 letters of the string
-  for (const item of arr) {
-    const shorthand = item.slice(0, shorthandLength).toLowerCase()
-    if (!map[shorthand]) {
-      map[shorthand] = []
-    }
-    map[shorthand].push(item)
-  }
-
-  // replace keys from the 3 letter shorthand to the shortest string in each group
-  const envMap: Record<string, string[]> = {}
-  for (const shorthand of Object.keys(map)) {
-    if (Object.prototype.hasOwnProperty.call(map, shorthand)) {
-      const group = map[shorthand]
-      const key = group.reduce((a, b) => (a.length <= b.length ? a : b))
-      envMap[key] = Array.from(new Set(group)).sort()
-    }
-  }
-  return envMap
-}
-
-// map the environment and alert object together to assign type rather than environment
-// export const mapAlertsToEnvironments = async (alerts: AlertListResponseDataItem[], environments: Environments) => {
-//   return alerts.map(alert => {
-//     const match = environments.find(env =>
-//       env.attributes.namespace === alert.labels.namespace && env.attributes.component.data.attributes.name === alert.labels.application
-//     )
-
-//     if (match) {
-//       return {
-//         ...alert,
-//         type: match.attributes.type,
-//       };
-//     }
-
-//     return alert
-//   })
-// }
-
 // map environment keys to the alert environment
-export const mapAlertEnvironments = (
-  alerts: AlertListResponseDataItem[],
-  envMap: { [x: string]: string | string[] },
-) => {
+export const mapAlertEnvironments = (alerts: AlertListResponseDataItem[]) => {
   const updatedAlerts = Array.isArray(alerts) ? [...alerts] : []
   return updatedAlerts.map(alert => {
     const updatedAlert = { ...alert }

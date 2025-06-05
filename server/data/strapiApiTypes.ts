@@ -46,6 +46,7 @@ export type CustomComponentListResponseDataItem = components['schemas']['CustomC
 
 export type Environment = components['schemas']['PropertiesEnvironmentComponent']
 export type EnvironmentForMapping = components['schemas']['EnvironmentPropertiesForMapping']
+export type EnvironmentListResponseDataItem = components['schemas']['EnvironmentListResponseDataItem']
 
 export type Namespace = components['schemas']['Namespace']
 export type NamespaceResponse = components['schemas']['NamespaceResponse']

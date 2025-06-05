@@ -19,6 +19,8 @@ import {
   groupBy,
   differenceInDate,
   median,
+  mapToCanonicalEnv,
+  mapAlertEnvironments,
 } from './utils'
 
 describe('Utils', () => {
@@ -126,6 +128,63 @@ describe('Utils', () => {
       expect(getEnvironmentName(mockRequest)).toBe(expected)
     })
   })
+
+  describe('mapToCanonicalEnv', () => {
+    it('should return "dev" for environment names starting with "dev"', () => {
+      expect(mapToCanonicalEnv('dev')).toBe('dev')
+      expect(mapToCanonicalEnv('development')).toBe('dev')
+    })
+    it('should return "test" for environment names starting with "test"', () => {
+      expect(mapToCanonicalEnv('test')).toBe('test')
+      expect(mapToCanonicalEnv('test1')).toBe('test')
+    })
+    it('should return "stage" for environment names starting with "stag"', () => {
+      expect(mapToCanonicalEnv('stage')).toBe('stage')
+      expect(mapToCanonicalEnv('staging')).toBe('stage')
+    })
+    it('should return "uat" for environment names starting with "uat"', () => {
+      expect(mapToCanonicalEnv('uat')).toBe('uat')
+      expect(mapToCanonicalEnv('user1')).toBe('uat')
+    })
+    it('should return "preprod" for environment names starting with "pre"', () => {
+      expect(mapToCanonicalEnv('preprod')).toBe('preprod')
+      expect(mapToCanonicalEnv('preproduction')).toBe('preprod')
+    })
+    it('should return "prod" for environment names starting with "prod"', () => {
+      expect(mapToCanonicalEnv('prod')).toBe('prod')
+      expect(mapToCanonicalEnv('live')).toBe('prod')
+      expect(mapToCanonicalEnv('prd')).toBe('prod')
+      expect(mapToCanonicalEnv('live')).toBe('prod')
+    })
+  })
+
+  // jest.mock('./utils', () => ({
+  //   mapToCanonicalEnv: jest.fn(),
+  // }))
+
+  // describe('mapAlertEnvironments', () => {
+  //   it('should update labels.environment for each alert based on the mapToCanonicalEnv function', () => {
+  //     // Mocking mapToCanonicalEnv to return specific values
+  //     ;(mapToCanonicalEnv as jest.Mock).mockImplementation((envName: string) => {
+  //       if (envName === 'development') return 'dev'
+  //       if (envName === 'prod') return 'prod'
+  //       if (envName === 'staging') return 'stage'
+  //       return 'none'
+  //     })
+
+  //     const alertsList = [
+  //       { id: 1, labels: { environment: 'development' } },
+  //       { id: 2, labels: { environment: 'prod' } },
+  //       { id: 3, labels: { environment: 'staging' } },
+  //     ]
+
+  //     const result = mapAlertEnvironments(alertsList)
+
+  //     expect(result[0].labels.environment).toBe('dev')
+  //     expect(result[1].labels.environment).toBe('prod')
+  //     expect(result[2].labels.environment).toBe('stage')
+  //   })
+  // })
 
   describe('getDependencyType', () => {
     it.each([

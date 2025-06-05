@@ -89,13 +89,13 @@ const dropdownHandler = {
     // Get dynamic options from filtered data
     const applications = this.getOptions(filteredData, 'application')
     // Don't rebuild the environments dropdown - preserve server-side canonical environments
-    // const environments = this.getOptions(filteredData, 'environment')
+    const environments = this.getOptions(filteredData, 'environment')
     const namespaces = this.getOptions(filteredData, 'namespace')
     const severities = this.getOptions(filteredData, 'severity')
 
     this.renderDropdown(applicationFilter, applications, currentFilters.application, 'application', isReset)
     // Skip environment dropdown rebuilding - only update selected value
-    this.updateSelectedValue(environmentFilter, currentFilters.environment, 'environment', isReset)
+    this.renderDropdown(environmentFilter, environments, currentFilters.environment, 'environment', isReset)
     this.renderDropdown(namespaceFilter, namespaces, currentFilters.namespace, 'namespace', isReset)
     this.renderDropdown(severityFilter, severities, currentFilters.severity, 'severity', isReset)
   },
@@ -175,14 +175,6 @@ async function getAlerts() {
   }
   return await response.json()
 }
-
-// async function getEnvironments() {
-//   const response = await fetch(`/alerts/environments`)
-//   if (!response.ok) {
-//     throw new Error('There was a problem fetching the alert data')
-//   }
-//   return await response.json()
-// }
 
 // add current filters to Url params
 function updateURLParams(filters) {

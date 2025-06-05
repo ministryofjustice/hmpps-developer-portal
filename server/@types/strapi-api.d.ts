@@ -5509,6 +5509,10 @@ export interface components {
         component?: unknown
       }
     }
+    EnvironmentListResponseDataItem: {
+      attributes?: components['schemas']['EnvironmentPropertiesForMapping']
+      id?: number
+    }
     ScheduledJob: {
       /** Format: date-time */
       createdAt?: string
