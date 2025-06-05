@@ -581,25 +581,13 @@ describe('Strapi service', () => {
     describe('getEnvironments', () => {
       const testEnvironmentsResponse = {
         data: [
-          {
-            id: 1,
-            attributes: { name: 'Environment 1' },
-          },
-          {
-            id: 2,
-            attributes: { name: 'Environment 2' },
-          },
+          { id: 1, attributes: { name: 'Environment 1' } },
+          { id: 2, attributes: { name: 'Environment 2' } },
         ],
       } as ListResponse<EnvironmentListResponseDataItem>
       const testEnvironments = [
-        {
-          id: 1,
-          attributes: { name: 'Environment 1' },
-        },
-        {
-          id: 2,
-          attributes: { name: 'Environment 2' },
-        },
+        { id: 1, attributes: { name: 'Environment 1' } },
+        { id: 2, attributes: { name: 'Environment 2' } },
       ] as EnvironmentListResponseDataItem[]
 
       it('should return an ordered array of environments', async () => {

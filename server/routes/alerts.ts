@@ -8,7 +8,6 @@ export default function routes({ alertsService }: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  // let envMap = {}
 
   get(['/', '/:alertType/:alertName'], async (req, res) => {
     const alertType = getAlertType(req)
