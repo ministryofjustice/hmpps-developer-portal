@@ -4,7 +4,7 @@ import type { Services } from '../services'
 import logger from '../../logger'
 import { getAlertType, getAlertName, mapAlertEnvironments, mapToCanonicalEnv } from '../utils/utils'
 
-export default function routes({ serviceCatalogueService, alertsService }: Services): Router {
+export default function routes({ alertsService }: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))

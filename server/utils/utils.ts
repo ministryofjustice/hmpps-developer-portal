@@ -12,7 +12,6 @@ dayjs.extend(relativeTime.default)
 type HasName = { attributes?: { name: string } }
 type HasRepoName = { attributes?: { github_repo: string } }
 type HasTeamName = { attributes?: { team_name: string } }
-type Environments = EnvironmentForMapping[]
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word

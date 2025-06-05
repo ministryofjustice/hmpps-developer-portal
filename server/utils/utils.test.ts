@@ -20,7 +20,6 @@ import {
   differenceInDate,
   median,
   mapToCanonicalEnv,
-  mapAlertEnvironments,
 } from './utils'
 
 describe('Utils', () => {
