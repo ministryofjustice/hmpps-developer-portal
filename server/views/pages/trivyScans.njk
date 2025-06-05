@@ -1,0 +1,40 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Teams" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb("Trivy Scans", []) }}
+
+  <h1>Trivy Scan Results</h1>
+  <form method="GET" action="/trivy">
+    {% include "../partials/filterDropDowns.njk" %}
+  </form>
+  
+  <table id="trivyScansTable" class="stripe">
+    <thead>
+      <tr>
+        <th class="govuk-!-width-one-quarter">Name</th>
+        <th class="govuk-!-width-one-quarter">Image</th> 
+        <th class="govuk-!-width-one-quarter">Scan Result</th>
+        <th class="govuk-!-width-one-quarter">Scan Time</th> 
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th class="govuk-!-width-one-quarter">Name</th>
+        <th class="govuk-!-width-one-quarter">Image</th> 
+        <th class="govuk-!-width-one-quarter">Scan Result</th>
+        <th class="govuk-!-width-one-quarter">Scan Time</th> 
+      </tr>
+    </tfoot>
+  </table>
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+  
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/trivyScans.js"></script>
+{% endblock %}

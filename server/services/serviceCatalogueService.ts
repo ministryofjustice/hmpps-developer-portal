@@ -22,6 +22,8 @@ import {
   ServiceArea as StrapiServiceArea,
   ScheduledJob,
   ScheduledJobListResponseDataItem,
+  TrivyScan,
+  TrivyScanListResponseDataItem,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
@@ -230,6 +232,24 @@ export default class ServiceCatalogueService {
         ? scheduledJobData.data[0].attributes
         : scheduledJobData.data?.attributes
     return scheduledJobsRequest
+  }
+
+  async getTrivyScans(): Promise<TrivyScanListResponseDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const trivyScansData = await strapiApiClient.getTrivyScans()
+    const trivyScansRequests = trivyScansData.data.sort(sortData)
+
+    return trivyScansRequests
+  }
+
+  async getTrivyScan({ name }: { name: string }): Promise<TrivyScan> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const trivyScansData = await strapiApiClient.getTrivyScan({ name })
+    const trivyScansRequest =
+      Array.isArray(trivyScansData.data) && trivyScansData.data.length > 0
+        ? trivyScansData.data[0].attributes
+        : trivyScansData.data?.attributes
+    return trivyScansRequest
   }
 
   async getRdsInstances(): Promise<RdsEntry[]> {
