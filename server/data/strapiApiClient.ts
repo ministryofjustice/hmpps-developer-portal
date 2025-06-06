@@ -23,6 +23,7 @@ import {
   TeamListResponseDataItem,
   ScheduledJobListResponseDataItem,
   ScheduledJobResponse,
+  EnvironmentListResponseDataItem,
 } from './strapiApiTypes'
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea } from './converters/modelTypes'
@@ -291,6 +292,13 @@ export default class StrapiApiClient {
     return this.restClient.get({
       path: '/v1/scheduled-jobs',
       query: `filters[name][$eq]=${name}`,
+    })
+  }
+
+  async getEnvironments() {
+    return this.restClient.get<ListResponse<EnvironmentListResponseDataItem>>({
+      path: '/v1/environments',
+      query: 'populate=component',
     })
   }
 }

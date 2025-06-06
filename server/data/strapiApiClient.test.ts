@@ -13,6 +13,7 @@ import {
   ComponentListResponseDataItem,
   TeamListResponseDataItem,
   ProductSetListResponseDataItem,
+  EnvironmentListResponseDataItem,
 } from './strapiApiTypes'
 import { createModelServiceArea, exampleStrapiServiceArea } from './converters/serviceArea.test'
 
@@ -232,6 +233,19 @@ describe('strapiApiClient', () => {
       })
 
       expect(output).toEqual(response)
+    })
+  })
+
+  describe('Environments', () => {
+    describe('getEnvironments', () => {
+      it('should return all environments', async () => {
+        const allEnvironments = {
+          data: [{ attributes: { name: 'Environment' } }],
+        } as ListResponse<EnvironmentListResponseDataItem>
+        fakeStrapiApi.get('/environments?populate=component').reply(200, allEnvironments)
+        const output = await strapiApiClient.getEnvironments()
+        expect(output).toEqual(allEnvironments)
+      })
     })
   })
 })

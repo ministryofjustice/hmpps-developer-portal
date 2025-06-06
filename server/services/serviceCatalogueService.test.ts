@@ -27,6 +27,7 @@ import {
   GithubRepoRequest,
   GithubRepoRequestResponse,
   ListResponse,
+  EnvironmentListResponseDataItem,
 } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
@@ -573,6 +574,29 @@ describe('Strapi service', () => {
 
         expect(strapiApiClient.getGithubRepoRequest).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testGithubRepoRequest)
+      })
+    })
+  })
+  describe('Environments', () => {
+    describe('getEnvironments', () => {
+      const testEnvironmentsResponse = {
+        data: [
+          { id: 1, attributes: { name: 'Environment 1' } },
+          { id: 2, attributes: { name: 'Environment 2' } },
+        ],
+      } as ListResponse<EnvironmentListResponseDataItem>
+      const testEnvironments = [
+        { id: 1, attributes: { name: 'Environment 1' } },
+        { id: 2, attributes: { name: 'Environment 2' } },
+      ] as EnvironmentListResponseDataItem[]
+
+      it('should return an ordered array of environments', async () => {
+        strapiApiClient.getEnvironments.mockResolvedValue(testEnvironmentsResponse)
+
+        const results = await serviceCatalogueService.getEnvironments()
+
+        expect(strapiApiClient.getEnvironments).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testEnvironments)
       })
     })
   })

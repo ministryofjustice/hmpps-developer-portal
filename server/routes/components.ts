@@ -2,7 +2,13 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { formatActiveAgencies, getComponentName, getEnvironmentName, utcTimestampToUtcDateTime } from '../utils/utils'
+import {
+  formatActiveAgencies,
+  getComponentName,
+  getEnvironmentName,
+  utcTimestampToUtcDateTime,
+  mapToCanonicalEnv,
+} from '../utils/utils'
 
 interface DisplayAlert {
   alertname: string
@@ -73,7 +79,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
         .filter(alert => alert.status?.state === 'active')
         .map(alert => ({
           alertname: alert.labels?.alertname ?? '',
-          environment: alert.labels?.environment ?? '',
+          environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
           summary: alert.annotations?.summary ?? '',
           message: alert.annotations?.message ?? '',
         }))
