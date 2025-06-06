@@ -142,9 +142,8 @@ export const mapAlertEnvironments = (alerts: AlertListResponseDataItem[]) => {
   const updatedAlerts = Array.isArray(alerts) ? [...alerts] : []
   return updatedAlerts.map(alert => {
     const updatedAlert = { ...alert }
-    // Map alert environment to canonical form
-    if (updatedAlert.labels && alert.labels.environment) {
-      // Use the mapToCanonicalEnv function for consistent environment mapping
+    // Map alert environment to canonical form, even if it's an empty string
+    if (updatedAlert.labels && 'environment' in updatedAlert.labels) {
       updatedAlert.labels.environment = mapToCanonicalEnv(updatedAlert.labels.environment)
     }
     return updatedAlert

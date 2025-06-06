@@ -20,6 +20,7 @@ import {
   differenceInDate,
   median,
   mapToCanonicalEnv,
+  mapAlertEnvironments,
 } from './utils'
 
 describe('Utils', () => {
@@ -161,29 +162,33 @@ describe('Utils', () => {
   //   mapToCanonicalEnv: jest.fn(),
   // }))
 
-  // describe('mapAlertEnvironments', () => {
-  //   it('should update labels.environment for each alert based on the mapToCanonicalEnv function', () => {
-  //     // Mocking mapToCanonicalEnv to return specific values
-  //     ;(mapToCanonicalEnv as jest.Mock).mockImplementation((envName: string) => {
-  //       if (envName === 'development') return 'dev'
-  //       if (envName === 'prod') return 'prod'
-  //       if (envName === 'staging') return 'stage'
-  //       return 'none'
-  //     })
-
-  //     const alertsList = [
-  //       { id: 1, labels: { environment: 'development' } },
-  //       { id: 2, labels: { environment: 'prod' } },
-  //       { id: 3, labels: { environment: 'staging' } },
-  //     ]
-
-  //     const result = mapAlertEnvironments(alertsList)
-
-  //     expect(result[0].labels.environment).toBe('dev')
-  //     expect(result[1].labels.environment).toBe('prod')
-  //     expect(result[2].labels.environment).toBe('stage')
-  //   })
-  // })
+  describe('mapAlertEnvironments', () => {
+    it('should map alert environment variants to canonical forms', () => {
+      const alertsList = [
+        { id: 1, labels: { environment: 'development' } },
+        { id: 2, labels: { environment: 'DEV1' } },
+        { id: 3, labels: { environment: 'prod' } },
+        { id: 4, labels: { environment: 'production' } },
+        { id: 5, labels: { environment: 'uat' } },
+        { id: 6, labels: { environment: 'STAGE' } },
+        { id: 7, labels: { environment: 'Preprod' } },
+        { id: 8, labels: { environment: 'unknownenv' } },
+        { id: 9, labels: { environment: '' } },
+        { id: 10, labels: {} },
+      ]
+      const result = mapAlertEnvironments(alertsList)
+      expect(result[0].labels.environment).toBe('dev')
+      expect(result[1].labels.environment).toBe('dev')
+      expect(result[2].labels.environment).toBe('prod')
+      expect(result[3].labels.environment).toBe('prod')
+      expect(result[4].labels.environment).toBe('uat')
+      expect(result[5].labels.environment).toBe('stage')
+      expect(result[6].labels.environment).toBe('preprod')
+      expect(result[7].labels.environment).toBe('none')
+      expect(result[8].labels.environment).toBe('none')
+      expect(result[9].labels.environment).toBeUndefined()
+    })
+  })
 
   describe('getDependencyType', () => {
     it.each([
