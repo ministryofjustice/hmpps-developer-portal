@@ -23,8 +23,8 @@ import {
   TeamListResponseDataItem,
   ScheduledJobListResponseDataItem,
   ScheduledJobResponse,
-  TrivyScanListResponseDataItem,
   TrivyScanResponse,
+  EnvListResponseDataItem,
 } from './strapiApiTypes'
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea } from './converters/modelTypes'
@@ -296,9 +296,13 @@ export default class StrapiApiClient {
     })
   }
 
-  async getTrivyScans(): Promise<ListResponse<TrivyScanListResponseDataItem>> {
+  async getTrivyScans(): Promise<ListResponse<EnvListResponseDataItem>> {
+    const populateList = ['trivy_scan', 'component', 'component.product', 'component.product.team']
+    const populate = new URLSearchParams({ populate: populateList }).toString()
+
     return this.restClient.get({
-      path: '/v1/trivy-scans',
+      path: '/v1/environments',
+      query: `${populate}&filters[trivy_scan][scan_status][$ne]=Failed&filters[trivy_scan][name][$eq]=hmpps-trivy-discovery`,
     })
   }
 
