@@ -207,10 +207,10 @@ jQuery(function () {
 
   $('#showAvailable').on('click', function () {
     const isVisible = $(this).is(':checked')
+
     Object.keys(severityColumns).forEach(severity => {
       const isSeveritySelected = $(`#showSeverity${capitalize(severity)}`).is(':checked')
-      const column = `unfixed_${severity}`
-
+      const column = `fixed_${severity}`
       table.column(`${column}:name`).visible(isVisible && isSeveritySelected)
     })
   })
