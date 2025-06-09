@@ -168,8 +168,11 @@ function getFiltersFromURL() {
 
 //  append tabledata to the #statusTable
 function populateAlertTable(alerts) {
+  const currentTime = new Date()
+  let lastUpdatedTimestamp = currentTime.toISOString().slice(0, 19).replace('T', ' ')
   try {
     $('#statusRows').empty()
+    document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdatedTimestamp}`
     alerts.forEach(alert => {
       //create links for alert urls
       const dashboardLink = alert.annotations.dashboard_url
