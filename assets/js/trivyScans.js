@@ -1,38 +1,37 @@
 jQuery(function () {
   const columns = [
     {
-      data: 'type',
-      createdCell: function (td, _cellData, rowData) {
-        const name = rowData?.attributes?.type
-        $(td).html(name)
-      },
-    },
-    {
-      data: 'name',
+      data: 'attributes',
       createdCell: function (td, _cellData, rowData) {
         const name = rowData?.attributes?.trivy_scan?.data?.attributes?.name || 'N/A'
         $(td).html(`<a href="/trivy-scans/${name}">${name}</a>`)
       },
     },
     {
-      data: 'build_image_tag',
+      data: 'attributes',
+      createdCell: function (td, _cellData, rowData) {
+        const type = rowData?.attributes?.type || 'N/A'
+        $(td).html(type)
+      },
+    },
+    {
+      data: 'attributes',
       createdCell: function (td, _cellData, rowData) {
         const buildImageTag = rowData?.attributes?.trivy_scan?.data?.attributes?.build_image_tag || 'N/A'
         $(td).html(buildImageTag)
       },
     },
     {
-      data: 'attributes.trivy_scan.data.attributes.trivy_scan_timestamp',
+      data: 'attributes',
       createdCell: function (td, _cellData, rowData) {
         const scan_timestamp = rowData?.attributes?.trivy_scan?.data?.attributes?.trivy_scan_timestamp || 'N/A'
         $(td).html(scan_timestamp)
       },
     },
     {
-      data: 'fixed_critical',
-      name: 'fixed_critical',
+      data: 'attributes',
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
+        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary || {}
         const os_fixed_critical = summary?.['os-pkgs']?.fixed?.CRITICAL ?? 0
         const lang_fixed_critical = summary?.['lang-pkgs']?.fixed?.CRITICAL ?? 0
         const value = os_fixed_critical + lang_fixed_critical
@@ -40,10 +39,9 @@ jQuery(function () {
       },
     },
     {
-      data: 'fixed_high',
-      name: 'fixed_high',
+      data: 'attributes',
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
+        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary || {}
         const os_fixed_high = summary?.['os-pkgs']?.fixed?.HIGH ?? 0
         const lang_fixed_high = summary?.['lang-pkgs']?.fixed?.HIGH ?? 0
         const value = os_fixed_high + lang_fixed_high
@@ -51,11 +49,10 @@ jQuery(function () {
       },
     },
     {
-      data: 'fixed_medium',
-      name: 'fixed_medium',
+      data: 'attributes',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
+        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary || {}
         const os_fixed_medium = summary?.['os-pkgs']?.fixed?.MEDIUM ?? 0
         const lang_fixed_medium = summary?.['lang-pkgs']?.fixed?.MEDIUM ?? 0
         const value = os_fixed_medium + lang_fixed_medium
@@ -63,11 +60,10 @@ jQuery(function () {
       },
     },
     {
-      data: 'fixed_low',
-      name: 'fixed_low',
+      data: 'attributes',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
+        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary || {}
         const os_fixed_low = summary?.['os-pkgs']?.fixed?.LOW ?? 0
         const lang_fixed_low = summary?.['lang-pkgs']?.fixed?.LOW ?? 0
         const value = os_fixed_low + lang_fixed_low
@@ -75,11 +71,10 @@ jQuery(function () {
       },
     },
     {
-      data: 'fixed_unknown',
-      name: 'fixed_unknown',
+      data: 'attributes',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
+        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary || {}
         const os_fixed_unknown = summary?.['os-pkgs']?.fixed?.UNKNOWN ?? 0
         const lang_fixed_unknown = summary?.['lang-pkgs']?.fixed?.UNKNOWN ?? 0
         value = os_fixed_unknown + lang_fixed_unknown
@@ -87,10 +82,9 @@ jQuery(function () {
       },
     },
     {
-      data: 'unfixed_critical',
-      name: 'unfixed_critical',
+      data: 'attributes',
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
+        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary || {}
         const os_unfixed_critical = summary?.['os-pkgs']?.unfixed?.CRITICAL ?? 0
         const lang_unfixed_critical = summary?.['lang-pkgs']?.unfixed?.CRITICAL ?? 0
         const value = os_unfixed_critical + lang_unfixed_critical
@@ -98,10 +92,9 @@ jQuery(function () {
       },
     },
     {
-      data: 'unfixed_high',
-      name: 'unfixed_high',
+      data: 'attributes',
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
+        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary || {}
         const os_unfixed_high = summary?.['os-pkgs']?.unfixed?.HIGH ?? 0
         const lang_unfixed_high = summary?.['lang-pkgs']?.unfixed?.HIGH ?? 0
         const value = os_unfixed_high + lang_unfixed_high
@@ -109,11 +102,10 @@ jQuery(function () {
       },
     },
     {
-      data: 'unfixed_medium',
-      name: 'unfixed_medium',
+      data: 'attributes',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
+        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary || {}
         const os_unfixed_medium = summary?.['os-pkgs']?.unfixed?.MEDIUM ?? 0
         const lang_unfixed_medium = summary?.['lang-pkgs']?.unfixed?.MEDIUM ?? 0
         const value = os_unfixed_medium + lang_unfixed_medium
@@ -121,11 +113,10 @@ jQuery(function () {
       },
     },
     {
-      data: 'unfixed_low',
-      name: 'unfixed_low',
+      data: 'attributes',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
+        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary || {}
         const os_unfixed_low = summary?.['os-pkgs']?.unfixed?.LOW ?? 0
         const lang_unfixed_low = summary?.['lang-pkgs']?.unfixed?.LOW ?? 0
         const value = os_unfixed_low + lang_unfixed_low
@@ -133,11 +124,10 @@ jQuery(function () {
       },
     },
     {
-      data: 'unfixed_unknown',
-      name: 'unfixed_unknown',
+      data: 'attributes',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
+        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary || {}
         const os_unfixed_unknown = summary?.['os-pkgs']?.unfixed?.UNKNOWN ?? 0
         const lang_unfixed_unknown = summary?.['lang-pkgs']?.ununfixed?.UNKNOWN ?? 0
         value = os_unfixed_unknown + lang_unfixed_unknown
@@ -145,8 +135,7 @@ jQuery(function () {
       },
     },
     {
-      data: 'config_issues',
-      name: 'config_issues',
+      data: 'attributes',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
         const config_summary =
@@ -160,12 +149,11 @@ jQuery(function () {
       },
     },
     {
-      data: 'secret_issues',
-      name: 'secret_issues',
+      data: 'attributes',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
         const secret_summary =
-          rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary.secret ?? {}
+          rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary?.secret ?? {}
         const value =
           (secret_summary.LOW ?? 0) +
           (secret_summary.MEDIUM ?? 0) +
@@ -175,12 +163,12 @@ jQuery(function () {
       },
     },
     {
-      data: 'team',
-      name: 'team',
+      data: 'attributes.component.data',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
         const team =
-          rowData?.attributes?.component?.data?.attributes?.product?.data?.attributes?.team?.data?.attributes?.name
+          rowData?.attributes?.component?.data?.attributes?.product?.data?.attributes?.team?.data?.attributes?.name ||
+          'N/A'
         $(td).html(`${team}`)
       },
     },
@@ -252,7 +240,7 @@ jQuery(function () {
   })
 
   // Non-working filter for team and environment
-  // $('#team').on('change', function () { 
+  // $('#team').on('change', function () {
   //   // Get the selected team
   //   const selectedTeam = $(this).val()
   //   console.log(`Selected team: ${selectedTeam}`)
