@@ -11,7 +11,7 @@ jQuery(function () {
       data: 'name',
       createdCell: function (td, _cellData, rowData) {
         const name = rowData?.attributes?.trivy_scan?.data?.attributes?.name || 'N/A'
-        $(td).html(name)
+        $(td).html(`<a href="/trivy-scans/${name}">${name}</a>`)
       },
     },
     {
@@ -164,8 +164,13 @@ jQuery(function () {
       name: 'secret_issues',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
+        const secret_summary =
+          rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary.secret ?? {}
         const value =
-          rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.summary?.['os-pkgs']?.unfixed?.UNKNOWN ?? 0
+          (secret_summary.LOW ?? 0) +
+          (secret_summary.MEDIUM ?? 0) +
+          (secret_summary.HIGH ?? 0) +
+          (secret_summary.CRITICAL ?? 0)
         $(td).html(`${value}`)
       },
     },
@@ -246,11 +251,12 @@ jQuery(function () {
     toggleSeverityColumns('unknown', $(this).is(':checked'))
   })
 
-  $('#team').on('change', function () {
-    // Get the selected team
-    const selectedTeam = $(this).val()
-    console.log(`Selected team: ${selectedTeam}`)
-    // Update the DataTable's AJAX URL with the selected team
-    table.ajax.url(`/trivy-scans/data?filter[component][product][team][name][$eq]=${selectedTeam}`).load()
-  })
+  // Non-working filter for team and environment
+  // $('#team').on('change', function () { 
+  //   // Get the selected team
+  //   const selectedTeam = $(this).val()
+  //   console.log(`Selected team: ${selectedTeam}`)
+  //   // Update the DataTable's AJAX URL with the selected team
+  //   table.ajax.url(`/trivy-scans/data?filter[component][product][team][name][$eq]=${selectedTeam}`).load()
+  // })
 })

@@ -1,0 +1,145 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + trivyScan.name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb(trivyScan.name, [{title: "Trivy Scan ", href: "/trivy-scans"}]) }}
+
+  <h1 data-test="detail-page-title">Trivy scan report for {{ trivyScan.name }}</h1>
+  <p><strong>Build Image Tag:</strong> {{ trivyScan.build_image_tag }}</p>
+  <p><strong>Scan Timestamp:</strong> {{ trivyScan.trivy_scan_timestamp }}</p>
+
+  <h2>Scan Summary </h2>
+    
+  <table border="1" style="table-layout: fixed; width: 100%; text-align: left;">
+    <thead style="background-color: grey; color: white">
+      <tr>
+        <th style="text-align: left;">Category</th>
+        <th>Severity</th>
+        <th>Count</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for row in summaryTable %}
+          <tr
+            {% if row.severity == "CRITICAL" %}
+              style="background-color: red; color: white;"
+            {% elif row.severity == "HIGH" %}
+              style="background-color: orange; color: black;"
+            {% endif %}
+          >
+            <td>{{ row.category }}</td>
+            <td>{{ row.severity }}</td>
+            <td>{{ row.count }}</td>
+          </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Scan Results</h2>
+
+  <!-- Hyperlinks -->
+  <ul>
+    <li><a href="#vulnerabilities">Vulnerabilities</a></li>
+    <li><a href="#config">Config</a></li>
+    <li><a href="#secrets">Secrets</a></li>
+  </ul>
+
+  <!-- Vulnerabilities Table -->
+  <h2 id="vulnerabilities">Vulnerabilities</h2>
+  <table border="1" style="table-layout: fixed; width: 100%; text-align: left;">
+    <thead style="background-color: grey; color: white">
+      <tr>
+        <th style="width: 10%;">Category</th>
+        <th style="width: 10%;">Severity</th>
+        <th style="width: 15%;">Vulnerability ID</th>
+        <th style="width: 10%;">Package</th>
+        <th style="width: 35%;">Description</th>
+        <th style="width: 10%;">Installed Version</th>
+        <th style="width: 10%;">Fixed Version</th>
+      </tr>
+    </thead>
+    <tbody>
+          {% for row in vulnerabilitiesResultsTable %}
+            <tr 
+              {% if row.severity == "HIGH" or row.severity == "CRITICAL" %}
+                style="font-weight: bold;"
+              {% endif %}
+            >
+              <td>{{ row.category }}</td>
+              <td>{{ row.severity }}</td>
+              <td>{{ row.vulnerabilityID }}</td>
+              <td>{{ row.pkgName }}</td>
+              <td>{{ row.description }}</td>
+              <td>{{ row.installedVersion }}</td>
+              <td>{{ row.fixedVersion }}</td>
+          </tr>
+          {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Config Table -->
+  <h2 id="config">Config</h2>
+  <table border="1" style="table-layout: fixed; width: 100%; text-align: left;">
+    <thead style="background-color: grey; color: white">
+      <tr>
+        <th style="width: 10%;">Category</th>
+        <th style="width: 10%;">Severity</th>
+        <th style="width: 30%;">Description</th>
+        <th style="width: 25%;">File Path</th>
+        <th style="width: 5%;">Line</th>
+        <th style="width: 25%;">Additional Context</th>
+      </tr>
+    </thead>
+    <tbody>
+          {% for config in configResultTable %}
+            <tr 
+              {% if config.severity == "HIGH" or config.severity == "CRITICAL" %}
+                style="font-weight: bold;"
+              {% endif %}
+            >
+              <td>Config</td>
+              <td>{{ config.severity }}</td>
+              <td>{{ config.description }}</td>
+              <td style="word-wrap: break-word;">{{ config.filePath }}</td>
+              <td>{{ config.LineNumber }}</td>
+              <td>{{ config.additionalContext }}</td>
+            </tr>
+          {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Secrets Table -->
+  <h2 id="secrets">Secrets</h2>
+  <table border="1" style="table-layout: fixed; width: 100%; text-align: left;">
+    <thead style="background-color: grey; color: white">
+      <tr>
+        <th style="width: 10%;">Category</th>
+        <th style="width: 10%;">Severity</th>
+        <th style="width: 30%;">Description</th>
+        <th style="width: 20%;">File Path</th>
+        <th style="width: 10%;">Line Number</th>
+        <th style="width: 20%;">Additional Context</th>
+      </tr>
+    </thead> 
+    <tbody>
+        {% for secret in secretResultTable %}
+          <tr 
+            {% if secret.severity == "HIGH" or secret.severity == "CRITICAL" %}
+              style="font-weight: bold;"
+            {% endif %}
+          >
+            <td> Secret </td>
+            <td>{{ secret.severity }}</td>
+            <td>{{ secret.description }}</td>
+            <td>{{ secret.filePath }}</td>
+            <td>{{ secret.lineNumber }}</td>
+            <td>{{ secret.additionalContext }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+  
+{% endblock %}

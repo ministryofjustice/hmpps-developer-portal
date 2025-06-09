@@ -1,41 +1,193 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { getFormattedName, utcTimestampToUtcDateTime } from '../utils/utils'
 
-export default function routes({ serviceCatalogueService, componentNameService, dataFilterService }: Services): Router {
+export default function routes({ serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    const components = await componentNameService.getAllDeployedComponents()
-    const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name: 'hmpps-sharepoint-discovery' })
-    const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
+    const [teamList, ] = await dataFilterService.getFormsDropdownLists({
       teamName: '',
-      productName: '',
-      serviceAreaName: '',
-      customComponentName: '',
+      productId: '',
       useFormattedName: true,
     })
     return res.render('pages/trivyScans', {
-      jobName: scheduledJobRequest.name,
-      lastSuccessfulRun: utcTimestampToUtcDateTime(scheduledJobRequest.last_successful_run),
-      components,
-      serviceAreaList,
       teamList,
-      productList,
-      customComponentsList,
     })
   })
 
   get('/data', async (req, res) => {
     const trivyScans = await serviceCatalogueService.getTrivyScans()
-    // trivyScans.forEach(scan => {
-    //   console.log("scan.id:", JSON.stringify(scan.attributes.trivy_scan.data.attributes.scan_summary.scan_summary.summary);
-    // });
+
     res.send(trivyScans)
   })
+  
+  get('/:trivy_scan_name', async (req, res) => {
+    const name = req.params.trivy_scan_name
+    const scan = await serviceCatalogueService.getTrivyScan({ name })
+    const scanSummary = scan.scan_summary?.scan_summary?.summary 
+    const scanResults = scan.scan_summary?.scan_summary?.scan_result || []
+    const severityOrder = ["CRITICAL", "HIGH", "MEDIUM", "LOW", "UNKNOWN"]
 
+    const createSummaryTable = (summary: any): Array<{ category: string; severity: string; count: number }> => {
+      const dataTable: Array<{ category: string; severity: string; count: number }> = []
+  
+      // Add rows for "config"
+      if (summary.config) {
+        for (const [severity, count] of Object.entries(summary.config)) {
+          dataTable.push({
+            category: 'Config',
+            severity: severity as string,
+            count: count as number,
+          })
+        }
+      }
+  
+      // Add rows for "os-pkgs"
+      if (summary['os-pkgs']) {
+        for (const [status, severities] of Object.entries(summary['os-pkgs'])) {
+          for (const [severity, count] of Object.entries(severities)) {
+            dataTable.push({
+              category: `OS Packages (${status})`,
+              severity: severity as string,
+              count: count as number,
+            })
+          }
+        }
+      }
+  
+      // Add rows for "lang-pkgs"
+      if (summary['lang-pkgs']) {
+        for (const [status, severities] of Object.entries(summary['lang-pkgs'])) {
+          for (const [severity, count] of Object.entries(severities)) {
+            dataTable.push({
+              category: `Language Packages (${status})`,
+              severity: severity as string,
+              count: count as number,
+            })
+          }
+        }
+      }
+
+      // Add rows for "secret"
+      if (summary.secret) {
+        for (const [severity, count] of Object.entries(summary.secret)) {
+          dataTable.push({
+            category: 'Secret',
+            severity: severity as string,
+            count: count as number,
+          })
+        }
+      }
+      dataTable.sort((a, b) => {
+        return severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity)
+      })
+      return dataTable
+    }
+    
+    const summaryTable = createSummaryTable(scanSummary)
+
+    // Results section 
+
+    // Create config results data table 
+    const createConfigResultsTable = (results: any) => {
+      const dataTable: any[] = []
+
+      // Add rows for "config"
+      if (results.config) {
+        for (const config of results.config) {
+          dataTable.push({
+            category: "Config",
+            filePath: config.FilePath,
+            severity: config.Severity,
+            lineNumber: config.LineNumber,
+            description: config.Description,
+            additionalContext: config.AdditionalContext,
+          })
+        }
+      }
+
+      // Sort the dataTable by severity
+      dataTable.sort((a, b) => {
+        return severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity)
+      })
+
+      return dataTable
+    }
+    const configResultTable = createConfigResultsTable(scanResults)
+
+    const createVulnerabilitiesResultsTable = (results: any) => {
+      const dataTable: any[] = []
+
+      // Add rows for "lang-pkgs"
+      if (results['lang-pkgs']) {
+        for (const pkg of results['lang-pkgs']) {
+          dataTable.push({
+            category: "Language Packages",
+            pkgName: pkg.PkgName,
+            severity: pkg.Severity,
+            description: pkg.Description,
+            fixedVersion: pkg.FixedVersion,
+            vulnerabilityID: pkg.VulnerabilityID,
+            installedVersion: pkg.InstalledVersion,
+          })
+        }
+      }
+
+      // Add rows for "os-pkgs"
+      if (results['os-pkgs']) {
+        for (const pkg of results['os-pkgs']) {
+          dataTable.push({
+            category: "Language Packages",
+            pkgName: pkg.PkgName,
+            severity: pkg.Severity,
+            description: pkg.Description,
+            fixedVersion: pkg.FixedVersion,
+            vulnerabilityID: pkg.VulnerabilityID,
+            installedVersion: pkg.InstalledVersion,
+          })
+        }
+      }
+
+      // Sort the dataTable by severity
+      dataTable.sort((a, b) => {
+        return severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity)
+      })
+
+      return dataTable
+    }
+    const vulnerabilitiesResultsTable = createVulnerabilitiesResultsTable(scanResults)
+
+    const createSecretResultsTable = (results: any) => {
+      const dataTable: any[] = []
+      // Add rows for "secret"
+      if (results.secret) {
+        for (const secret of results.secret) {
+          dataTable.push({
+            category: "Secret",
+            severity: secret.Severity,
+            description: secret.Description,
+            filePath: secret.FilePath,
+            lineNumber: secret.LineNumber,
+            additionalContext: secret.AdditionalContext.replace(/\*+/g, '*'),
+          })
+        }
+      }
+
+      // Sort the dataTable by severity
+      dataTable.sort((a, b) => {
+        return severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity)
+      })
+
+      return dataTable
+    }
+    const secretResultTable = createSecretResultsTable(scanResults)
+
+    return res.render('pages/trivyScan', { trivyScan: scan, summaryTable, vulnerabilitiesResultsTable, configResultTable, secretResultTable})
+  })
+
+  
   return router
 }

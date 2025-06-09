@@ -302,7 +302,7 @@ export default class StrapiApiClient {
 
     return this.restClient.get({
       path: '/v1/environments',
-      query: `${populate}&filters[trivy_scan][scan_status][$ne]=Failed&filters[trivy_scan][name][$eq]=hmpps-trivy-discovery`,
+      query: `${populate}&filters[trivy_scan][scan_status][$ne]=Failed`,
     })
   }
 
