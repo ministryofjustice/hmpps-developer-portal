@@ -86,15 +86,12 @@ const dropdownHandler = {
     }
   },
   updateDropdowns: function (filteredData, currentFilters, isReset) {
-    // Get dynamic options from filtered data
     const applications = this.getOptions(filteredData, 'application')
-    // Don't rebuild the environments dropdown - preserve server-side canonical environments
     const environments = this.getOptions(filteredData, 'environment')
     const namespaces = this.getOptions(filteredData, 'namespace')
     const severities = this.getOptions(filteredData, 'severity')
 
     this.renderDropdown(applicationFilter, applications, currentFilters.application, 'application', isReset)
-    // Skip environment dropdown rebuilding - only update selected value
     this.renderDropdown(environmentFilter, environments, currentFilters.environment, 'environment', isReset)
     this.renderDropdown(namespaceFilter, namespaces, currentFilters.namespace, 'namespace', isReset)
     this.renderDropdown(severityFilter, severities, currentFilters.severity, 'severity', isReset)
@@ -113,7 +110,6 @@ const dropdownHandler = {
     selectElement.appendChild(opt)
   },
   renderDropdown: function (select, options, selectedValue, key, isReset) {
-    // if there is a value pending apply that on click
     this.pendingValues[key] = selectedValue === select.value ? '' : select.value
     //  clear dropDown options to prevent duplicates
     this.removeOptions(select)
