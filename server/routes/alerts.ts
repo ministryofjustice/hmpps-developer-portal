@@ -15,12 +15,12 @@ export default function routes({ alertsService }: Services): Router {
     // Get alerts to determine which environments actually have data
     const alertsData = await alertsService.getAlerts()
 
-    // Extract unique canonical environment values from actual alerts
+    // Extract unique canonical environment values from actual alerts and deduplicate
     const alertEnvironments = [
       ...new Set(
         alertsData.map(alert => alert.labels?.environment || 'none').map(mapToCanonicalEnv), // Map to canonical form
       ),
-    ].sort() // Deduplicate
+    ].sort()
 
     // Format environments for dropdown with blank default option
     const environments = [

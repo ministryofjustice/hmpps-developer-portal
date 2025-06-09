@@ -158,10 +158,6 @@ describe('Utils', () => {
     })
   })
 
-  // jest.mock('./utils', () => ({
-  //   mapToCanonicalEnv: jest.fn(),
-  // }))
-
   describe('mapAlertEnvironments', () => {
     it('should map alert environment variants to canonical forms', () => {
       const alertsList = [
