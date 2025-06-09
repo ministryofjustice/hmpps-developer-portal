@@ -287,7 +287,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getSchuledJobs({ name }: { name: string }): Promise<ScheduledJobResponse> {
+  async getScheduledJob({ name }: { name: string }): Promise<ScheduledJobResponse> {
     return this.restClient.get({
       path: '/v1/scheduled-jobs',
       query: `filters[name][$eq]=${name}`,
