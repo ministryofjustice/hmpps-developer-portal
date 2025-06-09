@@ -13,11 +13,12 @@ jQuery(async function () {
   // use filters and alerts to update alert table and filters
   updateAll(alerts, currentFilters, isReset)
 
-  let previousDataJSON
+  // Setting previousDataJSON as soon as page loads (so never undefined)
+  let previousDataJSON = alerts
 
   // Watch function updates Alerts on a timeout
   setInterval(async function () {
-    alerts = await getAlerts()
+    if (!isAlertDropDownActive()) alerts = await getAlerts()
     previousDataJSON = updateAlerts(alerts, previousDataJSON, isReset)
   }, 5000)
   // on click of any 'Update' button to apply filters
@@ -231,4 +232,15 @@ function updateAll(alerts, currentFilters, isReset) {
   const dataForDropdowns = isFiltersEmpty(currentFilters) ? alerts : filtered
   dropdownHandler.updateDropdowns(dataForDropdowns, currentFilters, isReset)
   updateURLParams(currentFilters)
+}
+
+// Function to look for any active dropdown elements
+function isAlertDropDownActive() {
+  const activeElement = document.activeElement
+  if (activeElement && activeElement.tagName.toLowerCase() === 'select') {
+    console.log('dropdown active')
+    return true
+  }
+  console.log('dropdown not active')
+  return false
 }
