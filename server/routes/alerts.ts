@@ -16,11 +16,11 @@ export default function routes({ alertsService }: Services): Router {
     const alertsData = await alertsService.getAlerts()
 
     // Extract unique canonical environment values from actual alerts
-    const alertEnvironments = alertsData
-      .map(alert => alert.labels?.environment || 'none')
-      .map(mapToCanonicalEnv) // Map to canonical form
-      .filter((env, index, self) => self.indexOf(env) === index) // Deduplicate
-      .sort()
+    const alertEnvironments = [
+      ...new Set(
+        alertsData.map(alert => alert.labels?.environment || 'none').map(mapToCanonicalEnv), // Map to canonical form
+      ),
+    ].sort() // Deduplicate
 
     // Format environments for dropdown with blank default option
     const environments = [

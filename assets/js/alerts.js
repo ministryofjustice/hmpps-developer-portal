@@ -129,32 +129,6 @@ const dropdownHandler = {
       select.selectedIndex = 0
     }
   },
-  updateSelectedValue: function (select, selectedValue, key, isReset) {
-    // Only update selection without rebuilding the dropdown
-    if (isReset) {
-      select.selectedIndex = 0
-      this.pendingValues[key] = ''
-      return
-    }
-
-    if (selectedValue) {
-      // Find and select the option that matches the selectedValue
-      for (let i = 0; i < select.options.length; i++) {
-        if (select.options[i].value === selectedValue) {
-          select.selectedIndex = i
-          break
-        }
-      }
-    } else if (this.pendingValues[key]) {
-      // Or select based on pending value
-      for (let i = 0; i < select.options.length; i++) {
-        if (select.options[i].value === this.pendingValues[key]) {
-          select.selectedIndex = i
-          break
-        }
-      }
-    }
-  },
 }
 
 // gets alerts every 5 seconds
