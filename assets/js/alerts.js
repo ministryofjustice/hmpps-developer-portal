@@ -186,7 +186,7 @@ function populateAlertTable(alerts) {
         : 'N/A'
       const slackLink = alert.alert_slack_channel ? alert.alert_slack_channel : 'N/A'
       $('#statusRows')
-        .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" id="tile-${alert.labels.application}-${alert.labels.environment}">
+        .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" data-silenced="${alert.status.state}" id="tile-${alert.labels.application}-${alert.labels.environment}">
           <td>${alert.labels.alertname}</td>
           <td>${alert.annotations.message} </td>
           <td>${dashboardLink}</td>
