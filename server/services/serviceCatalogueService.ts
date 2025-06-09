@@ -237,8 +237,9 @@ export default class ServiceCatalogueService {
   async getTrivyScans(): Promise<EnvListResponseDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const trivyScansData = await strapiApiClient.getTrivyScans()
+    console.log("number of scans:", trivyScansData.data.length)
     const trivyScans = trivyScansData.data.sort(sortData)
-
+    console.log("number of scans after sort:", trivyScans.length)
     return trivyScans
   }
 
