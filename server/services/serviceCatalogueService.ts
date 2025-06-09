@@ -224,7 +224,7 @@ export default class ServiceCatalogueService {
 
   async getScheduledJob({ name }: { name: string }): Promise<ScheduledJob> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const scheduledJobData = await strapiApiClient.getSchuledJobs({ name })
+    const scheduledJobData = await strapiApiClient.getScheduledJob({ name })
     const scheduledJobsRequest =
       Array.isArray(scheduledJobData.data) && scheduledJobData.data.length > 0
         ? scheduledJobData.data[0].attributes
