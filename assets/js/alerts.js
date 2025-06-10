@@ -4,6 +4,8 @@ const namespaceFilter = document.getElementById('namespace')
 const severityFilter = document.getElementById('severity')
 
 jQuery(async function () {
+  // initialises message to alerts being fetched every 5 seconds
+  alertsUpdateFrequencyMessage()
   // check url to see if any filters are currently applied
   let currentFilters = getFiltersFromURL()
   // get alerts from the api
@@ -12,13 +14,17 @@ jQuery(async function () {
   let isReset = false
   // use filters and alerts to update alert table and filters
   updateAll(alerts, currentFilters, isReset)
-
-  let previousDataJSON
+  // ensures first interval check for updateAlerts is a match so UI doesn't refresh after 5 seconds, causing drop downs to jump
+  let previousDataJSON = alerts
 
   // Watch function updates Alerts on a timeout
   setInterval(async function () {
-    alerts = await getAlerts()
-    previousDataJSON = updateAlerts(alerts, previousDataJSON, isReset)
+    // Timer only starts ticking if a drop down is 'active'
+    if (!isAlertDropDownActive() || isDataThirtySecondsOld()) {
+      alerts = await getAlerts()
+      timer = 0 // used in isDataThirtySecondsOld()
+      previousDataJSON = updateAlerts(alerts, previousDataJSON, isReset)
+    }
   }, 5000)
   // on click of any 'Update' button to apply filters
   $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel').on('click', async e => {
@@ -231,4 +237,55 @@ function updateAll(alerts, currentFilters, isReset) {
   const dataForDropdowns = isFiltersEmpty(currentFilters) ? alerts : filtered
   dropdownHandler.updateDropdowns(dataForDropdowns, currentFilters, isReset)
   updateURLParams(currentFilters)
+}
+
+// Slows fetch frequency and changes message when user interacting with drop downs
+let isDropDownOpen = false
+
+// uses event listeners for instant change in UI when drop down open
+document.addEventListener('mousedown', e => {
+  if (e.target.tagName.toLowerCase() === 'select') {
+    isDropDownOpen = true
+    alertsUpdateFrequencyMessage()
+  }
+})
+
+document.addEventListener('click', e => {
+  if (e.target.tagName.toLowerCase() !== 'select') {
+    isDropDownOpen = false
+    alertsUpdateFrequencyMessage()
+  }
+})
+
+function isAlertDropDownActive() {
+  return isDropDownOpen
+}
+
+// Refreshes data if stale - more than 30 seconds old
+let timer = 0
+
+function isDataThirtySecondsOld() {
+  if (timer >= 25) {
+    // next interval will tick at 30 seconds
+    return true
+  } else {
+    timer += 5
+    return false
+  }
+}
+
+// Message changes if drop down is open - from every 5 seconds to 30 seconds
+function alertsUpdateFrequencyMessage() {
+  try {
+    $('#alertsFetchStatus').empty()
+    if (isDropDownOpen) {
+      $('#alertsFetchStatus').append(
+        `<div class="govuk-inset-text">Alerts are being updated every <strong>30</strong> seconds</div>`,
+      )
+    } else {
+      $('#alertsFetchStatus').append(`<div class="govuk-inset-text">Alerts are being updated every 5 seconds</div>`)
+    }
+  } catch (e) {
+    console.error(e)
+  }
 }

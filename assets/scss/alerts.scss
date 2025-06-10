@@ -24,8 +24,13 @@
 #alertsStatusTable {
   width: 100%;
 
+  th {
+    word-break: normal;
+  }
+
   tr {
     background-color: grey;
+    word-break: break-word;
 
     &[data-silenced="active"] {
       background-color: govuk-colour('red');
