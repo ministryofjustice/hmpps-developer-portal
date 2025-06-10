@@ -10,6 +10,7 @@ jQuery(async function () {
   let alerts = await getAlerts()
   // is the alert data being refreshed?
   let isReset = false
+
   // use filters and alerts to update alert table and filters
   updateAll(alerts, currentFilters, isReset)
 
@@ -109,9 +110,6 @@ const dropdownHandler = {
     selectElement.appendChild(opt)
   },
   renderDropdown: function (select, options, selectedValue, key, isReset) {
-    if (isReset) {
-      this.pendingValues[key] = ''
-    }
     this.pendingValues[key] = selectedValue === select.value ? '' : select.value
     //  clear dropDown options to prevent duplicates
     this.removeOptions(select)
