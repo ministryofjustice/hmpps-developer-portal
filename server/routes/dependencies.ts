@@ -2,18 +2,26 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { ServiceCatalogueService, Services } from '../services'
 import { getDependencyName, getDependencyType } from '../utils/utils'
+import { getDependencyNames, getDependencyTypes } from '../utils/dependencies'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  get(['/', '/:dependencyType/:dependencyName'], async (req, res) => {
-    const dependencyType = getDependencyType(req)
-    const dependencyName = getDependencyName(req)
-    const dropDownItems = await getDropDownOptions(serviceCatalogueService, `${dependencyType}::${dependencyName}`)
+  get('/dependency-names/:dependencyType', async (req, res) => {
+    const { dependencyType } = req.params
+    console.log(`[INFO] Fetching dependency names for type: ${dependencyType}`)
 
-    return res.render('pages/dependencies', { dropDownItems, dependencyType, dependencyName })
+    try {
+      const dependencyNames = await getDependencyNames(serviceCatalogueService, dependencyType)
+      console.log(`[INFO] Found ${dependencyNames.length} dependency names:`, dependencyNames)
+
+      res.json(dependencyNames)
+    } catch (error) {
+      console.error(`[ERROR] Failed to fetch dependency names for ${dependencyType}:`, error)
+      res.status(500).json({ error: 'Internal Server Error' })
+    }
   })
 
   get('/data/:dependencyType/:dependencyName', async (req, res) => {
@@ -45,6 +53,23 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     res.send(displayComponents)
   })
 
+  get(['/', '/:dependencyType/:dependencyName'], async (req, res) => {
+    const dependencyType = getDependencyType(req)
+    const dependencyName = getDependencyName(req)
+
+    const { dependencyTypes, dependencyNames } = await getDropDownOptions(
+      serviceCatalogueService,
+      `${dependencyType}::${dependencyName}`,
+    )
+
+    return res.render('pages/dependencies', {
+      dependencyTypes,
+      dependencyNames,
+      dependencyType,
+      dependencyName,
+    })
+  })
+
   return router
 }
 
@@ -61,23 +86,29 @@ export const getDropDownOptions = async (
 
   const dependencies = await serviceCatalogueService.getDependencies()
 
-  const dropDownItems = dependencies.map((dependency): SelectList => {
-    const parts = dependency.split('::')
+  const dependencyTypesSet = new Set<string>()
+  const dependencyNamesSet = new Set<string>()
 
-    return {
-      value: dependency,
-      text: `${parts[0]}: ${parts[1]}`,
-      selected: dependency === currentDependency,
-      attributes: {
-        'data-test': dependency,
-      },
-    }
+  dependencies.forEach(dependency => {
+    const [type, name] = dependency.split('::')
+    if (type) dependencyTypesSet.add(type)
+    if (name) dependencyNamesSet.add(name)
   })
 
-  dropDownItems.unshift({
-    value: '',
-    text: 'Please select',
-  })
+  const dependencyTypes: SelectList[] = Array.from(dependencyTypesSet).map(type => ({
+    value: type,
+    text: type,
+    selected: currentDependency.startsWith(type),
+  }))
 
-  return dropDownItems
+  const dependencyNames: SelectList[] = Array.from(dependencyNamesSet).map(name => ({
+    value: name,
+    text: name,
+    selected: currentDependency.endsWith(name),
+  }))
+
+  dependencyTypes.unshift({ value: '', text: 'Please select' })
+  dependencyNames.unshift({ value: '', text: 'Please select' })
+
+  return { dependencyTypes, dependencyNames }
 }
