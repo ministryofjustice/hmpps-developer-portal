@@ -1,4 +1,32 @@
 jQuery(function () {
+  function transformData(data) {
+    const transformed = []
+    data.forEach(item => {
+      const summary = item.scan_summary?.summary || {}
+      item.environments.forEach((env) => {
+        transformed.push({
+          environments: env,
+          name: item.name,
+          build_image_tag: item.build_image_tag,
+          trivy_scan_timestamp: item.trivy_scan_timestamp,
+          total_fixed_critical: (summary?.["os-pkgs"]?.fixed?.CRITICAL ?? 0) + ( summary?.["lang-pkgs"]?.fixed?.CRITICAL ?? 0),
+          total_fixed_high: (summary?.["os-pkgs"]?.fixed?.HIGH ?? 0) + ( summary?.["lang-pkgs"]?.fixed?.HIGH ?? 0),
+          total_fixed_medium: (summary?.["os-pkgs"]?.fixed?.MEDIUM ?? 0) + ( summary?.["lang-pkgs"]?.fixed?.MEDIUM ?? 0),
+          total_fixed_low: (summary?.["os-pkgs"]?.fixed?.LOW ?? 0) + ( summary?.["lang-pkgs"]?.fixed?.LOW ?? 0),
+          total_fixed_unknown: (summary?.["os-pkgs"]?.fixed?.UNKNOWN ?? 0) + ( summary?.["lang-pkgs"]?.fixed?.UNKNOWN ?? 0),
+          total_unfixed_critical: (summary?.["os-pkgs"]?.unfixed?.CRITICAL ?? 0) + ( summary?.["lang-pkgs"]?.unfixed?.CRITICAL ?? 0),
+          total_unfixed_high: (summary?.["os-pkgs"]?.unfixed?.HIGH ?? 0) + ( summary?.["lang-pkgs"]?.unfixed?.HIGH ?? 0),
+          total_unfixed_medium: (summary?.["os-pkgs"]?.unfixed?.MEDIUM ?? 0) + ( summary?.["lang-pkgs"]?.unfixed?.MEDIUM ?? 0),
+          total_unfixed_low: (summary?.["os-pkgs"]?.unfixed?.LOW ?? 0) + ( summary?.["lang-pkgs"]?.unfixed?.LOW ?? 0),
+          total_unfixed_unknown: (summary?.["os-pkgs"]?.unfixed?.UNKNOWN ?? 0) + ( summary?.["lang-pkgs"]?.unfixed?.UNKNOWN ?? 0),
+          total_secret_issues: (summary?.["secret"]?.CRITICAL ?? 0) +  (summary?.["secret"]?.HIGH ?? 0)
+            + (summary?.["secret"]?.MEDIUM ?? 0) + (summary?.["secret"]?.LOW ?? 0),
+        })
+      })
+    })
+    return transformed
+  }
+  
   const columns = [
     {
       data: 'name',
@@ -8,11 +36,10 @@ jQuery(function () {
       },
     },
     {
+      name: 'environments',
       data: 'environments',
       createdCell: function (td, _cellData, rowData) {
-        const environments = Array.isArray(rowData?.environments)
-          ? rowData.environments.join(', ')
-          : 'N/A'
+        const environments = rowData.environments
         $(td).html(environments)
       },
     },
@@ -31,158 +58,117 @@ jQuery(function () {
       },
     },
     {
+      data: 'total_fixed_critical',
       name: 'total_fixed_critical',
-      data: null,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.scan_summary?.summary || {}
-        const osFixedCritical = summary?.["os-pkgs"]?.fixed?.CRITICAL ?? 0
-        const langFixedCritical = summary?.["lang-pkgs"]?.fixed?.CRITICAL ?? 0
-        const totalFixedCritical = osFixedCritical + langFixedCritical
-        $(td).html(totalFixedCritical)
+        const totalFixedCritical = rowData?.total_fixed_critical 
+        $(td).html(totalFixedCritical); // Render the value in the cell
       },
     },
     {
+      data: 'total_fixed_high',
       name: 'total_fixed_high',
-      data: null,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.scan_summary?.summary || {}
-        const osFixedHigh = summary?.['os-pkgs']?.fixed?.HIGH ?? 0
-        const langFixedHigh = summary?.['lang-pkgs']?.fixed?.HIGH ?? 0
-        const totalFixedHigh = osFixedHigh + langFixedHigh
+        const totalFixedHigh = rowData?.total_fixed_high || 0
         $(td).html(totalFixedHigh)
       },
     },
     {
+      data: 'total_fixed_medium',
       name: 'total_fixed_medium',
-      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.scan_summary?.summary || {}
-        const osFixedMedium = summary?.['os-pkgs']?.fixed?.MEDIUM ?? 0
-        const langFixedMedium = summary?.['lang-pkgs']?.fixed?.MEDIUM ?? 0
-        const totalFixedMedium = osFixedMedium + langFixedMedium
+        const totalFixedMedium = rowData?.total_fixed_medium || 0
         $(td).html(totalFixedMedium)
       },
     },
     {
+      data: 'total_fixed_low',
       name: 'total_fixed_low',
-      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.scan_summary?.summary || {}
-        const osFixedLow = summary?.['os-pkgs']?.fixed?.LOW ?? 0
-        const langFixedLow = summary?.['lang-pkgs']?.fixed?.LOW ?? 0
-        const totalFixedLow = osFixedLow + langFixedLow
+        const totalFixedLow = rowData?.total_fixed_low || 0
         $(td).html(totalFixedLow)
       },
     },
     {
+      data: 'total_fixed_unknown',
       name: 'total_fixed_unknown',
-      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.scan_summary?.summary || {}
-        const osFixedUnknown = summary?.['os-pkgs']?.fixed?.UNKNOWN ?? 0
-        const langFixedUnknown = summary?.['lang-pkgs']?.fixed?.UNKNOWN ?? 0
-        const totalFixedUnknown = osFixedUnknown + langFixedUnknown
+        const totalFixedUnknown = rowData?.total_fixed_unknown || 0
         $(td).html(totalFixedUnknown)
       },
     },
     {
+      data: 'total_unfixed_critical',
       name: 'total_unfixed_critical',
-      data: null,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.scan_summary?.summary || {}
-        const osUnfixedCritical = summary?.['os-pkgs']?.unfixed?.CRITICAL ?? 0
-        const langUnfixedCritical = summary?.['lang-pkgs']?.unfixed?.CRITICAL ?? 0
-        const totalUnfixedCritical = osUnfixedCritical + langUnfixedCritical
+        const totalUnfixedCritical = rowData?.total_unfixed_critical || 0
         $(td).html(totalUnfixedCritical)
       },
     },
     {
+      data: 'total_unfixed_high',
       name: 'total_unfixed_high',
-      data: null,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.scan_summary?.summary || {}
-        const osUnfixedHigh = summary?.['os-pkgs']?.unfixed?.HIGH ?? 0
-        const langUnfixedHigh = summary?.['lang-pkgs']?.unfixed?.HIGH ?? 0
-        const totalUnfixedHigh = osUnfixedHigh + langUnfixedHigh
+        const totalUnfixedHigh = rowData?.total_unfixed_high || 0
         $(td).html(totalUnfixedHigh)
       },
     },
     {
+      data: 'total_unfixed_medium',
       name: 'total_unfixed_medium',
-      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.scan_summary?.summary || {}
-        const osUnfixedMedium = summary?.['os-pkgs']?.unfixed?.MEDIUM ?? 0
-        const langUnfixedMedium = summary?.['lang-pkgs']?.unfixed?.MEDIUM ?? 0
-        const totalUnfixedMedium = osUnfixedMedium + langUnfixedMedium
+        const totalUnfixedMedium = rowData?.total_unfixed_medium || 0
         $(td).html(totalUnfixedMedium)
       },
     },
     {
+      data: 'total_unfixed_low',
       name: 'total_unfixed_low',
-      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.scan_summary?.summary || {}
-        const osUnfixedLow = summary?.['os-pkgs']?.unfixed?.LOW ?? 0
-        const langUnfixedLow = summary?.['lang-pkgs']?.unfixed?.LOW ?? 0
-        const totalUnfixedLow= osUnfixedLow + langUnfixedLow
+        const totalUnfixedLow = rowData?.total_unfixed_low || 0
         $(td).html(totalUnfixedLow)
       },
     },
     {
+      data: 'total_unfixed_unknown',
       name: 'total_unfixed_unknown',
-      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.scan_summary?.summary || {}
-        const osUnfixedUnknown = summary?.['os-pkgs']?.unfixed?.UNKNOWN ?? 0
-        const langUnfixedUnknown = summary?.['lang-pkgs']?.ununfixed?.UNKNOWN ?? 0
-        const totalUnfixedUnknown = osUnfixedUnknown + langUnfixedUnknown
+        const totalUnfixedUnknown = rowData?.total_unfixed_unknown || 0
         $(td).html(totalUnfixedUnknown)
       },
     },
     {
-      name: 'total_config_issues',
-      data: null,
-      visible: false,
-      createdCell: function (td, _cellData, rowData) {
-        const config_summary = rowData?.scan_summary?.summary?.config || {}
-        const totalConfigIssues =
-          (config_summary.LOW ?? 0) +
-          (config_summary.MEDIUM ?? 0) +
-          (config_summary.HIGH ?? 0) +
-          (config_summary.CRITICAL ?? 0)
-        $(td).html(totalConfigIssues)
-      },
-    },
-    {
+      data: 'total_secret_issues',
       name: 'total_secret_issues',
-      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const secret_summary = rowData?.scan_summary?.summary?.secret ?? {}
-        const totalSecretIssues =
-          (secret_summary.LOW ?? 0) +
-          (secret_summary.MEDIUM ?? 0) +
-          (secret_summary.HIGH ?? 0) +
-          (secret_summary.CRITICAL ?? 0)
+        const totalSecretIssues = rowData?.total_secret_issues || 0
         $(td).html(totalSecretIssues)
       },
     },
   ]
 
-  const table = createTable({
-    id: 'trivyScansTable',
-    ajaxUrl: '/trivy-scans/data',
-    orderColumn: 0,
-    orderType: 'asc',
-    columns,
+  let table
+  $.ajax({
+    url: '/trivy-scans/data',
+    success: function (data) {
+      const transformedData = transformData(data)
+      table = createTable({
+        id: 'trivyScansTable',
+        data: transformedData,
+        orderColumn: 0,
+        orderType: 'asc',
+        columns,
+      })
+    },
   })
+
 
   const severityColumns = {
     critical: ['total_fixed_critical', 'total_unfixed_critical'],
@@ -202,7 +188,6 @@ jQuery(function () {
 
   $('#showAvailable').on('click', function () {
     const isVisible = $(this).is(':checked')
-
     Object.keys(severityColumns).forEach(severity => {
       const isSeveritySelected = $(`#showSeverity${capitalize(severity)}`).is(':checked')
       const column = `total_fixed_${severity}`
@@ -212,7 +197,6 @@ jQuery(function () {
 
   $('#showUnavailable').on('click', function () {
     const isVisible = $(this).is(':checked')
-
     Object.keys(severityColumns).forEach(severity => {
       const isSeveritySelected = $(`#showSeverity${capitalize(severity)}`).is(':checked')
       const column = `total_unfixed_${severity}`

@@ -302,7 +302,6 @@ export default class StrapiApiClient {
     const results = await this.restClient.get<ListResponse<TrivyScanListResponseDataItem>>({
       path: '/v1/trivy-scans',
     })
-
     return results.data.map(convertTrivyScan)
   }
 

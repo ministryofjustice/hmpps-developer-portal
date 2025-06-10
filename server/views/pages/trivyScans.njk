@@ -15,8 +15,53 @@
     <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
     <input type="hidden" name="monitorId" id="monitorId" value="{{ monitorId }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-
     <div class="monitor">
+      <div class="monitor-filter-block">
+        <div class="govuk-heading-s">Environments</div>
+        {{ govukCheckboxes({
+          classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+          name: "environment",
+          items: [
+            {
+              id: "environment-dev",
+              value: "dev",
+              text: "Dev",
+              checked: true
+            },
+            {
+              id: "environment-stage",
+              value: "stage",
+              text: "Stage",
+              checked: true
+            },
+            {
+              id: "environment-test",
+              value: "test",
+              text: "Test",
+              checked: true
+            },
+            {
+              id: "environment-preprod",
+              value: "preprod",
+              text: "PreProd",
+              checked: true
+            },
+            {
+              id: "environment-prod",
+              value: "prod",
+              text: "Prod",
+              checked: true
+            },
+            {
+              id: "environment-unknown",
+              value: "unknown",
+              text: "Unknown (latest image)",
+              checked: true
+            }
+          ]
+        }) }}
+      </div>
+
       <div class="monitor-filter-block">
         <div class="govuk-heading-s">Vulnerabilities with  </div>
         {{ govukCheckboxes({
@@ -99,7 +144,6 @@
         <th> Medium (FUA) </th>
         <th> Low (FUA) </th>
         <th> Unknown (FUA) </th>
-        <th> Config Issues </th>
         <th> Secret Issues </th>
       </tr>
     </thead>
@@ -119,7 +163,6 @@
         <th> Medium (FUA) </th>
         <th> Low (FUA) </th>
         <th> Unknown (FUA) </th>
-        <th> Config Issues </th>
         <th> Secret Issues </th>
       </tr>
     </tfoot>
