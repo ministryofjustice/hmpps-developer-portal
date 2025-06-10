@@ -2,7 +2,7 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { ServiceCatalogueService, Services } from '../services'
 import { getDependencyName, getDependencyType } from '../utils/utils'
-import { getDependencyNames, getDependencyTypes } from '../utils/dependencies'
+import getDependencyNames from '../utils/dependencies'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -11,17 +11,8 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   get('/dependency-names/:dependencyType', async (req, res) => {
     const { dependencyType } = req.params
-    console.log(`[INFO] Fetching dependency names for type: ${dependencyType}`)
-
-    try {
-      const dependencyNames = await getDependencyNames(serviceCatalogueService, dependencyType)
-      console.log(`[INFO] Found ${dependencyNames.length} dependency names:`, dependencyNames)
-
-      res.json(dependencyNames)
-    } catch (error) {
-      console.error(`[ERROR] Failed to fetch dependency names for ${dependencyType}:`, error)
-      res.status(500).json({ error: 'Internal Server Error' })
-    }
+    const dependencyNames = await getDependencyNames(serviceCatalogueService, dependencyType)
+    res.json(dependencyNames)
   })
 
   get('/data/:dependencyType/:dependencyName', async (req, res) => {
