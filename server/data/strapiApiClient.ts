@@ -29,7 +29,7 @@ import {
 } from './strapiApiTypes'
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea, TrivyScan } from './converters/modelTypes'
-import { convertTrivyScan } from './converters/trivyScans'
+import convertTrivyScan from './converters/trivyScans'
 
 export default class StrapiApiClient {
   private restClient: RestClient

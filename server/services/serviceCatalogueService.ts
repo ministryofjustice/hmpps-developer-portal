@@ -21,7 +21,6 @@ import {
   GithubTeam,
   ServiceArea as StrapiServiceArea,
   ScheduledJob,
-  TrivyScan as StrapiTrivyScan,
   ScheduledJobListResponseDataItem,
   EnvironmentListResponseDataItem,
 } from '../data/strapiApiTypes'

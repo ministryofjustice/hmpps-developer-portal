@@ -2,7 +2,7 @@
 import { TrivyScanListResponseDataItem } from '../strapiApiTypes'
 import type { TrivyScan } from './modelTypes'
 
-export const convertTrivyScan = (TrivyScan: TrivyScanListResponseDataItem): TrivyScan => {
+const convertTrivyScan = (TrivyScan: TrivyScanListResponseDataItem): TrivyScan => {
   const { attributes, id } = TrivyScan
   const { name, trivy_scan_timestamp, build_image_tag, scan_status, scan_summary, environments } = attributes
 
@@ -16,3 +16,5 @@ export const convertTrivyScan = (TrivyScan: TrivyScanListResponseDataItem): Triv
     scan_summary,
   }
 }
+
+export default convertTrivyScan
