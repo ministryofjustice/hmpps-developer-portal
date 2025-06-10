@@ -13,6 +13,6 @@ export const convertTrivyScan = (TrivyScan: TrivyScanListResponseDataItem): Triv
     build_image_tag,
     scan_status,
     environments: environments as string[],
-    scan_summary: scan_summary
+    scan_summary,
   }
 }

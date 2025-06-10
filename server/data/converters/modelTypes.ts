@@ -29,11 +29,11 @@ export type Summary = {
   summary?: {
     config?: Record<string, number>
     secret?: Record<string, number>
-    "os-pkgs"?: {
+    'os-pkgs'?: {
       fixed?: Record<string, number>
       unfixed?: Record<string, number>
     }
-    "lang-pkgs"?: {
+    'lang-pkgs'?: {
       fixed?: Record<string, number>
       unfixed?: Record<string, number>
     }
@@ -53,7 +53,7 @@ export type Summary = {
       Description: string
       AdditionalContext: string
     }>
-    "os-pkgs"?: Array<{
+    'os-pkgs'?: Array<{
       PkgName: string
       Severity: string
       Description: string
@@ -61,7 +61,7 @@ export type Summary = {
       FixedVersion: string
       VulnerabilityID: string
     }>
-    "lang-pkgs"?: Array<{
+    'lang-pkgs'?: Array<{
       PkgName: string
       Severity: string
       Description: string

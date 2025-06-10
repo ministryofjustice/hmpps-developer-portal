@@ -28,7 +28,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const createSummaryTable = (summary: any): Array<{ category: string; severity: string; count: number }> => {
       const dataTable: Array<{ category: string; severity: string; count: number }> = []
-  
+
       // Add rows for "config"
       if (summary.config) {
         for (const [severity, count] of Object.entries(summary.config)) {
@@ -39,7 +39,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           })
         }
       }
-  
+
       // Add rows for "os-pkgs"
       if (summary['os-pkgs']) {
         for (const [status, severities] of Object.entries(summary['os-pkgs'])) {
@@ -52,7 +52,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           }
         }
       }
-  
+
       // Add rows for "lang-pkgs"
       if (summary['lang-pkgs']) {
         for (const [status, severities] of Object.entries(summary['lang-pkgs'])) {
@@ -81,10 +81,10 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       })
       return dataTable
     }
-    
+
     const summaryTable = createSummaryTable(scanSummary)
 
-    // Results section 
+    // Results section
 
     const createVulnerabilitiesResultsTable = (results: any) => {
       const dataTable: any[] = []
@@ -93,7 +93,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       if (results['lang-pkgs']) {
         for (const pkg of results['lang-pkgs']) {
           dataTable.push({
-            category: "Language Packages",
+            category: 'Language Packages',
             pkgName: pkg.PkgName,
             severity: pkg.Severity,
             description: pkg.Description,
@@ -109,7 +109,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       if (results['os-pkgs']) {
         for (const pkg of results['os-pkgs']) {
           dataTable.push({
-            category: "Language Packages",
+            category: 'OS Packages',
             pkgName: pkg.PkgName,
             severity: pkg.Severity,
             description: pkg.Description,
@@ -136,7 +136,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       if (results.secret) {
         for (const secret of results.secret) {
           dataTable.push({
-            category: "Secret",
+            category: 'Secret',
             severity: secret.Severity,
             description: secret.Description,
             filePath: secret.FilePath,
@@ -155,9 +155,14 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     }
     const secretResultTable = createSecretResultsTable(scanResults)
 
-    return res.render('pages/trivyScan', { trivyScan: scan, scanDate, summaryTable, vulnerabilitiesResultsTable, secretResultTable})
+    return res.render('pages/trivyScan', { 
+      trivyScan: scan, 
+      scanDate, 
+      summaryTable, 
+      vulnerabilitiesResultsTable, 
+      secretResultTable
+    })
   })
 
-  
   return router
 }
