@@ -17,58 +17,8 @@
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
 
     <div class="monitor">
-      {{ govukSelect({
-        id: "team",
-        name: "team",
-        label: {
-          text: "Team",
-          classes: "govuk-fieldset__legend--s"
-        },
-        items: teamList,
-        hint: { html : "Select team to limit data" }
-      }) }}
       <div class="monitor-filter-block">
-        <div class="govuk-heading-s">Environments</div>
-        {{ govukCheckboxes({
-          classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
-          name: "environment",
-          items: [
-            {
-              id: "environment-dev",
-              value: "dev",
-              text: "Dev",
-              checked: true
-            },
-            {
-              id: "environment-stage",
-              value: "stage",
-              text: "Stage",
-              checked: true
-            },
-            {
-              id: "environment-test",
-              value: "test",
-              text: "Test",
-              checked: true
-            },
-            {
-              id: "environment-preprod",
-              value: "preprod",
-              text: "PreProd",
-              checked: true
-            },
-            {
-              id: "environment-prod",
-              value: "prod",
-              text: "Prod",
-              checked: true
-            }
-          ]
-        }) }}
-      </div>
-
-      <div class="monitor-filter-block">
-        <div class="govuk-heading-s">Vulnerabilities with Fix </div>
+        <div class="govuk-heading-s">Vulnerabilities with  </div>
         {{ govukCheckboxes({
           classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
           name: "Vulnerabilities with Fix",
@@ -128,14 +78,15 @@
           ]
         }) }}
       </div>
+    </div>
   </form>
-
-
+  <br>
+  <p><strong>Note:</strong> The latest images are not retrieved from the health endpoint, making it unclear which environment they are deployed in.</p>
   <table id="trivyScansTable" class="stripe">
     <thead>
       <tr>
-        <th class="govuk-!-width-one-quarter">Environment</th>
         <th class="govuk-!-width-one-quarter">Name</th>
+        <th class="govuk-!-width-one-quarter">Environment</th>
         <th class="govuk-!-width-one-quarter">Image</th> 
         <th class="govuk-!-width-one-quarter">Scan Timestamp</th> 
         <th> Critical (FA) </th>
@@ -150,13 +101,12 @@
         <th> Unknown (FUA) </th>
         <th> Config Issues </th>
         <th> Secret Issues </th>
-        <th> Team </th>
       </tr>
     </thead>
     <tfoot>
       <tr>
-        <th class="govuk-!-width-one-quarter">Environment</th>
         <th class="govuk-!-width-one-quarter">Name</th>
+        <th class="govuk-!-width-one-quarter">Environment</th>
         <th class="govuk-!-width-one-quarter">Image</th> 
         <th class="govuk-!-width-one-quarter">Scan Timestamp</th> 
         <th> Critical (FA) </th>
@@ -171,7 +121,6 @@
         <th> Unknown (FUA) </th>
         <th> Config Issues </th>
         <th> Secret Issues </th>
-        <th> Team </th>
       </tr>
     </tfoot>
   </table>

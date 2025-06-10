@@ -1,6 +1,6 @@
 import { RdsEntry } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import type { ServiceArea } from '../data/converters/modelTypes'
+import type { ServiceArea, TrivyScan } from '../data/converters/modelTypes'
 import {
   Product,
   Component,
@@ -21,9 +21,8 @@ import {
   GithubTeam,
   ServiceArea as StrapiServiceArea,
   ScheduledJob,
+  TrivyScan as StrapiTrivyScan,
   ScheduledJobListResponseDataItem,
-  TrivyScan,
-  EnvListResponseDataItem,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
@@ -234,12 +233,10 @@ export default class ServiceCatalogueService {
     return scheduledJobsRequest
   }
 
-  async getTrivyScans(): Promise<EnvListResponseDataItem[]> {
+  async getTrivyScans(): Promise<TrivyScan[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const trivyScansData = await strapiApiClient.getTrivyScans()
-    console.log("number of scans:", trivyScansData.data.length)
-    const trivyScans = trivyScansData.data.sort(sortData)
-    console.log("number of scans after sort:", trivyScans.length)
+    const trivyScans = trivyScansData.sort(sortByName)
     return trivyScans
   }
 

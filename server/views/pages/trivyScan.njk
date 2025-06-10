@@ -9,27 +9,26 @@
 
   <h1 data-test="detail-page-title">Trivy scan report for {{ trivyScan.name }}</h1>
   <p><strong>Build Image Tag:</strong> {{ trivyScan.build_image_tag }}</p>
-  <p><strong>Scan Timestamp:</strong> {{ trivyScan.trivy_scan_timestamp }}</p>
+  <p><strong>Environments Image deployed on:</strong> 
+    {% for environment in trivyScan.environments %}
+      {{ environment }}{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+  <p><strong>Scan Timestamp:</strong> {{ scanDate}}</p>
 
   <h2>Scan Summary </h2>
     
-  <table border="1" style="table-layout: fixed; width: 100%; text-align: left;">
-    <thead style="background-color: grey; color: white">
+  <table class="stripe">
+    <thead>
       <tr>
-        <th style="text-align: left;">Category</th>
+        <th>Category</th>
         <th>Severity</th>
         <th>Count</th>
       </tr>
     </thead>
     <tbody>
         {% for row in summaryTable %}
-          <tr
-            {% if row.severity == "CRITICAL" %}
-              style="background-color: red; color: white;"
-            {% elif row.severity == "HIGH" %}
-              style="background-color: orange; color: black;"
-            {% endif %}
-          >
+          <tr>
             <td>{{ row.category }}</td>
             <td>{{ row.severity }}</td>
             <td>{{ row.count }}</td>
@@ -43,7 +42,6 @@
   <!-- Hyperlinks -->
   <ul>
     <li><a href="#vulnerabilities">Vulnerabilities</a></li>
-    <li><a href="#config">Config</a></li>
     <li><a href="#secrets">Secrets</a></li>
   </ul>
 
@@ -70,43 +68,12 @@
             >
               <td>{{ row.category }}</td>
               <td>{{ row.severity }}</td>
-              <td>{{ row.vulnerabilityID }}</td>
+              <td><a href="{{ row.PrimaryURL }}">{{ row.vulnerabilityID }}</a></td>
               <td>{{ row.pkgName }}</td>
               <td>{{ row.description }}</td>
               <td>{{ row.installedVersion }}</td>
               <td>{{ row.fixedVersion }}</td>
           </tr>
-          {% endfor %}
-    </tbody>
-  </table>
-
-  <!-- Config Table -->
-  <h2 id="config">Config</h2>
-  <table border="1" style="table-layout: fixed; width: 100%; text-align: left;">
-    <thead style="background-color: grey; color: white">
-      <tr>
-        <th style="width: 10%;">Category</th>
-        <th style="width: 10%;">Severity</th>
-        <th style="width: 30%;">Description</th>
-        <th style="width: 25%;">File Path</th>
-        <th style="width: 5%;">Line</th>
-        <th style="width: 25%;">Additional Context</th>
-      </tr>
-    </thead>
-    <tbody>
-          {% for config in configResultTable %}
-            <tr 
-              {% if config.severity == "HIGH" or config.severity == "CRITICAL" %}
-                style="font-weight: bold;"
-              {% endif %}
-            >
-              <td>Config</td>
-              <td>{{ config.severity }}</td>
-              <td>{{ config.description }}</td>
-              <td style="word-wrap: break-word;">{{ config.filePath }}</td>
-              <td>{{ config.LineNumber }}</td>
-              <td>{{ config.additionalContext }}</td>
-            </tr>
           {% endfor %}
     </tbody>
   </table>
@@ -141,5 +108,5 @@
         {% endfor %}
     </tbody>
   </table>
-  
+
 {% endblock %}

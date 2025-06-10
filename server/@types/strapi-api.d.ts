@@ -2012,6 +2012,7 @@ export interface components {
                   scan_status?: 'Failed' | 'Succeeded'
                   trivy_scan_timestamp?: string
                   scan_summary?: unknown
+                  environments?: unknown
                   /** Format: date-time */
                   updatedAt?: string
                   updatedBy?: {
@@ -2611,6 +2612,7 @@ export interface components {
                         scan_status?: 'Failed' | 'Succeeded'
                         trivy_scan_timestamp?: string
                         scan_summary?: unknown
+                        environments?: unknown
                         /** Format: date-time */
                         updatedAt?: string
                         updatedBy?: {
@@ -3197,6 +3199,7 @@ export interface components {
                         scan_status?: 'Failed' | 'Succeeded'
                         trivy_scan_timestamp?: string
                         scan_summary?: unknown
+                        environments?: unknown
                         /** Format: date-time */
                         updatedAt?: string
                         updatedBy?: {
@@ -4267,6 +4270,7 @@ export interface components {
                               scan_status?: 'Failed' | 'Succeeded'
                               trivy_scan_timestamp?: string
                               scan_summary?: unknown
+                              environments?: unknown
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -4893,6 +4897,7 @@ export interface components {
                               scan_status?: 'Failed' | 'Succeeded'
                               trivy_scan_timestamp?: string
                               scan_summary?: unknown
+                              environments?: unknown
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -5854,6 +5859,7 @@ export interface components {
                               scan_status?: 'Failed' | 'Succeeded'
                               trivy_scan_timestamp?: string
                               scan_summary?: unknown
+                              environments?: unknown
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -6438,6 +6444,7 @@ export interface components {
                               scan_status?: 'Failed' | 'Succeeded'
                               trivy_scan_timestamp?: string
                               scan_summary?: unknown
+                              environments?: unknown
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -6989,6 +6996,7 @@ export interface components {
       scan_status?: 'Failed' | 'Succeeded'
       trivy_scan_timestamp?: string
       scan_summary?: unknown
+      environments?: unknown
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
@@ -7021,6 +7029,7 @@ export interface components {
         scan_status?: 'Failed' | 'Succeeded'
         trivy_scan_timestamp?: string
         scan_summary?: unknown
+        environments?: unknown
       }
     }
     TrivyScanResponse: {

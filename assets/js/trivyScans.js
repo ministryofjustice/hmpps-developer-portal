@@ -1,187 +1,177 @@
 jQuery(function () {
   const columns = [
     {
-      data: 'type',
+      data: 'name',
       createdCell: function (td, _cellData, rowData) {
-        const name = rowData?.attributes?.type
-        $(td).html(name)
+        const name = rowData?.name || 'N/A'
+        $(td).html(`<a href="/trivy-scans/${name}">${name}</a>`)
       },
     },
     {
-      data: 'name',
+      data: 'environments',
       createdCell: function (td, _cellData, rowData) {
-        const name = rowData?.attributes?.trivy_scan?.data?.attributes?.name || 'N/A'
-        $(td).html(`<a href="/trivy-scans/${name}">${name}</a>`)
+        const environments = Array.isArray(rowData?.environments)
+          ? rowData.environments.join(', ')
+          : 'N/A'
+        $(td).html(environments)
       },
     },
     {
       data: 'build_image_tag',
       createdCell: function (td, _cellData, rowData) {
-        const buildImageTag = rowData?.attributes?.trivy_scan?.data?.attributes?.build_image_tag || 'N/A'
+        const buildImageTag = rowData?.build_image_tag || 'N/A'
         $(td).html(buildImageTag)
       },
     },
     {
-      data: 'attributes.trivy_scan.data.attributes.trivy_scan_timestamp',
+      data: 'trivy_scan_timestamp',
       createdCell: function (td, _cellData, rowData) {
-        const scan_timestamp = rowData?.attributes?.trivy_scan?.data?.attributes?.trivy_scan_timestamp || 'N/A'
-        $(td).html(scan_timestamp)
+        const scan_timestamp = rowData?.trivy_scan_timestamp || 'N/A'
+        $(td).html(formatDateToDDMONYYYYHH24MMSS(scan_timestamp))
       },
     },
     {
-      data: 'fixed_critical',
-      name: 'fixed_critical',
+      name: 'total_fixed_critical',
+      data: null,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
-        const os_fixed_critical = summary?.['os-pkgs']?.fixed?.CRITICAL ?? 0
-        const lang_fixed_critical = summary?.['lang-pkgs']?.fixed?.CRITICAL ?? 0
-        const value = os_fixed_critical + lang_fixed_critical
-        $(td).html(`${value}`)
+        const summary = rowData?.scan_summary?.summary || {}
+        const osFixedCritical = summary?.["os-pkgs"]?.fixed?.CRITICAL ?? 0
+        const langFixedCritical = summary?.["lang-pkgs"]?.fixed?.CRITICAL ?? 0
+        const totalFixedCritical = osFixedCritical + langFixedCritical
+        $(td).html(totalFixedCritical)
       },
     },
     {
-      data: 'fixed_high',
-      name: 'fixed_high',
+      name: 'total_fixed_high',
+      data: null,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
-        const os_fixed_high = summary?.['os-pkgs']?.fixed?.HIGH ?? 0
-        const lang_fixed_high = summary?.['lang-pkgs']?.fixed?.HIGH ?? 0
-        const value = os_fixed_high + lang_fixed_high
-        $(td).html(`${value}`)
+        const summary = rowData?.scan_summary?.summary || {}
+        const osFixedHigh = summary?.['os-pkgs']?.fixed?.HIGH ?? 0
+        const langFixedHigh = summary?.['lang-pkgs']?.fixed?.HIGH ?? 0
+        const totalFixedHigh = osFixedHigh + langFixedHigh
+        $(td).html(totalFixedHigh)
       },
     },
     {
-      data: 'fixed_medium',
-      name: 'fixed_medium',
+      name: 'total_fixed_medium',
+      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
-        const os_fixed_medium = summary?.['os-pkgs']?.fixed?.MEDIUM ?? 0
-        const lang_fixed_medium = summary?.['lang-pkgs']?.fixed?.MEDIUM ?? 0
-        const value = os_fixed_medium + lang_fixed_medium
-        $(td).html(`${value}`)
+        const summary = rowData?.scan_summary?.summary || {}
+        const osFixedMedium = summary?.['os-pkgs']?.fixed?.MEDIUM ?? 0
+        const langFixedMedium = summary?.['lang-pkgs']?.fixed?.MEDIUM ?? 0
+        const totalFixedMedium = osFixedMedium + langFixedMedium
+        $(td).html(totalFixedMedium)
       },
     },
     {
-      data: 'fixed_low',
-      name: 'fixed_low',
+      name: 'total_fixed_low',
+      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
-        const os_fixed_low = summary?.['os-pkgs']?.fixed?.LOW ?? 0
-        const lang_fixed_low = summary?.['lang-pkgs']?.fixed?.LOW ?? 0
-        const value = os_fixed_low + lang_fixed_low
-        $(td).html(`${value}`)
+        const summary = rowData?.scan_summary?.summary || {}
+        const osFixedLow = summary?.['os-pkgs']?.fixed?.LOW ?? 0
+        const langFixedLow = summary?.['lang-pkgs']?.fixed?.LOW ?? 0
+        const totalFixedLow = osFixedLow + langFixedLow
+        $(td).html(totalFixedLow)
       },
     },
     {
-      data: 'fixed_unknown',
-      name: 'fixed_unknown',
+      name: 'total_fixed_unknown',
+      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
-        const os_fixed_unknown = summary?.['os-pkgs']?.fixed?.UNKNOWN ?? 0
-        const lang_fixed_unknown = summary?.['lang-pkgs']?.fixed?.UNKNOWN ?? 0
-        value = os_fixed_unknown + lang_fixed_unknown
-        $(td).html(`${value}`)
+        const summary = rowData?.scan_summary?.summary || {}
+        const osFixedUnknown = summary?.['os-pkgs']?.fixed?.UNKNOWN ?? 0
+        const langFixedUnknown = summary?.['lang-pkgs']?.fixed?.UNKNOWN ?? 0
+        const totalFixedUnknown = osFixedUnknown + langFixedUnknown
+        $(td).html(totalFixedUnknown)
       },
     },
     {
-      data: 'unfixed_critical',
-      name: 'unfixed_critical',
+      name: 'total_unfixed_critical',
+      data: null,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
-        const os_unfixed_critical = summary?.['os-pkgs']?.unfixed?.CRITICAL ?? 0
-        const lang_unfixed_critical = summary?.['lang-pkgs']?.unfixed?.CRITICAL ?? 0
-        const value = os_unfixed_critical + lang_unfixed_critical
-        $(td).html(`${value}`)
+        const summary = rowData?.scan_summary?.summary || {}
+        const osUnfixedCritical = summary?.['os-pkgs']?.unfixed?.CRITICAL ?? 0
+        const langUnfixedCritical = summary?.['lang-pkgs']?.unfixed?.CRITICAL ?? 0
+        const totalUnfixedCritical = osUnfixedCritical + langUnfixedCritical
+        $(td).html(totalUnfixedCritical)
       },
     },
     {
-      data: 'unfixed_high',
-      name: 'unfixed_high',
+      name: 'total_unfixed_high',
+      data: null,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
-        const os_unfixed_high = summary?.['os-pkgs']?.unfixed?.HIGH ?? 0
-        const lang_unfixed_high = summary?.['lang-pkgs']?.unfixed?.HIGH ?? 0
-        const value = os_unfixed_high + lang_unfixed_high
-        $(td).html(`${value}`)
+        const summary = rowData?.scan_summary?.summary || {}
+        const osUnfixedHigh = summary?.['os-pkgs']?.unfixed?.HIGH ?? 0
+        const langUnfixedHigh = summary?.['lang-pkgs']?.unfixed?.HIGH ?? 0
+        const totalUnfixedHigh = osUnfixedHigh + langUnfixedHigh
+        $(td).html(totalUnfixedHigh)
       },
     },
     {
-      data: 'unfixed_medium',
-      name: 'unfixed_medium',
+      name: 'total_unfixed_medium',
+      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
-        const os_unfixed_medium = summary?.['os-pkgs']?.unfixed?.MEDIUM ?? 0
-        const lang_unfixed_medium = summary?.['lang-pkgs']?.unfixed?.MEDIUM ?? 0
-        const value = os_unfixed_medium + lang_unfixed_medium
-        $(td).html(`${value}`)
+        const summary = rowData?.scan_summary?.summary || {}
+        const osUnfixedMedium = summary?.['os-pkgs']?.unfixed?.MEDIUM ?? 0
+        const langUnfixedMedium = summary?.['lang-pkgs']?.unfixed?.MEDIUM ?? 0
+        const totalUnfixedMedium = osUnfixedMedium + langUnfixedMedium
+        $(td).html(totalUnfixedMedium)
       },
     },
     {
-      data: 'unfixed_low',
-      name: 'unfixed_low',
+      name: 'total_unfixed_low',
+      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
-        const os_unfixed_low = summary?.['os-pkgs']?.unfixed?.LOW ?? 0
-        const lang_unfixed_low = summary?.['lang-pkgs']?.unfixed?.LOW ?? 0
-        const value = os_unfixed_low + lang_unfixed_low
-        $(td).html(`${value}`)
+        const summary = rowData?.scan_summary?.summary || {}
+        const osUnfixedLow = summary?.['os-pkgs']?.unfixed?.LOW ?? 0
+        const langUnfixedLow = summary?.['lang-pkgs']?.unfixed?.LOW ?? 0
+        const totalUnfixedLow= osUnfixedLow + langUnfixedLow
+        $(td).html(totalUnfixedLow)
       },
     },
     {
-      data: 'unfixed_unknown',
-      name: 'unfixed_unknown',
+      name: 'total_unfixed_unknown',
+      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const summary = rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary.summary || {}
-        const os_unfixed_unknown = summary?.['os-pkgs']?.unfixed?.UNKNOWN ?? 0
-        const lang_unfixed_unknown = summary?.['lang-pkgs']?.ununfixed?.UNKNOWN ?? 0
-        value = os_unfixed_unknown + lang_unfixed_unknown
-        $(td).html(`${value}`)
+        const summary = rowData?.scan_summary?.summary || {}
+        const osUnfixedUnknown = summary?.['os-pkgs']?.unfixed?.UNKNOWN ?? 0
+        const langUnfixedUnknown = summary?.['lang-pkgs']?.ununfixed?.UNKNOWN ?? 0
+        const totalUnfixedUnknown = osUnfixedUnknown + langUnfixedUnknown
+        $(td).html(totalUnfixedUnknown)
       },
     },
     {
-      data: 'config_issues',
-      name: 'config_issues',
+      name: 'total_config_issues',
+      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const config_summary =
-          rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary.config || {}
-        const value =
+        const config_summary = rowData?.scan_summary?.summary?.config || {}
+        const totalConfigIssues =
           (config_summary.LOW ?? 0) +
           (config_summary.MEDIUM ?? 0) +
           (config_summary.HIGH ?? 0) +
           (config_summary.CRITICAL ?? 0)
-        $(td).html(`${value}`)
+        $(td).html(totalConfigIssues)
       },
     },
     {
-      data: 'secret_issues',
-      name: 'secret_issues',
+      name: 'total_secret_issues',
+      data: null,
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const secret_summary =
-          rowData?.attributes?.trivy_scan?.data?.attributes?.scan_summary?.scan_summary?.summary.secret ?? {}
-        const value =
+        const secret_summary = rowData?.scan_summary?.summary?.secret ?? {}
+        const totalSecretIssues =
           (secret_summary.LOW ?? 0) +
           (secret_summary.MEDIUM ?? 0) +
           (secret_summary.HIGH ?? 0) +
           (secret_summary.CRITICAL ?? 0)
-        $(td).html(`${value}`)
-      },
-    },
-    {
-      data: 'team',
-      name: 'team',
-      visible: false,
-      createdCell: function (td, _cellData, rowData) {
-        const team =
-          rowData?.attributes?.component?.data?.attributes?.product?.data?.attributes?.team?.data?.attributes?.name
-        $(td).html(`${team}`)
+        $(td).html(totalSecretIssues)
       },
     },
   ]
@@ -195,11 +185,11 @@ jQuery(function () {
   })
 
   const severityColumns = {
-    critical: ['fixed_critical', 'unfixed_critical'],
-    high: ['fixed_high', 'unfixed_high'],
-    medium: ['fixed_medium', 'unfixed_medium'],
-    low: ['fixed_low', 'unfixed_low'],
-    unknown: ['fixed_unknown', 'unfixed_unknown'],
+    critical: ['total_fixed_critical', 'total_unfixed_critical'],
+    high: ['total_fixed_high', 'total_unfixed_high'],
+    medium: ['total_fixed_medium', 'total_unfixed_medium'],
+    low: ['total_fixed_low', 'total_unfixed_low'],
+    unknown: ['total_fixed_unknown', 'total_unfixed_unknown'],
   }
 
   function toggleSeverityColumns(severity, isVisible) {
@@ -215,7 +205,7 @@ jQuery(function () {
 
     Object.keys(severityColumns).forEach(severity => {
       const isSeveritySelected = $(`#showSeverity${capitalize(severity)}`).is(':checked')
-      const column = `fixed_${severity}`
+      const column = `total_fixed_${severity}`
       table.column(`${column}:name`).visible(isVisible && isSeveritySelected)
     })
   })
@@ -225,7 +215,7 @@ jQuery(function () {
 
     Object.keys(severityColumns).forEach(severity => {
       const isSeveritySelected = $(`#showSeverity${capitalize(severity)}`).is(':checked')
-      const column = `unfixed_${severity}`
+      const column = `total_unfixed_${severity}`
 
       table.column(`${column}:name`).visible(isVisible && isSeveritySelected)
     })
@@ -251,12 +241,21 @@ jQuery(function () {
     toggleSeverityColumns('unknown', $(this).is(':checked'))
   })
 
-  // Non-working filter for team and environment
-  // $('#team').on('change', function () { 
-  //   // Get the selected team
-  //   const selectedTeam = $(this).val()
-  //   console.log(`Selected team: ${selectedTeam}`)
-  //   // Update the DataTable's AJAX URL with the selected team
-  //   table.ajax.url(`/trivy-scans/data?filter[component][product][team][name][$eq]=${selectedTeam}`).load()
-  // })
 })
+
+function formatDateToDDMONYYYYHH24MMSS(dateString) {
+  if (!dateString) return 'N/A'
+  const date = new Date(dateString)
+  return date
+    .toLocaleString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    })
+    .replace(',', '')
+    .toUpperCase()
+}

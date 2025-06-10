@@ -1,21 +1,15 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
+import { utcTimestampToUtcDateTime } from '../utils/utils'
 
-export default function routes({ serviceCatalogueService, dataFilterService }: Services): Router {
+export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
   get('/', async (req, res) => {
-    const [teamList, ] = await dataFilterService.getFormsDropdownLists({
-      teamName: '',
-      productId: '',
-      useFormattedName: true,
-    })
-    return res.render('pages/trivyScans', {
-      teamList,
-    })
+    return res.render('pages/trivyScans')
   })
 
   get('/data', async (req, res) => {
@@ -23,13 +17,14 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
 
     res.send(trivyScans)
   })
-  
+
   get('/:trivy_scan_name', async (req, res) => {
     const name = req.params.trivy_scan_name
     const scan = await serviceCatalogueService.getTrivyScan({ name })
-    const scanSummary = scan.scan_summary?.scan_summary?.summary 
-    const scanResults = scan.scan_summary?.scan_summary?.scan_result || []
-    const severityOrder = ["CRITICAL", "HIGH", "MEDIUM", "LOW", "UNKNOWN"]
+    const scanSummary = scan.scan_summary?.summary
+    const scanResults = scan.scan_summary?.scan_result
+    const scanDate = utcTimestampToUtcDateTime(scan.trivy_scan_timestamp)
+    const severityOrder = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN']
 
     const createSummaryTable = (summary: any): Array<{ category: string; severity: string; count: number }> => {
       const dataTable: Array<{ category: string; severity: string; count: number }> = []
@@ -91,33 +86,6 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
 
     // Results section 
 
-    // Create config results data table 
-    const createConfigResultsTable = (results: any) => {
-      const dataTable: any[] = []
-
-      // Add rows for "config"
-      if (results.config) {
-        for (const config of results.config) {
-          dataTable.push({
-            category: "Config",
-            filePath: config.FilePath,
-            severity: config.Severity,
-            lineNumber: config.LineNumber,
-            description: config.Description,
-            additionalContext: config.AdditionalContext,
-          })
-        }
-      }
-
-      // Sort the dataTable by severity
-      dataTable.sort((a, b) => {
-        return severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity)
-      })
-
-      return dataTable
-    }
-    const configResultTable = createConfigResultsTable(scanResults)
-
     const createVulnerabilitiesResultsTable = (results: any) => {
       const dataTable: any[] = []
 
@@ -131,6 +99,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
             description: pkg.Description,
             fixedVersion: pkg.FixedVersion,
             vulnerabilityID: pkg.VulnerabilityID,
+            PrimaryURL: pkg.PrimaryURL,
             installedVersion: pkg.InstalledVersion,
           })
         }
@@ -146,6 +115,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
             description: pkg.Description,
             fixedVersion: pkg.FixedVersion,
             vulnerabilityID: pkg.VulnerabilityID,
+            PrimaryURL: pkg.PrimaryURL,
             installedVersion: pkg.InstalledVersion,
           })
         }
@@ -185,7 +155,7 @@ export default function routes({ serviceCatalogueService, dataFilterService }: S
     }
     const secretResultTable = createSecretResultsTable(scanResults)
 
-    return res.render('pages/trivyScan', { trivyScan: scan, summaryTable, vulnerabilitiesResultsTable, configResultTable, secretResultTable})
+    return res.render('pages/trivyScan', { trivyScan: scan, scanDate, summaryTable, vulnerabilitiesResultsTable, secretResultTable})
   })
 
   
