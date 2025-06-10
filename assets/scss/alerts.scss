@@ -20,6 +20,10 @@
   flex-flow: row wrap;
 }
 
+#lastUpdated {
+  float: right;
+}
+
 // For update buttons when page is bigger than 640px
 @media(width > 640px) {
   .alert-selectors .label-and-button {
