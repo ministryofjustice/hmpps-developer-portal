@@ -310,7 +310,9 @@ export default class StrapiApiClient {
     return this.restClient.get({
       path: '/v1/trivy-scans',
       query: `filters[name][$eq]=${name}`,
+    })
   }
+
   async getEnvironments() {
     return this.restClient.get<ListResponse<EnvironmentListResponseDataItem>>({
       path: '/v1/environments',
