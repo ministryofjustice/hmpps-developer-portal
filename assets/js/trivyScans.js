@@ -3,30 +3,38 @@ jQuery(function () {
     const transformed = []
     data.forEach(item => {
       const summary = item.scan_summary?.summary || {}
-      item.environments.forEach((env) => {
+      item.environments.forEach(env => {
         transformed.push({
           environments: env,
           name: item.name,
           build_image_tag: item.build_image_tag,
           trivy_scan_timestamp: item.trivy_scan_timestamp,
-          total_fixed_critical: (summary?.["os-pkgs"]?.fixed?.CRITICAL ?? 0) + ( summary?.["lang-pkgs"]?.fixed?.CRITICAL ?? 0),
-          total_fixed_high: (summary?.["os-pkgs"]?.fixed?.HIGH ?? 0) + ( summary?.["lang-pkgs"]?.fixed?.HIGH ?? 0),
-          total_fixed_medium: (summary?.["os-pkgs"]?.fixed?.MEDIUM ?? 0) + ( summary?.["lang-pkgs"]?.fixed?.MEDIUM ?? 0),
-          total_fixed_low: (summary?.["os-pkgs"]?.fixed?.LOW ?? 0) + ( summary?.["lang-pkgs"]?.fixed?.LOW ?? 0),
-          total_fixed_unknown: (summary?.["os-pkgs"]?.fixed?.UNKNOWN ?? 0) + ( summary?.["lang-pkgs"]?.fixed?.UNKNOWN ?? 0),
-          total_unfixed_critical: (summary?.["os-pkgs"]?.unfixed?.CRITICAL ?? 0) + ( summary?.["lang-pkgs"]?.unfixed?.CRITICAL ?? 0),
-          total_unfixed_high: (summary?.["os-pkgs"]?.unfixed?.HIGH ?? 0) + ( summary?.["lang-pkgs"]?.unfixed?.HIGH ?? 0),
-          total_unfixed_medium: (summary?.["os-pkgs"]?.unfixed?.MEDIUM ?? 0) + ( summary?.["lang-pkgs"]?.unfixed?.MEDIUM ?? 0),
-          total_unfixed_low: (summary?.["os-pkgs"]?.unfixed?.LOW ?? 0) + ( summary?.["lang-pkgs"]?.unfixed?.LOW ?? 0),
-          total_unfixed_unknown: (summary?.["os-pkgs"]?.unfixed?.UNKNOWN ?? 0) + ( summary?.["lang-pkgs"]?.unfixed?.UNKNOWN ?? 0),
-          total_secret_issues: (summary?.["secret"]?.CRITICAL ?? 0) +  (summary?.["secret"]?.HIGH ?? 0)
-            + (summary?.["secret"]?.MEDIUM ?? 0) + (summary?.["secret"]?.LOW ?? 0),
+          total_fixed_critical:
+            (summary?.['os-pkgs']?.fixed?.CRITICAL ?? 0) + (summary?.['lang-pkgs']?.fixed?.CRITICAL ?? 0),
+          total_fixed_high: (summary?.['os-pkgs']?.fixed?.HIGH ?? 0) + (summary?.['lang-pkgs']?.fixed?.HIGH ?? 0),
+          total_fixed_medium: (summary?.['os-pkgs']?.fixed?.MEDIUM ?? 0) + (summary?.['lang-pkgs']?.fixed?.MEDIUM ?? 0),
+          total_fixed_low: (summary?.['os-pkgs']?.fixed?.LOW ?? 0) + (summary?.['lang-pkgs']?.fixed?.LOW ?? 0),
+          total_fixed_unknown:
+            (summary?.['os-pkgs']?.fixed?.UNKNOWN ?? 0) + (summary?.['lang-pkgs']?.fixed?.UNKNOWN ?? 0),
+          total_unfixed_critical:
+            (summary?.['os-pkgs']?.unfixed?.CRITICAL ?? 0) + (summary?.['lang-pkgs']?.unfixed?.CRITICAL ?? 0),
+          total_unfixed_high: (summary?.['os-pkgs']?.unfixed?.HIGH ?? 0) + (summary?.['lang-pkgs']?.unfixed?.HIGH ?? 0),
+          total_unfixed_medium:
+            (summary?.['os-pkgs']?.unfixed?.MEDIUM ?? 0) + (summary?.['lang-pkgs']?.unfixed?.MEDIUM ?? 0),
+          total_unfixed_low: (summary?.['os-pkgs']?.unfixed?.LOW ?? 0) + (summary?.['lang-pkgs']?.unfixed?.LOW ?? 0),
+          total_unfixed_unknown:
+            (summary?.['os-pkgs']?.unfixed?.UNKNOWN ?? 0) + (summary?.['lang-pkgs']?.unfixed?.UNKNOWN ?? 0),
+          total_secret_issues:
+            (summary?.['secret']?.CRITICAL ?? 0) +
+            (summary?.['secret']?.HIGH ?? 0) +
+            (summary?.['secret']?.MEDIUM ?? 0) +
+            (summary?.['secret']?.LOW ?? 0),
         })
       })
     })
     return transformed
   }
-  
+
   const columns = [
     {
       data: 'name',
@@ -61,8 +69,8 @@ jQuery(function () {
       data: 'total_fixed_critical',
       name: 'total_fixed_critical',
       createdCell: function (td, _cellData, rowData) {
-        const totalFixedCritical = rowData?.total_fixed_critical 
-        $(td).html(totalFixedCritical); // Render the value in the cell
+        const totalFixedCritical = rowData?.total_fixed_critical
+        $(td).html(totalFixedCritical)
       },
     },
     {
@@ -169,7 +177,6 @@ jQuery(function () {
     },
   })
 
-
   const severityColumns = {
     critical: ['total_fixed_critical', 'total_unfixed_critical'],
     high: ['total_fixed_high', 'total_unfixed_high'],
@@ -180,31 +187,34 @@ jQuery(function () {
 
   function toggleSeverityColumns(severity, isVisible) {
     severityColumns[severity].forEach(column => table.column(`${column}:name`).visible(isVisible))
+    updateColumnVisibility()
   }
 
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1)
   }
 
-  $('#showAvailable').on('click', function () {
-    const isVisible = $(this).is(':checked')
+  function updateColumnVisibility() {
+    const isAvailableVisible = $('#showAvailable').is(':checked')
+    const isUnavailableVisible = $('#showUnavailable').is(':checked')
+
     Object.keys(severityColumns).forEach(severity => {
       const isSeveritySelected = $(`#showSeverity${capitalize(severity)}`).is(':checked')
-      const column = `total_fixed_${severity}`
-      table.column(`${column}:name`).visible(isVisible && isSeveritySelected)
+
+      const availableColumn = `total_fixed_${severity}`
+      table.column(`${availableColumn}:name`).visible(isAvailableVisible && isSeveritySelected)
+
+      // Toggle visibility for "unavailable" columns
+      const unavailableColumn = `total_unfixed_${severity}`
+      table.column(`${unavailableColumn}:name`).visible(isUnavailableVisible && isSeveritySelected)
     })
-  })
+  }
 
-  $('#showUnavailable').on('click', function () {
-    const isVisible = $(this).is(':checked')
-    Object.keys(severityColumns).forEach(severity => {
-      const isSeveritySelected = $(`#showSeverity${capitalize(severity)}`).is(':checked')
-      const column = `total_unfixed_${severity}`
+  // Event listeners for #showAvailable and #showUnavailable
+  $('#showAvailable').on('click', updateColumnVisibility)
+  $('#showUnavailable').on('click', updateColumnVisibility)
 
-      table.column(`${column}:name`).visible(isVisible && isSeveritySelected)
-    })
-  })
-
+  // Event listeners for severity checkboxes
   $('#showSeverityCritical').on('click', function () {
     toggleSeverityColumns('critical', $(this).is(':checked'))
   })
@@ -225,6 +235,39 @@ jQuery(function () {
     toggleSeverityColumns('unknown', $(this).is(':checked'))
   })
 
+  $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
+    'change',
+    e => {
+      updateEnvironmentList()
+    },
+  )
+
+  function updateEnvironmentList() {
+    const environmentMapping = {
+      prod: ['prod', 'production', 'Production'],
+      preprod: ['preprod', 'Preprod', 'Pre-production', 'Preproduction'],
+      stage: ['stage', 'staging'],
+      dev: ['dev', 'Dev', 'development', 'Development'],
+      unknown: ['unknown'],
+      test: ['test', 'uat', 'training', 'test1', 'test2', 'train'],
+    }
+    const selectedEnvironments = []
+    $('.environments .govuk-checkboxes__input:checked').each((index, e) => {
+      const environment = $(e).val()
+      if (environmentMapping[environment]) {
+        selectedEnvironments.push(...environmentMapping[environment])
+      }
+    })
+    const table = $('#trivyScansTable').DataTable()
+    $.fn.dataTable.ext.search = []
+    if (selectedEnvironments.length > 0) {
+      $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        const rowEnvironment = data[1]
+        return selectedEnvironments.includes(rowEnvironment)
+      })
+    }
+    table.draw(false)
+  }
 })
 
 function formatDateToDDMONYYYYHH24MMSS(dateString) {
