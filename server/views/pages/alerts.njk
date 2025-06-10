@@ -8,7 +8,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {%- set applicationNames = [{text: '', selected: false}] -%}
-{%- set environments = [{text: '', selected: false}] -%}
+
 {%- set namespaces = [{text: '', selected: false}] -%}
 {%- set severityLabels = [{text: '', selected: false}] -%}
 {%- for applicationName in applicationNameList -%}
@@ -44,7 +44,7 @@
     <input type="hidden" name="alertName" id="alertName" value="{{ alertName }}">
     <input type="hidden" name="alertType" id="alertType" value="{{ alertType }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-
+    
     <div class="alert-selectors govuk-button-group">
       <div class="alert-labels">
         <div class="label-and-button">
@@ -125,11 +125,11 @@
           }) }}
         </div>
     </div>
-
-
   </form>
 
-  <table id="statusTable">
+  <p id="lastUpdated"></p>
+
+  <table id="alertsStatusTable">
     <thead>
       <tr>
         <th>Alertname</th>
@@ -137,6 +137,7 @@
         <th>Dashboard Url</th>
         <th>Runback Url</th>
         <th>Generator Url</th>
+        <th>Slack Channel</th>
       </tr>
     </thead>
     <tbody id="statusRows">

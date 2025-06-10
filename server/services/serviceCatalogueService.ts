@@ -23,6 +23,7 @@ import {
   ScheduledJob,
   TrivyScan as StrapiTrivyScan,
   ScheduledJobListResponseDataItem,
+  EnvironmentListResponseDataItem,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
@@ -318,5 +319,13 @@ export default class ServiceCatalogueService {
     const response = await strapiApiClient.postGithubRepoRequest(request)
 
     return response
+  }
+
+  async getEnvironments(): Promise<EnvironmentListResponseDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const environmentData = await strapiApiClient.getEnvironments()
+    const environmentList = environmentData.data
+
+    return environmentList
   }
 }

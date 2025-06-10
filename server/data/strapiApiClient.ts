@@ -25,6 +25,7 @@ import {
   ScheduledJobResponse,
   TrivyScanResponse,
   TrivyScanListResponseDataItem,
+  EnvironmentListResponseDataItem,
 } from './strapiApiTypes'
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea, TrivyScan } from './converters/modelTypes'
@@ -309,6 +310,11 @@ export default class StrapiApiClient {
     return this.restClient.get({
       path: '/v1/trivy-scans',
       query: `filters[name][$eq]=${name}`,
+  }
+  async getEnvironments() {
+    return this.restClient.get<ListResponse<EnvironmentListResponseDataItem>>({
+      path: '/v1/environments',
+      query: 'populate=component',
     })
   }
 }

@@ -20,6 +20,36 @@
   flex-flow: row wrap;
 }
 
+#alertsStatusTable {
+  width: 100%;
+  word-break: break-word; 
+
+  tr {
+    background-color: grey;
+
+    &[data-silenced="active"] {
+      background-color: govuk-colour('red');
+    }
+
+    &[data-silenced="suppressed"] {
+      background-color: #990;
+    }
+  } 
+
+  th, td {
+    color: white;
+    padding: govuk-spacing(1);
+
+    a:link, a:visited {
+      color: white;
+    }
+  }
+}
+
+#lastUpdated {
+  float: right;
+}
+
 // For update buttons when page is bigger than 640px
 @media(width > 640px) {
   .alert-selectors .label-and-button {
