@@ -168,8 +168,11 @@ function getFiltersFromURL() {
 
 //  append tabledata to the #statusTable
 function populateAlertTable(alerts) {
+  const currentTime = new Date()
+  let lastUpdatedTimestamp = currentTime.toISOString().slice(0, 19).replace('T', ' ')
   try {
     $('#statusRows').empty()
+    document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdatedTimestamp}`
     alerts.forEach(alert => {
       //create links for alert urls
       const dashboardLink = alert.annotations.dashboard_url
@@ -181,6 +184,7 @@ function populateAlertTable(alerts) {
       const generatorLink = alert.generatorURL
         ? `<a href="${alert.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
         : 'N/A'
+      const slackLink = alert.alert_slack_channel ? alert.alert_slack_channel : 'N/A'
       $('#statusRows')
         .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" data-silenced="${alert.status.state}" id="tile-${alert.labels.application}-${alert.labels.environment}">
           <td>${alert.labels.alertname}</td>
@@ -188,6 +192,7 @@ function populateAlertTable(alerts) {
           <td>${dashboardLink}</td>
           <td>${runbookLink} </td>
           <td>${generatorLink}</td>
+          <td>${slackLink}</td>
         </tr>`)
     })
   } catch (e) {

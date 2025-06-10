@@ -2,9 +2,9 @@ import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { getAlertType, getAlertName, mapAlertEnvironments, mapToCanonicalEnv } from '../utils/utils'
+import { getAlertType, getAlertName, reviseAlerts, mapToCanonicalEnv } from '../utils/utils'
 
-export default function routes({ alertsService }: Services): Router {
+export default function routes({ serviceCatalogueService, alertsService }: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -34,7 +34,9 @@ export default function routes({ alertsService }: Services): Router {
   get('/all', async (req, res) => {
     try {
       const alerts = await alertsService.getAlerts()
-      const revisedAlerts = await mapAlertEnvironments(alerts)
+      const environments = await serviceCatalogueService.getEnvironments()
+      const revisedAlerts = await reviseAlerts(alerts, environments)
+
       res.json(revisedAlerts)
     } catch (error) {
       logger.warn(`Failed to get alerts`, error)

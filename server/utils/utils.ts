@@ -5,6 +5,7 @@ import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
 import { AlertListResponseDataItem, RdsEntry } from '../@types'
+import { EnvironmentListResponseDataItem } from '../data/strapiApiTypes'
 
 dayjs.extend(relativeTime.default)
 
@@ -137,6 +138,22 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
   return 'none'
 }
 
+export const addAlertSlackChannel = (
+  revisedEnvAlerts: AlertListResponseDataItem[],
+  environments: EnvironmentListResponseDataItem[],
+) => {
+  return revisedEnvAlerts.map(alert => {
+    const match = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
+    if (match) {
+      return {
+        ...alert,
+        alert_slack_channel: match.attributes.alerts_slack_channel,
+      }
+    }
+    return alert
+  })
+}
+
 // map environment keys to the alert environment
 export const mapAlertEnvironments = (alerts: AlertListResponseDataItem[]) => {
   const updatedAlerts = Array.isArray(alerts) ? [...alerts] : []
@@ -148,6 +165,13 @@ export const mapAlertEnvironments = (alerts: AlertListResponseDataItem[]) => {
     }
     return updatedAlert
   })
+}
+
+export const reviseAlerts = (alerts: AlertListResponseDataItem[], environments: EnvironmentListResponseDataItem[]) => {
+  const revisedEnvAlerts = mapAlertEnvironments(alerts)
+  const revisedAlerts = addAlertSlackChannel(revisedEnvAlerts, environments)
+
+  return revisedAlerts
 }
 
 export const getDependencyName = (req: Request): string => {
