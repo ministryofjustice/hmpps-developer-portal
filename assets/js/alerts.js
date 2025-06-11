@@ -4,7 +4,6 @@ const namespaceFilter = document.getElementById('namespace')
 const severityFilter = document.getElementById('severity')
 
 jQuery(async function () {
-  // initialises message to alerts being fetched every 5 seconds
   alertsUpdateFrequencyMessage()
   // check url to see if any filters are currently applied
   let currentFilters = getFiltersFromURL()
@@ -14,7 +13,7 @@ jQuery(async function () {
   let isReset = false
   // use filters and alerts to update alert table and filters
   updateAll(alerts, currentFilters, isReset)
-  // ensures first interval check for updateAlerts is a match so UI doesn't refresh after 5 seconds, causing drop downs to jump
+  // ensures first interval check for updateAlerts is a match so UI doesn't refresh after 5 seconds
   let previousDataJSON = alerts
 
   // Watch function updates Alerts on a timeout
@@ -276,16 +275,9 @@ function isDataThirtySecondsOld() {
 
 // Message changes if drop down is open - from every 5 seconds to 30 seconds
 function alertsUpdateFrequencyMessage() {
-  try {
-    $('#alertsFetchStatus').empty()
-    if (isDropDownOpen) {
-      $('#alertsFetchStatus').append(
-        `<div class="govuk-inset-text">Alerts are being updated every <strong>30</strong> seconds</div>`,
-      )
-    } else {
-      $('#alertsFetchStatus').append(`<div class="govuk-inset-text">Alerts are being updated every 5 seconds</div>`)
-    }
-  } catch (e) {
-    console.error(e)
-  }
+  const frequency = isDropDownOpen ? 30 : 5
+  $('#alertsFetchStatus').empty()
+  return $('#alertsFetchStatus').append(
+    `<div class="govuk-inset-text">Alerts are being updated every <strong>${frequency}</strong> seconds!</div>`,
+  )
 }
