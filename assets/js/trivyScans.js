@@ -178,43 +178,17 @@ jQuery(function () {
   })
 
   const severityColumns = {
-    critical: ['total_fixed_critical', 'total_unfixed_critical'],
-    high: ['total_fixed_high', 'total_unfixed_high'],
-    medium: ['total_fixed_medium', 'total_unfixed_medium'],
-    low: ['total_fixed_low', 'total_unfixed_low'],
-    unknown: ['total_fixed_unknown', 'total_unfixed_unknown'],
+    critical: [4, 9], // 'total_fixed_critical', 'total_unfixed_critical'],
+    high: [5, 10], // 'total_fixed_high', 'total_unfixed_high'],
+    medium: [6, 11], // 'total_fixed_medium', 'total_unfixed_medium'],
+    low: [7, 12], // 'total_fixed_low', 'total_unfixed_low'],
+    unknown: [8, 13], // 'total_fixed_unknown', 'total_unfixed_unknown'],
   }
 
   function toggleSeverityColumns(severity, isVisible) {
     severityColumns[severity].forEach(column => table.column(`${column}:name`).visible(isVisible))
-    updateColumnVisibility()
   }
 
-  function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1)
-  }
-
-  function updateColumnVisibility() {
-    const isAvailableVisible = $('#showAvailable').is(':checked')
-    const isUnavailableVisible = $('#showUnavailable').is(':checked')
-
-    Object.keys(severityColumns).forEach(severity => {
-      const isSeveritySelected = $(`#showSeverity${capitalize(severity)}`).is(':checked')
-
-      const availableColumn = `total_fixed_${severity}`
-      table.column(`${availableColumn}:name`).visible(isAvailableVisible && isSeveritySelected)
-
-      // Toggle visibility for "unavailable" columns
-      const unavailableColumn = `total_unfixed_${severity}`
-      table.column(`${unavailableColumn}:name`).visible(isUnavailableVisible && isSeveritySelected)
-    })
-  }
-
-  // Event listeners for #showAvailable and #showUnavailable
-  $('#showAvailable').on('click', updateColumnVisibility)
-  $('#showUnavailable').on('click', updateColumnVisibility)
-
-  // Event listeners for severity checkboxes
   $('#showSeverityCritical').on('click', function () {
     toggleSeverityColumns('critical', $(this).is(':checked'))
   })
@@ -234,6 +208,9 @@ jQuery(function () {
   $('#showSeverityUnknown').on('click', function () {
     toggleSeverityColumns('unknown', $(this).is(':checked'))
   })
+
+  $('#showAvailable').on('click', updateRowVisibility)
+  $('#showUnavailable').on('click', updateRowVisibility)
 
   $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
     'change',
@@ -266,6 +243,70 @@ jQuery(function () {
         return selectedEnvironments.includes(rowEnvironment)
       })
     }
+    table.draw(false)
+  }
+
+  function updateRowVisibility() {
+    const isAvailableChecked = $('#showAvailable').is(':checked')
+    const isUnavailableChecked = $('#showUnavailable').is(':checked')
+    const isNoVulnerabilitiesChecked = $('#showNoVulnerabilities').is(':checked')
+    // const availableColumns = ['total_fixed_critical', 'total_fixed_high', 'total_fixed_medium', 'total_fixed_low', 'total_fixed_unknown']
+    const availableColumns = [4, 5, 6, 7, 8]
+    // const unavailableColumns = ['total_unfixed_critical', 'total_unfixed_high', 'total_unfixed_medium', 'total_unfixed_low', 'total_unfixed_unknown']
+    const unavailableColumns = [9, 10, 11, 12, 13]
+    const severityCheckboxes = [
+      '#showSeverityCritical',
+      '#showSeverityHigh',
+      '#showSeverityMedium',
+      '#showSeverityLow',
+      '#showSeverityUnknown',
+    ]
+
+    const table = $('#trivyScansTable').DataTable()
+
+    $.fn.dataTable.ext.search.length = 0
+    if (isAvailableChecked || isUnavailableChecked || isNoVulnerabilitiesChecked) {
+      $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        const totalFixedSum = availableColumns.reduce((sum, index) => {
+          return sum + (parseInt(data[index]) || 0)
+        }, 0)
+
+        const totalUnfixedSum = unavailableColumns.reduce((sum, index) => {
+          return sum + (parseInt(data[index]) || 0)
+        }, 0)
+        if (isAvailableChecked && isUnavailableChecked) {
+          return totalFixedSum > 0 && totalUnfixedSum > 0
+        } else if (isAvailableChecked) {
+          return totalFixedSum > 0
+        } else if (isUnavailableChecked) {
+          return totalUnfixedSum > 0
+        } else if (isNoVulnerabilitiesChecked) {
+          return totalFixedSum === 0 && totalUnfixedSum === 0
+        } else {
+          return true // No filters applied, show all rows
+        }
+      })
+    }
+
+    if (isNoVulnerabilitiesChecked) {
+      availableColumns.forEach(column => {
+        table.column(`${column}`).visible(false)
+      })
+      unavailableColumns.forEach(column => {
+        table.column(`${column}`).visible(false)
+      })
+    }
+
+    availableColumns.forEach(column => {
+      table.column(`${column}`).visible(isAvailableChecked)
+    })
+    unavailableColumns.forEach(column => {
+      table.column(`${column}`).visible(isUnavailableChecked)
+    })
+    severityCheckboxes.forEach(checkbox => {
+      $(checkbox).prop('checked', true)
+    })
+
     table.draw(false)
   }
 })
