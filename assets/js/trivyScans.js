@@ -177,47 +177,17 @@ jQuery(function () {
     },
   })
 
-  const severityColumns = {
-    critical: [4, 9], // 'total_fixed_critical', 'total_unfixed_critical'],
-    high: [5, 10], // 'total_fixed_high', 'total_unfixed_high'],
-    medium: [6, 11], // 'total_fixed_medium', 'total_unfixed_medium'],
-    low: [7, 12], // 'total_fixed_low', 'total_unfixed_low'],
-    unknown: [8, 13], // 'total_fixed_unknown', 'total_unfixed_unknown'],
-  }
-
-  function toggleSeverityColumns(severity, isVisible) {
-    severityColumns[severity].forEach(column => table.column(`${column}:name`).visible(isVisible))
-  }
-
-  $('#showSeverityCritical').on('click', function () {
-    toggleSeverityColumns('critical', $(this).is(':checked'))
+  $('.severity').on('change', e => {
+    updateRowVisibility('severity')
   })
 
-  $('#showSeverityHigh').on('click', function () {
-    toggleSeverityColumns('high', $(this).is(':checked'))
+  $('.vulnerability').on('change', e => {
+    updateRowVisibility('vulnerability')
   })
 
-  $('#showSeverityMedium').on('click', function () {
-    toggleSeverityColumns('medium', $(this).is(':checked'))
+  $('.environments').on('change', e => {
+    updateEnvironmentList()
   })
-
-  $('#showSeverityLow').on('click', function () {
-    toggleSeverityColumns('low', $(this).is(':checked'))
-  })
-
-  $('#showSeverityUnknown').on('click', function () {
-    toggleSeverityColumns('unknown', $(this).is(':checked'))
-  })
-
-  $('#showAvailable').on('click', updateRowVisibility)
-  $('#showUnavailable').on('click', updateRowVisibility)
-
-  $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
-    'change',
-    e => {
-      updateEnvironmentList()
-    },
-  )
 
   function updateEnvironmentList() {
     const environmentMapping = {
@@ -246,7 +216,7 @@ jQuery(function () {
     table.draw(false)
   }
 
-  function updateRowVisibility() {
+  function updateRowVisibility(action) {
     const isAvailableChecked = $('#showAvailable').is(':checked')
     const isUnavailableChecked = $('#showUnavailable').is(':checked')
     const isNoVulnerabilitiesChecked = $('#showNoVulnerabilities').is(':checked')
@@ -261,6 +231,13 @@ jQuery(function () {
       '#showSeverityLow',
       '#showSeverityUnknown',
     ]
+    const severityColumns = {
+      critical: [4, 9], // 'total_fixed_critical', 'total_unfixed_critical'],
+      high: [5, 10], // 'total_fixed_high', 'total_unfixed_high'],
+      medium: [6, 11], // 'total_fixed_medium', 'total_unfixed_medium'],
+      low: [7, 12], // 'total_fixed_low', 'total_unfixed_low'],
+      unknown: [8, 13], // 'total_fixed_unknown', 'total_unfixed_unknown'],
+    }
 
     const table = $('#trivyScansTable').DataTable()
 
@@ -303,10 +280,22 @@ jQuery(function () {
     unavailableColumns.forEach(column => {
       table.column(`${column}`).visible(isUnavailableChecked)
     })
-    severityCheckboxes.forEach(checkbox => {
-      $(checkbox).prop('checked', true)
-    })
-
+    console.log(action)
+    if (action === 'severity') {
+      severityCheckboxes.forEach(checkbox => {
+        const severity = $(checkbox).val()
+        const isVisible = $(checkbox).is(':checked')
+        if (severityColumns[severity]) {
+          severityColumns[severity].forEach(column => {
+            table.column(`${column}`).visible(isVisible)
+          })
+        }
+      })
+    } else {
+      severityCheckboxes.forEach(checkbox => {
+        $(checkbox).prop('checked', true)
+      })
+    }
     table.draw(false)
   }
 })
