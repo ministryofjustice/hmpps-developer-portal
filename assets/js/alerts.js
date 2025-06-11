@@ -26,6 +26,7 @@ jQuery(async function () {
     // Timer only starts ticking if a drop down is 'active'
     if (!isAlertDropDownActive() || result) {
       alerts = await getAlerts()
+      timer = 0
       previousDataJSON = updateAlerts(alerts, previousDataJSON, isReset)
     }
   }, 5000)
