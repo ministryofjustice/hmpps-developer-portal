@@ -22,6 +22,7 @@ import {
   ServiceArea as StrapiServiceArea,
   ScheduledJob,
   ScheduledJobListResponseDataItem,
+  EnvironmentListResponseDataItem,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
@@ -224,7 +225,7 @@ export default class ServiceCatalogueService {
 
   async getScheduledJob({ name }: { name: string }): Promise<ScheduledJob> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const scheduledJobData = await strapiApiClient.getSchuledJobs({ name })
+    const scheduledJobData = await strapiApiClient.getScheduledJob({ name })
     const scheduledJobsRequest =
       Array.isArray(scheduledJobData.data) && scheduledJobData.data.length > 0
         ? scheduledJobData.data[0].attributes
@@ -300,5 +301,13 @@ export default class ServiceCatalogueService {
     const response = await strapiApiClient.postGithubRepoRequest(request)
 
     return response
+  }
+
+  async getEnvironments(): Promise<EnvironmentListResponseDataItem[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const environmentData = await strapiApiClient.getEnvironments()
+    const environmentList = environmentData.data
+
+    return environmentList
   }
 }
