@@ -4,7 +4,8 @@ import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
-import { RdsEntry } from '../@types'
+import { AlertListResponseDataItem, RdsEntry } from '../@types'
+import { EnvironmentListResponseDataItem } from '../data/strapiApiTypes'
 
 dayjs.extend(relativeTime.default)
 
@@ -114,6 +115,63 @@ export const getEnvironmentName = (req: Request): string => {
   const { environmentName } = req.params
 
   return environmentName.replace(/[^-a-z0-9_]/g, '')
+}
+
+// Environment types that match our existing type definition
+export type CanonicalEnv = 'dev' | 'test' | 'stage' | 'uat' | 'preprod' | 'prod' | 'none'
+
+// Map environment name to canonical form
+export function mapToCanonicalEnv(envName: string): CanonicalEnv {
+  if (!envName) return 'none'
+
+  // Normalize: trim whitespace, lowercase, remove trailing digits
+  const normalized = envName.trim().toLowerCase().replace(/\d+$/, '')
+
+  // Quick matching for common variants
+  if (normalized.startsWith('dev')) return 'dev'
+  if (normalized.startsWith('test')) return 'test'
+  if (normalized.startsWith('stag')) return 'stage'
+  if (normalized === 'uat' || normalized.includes('user')) return 'uat'
+  if (normalized.startsWith('pre')) return 'preprod'
+  if (normalized.startsWith('prod') || normalized === 'live' || normalized === 'prd') return 'prod'
+
+  return 'none'
+}
+
+export const addAlertSlackChannel = (
+  revisedEnvAlerts: AlertListResponseDataItem[],
+  environments: EnvironmentListResponseDataItem[],
+) => {
+  return revisedEnvAlerts.map(alert => {
+    const match = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
+    if (match) {
+      return {
+        ...alert,
+        alert_slack_channel: match.attributes.alerts_slack_channel,
+      }
+    }
+    return alert
+  })
+}
+
+// map environment keys to the alert environment
+export const mapAlertEnvironments = (alerts: AlertListResponseDataItem[]) => {
+  const updatedAlerts = Array.isArray(alerts) ? [...alerts] : []
+  return updatedAlerts.map(alert => {
+    const updatedAlert = { ...alert }
+    // Map alert environment to canonical form, even if it's an empty string
+    if (updatedAlert.labels && 'environment' in updatedAlert.labels) {
+      updatedAlert.labels.environment = mapToCanonicalEnv(updatedAlert.labels.environment)
+    }
+    return updatedAlert
+  })
+}
+
+export const reviseAlerts = (alerts: AlertListResponseDataItem[], environments: EnvironmentListResponseDataItem[]) => {
+  const revisedEnvAlerts = mapAlertEnvironments(alerts)
+  const revisedAlerts = addAlertSlackChannel(revisedEnvAlerts, environments)
+
+  return revisedAlerts
 }
 
 export const getDependencyName = (req: Request): string => {

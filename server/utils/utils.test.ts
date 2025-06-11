@@ -19,6 +19,8 @@ import {
   groupBy,
   differenceInDate,
   median,
+  mapToCanonicalEnv,
+  mapAlertEnvironments,
 } from './utils'
 
 describe('Utils', () => {
@@ -124,6 +126,63 @@ describe('Utils', () => {
       const mockRequest = { params: { environmentName: a } } as unknown as Request
 
       expect(getEnvironmentName(mockRequest)).toBe(expected)
+    })
+  })
+
+  describe('mapToCanonicalEnv', () => {
+    it('should return "dev" for environment names starting with "dev"', () => {
+      expect(mapToCanonicalEnv('dev')).toBe('dev')
+      expect(mapToCanonicalEnv('development')).toBe('dev')
+    })
+    it('should return "test" for environment names starting with "test"', () => {
+      expect(mapToCanonicalEnv('test')).toBe('test')
+      expect(mapToCanonicalEnv('test1')).toBe('test')
+    })
+    it('should return "stage" for environment names starting with "stag"', () => {
+      expect(mapToCanonicalEnv('stage')).toBe('stage')
+      expect(mapToCanonicalEnv('staging')).toBe('stage')
+    })
+    it('should return "uat" for environment names starting with "uat"', () => {
+      expect(mapToCanonicalEnv('uat')).toBe('uat')
+      expect(mapToCanonicalEnv('user1')).toBe('uat')
+    })
+    it('should return "preprod" for environment names starting with "pre"', () => {
+      expect(mapToCanonicalEnv('preprod')).toBe('preprod')
+      expect(mapToCanonicalEnv('preproduction')).toBe('preprod')
+    })
+    it('should return "prod" for environment names starting with "prod"', () => {
+      expect(mapToCanonicalEnv('prod')).toBe('prod')
+      expect(mapToCanonicalEnv('live')).toBe('prod')
+      expect(mapToCanonicalEnv('prd')).toBe('prod')
+      expect(mapToCanonicalEnv('live')).toBe('prod')
+    })
+  })
+
+  describe('mapAlertEnvironments', () => {
+    it('should map alert environment variants to canonical forms', () => {
+      const alertsList = [
+        { id: 1, labels: { environment: 'development' } },
+        { id: 2, labels: { environment: 'DEV1' } },
+        { id: 3, labels: { environment: 'prod' } },
+        { id: 4, labels: { environment: 'production' } },
+        { id: 5, labels: { environment: 'uat' } },
+        { id: 6, labels: { environment: 'STAGE' } },
+        { id: 7, labels: { environment: 'Preprod' } },
+        { id: 8, labels: { environment: 'unknownenv' } },
+        { id: 9, labels: { environment: '' } },
+        { id: 10, labels: {} },
+      ]
+      const result = mapAlertEnvironments(alertsList)
+      expect(result[0].labels.environment).toBe('dev')
+      expect(result[1].labels.environment).toBe('dev')
+      expect(result[2].labels.environment).toBe('prod')
+      expect(result[3].labels.environment).toBe('prod')
+      expect(result[4].labels.environment).toBe('uat')
+      expect(result[5].labels.environment).toBe('stage')
+      expect(result[6].labels.environment).toBe('preprod')
+      expect(result[7].labels.environment).toBe('none')
+      expect(result[8].labels.environment).toBe('none')
+      expect(result[9].labels.environment).toBeUndefined()
     })
   })
 

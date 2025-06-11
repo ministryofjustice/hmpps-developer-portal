@@ -20,7 +20,6 @@
   flex-flow: row wrap;
 }
 
-
 #alertsStatusTable {
   width: 100%;
 
@@ -40,7 +39,7 @@
       background-color: #990;
     }
   } 
-  
+
   th, td {
     color: white;
     padding: govuk-spacing(1);
@@ -49,6 +48,10 @@
       color: white;
     }
   }
+}
+
+#lastUpdated {
+  float: right;
 }
 
 // For update buttons when page is bigger than 640px
