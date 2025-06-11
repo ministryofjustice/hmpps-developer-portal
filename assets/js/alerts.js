@@ -16,13 +16,16 @@ jQuery(async function () {
   updateAll(alerts, currentFilters, isReset)
   // ensures first interval check for updateAlerts is a match so UI doesn't refresh after 5 seconds
   let previousDataJSON = alerts
+  let timer = 0
 
   // Watch function updates Alerts on a timeout
   setInterval(async function () {
+    const timerCheck = isDataThirtySecondsOld(timer)
+    timer = timerCheck.timer
+    result = timerCheck.result
     // Timer only starts ticking if a drop down is 'active'
-    if (!isAlertDropDownActive() || isDataThirtySecondsOld()) {
+    if (!isAlertDropDownActive() || result) {
       alerts = await getAlerts()
-      timer = 0 // used in isDataThirtySecondsOld()
       previousDataJSON = updateAlerts(alerts, previousDataJSON, isReset)
     }
   }, 5000)
@@ -263,15 +266,12 @@ function isAlertDropDownActive() {
 }
 
 // Refreshes data if stale - more than 30 seconds old
-let timer = 0
-
-function isDataThirtySecondsOld() {
+function isDataThirtySecondsOld(timer) {
   if (timer >= 25) {
     // next interval will tick at 30 seconds
-    return true
+    return { result: true, timer: 0 }
   } else {
-    timer += 5
-    return false
+    return { result: false, timer: timer + 5 }
   }
 }
 
