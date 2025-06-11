@@ -2,6 +2,7 @@ const applicationFilter = document.getElementById('application')
 const environmentFilter = document.getElementById('environment')
 const namespaceFilter = document.getElementById('namespace')
 const severityFilter = document.getElementById('severity')
+let isDropDownOpen = false
 
 jQuery(async function () {
   alertsUpdateFrequencyMessage()
@@ -24,7 +25,7 @@ jQuery(async function () {
     timer = timerCheck.timer
     result = timerCheck.result
     // Timer only starts ticking if a drop down is 'active'
-    if (!isAlertDropDownActive() || result) {
+    if (!isDropDownOpen || result) {
       alerts = await getAlerts()
       timer = 0
       previousDataJSON = updateAlerts(alerts, previousDataJSON, isReset)
@@ -245,8 +246,6 @@ function updateAll(alerts, currentFilters, isReset) {
 }
 
 // Slows fetch frequency and changes message when user interacting with drop downs
-let isDropDownOpen = false
-
 // uses event listeners for instant change in UI when drop down open
 document.addEventListener('mousedown', e => {
   if (e.target.tagName.toLowerCase() === 'select') {
@@ -262,18 +261,13 @@ document.addEventListener('click', e => {
   }
 })
 
-function isAlertDropDownActive() {
-  return isDropDownOpen
-}
-
 // Refreshes data if stale - more than 30 seconds old
 function isDataThirtySecondsOld(timer) {
   if (timer >= 25) {
     // next interval will tick at 30 seconds
     return { result: true, timer: 0 }
-  } else {
-    return { result: false, timer: timer + 5 }
   }
+  return { result: false, timer: timer + 5 }
 }
 
 // Message changes if drop down is open - from every 5 seconds to 30 seconds
