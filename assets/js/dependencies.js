@@ -6,7 +6,7 @@ jQuery(function () {
     const nameSelect = document.getElementById('dependencyName')
 
     const type = typeSelect.value.replace(/[^-a-z0-9:_]/g, '')
-    const name = nameSelect.value.replace(/[^-a-z0-9:_]/g, '')
+    const name = nameSelect.value.replace(/[^-a-z0-9:_\/.]/gi, '').replace(/\//g, '~')
 
     if (type && name) {
       // Redirect to the existing route
@@ -29,11 +29,25 @@ jQuery(function () {
       data: 'dependencyVersion',
       type: 'semver',
     },
+    {
+      data: 'location',
+      createdCell: function (td, _cellData, rowData) {
+        const url = rowData.location
+        try {
+          const parsedUrl = new URL(url)
+          const pathSegments = parsedUrl.pathname.split('/').filter(Boolean)
+          const croppedText = pathSegments.slice(-2).join('/') // final directory + filename
+          $(td).html(`<a href="${url}" target="_blank">${croppedText}</a>`)
+        } catch (e) {
+          $(td).text('')
+        }
+      },
+    },
   ]
 
   createTable({
     id: 'dependenciesTable',
-    ajaxUrl: `/dependencies/data/${dataDependencyType}/${dataDependencyName}`,
+    ajaxUrl: `/dependencies/data/${dataDependencyType}/${dataDependencyName.replace(/\//g, '~')}`,
     orderColumn: 1,
     orderType: 'asc',
     columns,

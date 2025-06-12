@@ -204,8 +204,8 @@ describe('Utils', () => {
     it.each([
       ['Already clean', 'product', 'product'],
       ['Already clean', 'ae-0_99', 'ae-0_99'],
-      ['Invalid characters', 'ADso-+0', 'so-0'],
-      ['Invalid characters', 'AD+', ''],
+      ['Invalid characters', 'ADso-+0', 'ADso-0'],
+      ['Invalid characters', '+', ''],
       ['Empty string', '', ''],
     ])('%s getDependencyName() with "%s" should return "%s"', (_: string, a: string, expected: string) => {
       const mockRequest = { params: { dependencyName: a } } as unknown as Request

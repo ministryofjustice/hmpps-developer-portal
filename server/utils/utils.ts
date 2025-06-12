@@ -6,6 +6,7 @@ import { formatDate } from 'date-fns'
 
 import { AlertListResponseDataItem, RdsEntry } from '../@types'
 import { EnvironmentListResponseDataItem } from '../data/strapiApiTypes'
+import type { ServiceCatalogueService } from '../services'
 
 dayjs.extend(relativeTime.default)
 
@@ -176,14 +177,28 @@ export const reviseAlerts = (alerts: AlertListResponseDataItem[], environments: 
 
 export const getDependencyName = (req: Request): string => {
   const dependencyName = req.params.dependencyName || ''
-
-  return dependencyName.replace(/[^-a-z0-9_]/g, '')
+  // replace ~ with / so that actions still work
+  return dependencyName.replace(/[^-a-z0-9_.~]/gi, '').replace(/~/g, '/')
 }
 
 export const getDependencyType = (req: Request): string => {
   const dependencyType = req.params.dependencyType || ''
 
   return dependencyType.replace(/[^-a-z0-9_]/g, '')
+}
+
+export async function getDependencyNames(serviceCatalogueService: ServiceCatalogueService, dependencyType: string) {
+  const components = await serviceCatalogueService.getComponents()
+  const namesSet = new Set<string>()
+
+  components.forEach(component => {
+    const versions = component.attributes?.versions as Record<string, Record<string, string>>
+    if (versions && versions[dependencyType]) {
+      Object.keys(versions[dependencyType]).forEach(name => namesSet.add(name))
+    }
+  })
+
+  return Array.from(namesSet).map(name => ({ value: name, text: name }))
 }
 
 export const isValidDropDown = (req: Request, paramName: string): boolean => {

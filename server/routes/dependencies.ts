@@ -1,8 +1,7 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { ServiceCatalogueService, Services } from '../services'
-import { getDependencyName, getDependencyType } from '../utils/utils'
-import getDependencyNames from '../utils/dependencies'
+import { getDependencyName, getDependencyType, getDependencyNames } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -17,7 +16,8 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   get('/data/:dependencyType/:dependencyName', async (req, res) => {
     const dependencyType = getDependencyType(req)
-    const dependencyName = getDependencyName(req)
+    const dependencyName = getDependencyName(req).replace(/~/g, '/')
+
     const components = await serviceCatalogueService.getComponents()
 
     const displayComponents = components
@@ -32,12 +32,27 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       })
       .map(component => {
         // @ts-expect-error Suppress any declaration
-        const dependencyVersion = component.attributes.versions[dependencyType][dependencyName]
+        const dependencyData = component.attributes?.versions?.[dependencyType]?.[dependencyName]
+        const githubRepo = component.attributes?.github_repo ?? ''
+
+        console.log('Component:', component.id, 'Dependency data:', dependencyData)
+
+        let dependencyVersion = ''
+        if (typeof dependencyData === 'string' || typeof dependencyData === 'number') {
+          dependencyVersion = String(dependencyData)
+        } else if (typeof dependencyData === 'object' && dependencyData !== null) {
+          dependencyVersion = dependencyData.ref ?? dependencyData.version ?? ''
+        }
+
+        const location = dependencyData?.path ?? ''
+        const githubUrl =
+          githubRepo && location ? `https://github.com/ministryofjustice/${githubRepo}/blob/main/${location}` : ''
 
         return {
           id: component.id,
-          componentName: component.attributes.name,
+          componentName: component.attributes?.name ?? '',
           dependencyVersion,
+          location: githubUrl,
         }
       })
 
