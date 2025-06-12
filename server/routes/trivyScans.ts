@@ -1,10 +1,8 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
-import { utcTimestampToUtcDateTime } from '../utils/utils'
+import { utcTimestampToUtcDateTime, sortBySeverity } from '../utils/utils'
 import { ScanResult, Summary } from '../data/converters/modelTypes'
-
-const severityOrder = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN']
 
 const createSummaryTable = (summary: Summary): Array<{ category: string; severity: string; count: number }> => {
   const dataTable: Array<{ category: string; severity: string; count: number }> = []
@@ -56,8 +54,7 @@ const createSummaryTable = (summary: Summary): Array<{ category: string; severit
       })
     })
   }
-  dataTable.sort((a, b) => severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity))
-  return dataTable
+  return dataTable.sort(sortBySeverity)
 }
 
 const createVulnerabilitiesResultsTable = (results: ScanResult) => {
@@ -94,11 +91,7 @@ const createVulnerabilitiesResultsTable = (results: ScanResult) => {
       })
     })
   }
-
-  // Sort the dataTable by severity
-  dataTable.sort((a, b) => severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity))
-
-  return dataTable
+  return dataTable.sort(sortBySeverity)
 }
 
 const createSecretResultsTable = (results: ScanResult) => {
@@ -116,11 +109,7 @@ const createSecretResultsTable = (results: ScanResult) => {
       })
     })
   }
-
-  // Sort the dataTable by severity
-  dataTable.sort((a, b) => severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity))
-
-  return dataTable
+  return dataTable.sort(sortBySeverity)
 }
 
 export default function routes({ serviceCatalogueService }: Services): Router {
