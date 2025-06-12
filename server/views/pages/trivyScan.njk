@@ -27,13 +27,13 @@
       </tr>
     </thead>
     <tbody>
-        {% for row in summaryTable %}
-          <tr>
-            <td>{{ row.category }}</td>
-            <td>{{ row.severity }}</td>
-            <td>{{ row.count }}</td>
-          </tr>
-        {% endfor %}
+      {% for row in summaryTable %}
+        <tr>
+          <td>{{ row.category }}</td>
+          <td>{{ row.severity }}</td>
+          <td>{{ row.count }}</td>
+        </tr>
+      {% endfor %}
     </tbody>
   </table>
 
@@ -60,21 +60,21 @@
       </tr>
     </thead>
     <tbody>
-          {% for row in vulnerabilitiesResultsTable %}
-            <tr 
-              {% if row.severity == "HIGH" or row.severity == "CRITICAL" %}
-                style="font-weight: bold;"
-              {% endif %}
-            >
-              <td>{{ row.category }}</td>
-              <td>{{ row.severity }}</td>
-              <td><a href="{{ row.PrimaryURL }}">{{ row.vulnerabilityID }}</a></td>
-              <td>{{ row.pkgName }}</td>
-              <td>{{ row.description }}</td>
-              <td>{{ row.installedVersion }}</td>
-              <td>{{ row.fixedVersion }}</td>
-          </tr>
-          {% endfor %}
+      {% for row in vulnerabilitiesResultsTable %}
+        <tr 
+          {% if row.severity == "HIGH" or row.severity == "CRITICAL" %}
+            style="font-weight: bold;"
+          {% endif %}
+        >
+          <td>{{ row.category }}</td>
+          <td>{{ row.severity }}</td>
+          <td><a href="{{ row.PrimaryURL }}">{{ row.vulnerabilityID }}</a></td>
+          <td>{{ row.pkgName }}</td>
+          <td>{{ row.description }}</td>
+          <td>{{ row.installedVersion }}</td>
+          <td>{{ row.fixedVersion }}</td>
+        </tr>
+      {% endfor %}
     </tbody>
   </table>
 
@@ -92,21 +92,31 @@
       </tr>
     </thead> 
     <tbody>
-        {% for secret in secretResultTable %}
-          <tr 
-            {% if secret.severity == "HIGH" or secret.severity == "CRITICAL" %}
-              style="font-weight: bold;"
-            {% endif %}
-          >
-            <td> Secret </td>
-            <td>{{ secret.severity }}</td>
-            <td>{{ secret.description }}</td>
-            <td>{{ secret.filePath }}</td>
-            <td>{{ secret.lineNumber }}</td>
-            <td>{{ secret.additionalContext }}</td>
+      {% for secret in secretResultTable %}
+        <tr 
+          {% if secret.severity == "HIGH" or secret.severity == "CRITICAL" %}
+            style="font-weight: bold;"
+          {% endif %}
+        >
+          <td> Secret </td>
+          <td>{{ secret.severity }}</td>
+          <td>{{ secret.description }}</td>
+          <td>{{ secret.filePath }}</td>
+          <td>{{ secret.lineNumber }}</td>
+          <td>{{ secret.additionalContext }}</td>
         </tr>
-        {% endfor %}
+      {% endfor %}
     </tbody>
   </table>
 
+{% endblock %}
+
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="/assets/js/dayjs/dayjs.min.js"></script>
+  <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/trivyScan.js"></script>
 {% endblock %}

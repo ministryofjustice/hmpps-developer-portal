@@ -135,7 +135,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   get('/data', async (req, res) => {
     const trivyScans = await serviceCatalogueService.getTrivyScans()
 
-    res.send(trivyScans)
+    res.json(trivyScans)
   })
 
   get('/:trivy_scan_name', async (req, res) => {
