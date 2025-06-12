@@ -242,8 +242,29 @@
   margin: 0 govuk-spacing(2) 0 0;
 }
 
-#trivyTable .govuk-details {
-  margin-bottom: 0;
+.trivyData {
+  th, td, img{
+    padding: govuk-spacing(1);
+    vertical-align: middle;
+  }
+
+  th {
+    text-align: centre;
+    background-color: govuk-colour('light-grey');
+
+    &.govuk-table__header {
+      text-align: left;
+    }
+  }
+
+  tr:nth-of-type(2n + 1) td {
+    background-color: govuk-colour('light-grey');
+  }
+
+  tr.trivyCritical {
+    font-weight: bold;
+    color: red;
+  }
 }
 
 #showHideBlock a {

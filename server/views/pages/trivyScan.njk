@@ -18,7 +18,7 @@
 
   <h2>Scan Summary </h2>
     
-  <table class="stripe">
+  <table class="trivyData">
     <thead>
       <tr>
         <th>Category</th>
@@ -28,7 +28,7 @@
     </thead>
     <tbody>
       {% for row in summaryTable %}
-        <tr>
+        <tr class="{% if row.severity == 'HIGH' or row.severity == 'CRITICAL' %}trivyCritical{% endif %}">
           <td>{{ row.category }}</td>
           <td>{{ row.severity }}</td>
           <td>{{ row.count }}</td>
@@ -38,8 +38,6 @@
   </table>
 
   <h2>Scan Results</h2>
-
-  <!-- Hyperlinks -->
   <ul>
     <li><a href="#vulnerabilities">Vulnerabilities</a></li>
     <li><a href="#secrets">Secrets</a></li>
@@ -47,8 +45,8 @@
 
   <!-- Vulnerabilities Table -->
   <h2 id="vulnerabilities">Vulnerabilities</h2>
-  <table border="1" style="table-layout: fixed; width: 100%; text-align: left;">
-    <thead style="background-color: grey; color: white">
+  <table class="trivyData">
+    <thead>
       <tr>
         <th style="width: 10%;">Category</th>
         <th style="width: 10%;">Severity</th>
@@ -61,11 +59,7 @@
     </thead>
     <tbody>
       {% for row in vulnerabilitiesResultsTable %}
-        <tr 
-          {% if row.severity == "HIGH" or row.severity == "CRITICAL" %}
-            style="font-weight: bold;"
-          {% endif %}
-        >
+        <tr class="{% if row.severity == 'HIGH' or row.severity == 'CRITICAL' %}trivyCritical{% endif %}">
           <td>{{ row.category }}</td>
           <td>{{ row.severity }}</td>
           <td><a href="{{ row.PrimaryURL }}">{{ row.vulnerabilityID }}</a></td>
@@ -80,8 +74,8 @@
 
   <!-- Secrets Table -->
   <h2 id="secrets">Secrets</h2>
-  <table border="1" style="table-layout: fixed; width: 100%; text-align: left;">
-    <thead style="background-color: grey; color: white">
+  <table class="trivyData">
+    <thead>
       <tr>
         <th style="width: 10%;">Category</th>
         <th style="width: 10%;">Severity</th>
@@ -93,11 +87,7 @@
     </thead> 
     <tbody>
       {% for secret in secretResultTable %}
-        <tr 
-          {% if secret.severity == "HIGH" or secret.severity == "CRITICAL" %}
-            style="font-weight: bold;"
-          {% endif %}
-        >
+        <tr class="{% if row.severity == 'HIGH' or row.severity == 'CRITICAL' %}trivyCritical{% endif %}">
           <td> Secret </td>
           <td>{{ secret.severity }}</td>
           <td>{{ secret.description }}</td>
