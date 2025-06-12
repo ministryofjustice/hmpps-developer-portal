@@ -11,54 +11,52 @@ const createSummaryTable = (summary: Summary): Array<{ category: string; severit
 
   // Add rows for "config"
   if (summary.config) {
-    for (const [severity, count] of Object.entries(summary.config)) {
+    Object.entries(summary.config).forEach(([severity, count]) => {
       dataTable.push({
         category: 'Config',
         severity,
         count,
       })
-    }
+    })
   }
 
   // Add rows for "os-pkgs"
   if (summary['os-pkgs']) {
-    for (const [status, severities] of Object.entries(summary['os-pkgs'])) {
-      for (const [severity, count] of Object.entries(severities)) {
+    Object.entries(summary['os-pkgs']).forEach(([status, severities]) => {
+      Object.entries(severities).forEach(([severity, count]) => {
         dataTable.push({
           category: `OS Packages (${status})`,
           severity,
           count,
         })
-      }
-    }
+      })
+    })
   }
 
   // Add rows for "lang-pkgs"
   if (summary['lang-pkgs']) {
-    for (const [status, severities] of Object.entries(summary['lang-pkgs'])) {
-      for (const [severity, count] of Object.entries(severities)) {
+    Object.entries(summary['lang-pkgs']).forEach(([status, severities]) => {
+      Object.entries(severities).forEach(([severity, count]) => {
         dataTable.push({
           category: `Language Packages (${status})`,
           severity,
           count,
         })
-      }
-    }
+      })
+    })
   }
 
   // Add rows for "secret"
   if (summary.secret) {
-    for (const [severity, count] of Object.entries(summary.secret)) {
+    Object.entries(summary.secret).forEach(([severity, count]) => {
       dataTable.push({
         category: 'Secret',
         severity,
         count,
       })
-    }
+    })
   }
-  dataTable.sort((a, b) => {
-    return severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity)
-  })
+  dataTable.sort((a, b) => severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity))
   return dataTable
 }
 
@@ -67,7 +65,7 @@ const createVulnerabilitiesResultsTable = (results: ScanResult) => {
 
   // Add rows for "lang-pkgs"
   if (results['lang-pkgs']) {
-    for (const pkg of results['lang-pkgs']) {
+    results['lang-pkgs'].forEach(pkg => {
       dataTable.push({
         category: 'Language Packages',
         pkgName: pkg.PkgName,
@@ -78,12 +76,12 @@ const createVulnerabilitiesResultsTable = (results: ScanResult) => {
         PrimaryURL: pkg.PrimaryURL,
         installedVersion: pkg.InstalledVersion,
       })
-    }
+    })
   }
 
   // Add rows for "os-pkgs"
   if (results['os-pkgs']) {
-    for (const pkg of results['os-pkgs']) {
+    results['os-pkgs'].forEach(pkg => {
       dataTable.push({
         category: 'OS Packages',
         pkgName: pkg.PkgName,
@@ -94,13 +92,11 @@ const createVulnerabilitiesResultsTable = (results: ScanResult) => {
         PrimaryURL: pkg.PrimaryURL,
         installedVersion: pkg.InstalledVersion,
       })
-    }
+    })
   }
 
   // Sort the dataTable by severity
-  dataTable.sort((a, b) => {
-    return severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity)
-  })
+  dataTable.sort((a, b) => severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity))
 
   return dataTable
 }
@@ -109,7 +105,7 @@ const createSecretResultsTable = (results: ScanResult) => {
   const dataTable: Record<string, string>[] = []
   // Add rows for "secret"
   if (results.secret) {
-    for (const secret of results.secret) {
+    results.secret.forEach(secret => {
       dataTable.push({
         category: 'Secret',
         severity: secret.Severity,
@@ -118,13 +114,11 @@ const createSecretResultsTable = (results: ScanResult) => {
         lineNumber: secret.LineNumber,
         additionalContext: secret.AdditionalContext.replace(/\*+/g, '*'),
       })
-    }
+    })
   }
 
   // Sort the dataTable by severity
-  dataTable.sort((a, b) => {
-    return severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity)
-  })
+  dataTable.sort((a, b) => severityOrder.indexOf(a.severity) - severityOrder.indexOf(b.severity))
 
   return dataTable
 }
