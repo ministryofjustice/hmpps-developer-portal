@@ -35,8 +35,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         const dependencyData = component.attributes?.versions?.[dependencyType]?.[dependencyName]
         const githubRepo = component.attributes?.github_repo ?? ''
 
-        console.log('Component:', component.id, 'Dependency data:', dependencyData)
-
         let dependencyVersion = ''
         if (typeof dependencyData === 'string' || typeof dependencyData === 'number') {
           dependencyVersion = String(dependencyData)
