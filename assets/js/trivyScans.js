@@ -179,7 +179,6 @@ jQuery(function () {
     },
   ]
 
-  let table
   $.ajax({
     url: '/trivy-scans/data',
     success: function (data) {
