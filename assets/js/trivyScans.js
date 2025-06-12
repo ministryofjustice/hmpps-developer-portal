@@ -275,8 +275,6 @@ jQuery(function () {
           return totalUnfixedSum > 0
         } else if (isNoVulnerabilitiesChecked) {
           return totalFixedSum === 0 && totalUnfixedSum === 0
-        } else {
-          return true // No filters applied, show all rows
         }
       })
     }
@@ -296,7 +294,7 @@ jQuery(function () {
     unavailableColumns.forEach(column => {
       table.column(`${column}`).visible(isUnavailableChecked)
     })
-    console.log(action)
+
     if (action === 'severity') {
       severityCheckboxes.forEach(checkbox => {
         const severity = $(checkbox).val()
