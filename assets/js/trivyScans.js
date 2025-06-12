@@ -29,6 +29,10 @@ jQuery(function () {
             (summary?.['secret']?.HIGH ?? 0) +
             (summary?.['secret']?.MEDIUM ?? 0) +
             (summary?.['secret']?.LOW ?? 0),
+          result_link: `
+              <a href="/trivy-scans/${item.name}">
+                <img src="/assets/images/trivy.png" alt="Trivy Logo" style="width: 32px; height: 32px; margin-right: 5px;" />
+              </a>`,
         })
       })
     })
@@ -38,9 +42,12 @@ jQuery(function () {
   const columns = [
     {
       data: 'name',
+      name: 'name',
       createdCell: function (td, _cellData, rowData) {
-        const name = rowData?.name || 'N/A'
-        $(td).html(`<a href="/trivy-scans/${name}">${name}</a>`)
+        const componentName = cleanColumnOutput(rowData.name || 'N/A')
+        $(td).html(`
+          <a class="govuk-link--no-visited-state" href="/components/${componentName}">${componentName}</a>
+        `)
       },
     },
     {
@@ -53,6 +60,7 @@ jQuery(function () {
     },
     {
       data: 'build_image_tag',
+      name: 'build_image_tag',
       createdCell: function (td, _cellData, rowData) {
         const buildImageTag = rowData?.build_image_tag || 'N/A'
         $(td).html(buildImageTag)
@@ -60,6 +68,7 @@ jQuery(function () {
     },
     {
       data: 'trivy_scan_timestamp',
+      name: 'trivy_scan_timestamp',
       createdCell: function (td, _cellData, rowData) {
         const scan_timestamp = rowData?.trivy_scan_timestamp || 'N/A'
         $(td).html(formatDateToDDMONYYYYHH24MMSS(scan_timestamp))
@@ -158,6 +167,14 @@ jQuery(function () {
       createdCell: function (td, _cellData, rowData) {
         const totalSecretIssues = rowData?.total_secret_issues || 0
         $(td).html(totalSecretIssues)
+      },
+    },
+    {
+      data: 'result_link',
+      name: 'result_link',
+      createdCell: function (td, _cellData, rowData) {
+        const componentName = cleanColumnOutput(rowData.name || 'N/A')
+        $(td).html(rowData.result_link)
       },
     },
   ]
