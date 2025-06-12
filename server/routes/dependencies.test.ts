@@ -25,66 +25,39 @@ afterEach(() => {
 describe('/components', () => {
   describe('getDropDownOptions()', () => {
     it('should provide drop down data from dependencies', async () => {
-      const dependencies = await getDropDownOptions(serviceCatalogueService)
+      const { dependencyTypes, dependencyNames } = await getDropDownOptions(serviceCatalogueService)
 
-      expect(dependencies).toEqual([
+      expect(dependencyTypes).toEqual([
         { value: '', text: 'Please select' },
-        {
-          value: 'type1::dependency1',
-          text: 'type1: dependency1',
-          selected: false,
-          attributes: {
-            'data-test': 'type1::dependency1',
-          },
-        },
-        {
-          value: 'type1::dependency2',
-          text: 'type1: dependency2',
-          selected: false,
-          attributes: {
-            'data-test': 'type1::dependency2',
-          },
-        },
-        {
-          value: 'type2::dependency3',
-          text: 'type2: dependency3',
-          selected: false,
-          attributes: {
-            'data-test': 'type2::dependency3',
-          },
-        },
+        { value: 'type1', text: 'type1', selected: false },
+        { value: 'type2', text: 'type2', selected: false },
+      ])
+
+      expect(dependencyNames).toEqual([
+        { value: '', text: 'Please select' },
+        { value: 'dependency1', text: 'dependency1', selected: false },
+        { value: 'dependency2', text: 'dependency2', selected: false },
+        { value: 'dependency3', text: 'dependency3', selected: false },
       ])
     })
 
-    it('should provide drop down data from dependencies selecting the chosen option when provided', async () => {
-      const dependencies = await getDropDownOptions(serviceCatalogueService, 'type1::dependency2')
+    it('should mark selected dependency type and name when provided', async () => {
+      const { dependencyTypes, dependencyNames } = await getDropDownOptions(
+        serviceCatalogueService,
+        'type1::dependency2',
+      )
 
-      expect(dependencies).toEqual([
+      expect(dependencyTypes).toEqual([
         { value: '', text: 'Please select' },
-        {
-          value: 'type1::dependency1',
-          text: 'type1: dependency1',
-          selected: false,
-          attributes: {
-            'data-test': 'type1::dependency1',
-          },
-        },
-        {
-          value: 'type1::dependency2',
-          text: 'type1: dependency2',
-          selected: true,
-          attributes: {
-            'data-test': 'type1::dependency2',
-          },
-        },
-        {
-          value: 'type2::dependency3',
-          text: 'type2: dependency3',
-          selected: false,
-          attributes: {
-            'data-test': 'type2::dependency3',
-          },
-        },
+        { value: 'type1', text: 'type1', selected: true },
+        { value: 'type2', text: 'type2', selected: false },
+      ])
+
+      expect(dependencyNames).toEqual([
+        { value: '', text: 'Please select' },
+        { value: 'dependency1', text: 'dependency1', selected: false },
+        { value: 'dependency2', text: 'dependency2', selected: true },
+        { value: 'dependency3', text: 'dependency3', selected: false },
       ])
     })
   })
@@ -96,9 +69,12 @@ describe('/components', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test="type1::dependency1"]').length).toBe(1)
-          expect($('[data-test="type1::dependency2"]').length).toBe(1)
-          expect($('[data-test="type2::dependency3"]').length).toBe(1)
+          expect($('[data-test="dependency-type-select"]').length).toBe(1)
+          expect($('[data-test="dependency-name-select"]').length).toBe(1)
+          expect($('option[value="type1"]').length).toBe(1)
+          expect($('option[value="dependency1"]').length).toBe(1)
+          expect($('option[value="type1"]').text()).toBe('type1')
+          expect($('option[value="dependency1"]').text()).toBe('dependency1')
         })
     })
   })
