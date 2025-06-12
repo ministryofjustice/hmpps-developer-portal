@@ -234,3 +234,4 @@ function updateAll(alerts, currentFilters, isReset) {
   dropdownHandler.updateDropdowns(dataForDropdowns, currentFilters, isReset)
   updateURLParams(currentFilters)
 }
+console.log('hello')
