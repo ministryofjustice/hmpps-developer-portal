@@ -265,6 +265,43 @@
     font-weight: bold;
     color: red;
   }
+
+  &.category {
+    width: 10%
+  }
+
+  &.severity {
+    width: 10%
+  }
+
+  &.description {
+    width: 30%
+  }
+
+  &.filePath {
+    width: 20%
+  }
+
+  &.lineNumber {
+    width: 10%
+  }
+
+  &.context {
+    width: 20%
+  }
+
+  &.vulnertabilityId {
+    width: 15%
+  }
+
+  &.package {
+    width: 10%
+  }
+
+  &.version {
+    width: 10%
+  }
+
 }
 
 .trivy-icon {

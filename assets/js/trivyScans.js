@@ -183,7 +183,7 @@ jQuery(function () {
     url: '/trivy-scans/data',
     success: function (data) {
       const transformedData = transformData(data)
-      table = createTable({
+      createTable({
         id: 'trivyScansTable',
         data: transformedData,
         orderColumn: 0,
