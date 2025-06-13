@@ -1,0 +1,185 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% set pageTitle = applicationName + " - Trivy Scan Results" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb("Trivy Scans", []) }}
+
+  <h1>Trivy Scan Results</h1>
+  <form>
+    <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
+    <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
+    <input type="hidden" name="monitorId" id="monitorId" value="{{ monitorId }}">
+    <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
+    <div class="monitor">
+      <div class="monitor-filter-block">
+        <div class="govuk-heading-s">Environments</div>
+        {{ govukCheckboxes({
+          classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
+          name: "environment",
+          items: [
+            {
+              id: "environment-dev",
+              value: "dev",
+              text: "Dev",
+              checked: true
+            },
+            {
+              id: "environment-stage",
+              value: "stage",
+              text: "Stage",
+              checked: true
+            },
+            {
+              id: "environment-test",
+              value: "test",
+              text: "Test",
+              checked: true
+            },
+            {
+              id: "environment-preprod",
+              value: "preprod",
+              text: "PreProd",
+              checked: true
+            },
+            {
+              id: "environment-prod",
+              value: "prod",
+              text: "Prod",
+              checked: true
+            },
+            {
+              id: "environment-unknown",
+              value: "unknown",
+              text: "Unknown (latest image)",
+              checked: true
+            }
+          ]
+        }) }}
+      </div>
+
+      <div class="monitor-filter-block">
+        <div class="govuk-heading-s">Vulnerabilities with  </div>
+        {{ govukCheckboxes({
+          classes: "govuk-checkboxes--inline govuk-checkboxes--small vulnerability",
+          name: "Vulnerabilities with Fix",
+          items: [
+            {
+              id: "showAvailable",
+              value: "Available",
+              text: "Fix Available (FA) ",
+              checked: true
+            },
+            {
+              id: "showUnavailable",
+              value: "Unavailable",
+              text: "Fix Unavailable (FUA)",
+              checked: true
+            },
+            {
+              id: "showNoVulnerabilities",
+              value: "NoVulnerability",
+              text: "No Vulnerabilities",
+              checked: true
+            }
+          ]
+        }) }}
+      </div>
+
+      <div class="monitor-filter-block">
+        <div class="govuk-heading-s">Severity</div>
+        {{ govukCheckboxes({
+          classes: "govuk-checkboxes--inline govuk-checkboxes--small severity",
+          name: "severityColumns",
+          items: [
+            {
+              id: "showSeverityCritical",
+              value: "critical ",
+              text: "Critical",
+              checked: true
+            },
+            {
+              id: "showSeverityHigh",
+              value: "high",
+              text: "High",
+              checked: true
+            },
+            {
+              id: "showSeverityMedium",
+              value: "medium",
+              text: "Medium",
+              checked: false
+            },
+            {
+              id: "showSeverityLow",
+              value: "low",
+              text: "Low",
+              checked: false
+            },
+            {
+              id: "showSeverityUnknown",
+              value: "unknown",
+              text: "Unknown",
+              checked: false
+            }
+          ]
+        }) }}
+      </div>
+    </div>
+  </form>
+  <br>
+  <p><strong>Note:</strong> The latest images are not retrieved from the health endpoint, making it unclear which environment they are deployed in.</p>
+  <table id="trivyScansTable" class="stripe">
+    <thead>
+      <tr>
+        <th class="govuk-!-width-one-quarter">Name</th>
+        <th class="govuk-!-width-one-quarter">Environment</th>
+        <th class="govuk-!-width-one-quarter">Image</th> 
+        <th class="govuk-!-width-one-quarter">Scan Timestamp</th> 
+        <th>Critical (FA)</th>
+        <th>High (FA)</th>
+        <th>Medium (FA)</th>
+        <th>Low (FA)</th>
+        <th>Unknown (FA)</th>
+        <th>Critical (FUA)</th>
+        <th>High (FUA)</th>
+        <th>Medium (FUA)</th>
+        <th>Low (FUA)</th>
+        <th>Unknown (FUA)</th>
+        <th>Secret Issues</th>
+        <th>Results</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th class="govuk-!-width-one-quarter">Name</th>
+        <th class="govuk-!-width-one-quarter">Environment</th>
+        <th class="govuk-!-width-one-quarter">Image</th> 
+        <th class="govuk-!-width-one-quarter">Scan Timestamp</th> 
+        <th>Critical (FA)</th>
+        <th>High (FA)</th>
+        <th>Medium (FA)</th>
+        <th>Low (FA)</th>
+        <th>Unknown (FA)</th>
+        <th>Critical (FUA)</th>
+        <th>High (FUA)</th>
+        <th>Medium (FUA)</th>
+        <th>Low (FUA)</th>
+        <th>Unknown (FUA)</th>
+        <th>Secret Issues</th>
+        <th>Results</th>
+      </tr>
+    </tfoot>
+  </table>
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+  
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/trivyScans.js"></script>
+{% endblock %}

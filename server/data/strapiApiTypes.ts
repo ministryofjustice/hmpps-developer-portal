@@ -70,6 +70,16 @@ export type ScheduledJobResponse = components['schemas']['ScheduledJobResponse']
 export type ScheduledJobListResponseDataItem = components['schemas']['ScheduledJobListResponseDataItem']
 export type ScheduledJobRequest = components['schemas']['ScheduledJobRequest']
 
+export type TrivyScan = components['schemas']['TrivyScan']
+export type TrivyScanResponse = components['schemas']['TrivyScanResponse']
+export type TrivyScanListResponseDataItem = components['schemas']['TrivyScanListResponseDataItem']
+export type TrivyScanRequest = components['schemas']['TrivyScanRequest']
+
+export type Env = components['schemas']['Environment']
+export type EnvResponse = components['schemas']['EnvironmentResponse']
+export type EnvListResponseDataItem = components['schemas']['EnvironmentListResponseDataItem']
+export type EnvRequest = components['schemas']['EnvironmentRequest']
+
 export type VeracodeResultsSummary = {
   'static-analysis': {
     score: number
