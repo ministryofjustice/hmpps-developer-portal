@@ -87,6 +87,11 @@ export const sortByName = (dataItem: { name: string }, compareDataItem: { name: 
   return dataItem.name.localeCompare(compareDataItem.name)
 }
 
+export const sortBySeverity = (dataItem: { severity: string }, compareDataItem: { severity: string }) => {
+  const severityOrder = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN']
+  return severityOrder.indexOf(dataItem.severity) - severityOrder.indexOf(compareDataItem.severity)
+}
+
 export const sortRdsInstances = (rdsInstance: RdsEntry, compareRdsInstance: RdsEntry) => {
   return rdsInstance.tf_label.localeCompare(compareRdsInstance.tf_label)
 }
