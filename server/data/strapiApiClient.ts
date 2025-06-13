@@ -28,7 +28,7 @@ import {
   EnvironmentListResponseDataItem,
 } from './strapiApiTypes'
 import { convertServiceArea } from './converters/serviceArea'
-import type { ServiceArea, trivyScanType } from './converters/modelTypes'
+import type { ServiceArea, TrivyScanType } from './converters/modelTypes'
 import convertTrivyScan from './converters/trivyScans'
 
 export default class StrapiApiClient {
@@ -298,7 +298,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getTrivyScans(): Promise<trivyScanType[]> {
+  async getTrivyScans(): Promise<TrivyScanType[]> {
     const results = await this.restClient.get<ListResponse<TrivyScanListResponseDataItem>>({
       path: '/v1/trivy-scans',
     })

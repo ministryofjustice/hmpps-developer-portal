@@ -78,7 +78,7 @@ export type ScanSummary = {
   scan_result?: ScanResult
 }
 
-export type trivyScanType = {
+export type TrivyScanType = {
   id: number
   name: string
   trivy_scan_timestamp: string
