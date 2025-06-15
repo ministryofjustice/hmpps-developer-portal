@@ -2,18 +2,8 @@ import { URLSearchParams } from 'url'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import {
-  ProductResponse,
-  TeamResponse,
-  ComponentResponse,
-  ServiceAreaResponse,
-  ProductSetResponse,
-  CustomComponentResponse,
-  GithubRepoRequestResponse,
   GithubRepoRequestRequest,
-  GithubTeamResponse,
   ListResponse,
-  ScheduledJobResponse,
-  TrivyScanResponse,
   Product,
   Component,
   Team,
@@ -26,6 +16,7 @@ import {
   ScheduledJob,
   TrivyScan,
   Environment,
+  SingleResponse,
 } from './strapiApiTypes'
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea, TrivyScanType } from './converters/modelTypes'
@@ -73,7 +64,7 @@ export default class StrapiApiClient {
     productSlug?: string
     productId?: number
     withEnvironments?: boolean
-  }): Promise<ProductResponse> {
+  }): Promise<SingleResponse<Product>> {
     const populateList = ['product_set', 'team', 'components', 'service_area']
 
     if (withEnvironments) {
@@ -105,7 +96,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getComponent({ componentName }: { componentName: string }): Promise<ComponentResponse> {
+  async getComponent({ componentName }: { componentName: string }): Promise<SingleResponse<Component>> {
     const populate = new URLSearchParams({ populate: 'product.team,environments' }).toString()
 
     return this.restClient.get({
@@ -129,7 +120,7 @@ export default class StrapiApiClient {
     teamId?: number
     teamSlug?: string
     withEnvironments?: boolean
-  }): Promise<TeamResponse> {
+  }): Promise<SingleResponse<Team>> {
     const populateList = ['products']
 
     if (withEnvironments) {
@@ -156,7 +147,7 @@ export default class StrapiApiClient {
   }: {
     namespaceId?: number
     namespaceSlug?: string
-  }): Promise<TeamResponse> {
+  }): Promise<SingleResponse<Namespace>> {
     const populateList = ['rds_instance']
 
     const populate = new URLSearchParams({ populate: populateList }).toString()
@@ -173,7 +164,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getProductSet({ productSetId = 0 }: { productSetId: number }): Promise<ProductSetResponse> {
+  async getProductSet({ productSetId = 0 }: { productSetId: number }): Promise<SingleResponse<ProductSet>> {
     return this.restClient.get({
       path: `/v1/product-sets/${productSetId}`,
       query: new URLSearchParams({ populate: 'products' }).toString(),
@@ -197,7 +188,7 @@ export default class StrapiApiClient {
     serviceAreaId?: number
     serviceAreaSlug?: string
     withProducts?: boolean
-  }): Promise<ServiceAreaResponse> {
+  }): Promise<SingleResponse<StrapiServiceArea>> {
     const populateList = ['products']
 
     if (withProducts) {
@@ -236,7 +227,7 @@ export default class StrapiApiClient {
   }: {
     customComponentId: number
     withEnvironments?: boolean
-  }): Promise<CustomComponentResponse> {
+  }): Promise<SingleResponse<CustomComponentView>> {
     const populate = ['components', 'components.product']
 
     if (withEnvironments) {
@@ -258,14 +249,14 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequestResponse> {
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<SingleResponse<GithubRepoRequest>> {
     return this.restClient.get({
       path: '/v1/github-repo-requests',
       query: `filters[github_repo][$eq]=${repoName}`,
     })
   }
 
-  async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<GithubRepoRequestResponse> {
+  async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<SingleResponse<GithubRepoRequest>> {
     return this.restClient.post({
       path: '/v1/github-repo-requests',
       data: request,
@@ -278,7 +269,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubTeam({ teamName }: { teamName: string }): Promise<GithubTeamResponse> {
+  async getGithubTeam({ teamName }: { teamName: string }): Promise<SingleResponse<GithubTeam>> {
     return this.restClient.get({
       path: '/v1/github-teams',
       query: `filters[team_name][$eq]=${teamName}`,
@@ -291,7 +282,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getScheduledJob({ name }: { name: string }): Promise<ScheduledJobResponse> {
+  async getScheduledJob({ name }: { name: string }): Promise<SingleResponse<ScheduledJob>> {
     return this.restClient.get({
       path: '/v1/scheduled-jobs',
       query: `filters[name][$eq]=${name}`,
@@ -305,7 +296,7 @@ export default class StrapiApiClient {
     return results.data.map(convertTrivyScan)
   }
 
-  async getTrivyScan({ name }: { name: string }): Promise<TrivyScanResponse> {
+  async getTrivyScan({ name }: { name: string }): Promise<SingleResponse<TrivyScan>> {
     return this.restClient.get({
       path: '/v1/trivy-scans',
       query: `filters[name][$eq]=${name}`,

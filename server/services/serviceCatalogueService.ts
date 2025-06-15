@@ -8,7 +8,6 @@ import {
   ProductSet,
   CustomComponentView,
   Namespace,
-  GithubRepoRequestResponse,
   GithubRepoRequest,
   GithubRepoRequestRequest,
   GithubTeam,
@@ -16,6 +15,7 @@ import {
   ScheduledJob,
   DataItem,
   Environment,
+  SingleResponse,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
@@ -302,7 +302,7 @@ export default class ServiceCatalogueService {
     return componentRequest
   }
 
-  async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<GithubRepoRequestResponse> {
+  async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<SingleResponse<GithubRepoRequest>> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const response = await strapiApiClient.postGithubRepoRequest(request)
 

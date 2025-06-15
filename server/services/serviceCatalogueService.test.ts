@@ -3,25 +3,18 @@ import { createModelServiceArea } from '../data/converters/serviceArea.test'
 import StrapiApiClient from '../data/strapiApiClient'
 import {
   Component,
-  ComponentResponse,
   Product,
-  ProductResponse,
   ProductSet,
-  ProductSetResponse,
   StrapiServiceArea,
-  ServiceAreaResponse,
   Team,
-  TeamResponse,
   Namespace,
-  GithubTeamResponse,
   GithubTeam,
-  CustomComponentResponse,
   CustomComponentView,
   GithubRepoRequest,
-  GithubRepoRequestResponse,
   ListResponse,
   DataItem,
   Environment,
+  SingleResponse,
 } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
@@ -86,7 +79,7 @@ describe('Strapi service', () => {
             attributes: { name: 'Product 1', p_id: '1', slug: 'product-1' },
           },
         ],
-      } as ProductResponse
+      } as SingleResponse<Product>
       const testProduct = { name: 'Product 1', p_id: '1', slug: 'product-1' } as Product
 
       it('should return the selected product', async () => {
@@ -144,7 +137,7 @@ describe('Strapi service', () => {
             id: 1,
             attributes: { name: 'Team 1', slug: 'team-1' },
           },
-        } as TeamResponse
+        } as SingleResponse<Team>
 
         strapiApiClient.getTeam.mockResolvedValue(testTeamResponse)
 
@@ -162,7 +155,7 @@ describe('Strapi service', () => {
               attributes: { name: 'Team 1', slug: 'team-1' },
             },
           ],
-        } as TeamResponse
+        } as SingleResponse<Team>
 
         strapiApiClient.getTeam.mockResolvedValue(testTeamResponse)
 
@@ -211,7 +204,7 @@ describe('Strapi service', () => {
             attributes: { name: 'Component 1' },
           },
         ],
-      } as ComponentResponse
+      } as SingleResponse<Component>
       const testComponent = { name: 'Component 1' } as Component
 
       it('should return the selected component', async () => {
@@ -293,7 +286,7 @@ describe('Strapi service', () => {
             id: 1,
             attributes: { name: 'Service Area 1', slug: 'service-area-1' },
           },
-        } as ServiceAreaResponse
+        } as SingleResponse<StrapiServiceArea>
 
         strapiApiClient.getServiceArea.mockResolvedValue(testServiceAreaResponse)
 
@@ -311,7 +304,7 @@ describe('Strapi service', () => {
               attributes: { name: 'Service Area 1', slug: 'service-area-1' },
             },
           ],
-        } as ServiceAreaResponse
+        } as SingleResponse<StrapiServiceArea>
 
         strapiApiClient.getServiceArea.mockResolvedValue(testServiceAreaResponse)
 
@@ -358,7 +351,7 @@ describe('Strapi service', () => {
           id: 1,
           attributes: { name: 'Product Set 1' },
         },
-      } as ProductSetResponse
+      } as SingleResponse<ProductSet>
       const testProductSet = { name: 'Product Set 1' } as ProductSet
 
       it('should return the selected product set', async () => {
@@ -407,7 +400,7 @@ describe('Strapi service', () => {
           id: 1,
           attributes: { name: 'Namespace 1' },
         },
-      } as TeamResponse
+      } as SingleResponse<Namespace>
       const testNamespace = { name: 'Namespace 1' } as Namespace
 
       it('should return the selected namespace', async () => {
@@ -486,7 +479,7 @@ describe('Strapi service', () => {
           id: 1,
           attributes: { team_name: 'Github Team 1' },
         },
-      } as GithubTeamResponse
+      } as SingleResponse<GithubTeam>
       const testGithubTeam = { team_name: 'Github Team 1' } as GithubTeam
 
       it('should return the selected github team', async () => {
@@ -508,7 +501,7 @@ describe('Strapi service', () => {
           name: 'custom component 1',
         },
       },
-    } as CustomComponentResponse
+    } as SingleResponse<CustomComponentView>
     const testCustomComponentView = {
       name: 'custom component 1',
     } as CustomComponentView
@@ -558,7 +551,7 @@ describe('Strapi service', () => {
           id: 1,
           attributes: { name: 'github_repo-1' },
         },
-      } as GithubRepoRequestResponse
+      } as SingleResponse<GithubRepoRequest>
       const testGithubRepoRequest = { name: 'github_repo-1' } as GithubRepoRequest
 
       it('should return the selected repo request', async () => {

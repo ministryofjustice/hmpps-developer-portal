@@ -1,14 +1,14 @@
 import { createModelServiceArea } from '../data/converters/serviceArea.test'
 import StrapiApiClient from '../data/strapiApiClient'
 import {
-  TeamResponse,
-  ServiceAreaResponse,
   ListResponse,
   Component,
   Team,
   Product,
   CustomComponentView,
   GithubRepoRequest,
+  SingleResponse,
+  StrapiServiceArea,
 } from '../data/strapiApiTypes'
 import ComponentNameService from './componentNameService'
 
@@ -81,7 +81,7 @@ describe('Component name service', () => {
           },
         },
       },
-    } as TeamResponse
+    } as SingleResponse<Team>
 
     it('should return deployed components sorted for the selected team', async () => {
       strapiApiClient.getTeams.mockResolvedValue(testTeamsResponse)
@@ -119,7 +119,7 @@ describe('Component name service', () => {
           },
         },
       },
-    } as ServiceAreaResponse
+    } as SingleResponse<StrapiServiceArea>
 
     it('should return deployed components sorted for the selected service area', async () => {
       strapiApiClient.getServiceAreas.mockResolvedValue(serviceAreasResponse)
