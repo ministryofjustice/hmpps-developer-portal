@@ -8,12 +8,12 @@ import {
   ProductResponse,
   ServiceAreaResponse,
   GithubRepoRequestRequest,
-  ProductListResponseDataItem,
   ListResponse,
-  ComponentListResponseDataItem,
-  TeamListResponseDataItem,
-  ProductSetListResponseDataItem,
-  EnvironmentListResponseDataItem,
+  Product,
+  Component,
+  ProductSet,
+  Environment,
+  Team,
 } from './strapiApiTypes'
 import { createModelServiceArea, exampleStrapiServiceArea } from './converters/serviceArea.test'
 
@@ -40,7 +40,7 @@ describe('strapiApiClient', () => {
       it('should return all products by default', async () => {
         const allProducts = {
           data: [{ id: 1, attributes: { name: 'Product', p_id: '1' } }],
-        } as ListResponse<ProductListResponseDataItem>
+        } as ListResponse<Product>
         fakeStrapiApi.get('/products?populate=product_set').reply(200, allProducts)
         const output = await strapiApiClient.getProducts({})
         expect(output).toEqual(allProducts)
@@ -49,7 +49,7 @@ describe('strapiApiClient', () => {
       it('should return products with environments if selected', async () => {
         const allProducts = {
           data: [{ id: 1, attributes: { name: 'Product', p_id: '1' } }],
-        } as ListResponse<ProductListResponseDataItem>
+        } as ListResponse<Product>
         fakeStrapiApi.get('/products?populate=product_set%2Ccomponents.environments').reply(200, allProducts)
         const output = await strapiApiClient.getProducts({ withEnvironments: true })
         expect(output).toEqual(allProducts)
@@ -111,7 +111,7 @@ describe('strapiApiClient', () => {
       it('should return all components', async () => {
         const allComponents = {
           data: [{ attributes: { name: 'Component' } }],
-        } as ListResponse<ComponentListResponseDataItem>
+        } as ListResponse<Component>
         fakeStrapiApi.get('/components?populate=product.team%2Cenvironments').reply(200, allComponents)
         const output = await strapiApiClient.getComponents()
         expect(output).toEqual(allComponents)
@@ -135,7 +135,7 @@ describe('strapiApiClient', () => {
   describe('Teams', () => {
     describe('getTeams', () => {
       it('should return all teams', async () => {
-        const allTeams = { data: [{ attributes: { name: 'Team' } }] } as ListResponse<TeamListResponseDataItem>
+        const allTeams = { data: [{ attributes: { name: 'Team' } }] } as ListResponse<Team>
         fakeStrapiApi.get('/teams?populate=products').reply(200, allTeams)
         const output = await strapiApiClient.getTeams()
         expect(output).toEqual(allTeams)
@@ -164,7 +164,7 @@ describe('strapiApiClient', () => {
       it('should return all product sets', async () => {
         const allProductSets = {
           data: [{ attributes: { name: 'Product Set' } }],
-        } as ListResponse<ProductSetListResponseDataItem>
+        } as ListResponse<ProductSet>
         fakeStrapiApi.get('/product-sets?populate=products').reply(200, allProductSets)
         const output = await strapiApiClient.getProductSets()
         expect(output).toEqual(allProductSets)
@@ -241,7 +241,7 @@ describe('strapiApiClient', () => {
       it('should return all environments', async () => {
         const allEnvironments = {
           data: [{ attributes: { name: 'Environment' } }],
-        } as ListResponse<EnvironmentListResponseDataItem>
+        } as ListResponse<Environment>
         fakeStrapiApi.get('/environments?populate=component').reply(200, allEnvironments)
         const output = await strapiApiClient.getEnvironments()
         expect(output).toEqual(allEnvironments)

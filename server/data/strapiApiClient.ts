@@ -12,20 +12,20 @@ import {
   GithubRepoRequestRequest,
   GithubTeamResponse,
   ListResponse,
-  ProductListResponseDataItem,
-  ComponentListResponseDataItem,
-  NamespaceListResponseDataItem,
-  ProductSetListResponseDataItem,
-  ServiceAreaListResponseDataItem,
-  CustomComponentListResponseDataItem,
-  GithubRepoRequestListResponseDataItem,
-  GithubTeamListResponseDataItem,
-  TeamListResponseDataItem,
-  ScheduledJobListResponseDataItem,
   ScheduledJobResponse,
   TrivyScanResponse,
-  TrivyScanListResponseDataItem,
-  EnvironmentListResponseDataItem,
+  Product,
+  Component,
+  Team,
+  Namespace,
+  ProductSet,
+  StrapiServiceArea,
+  CustomComponentView,
+  GithubRepoRequest,
+  GithubTeam,
+  ScheduledJob,
+  TrivyScan,
+  Environment,
 } from './strapiApiTypes'
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea, TrivyScanType } from './converters/modelTypes'
@@ -48,7 +48,7 @@ export default class StrapiApiClient {
   }: {
     withEnvironments?: boolean
     withComponents?: boolean
-  }): Promise<ListResponse<ProductListResponseDataItem>> {
+  }): Promise<ListResponse<Product>> {
     const populate = ['product_set']
 
     if (withComponents) {
@@ -91,7 +91,7 @@ export default class StrapiApiClient {
     exemptionFilters: string[] = [],
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
-  ): Promise<ListResponse<ComponentListResponseDataItem>> {
+  ): Promise<ListResponse<Component>> {
     const populate = new URLSearchParams({
       populate: `product${includeTeams ? '.team' : ''},environments${includeLatestCommit ? ',latest_commit' : ''}`,
     }).toString()
@@ -114,7 +114,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getTeams(): Promise<ListResponse<TeamListResponseDataItem>> {
+  async getTeams(): Promise<ListResponse<Team>> {
     return this.restClient.get({
       path: '/v1/teams',
       query: 'populate=products',
@@ -143,7 +143,7 @@ export default class StrapiApiClient {
     return this.restClient.get({ path, query })
   }
 
-  async getNamespaces(): Promise<ListResponse<NamespaceListResponseDataItem>> {
+  async getNamespaces(): Promise<ListResponse<Namespace>> {
     return this.restClient.get({
       path: '/v1/namespaces',
       query: 'populate=rds_instance,elasticache_cluster',
@@ -166,7 +166,7 @@ export default class StrapiApiClient {
     return this.restClient.get({ path, query })
   }
 
-  async getProductSets(): Promise<ListResponse<ProductSetListResponseDataItem>> {
+  async getProductSets(): Promise<ListResponse<ProductSet>> {
     return this.restClient.get({
       path: '/v1/product-sets',
       query: 'populate=products',
@@ -181,7 +181,7 @@ export default class StrapiApiClient {
   }
 
   async getServiceAreas(): Promise<ServiceArea[]> {
-    const results = await this.restClient.get<ListResponse<ServiceAreaListResponseDataItem>>({
+    const results = await this.restClient.get<ListResponse<StrapiServiceArea>>({
       path: '/v1/service-areas',
       query: 'populate=products',
     })
@@ -215,7 +215,7 @@ export default class StrapiApiClient {
     withEnvironments = false,
   }: {
     withEnvironments?: boolean
-  }): Promise<ListResponse<CustomComponentListResponseDataItem>> {
+  }): Promise<ListResponse<CustomComponentView>> {
     const populate = ['components']
 
     if (withEnvironments) {
@@ -251,7 +251,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubRepoRequests(): Promise<ListResponse<GithubRepoRequestListResponseDataItem>> {
+  async getGithubRepoRequests(): Promise<ListResponse<GithubRepoRequest>> {
     return this.restClient.get({
       path: '/v1/github-repo-requests',
       query: 'populate=github_repo',
@@ -272,7 +272,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubTeams(): Promise<ListResponse<GithubTeamListResponseDataItem>> {
+  async getGithubTeams(): Promise<ListResponse<GithubTeam>> {
     return this.restClient.get({
       path: '/v1/github-teams',
     })
@@ -285,7 +285,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getScheduledJobs(): Promise<ListResponse<ScheduledJobListResponseDataItem>> {
+  async getScheduledJobs(): Promise<ListResponse<ScheduledJob>> {
     return this.restClient.get({
       path: '/v1/scheduled-jobs',
     })
@@ -299,7 +299,7 @@ export default class StrapiApiClient {
   }
 
   async getTrivyScans(): Promise<TrivyScanType[]> {
-    const results = await this.restClient.get<ListResponse<TrivyScanListResponseDataItem>>({
+    const results = await this.restClient.get<ListResponse<TrivyScan>>({
       path: '/v1/trivy-scans',
     })
     return results.data.map(convertTrivyScan)
@@ -313,7 +313,7 @@ export default class StrapiApiClient {
   }
 
   async getEnvironments() {
-    return this.restClient.get<ListResponse<EnvironmentListResponseDataItem>>({
+    return this.restClient.get<ListResponse<Environment>>({
       path: '/v1/environments',
       query: 'populate=component',
     })
