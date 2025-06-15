@@ -4,7 +4,7 @@ import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import RedisService from '../services/redisService'
-import { Component, ComponentListResponseDataItem, Environment } from '../data/strapiApiTypes'
+import { Component, DataItem, Environment } from '../data/strapiApiTypes'
 import Dependencies from '../services/Dependencies'
 
 jest.mock('../services/serviceCatalogueService.ts')
@@ -14,7 +14,7 @@ const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked
 const redisService = new RedisService(null) as jest.Mocked<RedisService>
 
 let app: Express
-const testComponents = [{ id: 1, attributes: { name: 'testComponent' } }] as ComponentListResponseDataItem[]
+const testComponents = [{ id: 1, attributes: { name: 'testComponent' } }] as DataItem<Component>[]
 const testComponent = {
   name: 'testComponent',
   description: 'Test component description',

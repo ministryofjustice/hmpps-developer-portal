@@ -3,7 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { Product, ProductListResponseDataItem } from '../data/strapiApiTypes'
+import { DataItem, Product } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
@@ -12,7 +12,7 @@ const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked
 let app: Express
 const testProducts = [
   { id: 1, attributes: { name: 'testProduct', p_id: '1', slug: 'testproduct' } },
-] as ProductListResponseDataItem[]
+] as DataItem<Product>[]
 const testProduct = {
   name: 'z-index testProduct',
   p_id: '1',

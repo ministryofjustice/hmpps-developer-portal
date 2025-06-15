@@ -3,14 +3,14 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { ScheduledJob, ScheduledJobListResponseDataItem } from '../data/strapiApiTypes'
+import { ScheduledJob, DataItem } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testScheduledJobs = [{ id: 1, attributes: { name: 'testScheduledJob ' } }] as ScheduledJobListResponseDataItem[]
+const testScheduledJobs = [{ id: 1, attributes: { name: 'testScheduledJob ' } }] as DataItem<ScheduledJob>[]
 const testScheduledJob = {
   name: 'jobName',
   description: 'jobDescription',

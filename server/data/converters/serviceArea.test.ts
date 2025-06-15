@@ -1,4 +1,4 @@
-import { ServiceAreaListResponseDataItem } from '../strapiApiTypes'
+import { DataItem, StrapiServiceArea } from '../strapiApiTypes'
 import { convertServiceArea } from './serviceArea'
 
 test('check conversion', () => {
@@ -34,7 +34,7 @@ export const createModelServiceArea = (id: number, name: string) => ({
   ],
 })
 
-export const exampleStrapiServiceArea: ServiceAreaListResponseDataItem = {
+export const exampleStrapiServiceArea: DataItem<StrapiServiceArea> = {
   id: 123,
   attributes: {
     name: 'A Service Area name',

@@ -4,8 +4,8 @@ import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
-import { AlertListResponseDataItem, RdsEntry } from '../@types'
-import { EnvironmentListResponseDataItem } from '../data/strapiApiTypes'
+import { Alert, RdsEntry } from '../@types'
+import { DataItem, Environment } from '../data/strapiApiTypes'
 
 dayjs.extend(relativeTime.default)
 
@@ -143,10 +143,7 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
   return 'none'
 }
 
-export const addAlertSlackChannel = (
-  revisedEnvAlerts: AlertListResponseDataItem[],
-  environments: EnvironmentListResponseDataItem[],
-) => {
+export const addAlertSlackChannel = (revisedEnvAlerts: Alert[], environments: DataItem<Environment>[]) => {
   return revisedEnvAlerts.map(alert => {
     const match = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
     if (match) {
@@ -160,7 +157,7 @@ export const addAlertSlackChannel = (
 }
 
 // map environment keys to the alert environment
-export const mapAlertEnvironments = (alerts: AlertListResponseDataItem[]) => {
+export const mapAlertEnvironments = (alerts: Alert[]) => {
   const updatedAlerts = Array.isArray(alerts) ? [...alerts] : []
   return updatedAlerts.map(alert => {
     const updatedAlert = { ...alert }
@@ -171,8 +168,7 @@ export const mapAlertEnvironments = (alerts: AlertListResponseDataItem[]) => {
     return updatedAlert
   })
 }
-
-export const reviseAlerts = (alerts: AlertListResponseDataItem[], environments: EnvironmentListResponseDataItem[]) => {
+export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[]) => {
   const revisedEnvAlerts = mapAlertEnvironments(alerts)
   const revisedAlerts = addAlertSlackChannel(revisedEnvAlerts, environments)
 

@@ -1,11 +1,11 @@
 import type { AlertsApiClient, RestClientBuilder } from '../data'
-import { AlertListResponseDataItem } from '../@types'
+import { Alert } from '../@types'
 import logger from '../../logger'
 
 export default class AlertsService {
   constructor(private readonly alertsApiClientFactory: RestClientBuilder<AlertsApiClient>) {}
 
-  async getAlerts(): Promise<AlertListResponseDataItem[]> {
+  async getAlerts(): Promise<Alert[]> {
     const alertsApiClient = this.alertsApiClientFactory('')
     try {
       return await alertsApiClient.getAlerts()
@@ -16,7 +16,7 @@ export default class AlertsService {
     }
   }
 
-  async getAlertsForComponent(componentName: string): Promise<AlertListResponseDataItem[]> {
+  async getAlertsForComponent(componentName: string): Promise<Alert[]> {
     const alertsApiClient = this.alertsApiClientFactory('')
     try {
       return await alertsApiClient.getAlertsForComponent(componentName)

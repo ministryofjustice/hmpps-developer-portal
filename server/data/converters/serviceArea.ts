@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
-import { ServiceAreaListResponseDataItem } from '../strapiApiTypes'
+import { DataItem, StrapiServiceArea } from '../strapiApiTypes'
 import type { Product, ServiceArea } from './modelTypes'
 
-type ServiceAreaProduct = ServiceAreaListResponseDataItem['attributes']['products']['data'][0]
-export const convertServiceArea = (serviceArea: ServiceAreaListResponseDataItem): ServiceArea => {
+type ServiceAreaProduct = StrapiServiceArea['products']['data'][0]
+
+export const convertServiceArea = (serviceArea: DataItem<StrapiServiceArea>): ServiceArea => {
   const { attributes, id } = serviceArea
   const { name, slug, owner, sa_id, products } = attributes
 

@@ -1,11 +1,6 @@
 import StrapiApiClient from '../data/strapiApiClient'
 import { MoJSelectDataItem } from '../@types'
-import {
-  CustomComponentListResponseDataItem,
-  ListResponse,
-  ProductListResponseDataItem,
-  TeamListResponseDataItem,
-} from '../data/strapiApiTypes'
+import { CustomComponentView, ListResponse, Product, Team } from '../data/strapiApiTypes'
 import DataFilterService from './dataFilterService'
 import { createModelServiceArea } from '../data/converters/serviceArea.test'
 
@@ -39,7 +34,7 @@ describe('Data Filter service', () => {
           attributes: { name: 'Custom Component 2' },
         },
       ],
-    } as ListResponse<CustomComponentListResponseDataItem>
+    } as ListResponse<CustomComponentView>
 
     it('should return all custom compoentns as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -173,7 +168,7 @@ describe('Data Filter service', () => {
           attributes: { name: 'Team 2' },
         },
       ],
-    } as ListResponse<TeamListResponseDataItem>
+    } as ListResponse<Team>
 
     it('should return all teams as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -240,7 +235,7 @@ describe('Data Filter service', () => {
           attributes: { name: 'Product 2', p_id: '2' },
         },
       ],
-    } as ListResponse<ProductListResponseDataItem>
+    } as ListResponse<Product>
 
     it('should return all products as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -310,7 +305,7 @@ describe('Data Filter service', () => {
           attributes: { name: 'Product 2', p_id: '2' },
         },
       ],
-    } as ListResponse<ProductListResponseDataItem>
+    } as ListResponse<Product>
 
     it('should return all products with id as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [

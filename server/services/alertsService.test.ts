@@ -1,5 +1,5 @@
 import AlertsApiClient from '../data/alertsApiClient'
-import { AlertListResponseDataItem } from '../@types'
+import { Alert } from '../@types'
 import AlertsService from './alertsService'
 
 jest.mock('../data/alertsApiClient')
@@ -32,8 +32,8 @@ describe('Alerts service', () => {
 
   describe('Alerts', () => {
     describe('getAlerts', () => {
-      const testAlertsResponse = [alert1, alert2] as AlertListResponseDataItem[]
-      const testAlerts = [alert1, alert2] as AlertListResponseDataItem[]
+      const testAlertsResponse = [alert1, alert2] as Alert[]
+      const testAlerts = [alert1, alert2] as Alert[]
 
       it('should return an array of alerts', async () => {
         alertsApiClient.getAlerts.mockResolvedValue(testAlertsResponse)
@@ -50,7 +50,7 @@ describe('Alerts service', () => {
         const compAlert = {
           annotations: { message: 'Comp1 message' },
           labels: { alertname: 'AlertComp1', application: 'comp1' },
-        } as AlertListResponseDataItem
+        } as Alert
         const testAlertsComp = [compAlert]
         alertsApiClient.getAlertsForComponent.mockResolvedValue(testAlertsComp)
 

@@ -1,5 +1,5 @@
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { ComponentListResponseDataItem } from '../data/strapiApiTypes'
+import { Component, DataItem } from '../data/strapiApiTypes'
 import { formatMonitorName, sortData } from '../utils/utils'
 
 export default class ComponentNameService {
@@ -64,7 +64,7 @@ export default class ComponentNameService {
 
     if (!productDetails) throw Error(`No product called: ${productName}`)
 
-    const components = productDetails.attributes?.components?.data as unknown as ComponentListResponseDataItem[]
+    const components = productDetails.attributes?.components?.data as unknown as DataItem<Component>[]
 
     return components
       .filter(component => component.attributes?.environments?.length)
@@ -81,7 +81,7 @@ export default class ComponentNameService {
 
     if (!customComponentDetails) throw Error(`No custom component called: ${customComponentName}`)
 
-    const components = customComponentDetails.attributes?.components?.data as unknown as ComponentListResponseDataItem[]
+    const components = customComponentDetails.attributes?.components?.data as unknown as DataItem<Component>[]
 
     return components
       .filter(component => component.attributes?.environments?.length)
