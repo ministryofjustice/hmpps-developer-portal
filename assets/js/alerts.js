@@ -2,8 +2,10 @@ const applicationFilter = document.getElementById('application')
 const environmentFilter = document.getElementById('environment')
 const namespaceFilter = document.getElementById('namespace')
 const severityFilter = document.getElementById('severity')
+let isDropDownOpen = false
 
 jQuery(async function () {
+  alertsUpdateFrequencyMessage()
   // check url to see if any filters are currently applied
   let currentFilters = getFiltersFromURL()
   // get alerts from the api
@@ -13,13 +15,21 @@ jQuery(async function () {
 
   // use filters and alerts to update alert table and filters
   updateAll(alerts, currentFilters, isReset)
-
-  let previousDataJSON
+  // ensures first interval check for updateAlerts is a match so UI doesn't refresh after 5 seconds
+  let previousDataJSON = alerts
+  let timer = 0
 
   // Watch function updates Alerts on a timeout
   setInterval(async function () {
-    alerts = await getAlerts()
-    previousDataJSON = updateAlerts(alerts, previousDataJSON, isReset)
+    const timerCheck = isDataThirtySecondsOld(timer)
+    timer = timerCheck.timer
+    result = timerCheck.result
+    // Timer only starts ticking if a drop down is 'active'
+    if (!isDropDownOpen || result) {
+      alerts = await getAlerts()
+      timer = 0
+      previousDataJSON = updateAlerts(alerts, previousDataJSON, isReset)
+    }
   }, 5000)
   // on click of any 'Update' button to apply filters
   $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel').on('click', async e => {
@@ -166,7 +176,7 @@ function getFiltersFromURL() {
   }
 }
 
-//  append tabledata to the #statusTable
+//  append tabledata to the #alertsStatusTable
 function populateAlertTable(alerts) {
   const currentTime = new Date()
   let lastUpdatedTimestamp = currentTime.toISOString().slice(0, 19).replace('T', ' ')
@@ -233,4 +243,38 @@ function updateAll(alerts, currentFilters, isReset) {
   const dataForDropdowns = isFiltersEmpty(currentFilters) ? alerts : filtered
   dropdownHandler.updateDropdowns(dataForDropdowns, currentFilters, isReset)
   updateURLParams(currentFilters)
+}
+
+// Slows fetch frequency and changes message when user interacting with drop downs
+// uses event listeners for instant change in UI when drop down open
+document.addEventListener('mousedown', e => {
+  if (e.target.tagName.toLowerCase() === 'select') {
+    isDropDownOpen = true
+    alertsUpdateFrequencyMessage()
+  }
+})
+
+document.addEventListener('click', e => {
+  if (e.target.tagName.toLowerCase() !== 'select') {
+    isDropDownOpen = false
+    alertsUpdateFrequencyMessage()
+  }
+})
+
+// Refreshes data if stale - more than 30 seconds old
+function isDataThirtySecondsOld(timer) {
+  if (timer >= 25) {
+    // next interval will tick at 30 seconds
+    return { result: true, timer: 0 }
+  }
+  return { result: false, timer: timer + 5 }
+}
+
+// Message changes if drop down is open - from every 5 seconds to 30 seconds
+function alertsUpdateFrequencyMessage() {
+  const frequency = isDropDownOpen ? 30 : 5
+  $('#alertsFetchStatus').empty()
+  return $('#alertsFetchStatus').append(
+    `<div class="govuk-inset-text">Alerts are being updated every <strong>${frequency}</strong> seconds!</div>`,
+  )
 }
