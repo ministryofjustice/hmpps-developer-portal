@@ -23,13 +23,7 @@ jest.mock('../applicationInfo', () => ({
   }),
 }))
 
-// Define types for test mocks
-
 type ProductParams = { productSlug: string }
-// interface Alert {
-//   status?: { state?: string }
-//   labels?: { component?: string; application?: string }
-// }
 
 const mockLogger = logger as jest.Mocked<typeof logger>
 const strapiApiClient = new StrapiApiClient() as jest.Mocked<StrapiApiClient>
