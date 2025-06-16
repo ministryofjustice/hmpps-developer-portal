@@ -78,6 +78,7 @@ interface AlertListResponseDataItem {
     application?: string
     businessUnit?: string
     clusterName?: string
+    component?: string
     environment?: string
     namespace?: string
     productId?: string
