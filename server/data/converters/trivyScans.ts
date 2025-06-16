@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { TrivyScanListResponseDataItem } from '../strapiApiTypes'
-import type { TrivyScanType, ScanSummary } from './modelTypes'
+import type { TrivyScanType } from './modelTypes'
 
 const convertTrivyScan = (trivyScan: TrivyScanListResponseDataItem): TrivyScanType => {
   const { attributes, id } = trivyScan
@@ -13,7 +13,7 @@ const convertTrivyScan = (trivyScan: TrivyScanListResponseDataItem): TrivyScanTy
     build_image_tag,
     scan_status,
     environments: environments as string[],
-    scan_summary: scan_summary as ScanSummary,
+    scan_summary,
   }
 }
 
