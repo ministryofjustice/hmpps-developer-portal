@@ -9,7 +9,7 @@
 
   <h1 data-test="detail-page-title">Trivy scan report for {{ trivyScan.name }}</h1>
   <p><strong>Build Image Tag:</strong> {{ trivyScan.build_image_tag }}</p>
-  <p><strong>Image ID:</strong> {{ trivyScan.scan_summary.image_id }}
+  <p><strong>Image ID:</strong> {{ trivyScan.image_id }}
   <p><strong>Environments Image deployed on:</strong> 
     {% for environment in trivyScan.environments %}
       {{ environment }}{% if not loop.last %}, {% endif %}
