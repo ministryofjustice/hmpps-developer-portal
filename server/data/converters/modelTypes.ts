@@ -76,6 +76,7 @@ export type ScanResult = {
 export type ScanSummary = {
   summary?: Summary
   scan_result?: ScanResult
+  image_id: string
 }
 
 export type TrivyScanType = {
