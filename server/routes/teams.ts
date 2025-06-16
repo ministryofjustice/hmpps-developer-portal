@@ -4,7 +4,7 @@ import type { Services } from '../services'
 import { getFormattedName, utcTimestampToUtcDateTime } from '../utils/utils'
 import logger from '../../logger'
 
-export default function routes({ serviceCatalogueService, alertsService, teamsSummaryCountService }: Services): Router {
+export default function routes({ serviceCatalogueService, teamsSummaryCountService }: Services): Router {
   const router = Router()
 
   const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
@@ -30,7 +30,7 @@ export default function routes({ serviceCatalogueService, alertsService, teamsSu
 
     // DEMO/DEBUG: Call getTeamAlertSummary and log the result
     try {
-      const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug, alertsService)
+      const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
       logger.info(`[DEMO] getTeamAlertSummary for team '${teamSlug}': ${JSON.stringify(teamAlertSummary, null, 2)}`)
     } catch (err) {
       logger.error(`[DEMO] Error calling getTeamAlertSummary for team '${teamSlug}':`, err)
