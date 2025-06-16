@@ -6,21 +6,24 @@ import {
   TeamResponse,
   ComponentListResponseDataItem,
 } from '../data/strapiApiTypes'
-import { AlertListResponseDataItem } from '../@types'
-
-// Interface for alerts service to replace 'any' type
-interface AlertsService {
-  getAlerts(): Promise<AlertListResponseDataItem[]>
-}
+import AlertsService from './alertsService'
 
 export default class TeamsSummaryCountService {
+  private readonly alertsService: AlertsService
+
+  private readonly strapiClient: StrapiApiClient
+
+  constructor(alertsService: AlertsService, strapiClient: StrapiApiClient) {
+    this.alertsService = alertsService
+    this.strapiClient = strapiClient
+  }
+
   /**
    * Helper: Fetch all products for a team by team slug
    */
   async getProductsForTeam(teamSlug: string): Promise<ProductListResponseDataItem[]> {
-    const client = new StrapiApiClient()
     try {
-      const teamResp: TeamResponse = await client.getTeam({ teamSlug })
+      const teamResp: TeamResponse = await this.strapiClient.getTeam({ teamSlug })
       const products = Array.isArray(teamResp.data)
         ? teamResp.data[0]?.attributes?.products?.data || []
         : teamResp.data?.attributes?.products?.data || []
@@ -37,12 +40,11 @@ export default class TeamsSummaryCountService {
    */
   async getComponentsForProducts(
     products: ProductListResponseDataItem[],
-  ): Promise<{ [productName: string]: ComponentListResponseDataItem[] }> {
-    const client = new StrapiApiClient()
+  ): Promise<Record<string, ComponentListResponseDataItem[]>> {
     const promises = products.map(async product => {
       const productSlug = product.attributes.slug
       try {
-        const productResp: ProductResponse = await client.getProduct({ productSlug })
+        const productResp: ProductResponse = await this.strapiClient.getProduct({ productSlug })
         const components = Array.isArray(productResp.data)
           ? productResp.data[0]?.attributes?.components?.data || []
           : productResp.data?.attributes?.components?.data || []
@@ -62,13 +64,8 @@ export default class TeamsSummaryCountService {
 
     const results = await Promise.all(promises)
 
-    const result = results.reduce(
-      (acc, { name, components }) => {
-        acc[name] = components
-        return acc
-      },
-      {} as { [productName: string]: ComponentListResponseDataItem[] },
-    )
+    const entries = results.map(({ name, components }) => [name, components])
+    const result = Object.fromEntries(entries) as Record<string, ComponentListResponseDataItem[]>
 
     return result
   }
@@ -76,27 +73,21 @@ export default class TeamsSummaryCountService {
   /**
    * Orchestrator: For a teamSlug, get product -> component -> firing alert count
    * @param teamSlug string
-   * @param alertsService alerts service instance
    * @returns { [productName: string]: { [componentName: string]: number } }
    */
-  async getTeamAlertSummary(
-    teamSlug: string,
-    alertsService: AlertsService,
-  ): Promise<{ [productName: string]: { [componentName: string]: number } }> {
+  async getTeamAlertSummary(teamSlug: string): Promise<Record<string, Record<string, number>>> {
     logger.info(`[getTeamAlertSummary] Start for team ${teamSlug}`)
 
     const products = await this.getProductsForTeam(teamSlug)
     const productComponentMap = await this.getComponentsForProducts(products)
 
-    // Flatten all component names
-    const allComponentNames = Object.values(productComponentMap)
-      .flat()
-      .map(c => c.attributes.name)
+    const allComponentNames = Object.values(productComponentMap).flatMap(components =>
+      components.map(c => c.attributes.name),
+    )
     logger.info(`[getTeamAlertSummary] Total components found: ${allComponentNames.length}`)
 
-    const alertCounts = await this.getFiringAlertCountsForComponents(allComponentNames, alertsService)
+    const alertCounts = await this.getFiringAlertCountsForComponents(allComponentNames)
 
-    // Build the result using functional constructs
     const result = Object.fromEntries(
       Object.entries(productComponentMap).map(([productName, components]) => [
         productName,
@@ -116,37 +107,30 @@ export default class TeamsSummaryCountService {
   /**
    * Utility: Get count of currently firing alerts for each component in a list
    * @param componentNames Array of component names
-   * @param alertsService Alerts service instance (must have getAlerts())
    * @returns Map of component name to count of firing alerts
    */
-  async getFiringAlertCountsForComponents(
-    componentNames: string[],
-    alertsService: AlertsService,
-  ): Promise<{ [componentName: string]: number }> {
-    // This assumes alertsService.getAlerts() returns all alerts with .labels.application or .labels.component
+  async getFiringAlertCountsForComponents(componentNames: string[]): Promise<Record<string, number>> {
     try {
-      const allAlerts = await alertsService.getAlerts()
+      const allAlerts = await this.alertsService.getAlerts()
       logger.info(`[getFiringAlertCountsForComponents] Total alerts fetched: ${allAlerts.length}`)
 
       const nameSet = new Set(componentNames)
       const countsMap = new Map<string, number>()
 
-      for (const alert of allAlerts) {
-        // Replace continue with conditional logic
+      allAlerts.forEach(alert => {
         if (alert.status?.state === 'active') {
           const label = alert.labels?.application ?? alert.labels?.component
           if (label && nameSet.has(label)) {
             countsMap.set(label, (countsMap.get(label) || 0) + 1)
           }
         }
-      }
+      })
 
-      // Single pass for result + logging
       return componentNames.reduce(
-        (acc, name) => {
-          acc[name] = countsMap.get(name) || 0
-          logger.info(`Component ${name}: ${acc[name]} firing alerts`)
-          return acc
+        (alertCountsMap, componentName) => {
+          const count = countsMap.get(componentName) || 0
+          logger.info(`Component ${componentName}: ${count} firing alerts`)
+          return { ...alertCountsMap, [componentName]: count }
         },
         {} as Record<string, number>,
       )
