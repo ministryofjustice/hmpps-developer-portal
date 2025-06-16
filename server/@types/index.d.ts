@@ -25,7 +25,7 @@ export type RdsEntry = {
   environment_name?: string
 }
 
-interface AlertListResponseDataItem {
+interface Alert {
   annotations?: {
     dashboard_url?: string
     summary?: string

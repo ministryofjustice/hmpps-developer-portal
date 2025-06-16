@@ -1,6 +1,6 @@
 import nock from 'nock'
 import config from '../config'
-import { AlertListResponseDataItem } from '../@types'
+import { Alert } from '../@types'
 import AlertsApiClient from './alertsApiClient'
 
 describe('alertsApiClient', () => {
@@ -34,7 +34,7 @@ describe('alertsApiClient', () => {
   describe('Alerts', () => {
     describe('getAlerts', () => {
       it('should return an array of alerts', async () => {
-        const testAlerts = [alert1, alert2] as AlertListResponseDataItem[]
+        const testAlerts = [alert1, alert2] as Alert[]
         fakeAlertsApi.get('/alerts?businessUnit="hmpps"').reply(200, testAlerts)
         const output = await alertsApiClient.getAlerts()
         expect(output).toEqual(testAlerts)
@@ -46,7 +46,7 @@ describe('alertsApiClient', () => {
         const testAlertsComp = [
           { annotations: { message: 'Message1' }, labels: { alertname: 'A1', application: 'comp1' } },
           { annotations: { message: 'Message2' }, labels: { alertname: 'A2', application: 'comp1' } },
-        ] as AlertListResponseDataItem[]
+        ] as Alert[]
         fakeAlertsApi.get('/alerts?filter=application="comp1"').reply(200, testAlertsComp)
         const output = await alertsApiClient.getAlertsForComponent('comp1')
         expect(output).toEqual(testAlertsComp)
