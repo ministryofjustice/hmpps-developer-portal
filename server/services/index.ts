@@ -4,6 +4,7 @@ import ProductDependenciesService from './productDependenciesService'
 import RedisService from './redisService'
 import { createRedisClient } from '../data/redisClient'
 import logger from '../../logger'
+import TeamsSummaryCountService from './teamsSummaryCountService'
 import ComponentNameService from './componentNameService'
 import DataFilterService from './dataFilterService'
 import TeamHealthService from './teamHealthService'
@@ -21,6 +22,7 @@ export const services = () => {
   const dataFilterService = new DataFilterService(strapiApiClientBuilder)
   const teamHealthService = new TeamHealthService(redisService, serviceCatalogueService)
   const alertsService = new AlertsService(alertsApiClient)
+  const teamsSummaryCountService = new TeamsSummaryCountService()
 
   return {
     applicationInfo,
@@ -31,6 +33,7 @@ export const services = () => {
     productDependenciesService,
     teamHealthService,
     alertsService,
+    teamsSummaryCountService,
   }
 }
 
