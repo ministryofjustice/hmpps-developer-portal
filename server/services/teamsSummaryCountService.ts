@@ -88,35 +88,35 @@ export default class TeamsSummaryCountService {
       logger.info(`[getTeamAlertSummary] Total components found: ${allComponentNames.length}`)
 
       const alertCounts = await this.getFiringAlertCountsForComponents(allComponentNames)
-      const { productAlertCounts, totalAlertCount } = Object.entries(productComponentMap).reduce(
-        (summary, [productName, components]) => {
+      const productAlertSummary = Object.entries(productComponentMap).reduce(
+        (accumulatedSummary, [productName, components]) => {
           const componentAlertCounts = components.reduce(
-            (componentMap, component) => {
+            (componentCounts, component) => {
               const componentName = component.attributes?.name
-              if (!componentName) return componentMap
+              if (!componentName) return componentCounts
               const alertCount = alertCounts[componentName] || 0
               return {
-                ...componentMap,
+                ...componentCounts,
                 [componentName]: alertCount,
               }
             },
             {} as Record<string, number>,
           )
 
+          const productTotalAlerts = Object.values(componentAlertCounts).reduce((sum, count) => sum + count, 0)
           return {
-            productAlertCounts: {
-              ...summary.productAlertCounts,
+            products: {
+              ...accumulatedSummary.products,
               [productName]: componentAlertCounts,
             },
-            totalAlertCount:
-              summary.totalAlertCount + Object.values(componentAlertCounts).reduce((sum, count) => sum + count, 0),
+            total: accumulatedSummary.total + productTotalAlerts,
           }
         },
-        { productAlertCounts: {} as Record<string, Record<string, number>>, totalAlertCount: 0 },
+        { products: {} as Record<string, Record<string, number>>, total: 0 },
       )
 
       logger.info(`[getTeamAlertSummary] Done for team ${teamSlug}`)
-      return { products: productAlertCounts, total: totalAlertCount }
+      return productAlertSummary
     } catch (err) {
       logger.error(`[getTeamAlertSummary] Error for team ${teamSlug}:`, err)
       return { products: {}, total: 0 }
