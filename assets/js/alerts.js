@@ -179,7 +179,16 @@ function getFiltersFromURL() {
 //  append tabledata to the #alertsStatusTable
 function populateAlertTable(alerts) {
   const currentTime = new Date()
-  let lastUpdatedTimestamp = currentTime.toISOString().slice(0, 19).replace('T', ' ')
+  let timeFormat = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  }
+  let lastUpdatedTimestamp = new Intl.DateTimeFormat('en-GB', timeFormat).format(currentTime)
+  console.log(lastUpdatedTimestamp)
   try {
     $('#statusRows').empty()
     document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdatedTimestamp}`
