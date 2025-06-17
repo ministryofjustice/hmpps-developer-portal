@@ -3,6 +3,17 @@ jQuery(function () {
     const transformed = []
     data.forEach(item => {
       const summary = item.scan_summary?.summary || {}
+      const scanResult = item.scan_summary?.scan_result || {}
+      const cveIDs = []
+
+      // Extract CVE VulnerabilityID from os-pkgs and lang-pkgs
+      scanResult['os-pkgs']?.forEach(pkg => {
+        cveIDs.push(pkg.VulnerabilityID)
+      })
+      scanResult['lang-pkgs']?.forEach(pkg => {
+        cveIDs.push(pkg.VulnerabilityID)
+      })
+
       item.environments.forEach(env => {
         transformed.push({
           environments: env,
@@ -33,6 +44,7 @@ jQuery(function () {
               <a href="/trivy-scans/${item.name}">
                 <img src="/assets/images/trivy.png" alt="Trivy Logo" style="width: 32px; height: 32px; margin-right: 5px;" />
               </a>`,
+          cve_ids: cveIDs.join(', '),
         })
       })
     })
@@ -56,6 +68,14 @@ jQuery(function () {
       createdCell: function (td, _cellData, rowData) {
         const environments = rowData.environments
         $(td).html(environments)
+      },
+    },
+    {
+      data: 'result_link',
+      name: 'result_link',
+      createdCell: function (td, _cellData, rowData) {
+        const componentName = cleanColumnOutput(rowData.name || 'N/A')
+        $(td).html(rowData.result_link)
       },
     },
     {
@@ -172,11 +192,11 @@ jQuery(function () {
       },
     },
     {
-      data: 'result_link',
-      name: 'result_link',
+      data: 'cve_ids',
+      name: 'cve_ids',
+      visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const componentName = cleanColumnOutput(rowData.name || 'N/A')
-        $(td).html(rowData.result_link)
+        $(td).html(rowData.cve_ids || '')
       },
     },
   ]
