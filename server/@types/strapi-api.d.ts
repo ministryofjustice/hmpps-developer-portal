@@ -2010,8 +2010,9 @@ export interface components {
                   publishedAt?: string
                   /** @enum {string} */
                   scan_status?: 'Failed' | 'Succeeded'
-                  trivy_scan_results?: unknown
                   trivy_scan_timestamp?: string
+                  scan_summary?: unknown
+                  environments?: unknown
                   /** Format: date-time */
                   updatedAt?: string
                   updatedBy?: {
@@ -2609,8 +2610,9 @@ export interface components {
                         publishedAt?: string
                         /** @enum {string} */
                         scan_status?: 'Failed' | 'Succeeded'
-                        trivy_scan_results?: unknown
                         trivy_scan_timestamp?: string
+                        scan_summary?: unknown
+                        environments?: unknown
                         /** Format: date-time */
                         updatedAt?: string
                         updatedBy?: {
@@ -3195,8 +3197,9 @@ export interface components {
                         publishedAt?: string
                         /** @enum {string} */
                         scan_status?: 'Failed' | 'Succeeded'
-                        trivy_scan_results?: unknown
                         trivy_scan_timestamp?: string
+                        scan_summary?: unknown
+                        environments?: unknown
                         /** Format: date-time */
                         updatedAt?: string
                         updatedBy?: {
@@ -4265,8 +4268,9 @@ export interface components {
                               publishedAt?: string
                               /** @enum {string} */
                               scan_status?: 'Failed' | 'Succeeded'
-                              trivy_scan_results?: unknown
                               trivy_scan_timestamp?: string
+                              scan_summary?: unknown
+                              environments?: unknown
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -4891,8 +4895,9 @@ export interface components {
                               publishedAt?: string
                               /** @enum {string} */
                               scan_status?: 'Failed' | 'Succeeded'
-                              trivy_scan_results?: unknown
                               trivy_scan_timestamp?: string
+                              scan_summary?: unknown
+                              environments?: unknown
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -5885,8 +5890,9 @@ export interface components {
                               publishedAt?: string
                               /** @enum {string} */
                               scan_status?: 'Failed' | 'Succeeded'
-                              trivy_scan_results?: unknown
                               trivy_scan_timestamp?: string
+                              scan_summary?: unknown
+                              environments?: unknown
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -6469,8 +6475,9 @@ export interface components {
                               publishedAt?: string
                               /** @enum {string} */
                               scan_status?: 'Failed' | 'Succeeded'
-                              trivy_scan_results?: unknown
                               trivy_scan_timestamp?: string
+                              scan_summary?: unknown
+                              environments?: unknown
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -7020,8 +7027,9 @@ export interface components {
       publishedAt?: string
       /** @enum {string} */
       scan_status?: 'Failed' | 'Succeeded'
-      trivy_scan_results?: unknown
       trivy_scan_timestamp?: string
+      scan_summary?: unknown
+      environments?: unknown
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
@@ -7052,8 +7060,9 @@ export interface components {
         name?: string
         /** @enum {string} */
         scan_status?: 'Failed' | 'Succeeded'
-        trivy_scan_results?: unknown
         trivy_scan_timestamp?: string
+        scan_summary?: unknown
+        environments?: unknown
       }
     }
     TrivyScanResponse: {
