@@ -15,7 +15,6 @@ import {
   ScheduledJob,
   DataItem,
   Environment,
-  SingleResponse,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
@@ -284,29 +283,20 @@ export default class ServiceCatalogueService {
     return customComponentView
   }
 
-  async getGithubRepoRequests(): Promise<DataItem<GithubRepoRequest>[]> {
+  async getGithubRepoRequests(): Promise<GithubRepoRequest[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentRequestsData = await strapiApiClient.getGithubRepoRequests()
-    const componentRequests = componentRequestsData.data.sort(sortComponentRequestData)
-
-    return componentRequests
+    return componentRequestsData.sort(sortComponentRequestData)
   }
 
   async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const componentRequestData = await strapiApiClient.getGithubRepoRequest({ repoName })
-    const componentRequest =
-      Array.isArray(componentRequestData.data) && componentRequestData.data.length > 0
-        ? componentRequestData.data[0].attributes
-        : componentRequestData.data?.attributes
-    return componentRequest
+    return strapiApiClient.getGithubRepoRequest({ repoName })
   }
 
-  async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<SingleResponse<GithubRepoRequest>> {
+  async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<void> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const response = await strapiApiClient.postGithubRepoRequest(request)
-
-    return response
+    return strapiApiClient.postGithubRepoRequest(request)
   }
 
   async getEnvironments(): Promise<DataItem<Environment>[]> {

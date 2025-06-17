@@ -10,7 +10,7 @@ import { DataItem, Environment } from '../data/strapiApiTypes'
 dayjs.extend(relativeTime.default)
 
 type HasName = { attributes?: { name: string } }
-type HasRepoName = { attributes?: { github_repo: string } }
+type HasRepoName = { github_repo: string }
 type HasTeamName = { attributes?: { team_name: string } }
 
 const properCase = (word: string): string =>
@@ -97,7 +97,7 @@ export const sortRdsInstances = (rdsInstance: RdsEntry, compareRdsInstance: RdsE
 }
 
 export const sortComponentRequestData = (dataItem: HasRepoName, compareDataItem: HasRepoName) => {
-  return dataItem.attributes.github_repo.localeCompare(compareDataItem.attributes.github_repo)
+  return dataItem.github_repo.localeCompare(compareDataItem.github_repo)
 }
 
 export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasTeamName) => {
