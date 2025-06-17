@@ -188,29 +188,29 @@ function populateAlertTable(alerts) {
     second: 'numeric',
   }
   let lastUpdatedTimestamp = new Intl.DateTimeFormat('en-GB', timeFormat).format(currentTime)
-  console.log(lastUpdatedTimestamp)
   try {
     $('#statusRows').empty()
     document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdatedTimestamp}`
     alerts.forEach(alert => {
-      //create links for alert urls
+      // create links for alert urls
       const dashboardLink = alert.annotations.dashboard_url
-        ? `<a href="${alert.annotations.dashboard_url}" class="statusTileHealth" target="_blank">View</a>`
-        : 'N/A'
+        ? `<a href="${alert.annotations.dashboard_url}" class="statusTileHealth" target="_blank">Dashboard</a>`
+        : ''
       const runbookLink = alert.annotations.runbook_url
-        ? `<a href="${alert.annotations.runbook_url}" class="statusTileHealth" target="_blank">View</a>`
-        : 'N/A'
+        ? `<a href="${alert.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook<a>`
+        : ''
       const generatorLink = alert.generatorURL
-        ? `<a href="${alert.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
-        : 'N/A'
+        ? `<a href="${alert.generatorURL}" class="statusTileHealth" target="_blank">Generator</a>`
+        : ''
+
       const slackLink = alert.alert_slack_channel ? alert.alert_slack_channel : 'N/A'
       $('#statusRows')
         .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" data-silenced="${alert.status.state}" id="tile-${alert.labels.application}-${alert.labels.environment}">
           <td>${alert.labels.alertname}</td>
           <td>${alert.annotations.message} </td>
-          <td>${dashboardLink}</td>
-          <td>${runbookLink} </td>
-          <td>${generatorLink}</td>
+          <td>
+          ${[dashboardLink, runbookLink, generatorLink].filter(link => link !== '').join(' ') || 'N/A'}
+          </td>
           <td>${slackLink}</td>
         </tr>`)
     })
