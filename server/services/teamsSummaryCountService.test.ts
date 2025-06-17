@@ -41,7 +41,7 @@ describe('TeamsSummaryCountService.getProductsForTeam', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    service = new TeamsSummaryCountService(mockAlertsService, mockStrapiClient)
+    service = new TeamsSummaryCountService(mockAlertsService, () => mockStrapiClient)
   })
 
   it('should return products from array response', async () => {
@@ -144,7 +144,7 @@ describe('TeamsSummaryCountService.getComponentsForProducts', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    service = new TeamsSummaryCountService(mockAlertsService, mockStrapiClient)
+    service = new TeamsSummaryCountService(mockAlertsService, () => mockStrapiClient)
   })
 
   it('should fetch components for multiple products', async () => {
@@ -456,7 +456,7 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    service = new TeamsSummaryCountService(mockAlertsService, mockStrapiClient)
+    service = new TeamsSummaryCountService(mockAlertsService, () => mockStrapiClient)
     mockAlertsService.getAlerts.mockReset()
   })
 
