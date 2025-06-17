@@ -61,6 +61,7 @@ jQuery(function () {
     {
       data: 'build_image_tag',
       name: 'build_image_tag',
+      visible: false,
       createdCell: function (td, _cellData, rowData) {
         const buildImageTag = rowData?.build_image_tag || 'N/A'
         $(td).html(buildImageTag)
@@ -69,6 +70,7 @@ jQuery(function () {
     {
       data: 'trivy_scan_timestamp',
       name: 'trivy_scan_timestamp',
+      visible: false,
       createdCell: function (td, _cellData, rowData) {
         const scan_timestamp = rowData?.trivy_scan_timestamp || 'N/A'
         $(td).html(formatDateToDDMONYYYYHH24MMSS(scan_timestamp))
