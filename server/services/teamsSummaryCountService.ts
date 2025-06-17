@@ -8,6 +8,11 @@ import {
 } from '../data/strapiApiTypes'
 import AlertsService from './alertsService'
 
+type TeamAlertSummary = {
+  products: Record<string, Record<string, number>>
+  total: number
+}
+
 export default class TeamsSummaryCountService {
   constructor(
     private readonly alertsService: AlertsService,
@@ -69,35 +74,42 @@ export default class TeamsSummaryCountService {
   /**
    * Orchestrator: For a teamSlug, get product -> component -> firing alert count
    * @param teamSlug string
-   * @returns { [productName: string]: { [componentName: string]: number } }
+   * @returns { products: { [productName: string]: { [componentName: string]: number } }, total: number }
    */
-  async getTeamAlertSummary(teamSlug: string): Promise<Record<string, Record<string, number>>> {
+  async getTeamAlertSummary(teamSlug: string): Promise<TeamAlertSummary> {
     logger.info(`[getTeamAlertSummary] Start for team ${teamSlug}`)
+    try {
+      const products = await this.getProductsForTeam(teamSlug)
+      const productComponentMap = await this.getComponentsForProducts(products)
 
-    const products = await this.getProductsForTeam(teamSlug)
-    const productComponentMap = await this.getComponentsForProducts(products)
+      const allComponentNames = Object.values(productComponentMap).flatMap(components =>
+        components.map(c => c.attributes.name),
+      )
+      logger.info(`[getTeamAlertSummary] Total components found: ${allComponentNames.length}`)
 
-    const allComponentNames = Object.values(productComponentMap).flatMap(components =>
-      components.map(c => c.attributes.name),
-    )
-    logger.info(`[getTeamAlertSummary] Total components found: ${allComponentNames.length}`)
+      const alertCounts = await this.getFiringAlertCountsForComponents(allComponentNames)
+      const productsMap: Record<string, Record<string, number>> = {}
+      let total = 0
 
-    const alertCounts = await this.getFiringAlertCountsForComponents(allComponentNames)
+      Object.entries(productComponentMap).forEach(([productName, components]) => {
+        productsMap[productName] = {}
 
-    const result = Object.fromEntries(
-      Object.entries(productComponentMap).map(([productName, components]) => [
-        productName,
-        Object.fromEntries(
-          components.map(c => {
-            const componentName = c.attributes.name
-            return [componentName, alertCounts[componentName] || 0]
-          }),
-        ),
-      ]),
-    )
+        components.forEach(component => {
+          const componentName = component.attributes?.name
+          if (!componentName) return
 
-    logger.info(`[getTeamAlertSummary] Done for team ${teamSlug}`)
-    return result
+          const count = alertCounts[componentName] || 0
+          productsMap[productName][componentName] = count
+          total += count
+        })
+      })
+
+      logger.info(`[getTeamAlertSummary] Done for team ${teamSlug}`)
+      return { products: productsMap, total }
+    } catch (err) {
+      logger.error(`[getTeamAlertSummary] Error for team ${teamSlug}:`, err)
+      return { products: {}, total: 0 }
+    }
   }
 
   /**
