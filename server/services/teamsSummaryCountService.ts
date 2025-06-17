@@ -43,7 +43,7 @@ export default class TeamsSummaryCountService {
     products: ProductListResponseDataItem[],
   ): Promise<Record<string, ComponentListResponseDataItem[]>> {
     const promises = products.map(async product => {
-      const productSlug = product.attributes.slug
+      const productSlug = product.attributes?.slug
       try {
         const productResp: ProductResponse = await this.strapiClient('').getProduct({ productSlug })
         const components = Array.isArray(productResp.data)
@@ -88,24 +88,35 @@ export default class TeamsSummaryCountService {
       logger.info(`[getTeamAlertSummary] Total components found: ${allComponentNames.length}`)
 
       const alertCounts = await this.getFiringAlertCountsForComponents(allComponentNames)
-      const productsMap: Record<string, Record<string, number>> = {}
-      let total = 0
+      const { productAlertCounts, totalAlertCount } = Object.entries(productComponentMap).reduce(
+        (summary, [productName, components]) => {
+          const componentAlertCounts = components.reduce(
+            (componentMap, component) => {
+              const componentName = component.attributes?.name
+              if (!componentName) return componentMap
+              const alertCount = alertCounts[componentName] || 0
+              return {
+                ...componentMap,
+                [componentName]: alertCount,
+              }
+            },
+            {} as Record<string, number>,
+          )
 
-      Object.entries(productComponentMap).forEach(([productName, components]) => {
-        productsMap[productName] = {}
-
-        components.forEach(component => {
-          const componentName = component.attributes?.name
-          if (!componentName) return
-
-          const count = alertCounts[componentName] || 0
-          productsMap[productName][componentName] = count
-          total += count
-        })
-      })
+          return {
+            productAlertCounts: {
+              ...summary.productAlertCounts,
+              [productName]: componentAlertCounts,
+            },
+            totalAlertCount:
+              summary.totalAlertCount + Object.values(componentAlertCounts).reduce((sum, count) => sum + count, 0),
+          }
+        },
+        { productAlertCounts: {} as Record<string, Record<string, number>>, totalAlertCount: 0 },
+      )
 
       logger.info(`[getTeamAlertSummary] Done for team ${teamSlug}`)
-      return { products: productsMap, total }
+      return { products: productAlertCounts, total: totalAlertCount }
     } catch (err) {
       logger.error(`[getTeamAlertSummary] Error for team ${teamSlug}:`, err)
       return { products: {}, total: 0 }
@@ -125,14 +136,14 @@ export default class TeamsSummaryCountService {
       const nameSet = new Set(componentNames)
       const countsMap = new Map<string, number>()
 
-      allAlerts.forEach(alert => {
-        if (alert.status?.state === 'active') {
-          const label = alert.labels?.application ?? alert.labels?.component
-          if (label && nameSet.has(label)) {
-            countsMap.set(label, (countsMap.get(label) || 0) + 1)
+      allAlerts
+        .filter(alert => alert.status?.state === 'active')
+        .forEach(alert => {
+          const componentLabel = alert.labels?.application ?? alert.labels?.component
+          if (componentLabel && nameSet.has(componentLabel)) {
+            countsMap.set(componentLabel, (countsMap.get(componentLabel) || 0) + 1)
           }
-        }
-      })
+        })
 
       return componentNames.reduce(
         (alertCountsMap, componentName) => {
