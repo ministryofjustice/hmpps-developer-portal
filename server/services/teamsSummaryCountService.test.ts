@@ -323,13 +323,16 @@ describe('TeamsSummaryCountService.getComponentsForProducts', () => {
     expect(mockAlertsService.getAlerts).toHaveBeenCalled()
 
     expect(result).toEqual({
-      'Product A': {
-        ComponentA1: 3,
-        ComponentA2: 0,
+      products: {
+        'Product A': {
+          ComponentA1: 3,
+          ComponentA2: 0,
+        },
+        'Product B': {
+          ComponentB1: 2,
+        },
       },
-      'Product B': {
-        ComponentB1: 2,
-      },
+      total: 5,
     })
 
     expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining('Start for team team-alpha'))
@@ -358,7 +361,7 @@ describe('TeamsSummaryCountService.getComponentsForProducts', () => {
 
     const result = await service.getTeamAlertSummary('empty-team')
 
-    expect(result).toEqual({})
+    expect(result).toEqual({ products: {}, total: 0 })
     expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining('Total components found: 0'))
   })
 
@@ -390,7 +393,8 @@ describe('TeamsSummaryCountService.getComponentsForProducts', () => {
     const result = await service.getTeamAlertSummary('team-beta')
 
     expect(result).toEqual({
-      'Empty Product': {},
+      products: { 'Empty Product': {} },
+      total: 0,
     })
   })
 
@@ -442,11 +446,14 @@ describe('TeamsSummaryCountService.getComponentsForProducts', () => {
     const result = await service.getTeamAlertSummary('team-gamma')
 
     expect(result).toEqual({
-      'Product X': {
-        CompWithAlerts: 5,
-        CompWithNoAlerts: 0,
-        CompMissingFromAlertMap: 0,
+      products: {
+        'Product X': {
+          CompWithAlerts: 5,
+          CompWithNoAlerts: 0,
+          CompMissingFromAlertMap: 0,
+        },
       },
+      total: 5,
     })
   })
 })
