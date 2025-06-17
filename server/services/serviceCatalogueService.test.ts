@@ -518,49 +518,38 @@ describe('Strapi service', () => {
 
   describe('Repo Requests', () => {
     describe('getGithubRepoRequests', () => {
-      const testGithubRepoRequestsResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { github_repo: 'github_repo-1' },
-          },
-          {
-            id: 2,
-            attributes: { github_repo: 'github_repo-2' },
-          },
-        ],
-      } as ListResponse<GithubRepoRequest>
-      const testGithubRepoRequests = [
-        { id: 1, attributes: { github_repo: 'github_repo-1' } },
-        { id: 2, attributes: { github_repo: 'github_repo-2' } },
-      ] as DataItem<GithubRepoRequest>[]
+      const githubResponses = [
+        {
+          github_repo: 'github_repo-1',
+        },
+        {
+          github_repo: 'github_repo-2',
+        },
+      ] as GithubRepoRequest[]
 
       it('should return an ordered array of repo requests', async () => {
-        strapiApiClient.getGithubRepoRequests.mockResolvedValue(testGithubRepoRequestsResponse)
+        strapiApiClient.getGithubRepoRequests.mockResolvedValue(githubResponses)
 
         const results = await serviceCatalogueService.getGithubRepoRequests()
 
         expect(strapiApiClient.getGithubRepoRequests).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testGithubRepoRequests)
+        expect(results).toEqual(githubResponses)
       })
     })
 
     describe('getGithubRepoRequest', () => {
-      const testGithubRepoRequestResponse = {
-        data: {
-          id: 1,
-          attributes: { name: 'github_repo-1' },
-        },
-      } as SingleResponse<GithubRepoRequest>
-      const testGithubRepoRequest = { name: 'github_repo-1' } as GithubRepoRequest
+      const githubRequestResponse = {
+        id: 1,
+        name: 'github_repo-1',
+      } as GithubRepoRequest & { id: number }
 
       it('should return the selected repo request', async () => {
-        strapiApiClient.getGithubRepoRequest.mockResolvedValue(testGithubRepoRequestResponse)
+        strapiApiClient.getGithubRepoRequest.mockResolvedValue(githubRequestResponse)
 
         const results = await serviceCatalogueService.getGithubRepoRequest({ repoName: 'github_repo-1' })
 
         expect(strapiApiClient.getGithubRepoRequest).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testGithubRepoRequest)
+        expect(results).toEqual(githubRequestResponse)
       })
     })
   })

@@ -219,13 +219,11 @@ describe('Component name service', () => {
   })
 
   describe('checkComponentRequestExists()', () => {
-    const testComponentsResponse = {
-      data: [
-        { attributes: { github_repo: 'comp-3' } },
-        { attributes: { github_repo: 'comp-1' } },
-        { attributes: { github_repo: 'comp-2' } },
-      ],
-    } as ListResponse<GithubRepoRequest>
+    const testComponentsResponse = [
+      { github_repo: 'comp-3' },
+      { github_repo: 'comp-1' },
+      { github_repo: 'comp-2' },
+    ] as GithubRepoRequest[]
 
     it('should return true if component exists', async () => {
       strapiApiClient.getGithubRepoRequests.mockResolvedValue(testComponentsResponse)
