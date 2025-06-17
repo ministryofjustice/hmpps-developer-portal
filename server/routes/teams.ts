@@ -30,9 +30,9 @@ export default function routes({ serviceCatalogueService, teamsSummaryCountServi
 
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
-      logger.info(`[DEMO] getTeamAlertSummary for team '${teamSlug}': ${JSON.stringify(teamAlertSummary, null, 2)}`)
+      logger.info(`getTeamAlertSummary for team '${teamSlug}': ${JSON.stringify(teamAlertSummary, null, 2)}`)
     } catch (err) {
-      logger.error(`[DEMO] Error calling getTeamAlertSummary for team '${teamSlug}':`, err)
+      logger.error(`Error calling getTeamAlertSummary for team '${teamSlug}':`, err)
     }
 
     const displayTeam = {
