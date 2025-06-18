@@ -2,12 +2,23 @@
 .alert-selectors .label-and-button .govuk-form-group {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 // For update button alignment with selector
 .alert-selectors .label-and-button .govuk-button {
   margin-top: 15px;
 }
+
+// For dropdown and update button size consistency
+.alert-selectors .label-and-button {
+  width: 50%;
+}
+
+// For dropdown select size consistency
+.govuk-select {
+  width: 100%;
+} 
 
 // For reset button
 .alert-selectors {
