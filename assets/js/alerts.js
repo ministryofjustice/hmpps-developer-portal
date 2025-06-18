@@ -216,10 +216,8 @@ function populateAlertTable(alerts) {
           <td>${alert.labels.alertname}</td>
           <td>${startsAt}</td>
           <td>${alert.annotations.message} </td>
-          <td>
-          ${[dashboardLink, runbookLink, generatorLink].filter(link => link !== '').join(' ') || 'N/A'}
-          </td>
           <td>${slackLink}</td>
+          <td>${[dashboardLink, runbookLink, generatorLink].filter(link => link !== '').join(' ') || 'N/A'}</td>
         </tr>`)
     })
   } catch (e) {

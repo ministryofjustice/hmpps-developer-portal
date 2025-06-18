@@ -25,6 +25,11 @@
 
   th {
     word-break: normal;
+    &.col-alertname { width: 15%; }
+    &.col-startedAt { width: 11%; }
+    &.col-message { width: 45%; }
+    &.col-slackChannel { width: 20%; }
+    &.col-links { width: 9%; }
   }
 
   tr {
