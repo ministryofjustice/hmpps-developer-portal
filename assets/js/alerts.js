@@ -165,6 +165,7 @@ function updateURLParams(filters) {
   if (filters.severity) params.set('severity', filters.severity)
   history.replaceState(null, '', `?${params.toString()}`)
 }
+
 // function checks url params for applied filters and builds filter object
 function getFiltersFromURL() {
   const params = new URLSearchParams(location.search)
@@ -176,22 +177,28 @@ function getFiltersFromURL() {
   }
 }
 
+function formatTimeStamp(date) {
+  const day = date.getUTCDate()
+  const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC']
+  const month = monthNames[date.getUTCMonth()]
+  const year = date.getUTCFullYear()
+
+  const hours = String(date.getUTCHours()).padStart(2, '0')
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+  const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+
+  return `${day} ${month} ${year} ${hours}:${minutes}:${seconds}`
+}
+
 //  append tabledata to the #alertsStatusTable
 function populateAlertTable(alerts) {
   const currentTime = new Date()
-  let timeFormat = {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    second: 'numeric',
-  }
-  let lastUpdatedTimestamp = new Intl.DateTimeFormat('en-GB', timeFormat).format(currentTime)
+  const lastUpdatedTimestamp = formatTimeStamp(currentTime)
   try {
     $('#statusRows').empty()
     document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdatedTimestamp}`
     alerts.forEach(alert => {
+      const startsAt = formatTimeStamp(new Date(alert.startsAt))
       // create links for alert urls
       const dashboardLink = alert.annotations.dashboard_url
         ? `<a href="${alert.annotations.dashboard_url}" class="statusTileHealth" target="_blank">Dashboard</a>`
@@ -207,6 +214,7 @@ function populateAlertTable(alerts) {
       $('#statusRows')
         .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" data-silenced="${alert.status.state}" id="tile-${alert.labels.application}-${alert.labels.environment}">
           <td>${alert.labels.alertname}</td>
+          <td>${startsAt}</td>
           <td>${alert.annotations.message} </td>
           <td>
           ${[dashboardLink, runbookLink, generatorLink].filter(link => link !== '').join(' ') || 'N/A'}
