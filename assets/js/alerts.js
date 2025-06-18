@@ -202,7 +202,6 @@ function populateAlertTable(alerts) {
       const generatorLink = alert.generatorURL
         ? `<a href="${alert.generatorURL}" class="statusTileHealth" target="_blank">Generator</a>`
         : ''
-
       const slackLink = alert.alert_slack_channel ? alert.alert_slack_channel : 'N/A'
       $('#statusRows')
         .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" data-silenced="${alert.status.state}" id="tile-${alert.labels.application}-${alert.labels.environment}">
