@@ -36,29 +36,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   get('/:repo_name', async (req, res) => {
     const repoName = req.params.repo_name
     const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName })
-    const displayComponent = {
-      github_repo: componentRequest.github_repo,
-      repo_description: componentRequest.repo_description,
-      base_template: componentRequest.base_template,
-      jira_project_keys: componentRequest.jira_project_keys,
-      github_project_visibility: componentRequest.github_project_visibility,
-      product: componentRequest.product,
-      slack_channel_prod_release_notify: componentRequest.slack_channel_prod_release_notify,
-      slack_channel_nonprod_release_notify: componentRequest.slack_channel_nonprod_release_notify,
-      slack_channel_security_scans_notify: componentRequest.slack_channel_security_scans_notify,
-      prod_alerts_severity_label: componentRequest.prod_alerts_severity_label,
-      nonprod_alerts_severity_label: componentRequest.nonprod_alerts_severity_label,
-      github_project_teams_write: componentRequest.github_project_teams_write,
-      github_projects_teams_admin: componentRequest.github_projects_teams_admin,
-      github_project_branch_protection_restricted_teams:
-        componentRequest.github_project_branch_protection_restricted_teams,
-      requester_name: componentRequest.requester_name,
-      requester_email: componentRequest.requester_email,
-      requester_team: componentRequest.requester_team,
-      request_github_pr_status: componentRequest.request_github_pr_status,
-      request_github_pr_number: componentRequest.request_github_pr_number,
-    }
-    return res.render('pages/componentRequest', { componentRequest: displayComponent })
+    return res.render('pages/componentRequest', { componentRequest })
   })
 
   post('/new', async (req, res): Promise<void> => {
