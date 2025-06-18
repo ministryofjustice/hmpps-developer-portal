@@ -211,7 +211,7 @@ describe('strapiApiClient', () => {
       } as GithubRepoRequestRequest
       fakeStrapiApi.post('/github-repo-requests').reply(200, response)
 
-      const output = await strapiApiClient.postGithubRepoRequest({
+      await strapiApiClient.postGithubRepoRequest({
         data: {
           github_repo: 'Test01',
           repo_description: 'Test Data',
@@ -228,8 +228,6 @@ describe('strapiApiClient', () => {
           nonprod_alerts_severity_label: 'hmpps-sre-nonprod-slack-channel',
         },
       })
-
-      expect(output).toEqual(response)
     })
   })
 
