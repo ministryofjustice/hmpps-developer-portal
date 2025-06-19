@@ -66,16 +66,14 @@
           <td><a href="{{ row.PrimaryURL }}">{{ row.vulnerabilityID }}</a></td>
           <td>{{ row.pkgName }}</td>
           <td>
-            {% if row.description.length > 100 %}
-              <span class="truncated-description">
-                {{ row.description | slice (0,100) }} ...
-              </span>
-              <a href="#" class="read-more" onclick="expandDescription(this)">Read More</a>
-              <span class="full-description" style="display: none;">
-                {{ row.description }}
-            {% else %}
-              {{ row.description }}
-            {% endif %}
+            <details class="govuk-details">
+              <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">Description</span>
+              </summary>
+              <div class="govuk-details__text">
+                <p>{{ row.description }}</p>
+              </div>
+            </details>
           </td>
           <td>{{ row.installedVersion }}</td>
           <td>{{ row.fixedVersion }}</td>
