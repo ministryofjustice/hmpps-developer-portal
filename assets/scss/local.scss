@@ -282,11 +282,11 @@
 .trivyData {
   th, td, img{
     padding: govuk-spacing(1);
-    vertical-align: middle;
+    vertical-align: top;
   }
 
   th {
-    text-align: centre;
+    text-align: center;
     background-color: govuk-colour('light-grey');
 
     &.govuk-table__header {
@@ -296,11 +296,6 @@
 
   tr:nth-of-type(2n + 1) td {
     background-color: govuk-colour('light-grey');
-  }
-
-  tr.trivyCritical {
-    font-weight: bold;
-    color: red;
   }
 
   &.category {
@@ -339,6 +334,11 @@
     width: 10%
   }
 
+}
+
+.trivyData tr.trivyCritical, .trivyData tr.trivyCritical td {
+  background-color: govuk-colour('red');
+  color: white;
 }
 
 .trivy-icon {
