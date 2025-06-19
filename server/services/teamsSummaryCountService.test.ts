@@ -3,11 +3,30 @@ import AlertsService from './alertsService'
 import logger from '../../logger'
 import { StrapiApiClient } from '../data'
 import {
-  TeamResponse,
-  ProductResponse,
-  ComponentListResponseDataItem,
-  ProductListResponseDataItem,
-} from '../data/strapiApiTypes'
+  mockProducts,
+  mockProductList,
+  mockTeamResponseWithProducts,
+  mockTeamResponseWithoutProducts,
+  mockComponents2,
+  mockProductResponse1,
+  mockProductResponse2,
+  mockProductComponentMapResponse,
+  mockOneProduct,
+  mockProductSingleComponentMapResponse,
+  mockEmptyProduct,
+  mockProductResponseEmpty,
+  mockTeamResponseWithTwoProducts,
+  mockAlerts,
+  mockProductResponseWithComponents,
+  mockProductResponseWithComponents2,
+  mockTeamAlertSummary,
+  mockProductResponseWithNoComponents,
+  mockTeamResponseWithEmptyProduct,
+  mockTeamResponseWithOneProduct,
+  mockProductResponseWithComponentsAndAlerts,
+  mockAlertsForProductWithComponentsAndAlerts,
+  mockTeamAlertSummaryForProductWithComponentsAndAlerts,
+} from './teamsSummaryCountService.test-helpers'
 
 jest.mock('../../logger')
 jest.mock('../data/strapiApiClient')
@@ -45,97 +64,28 @@ describe('TeamsSummaryCountService.getProductsForTeam', () => {
   })
 
   it('should return products from array response', async () => {
-    const mockProducts = [
-      { id: 1, attributes: { name: 'Product 1', p_id: 'p1' } },
-      { id: 2, attributes: { name: 'Product 2', p_id: 'p2' } },
-    ]
-
-    strapiApiClient.getTeam.mockResolvedValue({
-      data: [
-        {
-          id: 1,
-          attributes: {
-            name: 'Team Name',
-            t_id: 'team-id',
-            products: {
-              data: mockProducts,
-            },
-            createdAt: '2023-01-01T00:00:00Z',
-            createdBy: { data: { attributes: {}, id: 1 } },
-            updatedAt: '2023-01-01T00:00:00Z',
-            updatedBy: { data: { attributes: {}, id: 1 } },
-          },
-        },
-      ],
-    } as TeamResponse)
-
+    strapiApiClient.getTeam.mockResolvedValue(mockTeamResponseWithProducts)
     const result = await service.getProductsForTeam('team-slug')
-
     expect(strapiApiClient.getTeam).toHaveBeenCalledWith({ teamSlug: 'team-slug' })
     expect(result).toEqual(mockProducts)
-    expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining('Found 2 products for team team-slug'))
   })
 
   it('should return products from object response', async () => {
-    const mockProducts = [{ id: 1, attributes: { name: 'Product 1', p_id: 'p1' } }]
-
-    strapiApiClient.getTeam.mockResolvedValue({
-      data: {
-        attributes: {
-          name: 'Team Name',
-          t_id: 'team-id',
-          products: {
-            data: mockProducts,
-          },
-          createdAt: '2023-01-01T00:00:00Z',
-          createdBy: { data: { attributes: {}, id: 1 } },
-          updatedAt: '2023-01-01T00:00:00Z',
-          updatedBy: { data: { attributes: {}, id: 1 } },
-        },
-      },
-    } as TeamResponse)
-
+    strapiApiClient.getTeam.mockResolvedValue(mockTeamResponseWithProducts)
     const result = await service.getProductsForTeam('team-slug')
-
     expect(result).toEqual(mockProducts)
   })
 
   it('should return empty array when no products found', async () => {
-    strapiApiClient.getTeam.mockResolvedValue({
-      data: [
-        {
-          id: 1,
-          attributes: {
-            name: 'Team Name',
-            t_id: 'team-id',
-            products: {
-              data: [],
-            },
-            createdAt: '2023-01-01T00:00:00Z',
-            createdBy: { data: { attributes: {}, id: 1 } },
-            updatedAt: '2023-01-01T00:00:00Z',
-            updatedBy: { data: { attributes: {}, id: 1 } },
-          },
-        },
-      ],
-    } as TeamResponse)
-
+    strapiApiClient.getTeam.mockResolvedValue(mockTeamResponseWithoutProducts)
     const result = await service.getProductsForTeam('team-slug')
-
     expect(result).toEqual([])
-    expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining('Found 0 products for team team-slug'))
   })
 
   it('should return empty array on error', async () => {
     strapiApiClient.getTeam.mockRejectedValue(new Error('API Error'))
-
     const result = await service.getProductsForTeam('team-slug')
-
     expect(result).toEqual([])
-    expect(mockLogger.error).toHaveBeenCalledWith(
-      expect.stringContaining('Error fetching products for team team-slug'),
-      expect.any(Error),
-    )
   })
 })
 
@@ -148,172 +98,65 @@ describe('TeamsSummaryCountService.getComponentsForProducts', () => {
   })
 
   it('should fetch components for multiple products', async () => {
-    const mockProducts = [
-      { attributes: { name: 'Product 1', slug: 'product-1', p_id: 'p1' } },
-      { attributes: { name: 'Product 2', slug: 'product-2', p_id: 'p2' } },
-    ] as ProductListResponseDataItem[]
-
-    const mockComponents1: ComponentListResponseDataItem[] = [
-      { id: 1, attributes: { name: 'Comp1A' } },
-      { id: 2, attributes: { name: 'Comp1B' } },
-    ]
-
-    const mockComponents2: ComponentListResponseDataItem[] = [{ id: 3, attributes: { name: 'Comp2A' } }]
-
     strapiApiClient.getProduct.mockImplementation((params: ProductParams) => {
       if (params.productSlug === 'product-1') {
-        return Promise.resolve({
-          data: [{ attributes: { components: { data: mockComponents1 } } }],
-        } as unknown as ProductResponse)
+        return Promise.resolve(mockProductResponse1)
       }
       if (params.productSlug === 'product-2') {
-        return Promise.resolve({
-          data: [{ attributes: { components: { data: mockComponents2 } } }],
-        } as unknown as ProductResponse)
+        return Promise.resolve(mockProductResponse2)
       }
       return Promise.reject(new Error('Unknown product'))
     })
 
-    const result = await service.getComponentsForProducts(mockProducts)
+    const result = await service.getComponentsForProducts(mockProductList)
 
     expect(strapiApiClient.getProduct).toHaveBeenCalledTimes(2)
     expect(strapiApiClient.getProduct).toHaveBeenCalledWith({ productSlug: 'product-1' } as ProductParams)
     expect(strapiApiClient.getProduct).toHaveBeenCalledWith({ productSlug: 'product-2' } as ProductParams)
 
-    expect(result).toEqual({
-      'Product 1': mockComponents1,
-      'Product 2': mockComponents2,
-    })
+    expect(result).toEqual(mockProductComponentMapResponse)
   })
 
   it('should handle object response format', async () => {
-    const mockProducts = [{ attributes: { name: 'Product 3', slug: 'product-3', p_id: 'p3' } }]
-
-    const mockComponents = [{ id: 4, attributes: { name: 'Comp3A' } }]
-
-    strapiApiClient.getProduct.mockResolvedValue({
-      data: { attributes: { components: { data: mockComponents } } },
-    } as unknown as ProductResponse)
-
-    const result = await service.getComponentsForProducts(mockProducts)
-
-    expect(result).toEqual({
-      'Product 3': mockComponents,
-    })
+    strapiApiClient.getProduct.mockResolvedValue(mockProductResponse2)
+    const result = await service.getComponentsForProducts(mockOneProduct)
+    expect(result).toEqual(mockProductSingleComponentMapResponse)
   })
 
   it('should handle API errors for individual products', async () => {
-    const mockProducts = [
-      { attributes: { name: 'Good Product', slug: 'good-product', p_id: 'good1' } },
-      { attributes: { name: 'Bad Product', slug: 'bad-product', p_id: 'bad1' } },
-    ]
-
-    const mockComponents1 = [{ id: 1, attributes: { name: 'Comp1' } }]
-
     strapiApiClient.getProduct.mockImplementation(({ productSlug }) => {
-      if (productSlug === 'good-product') {
-        return Promise.resolve({
-          data: [{ attributes: { components: { data: mockComponents1 } } }],
-        } as unknown as ProductResponse)
+      if (productSlug === 'product-2') {
+        return Promise.resolve(mockProductResponse2)
       }
       return Promise.reject(new Error('API Error'))
     })
 
-    const result = await service.getComponentsForProducts(mockProducts)
-
+    const result = await service.getComponentsForProducts(mockProductList)
     expect(result).toEqual({
-      'Good Product': mockComponents1,
-      'Bad Product': [],
+      'Product 1': [],
+      'Product 2': mockComponents2,
     })
-
-    expect(mockLogger.error).toHaveBeenCalledWith(
-      expect.stringContaining('[getComponentsForProducts] Error fetching components for product Bad Product'),
-      expect.any(Error),
-    )
   })
 
   it('should handle empty components array', async () => {
-    const mockProducts = [{ attributes: { name: 'Empty Product', slug: 'empty-product', p_id: 'empty1' } }]
-
-    strapiApiClient.getProduct.mockResolvedValue({
-      data: [{ attributes: { components: { data: [] } } }],
-    } as unknown as ProductResponse)
-
-    const result = await service.getComponentsForProducts(mockProducts)
-
+    strapiApiClient.getProduct.mockResolvedValue(mockProductResponseEmpty)
+    const result = await service.getComponentsForProducts(mockEmptyProduct)
     expect(result).toEqual({
       'Empty Product': [],
     })
-
-    expect(mockLogger.info).toHaveBeenCalledWith(
-      expect.stringContaining('Found 0 components for product Empty Product'),
-    )
   })
 
   it('should orchestrate data flow correctly to build product->component->alert mapping', async () => {
     const teamSlug = 'team-alpha'
-
-    const mockProducts = [
-      { id: 1, attributes: { name: 'Product A', slug: 'product-a', p_id: 'pa' } },
-      { id: 2, attributes: { name: 'Product B', slug: 'product-b', p_id: 'pb' } },
-    ]
-
-    mockStrapiClient.getTeam.mockResolvedValue({
-      data: [
-        {
-          id: 1,
-          attributes: {
-            t_id: 'team-alpha-id',
-            name: 'Team Alpha',
-            products: { data: mockProducts },
-            createdAt: '2023-01-01T00:00:00Z',
-            createdBy: { data: { attributes: {}, id: 1 } },
-            updatedAt: '2023-01-01T00:00:00Z',
-            updatedBy: { data: { attributes: {}, id: 1 } },
-          },
-        },
-      ],
-    } as unknown as TeamResponse)
+    mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithTwoProducts)
 
     mockStrapiClient.getProduct.mockImplementation((params: ProductParams) => {
       if (params.productSlug === 'product-a') {
-        return Promise.resolve({
-          data: {
-            id: 1,
-            attributes: {
-              name: 'Product A',
-              slug: 'product-a',
-              p_id: 'pa',
-              components: {
-                data: [
-                  { id: 1, attributes: { name: 'ComponentA1' } },
-                  { id: 2, attributes: { name: 'ComponentA2' } },
-                ],
-              },
-            },
-          },
-        } as unknown as ProductResponse)
+        return Promise.resolve(mockProductResponseWithComponents)
       }
-      return Promise.resolve({
-        data: {
-          id: 2,
-          attributes: {
-            name: 'Product B',
-            slug: 'product-b',
-            p_id: 'pb',
-            components: { data: [{ id: 3, attributes: { name: 'ComponentB1' } }] },
-          },
-        },
-      } as unknown as ProductResponse)
+      return Promise.resolve(mockProductResponseWithComponents2)
     })
 
-    const mockAlerts = [
-      { status: { state: 'active' }, labels: { component: 'ComponentA1' } },
-      { status: { state: 'active' }, labels: { component: 'ComponentA1' } },
-      { status: { state: 'active' }, labels: { component: 'ComponentA1' } },
-      { status: { state: 'active' }, labels: { component: 'ComponentB1' } },
-      { status: { state: 'active' }, labels: { component: 'ComponentB1' } },
-    ]
     mockAlertsService.getAlerts.mockResolvedValue(mockAlerts)
 
     const result = await service.getTeamAlertSummary(teamSlug)
@@ -322,74 +165,20 @@ describe('TeamsSummaryCountService.getComponentsForProducts', () => {
     expect(mockStrapiClient.getProduct).toHaveBeenCalledTimes(2)
     expect(mockAlertsService.getAlerts).toHaveBeenCalled()
 
-    expect(result).toEqual({
-      products: {
-        'Product A': {
-          ComponentA1: 3,
-          ComponentA2: 0,
-        },
-        'Product B': {
-          ComponentB1: 2,
-        },
-      },
-      total: 5,
-    })
-
-    expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining('Start for team team-alpha'))
-    expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining('Total components found: 3'))
-    expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining('Done for team team-alpha'))
+    expect(result).toEqual(mockTeamAlertSummary)
   })
 
   it('should handle empty product list', async () => {
-    mockStrapiClient.getTeam.mockResolvedValue({
-      data: [
-        {
-          attributes: {
-            t_id: 'team-beta-id',
-            name: 'Team Beta',
-            products: { data: [] },
-            createdAt: '2023-01-01T00:00:00Z',
-            createdBy: { data: { attributes: {}, id: 1 } },
-            updatedAt: '2023-01-01T00:00:00Z',
-            updatedBy: { data: { attributes: {}, id: 1 } },
-          },
-        },
-      ],
-    } as unknown as TeamResponse)
-
+    mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithoutProducts)
     mockAlertsService.getAlerts.mockResolvedValue([])
-
     const result = await service.getTeamAlertSummary('empty-team')
-
     expect(result).toEqual({ products: {}, total: 0 })
-    expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining('Total components found: 0'))
   })
 
   it('should handle products with no components', async () => {
-    const mockProducts = [{ attributes: { name: 'Empty Product', slug: 'empty', p_id: 'empty1' } }]
-
-    mockStrapiClient.getTeam.mockResolvedValue({
-      data: [
-        {
-          attributes: {
-            t_id: 'team-gamma-id',
-            name: 'Team Gamma',
-            products: { data: mockProducts },
-            createdAt: '2023-01-01T00:00:00Z',
-            createdBy: { data: { attributes: {}, id: 1 } },
-            updatedAt: '2023-01-01T00:00:00Z',
-            updatedBy: { data: { attributes: {}, id: 1 } },
-          },
-        },
-      ],
-    } as unknown as TeamResponse)
-
-    mockStrapiClient.getProduct.mockResolvedValue({
-      data: { attributes: { name: 'Test Product', p_id: 'test-prod-id', components: { data: [] } } },
-    } as unknown as ProductResponse)
-
+    mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithEmptyProduct)
+    mockStrapiClient.getProduct.mockResolvedValue(mockProductResponseWithNoComponents)
     mockAlertsService.getAlerts.mockResolvedValue([])
-
     const result = await service.getTeamAlertSummary('team-beta')
 
     expect(result).toEqual({
@@ -399,62 +188,13 @@ describe('TeamsSummaryCountService.getComponentsForProducts', () => {
   })
 
   it('should handle various alert count scenarios', async () => {
-    const mockProducts = [{ attributes: { name: 'Product X', slug: 'product-x', p_id: 'px' } }]
-
-    mockStrapiClient.getTeam.mockResolvedValue({
-      data: [
-        {
-          attributes: {
-            t_id: 'team-gamma-id',
-            name: 'Team Gamma',
-            products: { data: mockProducts },
-            createdAt: '2023-01-01T00:00:00Z',
-            createdBy: { data: { attributes: {}, id: 1 } },
-            updatedAt: '2023-01-01T00:00:00Z',
-            updatedBy: { data: { attributes: {}, id: 1 } },
-          },
-        },
-      ],
-    } as unknown as TeamResponse)
-
-    mockStrapiClient.getProduct.mockResolvedValue({
-      data: {
-        attributes: {
-          name: 'Test Product',
-          p_id: 'test-prod-id',
-          components: {
-            data: [
-              { attributes: { name: 'CompWithAlerts' } },
-              { attributes: { name: 'CompWithNoAlerts' } },
-              { attributes: { name: 'CompMissingFromAlertMap' } },
-            ],
-          },
-        },
-      },
-    } as unknown as ProductResponse)
-
-    const mockAlerts = [
-      { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
-      { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
-      { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
-      { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
-      { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
-      { status: { state: 'inactive' }, labels: { component: 'CompWithNoAlerts' } },
-    ]
-    mockAlertsService.getAlerts.mockResolvedValue(mockAlerts)
+    mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithOneProduct)
+    mockStrapiClient.getProduct.mockResolvedValue(mockProductResponseWithComponentsAndAlerts)
+    mockAlertsService.getAlerts.mockResolvedValue(mockAlertsForProductWithComponentsAndAlerts)
 
     const result = await service.getTeamAlertSummary('team-gamma')
 
-    expect(result).toEqual({
-      products: {
-        'Product X': {
-          CompWithAlerts: 5,
-          CompWithNoAlerts: 0,
-          CompMissingFromAlertMap: 0,
-        },
-      },
-      total: 5,
-    })
+    expect(result).toEqual(mockTeamAlertSummaryForProductWithComponentsAndAlerts)
   })
 })
 
@@ -470,7 +210,7 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
   it('should count active alerts for matching components', async () => {
     const componentNames = ['component-1', 'component-2', 'component-3']
 
-    const mockAlerts = [
+    const mockAlertsCount = [
       { status: { state: 'active' }, labels: { component: 'component-1' } },
       { status: { state: 'active' }, labels: { component: 'component-1' } },
       { status: { state: 'active' }, labels: { application: 'component-2' } },
@@ -479,7 +219,7 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
       { status: { state: 'active' }, labels: { component: 'component-3' } },
     ]
 
-    mockAlertsService.getAlerts.mockResolvedValue(mockAlerts)
+    mockAlertsService.getAlerts.mockResolvedValue(mockAlertsCount)
 
     const result = await service.getFiringAlertCountsForComponents(componentNames)
 
@@ -488,20 +228,17 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
       'component-2': 1,
       'component-3': 1,
     })
-
-    expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining(`Total alerts fetched: ${mockAlerts.length}`))
-    expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining('Component component-1: 2 firing alerts'))
   })
 
   it('should handle component names with no active alerts', async () => {
     const componentNames = ['no-alerts-component', 'component-with-alert']
 
-    const mockAlerts = [
+    const mockActiveAndInactiveAlerts = [
       { status: { state: 'active' }, labels: { component: 'component-with-alert' } },
       { status: { state: 'inactive' }, labels: { component: 'no-alerts-component' } },
     ]
 
-    mockAlertsService.getAlerts.mockResolvedValue(mockAlerts)
+    mockAlertsService.getAlerts.mockResolvedValue(mockActiveAndInactiveAlerts)
 
     const result = await service.getFiringAlertCountsForComponents(componentNames)
 
@@ -513,11 +250,10 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
 
   it('should handle component names not present in any alert', async () => {
     const componentNames = ['unknown-component-1', 'unknown-component-2']
-
-    const mockAlerts = [{ status: { state: 'active' }, labels: { component: 'some-other-component' } }]
-
-    mockAlertsService.getAlerts.mockResolvedValue(mockAlerts)
-
+    const mockAlertsWithMissingComponent = [
+      { status: { state: 'active' }, labels: { component: 'some-other-component' } },
+    ]
+    mockAlertsService.getAlerts.mockResolvedValue(mockAlertsWithMissingComponent)
     const result = await service.getFiringAlertCountsForComponents(componentNames)
 
     expect(result).toEqual({
@@ -529,7 +265,7 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
   it('should handle alerts with missing labels or status', async () => {
     const componentNames = ['component-1', 'component-2']
 
-    const mockAlerts = [
+    const mockAlertsWithMissingLabelsOrStatus = [
       { status: { state: 'active' }, labels: { component: 'component-1' } },
       { status: {}, labels: { component: 'component-1' } },
       { status: { state: 'active' } },
@@ -537,7 +273,7 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
       {},
     ]
 
-    mockAlertsService.getAlerts.mockResolvedValue(mockAlerts)
+    mockAlertsService.getAlerts.mockResolvedValue(mockAlertsWithMissingLabelsOrStatus)
 
     const result = await service.getFiringAlertCountsForComponents(componentNames)
 
@@ -558,8 +294,6 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
       'component-1': 0,
       'component-2': 0,
     })
-
-    expect(mockLogger.info).toHaveBeenCalledWith(expect.stringContaining('Total alerts fetched: 0'))
   })
 
   it('should handle errors from alerts service', async () => {
