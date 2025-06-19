@@ -109,7 +109,7 @@ describe('strapiApiClient', () => {
         const allComponents = {
           data: [{ attributes: { name: 'Component' } }],
         } as ListResponse<Component>
-        fakeStrapiApi.get('/components?populate=product.team%2Cenvs').reply(200, allComponents)
+        fakeStrapiApi.get('/components?populate=product.team%2Cenvironments&').reply(200, allComponents)
         const output = await strapiApiClient.getComponents()
         expect(output).toEqual(allComponents)
       })

@@ -59,6 +59,9 @@ export type TrivyScanRequest = components['schemas']['TrivyScanRequest']
 export type Env = components['schemas']['Environment']
 export type EnvRequest = components['schemas']['EnvironmentRequest']
 
+export type Env2 = components['schemas']['Component']['envs']['data'][0]['attributes']
+
+
 export type VeracodeResultsSummary = {
   'static-analysis': {
     score: number

@@ -135,7 +135,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       environment => environment.attributes.name === environmentName,
     )
     const scan = filteredEnvironment[0].attributes.trivy_scan.data.attributes as TrivyScanType
-    console.log('scan', scan)
     const summary = scan.scan_summary?.summary
     const scanResults = scan.scan_summary?.scan_result
     const scanDate = utcTimestampToUtcDateTime(scan.trivy_scan_timestamp)
