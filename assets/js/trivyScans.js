@@ -8,10 +8,19 @@ jQuery(function () {
 
       // Extract CVE VulnerabilityID from os-pkgs and lang-pkgs
       scanResult['os-pkgs']?.forEach(pkg => {
-        cveIDs.push(pkg.VulnerabilityID)
+        if (pkg.VulnerabilityID && pkg.PrimaryURL) {
+          cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
+        } else if (pkg.VulnerabilityID) {
+          cveIDs.push(pkg.VulnerabilityID)
+        }
       })
+
       scanResult['lang-pkgs']?.forEach(pkg => {
-        cveIDs.push(pkg.VulnerabilityID)
+        if (pkg.VulnerabilityID && pkg.PrimaryURL) {
+          cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
+        } else if (pkg.VulnerabilityID) {
+          cveIDs.push(pkg.VulnerabilityID)
+        }
       })
 
       item.environments.forEach(env => {
@@ -196,7 +205,21 @@ jQuery(function () {
       name: 'cve_ids',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(rowData.cve_ids || '')
+        const cveDetails = rowData.cve_ids
+          .split(', ')
+          .map(cve => `<li>${cve}</li>`)
+          .join('')
+
+        const detailsContent = `<details class="govuk-details">
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text">CVE IDs</span>
+        </summary>
+        <div class="govuk-details__text">
+          <ul>${cveDetails}</ul>
+        </div>
+      </details>`
+
+        $(td).html(detailsContent)
       },
     },
   ]
@@ -259,9 +282,9 @@ jQuery(function () {
     const isUnavailableChecked = $('#showUnavailable').is(':checked')
     const isNoVulnerabilitiesChecked = $('#showNoVulnerabilities').is(':checked')
     // const availableColumns = ['total_fixed_critical', 'total_fixed_high', 'total_fixed_medium', 'total_fixed_low', 'total_fixed_unknown']
-    const availableColumns = [4, 5, 6, 7, 8]
+    const availableColumns = [5, 6, 7, 8, 9]
     // const unavailableColumns = ['total_unfixed_critical', 'total_unfixed_high', 'total_unfixed_medium', 'total_unfixed_low', 'total_unfixed_unknown']
-    const unavailableColumns = [9, 10, 11, 12, 13]
+    const unavailableColumns = [10, 11, 12, 13, 14]
     const severityCheckboxes = [
       '#showSeverityCritical',
       '#showSeverityHigh',
@@ -270,11 +293,11 @@ jQuery(function () {
       '#showSeverityUnknown',
     ]
     const severityColumns = {
-      critical: [4, 9], // 'total_fixed_critical', 'total_unfixed_critical'],
-      high: [5, 10], // 'total_fixed_high', 'total_unfixed_high'],
-      medium: [6, 11], // 'total_fixed_medium', 'total_unfixed_medium'],
-      low: [7, 12], // 'total_fixed_low', 'total_unfixed_low'],
-      unknown: [8, 13], // 'total_fixed_unknown', 'total_unfixed_unknown'],
+      critical: [5, 10], // 'total_fixed_critical', 'total_unfixed_critical'],
+      high: [6, 11], // 'total_fixed_high', 'total_unfixed_high'],
+      medium: [7, 12], // 'total_fixed_medium', 'total_unfixed_medium'],
+      low: [8, 13], // 'total_fixed_low', 'total_unfixed_low'],
+      unknown: [9, 14], // 'total_fixed_unknown', 'total_unfixed_unknown'],
     }
 
     const table = $('#trivyScansTable').DataTable()
