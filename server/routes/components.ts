@@ -42,9 +42,9 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const componentName = getComponentName(req)
     const component = await serviceCatalogueService.getComponent({ componentName })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
-    const { environments } = component
-    const prodEnvData = component.environments?.filter(environment => environment.name === 'prod')
-    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].alerts_slack_channel
+    const { envs } = component
+    const prodEnvData = component.envs?.data?.filter(environment => environment.attributes.name === 'prod')
+    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].attributes.alerts_slack_channel
     const displayComponent = {
       name: component.name,
       description: component.description,
@@ -65,7 +65,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       dependencyTypes: dependencies.categories,
       dependents: dependencies.dependents,
       dependencies: dependencies.dependencies,
-      environments,
+      envs,
       alerts_slack_channel: alertsSlackChannel,
       github_enforce_admins_enabled: component.github_enforce_admins_enabled,
       standardsCompliance: component.standards_compliance,
@@ -96,20 +96,24 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const environmentName = getEnvironmentName(req)
 
     const component = await serviceCatalogueService.getComponent({ componentName })
-    const environments = component.environments?.filter(environment => environment.name === environmentName)
+    const filteredEnvironment = component.envs?.data?.filter(
+      environment => environment.attributes.name === environmentName,
+    )
     const activeAgencies =
-      environments.length === 0 ? '' : formatActiveAgencies(environments[0].active_agencies as Array<string>)
+      filteredEnvironment.length === 0
+        ? ''
+        : formatActiveAgencies(filteredEnvironment[0].attributes.active_agencies as Array<string>)
     const allowList = new Map()
 
-    if (environments[0].ip_allow_list && environments[0].ip_allow_list_enabled) {
-      const ipAllowListFiles = Object.keys(environments[0].ip_allow_list)
+    if (filteredEnvironment[0].attributes.ip_allow_list && filteredEnvironment[0].attributes.ip_allow_list_enabled) {
+      const ipAllowListFiles = Object.keys(filteredEnvironment[0].attributes.ip_allow_list)
       allowList.set('groups', [])
       ipAllowListFiles.forEach(fileName => {
         // @ts-expect-error Suppress any declaration
-        Object.keys(environments[0].ip_allow_list[fileName]).forEach(item => {
+        Object.keys(filteredEnvironment[0].attributes.ip_allow_list[fileName]).forEach(item => {
           if (item === 'generic-service') {
             // @ts-expect-error Suppress any declaration
-            const genericService = environments[0].ip_allow_list[fileName]['generic-service']
+            const genericService = filteredEnvironment[0].attributes.ip_allow_list[fileName]['generic-service']
             Object.keys(genericService).forEach(ipName => {
               if (ipName !== 'groups') {
                 allowList.set(ipName, genericService[ipName])
@@ -119,7 +123,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
             })
           } else {
             // @ts-expect-error Suppress any declaration
-            allowList.set(item, environments[0].ip_allow_list[fileName][item])
+            allowList.set(item, filteredEnvironment[0].attributes.ip_allow_list[fileName][item])
           }
         })
       })
@@ -129,7 +133,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       name: componentName,
       product: component.product?.data,
       api: component.api,
-      environment: environments[0],
+      environment: filteredEnvironment[0].attributes,
       activeAgencies,
       allowList,
     }

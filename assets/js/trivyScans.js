@@ -25,7 +25,7 @@ jQuery(function () {
 
       item.environments.forEach(env => {
         transformed.push({
-          environments: env,
+          environment: env,
           name: item.name,
           build_image_tag: item.build_image_tag,
           trivy_scan_timestamp: item.trivy_scan_timestamp,
@@ -50,7 +50,7 @@ jQuery(function () {
             (summary?.['secret']?.MEDIUM ?? 0) +
             (summary?.['secret']?.LOW ?? 0),
           result_link: `
-              <a href="/trivy-scans/${item.name}">
+              <a href="/trivy-scans/${item.name}/environments/${env}">
                 <img src="/assets/images/trivy.png" alt="Trivy Logo" style="width: 32px; height: 32px; margin-right: 5px;" />
               </a>`,
           cve_ids: cveIDs.join(', '),
@@ -72,18 +72,22 @@ jQuery(function () {
       },
     },
     {
-      name: 'environments',
-      data: 'environments',
+      name: 'environment',
+      data: 'environment',
       createdCell: function (td, _cellData, rowData) {
-        const environments = rowData.environments
-        $(td).html(environments)
+        const envlink = `
+          <a class="govuk-link--no-visited-state" 
+             href="/components/${rowData.name}/environment/${rowData.environment}" 
+             data-test="environment">
+             ${rowData.environment}
+          </a>&nbsp;`
+        $(td).html(envlink)
       },
     },
     {
       data: 'result_link',
       name: 'result_link',
       createdCell: function (td, _cellData, rowData) {
-        const componentName = cleanColumnOutput(rowData.name || 'N/A')
         $(td).html(rowData.result_link)
       },
     },
