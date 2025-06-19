@@ -1,47 +1,46 @@
-import {
-  ComponentListResponseDataItem,
-  ProductListResponseDataItem,
-  ProductResponse,
-  TeamResponse,
-} from '../data/strapiApiTypes'
+import { Component, Product, Team, DataItem, SingleResponse } from '../data/strapiApiTypes'
 
 export const mockProducts = [
   { id: 1, attributes: { name: 'Product 1', p_id: 'p1' } },
   { id: 2, attributes: { name: 'Product 2', p_id: 'p2' } },
 ]
 
-export const mockOneProduct = [{ id: 3, attributes: { name: 'Product 3', slug: 'product-3', p_id: 'p3' } }]
+export const mockOneProduct = [
+  { id: 3, attributes: { name: 'Product 3', slug: 'product-3', p_id: 'p3' } },
+] as DataItem<Product>[]
 
 export const mockTwoProduct = [
   { id: 1, attributes: { name: 'Product A', slug: 'product-a', p_id: 'pa' } },
   { id: 2, attributes: { name: 'Product B', slug: 'product-b', p_id: 'pb' } },
 ]
 
-export const mockEmptyProduct = [{ attributes: { name: 'Empty Product', slug: 'empty-product', p_id: 'empty1' } }]
+export const mockEmptyProducts = [
+  { attributes: { name: 'Empty Product', slug: 'empty-product', p_id: 'empty1' } },
+] as DataItem<Product>[]
 
 export const mockProductList = [
   { attributes: { name: 'Product 1', slug: 'product-1', p_id: 'p1' } },
   { attributes: { name: 'Product 2', slug: 'product-2', p_id: 'p2' } },
-] as ProductListResponseDataItem[]
+] as DataItem<Product>[]
 
-export const mockComponents1: ComponentListResponseDataItem[] = [
+export const mockComponents1: DataItem<Component>[] = [
   { id: 1, attributes: { name: 'Comp1A' } },
   { id: 2, attributes: { name: 'Comp1B' } },
 ]
 
-export const mockComponents2: ComponentListResponseDataItem[] = [{ id: 3, attributes: { name: 'Comp2A' } }]
+export const mockComponents2: DataItem<Component>[] = [{ id: 3, attributes: { name: 'Comp2A' } }]
 
 export const mockProductResponse1 = {
   data: [{ attributes: { components: { data: mockComponents1 } } }],
-} as unknown as ProductResponse
+} as SingleResponse<Product>
 
 export const mockProductResponse2 = {
   data: [{ attributes: { components: { data: mockComponents2 } } }],
-} as unknown as ProductResponse
+} as SingleResponse<Product>
 
 export const mockProductResponseEmpty = {
   data: [{ attributes: { components: { data: [] } } }],
-} as unknown as ProductResponse
+} as SingleResponse<Product>
 
 export const mockTeamResponseWithProducts = {
   data: [
@@ -60,7 +59,7 @@ export const mockTeamResponseWithProducts = {
       },
     },
   ],
-} as TeamResponse
+} as SingleResponse<Team>
 
 export const mockTeamResponseWithoutProducts = {
   data: [
@@ -79,7 +78,7 @@ export const mockTeamResponseWithoutProducts = {
       },
     },
   ],
-} as TeamResponse
+} as SingleResponse<Team>
 
 export const mockTeamResponseWithTwoProducts = {
   data: [
@@ -96,7 +95,7 @@ export const mockTeamResponseWithTwoProducts = {
       },
     },
   ],
-} as TeamResponse
+} as SingleResponse<Team>
 
 export const mockTeamResponseWithOneProduct = {
   data: [
@@ -112,7 +111,7 @@ export const mockTeamResponseWithOneProduct = {
       },
     },
   ],
-} as unknown as TeamResponse
+} as SingleResponse<Team>
 
 export const mockProductResponseWithComponents = {
   data: {
@@ -129,7 +128,7 @@ export const mockProductResponseWithComponents = {
       },
     },
   },
-} as unknown as ProductResponse
+} as SingleResponse<Product>
 
 export const mockTeamResponseWithEmptyProduct = {
   data: [
@@ -137,7 +136,7 @@ export const mockTeamResponseWithEmptyProduct = {
       attributes: {
         t_id: 'team-gamma-id',
         name: 'Team Gamma',
-        products: { data: mockEmptyProduct },
+        products: { data: mockEmptyProducts },
         createdAt: '2023-01-01T00:00:00Z',
         createdBy: { data: { attributes: {}, id: 1 } },
         updatedAt: '2023-01-01T00:00:00Z',
@@ -145,7 +144,7 @@ export const mockTeamResponseWithEmptyProduct = {
       },
     },
   ],
-} as unknown as TeamResponse
+} as SingleResponse<Team>
 
 export const mockProductResponseWithComponents2 = {
   data: {
@@ -157,11 +156,11 @@ export const mockProductResponseWithComponents2 = {
       components: { data: [{ id: 3, attributes: { name: 'ComponentB1' } }] },
     },
   },
-} as unknown as ProductResponse
+} as SingleResponse<Product>
 
 export const mockProductResponseWithNoComponents = {
   data: { attributes: { name: 'Test Product', p_id: 'test-prod-id', components: { data: [] } } },
-} as unknown as ProductResponse
+} as SingleResponse<Product>
 
 export const mockTeamAlertSummary = {
   products: {
@@ -207,7 +206,7 @@ export const mockProductResponseWithComponentsAndAlerts = {
       },
     },
   },
-} as unknown as ProductResponse
+} as SingleResponse<Product>
 
 export const mockAlertsForProductWithComponentsAndAlerts = [
   { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },

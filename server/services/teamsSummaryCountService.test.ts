@@ -13,7 +13,6 @@ import {
   mockProductComponentMapResponse,
   mockOneProduct,
   mockProductSingleComponentMapResponse,
-  mockEmptyProduct,
   mockProductResponseEmpty,
   mockTeamResponseWithTwoProducts,
   mockAlerts,
@@ -26,6 +25,7 @@ import {
   mockProductResponseWithComponentsAndAlerts,
   mockAlertsForProductWithComponentsAndAlerts,
   mockTeamAlertSummaryForProductWithComponentsAndAlerts,
+  mockEmptyProducts,
 } from './teamsSummaryCountService.test-helpers'
 
 jest.mock('../../logger')
@@ -140,7 +140,7 @@ describe('TeamsSummaryCountService.getComponentsForProducts', () => {
 
   it('should handle empty components array', async () => {
     strapiApiClient.getProduct.mockResolvedValue(mockProductResponseEmpty)
-    const result = await service.getComponentsForProducts(mockEmptyProduct)
+    const result = await service.getComponentsForProducts(mockEmptyProducts)
     expect(result).toEqual({
       'Empty Product': [],
     })
