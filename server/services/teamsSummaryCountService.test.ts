@@ -26,6 +26,8 @@ import {
   mockAlertsForProductWithComponentsAndAlerts,
   mockTeamAlertSummaryForProductWithComponentsAndAlerts,
   mockEmptyProducts,
+  mockActiveAndInactiveAlerts,
+  mockAlertsCount,
 } from './teamsSummaryCountService.test-helpers'
 
 jest.mock('../../logger')
@@ -209,18 +211,7 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
 
   it('should count active alerts for matching components', async () => {
     const componentNames = ['component-1', 'component-2', 'component-3']
-
-    const mockAlertsCount = [
-      { status: { state: 'active' }, labels: { component: 'component-1' } },
-      { status: { state: 'active' }, labels: { component: 'component-1' } },
-      { status: { state: 'active' }, labels: { application: 'component-2' } },
-      { status: { state: 'inactive' }, labels: { component: 'component-1' } },
-      { status: { state: 'active' }, labels: { component: 'other-component' } },
-      { status: { state: 'active' }, labels: { component: 'component-3' } },
-    ]
-
     mockAlertsService.getAlerts.mockResolvedValue(mockAlertsCount)
-
     const result = await service.getFiringAlertCountsForComponents(componentNames)
 
     expect(result).toEqual({
@@ -232,14 +223,7 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
 
   it('should handle component names with no active alerts', async () => {
     const componentNames = ['no-alerts-component', 'component-with-alert']
-
-    const mockActiveAndInactiveAlerts = [
-      { status: { state: 'active' }, labels: { component: 'component-with-alert' } },
-      { status: { state: 'inactive' }, labels: { component: 'no-alerts-component' } },
-    ]
-
     mockAlertsService.getAlerts.mockResolvedValue(mockActiveAndInactiveAlerts)
-
     const result = await service.getFiringAlertCountsForComponents(componentNames)
 
     expect(result).toEqual({
@@ -264,7 +248,6 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
 
   it('should handle alerts with missing labels or status', async () => {
     const componentNames = ['component-1', 'component-2']
-
     const mockAlertsWithMissingLabelsOrStatus = [
       { status: { state: 'active' }, labels: { component: 'component-1' } },
       { status: {}, labels: { component: 'component-1' } },
@@ -272,9 +255,7 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
       { labels: { component: 'component-2' } },
       {},
     ]
-
     mockAlertsService.getAlerts.mockResolvedValue(mockAlertsWithMissingLabelsOrStatus)
-
     const result = await service.getFiringAlertCountsForComponents(componentNames)
 
     expect(result).toEqual({
@@ -285,9 +266,7 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
 
   it('should handle empty alerts array', async () => {
     const componentNames = ['component-1', 'component-2']
-
     mockAlertsService.getAlerts.mockResolvedValue([])
-
     const result = await service.getFiringAlertCountsForComponents(componentNames)
 
     expect(result).toEqual({
@@ -298,9 +277,7 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
 
   it('should handle errors from alerts service', async () => {
     const componentNames = ['component-1', 'component-2']
-
     mockAlertsService.getAlerts.mockRejectedValue(new Error('Failed to fetch alerts'))
-
     const result = await service.getFiringAlertCountsForComponents(componentNames)
 
     expect(result).toEqual({})

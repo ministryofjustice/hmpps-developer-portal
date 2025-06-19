@@ -227,3 +227,17 @@ export const mockTeamAlertSummaryForProductWithComponentsAndAlerts = {
   },
   total: 5,
 }
+
+export const mockAlertsCount = [
+  { status: { state: 'active' }, labels: { component: 'component-1' } },
+  { status: { state: 'active' }, labels: { component: 'component-1' } },
+  { status: { state: 'active' }, labels: { application: 'component-2' } },
+  { status: { state: 'inactive' }, labels: { component: 'component-1' } },
+  { status: { state: 'active' }, labels: { component: 'other-component' } },
+  { status: { state: 'active' }, labels: { component: 'component-3' } },
+]
+
+export const mockActiveAndInactiveAlerts = [
+  { status: { state: 'active' }, labels: { component: 'component-with-alert' } },
+  { status: { state: 'inactive' }, labels: { component: 'no-alerts-component' } },
+]
