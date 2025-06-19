@@ -208,20 +208,26 @@ jQuery(function () {
       name: 'cve_ids',
       createdCell: function (td, _cellData, rowData) {
         const cveDetails = rowData.cve_ids
-          .split(', ')
-          .map(cve => `<li>${cve}</li>`)
-          .join('')
+          ? rowData.cve_ids
+              .split(', ')
+              .map(cve => `<li>${cve}</li>`)
+              .join('')
+          : 'None'
 
-        const detailsContent = `<details class="govuk-details">
-        <summary class="govuk-details__summary">
-          <span class="govuk-details__summary-text">CVE IDs</span>
-        </summary>
-        <div class="govuk-details__text">
-          <ul>${cveDetails}</ul>
-        </div>
-      </details>`
-
-        $(td).html(detailsContent)
+        if (cveDetails === 'None') {
+          $(td).html(cveDetails)
+        } else {
+          const detailsContent = `
+            <details class="govuk-details">
+              <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">CVE IDs</span>
+              </summary>
+              <div class="govuk-details__text">
+                <ul>${cveDetails}</ul>
+              </div>
+            </details>`
+          $(td).html(detailsContent)
+        }
       },
     },
   ]
