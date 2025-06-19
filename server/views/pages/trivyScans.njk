@@ -4,6 +4,7 @@
 
 {% set pageTitle = applicationName + " - Trivy Scan Results" %}
 {% set mainClasses = "app-container govuk-body" %}
+{% set containerClasses = "wide-screen" %}
 
 {% block content %}
 
@@ -71,13 +72,13 @@
             {
               id: "showAvailable",
               value: "Available",
-              text: "Fix Available (FA) ",
+              text: "Fix Available (F) ",
               checked: true
             },
             {
               id: "showUnavailable",
               value: "Unavailable",
-              text: "Fix Unavailable (FUA)",
+              text: "Fix Unavailable (N)",
               checked: true
             },
             {

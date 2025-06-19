@@ -194,7 +194,6 @@ jQuery(function () {
     {
       data: 'total_secret_issues',
       name: 'total_secret_issues',
-      visible: false,
       createdCell: function (td, _cellData, rowData) {
         const totalSecretIssues = rowData?.total_secret_issues || 0
         $(td).html(totalSecretIssues)
@@ -203,7 +202,6 @@ jQuery(function () {
     {
       data: 'cve_ids',
       name: 'cve_ids',
-      visible: false,
       createdCell: function (td, _cellData, rowData) {
         const cveDetails = rowData.cve_ids
           .split(', ')

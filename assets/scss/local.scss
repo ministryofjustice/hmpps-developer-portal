@@ -117,7 +117,6 @@
 
 #trivyScansTable {
   width: 100%;
-  table-layout: fixed; // Ensures consistent column widths
   overflow-x: auto; // Enables horizontal scrolling if the table overflows
 
   th, td {
@@ -128,20 +127,23 @@
     white-space: nowrap;
 
     &.name {
-      width: 15%; // Fixed width for the name column
-      min-width: 80px; // Prevents reduction below this width
+      width: 80px;
+      min-width: 80px;
+      max-width: 100px;
     }
     &.environments {
-      width: 10px; // Adjust width proportionally
+      width: 20px;
     }
     &.result {
-      width: 3% !important; // Adjust width proportionally
+      width: 10px !important;
     }
     &.count {
-      width: 2% !important; // Adjust width for 10 columns
+      width: 10px !important;
     }
     &.cve {
-      width: auto; // Adjust width proportionally
+      width: 120px;
+      min-width: 100px;
+      max-width: 140px;
     }
   }
 }
