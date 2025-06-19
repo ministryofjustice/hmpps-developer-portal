@@ -110,7 +110,40 @@
       width: 20%;
     }
     &.terraform {
-      width: 5%;
+      width: 3%;
+    }
+  }
+}
+
+#trivyScansTable {
+  width: 100%;
+  overflow-x: auto; // Enables horizontal scrolling if the table overflows
+
+  th, td {
+    padding: govuk-spacing(1);
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.name {
+      width: 80px;
+      min-width: 80px;
+      max-width: 100px;
+    }
+    &.environments {
+      width: 20px;
+    }
+    &.result {
+      width: 10px !important;
+    }
+    &.count {
+      width: 10px !important;
+    }
+    &.cve {
+      width: 120px;
+      min-width: 100px;
+      max-width: 140px;
     }
   }
 }
@@ -316,7 +349,6 @@
 #showHideBlock a {
   margin: 0 10px;
 }
-
 
 .app-\!-width-one-fifth{ 
   width: 20% !important

@@ -109,7 +109,7 @@ describe('strapiApiClient', () => {
         const allComponents = {
           data: [{ attributes: { name: 'Component' } }],
         } as ListResponse<Component>
-        fakeStrapiApi.get('/components?populate=product.team%2Cenvironments').reply(200, allComponents)
+        fakeStrapiApi.get('/components?populate=product.team%2Cenvs').reply(200, allComponents)
         const output = await strapiApiClient.getComponents()
         expect(output).toEqual(allComponents)
       })
@@ -121,7 +121,7 @@ describe('strapiApiClient', () => {
           data: [{ id: 1, attributes: { name: 'component' } }],
         } as SingleResponse<Component>
         fakeStrapiApi
-          .get('/components?filters[name][$eq]=component&populate=product.team%2Cenvironments')
+          .get('/components?filters[name][$eq]=component&populate=product.team%2Cenvs.trivy_scan')
           .reply(200, component)
         const output = await strapiApiClient.getComponent({ componentName: 'component' })
         expect(output).toEqual(component)

@@ -65,7 +65,16 @@
           <td>{{ row.severity }}</td>
           <td><a href="{{ row.PrimaryURL }}">{{ row.vulnerabilityID }}</a></td>
           <td>{{ row.pkgName }}</td>
-          <td>{{ row.description }}</td>
+          <td>
+            <details class="govuk-details">
+              <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">Description</span>
+              </summary>
+              <div class="govuk-details__text">
+                <p>{{ row.description }}</p>
+              </div>
+            </details>
+          </td>
           <td>{{ row.installedVersion }}</td>
           <td>{{ row.fixedVersion }}</td>
         </tr>
@@ -102,12 +111,3 @@
 
 {% endblock %}
 
-
-{% block bodyEnd %}
-  <script type="module" src="/assets/frontendInit.js"></script>
-  <script src="https://www.gstatic.com/charts/loader.js"></script>
-  <script src="/assets/js/dayjs/dayjs.min.js"></script>
-  <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
-  <script src="/assets/js/common.js"></script>
-  <script src="/assets/js/trivyScan.js"></script>
-{% endblock %}

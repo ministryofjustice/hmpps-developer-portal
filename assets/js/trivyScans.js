@@ -3,9 +3,29 @@ jQuery(function () {
     const transformed = []
     data.forEach(item => {
       const summary = item.scan_summary?.summary || {}
+      const scanResult = item.scan_summary?.scan_result || {}
+      const cveIDs = []
+
+      // Extract CVE VulnerabilityID from os-pkgs and lang-pkgs
+      scanResult['os-pkgs']?.forEach(pkg => {
+        if (pkg.VulnerabilityID && pkg.PrimaryURL) {
+          cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
+        } else if (pkg.VulnerabilityID) {
+          cveIDs.push(pkg.VulnerabilityID)
+        }
+      })
+
+      scanResult['lang-pkgs']?.forEach(pkg => {
+        if (pkg.VulnerabilityID && pkg.PrimaryURL) {
+          cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
+        } else if (pkg.VulnerabilityID) {
+          cveIDs.push(pkg.VulnerabilityID)
+        }
+      })
+
       item.environments.forEach(env => {
         transformed.push({
-          environments: env,
+          environment: env,
           name: item.name,
           build_image_tag: item.build_image_tag,
           trivy_scan_timestamp: item.trivy_scan_timestamp,
@@ -30,9 +50,10 @@ jQuery(function () {
             (summary?.['secret']?.MEDIUM ?? 0) +
             (summary?.['secret']?.LOW ?? 0),
           result_link: `
-              <a href="/trivy-scans/${item.name}">
+              <a href="/trivy-scans/${item.name}/environments/${env}">
                 <img src="/assets/images/trivy.png" alt="Trivy Logo" style="width: 32px; height: 32px; margin-right: 5px;" />
               </a>`,
+          cve_ids: cveIDs.join(', '),
         })
       })
     })
@@ -51,16 +72,29 @@ jQuery(function () {
       },
     },
     {
-      name: 'environments',
-      data: 'environments',
+      name: 'environment',
+      data: 'environment',
       createdCell: function (td, _cellData, rowData) {
-        const environments = rowData.environments
-        $(td).html(environments)
+        const envlink = `
+          <a class="govuk-link--no-visited-state" 
+             href="/components/${rowData.name}/environment/${rowData.environment}" 
+             data-test="environment">
+             ${rowData.environment}
+          </a>&nbsp;`
+        $(td).html(envlink)
+      },
+    },
+    {
+      data: 'result_link',
+      name: 'result_link',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(rowData.result_link)
       },
     },
     {
       data: 'build_image_tag',
       name: 'build_image_tag',
+      visible: false,
       createdCell: function (td, _cellData, rowData) {
         const buildImageTag = rowData?.build_image_tag || 'N/A'
         $(td).html(buildImageTag)
@@ -69,6 +103,7 @@ jQuery(function () {
     {
       data: 'trivy_scan_timestamp',
       name: 'trivy_scan_timestamp',
+      visible: false,
       createdCell: function (td, _cellData, rowData) {
         const scan_timestamp = rowData?.trivy_scan_timestamp || 'N/A'
         $(td).html(formatDateToDDMONYYYYHH24MMSS(scan_timestamp))
@@ -163,18 +198,30 @@ jQuery(function () {
     {
       data: 'total_secret_issues',
       name: 'total_secret_issues',
-      visible: false,
       createdCell: function (td, _cellData, rowData) {
         const totalSecretIssues = rowData?.total_secret_issues || 0
         $(td).html(totalSecretIssues)
       },
     },
     {
-      data: 'result_link',
-      name: 'result_link',
+      data: 'cve_ids',
+      name: 'cve_ids',
       createdCell: function (td, _cellData, rowData) {
-        const componentName = cleanColumnOutput(rowData.name || 'N/A')
-        $(td).html(rowData.result_link)
+        const cveDetails = rowData.cve_ids
+          .split(', ')
+          .map(cve => `<li>${cve}</li>`)
+          .join('')
+
+        const detailsContent = `<details class="govuk-details">
+        <summary class="govuk-details__summary">
+          <span class="govuk-details__summary-text">CVE IDs</span>
+        </summary>
+        <div class="govuk-details__text">
+          <ul>${cveDetails}</ul>
+        </div>
+      </details>`
+
+        $(td).html(detailsContent)
       },
     },
   ]
@@ -237,9 +284,9 @@ jQuery(function () {
     const isUnavailableChecked = $('#showUnavailable').is(':checked')
     const isNoVulnerabilitiesChecked = $('#showNoVulnerabilities').is(':checked')
     // const availableColumns = ['total_fixed_critical', 'total_fixed_high', 'total_fixed_medium', 'total_fixed_low', 'total_fixed_unknown']
-    const availableColumns = [4, 5, 6, 7, 8]
+    const availableColumns = [5, 6, 7, 8, 9]
     // const unavailableColumns = ['total_unfixed_critical', 'total_unfixed_high', 'total_unfixed_medium', 'total_unfixed_low', 'total_unfixed_unknown']
-    const unavailableColumns = [9, 10, 11, 12, 13]
+    const unavailableColumns = [10, 11, 12, 13, 14]
     const severityCheckboxes = [
       '#showSeverityCritical',
       '#showSeverityHigh',
@@ -248,11 +295,11 @@ jQuery(function () {
       '#showSeverityUnknown',
     ]
     const severityColumns = {
-      critical: [4, 9], // 'total_fixed_critical', 'total_unfixed_critical'],
-      high: [5, 10], // 'total_fixed_high', 'total_unfixed_high'],
-      medium: [6, 11], // 'total_fixed_medium', 'total_unfixed_medium'],
-      low: [7, 12], // 'total_fixed_low', 'total_unfixed_low'],
-      unknown: [8, 13], // 'total_fixed_unknown', 'total_unfixed_unknown'],
+      critical: [5, 10], // 'total_fixed_critical', 'total_unfixed_critical'],
+      high: [6, 11], // 'total_fixed_high', 'total_unfixed_high'],
+      medium: [7, 12], // 'total_fixed_medium', 'total_unfixed_medium'],
+      low: [8, 13], // 'total_fixed_low', 'total_unfixed_low'],
+      unknown: [9, 14], // 'total_fixed_unknown', 'total_unfixed_unknown'],
     }
 
     const table = $('#trivyScansTable').DataTable()
