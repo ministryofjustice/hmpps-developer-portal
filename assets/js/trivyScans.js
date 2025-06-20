@@ -291,9 +291,7 @@ jQuery(function () {
     const isAvailableChecked = $('#showAvailable').is(':checked')
     const isUnavailableChecked = $('#showUnavailable').is(':checked')
     const isNoVulnerabilitiesChecked = $('#showNoVulnerabilities').is(':checked')
-    // const availableColumns = ['total_fixed_critical', 'total_fixed_high', 'total_fixed_medium', 'total_fixed_low', 'total_fixed_unknown']
     const availableColumns = [5, 6, 7, 8, 9]
-    // const unavailableColumns = ['total_unfixed_critical', 'total_unfixed_high', 'total_unfixed_medium', 'total_unfixed_low', 'total_unfixed_unknown']
     const unavailableColumns = [10, 11, 12, 13, 14]
     const severityCheckboxes = [
       '#showSeverityCritical',
