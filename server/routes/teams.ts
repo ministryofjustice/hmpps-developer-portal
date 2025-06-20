@@ -17,7 +17,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   get('/data', async (req, res) => {
-    const teams = await serviceCatalogueService.getTeams()
+    const teams = await serviceCatalogueService.getTeams({ withComponents: false })
 
     res.send(teams)
   })
