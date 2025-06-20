@@ -65,21 +65,22 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const environmentName = getEnvironmentName(req)
 
     const component = await serviceCatalogueService.getComponent({ componentName })
-    const environment = component.envs?.data?.filter(envs => envs.attributes?.name === environmentName)
+    const filteredEnvironment = component.envs?.data?.filter(envs => envs.attributes?.name === environmentName)
+    const envAttributes = filteredEnvironment.length === 0 ? {} : filteredEnvironment[0].attributes
     const activeAgencies =
-      environment.length === 0 ? '' : formatActiveAgencies(environment[0].attributes.active_agencies as Array<string>)
+      filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
     const allowList = new Map()
 
-    if (environment[0].attributes.ip_allow_list && environment[0].attributes?.ip_allow_list_enabled) {
-      const ipAllowListFiles = Object.keys(environment[0].attributes.ip_allow_list)
+    if (envAttributes.ip_allow_list && envAttributes?.ip_allow_list_enabled) {
+      const ipAllowListFiles = Object.keys(envAttributes.ip_allow_list)
 
       ipAllowListFiles.forEach(fileName => {
         // @ts-expect-error Suppress any declaration
-        Object.keys(environment[0].attributes.ip_allow_list[fileName]).forEach(item => {
+        Object.keys(envAttributes.ip_allow_list[fileName]).forEach(item => {
           if (item === 'generic-service') {
             allowList.set('groups', [])
             // @ts-expect-error Suppress any declaration
-            const genericService = environment[0].attributes.ip_allow_list[fileName]['generic-service']
+            const genericService = envAttributes.ip_allow_list[fileName]['generic-service']
             Object.keys(genericService).forEach(ipName => {
               if (ipName !== 'groups') {
                 allowList.set(ipName, genericService[ipName])
@@ -89,16 +90,16 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
             })
           } else {
             // @ts-expect-error Suppress any declaration
-            allowList.set(item, environment[0].ip_allow_list[fileName][item])
+            allowList.set(item, envAttributes.ip_allow_list[fileName][item])
           }
         })
       })
     }
-
+    console.log(envAttributes)
     const displayComponent = {
       name: componentName,
       api: component.api,
-      environment: environment[0],
+      environment: filteredEnvironment,
       activeAgencies,
       allowList,
     }
