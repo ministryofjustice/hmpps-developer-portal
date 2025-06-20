@@ -38,6 +38,14 @@ export default class RedisService {
     logger.error(`${message}: ${error.message}`, error)
   }
 
+  async handleErrorPool(error: Error, message: string): Promise<void> {
+    if (error instanceof ClientClosedError) {
+      logger.error(`${error.message} ...RECONNECTING`)
+      await this.redisClient.connect
+    }
+    logger.error(`${message}: ${error.message}`, error)
+  }
+
   async readStream(
     streamDetails: {
       key: string
@@ -49,7 +57,7 @@ export default class RedisService {
 
       return response ? JSON.stringify(response) : '[]'
     } catch (error) {
-      await this.handleError(error, 'Failed to xRead from Redis Stream')
+      await this.handleErrorPool(error, 'Failed to xRead from Redis Stream')
       throw error
     }
   }
@@ -62,7 +70,7 @@ export default class RedisService {
       )
       return Object.fromEntries(entries)
     } catch (error) {
-      await this.handleError(error, 'Failed to read latest')
+      await this.handleErrorPool(error, 'Failed to read latest')
       throw error
     }
   }
@@ -72,7 +80,7 @@ export default class RedisService {
       const result = (await this.redisClientPool.json.get('dependency:info')) as DependencyInfo
       return new Dependencies(result)
     } catch (error) {
-      await this.handleError(error, 'Failed to get dependency info')
+      await this.handleErrorPool(error, 'Failed to get dependency info')
       throw error
     }
   }
