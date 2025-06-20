@@ -5,7 +5,7 @@ import { RedisClient } from '../data/redisClient'
 import { DependencyInfo } from '../data/dependencyInfoTypes'
 import Dependencies from './Dependencies'
 
-export type RedisStreamMessage = Awaited<ReturnType<RedisClient['xRead']>>[number]['messages'][number]
+export type RedisStreamMessage = Awaited<ReturnType<RedisClient['xRead']>>
 export type AsyncRedisStreamGenerator = AsyncGenerator<RedisStreamMessage, void, unknown>
 
 export type VersionDetails = {
