@@ -99,21 +99,20 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const filteredEnvironment = component.envs?.data?.filter(
       environment => environment.attributes.name === environmentName,
     )
+    const envAttributes = filteredEnvironment.length === 0 ? {} : filteredEnvironment[0].attributes
     const activeAgencies =
-      filteredEnvironment.length === 0
-        ? ''
-        : formatActiveAgencies(filteredEnvironment[0].attributes.active_agencies as Array<string>)
+      filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
     const allowList = new Map()
 
-    if (filteredEnvironment[0].attributes.ip_allow_list && filteredEnvironment[0].attributes.ip_allow_list_enabled) {
-      const ipAllowListFiles = Object.keys(filteredEnvironment[0].attributes.ip_allow_list)
+    if (envAttributes.ip_allow_list && envAttributes.ip_allow_list_enabled) {
+      const ipAllowListFiles = Object.keys(envAttributes.ip_allow_list)
       allowList.set('groups', [])
       ipAllowListFiles.forEach(fileName => {
         // @ts-expect-error Suppress any declaration
-        Object.keys(filteredEnvironment[0].attributes.ip_allow_list[fileName]).forEach(item => {
+        Object.keys(envAttributes.ip_allow_list[fileName]).forEach(item => {
           if (item === 'generic-service') {
             // @ts-expect-error Suppress any declaration
-            const genericService = filteredEnvironment[0].attributes.ip_allow_list[fileName]['generic-service']
+            const genericService = envAttributes.ip_allow_list[fileName]['generic-service']
             Object.keys(genericService).forEach(ipName => {
               if (ipName !== 'groups') {
                 allowList.set(ipName, genericService[ipName])
@@ -123,7 +122,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
             })
           } else {
             // @ts-expect-error Suppress any declaration
-            allowList.set(item, filteredEnvironment[0].attributes.ip_allow_list[fileName][item])
+            allowList.set(item, envAttributes.ip_allow_list[fileName][item])
           }
         })
       })
@@ -133,7 +132,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       name: componentName,
       product: component.product?.data,
       api: component.api,
-      environment: filteredEnvironment[0].attributes,
+      environment: envAttributes,
       activeAgencies,
       allowList,
     }
