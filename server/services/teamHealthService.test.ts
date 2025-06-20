@@ -8,7 +8,7 @@ jest.mock('./redisService')
 jest.mock('./serviceCatalogueService')
 
 describe('teamHealthService', () => {
-  const redisService = new RedisService(null) as jest.Mocked<RedisService>
+  const redisService = new RedisService(null, null) as jest.Mocked<RedisService>
   const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
   const teamHealthService = new TeamHealthService(redisService, serviceCatalogueService)
 
