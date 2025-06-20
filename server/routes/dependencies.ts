@@ -93,22 +93,26 @@ export const getDropDownOptions = async (
   const dependencyTypesSet = new Set<string>()
   const dependencyNamesSet = new Set<string>()
 
+  const [currentType, currentName] = currentDependency.split('::')
+
   dependencies.forEach(dependency => {
     const [type, name] = dependency.split('::')
     if (type) dependencyTypesSet.add(type)
-    if (name) dependencyNamesSet.add(name)
+    if (type === currentType && name) {
+      dependencyNamesSet.add(name)
+    }
   })
 
   const dependencyTypes: SelectList[] = Array.from(dependencyTypesSet).map(type => ({
     value: type,
     text: type,
-    selected: currentDependency.startsWith(type),
+    selected: type === currentType,
   }))
 
   const dependencyNames: SelectList[] = Array.from(dependencyNamesSet).map(name => ({
     value: name,
     text: name,
-    selected: currentDependency.endsWith(name),
+    selected: name === currentName,
   }))
 
   dependencyTypes.unshift({ value: '', text: 'Please select' })

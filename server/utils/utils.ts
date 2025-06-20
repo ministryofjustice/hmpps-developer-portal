@@ -198,7 +198,9 @@ export async function getDependencyNames(serviceCatalogueService: ServiceCatalog
     }
   })
 
-  return Array.from(namesSet).map(name => ({ value: name, text: name }))
+  return Array.from(namesSet)
+    .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+    .map(name => ({ value: name, text: name }))
 }
 
 export const isValidDropDown = (req: Request, paramName: string): boolean => {
