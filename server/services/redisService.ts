@@ -1,4 +1,4 @@
-import { ClientClosedError, commandOptions } from 'redis'
+import { ClientClosedError, RedisClientPoolType, RedisFunctions, RedisModules, RedisScripts, RespVersions } from 'redis'
 
 import logger from '../../logger'
 import { RedisClient } from '../data/redisClient'
@@ -19,7 +19,16 @@ export type VersionDetails = {
 }
 
 export default class RedisService {
-  constructor(private readonly redisClient: RedisClient) {}
+  constructor(
+    private readonly redisClient: RedisClient,
+    private readonly redisClientPool: RedisClientPoolType<
+      RedisModules,
+      RedisFunctions,
+      RedisScripts,
+      RespVersions,
+      object
+    >,
+  ) {}
 
   async handleError(error: Error, message: string): Promise<void> {
     if (error instanceof ClientClosedError) {
@@ -36,10 +45,7 @@ export default class RedisService {
     }[],
   ): Promise<string> {
     try {
-      const response = await this.redisClient.xRead(
-        commandOptions({ isolated: true }), // uses new connection from pool not to block other redis calls
-        streamDetails,
-      )
+      const response = await this.redisClientPool.xRead(streamDetails)
 
       return response ? JSON.stringify(response) : '[]'
     } catch (error) {
@@ -50,7 +56,7 @@ export default class RedisService {
 
   async readLatest(redisKey: string): Promise<Record<string, Record<string, string>>> {
     try {
-      const result = await this.redisClient.json.get(commandOptions({ isolated: true }), redisKey)
+      const result = await this.redisClientPool.json.get(redisKey)
       const entries = Object.entries(result).map(
         ([key, value]) => [key.substring(key.indexOf(':') + 1), value] as [string, Record<string, string>],
       )
@@ -63,10 +69,7 @@ export default class RedisService {
 
   async getAllDependencies(): Promise<Dependencies> {
     try {
-      const result = (await this.redisClient.json.get(
-        commandOptions({ isolated: true }),
-        'dependency:info',
-      )) as DependencyInfo
+      const result = (await this.redisClientPool.json.get('dependency:info')) as DependencyInfo
       return new Dependencies(result)
     } catch (error) {
       await this.handleError(error, 'Failed to get dependency info')
