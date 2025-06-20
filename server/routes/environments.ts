@@ -95,7 +95,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
         })
       })
     }
-    console.log(envAttributes)
+
     const displayComponent = {
       name: componentName,
       api: component.api,
