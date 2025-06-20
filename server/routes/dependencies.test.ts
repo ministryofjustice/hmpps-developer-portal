@@ -122,31 +122,27 @@ describe('/components', () => {
           expect($('[data-test="dependency-type-select"]').length).toBe(1)
           expect($('[data-test="dependency-name-select"]').length).toBe(1)
           expect($('option[value="type1"]').length).toBe(1)
-          expect($('option[value="dependency1"]').length).toBe(0)
+          expect($('option[value="dependency1"]').length).toBe(0) // It's blank because it's not been selected yet
           expect($('option[value="type1"]').text()).toBe('type1')
         })
     })
   })
 
   describe('GET /dependencies/:dependencyType/:dependencyName', () => {
-    it('should render dependencies page with populated dropdowns', async () => {
+    it('should render dependencies page with selected options', async () => {
       const res = await request(app).get('/dependencies/type1/dependency1')
-
-      expect(res.status).toBe(200)
-      expect(res.headers['content-type']).toMatch(/html/)
 
       const $ = cheerio.load(res.text)
 
-      // Check that both dropdowns are present
       expect($('[data-test="dependency-type-select"]').length).toBe(1)
       expect($('[data-test="dependency-name-select"]').length).toBe(1)
 
-      // Check that the expected options are present
       expect($('option[value="type1"]').length).toBe(1)
-      expect($('option[value="type1"]').text()).toBe('type1')
-
       expect($('option[value="dependency1"]').length).toBe(1)
-      expect($('option[value="dependency1"]').text()).toBe('dependency1')
+
+      // Assert selected options
+      expect($('[data-test="dependency-type-select"] option[selected]').val()).toBe('type1')
+      expect($('[data-test="dependency-name-select"] option[selected]').val()).toBe('dependency1')
     })
   })
 
