@@ -195,21 +195,13 @@
         <tr>
           <th>Environments</th>
           <td>
-            {% if component.environments | length %}
-              {% for environment in component.environments %}
-                <a class="govuk-link--no-visited-state" href="/components/{{ component.name }}/environment/{{ environment.name }}" data-test="environment">{{ environment.name }}</a>&nbsp;
+            {% if component.envs | length %}
+              {% for environment in component.envs.data %}
+                <a class="govuk-link--no-visited-state" href="/components/{{ component.name }}/environment/{{ environment.attributes.name }}" data-test="environment">{{ environment.attributes.name }}</a>&nbsp;
               {% endfor %}
             {% else %}
             <p data-test="no-environments">None</p>
             {% endif %}
-          </td>
-        </tr>
-        <tr>
-          <th>Trivy Scan Results</th>
-          <td>
-            <a class="govuk-link--no-visited-state" href="/trivy-scans/{{component.name}}">
-              <img src="/assets/images/trivy.png" alt="Trivy Logo" class="trivy-icon"/>
-            </a>
           </td>
         </tr>
       </tbody>
