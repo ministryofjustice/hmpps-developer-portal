@@ -75,12 +75,14 @@ jQuery(function () {
       name: 'environment',
       data: 'environment',
       createdCell: function (td, _cellData, rowData) {
-        const envlink = `
-          <a class="govuk-link--no-visited-state" 
-             href="/components/${rowData.name}/environment/${rowData.environment}" 
-             data-test="environment">
-             ${rowData.environment}
-          </a>&nbsp;`
+        const envlink =
+          rowData.environment !== 'unknown'
+            ? `<a class="govuk-link--no-visited-state" 
+               href="/components/${rowData.name}/environment/${rowData.environment}" 
+               data-test="environment">
+               ${rowData.environment}
+            </a>&nbsp;`
+            : 'unknown'
         $(td).html(envlink)
       },
     },
