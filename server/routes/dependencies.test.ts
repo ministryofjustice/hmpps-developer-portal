@@ -118,7 +118,6 @@ describe('/components', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          console.log(res.text)
           expect($('[data-test="dependency-type-select"]').length).toBe(1)
           expect($('[data-test="dependency-name-select"]').length).toBe(1)
           expect($('option[value="type1"]').length).toBe(1)
