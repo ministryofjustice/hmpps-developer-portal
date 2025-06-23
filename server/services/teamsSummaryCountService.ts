@@ -1,6 +1,6 @@
 import logger from '../../logger'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Component, DataItem, Product, SingleResponse } from '../data/strapiApiTypes'
+import { Component, DataItem, Product, SingleResponse, VeracodeResultsSummary } from '../data/strapiApiTypes'
 import AlertsService from './alertsService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { formatMonitorName } from '../utils/utils'
@@ -216,6 +216,64 @@ export default class TeamsSummaryCountService {
     } catch (err) {
       logger.error('Error in getTeamTrivyVulnerabilityCounts:', err)
       return { critical: 0, high: 0 }
+    }
+  }
+
+  /**
+   * Helper: Get Veracode VERY_HIGH, HIGH, MEDIUM, LOW vuln counts for a team's products
+   */
+  async getTeamVeracodeVulnerabilityCounts(
+    products: StrapiProduct[],
+    serviceCatalogueService: ServiceCatalogueService,
+  ): Promise<{ veryHigh: number; high: number; medium: number; low: number }> {
+    if (!Array.isArray(products) || products.length === 0) {
+      return { veryHigh: 0, high: 0, medium: 0, low: 0 }
+    }
+    try {
+      const allComponents = await serviceCatalogueService.getComponents()
+      const productIds = new Set(products.map(p => p.id))
+      const validComponents = allComponents.filter(component => {
+        const productId = component?.attributes?.product?.data?.id
+        return productId && productIds.has(productId)
+      })
+
+      const counts = validComponents.reduce(
+        (accumulator, component) => {
+          const summary = component.attributes?.veracode_results_summary as VeracodeResultsSummary | undefined
+          if (!summary?.severity) return accumulator
+
+          summary.severity.forEach(severity => {
+            severity.category.forEach(category => {
+              switch (category.severity) {
+                case 'VERY_HIGH':
+                  accumulator.veryHigh += category.count
+                  break
+                case 'HIGH':
+                  accumulator.high += category.count
+                  break
+                case 'MEDIUM':
+                  accumulator.medium += category.count
+                  break
+                case 'LOW':
+                  accumulator.low += category.count
+                  break
+                default:
+                  logger.warn(`[getTeamVeracodeVulnerabilityCounts] Unexpected severity: ${category.severity}`)
+                  break
+              }
+            })
+          })
+          return accumulator
+        },
+        { veryHigh: 0, high: 0, medium: 0, low: 0 },
+      )
+      logger.info(
+        `[Veracode] VERY_HIGH: ${counts.veryHigh}, HIGH: ${counts.high}, MEDIUM: ${counts.medium}, LOW: ${counts.low}`,
+      )
+      return counts
+    } catch (err) {
+      logger.error('Error in getTeamVeracodeVulnerabilityCounts:', err)
+      return { veryHigh: 0, high: 0, medium: 0, low: 0 }
     }
   }
 }
