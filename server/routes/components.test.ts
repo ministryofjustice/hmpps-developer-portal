@@ -11,7 +11,7 @@ jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/redisService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
-const redisService = new RedisService(null, null) as jest.Mocked<RedisService>
+const redisService = new RedisService(null) as jest.Mocked<RedisService>
 
 let app: Express
 const testComponents = [{ id: 1, attributes: { name: 'testComponent' } }] as DataItem<Component>[]

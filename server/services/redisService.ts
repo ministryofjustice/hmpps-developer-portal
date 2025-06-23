@@ -20,7 +20,6 @@ export type VersionDetails = {
 
 export default class RedisService {
   constructor(
-    private readonly redisClient: RedisClient,
     private readonly redisClientPool: RedisClientPoolType<
       RedisModules,
       RedisFunctions,
@@ -30,18 +29,10 @@ export default class RedisService {
     >,
   ) {}
 
-  async handleError(error: Error, message: string): Promise<void> {
-    if (error instanceof ClientClosedError) {
-      logger.error(`${error.message} ...RECONNECTING`)
-      await this.redisClient.connect
-    }
-    logger.error(`${message}: ${error.message}`, error)
-  }
-
   async handleErrorPool(error: Error, message: string): Promise<void> {
     if (error instanceof ClientClosedError) {
       logger.error(`${error.message} ...RECONNECTING`)
-      await this.redisClient.connect
+      await this.redisClientPool.connect
     }
     logger.error(`${message}: ${error.message}`, error)
   }
