@@ -241,3 +241,37 @@ export const mockActiveAndInactiveAlerts = [
   { status: { state: 'active' }, labels: { component: 'component-with-alert' } },
   { status: { state: 'inactive' }, labels: { component: 'no-alerts-component' } },
 ]
+
+export const mockComponents = [
+  { attributes: { name: 'ComponentA', product: { data: { id: 1 } } } },
+  { attributes: { name: 'ComponentB', product: { data: { id: 2 } } } },
+]
+export const mockTrivyScans = [
+  {
+    name: 'ComponentA',
+    scan_summary: {
+      scan_result: {
+        'os-pkgs': [{ Severity: 'CRITICAL' }, { Severity: 'HIGH' }, { Severity: 'LOW' }],
+        'lang-pkgs': [{ Severity: 'HIGH' }, { Severity: 'CRITICAL' }],
+      },
+    },
+  },
+  {
+    name: 'ComponentB',
+    scan_summary: {
+      scan_result: {
+        'os-pkgs': [{ Severity: 'HIGH' }, { Severity: 'HIGH' }],
+        'lang-pkgs': [],
+      },
+    },
+  },
+  {
+    name: 'NonMatchingComponent',
+    scan_summary: {
+      scan_result: {
+        'os-pkgs': [{ Severity: 'CRITICAL' }],
+        'lang-pkgs': [],
+      },
+    },
+  },
+]

@@ -28,7 +28,10 @@ import {
   mockEmptyProducts,
   mockActiveAndInactiveAlerts,
   mockAlertsCount,
+  mockTrivyScans,
+  mockComponents,
 } from './teamsSummaryCountService.test-helpers'
+import ServiceCatalogueService from './serviceCatalogueService'
 
 jest.mock('../../logger')
 jest.mock('../data/strapiApiClient')
@@ -284,6 +287,76 @@ describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
 
     expect(mockLogger.error).toHaveBeenCalledWith(
       expect.stringContaining('[getFiringAlertCountsForComponents] Error:'),
+      expect.any(Error),
+    )
+  })
+})
+
+/**
+ * getTeamTrivyVulnerabilityCounts tests
+ */
+describe('TeamsSummaryCountService.getTeamTrivyVulnerabilityCounts', () => {
+  let service: TeamsSummaryCountService
+  let mockServiceCatalogueService: Partial<ServiceCatalogueService> & {
+    getTrivyScans: jest.Mock
+    getComponents: jest.Mock
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    service = new TeamsSummaryCountService(mockAlertsService, () => mockStrapiClient)
+    mockServiceCatalogueService = {
+      getTrivyScans: jest.fn(),
+      getComponents: jest.fn(),
+    }
+  })
+
+  it('should count CRITICAL and HIGH vulns for matching components', async () => {
+    mockServiceCatalogueService.getTrivyScans!.mockResolvedValue(mockTrivyScans)
+    mockServiceCatalogueService.getComponents!.mockResolvedValue(mockComponents)
+    const result = await service.getTeamTrivyVulnerabilityCounts(
+      mockProducts,
+      mockServiceCatalogueService as unknown as ServiceCatalogueService,
+    )
+    expect(result).toEqual({ critical: 2, high: 4 })
+  })
+
+  it('should return 0,0 if products is empty', async () => {
+    const result = await service.getTeamTrivyVulnerabilityCounts(
+      [],
+      mockServiceCatalogueService as unknown as ServiceCatalogueService,
+    )
+    expect(result).toEqual({ critical: 0, high: 0 })
+  })
+
+  it('should return 0,0 if no matching components', async () => {
+    mockServiceCatalogueService.getTrivyScans!.mockResolvedValue([
+      {
+        name: 'NonMatchingComponent',
+        scan_summary: { scan_result: { 'os-pkgs': [{ Severity: 'CRITICAL' }], 'lang-pkgs': [] } },
+      },
+    ])
+    mockServiceCatalogueService.getComponents!.mockResolvedValue([
+      { attributes: { name: 'ComponentX', product: { data: { id: 99 } } } },
+    ])
+    const products = [{ id: 1, attributes: { name: 'Product 1' } }]
+    const result = await service.getTeamTrivyVulnerabilityCounts(
+      products,
+      mockServiceCatalogueService as unknown as ServiceCatalogueService,
+    )
+    expect(result).toEqual({ critical: 0, high: 0 })
+  })
+
+  it('should log error and return 0,0 on exception', async () => {
+    mockServiceCatalogueService.getTrivyScans!.mockRejectedValue(new Error('fail'))
+    const products = [{ id: 1, attributes: { name: 'Product 1' } }]
+    const result = await service.getTeamTrivyVulnerabilityCounts(
+      products,
+      mockServiceCatalogueService as unknown as ServiceCatalogueService,
+    )
+    expect(result).toEqual({ critical: 0, high: 0 })
+    expect(mockLogger.error).toHaveBeenCalledWith(
+      expect.stringContaining('Error in getTeamTrivyVulnerabilityCounts'),
       expect.any(Error),
     )
   })
