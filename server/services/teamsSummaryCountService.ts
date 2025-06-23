@@ -163,15 +163,13 @@ export default class TeamsSummaryCountService {
     products: StrapiProduct[],
     serviceCatalogueService: ServiceCatalogueService,
   ): Promise<{ critical: number; high: number }> {
-    try {
-      if (!Array.isArray(products) || products.length === 0) {
-        return { critical: 0, high: 0 }
-      }
+    if (!Array.isArray(products) || products.length === 0) {
+      return { critical: 0, high: 0 }
+    }
 
-      const [trivyScans, allComponents] = await Promise.all([
-        serviceCatalogueService.getTrivyScans(),
-        serviceCatalogueService.getComponents(),
-      ])
+    try {
+      const trivyScans = await serviceCatalogueService.getTrivyScans()
+      const allComponents = await serviceCatalogueService.getComponents()
 
       const productIds = new Set(products.map(p => p.id))
       const validComponents = allComponents
