@@ -60,28 +60,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const nameSelect = document.getElementById('dependencyName')
   const updateButton = document.getElementById('selectDependency')
   const spinner = document.getElementById('loadingSpinner')
+  const defaultOption = document.createElement('option')
+  defaultOption.value = ''
+  defaultOption.textContent = 'Please select'
 
   typeSelect.addEventListener('change', async () => {
     const selectedType = typeSelect.value
-
     nameSelect.innerHTML = ''
-    spinner.hidden = false
     updateButton.disabled = true
+    spinner.hidden = false
 
     if (!selectedType) {
-      nameSelect.innerHTML = '<option value="">Please select</option>'
+      nameSelect.appendChild(defaultOption)
       spinner.hidden = true
-      updateButton.disabled = false
+      updateButton.disabled = true
       return
     }
 
     try {
       const response = await fetch(`/dependencies/dependency-names/${encodeURIComponent(selectedType)}`)
       const names = await response.json()
-
-      const defaultOption = document.createElement('option')
-      defaultOption.value = ''
-      defaultOption.textContent = 'Please select'
       nameSelect.appendChild(defaultOption)
 
       names.forEach(name => {
