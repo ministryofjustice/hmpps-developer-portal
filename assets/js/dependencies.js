@@ -35,7 +35,7 @@ jQuery(function () {
         const url = rowData.location
         try {
           const parsedUrl = new URL(url)
-          const pathSegments = parsedUrl.pathname.split('/').filter(Boolean)
+          const pathSegments = parsedUrl.pathname.split('/')
           const croppedText = pathSegments.slice(-2).join('/') // final directory + filename
           $(td).html(`<a href="${url}" target="_blank">${croppedText}</a>`)
         } catch (e) {
