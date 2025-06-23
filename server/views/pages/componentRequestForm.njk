@@ -8,6 +8,9 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
 {% block content %}
+
+{{ breadCrumb("Component Request Form", []) }}
+
 <div class="govuk-grid-row govuk-body">
   <div class="govuk-grid-column-one-half">
     {% include 'partials/errorSummary.njk' %}
@@ -280,4 +283,3 @@
 </div>
 {% endblock %}
 
-console.log("hello")
