@@ -30,6 +30,7 @@ import {
   mockAlertsCount,
   mockTrivyScans,
   mockComponents,
+  mockVeracodeComponents,
 } from './teamsSummaryCountService.test-helpers'
 import ServiceCatalogueService from './serviceCatalogueService'
 
@@ -357,6 +358,89 @@ describe('TeamsSummaryCountService.getTeamTrivyVulnerabilityCounts', () => {
     expect(result).toEqual({ critical: 0, high: 0 })
     expect(mockLogger.error).toHaveBeenCalledWith(
       expect.stringContaining('Error in getTeamTrivyVulnerabilityCounts'),
+      expect.any(Error),
+    )
+  })
+})
+
+describe('TeamsSummaryCountService.getTeamVeracodeVulnerabilityCounts', () => {
+  let service: TeamsSummaryCountService
+  let mockServiceCatalogueService: Partial<ServiceCatalogueService> & {
+    getComponents: jest.Mock
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    service = new TeamsSummaryCountService(mockAlertsService, () => mockStrapiClient)
+    mockServiceCatalogueService = {
+      getComponents: jest.fn(),
+    }
+  })
+
+  it('should aggregate severities from matching components', async () => {
+    mockServiceCatalogueService.getComponents!.mockResolvedValue(mockVeracodeComponents)
+    const result = await service.getTeamVeracodeVulnerabilityCounts(
+      [
+        { id: 1, attributes: { name: 'Product 1' } },
+        { id: 2, attributes: { name: 'Product 2' } },
+      ],
+      mockServiceCatalogueService as unknown as ServiceCatalogueService,
+    )
+    expect(result).toEqual({ veryHigh: 2, high: 4, medium: 5, low: 9 })
+  })
+
+  it('should return all zeros if products is empty', async () => {
+    const result = await service.getTeamVeracodeVulnerabilityCounts(
+      [],
+      mockServiceCatalogueService as unknown as ServiceCatalogueService,
+    )
+    expect(result).toEqual({ veryHigh: 0, high: 0, medium: 0, low: 0 })
+  })
+
+  it('should return all zeros if no matching components', async () => {
+    mockServiceCatalogueService.getComponents!.mockResolvedValue([
+      {
+        attributes: {
+          name: 'OtherComponent',
+          product: { data: { id: 99 } },
+          veracode_results_summary: { severity: [{ category: [{ severity: 'VERY_HIGH', count: 10 }] }] },
+        },
+      },
+    ])
+    const result = await service.getTeamVeracodeVulnerabilityCounts(
+      [{ id: 1, attributes: { name: 'Product 1' } }],
+      mockServiceCatalogueService as unknown as ServiceCatalogueService,
+    )
+    expect(result).toEqual({ veryHigh: 0, high: 0, medium: 0, low: 0 })
+  })
+
+  it('should ignore components with missing or empty severity', async () => {
+    mockServiceCatalogueService.getComponents!.mockResolvedValue([
+      { attributes: { name: 'CompNoSummary', product: { data: { id: 1 } } } },
+      {
+        attributes: {
+          name: 'CompEmptySeverity',
+          product: { data: { id: 1 } },
+          veracode_results_summary: { severity: [] },
+        },
+      },
+    ])
+    const result = await service.getTeamVeracodeVulnerabilityCounts(
+      [{ id: 1, attributes: { name: 'Product 1' } }],
+      mockServiceCatalogueService as unknown as ServiceCatalogueService,
+    )
+    expect(result).toEqual({ veryHigh: 0, high: 0, medium: 0, low: 0 })
+  })
+
+  it('should log error and return all zeros on exception', async () => {
+    mockServiceCatalogueService.getComponents!.mockRejectedValue(new Error('fail'))
+    const result = await service.getTeamVeracodeVulnerabilityCounts(
+      [{ id: 1, attributes: { name: 'Product 1' } }],
+      mockServiceCatalogueService as unknown as ServiceCatalogueService,
+    )
+    expect(result).toEqual({ veryHigh: 0, high: 0, medium: 0, low: 0 })
+    expect(mockLogger.error).toHaveBeenCalledWith(
+      expect.stringContaining('Error in getTeamVeracodeVulnerabilityCounts'),
       expect.any(Error),
     )
   })
