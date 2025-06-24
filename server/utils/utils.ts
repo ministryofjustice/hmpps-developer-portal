@@ -144,27 +144,27 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
   return 'none'
 }
 
-export const addNewPropertiesToAlerts = (
+// Match alert data to correspondting environments and components to get slack channel and team properties
+export const addNewPropertiesToAlert = (
   revisedAlerts: Alert[],
   environments: DataItem<Environment>[],
   teams: DataItem<Team>[],
 ) => {
   return revisedAlerts.map(alert => {
     const envMatch = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
-    const teamMatch = teams.find(team => {
-      return team?.attributes?.products?.data?.some(product => {
-        return product?.attributes?.components?.data?.some(component => {
-          return component.attributes?.name === alert.labels.application
-        })
-      })
-    })
+    const teamMatch = teams.find(team =>
+      team?.attributes?.products?.data?.some(product =>
+        product?.attributes?.components?.data?.some(
+          component => component.attributes?.name === alert.labels.application,
+        ),
+      ),
+    )
+
     const updatedAlert = { ...alert }
-    if (envMatch) {
-      updatedAlert.labels.alert_slack_channel = envMatch.attributes.alerts_slack_channel
-    }
-    if (teamMatch) {
-      updatedAlert.labels.team = teamMatch.attributes.name
-    }
+
+    if (envMatch) updatedAlert.labels.alert_slack_channel = envMatch.attributes.alerts_slack_channel
+    if (teamMatch) updatedAlert.labels.team = teamMatch.attributes.name
+
     return updatedAlert
   })
 }
@@ -183,7 +183,7 @@ export const mapAlertEnvironments = (alerts: Alert[]) => {
 }
 export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[], teams: DataItem<Team>[]) => {
   const revisedEnvAlerts = mapAlertEnvironments(alerts)
-  const revisedAlerts = addNewPropertiesToAlerts(revisedEnvAlerts, environments, teams)
+  const revisedAlerts = addNewPropertiesToAlert(revisedEnvAlerts, environments, teams)
 
   return revisedAlerts
 }
