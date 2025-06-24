@@ -1,20 +1,17 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { ServiceCatalogueService, Services } from '../services'
 import { getDependencyName, getDependencyType, getDependencyNames } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/dependency-names/:dependencyType', async (req, res) => {
+  router.get('/dependency-names/:dependencyType', async (req, res) => {
     const { dependencyType } = req.params
     const dependencyNames = await getDependencyNames(serviceCatalogueService, dependencyType)
     res.json(dependencyNames)
   })
 
-  get('/data/:dependencyType/:dependencyName', async (req, res) => {
+  router.get('/data/:dependencyType/:dependencyName', async (req, res) => {
     const dependencyType = getDependencyType(req)
     const dependencyName = getDependencyName(req).replace(/~/g, '/')
 
@@ -57,7 +54,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     res.send(displayComponents)
   })
 
-  get(['/', '/:dependencyType/:dependencyName'], async (req, res) => {
+  router.get(['/', '/:dependencyType/:dependencyName'], async (req, res) => {
     const dependencyType = getDependencyType(req)
     const dependencyName = getDependencyName(req)
 

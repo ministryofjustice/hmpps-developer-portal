@@ -1,13 +1,10 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 
 export default function routes({ productDependenciesService, teamHealthService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/', async (_, res) => {
+  router.get('/', async (_, res) => {
     const componentsWithoutProducts = await productDependenciesService.getComponentsWithUnknownProducts()
     const hostNamesWithoutComponents = await productDependenciesService.getHostNamesMissingComponents()
     const componentsMissingTeams = await teamHealthService.getComponentsMissingTeams()
