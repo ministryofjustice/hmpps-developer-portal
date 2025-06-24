@@ -51,6 +51,9 @@ jQuery(async function () {
         case 'updateNamespace':
           dropDownType = 'namespace'
           break
+        case 'updateSeverityLabel':
+          dropDownType = 'severity'
+          break
         case 'updateTeam':
           dropDownType = 'team'
           break
@@ -230,7 +233,7 @@ function populateAlertTable(alerts) {
         : ''
       const generatorLink = alert.generatorURL
         ? `<a href="${alert.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
-        : 'N/A'
+        : ''
       const slackLink = alert.labels.alert_slack_channel ? alert.labels.alert_slack_channel : 'N/A'
       $('#statusRows')
         .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" data-silenced="${alert.status.state}" id="tile-${alert.labels.application}-${alert.labels.environment}">
