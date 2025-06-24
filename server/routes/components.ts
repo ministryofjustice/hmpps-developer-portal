@@ -141,9 +141,8 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const componentName = getComponentName(req)
     const environmentName = getEnvironmentName(req)
     const queueInformation = req.params?.queueInformation ?? ''
-    logger.info('queueInformation:', queueInformation)
     const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
-    logger.info('queueParams:', JSON.stringify(queueParams))
+
     logger.info(`Queue call for ${componentName} with ${queueInformation}`)
 
     const component = await serviceCatalogueService.getComponent({ componentName })
