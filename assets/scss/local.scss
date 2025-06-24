@@ -56,16 +56,19 @@
 }
 
 .monitor-selectors {
-  align-items: flex-end;
-
   &.govuk-button-group .govuk-button {
-    margin-bottom: 2px;
-    margin-left: govuk-spacing(1);
+    margin-bottom: -3px;
   }
 
-  & .govuk-form-group {
-    margin-bottom: 0;
-    width: 15%;
+  &.govuk-button-group .govuk-form-group select {
+    max-width: 8em;
+    min-width: 7em;
+  }
+
+  &.govuk-button-group > div {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
   }
 }
 
@@ -80,8 +83,6 @@
   float: left;
   clear: none;
 }
-
-
 
 .button-spinner-wrapper {
   position: relative;
@@ -296,4 +297,19 @@
 .componentsActiveAgencies {
   max-width: 100px;
   white-space: nowrap
+}
+
+// For update buttons on filterDropDowns partial when page is bigger than 640px
+@media(width > 640px) {
+  .monitor-selectors {
+    &.govuk-button-group {
+      margin-bottom: 0;
+    }
+  }
+
+  .monitor-selectors {
+    &.govuk-button-group .govuk-button {
+      margin-bottom: 2px;
+    }
+  }
 }
