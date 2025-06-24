@@ -6,11 +6,12 @@ import { formatDate } from 'date-fns'
 
 import { Alert, RdsEntry } from '../@types'
 import { DataItem, Environment } from '../data/strapiApiTypes'
+import type { ServiceCatalogueService } from '../services'
 
 dayjs.extend(relativeTime.default)
 
 type HasName = { attributes?: { name: string } }
-type HasRepoName = { attributes?: { github_repo: string } }
+type HasRepoName = { github_repo: string }
 type HasTeamName = { attributes?: { team_name: string } }
 
 const properCase = (word: string): string =>
@@ -97,7 +98,7 @@ export const sortRdsInstances = (rdsInstance: RdsEntry, compareRdsInstance: RdsE
 }
 
 export const sortComponentRequestData = (dataItem: HasRepoName, compareDataItem: HasRepoName) => {
-  return dataItem.attributes.github_repo.localeCompare(compareDataItem.attributes.github_repo)
+  return dataItem.github_repo.localeCompare(compareDataItem.github_repo)
 }
 
 export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasTeamName) => {
@@ -168,6 +169,7 @@ export const mapAlertEnvironments = (alerts: Alert[]) => {
     return updatedAlert
   })
 }
+
 export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[]) => {
   const revisedEnvAlerts = mapAlertEnvironments(alerts)
   const revisedAlerts = addAlertSlackChannel(revisedEnvAlerts, environments)
@@ -177,14 +179,30 @@ export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment
 
 export const getDependencyName = (req: Request): string => {
   const dependencyName = req.params.dependencyName || ''
-
-  return dependencyName.replace(/[^-a-z0-9_]/g, '')
+  // replace ~ with / so that actions still work
+  return dependencyName.replace(/[^-a-z0-9_.~]/gi, '').replace(/~/g, '/')
 }
 
 export const getDependencyType = (req: Request): string => {
   const dependencyType = req.params.dependencyType || ''
 
   return dependencyType.replace(/[^-a-z0-9_]/g, '')
+}
+
+export async function getDependencyNames(serviceCatalogueService: ServiceCatalogueService, dependencyType: string) {
+  const components = await serviceCatalogueService.getComponents()
+  const namesSet = new Set<string>()
+
+  components.forEach(component => {
+    const versions = component.attributes?.versions as Record<string, Record<string, string>>
+    if (versions && versions[dependencyType]) {
+      Object.keys(versions[dependencyType]).forEach(name => namesSet.add(name))
+    }
+  })
+
+  return Array.from(namesSet)
+    .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+    .map(name => ({ value: name, text: name }))
 }
 
 export const isValidDropDown = (req: Request, paramName: string): boolean => {

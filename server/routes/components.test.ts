@@ -76,59 +76,69 @@ const testComponent = {
       },
     },
   },
-  environments: [
-    {
-      id: 46778,
-      name: 'dev',
-      namespace: 'test-namespace-svc-dev',
-      info_path: '/info',
-      health_path: '/health',
-      url: 'https://dev.test.com',
-      cluster: 'live-cluster.com',
-      active_agencies: ['LEI', 'EAI'],
-      type: 'dev',
-      monitor: true,
-      swagger_docs: '/swagger-ui.html',
-    },
-    {
-      id: 48914,
-      name: 'staging',
-      namespace: 'test-namespace-svc-staging',
-      info_path: '/info',
-      health_path: '/health',
-      url: 'https://stage.test.com',
-      cluster: 'live-cluster.com',
-      type: 'stage',
-      monitor: true,
-      swagger_docs: '/swagger-ui.html',
-    },
-    {
-      id: 46779,
-      name: 'dev-all-agencies',
-      namespace: 'test-namespace-svc-dev-all-agencies',
-      info_path: '/info',
-      health_path: '/health',
-      url: 'https://dev.test.com',
-      cluster: 'live-cluster.com',
-      active_agencies: ['***'],
-      type: 'dev',
-      monitor: true,
-      swagger_docs: '/swagger-ui.html',
-    },
-    {
-      id: 46780,
-      name: 'dev-not-set-agencies',
-      namespace: 'test-namespace-svc-not-set-agencies',
-      info_path: '/info',
-      health_path: '/health',
-      url: 'https://dev.test.com',
-      cluster: 'live-cluster.com',
-      active_agencies: undefined,
-      type: 'dev',
-      monitor: true,
-      swagger_docs: '/swagger-ui.html',
-    },
-  ],
+  envs: {
+    data: [
+      {
+        attributes: {
+          id: 46778,
+          name: 'dev',
+          namespace: 'test-namespace-svc-dev',
+          info_path: '/info',
+          health_path: '/health',
+          url: 'https://dev.test.com',
+          cluster: 'live-cluster.com',
+          active_agencies: ['LEI', 'EAI'],
+          type: 'dev',
+          monitor: true,
+          swagger_docs: '/swagger-ui.html',
+        },
+      },
+      {
+        attributes: {
+          id: 48914,
+          name: 'staging',
+          namespace: 'test-namespace-svc-staging',
+          info_path: '/info',
+          health_path: '/health',
+          url: 'https://stage.test.com',
+          cluster: 'live-cluster.com',
+          type: 'stage',
+          monitor: true,
+          swagger_docs: '/swagger-ui.html',
+        },
+      },
+      {
+        attributes: {
+          id: 46779,
+          name: 'dev-all-agencies',
+          namespace: 'test-namespace-svc-dev-all-agencies',
+          info_path: '/info',
+          health_path: '/health',
+          url: 'https://dev.test.com',
+          cluster: 'live-cluster.com',
+          active_agencies: ['***'],
+          type: 'dev',
+          monitor: true,
+          swagger_docs: '/swagger-ui.html',
+        },
+      },
+      {
+        attributes: {
+          id: 46780,
+          name: 'dev-not-set-agencies',
+          namespace: 'test-namespace-svc-not-set-agencies',
+          info_path: '/info',
+          health_path: '/health',
+          url: 'https://dev.test.com',
+          cluster: 'live-cluster.com',
+          active_agencies: undefined,
+          type: 'dev',
+          monitor: true,
+          swagger_docs: '/swagger-ui.html',
+        },
+      },
+    ],
+  },
 } as unknown as Component
 
 beforeEach(() => {
@@ -224,8 +234,8 @@ describe('/components', () => {
           expect($('[data-test="dependency-0"]').text()).toContain('bbb')
           expect($('[data-test="dependent-0"]').text()).toContain('aaa')
 
-          const environments = testComponent.environments.reduce(
-            (environmentList, environment) => `${environmentList}${environment.name}`,
+          const environments = testComponent.envs.data.reduce(
+            (environmentList, environment) => `${environmentList}${environment.attributes.name}`,
             '',
           )
 
@@ -251,11 +261,11 @@ describe('/components', () => {
         .get('/components/testComponent/environment/dev')
         .expect('Content-Type', /html/)
         .expect(res => {
-          const devEnvironment = testComponent.environments.find(env => env.name === 'dev')
+          const devEnvironment = testComponent.envs.data.find(env => env.attributes.name === 'dev')
           expect(devEnvironment).not.toBeNull()
           const $ = cheerio.load(res.text)
           expectEnvironmentScreenToBeFilled($, devEnvironment)
-          const activeAgencies = devEnvironment.active_agencies as Array<string>
+          const activeAgencies = devEnvironment.attributes.active_agencies as Array<string>
           expect($('td[data-test="active-agencies"]').text()).toBe(activeAgencies.join(', '))
         })
     })
@@ -263,9 +273,10 @@ describe('/components', () => {
   it('should render environment page for all agencies, denoted by *** in the info endpoint', () => {
     return request(app)
       .get('/components/testComponent/environment/dev-all-agencies')
+      .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
-        const devEnvironment = testComponent.environments.find(env => env.name === 'dev-all-agencies')
+        const devEnvironment = testComponent.envs.data.find(env => env.attributes.name === 'dev-all-agencies')
         expect(devEnvironment).not.toBeNull()
         const $ = cheerio.load(res.text)
         expectEnvironmentScreenToBeFilled($, devEnvironment)
@@ -277,7 +288,7 @@ describe('/components', () => {
       .get('/components/testComponent/environment/dev-not-set-agencies')
       .expect('Content-Type', /html/)
       .expect(res => {
-        const devEnvironment = testComponent.environments.find(env => env.name === 'dev-not-set-agencies')
+        const devEnvironment = testComponent.envs.data.find(env => env.attributes.name === 'dev-not-set-agencies')
         expect(devEnvironment).not.toBeNull()
         const $ = cheerio.load(res.text)
         expectEnvironmentScreenToBeFilled($, devEnvironment)
@@ -286,7 +297,10 @@ describe('/components', () => {
   })
 })
 
-function expectEnvironmentScreenToBeFilled($: cheerio.CheerioAPI, devEnvironment: Environment) {
+function expectEnvironmentScreenToBeFilled(
+  $: cheerio.CheerioAPI,
+  { attributes: devEnvironment }: DataItem<Environment>,
+) {
   expect($('td[data-test="name"]').text()).toBe(devEnvironment.name)
   expect($('td[data-test="type"]').text()).toBe(devEnvironment.type)
   expect($('a[data-test="url"]').attr('href')).toBe(devEnvironment.url)

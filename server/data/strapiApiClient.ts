@@ -17,6 +17,7 @@ import {
   TrivyScan,
   Environment,
   SingleResponse,
+  DataItem,
 } from './strapiApiTypes'
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea, TrivyScanType } from './converters/modelTypes'
@@ -97,7 +98,7 @@ export default class StrapiApiClient {
   }
 
   async getComponent({ componentName }: { componentName: string }): Promise<SingleResponse<Component>> {
-    const populate = new URLSearchParams({ populate: 'product.team,environments' }).toString()
+    const populate = new URLSearchParams({ populate: 'product.team,envs.trivy_scan' }).toString()
 
     return this.restClient.get({
       path: '/v1/components',
@@ -242,22 +243,26 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubRepoRequests(): Promise<ListResponse<GithubRepoRequest>> {
-    return this.restClient.get({
-      path: '/v1/github-repo-requests',
-      query: 'populate=github_repo',
-    })
+  async getGithubRepoRequests(): Promise<Array<GithubRepoRequest>> {
+    return this.restClient
+      .get<ListResponse<GithubRepoRequest>>({
+        path: '/v1/github-repo-requests',
+        query: 'populate=github_repo',
+      })
+      .then(this.unwrapListResponse)
   }
 
-  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<SingleResponse<GithubRepoRequest>> {
-    return this.restClient.get({
-      path: '/v1/github-repo-requests',
-      query: `filters[github_repo][$eq]=${repoName}`,
-    })
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
+    return this.restClient
+      .get<SingleResponse<GithubRepoRequest>>({
+        path: '/v1/github-repo-requests',
+        query: `filters[github_repo][$eq]=${repoName}`,
+      })
+      .then(this.unwrapSingleResponse)
   }
 
-  async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<SingleResponse<GithubRepoRequest>> {
-    return this.restClient.post({
+  async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<void> {
+    await this.restClient.post<SingleResponse<GithubRepoRequest>>({
       path: '/v1/github-repo-requests',
       data: request,
     })
@@ -308,5 +313,15 @@ export default class StrapiApiClient {
       path: '/v1/environments',
       query: 'populate=component',
     })
+  }
+
+  private unwrapSingleResponse<T>(response: SingleResponse<T>): T & { id: number } {
+    const data =
+      Array.isArray(response.data) && response.data.length > 0 ? (response.data[0] as DataItem<T>) : response.data
+    return { ...data.attributes, id: data.id }
+  }
+
+  private unwrapListResponse<T>(response: ListResponse<T>): Array<T & { id: number }> {
+    return response.data.map(({ id, attributes }) => ({ ...attributes, id }))
   }
 }
