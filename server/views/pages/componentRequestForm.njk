@@ -3,16 +3,19 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %} 
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 
 {% block content %}
+
+{{ breadCrumb("Component Request Form", []) }}
+
 <div class="govuk-grid-row govuk-body">
   <div class="govuk-grid-column-one-half">
     {% include 'partials/errorSummary.njk' %}
     <h1 class="govuk-heading-xl">Component Request Form</h1>
-    <p>Documentation for creating new services is located <a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/creating-new-services/">here</a>. If this is the first time you're creating a service please make sure you read that first. 
+    <p>Documentation for creating new services is located <a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/creating-new-services/">here</a>. If this is the first time you're creating a service please make sure you read that first.
     <p>After submitting this form, the SRE team will run the bootstrap to create the github repo and service catalogue entries. </p>
     <form action="/component-requests/new" method="POST">
       <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -158,7 +161,7 @@
         }
       }) }}
       <h2>Slack notification channels</h2>
-      <p>There is some guidance around selecting slack channels <a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/creating-new-services/prerequisites/#team-slack-channels">here</a>.</p> 
+      <p>There is some guidance around selecting slack channels <a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/creating-new-services/prerequisites/#team-slack-channels">here</a>.</p>
       <p>You'll need to ensure that notifications are not sent to the channel that receives production alerts.</p>
       <p><b>Note:</b> If a Slack channel is private, please invite <b>@HMPPS SRE Slack Bot</b> to the channel</p>
       {{ govukInput({
@@ -279,3 +282,4 @@
   </div>
 </div>
 {% endblock %}
+
