@@ -56,16 +56,20 @@
 }
 
 .monitor-selectors {
-  align-items: flex-end;
-
   &.govuk-button-group .govuk-button {
     margin-bottom: 2px;
-    margin-left: govuk-spacing(1);
   }
 
-  & .govuk-form-group {
+  &.govuk-form-group {
     margin-bottom: 0;
     width: 15%;
+  }
+
+  &.govuk-button-group > div {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    margin-top: govuk-spacing(3);
   }
 }
 
@@ -79,36 +83,6 @@
   margin-right: 20px;
   float: left;
   clear: none;
-}
-
-
-
-.button-spinner-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-.spinner-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -100%);
-  pointer-events: none; /* allows clicks to pass through */
-}
-
-.govuk-spinner {
-  width: 24px;
-  height: 24px;
-  border: 4px solid #b1b4b6;
-  border-top-color: #1d70b8;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .wide-screen {
@@ -136,7 +110,39 @@
       width: 20%;
     }
     &.terraform {
-      width: 5%;
+      width: 3%;
+    }
+  }
+}
+
+#trivyScansTable {
+  width: 100%;
+  overflow-x: auto; // Enables horizontal scrolling if the table overflows
+
+  th, td {
+    padding: govuk-spacing(1);
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.name {
+      width: 80px;
+      min-width: 80px;
+      max-width: 100px;
+    }
+    &.environments {
+      width: 20px;
+    }
+    &.count,
+    &.result{
+      width: 10px !important;
+    }
+    
+    &.cve {
+      width: 120px;
+      min-width: 100px;
+      max-width: 140px;
     }
   }
 }
@@ -272,14 +278,76 @@
   margin: 0 govuk-spacing(2) 0 0;
 }
 
-#trivyTable .govuk-details {
-  margin-bottom: 0;
+.trivyData {
+  th, td, img{
+    padding: govuk-spacing(1);
+    vertical-align: top;
+  }
+
+  th {
+    text-align: center;
+    background-color: govuk-colour('light-grey');
+
+    &.govuk-table__header {
+      text-align: left;
+    }
+  }
+
+  tr:nth-of-type(2n + 1) td {
+    background-color: govuk-colour('light-grey');
+  }
+
+  &.category {
+    width: 10%
+  }
+
+  &.severity {
+    width: 10%
+  }
+
+  &.description {
+    width: 30%
+  }
+
+  &.filePath {
+    width: 20%
+  }
+
+  &.lineNumber {
+    width: 10%
+  }
+
+  &.context {
+    width: 20%
+  }
+
+  &.vulnertabilityId {
+    width: 15%
+  }
+
+  &.package {
+    width: 10%
+  }
+
+  &.version {
+    width: 10%
+  }
+
 }
 
+.trivyData tr.trivyCritical, .trivyData tr.trivyCritical td {
+  background-color: govuk-colour('red');
+  color: white;
+}
+
+.trivy-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 5px;
+}
 #showHideBlock a {
   margin: 0 10px;
 }
-
 
 .app-\!-width-one-fifth{ 
   width: 20% !important

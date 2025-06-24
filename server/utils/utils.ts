@@ -6,7 +6,6 @@ import { formatDate } from 'date-fns'
 
 import { Alert, RdsEntry } from '../@types'
 import { DataItem, Environment } from '../data/strapiApiTypes'
-import type { ServiceCatalogueService } from '../services'
 
 dayjs.extend(relativeTime.default)
 
@@ -169,7 +168,6 @@ export const mapAlertEnvironments = (alerts: Alert[]) => {
     return updatedAlert
   })
 }
-
 export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[]) => {
   const revisedEnvAlerts = mapAlertEnvironments(alerts)
   const revisedAlerts = addAlertSlackChannel(revisedEnvAlerts, environments)
@@ -179,30 +177,14 @@ export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment
 
 export const getDependencyName = (req: Request): string => {
   const dependencyName = req.params.dependencyName || ''
-  // replace ~ with / so that actions still work
-  return dependencyName.replace(/[^-a-z0-9_.~]/gi, '').replace(/~/g, '/')
+
+  return dependencyName.replace(/[^-a-z0-9_]/g, '')
 }
 
 export const getDependencyType = (req: Request): string => {
   const dependencyType = req.params.dependencyType || ''
 
   return dependencyType.replace(/[^-a-z0-9_]/g, '')
-}
-
-export async function getDependencyNames(serviceCatalogueService: ServiceCatalogueService, dependencyType: string) {
-  const components = await serviceCatalogueService.getComponents()
-  const namesSet = new Set<string>()
-
-  components.forEach(component => {
-    const versions = component.attributes?.versions as Record<string, Record<string, string>>
-    if (versions && versions[dependencyType]) {
-      Object.keys(versions[dependencyType]).forEach(name => namesSet.add(name))
-    }
-  })
-
-  return Array.from(namesSet)
-    .sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-    .map(name => ({ value: name, text: name }))
 }
 
 export const isValidDropDown = (req: Request, paramName: string): boolean => {
