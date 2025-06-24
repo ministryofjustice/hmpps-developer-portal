@@ -24,90 +24,68 @@ afterEach(() => {
 
 describe('/components', () => {
   describe('getDropDownOptions()', () => {
-    it('should provide drop down types and no names when no dependency is selected', async () => {
-      const { dependencyTypes, dependencyNames } = await getDropDownOptions(serviceCatalogueService)
+    it('should provide drop down data from dependencies', async () => {
+      const dependencies = await getDropDownOptions(serviceCatalogueService)
 
-      expect(dependencyTypes).toEqual([
+      expect(dependencies).toEqual([
         { value: '', text: 'Please select' },
-        { value: 'type1', text: 'type1', selected: false },
-        { value: 'type2', text: 'type2', selected: false },
-      ])
-
-      expect(dependencyNames).toEqual([{ value: '', text: 'Please select' }])
-    })
-
-    it('should mark selected dependency type and filter names when provided', async () => {
-      const { dependencyTypes, dependencyNames } = await getDropDownOptions(
-        serviceCatalogueService,
-        'type1::dependency2',
-      )
-
-      expect(dependencyTypes).toEqual([
-        { value: '', text: 'Please select' },
-        { value: 'type1', text: 'type1', selected: true },
-        { value: 'type2', text: 'type2', selected: false },
-      ])
-
-      expect(dependencyNames).toEqual([
-        { value: '', text: 'Please select' },
-        { value: 'dependency1', text: 'dependency1', selected: false },
-        { value: 'dependency2', text: 'dependency2', selected: true },
-      ])
-    })
-
-    it('should return only names for selected type', async () => {
-      const { dependencyTypes, dependencyNames } = await getDropDownOptions(serviceCatalogueService, 'type2::')
-
-      expect(dependencyTypes).toEqual([
-        { value: '', text: 'Please select' },
-        { value: 'type1', text: 'type1', selected: false },
-        { value: 'type2', text: 'type2', selected: true },
-      ])
-
-      expect(dependencyNames).toEqual([
-        { value: '', text: 'Please select' },
-        { value: 'dependency3', text: 'dependency3', selected: false },
+        {
+          value: 'type1::dependency1',
+          text: 'type1: dependency1',
+          selected: false,
+          attributes: {
+            'data-test': 'type1::dependency1',
+          },
+        },
+        {
+          value: 'type1::dependency2',
+          text: 'type1: dependency2',
+          selected: false,
+          attributes: {
+            'data-test': 'type1::dependency2',
+          },
+        },
+        {
+          value: 'type2::dependency3',
+          text: 'type2: dependency3',
+          selected: false,
+          attributes: {
+            'data-test': 'type2::dependency3',
+          },
+        },
       ])
     })
 
-    it('should return no names if type does not match any dependency', async () => {
-      const { dependencyTypes, dependencyNames } = await getDropDownOptions(serviceCatalogueService, 'nonexistent::')
+    it('should provide drop down data from dependencies selecting the chosen option when provided', async () => {
+      const dependencies = await getDropDownOptions(serviceCatalogueService, 'type1::dependency2')
 
-      expect(dependencyTypes).toEqual([
+      expect(dependencies).toEqual([
         { value: '', text: 'Please select' },
-        { value: 'type1', text: 'type1', selected: false },
-        { value: 'type2', text: 'type2', selected: false },
+        {
+          value: 'type1::dependency1',
+          text: 'type1: dependency1',
+          selected: false,
+          attributes: {
+            'data-test': 'type1::dependency1',
+          },
+        },
+        {
+          value: 'type1::dependency2',
+          text: 'type1: dependency2',
+          selected: true,
+          attributes: {
+            'data-test': 'type1::dependency2',
+          },
+        },
+        {
+          value: 'type2::dependency3',
+          text: 'type2: dependency3',
+          selected: false,
+          attributes: {
+            'data-test': 'type2::dependency3',
+          },
+        },
       ])
-
-      expect(dependencyNames).toEqual([{ value: '', text: 'Please select' }])
-    })
-  })
-
-  describe('GET /dependencies', () => {
-    it('should render components page with only types and no names by default', () => {
-      return request(app)
-        .get('/dependencies')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('[data-test="dependency-type-select"]').length).toBe(1)
-          expect($('[data-test="dependency-name-select"]').length).toBe(1)
-          expect($('option[value="type1"]').length).toBe(1)
-          expect($('option[value="dependency1"]').length).toBe(0) // no names shown
-        })
-    })
-
-    it('should render components page with filtered names when dependency is selected', () => {
-      return request(app)
-        .get('/dependencies/type1/dependency2')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('option[value="type1"]').attr('selected')).toBeDefined()
-          expect($('option[value="dependency2"]').attr('selected')).toBeDefined()
-          expect($('option[value="dependency1"]').length).toBe(1)
-          expect($('option[value="dependency3"]').length).toBe(0)
-        })
     })
   })
 
@@ -118,30 +96,10 @@ describe('/components', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('[data-test="dependency-type-select"]').length).toBe(1)
-          expect($('[data-test="dependency-name-select"]').length).toBe(1)
-          expect($('option[value="type1"]').length).toBe(1)
-          expect($('option[value="dependency1"]').length).toBe(0) // It's blank because it's not been selected yet
-          expect($('option[value="type1"]').text()).toBe('type1')
+          expect($('[data-test="type1::dependency1"]').length).toBe(1)
+          expect($('[data-test="type1::dependency2"]').length).toBe(1)
+          expect($('[data-test="type2::dependency3"]').length).toBe(1)
         })
-    })
-  })
-
-  describe('GET /dependencies/:dependencyType/:dependencyName', () => {
-    it('should render dependencies page with selected options', async () => {
-      const res = await request(app).get('/dependencies/type1/dependency1')
-
-      const $ = cheerio.load(res.text)
-
-      expect($('[data-test="dependency-type-select"]').length).toBe(1)
-      expect($('[data-test="dependency-name-select"]').length).toBe(1)
-
-      expect($('option[value="type1"]').length).toBe(1)
-      expect($('option[value="dependency1"]').length).toBe(1)
-
-      // Assert selected options
-      expect($('[data-test="dependency-type-select"] option[selected]').val()).toBe('type1')
-      expect($('[data-test="dependency-name-select"] option[selected]').val()).toBe('dependency1')
     })
   })
 

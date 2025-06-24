@@ -1,23 +1,24 @@
 import { type RequestHandler, Router } from 'express'
 import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { ServiceCatalogueService, Services } from '../services'
-import { getDependencyName, getDependencyType, getDependencyNames } from '../utils/utils'
+import { getDependencyName, getDependencyType } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
   const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
 
-  get('/dependency-names/:dependencyType', async (req, res) => {
-    const { dependencyType } = req.params
-    const dependencyNames = await getDependencyNames(serviceCatalogueService, dependencyType)
-    res.json(dependencyNames)
+  get(['/', '/:dependencyType/:dependencyName'], async (req, res) => {
+    const dependencyType = getDependencyType(req)
+    const dependencyName = getDependencyName(req)
+    const dropDownItems = await getDropDownOptions(serviceCatalogueService, `${dependencyType}::${dependencyName}`)
+
+    return res.render('pages/dependencies', { dropDownItems, dependencyType, dependencyName })
   })
 
   get('/data/:dependencyType/:dependencyName', async (req, res) => {
     const dependencyType = getDependencyType(req)
-    const dependencyName = getDependencyName(req).replace(/~/g, '/')
-
+    const dependencyName = getDependencyName(req)
     const components = await serviceCatalogueService.getComponents()
 
     const displayComponents = components
@@ -32,46 +33,16 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       })
       .map(component => {
         // @ts-expect-error Suppress any declaration
-        const dependencyData = component.attributes?.versions?.[dependencyType]?.[dependencyName]
-        const githubRepo = component.attributes?.github_repo ?? ''
-
-        let dependencyVersion = ''
-        if (typeof dependencyData === 'string' || typeof dependencyData === 'number') {
-          dependencyVersion = String(dependencyData)
-        } else if (typeof dependencyData === 'object' && dependencyData !== null) {
-          dependencyVersion = dependencyData.ref ?? dependencyData.version ?? ''
-        }
-
-        const location = dependencyData?.path ?? ''
-        const githubUrl =
-          githubRepo && location ? `https://github.com/ministryofjustice/${githubRepo}/blob/main/${location}` : ''
+        const dependencyVersion = component.attributes.versions[dependencyType][dependencyName]
 
         return {
           id: component.id,
-          componentName: component.attributes?.name ?? '',
+          componentName: component.attributes.name,
           dependencyVersion,
-          location: githubUrl,
         }
       })
 
     res.send(displayComponents)
-  })
-
-  get(['/', '/:dependencyType/:dependencyName'], async (req, res) => {
-    const dependencyType = getDependencyType(req)
-    const dependencyName = getDependencyName(req)
-
-    const { dependencyTypes, dependencyNames } = await getDropDownOptions(
-      serviceCatalogueService,
-      `${dependencyType}::${dependencyName}`,
-    )
-
-    return res.render('pages/dependencies', {
-      dependencyTypes,
-      dependencyNames,
-      dependencyType,
-      dependencyName,
-    })
   })
 
   return router
@@ -90,33 +61,23 @@ export const getDropDownOptions = async (
 
   const dependencies = await serviceCatalogueService.getDependencies()
 
-  const dependencyTypesSet = new Set<string>()
-  const dependencyNamesSet = new Set<string>()
+  const dropDownItems = dependencies.map((dependency): SelectList => {
+    const parts = dependency.split('::')
 
-  const [currentType, currentName] = currentDependency.split('::')
-
-  dependencies.forEach(dependency => {
-    const [type, name] = dependency.split('::')
-    if (type) dependencyTypesSet.add(type)
-    if (type === currentType && name) {
-      dependencyNamesSet.add(name)
+    return {
+      value: dependency,
+      text: `${parts[0]}: ${parts[1]}`,
+      selected: dependency === currentDependency,
+      attributes: {
+        'data-test': dependency,
+      },
     }
   })
 
-  const dependencyTypes: SelectList[] = Array.from(dependencyTypesSet).map(type => ({
-    value: type,
-    text: type,
-    selected: type === currentType,
-  }))
+  dropDownItems.unshift({
+    value: '',
+    text: 'Please select',
+  })
 
-  const dependencyNames: SelectList[] = Array.from(dependencyNamesSet).map(name => ({
-    value: name,
-    text: name,
-    selected: name === currentName,
-  }))
-
-  dependencyTypes.unshift({ value: '', text: 'Please select' })
-  dependencyNames.unshift({ value: '', text: 'Please select' })
-
-  return { dependencyTypes, dependencyNames }
+  return dropDownItems
 }

@@ -3,57 +3,29 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
-{% set pageTitle = applicationName + " - Component Dependency Versions" %}
+{% set pageTitle = applicationName + " - Component Dependencies" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-{{ breadCrumb("Component Dependency Versions", []) }}
-  <h1>Component Dependency Versions</h1>
+{{ breadCrumb("Component Dependencies", []) }}
+  <h1>Dependencies</h1>
 
   <form>
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-
-
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-quarter">
-      {{ govukSelect({
-        id: "dependencyType",
-        name: "dependencyType",
-        label: { text: "Dependency Type" },
-        items: dependencyTypes,
-        attributes: {
-          'data-test': 'dependency-type-select'
-        }
-      }) }}
-    </div>
-
-    <div class="govuk-grid-column-one-quarter">
-      {{ govukSelect({
-        id: "dependencyName",
-        name: "dependencyName",
-        label: { text: "Dependency Name" },
-        items: dependencyNames,
-        attributes: {
-          'data-test': 'dependency-name-select'
-        }
-      }) }}
-    </div>
-
-  <div class="govuk-grid-column-one-quarter govuk-!-padding-top-6">
-    <div class="button-spinner-wrapper">
-      {{ govukButton({
-        id: "selectDependency",
-        name: "selectDependency",
-        text: "Update",
-        element: "button"
-      }) }}
-      <div id="loadingSpinner" class="spinner-overlay" hidden>
-        <span class="govuk-visually-hidden">Loading</span>
-        <div class="govuk-spinner" role="status" aria-hidden="true"></div>
-      </div>
-    </div>
-  </div>
-
+    {{ govukSelect({
+      id: "dependencyData",
+      name: "dependencyData",
+      items: dropDownItems,
+      attributes: {
+        'data-test': 'dependency-select'
+      }
+    }) }}
+    {{ govukButton({
+      id: "selectDependency",
+      name: "selectDependency",
+      text: "Update",
+      element: "button"
+    }) }}
   </form>
 
   {% if dependencyName|length %}
@@ -62,14 +34,12 @@
       <tr>
         <th>Component</th>
         <th>Version</th>
-        <th>Github Link</th>
       </tr>
     </thead>
     <tfoot>
       <tr>
         <th>Component</th>
         <th>Version</th>
-        <th>Github Link</th>
       </tr>
     </tfoot>
   </table>
