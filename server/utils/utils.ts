@@ -5,7 +5,7 @@ import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
 import { Alert, RdsEntry } from '../@types'
-import { DataItem, Environment } from '../data/strapiApiTypes'
+import { DataItem, Environment, Team } from '../data/strapiApiTypes'
 
 dayjs.extend(relativeTime.default)
 
@@ -143,16 +143,28 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
   return 'none'
 }
 
-export const addAlertSlackChannel = (revisedEnvAlerts: Alert[], environments: DataItem<Environment>[]) => {
-  return revisedEnvAlerts.map(alert => {
-    const match = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
-    if (match) {
-      return {
-        ...alert,
-        alert_slack_channel: match.attributes.alerts_slack_channel,
-      }
+export const addNewPropertiesToAlerts = (
+  revisedAlerts: Alert[],
+  environments: DataItem<Environment>[],
+  teams: DataItem<Team>[],
+) => {
+  return revisedAlerts.map(alert => {
+    const envMatch = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
+    const teamMatch = teams.find(team => {
+      return team?.attributes?.products?.data?.some(product => {
+        return product?.attributes?.components?.data?.some(component => {
+          return component.attributes?.name === alert.labels.application
+        })
+      })
+    })
+    const updatedAlert = { ...alert }
+    if (envMatch) {
+      updatedAlert.labels.alert_slack_channel = envMatch.attributes.alerts_slack_channel
     }
-    return alert
+    if (teamMatch) {
+      updatedAlert.labels.team = teamMatch.attributes.name
+    }
+    return updatedAlert
   })
 }
 
@@ -168,9 +180,9 @@ export const mapAlertEnvironments = (alerts: Alert[]) => {
     return updatedAlert
   })
 }
-export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[]) => {
+export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[], teams: DataItem<Team>[]) => {
   const revisedEnvAlerts = mapAlertEnvironments(alerts)
-  const revisedAlerts = addAlertSlackChannel(revisedEnvAlerts, environments)
+  const revisedAlerts = addNewPropertiesToAlerts(revisedEnvAlerts, environments, teams)
 
   return revisedAlerts
 }

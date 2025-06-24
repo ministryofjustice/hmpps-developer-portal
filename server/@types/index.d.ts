@@ -58,5 +58,7 @@ interface Alert {
     prometheus?: string
     queue_name?: string
     severity?: string
+    alert_slack_channel?: string
+    team?: string
   }
 }

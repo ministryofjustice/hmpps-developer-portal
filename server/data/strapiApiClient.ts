@@ -110,7 +110,6 @@ export default class StrapiApiClient {
     const populateList = ['products']
 
     if (withComponents) {
-      console.log('TRIGGER')
       populateList.push('products.components')
     }
     const path = '/v1/teams'
