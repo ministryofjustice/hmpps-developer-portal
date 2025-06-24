@@ -1,24 +1,21 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import { getFormattedName } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/rds', async (req, res) => {
+  router.get('/rds', async (req, res) => {
     return res.render('pages/rds')
   })
 
-  get('/rds/data', async (req, res) => {
+  router.get('/rds/data', async (req, res) => {
     const rdsInstances = await serviceCatalogueService.getRdsInstances()
 
     res.send(rdsInstances)
   })
 
-  get('/rds/:rdsInstanceSlug', async (req, res) => {
+  router.get('/rds/:rdsInstanceSlug', async (req, res) => {
     const rdsInstanceSlug = getFormattedName(req, 'rdsInstanceSlug')
     const rdsInstances = await serviceCatalogueService.getRdsInstances()
     const rdsInstanceData = rdsInstances.find(

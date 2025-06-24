@@ -1,23 +1,20 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     return res.render('pages/scheduledJobs')
   })
 
-  get('/data', async (req, res) => {
+  router.get('/data', async (req, res) => {
     const scheduledJobs = await serviceCatalogueService.getScheduledJobs()
 
     res.send(scheduledJobs)
   })
 
-  get('/:name', async (req, res) => {
+  router.get('/:name', async (req, res) => {
     const { name } = req.params
     const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name })
     const displayJob = {

@@ -1,5 +1,4 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { getAlertType, getAlertName, reviseAlerts, mapToCanonicalEnv } from '../utils/utils'
@@ -7,9 +6,7 @@ import { getAlertType, getAlertName, reviseAlerts, mapToCanonicalEnv } from '../
 export default function routes({ serviceCatalogueService, alertsService }: Services): Router {
   const router = Router()
 
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get(['/', '/:alertType/:alertName'], async (req, res) => {
+  router.get(['/', '/:alertType/:alertName'], async (req, res) => {
     const alertType = getAlertType(req)
     const alertName = getAlertName(req)
     // Get alerts to determine which environments actually have data
@@ -31,7 +28,7 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
     return res.render('pages/alerts', { environments })
   })
 
-  get('/all', async (req, res) => {
+  router.get('/all', async (req, res) => {
     try {
       const alerts = await alertsService.getAlerts()
       const environments = await serviceCatalogueService.getEnvironments()

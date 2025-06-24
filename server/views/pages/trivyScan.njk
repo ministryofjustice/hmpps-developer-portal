@@ -1,4 +1,5 @@
 {% extends "../partials/layout.njk" %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set pageTitle = applicationName + " - " + trivyScan.name %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -18,7 +19,6 @@
   <p><strong>Scan Timestamp:</strong> {{ scanDate}}</p>
 
   <h2>Scan Summary </h2>
-    
   <table class="trivyData">
     <thead>
       <tr>
@@ -65,7 +65,12 @@
           <td>{{ row.severity }}</td>
           <td><a href="{{ row.PrimaryURL }}">{{ row.vulnerabilityID }}</a></td>
           <td>{{ row.pkgName }}</td>
-          <td>{{ row.description }}</td>
+          <td>
+            {{ govukDetails({
+              summaryText: "Details",
+              text: row.description
+            }) }}
+          </td>
           <td>{{ row.installedVersion }}</td>
           <td>{{ row.fixedVersion }}</td>
         </tr>
@@ -102,12 +107,3 @@
 
 {% endblock %}
 
-
-{% block bodyEnd %}
-  <script type="module" src="/assets/frontendInit.js"></script>
-  <script src="https://www.gstatic.com/charts/loader.js"></script>
-  <script src="/assets/js/dayjs/dayjs.min.js"></script>
-  <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
-  <script src="/assets/js/common.js"></script>
-  <script src="/assets/js/trivyScan.js"></script>
-{% endblock %}

@@ -1,14 +1,11 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import { getFormattedName, utcTimestampToUtcDateTime } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name: 'hmpps-sharepoint-discovery' })
     return res.render('pages/products', {
       jobName: scheduledJobRequest.name,
@@ -16,13 +13,13 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     })
   })
 
-  get('/data', async (req, res) => {
+  router.get('/data', async (req, res) => {
     const products = await serviceCatalogueService.getProducts({})
 
     res.send(products)
   })
 
-  get('/:productSlug', async (req, res) => {
+  router.get('/:productSlug', async (req, res) => {
     const productSlug = getFormattedName(req, 'productSlug')
     const product = await serviceCatalogueService.getProduct({ productSlug })
     const productSet = product.product_set?.data

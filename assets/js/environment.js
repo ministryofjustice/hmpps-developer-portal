@@ -263,7 +263,6 @@ function drawVersionChart(stream) {
   }
 
   function selectHandler(arg) {
-    console.log('selectHandler fired')
     if (arg) {
       versionChart.setSelection(arg)
     }

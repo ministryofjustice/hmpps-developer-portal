@@ -1,6 +1,5 @@
-import { type RequestHandler, Router } from 'express'
+import { Router } from 'express'
 import dayjs from 'dayjs'
-import asyncMiddleware from '../middleware/asyncMiddleware'
 import type { Services } from '../services'
 import { veracodeFilters, utcTimestampToUtcDateTime } from '../utils/utils'
 import { VeracodeResultsSummary } from '../data/strapiApiTypes'
@@ -8,9 +7,7 @@ import { VeracodeResultsSummary } from '../data/strapiApiTypes'
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name: 'hmpps-veracode-discovery' })
     return res.render('pages/veracode', {
       jobName: scheduledJobRequest.name,
@@ -18,7 +15,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     })
   })
 
-  get('/data', async (req, res) => {
+  router.get('/data', async (req, res) => {
     const resultFilters = getResultFilters(req.query.results as string)
     const exemptionFilters = getExemptionFilters(req.query.exemption as string)
     const allComponents = await serviceCatalogueService.getComponents(exemptionFilters)

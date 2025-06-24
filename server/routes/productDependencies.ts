@@ -1,13 +1,10 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 
 export default function routes({ productDependenciesService }: Services): Router {
   const router = Router()
 
-  const get = (paths: string[], handler: RequestHandler) => router.get(paths, asyncMiddleware(handler))
-
-  get(['/:productCode', '/'], async (req, res) => {
+  router.get(['/:productCode', '/'], async (req, res) => {
     const selectedProduct = req.params.productCode
     const products = await productDependenciesService.getProducts()
     // @ts-expect-error Suppress any declaration

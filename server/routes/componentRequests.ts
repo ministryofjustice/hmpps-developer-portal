@@ -1,5 +1,4 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import { GithubRepoRequestRequest, GithubProjectVisibility } from '../data/strapiApiTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
@@ -8,10 +7,7 @@ import { FieldValidationError } from '../@types/FieldValidationError'
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
-
-  get('/new', async (req, res) => {
+  router.get('/new', async (req, res) => {
     const [, productList] = await dataFilterService.getFormsDropdownLists({
       teamName: '',
       productId: '',
@@ -23,23 +19,23 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     })
   })
 
-  get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     return res.render('pages/componentRequests')
   })
 
-  get('/data', async (req, res) => {
+  router.get('/data', async (req, res) => {
     const componentRequests = await serviceCatalogueService.getGithubRepoRequests()
 
     res.send(componentRequests)
   })
 
-  get('/:repo_name', async (req, res) => {
+  router.get('/:repo_name', async (req, res) => {
     const repoName = req.params.repo_name
     const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName })
     return res.render('pages/componentRequest', { componentRequest })
   })
 
-  post('/new', async (req, res): Promise<void> => {
+  router.post('/new', async (req, res): Promise<void> => {
     const formData = req.body
     const repoExists = formData.github_repo
       ? await componentNameService.checkComponentExists(formData.github_repo)

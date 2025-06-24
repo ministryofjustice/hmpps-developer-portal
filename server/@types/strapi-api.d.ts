@@ -1125,6 +1125,18 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
+            /** @example [
+             *       {
+             *         "id": 9,
+             *         "username": "foao@strapi.io",
+             *         "email": "foao@strapi.io",
+             *         "provider": "local",
+             *         "confirmed": false,
+             *         "blocked": false,
+             *         "createdAt": "2022-06-01T18:32:35.211Z",
+             *         "updatedAt": "2022-06-01T18:32:35.217Z"
+             *       }
+             *     ] */
             'application/json': components['schemas']['Users-Permissions-User'][]
           }
         }
@@ -1169,6 +1181,24 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
+            /** @example {
+             *       "id": 1,
+             *       "username": "foo",
+             *       "email": "foo@strapi.io",
+             *       "provider": "local",
+             *       "confirmed": false,
+             *       "blocked": false,
+             *       "createdAt": "2022-05-19T17:35:35.096Z",
+             *       "updatedAt": "2022-05-19T17:35:35.096Z",
+             *       "role": {
+             *         "id": 1,
+             *         "name": "X",
+             *         "description": "Default role given to authenticated user.",
+             *         "type": "authenticated",
+             *         "createdAt": "2022-05-19T17:35:35.096Z",
+             *         "updatedAt": "2022-06-04T07:11:59.551Z"
+             *       }
+             *     } */
             'application/json': components['schemas']['Users-Permissions-User'] & {
               role?: components['schemas']['Users-Permissions-Role']
             }
@@ -1214,6 +1244,42 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
+            /** @example {
+             *       "permissions": {
+             *         "api::content-type.content-type": {
+             *           "controllers": {
+             *             "controllerA": {
+             *               "find": {
+             *                 "enabled": false,
+             *                 "policy": ""
+             *               },
+             *               "findOne": {
+             *                 "enabled": false,
+             *                 "policy": ""
+             *               },
+             *               "create": {
+             *                 "enabled": false,
+             *                 "policy": ""
+             *               }
+             *             },
+             *             "controllerB": {
+             *               "find": {
+             *                 "enabled": false,
+             *                 "policy": ""
+             *               },
+             *               "findOne": {
+             *                 "enabled": false,
+             *                 "policy": ""
+             *               },
+             *               "create": {
+             *                 "enabled": false,
+             *                 "policy": ""
+             *               }
+             *             }
+             *           }
+             *         }
+             *       }
+             *     } */
             'application/json': {
               permissions?: components['schemas']['Users-Permissions-PermissionsTree']
             }
@@ -1261,6 +1327,19 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
+            /** @example {
+             *       "roles": [
+             *         {
+             *           "id": 1,
+             *           "name": "Public",
+             *           "description": "Default role given to unauthenticated user.",
+             *           "type": "public",
+             *           "createdAt": "2022-05-19T17:35:35.097Z",
+             *           "updatedAt": "2022-05-31T16:05:36.603Z",
+             *           "nb_users": 0
+             *         }
+             *       ]
+             *     } */
             'application/json': {
               roles?: (components['schemas']['Users-Permissions-Role'] & {
                 nb_users?: number
@@ -1345,6 +1424,27 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
+            /** @example {
+             *       "role": {
+             *         "id": 1,
+             *         "name": "Public",
+             *         "description": "Default role given to unauthenticated user.",
+             *         "type": "public",
+             *         "createdAt": "2022-05-19T17:35:35.097Z",
+             *         "updatedAt": "2022-05-31T16:05:36.603Z",
+             *         "permissions": {
+             *           "api::content-type.content-type": {
+             *             "controllers": {
+             *               "controllerA": {
+             *                 "find": {
+             *                   "enabled": true
+             *                 }
+             *               }
+             *             }
+             *           }
+             *         }
+             *       }
+             *     } */
             'application/json': {
               role?: components['schemas']['Users-Permissions-Role']
             }
@@ -1481,6 +1581,16 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
+            /** @example {
+             *       "id": 1,
+             *       "username": "foo",
+             *       "email": "foo@strapi.io",
+             *       "provider": "local",
+             *       "confirmed": false,
+             *       "blocked": false,
+             *       "createdAt": "2022-05-19T17:35:35.096Z",
+             *       "updatedAt": "2022-05-19T17:35:35.096Z"
+             *     } */
             'application/json': components['schemas']['Users-Permissions-User']
           }
         }
@@ -1527,6 +1637,24 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
+            /** @example {
+             *       "id": 1,
+             *       "username": "foo",
+             *       "email": "foo@strapi.io",
+             *       "provider": "local",
+             *       "confirmed": false,
+             *       "blocked": false,
+             *       "createdAt": "2022-05-19T17:35:35.096Z",
+             *       "updatedAt": "2022-05-19T17:35:35.096Z",
+             *       "role": {
+             *         "id": 1,
+             *         "name": "X",
+             *         "description": "Default role given to authenticated user.",
+             *         "type": "authenticated",
+             *         "createdAt": "2022-05-19T17:35:35.096Z",
+             *         "updatedAt": "2022-06-04T07:11:59.551Z"
+             *       }
+             *     } */
             'application/json': components['schemas']['Users-Permissions-User'] & {
               role?: components['schemas']['Users-Permissions-Role']
             }
@@ -1563,6 +1691,16 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
+            /** @example {
+             *       "id": 1,
+             *       "username": "foo",
+             *       "email": "foo@strapi.io",
+             *       "provider": "local",
+             *       "confirmed": false,
+             *       "blocked": false,
+             *       "createdAt": "2022-05-19T17:35:35.096Z",
+             *       "updatedAt": "2022-05-19T17:35:35.096Z"
+             *     } */
             'application/json': components['schemas']['Users-Permissions-User']
           }
         }
@@ -1605,6 +1743,7 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
+            /** @example 1 */
             'application/json': number
           }
         }
@@ -1650,6 +1789,16 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
+            /** @example {
+             *       "id": 1,
+             *       "username": "foo",
+             *       "email": "foo@strapi.io",
+             *       "provider": "local",
+             *       "confirmed": false,
+             *       "blocked": false,
+             *       "createdAt": "2022-05-19T17:35:35.096Z",
+             *       "updatedAt": "2022-05-19T17:35:35.096Z"
+             *     } */
             'application/json': components['schemas']['Users-Permissions-User']
           }
         }
@@ -1679,6 +1828,7 @@ export interface components {
     Component: {
       api?: boolean
       app_insights_cloud_role_name?: string
+      codescanning_summary?: unknown
       container_image?: string
       /** Format: date-time */
       createdAt?: string
@@ -1689,6 +1839,7 @@ export interface components {
         }
       }
       description?: string
+      disabled_workflows?: unknown
       environments?: components['schemas']['PropertiesEnvironmentComponent'][]
       envs?: {
         data?: {
@@ -1703,6 +1854,7 @@ export interface components {
                 attributes?: {
                   api?: boolean
                   app_insights_cloud_role_name?: string
+                  codescanning_summary?: unknown
                   container_image?: string
                   /** Format: date-time */
                   createdAt?: string
@@ -1713,6 +1865,7 @@ export interface components {
                     }
                   }
                   description?: string
+                  disabled_workflows?: unknown
                   environments?: {
                     active_agencies?: unknown
                     alert_severity_label?: string
@@ -1944,8 +2097,6 @@ export interface components {
                   slack_channel_security_scans_notify?: string
                   standards_compliance?: unknown
                   title?: string
-                  trivy_last_completed_scan_date?: string
-                  trivy_scan_summary?: unknown
                   /** Format: date-time */
                   updatedAt?: string
                   updatedBy?: {
@@ -2005,14 +2156,15 @@ export interface components {
                       id?: number
                     }
                   }
+                  environments?: unknown
+                  image_id?: string
                   name?: string
                   /** Format: date-time */
                   publishedAt?: string
                   /** @enum {string} */
                   scan_status?: 'Failed' | 'Succeeded'
-                  trivy_scan_timestamp?: string
                   scan_summary?: unknown
-                  environments?: unknown
+                  trivy_scan_timestamp?: string
                   /** Format: date-time */
                   updatedAt?: string
                   updatedBy?: {
@@ -2073,8 +2225,6 @@ export interface components {
       slack_channel_security_scans_notify?: string
       standards_compliance?: unknown
       title?: string
-      trivy_last_completed_scan_date?: string
-      trivy_scan_summary?: unknown
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
@@ -2109,8 +2259,10 @@ export interface components {
       data: {
         api?: boolean
         app_insights_cloud_role_name?: string
+        codescanning_summary?: unknown
         container_image?: string
         description?: string
+        disabled_workflows?: unknown
         environments?: components['schemas']['PropertiesEnvironmentComponent'][]
         envs?: (number | string)[]
         frontend?: boolean
@@ -2140,8 +2292,6 @@ export interface components {
         slack_channel_security_scans_notify?: string
         standards_compliance?: unknown
         title?: string
-        trivy_last_completed_scan_date?: string
-        trivy_scan_summary?: unknown
         veracode_exempt?: boolean
         veracode_last_completed_scan_date?: string
         veracode_policy_rules_status?: string
@@ -2330,6 +2480,7 @@ export interface components {
           attributes?: {
             api?: boolean
             app_insights_cloud_role_name?: string
+            codescanning_summary?: unknown
             container_image?: string
             /** Format: date-time */
             createdAt?: string
@@ -2340,6 +2491,7 @@ export interface components {
               }
             }
             description?: string
+            disabled_workflows?: unknown
             environments?: {
               active_agencies?: unknown
               alert_severity_label?: string
@@ -2483,6 +2635,27 @@ export interface components {
                       tf_mod_version?: string
                       tf_path?: string
                     }[]
+                    hmpps_template?: {
+                      application?: string
+                      application_insights_instance?: string
+                      environment_name?: string
+                      github_repo?: string
+                      github_team_name?: string
+                      id?: number
+                      is_production?: boolean
+                      namespace?: string
+                      prevent_self_review?: boolean
+                      protected_branches_only?: boolean
+                      reviewer_teams?: unknown
+                      selected_branch_patterns?: unknown
+                      source_template_repo?: string
+                      tf_filename?: string
+                      tf_label?: string
+                      tf_line_end?: number
+                      tf_line_start?: number
+                      tf_mod_version?: string
+                      tf_path?: string
+                    }[]
                     name?: string
                     pingdom_check?: {
                       encryption?: boolean
@@ -2605,14 +2778,15 @@ export interface components {
                             id?: number
                           }
                         }
+                        environments?: unknown
+                        image_id?: string
                         name?: string
                         /** Format: date-time */
                         publishedAt?: string
                         /** @enum {string} */
                         scan_status?: 'Failed' | 'Succeeded'
-                        trivy_scan_timestamp?: string
                         scan_summary?: unknown
-                        environments?: unknown
+                        trivy_scan_timestamp?: string
                         /** Format: date-time */
                         updatedAt?: string
                         updatedBy?: {
@@ -2835,8 +3009,6 @@ export interface components {
             slack_channel_security_scans_notify?: string
             standards_compliance?: unknown
             title?: string
-            trivy_last_completed_scan_date?: string
-            trivy_scan_summary?: unknown
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
@@ -2917,6 +3089,7 @@ export interface components {
           attributes?: {
             api?: boolean
             app_insights_cloud_role_name?: string
+            codescanning_summary?: unknown
             container_image?: string
             /** Format: date-time */
             createdAt?: string
@@ -2927,6 +3100,7 @@ export interface components {
               }
             }
             description?: string
+            disabled_workflows?: unknown
             environments?: {
               active_agencies?: unknown
               alert_severity_label?: string
@@ -3070,6 +3244,27 @@ export interface components {
                       tf_mod_version?: string
                       tf_path?: string
                     }[]
+                    hmpps_template?: {
+                      application?: string
+                      application_insights_instance?: string
+                      environment_name?: string
+                      github_repo?: string
+                      github_team_name?: string
+                      id?: number
+                      is_production?: boolean
+                      namespace?: string
+                      prevent_self_review?: boolean
+                      protected_branches_only?: boolean
+                      reviewer_teams?: unknown
+                      selected_branch_patterns?: unknown
+                      source_template_repo?: string
+                      tf_filename?: string
+                      tf_label?: string
+                      tf_line_end?: number
+                      tf_line_start?: number
+                      tf_mod_version?: string
+                      tf_path?: string
+                    }[]
                     name?: string
                     pingdom_check?: {
                       encryption?: boolean
@@ -3192,14 +3387,15 @@ export interface components {
                             id?: number
                           }
                         }
+                        environments?: unknown
+                        image_id?: string
                         name?: string
                         /** Format: date-time */
                         publishedAt?: string
                         /** @enum {string} */
                         scan_status?: 'Failed' | 'Succeeded'
-                        trivy_scan_timestamp?: string
                         scan_summary?: unknown
-                        environments?: unknown
+                        trivy_scan_timestamp?: string
                         /** Format: date-time */
                         updatedAt?: string
                         updatedBy?: {
@@ -3422,8 +3618,6 @@ export interface components {
             slack_channel_security_scans_notify?: string
             standards_compliance?: unknown
             title?: string
-            trivy_last_completed_scan_date?: string
-            trivy_scan_summary?: unknown
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
@@ -3993,6 +4187,7 @@ export interface components {
         }
       }
       elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
+      hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
       name: string
       pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
       /** Format: date-time */
@@ -4025,6 +4220,7 @@ export interface components {
     NamespaceRequest: {
       data: {
         elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
+        hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
         name: string
         pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
         rds_instance?: components['schemas']['TfModulesRdsInstanceComponent'][]
@@ -4081,6 +4277,7 @@ export interface components {
                 attributes?: {
                   api?: boolean
                   app_insights_cloud_role_name?: string
+                  codescanning_summary?: unknown
                   container_image?: string
                   /** Format: date-time */
                   createdAt?: string
@@ -4091,6 +4288,7 @@ export interface components {
                     }
                   }
                   description?: string
+                  disabled_workflows?: unknown
                   environments?: {
                     active_agencies?: unknown
                     alert_severity_label?: string
@@ -4134,6 +4332,27 @@ export interface components {
                             number_cache_clusters?: number
                             parameter_group_name?: string
                             team_name?: string
+                            tf_filename?: string
+                            tf_label?: string
+                            tf_line_end?: number
+                            tf_line_start?: number
+                            tf_mod_version?: string
+                            tf_path?: string
+                          }[]
+                          hmpps_template?: {
+                            application?: string
+                            application_insights_instance?: string
+                            environment_name?: string
+                            github_repo?: string
+                            github_team_name?: string
+                            id?: number
+                            is_production?: boolean
+                            namespace?: string
+                            prevent_self_review?: boolean
+                            protected_branches_only?: boolean
+                            reviewer_teams?: unknown
+                            selected_branch_patterns?: unknown
+                            source_template_repo?: string
                             tf_filename?: string
                             tf_label?: string
                             tf_line_end?: number
@@ -4263,14 +4482,15 @@ export interface components {
                                   id?: number
                                 }
                               }
+                              environments?: unknown
+                              image_id?: string
                               name?: string
                               /** Format: date-time */
                               publishedAt?: string
                               /** @enum {string} */
                               scan_status?: 'Failed' | 'Succeeded'
-                              trivy_scan_timestamp?: string
                               scan_summary?: unknown
-                              environments?: unknown
+                              trivy_scan_timestamp?: string
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -4336,8 +4556,6 @@ export interface components {
                   slack_channel_security_scans_notify?: string
                   standards_compliance?: unknown
                   title?: string
-                  trivy_last_completed_scan_date?: string
-                  trivy_scan_summary?: unknown
                   /** Format: date-time */
                   updatedAt?: string
                   updatedBy?: {
@@ -4708,6 +4926,7 @@ export interface components {
                 attributes?: {
                   api?: boolean
                   app_insights_cloud_role_name?: string
+                  codescanning_summary?: unknown
                   container_image?: string
                   /** Format: date-time */
                   createdAt?: string
@@ -4718,6 +4937,7 @@ export interface components {
                     }
                   }
                   description?: string
+                  disabled_workflows?: unknown
                   environments?: {
                     active_agencies?: unknown
                     alert_severity_label?: string
@@ -4761,6 +4981,27 @@ export interface components {
                             number_cache_clusters?: number
                             parameter_group_name?: string
                             team_name?: string
+                            tf_filename?: string
+                            tf_label?: string
+                            tf_line_end?: number
+                            tf_line_start?: number
+                            tf_mod_version?: string
+                            tf_path?: string
+                          }[]
+                          hmpps_template?: {
+                            application?: string
+                            application_insights_instance?: string
+                            environment_name?: string
+                            github_repo?: string
+                            github_team_name?: string
+                            id?: number
+                            is_production?: boolean
+                            namespace?: string
+                            prevent_self_review?: boolean
+                            protected_branches_only?: boolean
+                            reviewer_teams?: unknown
+                            selected_branch_patterns?: unknown
+                            source_template_repo?: string
                             tf_filename?: string
                             tf_label?: string
                             tf_line_end?: number
@@ -4890,14 +5131,15 @@ export interface components {
                                   id?: number
                                 }
                               }
+                              environments?: unknown
+                              image_id?: string
                               name?: string
                               /** Format: date-time */
                               publishedAt?: string
                               /** @enum {string} */
                               scan_status?: 'Failed' | 'Succeeded'
-                              trivy_scan_timestamp?: string
                               scan_summary?: unknown
-                              environments?: unknown
+                              trivy_scan_timestamp?: string
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -4963,8 +5205,6 @@ export interface components {
                   slack_channel_security_scans_notify?: string
                   standards_compliance?: unknown
                   title?: string
-                  trivy_last_completed_scan_date?: string
-                  trivy_scan_summary?: unknown
                   /** Format: date-time */
                   updatedAt?: string
                   updatedBy?: {
@@ -5418,6 +5658,27 @@ export interface components {
               tf_mod_version?: string
               tf_path?: string
             }[]
+            hmpps_template?: {
+              application?: string
+              application_insights_instance?: string
+              environment_name?: string
+              github_repo?: string
+              github_team_name?: string
+              id?: number
+              is_production?: boolean
+              namespace?: string
+              prevent_self_review?: boolean
+              protected_branches_only?: boolean
+              reviewer_teams?: unknown
+              selected_branch_patterns?: unknown
+              source_template_repo?: string
+              tf_filename?: string
+              tf_label?: string
+              tf_line_end?: number
+              tf_line_start?: number
+              tf_mod_version?: string
+              tf_path?: string
+            }[]
             name?: string
             pingdom_check?: {
               encryption?: boolean
@@ -5484,39 +5745,6 @@ export interface components {
       /** @enum {string} */
       type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
       url?: string
-    }
-    EnvironmentPropertiesForMapping: {
-      id?: number
-      attributes?: {
-        name?: string
-        type?: string
-        namespace?: string
-        info_path?: string
-        health_path?: string
-        url?: string
-        cluster?: string
-        monitor?: boolean
-        active_agencies?: unknown
-        swagger_docs?: string
-        ip_allow_list_enabled?: boolean
-        ip_allow_list?: unknown
-        include_in_subject_access_requests?: boolean
-        modsecurity_enabled?: boolean
-        modsecurity_audit_enabled?: boolean
-        modsecurity_snippet?: string
-        build_image_tag?: string
-        alert_severity_label?: string
-        alerts_slack_channel?: string
-        createdAt?: string
-        updatedAt?: string
-        publishedAt?: string
-        manually_managed?: boolean
-        component?: unknown
-      }
-    }
-    EnvironmentListResponseDataItem: {
-      attributes?: components['schemas']['EnvironmentPropertiesForMapping']
-      id?: number
     }
     ScheduledJob: {
       /** Format: date-time */
@@ -5703,6 +5931,7 @@ export interface components {
                 attributes?: {
                   api?: boolean
                   app_insights_cloud_role_name?: string
+                  codescanning_summary?: unknown
                   container_image?: string
                   /** Format: date-time */
                   createdAt?: string
@@ -5713,6 +5942,7 @@ export interface components {
                     }
                   }
                   description?: string
+                  disabled_workflows?: unknown
                   environments?: {
                     active_agencies?: unknown
                     alert_severity_label?: string
@@ -5756,6 +5986,27 @@ export interface components {
                             number_cache_clusters?: number
                             parameter_group_name?: string
                             team_name?: string
+                            tf_filename?: string
+                            tf_label?: string
+                            tf_line_end?: number
+                            tf_line_start?: number
+                            tf_mod_version?: string
+                            tf_path?: string
+                          }[]
+                          hmpps_template?: {
+                            application?: string
+                            application_insights_instance?: string
+                            environment_name?: string
+                            github_repo?: string
+                            github_team_name?: string
+                            id?: number
+                            is_production?: boolean
+                            namespace?: string
+                            prevent_self_review?: boolean
+                            protected_branches_only?: boolean
+                            reviewer_teams?: unknown
+                            selected_branch_patterns?: unknown
+                            source_template_repo?: string
                             tf_filename?: string
                             tf_label?: string
                             tf_line_end?: number
@@ -5885,14 +6136,15 @@ export interface components {
                                   id?: number
                                 }
                               }
+                              environments?: unknown
+                              image_id?: string
                               name?: string
                               /** Format: date-time */
                               publishedAt?: string
                               /** @enum {string} */
                               scan_status?: 'Failed' | 'Succeeded'
-                              trivy_scan_timestamp?: string
                               scan_summary?: unknown
-                              environments?: unknown
+                              trivy_scan_timestamp?: string
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -5958,8 +6210,6 @@ export interface components {
                   slack_channel_security_scans_notify?: string
                   standards_compliance?: unknown
                   title?: string
-                  trivy_last_completed_scan_date?: string
-                  trivy_scan_summary?: unknown
                   /** Format: date-time */
                   updatedAt?: string
                   updatedBy?: {
@@ -6288,6 +6538,7 @@ export interface components {
                 attributes?: {
                   api?: boolean
                   app_insights_cloud_role_name?: string
+                  codescanning_summary?: unknown
                   container_image?: string
                   /** Format: date-time */
                   createdAt?: string
@@ -6298,6 +6549,7 @@ export interface components {
                     }
                   }
                   description?: string
+                  disabled_workflows?: unknown
                   environments?: {
                     active_agencies?: unknown
                     alert_severity_label?: string
@@ -6341,6 +6593,27 @@ export interface components {
                             number_cache_clusters?: number
                             parameter_group_name?: string
                             team_name?: string
+                            tf_filename?: string
+                            tf_label?: string
+                            tf_line_end?: number
+                            tf_line_start?: number
+                            tf_mod_version?: string
+                            tf_path?: string
+                          }[]
+                          hmpps_template?: {
+                            application?: string
+                            application_insights_instance?: string
+                            environment_name?: string
+                            github_repo?: string
+                            github_team_name?: string
+                            id?: number
+                            is_production?: boolean
+                            namespace?: string
+                            prevent_self_review?: boolean
+                            protected_branches_only?: boolean
+                            reviewer_teams?: unknown
+                            selected_branch_patterns?: unknown
+                            source_template_repo?: string
                             tf_filename?: string
                             tf_label?: string
                             tf_line_end?: number
@@ -6470,14 +6743,15 @@ export interface components {
                                   id?: number
                                 }
                               }
+                              environments?: unknown
+                              image_id?: string
                               name?: string
                               /** Format: date-time */
                               publishedAt?: string
                               /** @enum {string} */
                               scan_status?: 'Failed' | 'Succeeded'
-                              trivy_scan_timestamp?: string
                               scan_summary?: unknown
-                              environments?: unknown
+                              trivy_scan_timestamp?: string
                               /** Format: date-time */
                               updatedAt?: string
                               updatedBy?: {
@@ -6543,8 +6817,6 @@ export interface components {
                   slack_channel_security_scans_notify?: string
                   standards_compliance?: unknown
                   title?: string
-                  trivy_last_completed_scan_date?: string
-                  trivy_scan_summary?: unknown
                   /** Format: date-time */
                   updatedAt?: string
                   updatedBy?: {
@@ -6872,6 +7144,27 @@ export interface components {
       tf_mod_version?: string
       tf_path?: string
     }
+    TfModulesHmppsTerraformTemplateComponent: {
+      application?: string
+      application_insights_instance?: string
+      environment_name?: string
+      github_repo?: string
+      github_team_name?: string
+      id?: number
+      is_production?: boolean
+      namespace?: string
+      prevent_self_review?: boolean
+      protected_branches_only?: boolean
+      reviewer_teams?: unknown
+      selected_branch_patterns?: unknown
+      source_template_repo?: string
+      tf_filename?: string
+      tf_label?: string
+      tf_line_end?: number
+      tf_line_start?: number
+      tf_mod_version?: string
+      tf_path?: string
+    }
     TfModulesPingdomCheckComponent: {
       encryption?: boolean
       host?: string
@@ -7022,14 +7315,15 @@ export interface components {
           id?: number
         }
       }
+      environments?: unknown
+      image_id?: string
       name?: string
       /** Format: date-time */
       publishedAt?: string
       /** @enum {string} */
       scan_status?: 'Failed' | 'Succeeded'
-      trivy_scan_timestamp?: string
       scan_summary?: unknown
-      environments?: unknown
+      trivy_scan_timestamp?: string
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
@@ -7057,12 +7351,13 @@ export interface components {
     TrivyScanRequest: {
       data: {
         build_image_tag?: string
+        environments?: unknown
+        image_id?: string
         name?: string
         /** @enum {string} */
         scan_status?: 'Failed' | 'Succeeded'
-        trivy_scan_timestamp?: string
         scan_summary?: unknown
-        environments?: unknown
+        trivy_scan_timestamp?: string
       }
     }
     TrivyScanResponse: {

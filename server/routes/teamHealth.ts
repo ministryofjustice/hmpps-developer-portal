@@ -1,14 +1,11 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import { isValidDropDown } from '../utils/utils'
 
 export default function routes({ teamHealthService, componentNameService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     if (req.query.updateServiceArea === '' && isValidDropDown(req, 'serviceArea')) {
       return res.redirect(`/team-health/service-areas/${req.query.serviceArea}`)
     }

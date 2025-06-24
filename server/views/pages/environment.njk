@@ -8,7 +8,7 @@
 
 {% set breadCrumbList = [
     {title: "Products", href: "/products"},
-    {title: component.product.attributes.name, href: "/products/" + component.product.attributes.slug},
+    {title: component.product.name, href: "/products/" + component.product.slug},
     {title: component.name, href: "/components/" + component.name},
     {title: "Environment"}
   ]
@@ -150,6 +150,14 @@
     <tr>
       <th>Alerts Slack Channel</th>
       <td>{{ component.environment.alerts_slack_channel }}</td>
+    </tr>
+    <tr>
+      <th>Trivy Scan Results</th>
+      <td>
+        <a class="govuk-link--no-visited-state" href="/trivy-scans/{{component.name}}/environments/{{ component.environment.name }}">
+          <img src="/assets/images/trivy.png" alt="Trivy Logo" class="trivy-icon"/>
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>

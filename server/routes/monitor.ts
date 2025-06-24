@@ -1,5 +1,4 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { Environment } from '../data/strapiApiTypes'
@@ -32,9 +31,7 @@ type ComponentToMonitor = {
 export default function routes({ serviceCatalogueService, redisService, dataFilterService }: Services): Router {
   const router = Router()
 
-  const get = (path: string | string[], handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get(['/', '/:monitorType/:monitorName'], async (req, res) => {
+  router.get(['/', '/:monitorType/:monitorName'], async (req, res) => {
     const monitorType = getMonitorType(req)
     const monitorName = getMonitorName(req)
     logger.info(`Request for /monitor/${monitorType}/${monitorName}`)
@@ -95,7 +92,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     })
   })
 
-  get('/components/:monitorType/:monitorId?', async (req, res) => {
+  router.get('/components/:monitorType{/:monitorId}', async (req, res) => {
     try {
       const monitorType = getMonitorType(req)
       let monitorId = getNumericId(req, 'monitorId')
@@ -191,7 +188,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     return healthPayload.healthy === true ? 'UP' : 'DOWN'
   }
 
-  get('/queue', async (req, res) => {
+  router.get('/queue', async (req, res) => {
     const versions = await redisService.readLatest('latest:versions')
     const health = await redisService.readLatest('latest:health')
 
