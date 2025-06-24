@@ -1,14 +1,11 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import { utcTimestampToUtcDateTime } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name: 'hmpps-github-teams-discovery' })
     return res.render('pages/githubTeams', {
       jobName: scheduledJobRequest.name,
@@ -16,13 +13,13 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     })
   })
 
-  get('/data', async (req, res) => {
+  router.get('/data', async (req, res) => {
     const githubTeams = await serviceCatalogueService.getGithubTeams()
 
     res.send(githubTeams)
   })
 
-  get('/:github_team_name', async (req, res) => {
+  router.get('/:github_team_name', async (req, res) => {
     const teamName = req.params.github_team_name
     const teamRequest = await serviceCatalogueService.getGithubTeam({ teamName })
     const allGithubTeams = await serviceCatalogueService.getGithubTeams()

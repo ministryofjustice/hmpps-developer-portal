@@ -1,5 +1,4 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
 import {
@@ -20,9 +19,7 @@ interface DisplayAlert {
 export default function routes({ serviceCatalogueService, redisService, alertsService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({
       name: 'hmpps-github-discovery-incremental',
     })
@@ -32,13 +29,13 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     })
   })
 
-  get('/data', async (req, res) => {
+  router.get('/data', async (req, res) => {
     const components = await serviceCatalogueService.getComponents()
 
     res.send(components)
   })
 
-  get('/:componentName', async (req, res) => {
+  router.get('/:componentName', async (req, res) => {
     const componentName = getComponentName(req)
     const component = await serviceCatalogueService.getComponent({ componentName })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
@@ -91,7 +88,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     return res.render('pages/component', { component: displayComponent })
   })
 
-  get('/:componentName/environment/:environmentName', async (req, res) => {
+  router.get('/:componentName/environment/:environmentName', async (req, res) => {
     const componentName = getComponentName(req)
     const environmentName = getEnvironmentName(req)
 
@@ -140,10 +137,10 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     return res.render('pages/environment', { component: displayComponent })
   })
 
-  get('/queue/:componentName/:environmentName/*', async (req, res) => {
+  router.get('/queue/:componentName/:environmentName/:queueInformation', async (req, res) => {
     const componentName = getComponentName(req)
     const environmentName = getEnvironmentName(req)
-    const queueInformation = req.params[0]
+    const queueInformation = req.params?.queueInformation ?? ''
     const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
 
     logger.info(`Queue call for ${componentName} with ${queueInformation}`)

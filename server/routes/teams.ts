@@ -1,5 +1,4 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import { getFormattedName, utcTimestampToUtcDateTime } from '../utils/utils'
 import logger from '../../logger'
@@ -7,9 +6,7 @@ import logger from '../../logger'
 export default function routes({ serviceCatalogueService, teamsSummaryCountService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name: 'hmpps-sharepoint-discovery' })
     return res.render('pages/teams', {
       jobName: scheduledJobRequest.name,
@@ -17,13 +14,13 @@ export default function routes({ serviceCatalogueService, teamsSummaryCountServi
     })
   })
 
-  get('/data', async (req, res) => {
+  router.get('/data', async (req, res) => {
     const teams = await serviceCatalogueService.getTeams()
 
     res.send(teams)
   })
 
-  get('/:teamSlug', async (req, res) => {
+  router.get('/:teamSlug', async (req, res) => {
     const teamSlug = getFormattedName(req, 'teamSlug')
     const team = await serviceCatalogueService.getTeam({ teamSlug })
     const products = team.products?.data?.map(product => product)

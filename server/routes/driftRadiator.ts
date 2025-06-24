@@ -1,15 +1,11 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import { isValidDropDown } from '../utils/utils'
 
 export default function routes({ teamHealthService, componentNameService, dataFilterService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-  const post = (path: string, handler: RequestHandler) => router.post(path, asyncMiddleware(handler))
-
-  get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     if (req.query.updateServiceArea === '' && isValidDropDown(req, 'serviceArea')) {
       return res.redirect(`/drift-radiator/service-areas/${req.query.serviceArea}`)
     }
@@ -42,7 +38,7 @@ export default function routes({ teamHealthService, componentNameService, dataFi
     })
   })
 
-  get('/teams/:teamName', async (req, res) => {
+  router.get('/teams/:teamName', async (req, res) => {
     const { teamName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForTeam(teamName)
     const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
@@ -63,7 +59,7 @@ export default function routes({ teamHealthService, componentNameService, dataFi
     })
   })
 
-  get('/service-areas/:serviceAreaName', async (req, res) => {
+  router.get('/service-areas/:serviceAreaName', async (req, res) => {
     const { serviceAreaName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForServiceArea(serviceAreaName)
     const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
@@ -84,7 +80,7 @@ export default function routes({ teamHealthService, componentNameService, dataFi
     })
   })
 
-  get('/products/:productName', async (req, res) => {
+  router.get('/products/:productName', async (req, res) => {
     const { productName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForProduct(productName)
     const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
@@ -105,7 +101,7 @@ export default function routes({ teamHealthService, componentNameService, dataFi
     })
   })
 
-  get('/custom-components/:customComponentName', async (req, res) => {
+  router.get('/custom-components/:customComponentName', async (req, res) => {
     const { customComponentName } = req.params
     const components = await componentNameService.getAllDeployedComponentsForCustomComponents(customComponentName)
     const [teamList, productList, serviceAreaList, customComponentsList] = await dataFilterService.getDropDownLists({
@@ -126,7 +122,7 @@ export default function routes({ teamHealthService, componentNameService, dataFi
     })
   })
 
-  post('/components.json', async (req, res) => {
+  router.post('/components.json', async (req, res) => {
     const { componentNames } = req.body as Record<string, string[]>
     const driftData = await teamHealthService.getDriftData(componentNames)
     res.send(driftData)

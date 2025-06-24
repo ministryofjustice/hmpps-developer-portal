@@ -1,5 +1,4 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import { utcTimestampToUtcDateTime, sortBySeverity, getComponentName, getEnvironmentName } from '../utils/utils'
 import { ScanResult, Summary, TrivyScanType } from '../data/converters/modelTypes'
@@ -115,19 +114,17 @@ const createSecretResultsTable = (results: ScanResult) => {
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     return res.render('pages/trivyScans')
   })
 
-  get('/data', async (req, res) => {
+  router.get('/data', async (req, res) => {
     const trivyScans = await serviceCatalogueService.getTrivyScans()
 
     res.json(trivyScans)
   })
 
-  get('/:componentName/environments/:environmentName', async (req, res) => {
+  router.get('/:componentName/environments/:environmentName', async (req, res) => {
     const componentName = getComponentName(req)
     const environmentName = getEnvironmentName(req)
     const component = await serviceCatalogueService.getComponent({ componentName })

@@ -1,14 +1,11 @@
-import { type RequestHandler, Router } from 'express'
-import asyncMiddleware from '../middleware/asyncMiddleware'
+import { Router } from 'express'
 import type { Services } from '../services'
 import { utcTimestampToUtcDateTime } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
-  const get = (path: string, handler: RequestHandler) => router.get(path, asyncMiddleware(handler))
-
-  get('/', async (req, res) => {
+  router.get('/', async (req, res) => {
     const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name: 'hmpps-sharepoint-discovery' })
     return res.render('pages/serviceAreas', {
       jobName: scheduledJobRequest.name,
@@ -16,12 +13,12 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     })
   })
 
-  get('/data', async (req, res) => {
+  router.get('/data', async (req, res) => {
     const serviceAreas = await serviceCatalogueService.getServiceAreas()
     res.send(serviceAreas)
   })
 
-  get('/:serviceAreaSlug', async (req, res) => {
+  router.get('/:serviceAreaSlug', async (req, res) => {
     const { serviceAreaSlug } = req.params
     const serviceArea = await serviceCatalogueService.getServiceArea({ serviceAreaSlug, withProducts: true })
     const products = serviceArea.products?.data?.map(product => product)
@@ -37,7 +34,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.render('pages/serviceArea', { serviceArea: displayServiceArea })
   })
 
-  get('/:serviceAreaSlug/diagram', async (req, res) => {
+  router.get('/:serviceAreaSlug/diagram', async (req, res) => {
     const { serviceAreaSlug } = req.params
     const serviceAreas = (await serviceCatalogueService.getServiceAreas()).map(({ name, slug }) => ({
       name,
