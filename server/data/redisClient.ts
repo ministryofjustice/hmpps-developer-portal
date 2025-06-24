@@ -1,12 +1,4 @@
-import {
-  createClient,
-  createClientPool,
-  RedisClientPoolType,
-  RedisFunctions,
-  RedisModules,
-  RedisScripts,
-  RespVersions,
-} from 'redis'
+import { createClient } from 'redis'
 
 import logger from '../../logger'
 import config from '../config'
@@ -22,32 +14,6 @@ const tlsVerification = config.redis.tlsVerification === 'true'
 
 export const createRedisClient = (): RedisClient => {
   const client = createClient({
-    url,
-    password: config.redis.password,
-    socket: {
-      rejectUnauthorized: tlsVerification,
-      reconnectStrategy: (attempts: number) => {
-        // Exponential back off: 20ms, 40ms, 80ms..., capped to retry every 30 seconds
-        const nextDelay = Math.min(2 ** attempts * 20, 30000)
-        logger.info(`Retry Redis connection attempt: ${attempts}, next attempt in: ${nextDelay}ms`)
-        return nextDelay
-      },
-    },
-  })
-
-  client.on('error', (e: Error) => logger.error('Redis client error', e))
-
-  return client
-}
-
-export const createRedisClientPool = (): RedisClientPoolType<
-  RedisModules,
-  RedisFunctions,
-  RedisScripts,
-  RespVersions,
-  object
-> => {
-  const client = createClientPool({
     url,
     password: config.redis.password,
     socket: {
