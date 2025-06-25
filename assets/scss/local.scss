@@ -299,6 +299,97 @@
   white-space: nowrap
 }
 
+#trivyScansTable {
+  width: 100%;
+  overflow-x: auto; // Enables horizontal scrolling if the table overflows
+
+  th, td {
+    padding: govuk-spacing(1);
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &.name {
+      width: 80px;
+      min-width: 80px;
+      max-width: 100px;
+    }
+    &.environments {
+      width: 20px;
+    }
+    &.count,
+    &.result{
+      width: 10px !important;
+    }
+
+    &.cve {
+      width: 120px;
+      min-width: 100px;
+      max-width: 140px;
+    }
+  }
+}
+
+.trivyData {
+  th, td, img{
+    padding: govuk-spacing(1);
+    vertical-align: top;
+  }
+
+  th {
+    text-align: center;
+    background-color: govuk-colour('light-grey');
+
+    &.govuk-table__header {
+      text-align: left;
+    }
+  }
+  tr:nth-of-type(2n + 1) td {
+    background-color: govuk-colour('light-grey');
+  }
+
+  &.category {
+    width: 10%
+  }
+  &.severity {
+    width: 10%
+  }
+  &.description {
+    width: 30%
+  }
+  &.filePath {
+    width: 20%
+  }
+  &.lineNumber {
+    width: 10%
+  }
+  &.context {
+    width: 20%
+  }
+  &.vulnertabilityId {
+    width: 15%
+  }
+  &.package {
+    width: 10%
+  }
+  &.version {
+    width: 10%
+  }
+
+}
+
+.trivyData tr.trivyCritical, .trivyData tr.trivyCritical td {
+  background-color: govuk-colour('red');
+  color: white;
+}
+
+.trivy-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 5px;
+}
+
 // For update buttons on filterDropDowns partial when page is bigger than 640px
 @media(width > 640px) {
   .monitor-selectors {
