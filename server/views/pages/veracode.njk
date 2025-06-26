@@ -66,30 +66,30 @@
 	</form>
 
   <table id="veracodeTable" class="stripe">
-		<tfoot>
-			<tr>
-				<th>Name</th>
-				<th>Result</th>
-				<th>Date</th>
-				<th>Very High</th>
-				<th>High</th>
-				<th>Medium</th>
-				<th>Low</th>
-				<th>Score</th>
-				<th>Report</th>
-			</tr>
-		</thead>
 		<thead>
 			<tr>
 				<th>Name</th>
-				<th>Result</th>
+				<th class="col-med">Result</th>
 				<th>Date</th>
-				<th>Very High</th>
-				<th>High</th>
-				<th>Medium</th>
-				<th>Low</th>
-				<th>Score</th>
-				<th>Report</th>
+				<th class="col-med">Very High</th>
+				<th class="col-small">High</th>
+				<th class="col-med">Medium</th>
+				<th class="col-small">Low</th>
+				<th class="col-small">Score</th>
+				<th class="col-med">Report</th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+			<th>Name</th>
+      <th class="col-med">Result</th>
+      <th>Date</th>
+      <th class="col-med">Very High</th>
+      <th class="col-small">High</th>
+      <th class="col-med">Medium</th>
+      <th class="col-small">Low</th>
+      <th class="col-small">Score</th>
+     	<th class="col-med">Report</th>
 			</tr>
 		</tfoot>
   </table>
@@ -100,7 +100,7 @@
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
   <script src="/assets/js/common.js"></script>
   <script src="/assets/js/veracode.js"></script>
 {% endblock %}

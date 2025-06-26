@@ -1,0 +1,49 @@
+#veracodeTable {
+  position: relative;
+  width: 100%;
+  border-collapse: collapse;
+  align-items: center;
+  overflow: visible;
+}
+
+#veracodeTable th {
+&.col-med {
+  max-width: 110px;
+};
+&.col-small {
+max-width: 100px;
+}
+}
+
+//#vericodeTable .col-small {
+//  max-width: 100px;
+//}
+
+
+@media (width < 1230px) {
+  #veracodeTable {
+    display: block;
+    overflow-x: auto
+  }
+}
+//#veracodeTable th {
+//  word-break: normal;
+//  &.col-name { width: 12% };
+//  &.col-result { width: 11% };
+//  &.col-date { width: 11% };
+//  &.col-veryHigh { width: 10% };
+//  &.col-high { width: 10% };
+//  &.col-medium { width: 10% };
+//  &.col-low { width: 10% };
+//  &.col-score { width: 10% };
+//  &.col-report { width: 11% };
+//}
+
+//#veracodeTable td {
+//  background-color: grey;
+//  word-break: normal;
+//}
+
+//#veracodeTable tr {
+//  word-break: break-word;
+//}
