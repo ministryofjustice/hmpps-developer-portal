@@ -246,6 +246,80 @@ export const mockComponents = [
   { attributes: { name: 'ComponentA', product: { data: { id: 1 } } } },
   { attributes: { name: 'ComponentB', product: { data: { id: 2 } } } },
 ]
+
+// Veracode mock components for getTeamVeracodeVulnerabilityCounts tests
+export const mockVeracodeComponents = [
+  {
+    attributes: {
+      name: 'ComponentA',
+      product: { data: { id: 1 } },
+      veracode_results_summary: {
+        severity: [
+          {
+            category: [
+              { severity: 'VERY_HIGH', count: 2 },
+              { severity: 'HIGH', count: 3 },
+            ],
+          },
+          {
+            category: [
+              { severity: 'MEDIUM', count: 5 },
+              { severity: 'LOW', count: 7 },
+            ],
+          },
+        ],
+      },
+    },
+  },
+  {
+    attributes: {
+      name: 'ComponentB',
+      product: { data: { id: 2 } },
+      veracode_results_summary: {
+        severity: [
+          {
+            category: [
+              { severity: 'HIGH', count: 1 },
+              { severity: 'LOW', count: 2 },
+            ],
+          },
+        ],
+      },
+    },
+  },
+  // Component with no veracode_results_summary
+  {
+    attributes: {
+      name: 'ComponentC',
+      product: { data: { id: 1 } },
+    },
+  },
+  // Component with empty severity array
+  {
+    attributes: {
+      name: 'ComponentD',
+      product: { data: { id: 2 } },
+      veracode_results_summary: {
+        severity: [],
+      },
+    },
+  },
+  // Component with non-matching product id
+  {
+    attributes: {
+      name: 'ComponentE',
+      product: { data: { id: 99 } },
+      veracode_results_summary: {
+        severity: [
+          {
+            category: [{ severity: 'VERY_HIGH', count: 10 }],
+          },
+        ],
+      },
+    },
+  },
+]
+
 export const mockTrivyScans = [
   {
     name: 'ComponentA',

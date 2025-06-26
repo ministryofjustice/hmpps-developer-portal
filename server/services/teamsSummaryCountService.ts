@@ -1,9 +1,13 @@
 import logger from '../../logger'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Component, DataItem, Product, SingleResponse } from '../data/strapiApiTypes'
+import { Component, DataItem, Product, SingleResponse, VeracodeResultsSummary } from '../data/strapiApiTypes'
 import AlertsService from './alertsService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { formatMonitorName } from '../utils/utils'
+
+// Valid Veracode severity levels
+export const VALID_SEVERITIES = ['VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW'] as const
+export type Severity = (typeof VALID_SEVERITIES)[number]
 
 type StrapiProduct = { id?: number; attributes?: Record<string, unknown> }
 
@@ -216,6 +220,59 @@ export default class TeamsSummaryCountService {
     } catch (err) {
       logger.error('Error in getTeamTrivyVulnerabilityCounts:', err)
       return { critical: 0, high: 0 }
+    }
+  }
+
+  /**
+   * Helper: Get Veracode VERY_HIGH, HIGH, MEDIUM, LOW vuln counts for a team's products
+   */
+  async getTeamVeracodeVulnerabilityCounts(
+    products: StrapiProduct[],
+    serviceCatalogueService: ServiceCatalogueService,
+  ): Promise<{ veryHigh: number; high: number; medium: number; low: number }> {
+    if (!Array.isArray(products) || products.length === 0) {
+      return { veryHigh: 0, high: 0, medium: 0, low: 0 }
+    }
+    try {
+      const allComponents = await serviceCatalogueService.getComponents()
+      const productIds = new Set(products.map(p => p.id))
+      const validComponents = allComponents.filter(component => {
+        const productId = component?.attributes?.product?.data?.id
+        return productId && productIds.has(productId)
+      })
+
+      const counts = validComponents.reduce(
+        (total, component) => {
+          const summary = component.attributes?.veracode_results_summary as VeracodeResultsSummary | undefined
+          if (!summary?.severity) return total
+
+          return summary.severity.reduce((outerTotal, severity) => {
+            return severity.category.reduce((innerTotal, category) => {
+              if (VALID_SEVERITIES.includes(category.severity as Severity)) {
+                return {
+                  ...innerTotal,
+                  [category.severity]: innerTotal[category.severity as Severity] + category.count,
+                }
+              }
+              logger.warn(`[getTeamVeracodeVulnerabilityCounts] Unexpected severity: ${category.severity}`)
+              return innerTotal
+            }, outerTotal)
+          }, total)
+        },
+        VALID_SEVERITIES.reduce((acc, sev) => ({ ...acc, [sev]: 0 }), {} as Record<Severity, number>),
+      )
+      logger.info(
+        `[Veracode] VERY_HIGH: ${counts.VERY_HIGH}, HIGH: ${counts.HIGH}, MEDIUM: ${counts.MEDIUM}, LOW: ${counts.LOW}`,
+      )
+      return {
+        veryHigh: counts.VERY_HIGH,
+        high: counts.HIGH,
+        medium: counts.MEDIUM,
+        low: counts.LOW,
+      }
+    } catch (err) {
+      logger.error('Error in getTeamVeracodeVulnerabilityCounts:', err)
+      return { veryHigh: 0, high: 0, medium: 0, low: 0 }
     }
   }
 }
