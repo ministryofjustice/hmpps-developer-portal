@@ -120,6 +120,9 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   router.get('/data', async (req, res) => {
     const trivyScans = await serviceCatalogueService.getTrivyScans()
+    const teams = await serviceCatalogueService.getTeams({ withComponents: true })
+
+    console.log('trivyScans: ', trivyScans)
 
     res.json(trivyScans)
   })
