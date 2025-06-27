@@ -144,7 +144,7 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
   return 'none'
 }
 
-// Match alert data to correspondting environments and components to get slack channel and team properties
+// Match alert data to corresponding environments and components to get slack channel and team properties
 export const addNewPropertiesToAlert = (
   revisedAlerts: Alert[],
   environments: DataItem<Environment>[],
