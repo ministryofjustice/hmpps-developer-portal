@@ -310,10 +310,11 @@ export default class StrapiApiClient {
   }
 
   async getEnvironments() {
-    return this.restClient.get<ListResponse<Environment>>({
+    const results = await this.restClient.get<ListResponse<Environment>>({
       path: '/v1/environments',
       query: 'populate=component',
     })
+    return results.data.map(convertEnvironments)
   }
 
   private unwrapSingleResponse<T>(response: SingleResponse<T>): T & { id: number } {

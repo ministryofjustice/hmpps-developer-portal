@@ -13,7 +13,7 @@ import {
   GithubRepoRequest,
   ListResponse,
   DataItem,
-  Environment,
+  Env,
   SingleResponse,
 } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
@@ -557,14 +557,14 @@ describe('Strapi service', () => {
     describe('getEnvironments', () => {
       const testEnvironmentsResponse = {
         data: [
-          { id: 1, attributes: { name: 'Environment 1' } },
-          { id: 2, attributes: { name: 'Environment 2' } },
+          { id: 1, name: 'Environment 1'},
+          { id: 2, name: 'Environment 2' },
         ],
-      } as ListResponse<Environment>
+      } as ListResponse<Env>
       const testEnvironments = [
-        { id: 1, attributes: { name: 'Environment 1' } },
-        { id: 2, attributes: { name: 'Environment 2' } },
-      ] as DataItem<Environment>[]
+        { id: 1, name: 'Environment 1' },
+        { id: 2, name: 'Environment 2' },
+      ] as DataItem<Env>[]
 
       it('should return an ordered array of environments', async () => {
         strapiApiClient.getEnvironments.mockResolvedValue(testEnvironmentsResponse)

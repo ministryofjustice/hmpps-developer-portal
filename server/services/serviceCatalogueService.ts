@@ -302,8 +302,7 @@ export default class ServiceCatalogueService {
   async getEnvironments(): Promise<DataItem<Environment>[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const environmentData = await strapiApiClient.getEnvironments()
-    const environmentList = environmentData.data
 
-    return environmentList
+    return environmentData
   }
 }

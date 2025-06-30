@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { Envs } from '../types/strapiApiTypes'
 import { EnvironmentType } from '../data/converters/modelTypes'
 import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow, formatMonitorName } from '../utils/utils'
 
@@ -222,7 +221,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 }
 
 const getEnvironmentData = (component: ComponentToMonitor, selectedProductId?: string): MonitorEnvironment[] => {
-  const typedEnvironments = component.attributes.envs?.data as Environment[] || []
+  const typedEnvironments = component.attributes.envs?.data as EnvironmentType[] || []
   console.log(`Environments for component ${component.attributes.name}:`, typedEnvironments)
   let productId
   if (selectedProductId) {
