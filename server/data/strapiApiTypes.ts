@@ -22,12 +22,12 @@ export type SingleResponse<T> = {
   meta?: Record<string, never>
 }
 
-type HasComponents = { components: { data: DataItem<Component>[] } }
+type HasComponents = { components: ListResponse<Component> }
 type HasTeam = { team: SingleResponse<Team> }
 type HasServiceArea = { service_area: SingleResponse<StrapiServiceArea> }
-type HasProduct = { product?: { data: { attributes: ProductWithTeamAndServiceArea } } }
+type HasProduct = { product: SingleResponse<ProductWithTeamAndServiceArea> }
 
-type ProductWithTeamAndServiceArea = Omit<Omit<Product, 'team'>, 'serviceArea'> & HasTeam & HasServiceArea
+type ProductWithTeamAndServiceArea = Omit<Product, 'team' | 'serviceArea'> & HasTeam & HasServiceArea
 
 export type Product = Omit<components['schemas']['Product'], 'components'> & HasComponents
 export type Component = components['schemas']['Component'] & HasProduct
