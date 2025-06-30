@@ -23,12 +23,12 @@ export const mockProductList = [
   { attributes: { name: 'Product 2', slug: 'product-2', p_id: 'p2' } },
 ] as DataItem<Product>[]
 
-export const mockComponents1: DataItem<Component>[] = [
+export const mockComponents1 = [
   { id: 1, attributes: { name: 'Comp1A' } },
   { id: 2, attributes: { name: 'Comp1B' } },
-]
+] as DataItem<Component>[]
 
-export const mockComponents2: DataItem<Component>[] = [{ id: 3, attributes: { name: 'Comp2A' } }]
+export const mockComponents2 = [{ id: 3, attributes: { name: 'Comp2A' } }] as DataItem<Component>[]
 
 export const mockProductResponse1 = {
   data: [{ attributes: { components: { data: mockComponents1 } } }],
