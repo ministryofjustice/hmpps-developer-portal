@@ -48,37 +48,32 @@ jQuery(function () {
       },
     },
     {
-      data: 'attributes.environments',
+      data: 'attributes.envs',
       render: function (data, type, row, meta) {
-        const prodEnvironments = (data || []).filter(env => env.name === 'prod')
+        const envs = Array.isArray(row.attributes.envs.data) ? row.attributes.envs.data : []
+        const prodEnvs = envs.filter(env => env.attributes.name === 'prod')
 
-        if (prodEnvironments.length === 0) {
+        if (prodEnvs.length === 0) {
           const displayVal = 'No Prod Environment'
           const filterVal = displayVal
           const sortVal = 'zzzzz'
           if (type === 'display') return displayVal
           if (type === 'filter') return filterVal
           return sortVal
-        }
-
-        const displayList = prodEnvironments.map(env =>
-          env.alerts_slack_channel === null ? 'Not set' : env.alerts_slack_channel,
-        )
-        const filterList = prodEnvironments.map(env => env.alerts_slack_channel || 'Not set')
-        const sortList = prodEnvironments
-          .map(env => {
-            const channel = env.alerts_slack_channel
-            return channel === null ? 'zzzz' : channel.toLowerCase().replace(/[^a-z0-9]/g, '')
-          })
-          .sort()
-
-        switch (type) {
-          case 'display':
-            return displayList.join(', ')
-          case 'filter':
-            return filterList.join(' ')
-          default:
-            return sortList.join(' ')
+        } else {
+          const prodEnvironment = prodEnvs[0].attributes
+          const displayVal =
+            prodEnvironment.alerts_slack_channel === null ? 'Not set' : prodEnvironment.alerts_slack_channel
+          const filterVal = prodEnvironment.alerts_slack_channel || 'Not set'
+          const sortVal = prodEnvironment.alerts_slack_channel === null
+          switch (type) {
+            case 'display':
+              return displayVal
+            case 'filter':
+              return filterVal
+            default:
+              return sortVal
+          }
         }
       },
     },

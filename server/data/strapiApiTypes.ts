@@ -37,9 +37,6 @@ export type StrapiServiceArea = components['schemas']['ServiceArea']
 
 export type CustomComponentView = components['schemas']['CustomComponentView']
 
-export type Environment = components['schemas']['PropertiesEnvironmentComponent']
-export type EnvironmentForMapping = SingleResponse<Environment>
-
 export type Namespace = components['schemas']['Namespace']
 
 export type GithubRepoRequest = components['schemas']['GithubRepoRequest']

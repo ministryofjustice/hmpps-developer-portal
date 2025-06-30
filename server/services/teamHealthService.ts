@@ -271,8 +271,9 @@ export default class TeamHealthService {
   toComponentView = (component: Component, versionDetails: VersionDetails[], now: Date) => {
     const versionDetailByEnv = associateBy(versionDetails, details => details.type)
 
-    const environmentsWithVersions = component.environments
-      .map(env => {
+    const environmentsWithVersions = component.envs?.data
+      .map(environment => {
+        const env = environment.attributes
         if (!versionDetailByEnv[env.name]) {
           return undefined
         }

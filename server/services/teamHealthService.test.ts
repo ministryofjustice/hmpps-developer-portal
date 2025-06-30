@@ -27,11 +27,13 @@ describe('teamHealthService', () => {
           attributes: {
             name: 'some-service',
             github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
+            envs: {
+              data: [
+                { id: 123, attributes: { name: 'dev', type: 'dev' } },
+                { id: 456, attributes: { name: 'preprod', type: 'preprod' } },
+                { id: 789, attributes: { name: 'prod', type: 'prod' } },
+              ],
+            },
           },
         } as DataItem<Component>,
       ])
@@ -112,12 +114,14 @@ describe('teamHealthService', () => {
             name: 'some-service',
             github_repo: 'some-service-repo',
             latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-02T01:02:03.000Z' },
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'test1', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
+            envs: {
+              data: [
+                { id: 123, attributes: { name: 'dev', type: 'dev' } },
+                { id: 450, attributes: { name: 'test1', type: 'dev' } },
+                { id: 456, attributes: { name: 'preprod', type: 'preprod' } },
+                { id: 789, attributes: { name: 'prod', type: 'prod' } },
+              ],
+            },
           },
         } as DataItem<Component>,
       ])
@@ -194,21 +198,25 @@ describe('teamHealthService', () => {
           attributes: {
             name: 'some-service',
             github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
+            envs: {
+              data: [
+                { id: 123, attributes: { name: 'dev', type: 'dev' } },
+                { id: 456, attributes: { name: 'preprod', type: 'preprod' } },
+                { id: 789, attributes: { name: 'prod', type: 'prod' } },
+              ],
+            },
           },
         },
         {
           attributes: {
             name: 'another-service',
             github_repo: 'another-service-repo',
-            environments: [
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
+            envs: {
+              data: [
+                { id: 456, attributes: { name: 'preprod', type: 'preprod' } },
+                { id: 789, attributes: { name: 'prod', type: 'prod' } },
+              ],
+            },
           },
         },
         {
@@ -216,11 +224,13 @@ describe('teamHealthService', () => {
             name: 'yet-another-service',
             github_repo: 'yet-another-service-repo',
             api: true,
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
+            envs: {
+              data: [
+                { id: 123, attributes: { name: 'dev', type: 'dev' } },
+                { id: 456, attributes: { name: 'preprod', type: 'preprod' } },
+                { id: 789, attributes: { name: 'prod', type: 'prod' } },
+              ],
+            },
           },
         },
       ] as DataItem<Component>[])
@@ -248,11 +258,13 @@ describe('teamHealthService', () => {
           attributes: {
             name: 'some-service',
             github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
+            envs: {
+              data: [
+                { id: 123, attributes: { name: 'dev', type: 'dev' } },
+                { id: 456, attributes: { name: 'preprod', type: 'preprod' } },
+                { id: 789, attributes: { name: 'prod', type: 'prod' } },
+              ],
+            },
             product: {
               data: {
                 attributes: {
@@ -408,11 +420,13 @@ describe('teamHealthService', () => {
           attributes: {
             name: 'some-service',
             github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
+            envs: {
+              data: [
+                { id: 123, attributes: { name: 'dev', type: 'dev' } },
+                { id: 456, attributes: { name: 'preprod', type: 'preprod' } },
+                { id: 789, attributes: { name: 'prod', type: 'prod' } },
+              ],
+            },
             product: {
               data: {
                 attributes: {
@@ -433,10 +447,12 @@ describe('teamHealthService', () => {
           attributes: {
             name: 'another-service',
             github_repo: 'another-service-repo',
-            environments: [
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
+            envs: {
+              data: [
+                { id: 456, attributes: { name: 'preprod', type: 'preprod' } },
+                { id: 789, attributes: { name: 'prod', type: 'prod' } },
+              ],
+            },
             product: {
               data: {
                 attributes: {
@@ -458,11 +474,13 @@ describe('teamHealthService', () => {
             name: 'yet-another-service',
             github_repo: 'yet-another-service-repo',
             api: true,
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
+            envs: {
+              data: [
+                { id: 123, attributes: { name: 'dev', type: 'dev' } },
+                { id: 456, attributes: { name: 'preprod', type: 'preprod' } },
+                { id: 789, attributes: { name: 'prod', type: 'prod' } },
+              ],
+            },
             product: {
               data: {
                 attributes: {

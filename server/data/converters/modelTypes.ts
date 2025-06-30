@@ -87,3 +87,26 @@ export type TrivyScanType = {
   environments: string[]
   scan_summary: ScanSummary
 }
+
+export type EnvironmentType = {
+  id: number
+  name: string
+  type: string
+  namespace: string
+  info_path: string
+  health_path: string
+  url: string
+  monitor: boolean
+  active_agencies: string[]
+  swagger_docs: string
+  ip_allow_list_enabled: boolean
+  ip_allow_list: string[]
+  include_in_subject_access_requests: boolean
+  modsecurity_enabled: boolean
+  modsecurity_audit_enabled: boolean
+  modsecurity_snippet: string
+  build_image_tag: string
+  alert_severity_label: string
+  alerts_slack_channel: string
+  manually_managed: boolean
+}

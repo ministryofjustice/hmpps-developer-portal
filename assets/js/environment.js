@@ -251,7 +251,7 @@ function drawVersionChart(stream) {
       tableChart.setSelection(arg)
     }
     selected = tableChart.getSelection()
-    console.log(selected)
+
     if (selected.length > 0) {
       const selectedItem = selected[0]
       const version = dataVersionTable.getValue(selectedItem.row, 0)

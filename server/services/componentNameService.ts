@@ -11,7 +11,7 @@ export default class ComponentNameService {
     const rawComponents = componentData.data.sort(sortData)
 
     const components = rawComponents
-      .filter(component => component.attributes?.environments?.length)
+      .filter(component => component.attributes?.envs?.data?.length)
       .map(component => component.attributes.name)
 
     return components
@@ -31,7 +31,7 @@ export default class ComponentNameService {
 
     return teamDetails.data.attributes.products.data.flatMap(product =>
       product.attributes?.components?.data
-        .filter(component => component.attributes?.environments?.length)
+        .filter(component => component.attributes?.envs?.data?.length)
         .sort(sortData)
         .map(component => component.attributes.name),
     )
@@ -51,7 +51,7 @@ export default class ComponentNameService {
 
     return serviceAreaDetails.data.attributes.products.data.flatMap(product =>
       product.attributes?.components?.data
-        .filter(component => component.attributes?.environments?.length)
+        .filter(component => component.attributes?.envs?.data?.length)
         .sort(sortData)
         .map(component => component.attributes.name),
     )
@@ -67,7 +67,7 @@ export default class ComponentNameService {
     const components = productDetails.attributes?.components?.data as unknown as DataItem<Component>[]
 
     return components
-      .filter(component => component.attributes?.environments?.length)
+      .filter(component => component.attributes?.envs?.data?.length)
       .sort(sortData)
       .map(component => component.attributes.name)
   }
@@ -84,7 +84,7 @@ export default class ComponentNameService {
     const components = customComponentDetails.attributes?.components?.data as unknown as DataItem<Component>[]
 
     return components
-      .filter(component => component.attributes?.environments?.length)
+      .filter(component => component.attributes?.envs?.data?.length)
       .sort(sortData)
       .map(component => component.attributes.name)
   }

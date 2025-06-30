@@ -1,7 +1,8 @@
 import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { Environment } from '../data/strapiApiTypes'
+import { Envs } from '../types/strapiApiTypes'
+import { EnvironmentType } from '../data/converters/modelTypes'
 import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow, formatMonitorName } from '../utils/utils'
 
 type MonitorEnvironment = {
@@ -17,7 +18,15 @@ type MonitorEnvironment = {
 type ComponentToMonitor = {
   attributes?: {
     name?: string
-    environments?: Environment[]
+    envs?: {
+      data?: Array<{
+        id?: number
+        attributes?: {
+          name?: string
+          type?: string
+        }
+      }>
+    }
     product?: {
       data?: {
         attributes?: {
@@ -213,7 +222,8 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 }
 
 const getEnvironmentData = (component: ComponentToMonitor, selectedProductId?: string): MonitorEnvironment[] => {
-  const typedEnvironments = component.attributes.environments as Environment[]
+  const typedEnvironments = component.attributes.envs?.data as Environment[] || []
+  console.log(`Environments for component ${component.attributes.name}:`, typedEnvironments)
   let productId
   if (selectedProductId) {
     productId = selectedProductId
@@ -224,7 +234,6 @@ const getEnvironmentData = (component: ComponentToMonitor, selectedProductId?: s
   const isPrisons = `${productId}`.startsWith('DPS')
   const isProbation = `${productId}`.startsWith('HMPPS')
   const environments: MonitorEnvironment[] = []
-
   typedEnvironments.forEach(environment => {
     if (environment.monitor) {
       environments.push({

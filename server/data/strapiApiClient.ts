@@ -22,6 +22,7 @@ import {
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea, TrivyScanType } from './converters/modelTypes'
 import convertTrivyScan from './converters/trivyScans'
+import convertEnvironments from './converters/environments'
 
 export default class StrapiApiClient {
   private restClient: RestClient
@@ -48,7 +49,7 @@ export default class StrapiApiClient {
     }
 
     if (withEnvironments) {
-      populate.push('components.environments')
+      populate.push('components.envs')
     }
 
     return this.restClient.get({
@@ -69,7 +70,7 @@ export default class StrapiApiClient {
     const populateList = ['product_set', 'team', 'components', 'service_area']
 
     if (withEnvironments) {
-      populateList.push('components.environments')
+      populateList.push('components.envs')
     }
 
     const populate = new URLSearchParams({ populate: populateList }).toString()
@@ -85,7 +86,7 @@ export default class StrapiApiClient {
     includeLatestCommit: boolean = false,
   ): Promise<ListResponse<Component>> {
     const populate = new URLSearchParams({
-      populate: `product${includeTeams ? '.team' : ''},environments${includeLatestCommit ? ',latest_commit' : ''}`,
+      populate: `product${includeTeams ? '.team' : ''},envs${includeLatestCommit ? ',latest_commit' : ''}`,
     }).toString()
     const filters = exemptionFilters.map((filterValue, index) => {
       return `filters[veracode_exempt][$in][${index}]=${filterValue}`
@@ -125,7 +126,7 @@ export default class StrapiApiClient {
     const populateList = ['products']
 
     if (withEnvironments) {
-      populateList.push('products.components.environments')
+      populateList.push('products.components.envs')
     }
 
     const populate = new URLSearchParams({ populate: populateList }).toString()
@@ -193,7 +194,7 @@ export default class StrapiApiClient {
     const populateList = ['products']
 
     if (withProducts) {
-      populateList.push('products.components.environments')
+      populateList.push('products.components.envs')
     }
 
     const populate = new URLSearchParams({ populate: populateList }).toString()
@@ -211,7 +212,7 @@ export default class StrapiApiClient {
     const populate = ['components']
 
     if (withEnvironments) {
-      populate.push('components.environments')
+      populate.push('components.envs')
     }
 
     return this.restClient.get({
@@ -232,7 +233,7 @@ export default class StrapiApiClient {
     const populate = ['components', 'components.product']
 
     if (withEnvironments) {
-      populate.push('components.environments')
+      populate.push('components.envs')
     }
 
     return this.restClient.get({

@@ -33,8 +33,8 @@ describe('Component name service', () => {
   describe('All components', () => {
     const testComponentsResponse = {
       data: [
-        { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-        { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
+        { attributes: { name: 'comp-3', envs: { data: [{ id: 123, attributes: { name: 'dev' } }] } } },
+        { attributes: { name: 'comp-1', envs: { data: [{ id: 156, attributes: { name: 'env' } }] } } },
         { attributes: { name: 'comp-2' } },
       ],
     } as ListResponse<Component>
@@ -70,8 +70,8 @@ describe('Component name service', () => {
                 attributes: {
                   components: {
                     data: [
-                      { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-                      { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
+                      { attributes: { name: 'comp-3', envs: { data: [{ id: 123, attributes: { name: 'dev' } }] } } },
+                      { attributes: { name: 'comp-1', envs: { data: [{ id: 156, attributes: { name: 'env' } }] } } },
                       { attributes: { name: 'comp-2' } },
                     ],
                   },
@@ -108,8 +108,8 @@ describe('Component name service', () => {
                 attributes: {
                   components: {
                     data: [
-                      { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-                      { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
+                      { attributes: { name: 'comp-3', envs: { data: [{ id: 123, attributes: { name: 'dev' } }] } } },
+                      { attributes: { name: 'comp-1', envs: { data: [{ id: 156, attributes: { name: 'env' } }] } } },
                       { attributes: { name: 'comp-2' } },
                     ],
                   },
@@ -141,8 +141,8 @@ describe('Component name service', () => {
             name: 'product-1',
             components: {
               data: [
-                { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-                { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
+                { attributes: { name: 'comp-3', envs: { data: [{ id: 123, attributes: { name: 'dev' } }] } } },
+                { attributes: { name: 'comp-1', envs: { data: [{ id: 156, attributes: { name: 'env' } }] } } },
                 { attributes: { name: 'comp-2' } },
               ],
             },
@@ -170,8 +170,8 @@ describe('Component name service', () => {
             name: 'custom-component-1',
             components: {
               data: [
-                { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-                { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
+                { attributes: { name: 'comp-3', envs: { data: [{ id: 123, attributes: { name: 'dev' } }] } } },
+                { attributes: { name: 'comp-1', envs: { data: [{ id: 156, attributes: { name: 'env' } }] } } },
                 { attributes: { name: 'comp-2' } },
               ],
             },
@@ -193,8 +193,8 @@ describe('Component name service', () => {
   describe('checkComponentExists()', () => {
     const testComponentsResponse = {
       data: [
-        { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-        { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
+        { attributes: { name: 'comp-3', envs: { data: [{ id: 123, attributes: { name: 'dev' } }] } } },
+        { attributes: { name: 'comp-1', envs: { data: [{ id: 156, attributes: { name: 'env' } }] } } },
         { attributes: { name: 'comp-2' } },
       ],
     } as ListResponse<Component>

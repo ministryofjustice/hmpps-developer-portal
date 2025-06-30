@@ -1840,7 +1840,6 @@ export interface components {
       }
       description?: string
       disabled_workflows?: unknown
-      environments?: components['schemas']['PropertiesEnvironmentComponent'][]
       envs?: {
         data?: {
           attributes?: {
@@ -1866,36 +1865,6 @@ export interface components {
                   }
                   description?: string
                   disabled_workflows?: unknown
-                  environments?: {
-                    active_agencies?: unknown
-                    alert_severity_label?: string
-                    alerts_slack_channel?: string
-                    build_image_tag?: string
-                    cluster?: string
-                    health_path?: string
-                    id?: number
-                    include_in_subject_access_requests?: boolean
-                    info_path?: string
-                    ip_allow_list?: unknown
-                    ip_allow_list_enabled?: boolean
-                    manually_managed?: boolean
-                    modsecurity_audit_enabled?: boolean
-                    modsecurity_enabled?: boolean
-                    modsecurity_snippet?: string
-                    monitor?: boolean
-                    name?: string
-                    namespace?: string
-                    ns?: {
-                      data?: {
-                        attributes?: Record<string, never>
-                        id?: number
-                      }
-                    }
-                    swagger_docs?: string
-                    /** @enum {string} */
-                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                    url?: string
-                  }[]
                   envs?: {
                     data?: {
                       attributes?: Record<string, never>
@@ -2123,12 +2092,6 @@ export interface components {
                 id?: number
               }
             }
-            env_namespace?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
-            }
             health_path?: string
             include_in_subject_access_requests?: boolean
             info_path?: string
@@ -2141,6 +2104,12 @@ export interface components {
             monitor?: boolean
             name?: string
             namespace?: string
+            ns?: {
+              data?: {
+                attributes?: Record<string, never>
+                id?: number
+              }
+            }
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -2263,7 +2232,6 @@ export interface components {
         container_image?: string
         description?: string
         disabled_workflows?: unknown
-        environments?: components['schemas']['PropertiesEnvironmentComponent'][]
         envs?: (number | string)[]
         frontend?: boolean
         github_enforce_admins_enabled?: boolean
@@ -2492,237 +2460,6 @@ export interface components {
             }
             description?: string
             disabled_workflows?: unknown
-            environments?: {
-              active_agencies?: unknown
-              alert_severity_label?: string
-              alerts_slack_channel?: string
-              build_image_tag?: string
-              cluster?: string
-              health_path?: string
-              id?: number
-              include_in_subject_access_requests?: boolean
-              info_path?: string
-              ip_allow_list?: unknown
-              ip_allow_list_enabled?: boolean
-              manually_managed?: boolean
-              modsecurity_audit_enabled?: boolean
-              modsecurity_enabled?: boolean
-              modsecurity_snippet?: string
-              monitor?: boolean
-              name?: string
-              namespace?: string
-              ns?: {
-                data?: {
-                  attributes?: {
-                    /** Format: date-time */
-                    createdAt?: string
-                    createdBy?: {
-                      data?: {
-                        attributes?: {
-                          blocked?: boolean
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          /** Format: email */
-                          email?: string
-                          firstname?: string
-                          isActive?: boolean
-                          lastname?: string
-                          preferedLanguage?: string
-                          registrationToken?: string
-                          resetPasswordToken?: string
-                          roles?: {
-                            data?: {
-                              attributes?: {
-                                code?: string
-                                /** Format: date-time */
-                                createdAt?: string
-                                createdBy?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }
-                                }
-                                description?: string
-                                name?: string
-                                permissions?: {
-                                  data?: {
-                                    attributes?: {
-                                      action?: string
-                                      actionParameters?: unknown
-                                      conditions?: unknown
-                                      /** Format: date-time */
-                                      createdAt?: string
-                                      createdBy?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                      properties?: unknown
-                                      role?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                      subject?: string
-                                      /** Format: date-time */
-                                      updatedAt?: string
-                                      updatedBy?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                    }
-                                    id?: number
-                                  }[]
-                                }
-                                /** Format: date-time */
-                                updatedAt?: string
-                                updatedBy?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }
-                                }
-                                users?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }[]
-                                }
-                              }
-                              id?: number
-                            }[]
-                          }
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          username?: string
-                        }
-                        id?: number
-                      }
-                    }
-                    elasticache_cluster?: {
-                      application?: string
-                      business_unit?: string
-                      engine_version?: string
-                      environment_name?: string
-                      id?: number
-                      infrastructure_support?: string
-                      is_production?: boolean
-                      namespace?: string
-                      node_type?: string
-                      number_cache_clusters?: number
-                      parameter_group_name?: string
-                      team_name?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    hmpps_template?: {
-                      application?: string
-                      application_insights_instance?: string
-                      environment_name?: string
-                      github_repo?: string
-                      github_team_name?: string
-                      id?: number
-                      is_production?: boolean
-                      namespace?: string
-                      prevent_self_review?: boolean
-                      protected_branches_only?: boolean
-                      reviewer_teams?: unknown
-                      selected_branch_patterns?: unknown
-                      source_template_repo?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    name?: string
-                    pingdom_check?: {
-                      encryption?: boolean
-                      host?: string
-                      id?: number
-                      integrationids?: unknown
-                      name?: string
-                      notifyagainevery?: number
-                      notifywhenbackup?: boolean
-                      port?: number
-                      probefilters?: string
-                      resolution?: number
-                      sendnotificationwhendown?: number
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_path?: string
-                      type?: string
-                      url?: string
-                    }[]
-                    /** Format: date-time */
-                    publishedAt?: string
-                    rds_instance?: {
-                      allow_major_version_upgrade?: boolean
-                      allow_minor_version_upgrade?: boolean
-                      application?: string
-                      backup_window?: string
-                      business_unit?: string
-                      db_engine_version?: string
-                      db_instance_class?: string
-                      db_max_allocated_storage?: string
-                      db_parameter?: unknown
-                      deletion_protection?: boolean
-                      environment_name?: string
-                      id?: number
-                      infrastructure_support?: string
-                      is_production?: string
-                      maintenance_window?: string
-                      namespace?: string
-                      performance_insights_enabled?: boolean
-                      rds_family?: string
-                      team_name?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    /** Format: date-time */
-                    updatedAt?: string
-                    updatedBy?: {
-                      data?: {
-                        attributes?: Record<string, never>
-                        id?: number
-                      }
-                    }
-                  }
-                  id?: number
-                }
-              }
-              swagger_docs?: string
-              /** @enum {string} */
-              type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-              url?: string
-            }[]
             envs?: {
               data?: {
                 attributes?: {
@@ -2745,12 +2482,6 @@ export interface components {
                       id?: number
                     }
                   }
-                  env_namespace?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
                   health_path?: string
                   include_in_subject_access_requests?: boolean
                   info_path?: string
@@ -2763,6 +2494,12 @@ export interface components {
                   monitor?: boolean
                   name?: string
                   namespace?: string
+                  ns?: {
+                    data?: {
+                      attributes?: Record<string, never>
+                      id?: number
+                    }
+                  }
                   /** Format: date-time */
                   publishedAt?: string
                   swagger_docs?: string
@@ -3101,237 +2838,6 @@ export interface components {
             }
             description?: string
             disabled_workflows?: unknown
-            environments?: {
-              active_agencies?: unknown
-              alert_severity_label?: string
-              alerts_slack_channel?: string
-              build_image_tag?: string
-              cluster?: string
-              health_path?: string
-              id?: number
-              include_in_subject_access_requests?: boolean
-              info_path?: string
-              ip_allow_list?: unknown
-              ip_allow_list_enabled?: boolean
-              manually_managed?: boolean
-              modsecurity_audit_enabled?: boolean
-              modsecurity_enabled?: boolean
-              modsecurity_snippet?: string
-              monitor?: boolean
-              name?: string
-              namespace?: string
-              ns?: {
-                data?: {
-                  attributes?: {
-                    /** Format: date-time */
-                    createdAt?: string
-                    createdBy?: {
-                      data?: {
-                        attributes?: {
-                          blocked?: boolean
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          /** Format: email */
-                          email?: string
-                          firstname?: string
-                          isActive?: boolean
-                          lastname?: string
-                          preferedLanguage?: string
-                          registrationToken?: string
-                          resetPasswordToken?: string
-                          roles?: {
-                            data?: {
-                              attributes?: {
-                                code?: string
-                                /** Format: date-time */
-                                createdAt?: string
-                                createdBy?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }
-                                }
-                                description?: string
-                                name?: string
-                                permissions?: {
-                                  data?: {
-                                    attributes?: {
-                                      action?: string
-                                      actionParameters?: unknown
-                                      conditions?: unknown
-                                      /** Format: date-time */
-                                      createdAt?: string
-                                      createdBy?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                      properties?: unknown
-                                      role?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                      subject?: string
-                                      /** Format: date-time */
-                                      updatedAt?: string
-                                      updatedBy?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                    }
-                                    id?: number
-                                  }[]
-                                }
-                                /** Format: date-time */
-                                updatedAt?: string
-                                updatedBy?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }
-                                }
-                                users?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }[]
-                                }
-                              }
-                              id?: number
-                            }[]
-                          }
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          username?: string
-                        }
-                        id?: number
-                      }
-                    }
-                    elasticache_cluster?: {
-                      application?: string
-                      business_unit?: string
-                      engine_version?: string
-                      environment_name?: string
-                      id?: number
-                      infrastructure_support?: string
-                      is_production?: boolean
-                      namespace?: string
-                      node_type?: string
-                      number_cache_clusters?: number
-                      parameter_group_name?: string
-                      team_name?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    hmpps_template?: {
-                      application?: string
-                      application_insights_instance?: string
-                      environment_name?: string
-                      github_repo?: string
-                      github_team_name?: string
-                      id?: number
-                      is_production?: boolean
-                      namespace?: string
-                      prevent_self_review?: boolean
-                      protected_branches_only?: boolean
-                      reviewer_teams?: unknown
-                      selected_branch_patterns?: unknown
-                      source_template_repo?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    name?: string
-                    pingdom_check?: {
-                      encryption?: boolean
-                      host?: string
-                      id?: number
-                      integrationids?: unknown
-                      name?: string
-                      notifyagainevery?: number
-                      notifywhenbackup?: boolean
-                      port?: number
-                      probefilters?: string
-                      resolution?: number
-                      sendnotificationwhendown?: number
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_path?: string
-                      type?: string
-                      url?: string
-                    }[]
-                    /** Format: date-time */
-                    publishedAt?: string
-                    rds_instance?: {
-                      allow_major_version_upgrade?: boolean
-                      allow_minor_version_upgrade?: boolean
-                      application?: string
-                      backup_window?: string
-                      business_unit?: string
-                      db_engine_version?: string
-                      db_instance_class?: string
-                      db_max_allocated_storage?: string
-                      db_parameter?: unknown
-                      deletion_protection?: boolean
-                      environment_name?: string
-                      id?: number
-                      infrastructure_support?: string
-                      is_production?: string
-                      maintenance_window?: string
-                      namespace?: string
-                      performance_insights_enabled?: boolean
-                      rds_family?: string
-                      team_name?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    /** Format: date-time */
-                    updatedAt?: string
-                    updatedBy?: {
-                      data?: {
-                        attributes?: Record<string, never>
-                        id?: number
-                      }
-                    }
-                  }
-                  id?: number
-                }
-              }
-              swagger_docs?: string
-              /** @enum {string} */
-              type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-              url?: string
-            }[]
             envs?: {
               data?: {
                 attributes?: {
@@ -3354,12 +2860,6 @@ export interface components {
                       id?: number
                     }
                   }
-                  env_namespace?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
                   health_path?: string
                   include_in_subject_access_requests?: boolean
                   info_path?: string
@@ -3372,6 +2872,12 @@ export interface components {
                   monitor?: boolean
                   name?: string
                   namespace?: string
+                  ns?: {
+                    data?: {
+                      attributes?: Record<string, never>
+                      id?: number
+                    }
+                  }
                   /** Format: date-time */
                   publishedAt?: string
                   swagger_docs?: string
@@ -3644,12 +3150,6 @@ export interface components {
           id?: number
         }
       }
-      env_namespace?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
-      }
       health_path?: string
       include_in_subject_access_requests?: boolean
       info_path?: string
@@ -3662,6 +3162,12 @@ export interface components {
       monitor?: boolean
       name: string
       namespace?: string
+      ns?: {
+        data?: {
+          attributes?: Record<string, never>
+          id?: number
+        }
+      }
       /** Format: date-time */
       publishedAt?: string
       swagger_docs?: string
@@ -3707,8 +3213,6 @@ export interface components {
         cluster?: string
         /** @example string or id */
         component?: number | string
-        /** @example string or id */
-        env_namespace?: number | string
         health_path?: string
         include_in_subject_access_requests?: boolean
         info_path?: string
@@ -3721,6 +3225,8 @@ export interface components {
         monitor?: boolean
         name: string
         namespace?: string
+        /** @example string or id */
+        ns?: number | string
         swagger_docs?: string
         /** @example string or id */
         trivy_scan?: number | string
@@ -4289,144 +3795,6 @@ export interface components {
                   }
                   description?: string
                   disabled_workflows?: unknown
-                  environments?: {
-                    active_agencies?: unknown
-                    alert_severity_label?: string
-                    alerts_slack_channel?: string
-                    build_image_tag?: string
-                    cluster?: string
-                    health_path?: string
-                    id?: number
-                    include_in_subject_access_requests?: boolean
-                    info_path?: string
-                    ip_allow_list?: unknown
-                    ip_allow_list_enabled?: boolean
-                    manually_managed?: boolean
-                    modsecurity_audit_enabled?: boolean
-                    modsecurity_enabled?: boolean
-                    modsecurity_snippet?: string
-                    monitor?: boolean
-                    name?: string
-                    namespace?: string
-                    ns?: {
-                      data?: {
-                        attributes?: {
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          elasticache_cluster?: {
-                            application?: string
-                            business_unit?: string
-                            engine_version?: string
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: boolean
-                            namespace?: string
-                            node_type?: string
-                            number_cache_clusters?: number
-                            parameter_group_name?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          hmpps_template?: {
-                            application?: string
-                            application_insights_instance?: string
-                            environment_name?: string
-                            github_repo?: string
-                            github_team_name?: string
-                            id?: number
-                            is_production?: boolean
-                            namespace?: string
-                            prevent_self_review?: boolean
-                            protected_branches_only?: boolean
-                            reviewer_teams?: unknown
-                            selected_branch_patterns?: unknown
-                            source_template_repo?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          name?: string
-                          pingdom_check?: {
-                            encryption?: boolean
-                            host?: string
-                            id?: number
-                            integrationids?: unknown
-                            name?: string
-                            notifyagainevery?: number
-                            notifywhenbackup?: boolean
-                            port?: number
-                            probefilters?: string
-                            resolution?: number
-                            sendnotificationwhendown?: number
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_path?: string
-                            type?: string
-                            url?: string
-                          }[]
-                          /** Format: date-time */
-                          publishedAt?: string
-                          rds_instance?: {
-                            allow_major_version_upgrade?: boolean
-                            allow_minor_version_upgrade?: boolean
-                            application?: string
-                            backup_window?: string
-                            business_unit?: string
-                            db_engine_version?: string
-                            db_instance_class?: string
-                            db_max_allocated_storage?: string
-                            db_parameter?: unknown
-                            deletion_protection?: boolean
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: string
-                            maintenance_window?: string
-                            namespace?: string
-                            performance_insights_enabled?: boolean
-                            rds_family?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                        }
-                        id?: number
-                      }
-                    }
-                    swagger_docs?: string
-                    /** @enum {string} */
-                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                    url?: string
-                  }[]
                   envs?: {
                     data?: {
                       attributes?: {
@@ -4449,12 +3817,6 @@ export interface components {
                             id?: number
                           }
                         }
-                        env_namespace?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
                         health_path?: string
                         include_in_subject_access_requests?: boolean
                         info_path?: string
@@ -4467,6 +3829,12 @@ export interface components {
                         monitor?: boolean
                         name?: string
                         namespace?: string
+                        ns?: {
+                          data?: {
+                            attributes?: Record<string, never>
+                            id?: number
+                          }
+                        }
                         /** Format: date-time */
                         publishedAt?: string
                         swagger_docs?: string
@@ -4938,144 +4306,6 @@ export interface components {
                   }
                   description?: string
                   disabled_workflows?: unknown
-                  environments?: {
-                    active_agencies?: unknown
-                    alert_severity_label?: string
-                    alerts_slack_channel?: string
-                    build_image_tag?: string
-                    cluster?: string
-                    health_path?: string
-                    id?: number
-                    include_in_subject_access_requests?: boolean
-                    info_path?: string
-                    ip_allow_list?: unknown
-                    ip_allow_list_enabled?: boolean
-                    manually_managed?: boolean
-                    modsecurity_audit_enabled?: boolean
-                    modsecurity_enabled?: boolean
-                    modsecurity_snippet?: string
-                    monitor?: boolean
-                    name?: string
-                    namespace?: string
-                    ns?: {
-                      data?: {
-                        attributes?: {
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          elasticache_cluster?: {
-                            application?: string
-                            business_unit?: string
-                            engine_version?: string
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: boolean
-                            namespace?: string
-                            node_type?: string
-                            number_cache_clusters?: number
-                            parameter_group_name?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          hmpps_template?: {
-                            application?: string
-                            application_insights_instance?: string
-                            environment_name?: string
-                            github_repo?: string
-                            github_team_name?: string
-                            id?: number
-                            is_production?: boolean
-                            namespace?: string
-                            prevent_self_review?: boolean
-                            protected_branches_only?: boolean
-                            reviewer_teams?: unknown
-                            selected_branch_patterns?: unknown
-                            source_template_repo?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          name?: string
-                          pingdom_check?: {
-                            encryption?: boolean
-                            host?: string
-                            id?: number
-                            integrationids?: unknown
-                            name?: string
-                            notifyagainevery?: number
-                            notifywhenbackup?: boolean
-                            port?: number
-                            probefilters?: string
-                            resolution?: number
-                            sendnotificationwhendown?: number
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_path?: string
-                            type?: string
-                            url?: string
-                          }[]
-                          /** Format: date-time */
-                          publishedAt?: string
-                          rds_instance?: {
-                            allow_major_version_upgrade?: boolean
-                            allow_minor_version_upgrade?: boolean
-                            application?: string
-                            backup_window?: string
-                            business_unit?: string
-                            db_engine_version?: string
-                            db_instance_class?: string
-                            db_max_allocated_storage?: string
-                            db_parameter?: unknown
-                            deletion_protection?: boolean
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: string
-                            maintenance_window?: string
-                            namespace?: string
-                            performance_insights_enabled?: boolean
-                            rds_family?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                        }
-                        id?: number
-                      }
-                    }
-                    swagger_docs?: string
-                    /** @enum {string} */
-                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                    url?: string
-                  }[]
                   envs?: {
                     data?: {
                       attributes?: {
@@ -5098,12 +4328,6 @@ export interface components {
                             id?: number
                           }
                         }
-                        env_namespace?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
                         health_path?: string
                         include_in_subject_access_requests?: boolean
                         info_path?: string
@@ -5116,6 +4340,12 @@ export interface components {
                         monitor?: boolean
                         name?: string
                         namespace?: string
+                        ns?: {
+                          data?: {
+                            attributes?: Record<string, never>
+                            id?: number
+                          }
+                        }
                         /** Format: date-time */
                         publishedAt?: string
                         swagger_docs?: string
@@ -5515,7 +4745,7 @@ export interface components {
       id?: number
       sha?: string
     }
-    PropertiesEnvironmentComponent: {
+    PropertiesEnvsComponent: {
       active_agencies?: unknown
       alert_severity_label?: string
       alerts_slack_channel?: string
@@ -5943,144 +5173,6 @@ export interface components {
                   }
                   description?: string
                   disabled_workflows?: unknown
-                  environments?: {
-                    active_agencies?: unknown
-                    alert_severity_label?: string
-                    alerts_slack_channel?: string
-                    build_image_tag?: string
-                    cluster?: string
-                    health_path?: string
-                    id?: number
-                    include_in_subject_access_requests?: boolean
-                    info_path?: string
-                    ip_allow_list?: unknown
-                    ip_allow_list_enabled?: boolean
-                    manually_managed?: boolean
-                    modsecurity_audit_enabled?: boolean
-                    modsecurity_enabled?: boolean
-                    modsecurity_snippet?: string
-                    monitor?: boolean
-                    name?: string
-                    namespace?: string
-                    ns?: {
-                      data?: {
-                        attributes?: {
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          elasticache_cluster?: {
-                            application?: string
-                            business_unit?: string
-                            engine_version?: string
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: boolean
-                            namespace?: string
-                            node_type?: string
-                            number_cache_clusters?: number
-                            parameter_group_name?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          hmpps_template?: {
-                            application?: string
-                            application_insights_instance?: string
-                            environment_name?: string
-                            github_repo?: string
-                            github_team_name?: string
-                            id?: number
-                            is_production?: boolean
-                            namespace?: string
-                            prevent_self_review?: boolean
-                            protected_branches_only?: boolean
-                            reviewer_teams?: unknown
-                            selected_branch_patterns?: unknown
-                            source_template_repo?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          name?: string
-                          pingdom_check?: {
-                            encryption?: boolean
-                            host?: string
-                            id?: number
-                            integrationids?: unknown
-                            name?: string
-                            notifyagainevery?: number
-                            notifywhenbackup?: boolean
-                            port?: number
-                            probefilters?: string
-                            resolution?: number
-                            sendnotificationwhendown?: number
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_path?: string
-                            type?: string
-                            url?: string
-                          }[]
-                          /** Format: date-time */
-                          publishedAt?: string
-                          rds_instance?: {
-                            allow_major_version_upgrade?: boolean
-                            allow_minor_version_upgrade?: boolean
-                            application?: string
-                            backup_window?: string
-                            business_unit?: string
-                            db_engine_version?: string
-                            db_instance_class?: string
-                            db_max_allocated_storage?: string
-                            db_parameter?: unknown
-                            deletion_protection?: boolean
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: string
-                            maintenance_window?: string
-                            namespace?: string
-                            performance_insights_enabled?: boolean
-                            rds_family?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                        }
-                        id?: number
-                      }
-                    }
-                    swagger_docs?: string
-                    /** @enum {string} */
-                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                    url?: string
-                  }[]
                   envs?: {
                     data?: {
                       attributes?: {
@@ -6103,12 +5195,6 @@ export interface components {
                             id?: number
                           }
                         }
-                        env_namespace?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
                         health_path?: string
                         include_in_subject_access_requests?: boolean
                         info_path?: string
@@ -6121,6 +5207,12 @@ export interface components {
                         monitor?: boolean
                         name?: string
                         namespace?: string
+                        ns?: {
+                          data?: {
+                            attributes?: Record<string, never>
+                            id?: number
+                          }
+                        }
                         /** Format: date-time */
                         publishedAt?: string
                         swagger_docs?: string
@@ -6550,144 +5642,6 @@ export interface components {
                   }
                   description?: string
                   disabled_workflows?: unknown
-                  environments?: {
-                    active_agencies?: unknown
-                    alert_severity_label?: string
-                    alerts_slack_channel?: string
-                    build_image_tag?: string
-                    cluster?: string
-                    health_path?: string
-                    id?: number
-                    include_in_subject_access_requests?: boolean
-                    info_path?: string
-                    ip_allow_list?: unknown
-                    ip_allow_list_enabled?: boolean
-                    manually_managed?: boolean
-                    modsecurity_audit_enabled?: boolean
-                    modsecurity_enabled?: boolean
-                    modsecurity_snippet?: string
-                    monitor?: boolean
-                    name?: string
-                    namespace?: string
-                    ns?: {
-                      data?: {
-                        attributes?: {
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          elasticache_cluster?: {
-                            application?: string
-                            business_unit?: string
-                            engine_version?: string
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: boolean
-                            namespace?: string
-                            node_type?: string
-                            number_cache_clusters?: number
-                            parameter_group_name?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          hmpps_template?: {
-                            application?: string
-                            application_insights_instance?: string
-                            environment_name?: string
-                            github_repo?: string
-                            github_team_name?: string
-                            id?: number
-                            is_production?: boolean
-                            namespace?: string
-                            prevent_self_review?: boolean
-                            protected_branches_only?: boolean
-                            reviewer_teams?: unknown
-                            selected_branch_patterns?: unknown
-                            source_template_repo?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          name?: string
-                          pingdom_check?: {
-                            encryption?: boolean
-                            host?: string
-                            id?: number
-                            integrationids?: unknown
-                            name?: string
-                            notifyagainevery?: number
-                            notifywhenbackup?: boolean
-                            port?: number
-                            probefilters?: string
-                            resolution?: number
-                            sendnotificationwhendown?: number
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_path?: string
-                            type?: string
-                            url?: string
-                          }[]
-                          /** Format: date-time */
-                          publishedAt?: string
-                          rds_instance?: {
-                            allow_major_version_upgrade?: boolean
-                            allow_minor_version_upgrade?: boolean
-                            application?: string
-                            backup_window?: string
-                            business_unit?: string
-                            db_engine_version?: string
-                            db_instance_class?: string
-                            db_max_allocated_storage?: string
-                            db_parameter?: unknown
-                            deletion_protection?: boolean
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: string
-                            maintenance_window?: string
-                            namespace?: string
-                            performance_insights_enabled?: boolean
-                            rds_family?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                        }
-                        id?: number
-                      }
-                    }
-                    swagger_docs?: string
-                    /** @enum {string} */
-                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                    url?: string
-                  }[]
                   envs?: {
                     data?: {
                       attributes?: {
@@ -6710,12 +5664,6 @@ export interface components {
                             id?: number
                           }
                         }
-                        env_namespace?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
                         health_path?: string
                         include_in_subject_access_requests?: boolean
                         info_path?: string
@@ -6728,6 +5676,12 @@ export interface components {
                         monitor?: boolean
                         name?: string
                         namespace?: string
+                        ns?: {
+                          data?: {
+                            attributes?: Record<string, never>
+                            id?: number
+                          }
+                        }
                         /** Format: date-time */
                         publishedAt?: string
                         swagger_docs?: string
