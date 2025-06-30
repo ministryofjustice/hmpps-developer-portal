@@ -2123,12 +2123,6 @@ export interface components {
                 id?: number
               }
             }
-            env_namespace?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
-            }
             health_path?: string
             include_in_subject_access_requests?: boolean
             info_path?: string
@@ -2141,6 +2135,12 @@ export interface components {
             monitor?: boolean
             name?: string
             namespace?: string
+            ns?: {
+              data?: {
+                attributes?: Record<string, never>
+                id?: number
+              }
+            }
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -2745,12 +2745,6 @@ export interface components {
                       id?: number
                     }
                   }
-                  env_namespace?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
                   health_path?: string
                   include_in_subject_access_requests?: boolean
                   info_path?: string
@@ -2763,6 +2757,12 @@ export interface components {
                   monitor?: boolean
                   name?: string
                   namespace?: string
+                  ns?: {
+                    data?: {
+                      attributes?: Record<string, never>
+                      id?: number
+                    }
+                  }
                   /** Format: date-time */
                   publishedAt?: string
                   swagger_docs?: string
@@ -3354,12 +3354,6 @@ export interface components {
                       id?: number
                     }
                   }
-                  env_namespace?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
                   health_path?: string
                   include_in_subject_access_requests?: boolean
                   info_path?: string
@@ -3372,6 +3366,12 @@ export interface components {
                   monitor?: boolean
                   name?: string
                   namespace?: string
+                  ns?: {
+                    data?: {
+                      attributes?: Record<string, never>
+                      id?: number
+                    }
+                  }
                   /** Format: date-time */
                   publishedAt?: string
                   swagger_docs?: string
@@ -3644,12 +3644,6 @@ export interface components {
           id?: number
         }
       }
-      env_namespace?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
-      }
       health_path?: string
       include_in_subject_access_requests?: boolean
       info_path?: string
@@ -3662,6 +3656,12 @@ export interface components {
       monitor?: boolean
       name: string
       namespace?: string
+      ns?: {
+        data?: {
+          attributes?: Record<string, never>
+          id?: number
+        }
+      }
       /** Format: date-time */
       publishedAt?: string
       swagger_docs?: string
@@ -3707,8 +3707,6 @@ export interface components {
         cluster?: string
         /** @example string or id */
         component?: number | string
-        /** @example string or id */
-        env_namespace?: number | string
         health_path?: string
         include_in_subject_access_requests?: boolean
         info_path?: string
@@ -3721,6 +3719,8 @@ export interface components {
         monitor?: boolean
         name: string
         namespace?: string
+        /** @example string or id */
+        ns?: number | string
         swagger_docs?: string
         /** @example string or id */
         trivy_scan?: number | string
@@ -4449,12 +4449,6 @@ export interface components {
                             id?: number
                           }
                         }
-                        env_namespace?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
                         health_path?: string
                         include_in_subject_access_requests?: boolean
                         info_path?: string
@@ -4467,6 +4461,12 @@ export interface components {
                         monitor?: boolean
                         name?: string
                         namespace?: string
+                        ns?: {
+                          data?: {
+                            attributes?: Record<string, never>
+                            id?: number
+                          }
+                        }
                         /** Format: date-time */
                         publishedAt?: string
                         swagger_docs?: string
@@ -5098,12 +5098,6 @@ export interface components {
                             id?: number
                           }
                         }
-                        env_namespace?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
                         health_path?: string
                         include_in_subject_access_requests?: boolean
                         info_path?: string
@@ -5116,6 +5110,12 @@ export interface components {
                         monitor?: boolean
                         name?: string
                         namespace?: string
+                        ns?: {
+                          data?: {
+                            attributes?: Record<string, never>
+                            id?: number
+                          }
+                        }
                         /** Format: date-time */
                         publishedAt?: string
                         swagger_docs?: string
@@ -6103,12 +6103,6 @@ export interface components {
                             id?: number
                           }
                         }
-                        env_namespace?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
                         health_path?: string
                         include_in_subject_access_requests?: boolean
                         info_path?: string
@@ -6121,6 +6115,12 @@ export interface components {
                         monitor?: boolean
                         name?: string
                         namespace?: string
+                        ns?: {
+                          data?: {
+                            attributes?: Record<string, never>
+                            id?: number
+                          }
+                        }
                         /** Format: date-time */
                         publishedAt?: string
                         swagger_docs?: string
@@ -6710,12 +6710,6 @@ export interface components {
                             id?: number
                           }
                         }
-                        env_namespace?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
                         health_path?: string
                         include_in_subject_access_requests?: boolean
                         info_path?: string
@@ -6728,6 +6722,12 @@ export interface components {
                         monitor?: boolean
                         name?: string
                         namespace?: string
+                        ns?: {
+                          data?: {
+                            attributes?: Record<string, never>
+                            id?: number
+                          }
+                        }
                         /** Format: date-time */
                         publishedAt?: string
                         swagger_docs?: string
