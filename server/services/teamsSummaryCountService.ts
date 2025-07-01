@@ -1,6 +1,6 @@
 import logger from '../../logger'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Component, DataItem, Product, SingleResponse, VeracodeResultsSummary } from '../data/strapiApiTypes'
+import { Component, DataItem, Product, SingleResponse, TrivyScanType, VeracodeResultsSummary } from '../data/strapiApiTypes'
 import AlertsService from './alertsService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { formatMonitorName } from '../utils/utils'
@@ -172,7 +172,7 @@ export default class TeamsSummaryCountService {
     }
 
     try {
-      const trivyScans = await serviceCatalogueService.getTrivyScans()
+      const trivyScans = await serviceCatalogueService.getTrivyScans() as DataItem<TrivyScanType>[]
       const allComponents = await serviceCatalogueService.getComponents()
 
       const productIds = new Set(products.map(p => p.id))
