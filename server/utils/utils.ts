@@ -5,7 +5,7 @@ import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
 import { Alert, RdsEntry } from '../@types'
-import { DataItem, SingleResponse, ListResponse, Environment } from '../data/strapiApiTypes'
+import { DataItem, Environment } from '../data/strapiApiTypes'
 import type { ServiceCatalogueService } from '../services'
 
 dayjs.extend(relativeTime.default)
@@ -323,48 +323,3 @@ export const utcTimestampToUtcDate = (str: string) => (str ? formatDate(new Date
 
 export const utcTimestampToUtcDateTime = (str: string) =>
   str ? formatDate(new Date(str), 'dd-MMM-yyyy HH:mm:ss').toUpperCase() : undefined
-
-export function unwrapSingleResponse<T>(response: SingleResponse<T>): T & { id: number } {
-  const data =
-    Array.isArray(response.data) && response.data.length > 0 ? (response.data[0] as DataItem<T>) : response.data
-
-  const unwrapAttributes = (item: Record<string, unknown>): Record<string, unknown> => {
-    if (!item || typeof item !== 'object') return item
-
-    // If the item has attributes, merge them with the id and recursively unwrap
-    if ('attributes' in item) {
-      const { id, attributes } = item as { id: number; attributes: Record<string, unknown> }
-      return { id, ...unwrapAttributes(attributes) }
-    }
-
-    // Recursively unwrap any nested objects or arrays
-    const unwrappedItem: Record<string, unknown> = { ...item }
-    for (const key of Object.keys(unwrappedItem)) {
-      unwrappedItem[key] = Array.isArray(unwrappedItem[key])
-        ? (unwrappedItem[key] as unknown[]).map(unwrapAttributes)
-        : unwrapAttributes(unwrappedItem[key] as Record<string, unknown>)
-    }
-
-    return unwrappedItem
-  }
-  return unwrapAttributes(data) as T & { id: number }
-}
-
-export function unwrapListResponse<T>(response: ListResponse<T>): Array<T & { id: number }> {
-  return response.data.map(({ id, attributes }) => ({ ...attributes, id }))
-}
-
-// Recursive unwrap utility
-export type DeepUnwrap<T> =
-  T extends ListResponse<infer U>
-    ? DeepUnwrap<U>[]
-    : T extends SingleResponse<infer U>
-      ? DeepUnwrap<U>
-      : T extends object
-        ? { [K in keyof T]: DeepUnwrap<T[K]> }
-        : T
-
-// Transform utility that applies DeepUnwrap to each property
-export type Transform<T> = {
-  [K in keyof T]: DeepUnwrap<T[K]>
-}
