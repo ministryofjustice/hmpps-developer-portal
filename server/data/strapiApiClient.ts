@@ -15,13 +15,13 @@ import {
   GithubTeam,
   ScheduledJob,
   TrivyScan,
+  TrivyScanRequest,
   Environment,
   SingleResponse,
   DataItem,
 } from './strapiApiTypes'
 import { convertServiceArea } from './converters/serviceArea'
-import type { ServiceArea, TrivyScanType } from './converters/modelTypes'
-import convertTrivyScan from './converters/trivyScans'
+import type { ServiceArea } from './converters/modelTypes'
 
 export default class StrapiApiClient {
   private restClient: RestClient
@@ -104,6 +104,15 @@ export default class StrapiApiClient {
       path: '/v1/components',
       query: `filters[name][$eq]=${componentName}&${populate}`,
     })
+  }
+
+  async getComponentNew({ componentName }: { componentName: string }): Promise<SingleResponse<Component>> {
+    const populate = new URLSearchParams({ populate: 'product.team,envs.trivy_scan' }).toString()
+    return this.restClient.get<SingleResponse<Component>>({
+      path: '/v1/components',
+      query: `filters[name][$eq]=${componentName}&${populate}`,
+    })
+    .then(this.unwrapSingleResponse)
   }
 
   async getTeams(): Promise<ListResponse<Team>> {
@@ -294,18 +303,20 @@ export default class StrapiApiClient {
     })
   }
 
-  async getTrivyScans(): Promise<TrivyScanType[]> {
-    const results = await this.restClient.get<ListResponse<TrivyScan>>({
-      path: '/v1/trivy-scans',
-    })
-    return results.data.map(convertTrivyScan)
+  async getTrivyScans(): Promise<TrivyScan[]> {
+    return this.restClient
+      .get<ListResponse<TrivyScan>>({
+        path: '/v1/trivy-scans',
+      })
+      .then(this.unwrapListResponse)
   }
 
-  async getTrivyScan({ name }: { name: string }): Promise<SingleResponse<TrivyScan>> {
-    return this.restClient.get({
+  async getTrivyScan({ name }: { name: string }): Promise<TrivyScan> {
+    return this.restClient.get<SingleResponse<TrivyScan>>({
       path: '/v1/trivy-scans',
       query: `filters[name][$eq]=${name}`,
     })
+    .then(this.unwrapSingleResponse)
   }
 
   async getEnvironments() {
@@ -317,8 +328,27 @@ export default class StrapiApiClient {
 
   private unwrapSingleResponse<T>(response: SingleResponse<T>): T & { id: number } {
     const data =
-      Array.isArray(response.data) && response.data.length > 0 ? (response.data[0] as DataItem<T>) : response.data
-    return { ...data.attributes, id: data.id }
+      Array.isArray(response.data) && response.data.length > 0 ? (response.data[0] as DataItem<T>) : response.data;
+  
+    const unwrapAttributes = (item: any): any => {
+      if (!item || typeof item !== 'object') return item;
+  
+      // If the item has attributes, merge them with the id and recursively unwrap
+      if (item.attributes) {
+        return { id: item.id, ...unwrapAttributes(item.attributes) }
+      }
+  
+      // Recursively unwrap any nested objects or arrays
+      for (const key of Object.keys(item)) {
+        item[key] = Array.isArray(item[key])
+          ? item[key].map(unwrapAttributes) // Handle arrays
+          : unwrapAttributes(item[key])
+      }
+  
+      return item
+    }
+  
+    return { id: data.id, ...unwrapAttributes(data.attributes) }
   }
 
   private unwrapListResponse<T>(response: ListResponse<T>): Array<T & { id: number }> {

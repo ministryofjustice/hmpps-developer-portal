@@ -1,6 +1,6 @@
 import { RdsEntry } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import type { ServiceArea, TrivyScanType } from '../data/converters/modelTypes'
+import type { ServiceArea } from '../data/converters/modelTypes'
 import {
   Product,
   Component,
@@ -15,6 +15,8 @@ import {
   ScheduledJob,
   DataItem,
   Environment,
+  TrivyScan,
+  TrivyScanType,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
@@ -95,6 +97,13 @@ export default class ServiceCatalogueService {
     const component = componentData.length > 0 ? componentItem.data[0]?.attributes : {}
 
     return component
+  }
+
+  async getComponentNew({ componentName }: { componentName: string }): Promise<Component> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const componentItem = await strapiApiClient.getComponentNew({ componentName })
+
+    return componentItem
   }
 
   async getDependencies(): Promise<string[]> {
@@ -221,20 +230,21 @@ export default class ServiceCatalogueService {
     return scheduledJobsRequest
   }
 
-  async getTrivyScans(): Promise<TrivyScanType[]> {
+  async getTrivyScans(): Promise<TrivyScan[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const trivyScansData = await strapiApiClient.getTrivyScans()
-    const trivyScans = trivyScansData.sort(sortByName)
-    return trivyScans
+    const trivyScans = await strapiApiClient.getTrivyScans()
+
+    const trivyScansData = trivyScans.sort(sortByName)
+    return trivyScansData
   }
 
-  async getTrivyScan({ name }: { name: string }): Promise<TrivyScanType> {
+  async getTrivyScan({ name }: { name: string }): Promise<TrivyScan> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const trivyScansData = await strapiApiClient.getTrivyScan({ name })
     const trivyScansRequest =
-      Array.isArray(trivyScansData.data) && trivyScansData.data.length > 0
-        ? trivyScansData.data[0].attributes
-        : trivyScansData.data?.attributes
+      Array.isArray(trivyScansData) && trivyScansData.length > 0
+        ? trivyScansData[0]
+        : trivyScansData
     return trivyScansRequest
   }
 

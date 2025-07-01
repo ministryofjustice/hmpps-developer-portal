@@ -1,8 +1,7 @@
 import { Router } from 'express'
 import type { Services } from '../services'
 import { utcTimestampToUtcDateTime, sortBySeverity, getComponentName, getEnvironmentName } from '../utils/utils'
-import { ScanResult, Summary, TrivyScanType } from '../data/converters/modelTypes'
-import { Environment } from '../data/strapiApiTypes'
+import { Environment, ScanResult, Summary, TrivyScanType } from '../data/strapiApiTypes'
 
 const createSummaryTable = (summary: Summary): Array<{ category: string; severity: string; count: number }> => {
   const dataTable: Array<{ category: string; severity: string; count: number }> = []
@@ -128,12 +127,15 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   router.get('/:componentName/environments/:environmentName', async (req, res) => {
     const componentName = getComponentName(req)
     const environmentName = getEnvironmentName(req)
-    const component = await serviceCatalogueService.getComponent({ componentName })
+    const component = await serviceCatalogueService.getComponentNew({ componentName })
+    console.log('component', component.envs)
     const filteredEnvironment = component.envs?.data?.filter(
-      environment => environment.attributes.name === environmentName,
+      environment => environment.name === environmentName,
     )
-    const envAttributes = filteredEnvironment.length === 0 ? ({} as Environment) : filteredEnvironment[0].attributes
-    const scan = envAttributes.trivy_scan.data.attributes as TrivyScanType
+    console.log('filteredEnvironment', filteredEnvironment)
+    const envAttributes = filteredEnvironment.length === 0 ? ({} as Environment) : filteredEnvironment[0]
+    console.log('envAttributes', envAttributes.trivy_scan.data)
+    const scan = envAttributes.trivy_scan?.data as TrivyScanType
     const summary = scan.scan_summary?.summary
     const scanResults = scan.scan_summary?.scan_result
     const scanDate = utcTimestampToUtcDateTime(scan.trivy_scan_timestamp)
