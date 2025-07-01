@@ -22,6 +22,21 @@ export type SingleResponse<T> = {
   meta?: Record<string, never>
 }
 
+// Recursive unwrap utility
+export type DeepUnwrap<T> =
+  T extends ListResponse<infer U>
+    ? DeepUnwrap<U>[]
+    : T extends SingleResponse<infer U>
+      ? DeepUnwrap<U>
+      : T extends object
+        ? { [K in keyof T]: DeepUnwrap<T[K]> }
+        : T
+
+// Transform utility that applies DeepUnwrap to each property
+export type Unwrapped<T> = {
+  [K in keyof T]: DeepUnwrap<T[K]>
+}
+
 type HasComponent = { component: SingleResponse<Component> }
 type HasComponents = { components: ListResponse<Component> }
 

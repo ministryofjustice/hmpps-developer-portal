@@ -15,9 +15,9 @@ import {
   DataItem,
   Environment,
   SingleResponse,
+  Unwrapped,
 } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
-import { Transform } from '../utils/utils'
 
 jest.mock('../data/strapiApiClient')
 
@@ -542,7 +542,7 @@ describe('Strapi service', () => {
       const githubRequestResponse = {
         id: 57,
         github_repo: 'github_repo-1',
-      } as Transform<GithubRepoRequest> & { id: number }
+      } as Unwrapped<GithubRepoRequest> & { id: number }
 
       it('should return the selected repo request', async () => {
         strapiApiClient.getGithubRepoRequest.mockResolvedValue(githubRequestResponse)
