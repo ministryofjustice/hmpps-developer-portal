@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { Environment } from '../data/strapiApiTypes'
+import { Component, DataItem, Environment } from '../data/strapiApiTypes'
 import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow, formatMonitorName } from '../utils/utils'
 
 type MonitorEnvironment = {
@@ -12,20 +12,6 @@ type MonitorEnvironment = {
   environmentType: string
   isPrisons: boolean
   isProbation: boolean
-}
-
-type ComponentToMonitor = {
-  attributes?: {
-    name?: string
-    environments?: Environment[]
-    product?: {
-      data?: {
-        attributes?: {
-          p_id?: string
-        }
-      }
-    }
-  }
 }
 
 export default function routes({ serviceCatalogueService, redisService, dataFilterService }: Services): Router {
@@ -212,7 +198,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   return router
 }
 
-const getEnvironmentData = (component: ComponentToMonitor, selectedProductId?: string): MonitorEnvironment[] => {
+const getEnvironmentData = (component: DataItem<Component>, selectedProductId?: string): MonitorEnvironment[] => {
   const typedEnvironments = component.attributes.environments as Environment[]
   let productId
   if (selectedProductId) {

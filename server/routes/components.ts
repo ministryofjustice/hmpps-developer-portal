@@ -8,6 +8,7 @@ import {
   utcTimestampToUtcDateTime,
   mapToCanonicalEnv,
 } from '../utils/utils'
+import { Environment } from '../data/strapiApiTypes'
 
 interface DisplayAlert {
   alertname: string
@@ -96,7 +97,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const filteredEnvironment = component.envs?.data?.filter(
       environment => environment.attributes.name === environmentName,
     )
-    const envAttributes = filteredEnvironment.length === 0 ? {} : filteredEnvironment[0].attributes
+    const envAttributes = filteredEnvironment.length === 0 ? ({} as Environment) : filteredEnvironment[0].attributes
     const activeAgencies =
       filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
     const allowList = new Map()

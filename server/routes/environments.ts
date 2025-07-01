@@ -2,6 +2,7 @@ import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { formatActiveAgencies, getComponentName, getEnvironmentName, utcTimestampToUtcDateTime } from '../utils/utils'
+import { Environment } from '../data/strapiApiTypes'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()
@@ -63,7 +64,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
 
     const component = await serviceCatalogueService.getComponent({ componentName })
     const filteredEnvironment = component.envs?.data?.filter(envs => envs.attributes?.name === environmentName)
-    const envAttributes = filteredEnvironment.length === 0 ? {} : filteredEnvironment[0].attributes
+    const envAttributes = filteredEnvironment.length === 0 ? ({} as Environment) : filteredEnvironment[0].attributes
     const activeAgencies =
       filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
     const allowList = new Map()
