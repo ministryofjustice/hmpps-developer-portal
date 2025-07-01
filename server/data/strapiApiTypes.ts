@@ -32,6 +32,7 @@ type HasTeam = { team: SingleResponse<Team> }
 type HasServiceArea = { service_area: SingleResponse<StrapiServiceArea> }
 type HasNamespace = { ns: SingleResponse<Namespace> }
 type HasEnvironments = { envs: ListResponse<Environment> }
+type HasTrivyScan = { trivy_scan?: DataItem<TrivyScan> }
 
 export type Product = Omit<components['schemas']['Product'], 'components' | 'team' | 'service_area' | 'product_set'> &
   HasComponents &
@@ -46,7 +47,7 @@ export type StrapiServiceArea = Omit<components['schemas']['ServiceArea'], 'prod
 
 export type CustomComponentView = Omit<components['schemas']['CustomComponentView'], 'components'> & HasComponents
 
-export type Environment = components['schemas']['Component']['envs']['data'][0]['attributes'] & HasNamespace
+export type Environment = components['schemas']['Component']['envs']['data'][0]['attributes'] & HasNamespace & HasTrivyScan
 export type EnvironmentForMapping = SingleResponse<Environment>
 
 export type Namespace = components['schemas']['Namespace']
