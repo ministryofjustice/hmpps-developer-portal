@@ -47,7 +47,10 @@ export type StrapiServiceArea = Omit<components['schemas']['ServiceArea'], 'prod
 
 export type CustomComponentView = Omit<components['schemas']['CustomComponentView'], 'components'> & HasComponents
 
-export type Environment = components['schemas']['Component']['envs']['data'][0]['attributes'] & HasNamespace & HasTrivyScan & HasComponent
+export type Environment = components['schemas']['Component']['envs']['data'][0]['attributes'] &
+  HasNamespace &
+  HasTrivyScan &
+  HasComponent
 export type EnvironmentForMapping = SingleResponse<Environment>
 
 export type Namespace = components['schemas']['Namespace']
