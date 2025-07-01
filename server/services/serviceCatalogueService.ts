@@ -163,11 +163,11 @@ export default class ServiceCatalogueService {
     return productSet
   }
 
-  async getNamespaces(): Promise<DataItem<Namespace>[]> {
+  async getNamespaces(): Promise<Namespace[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const namespaceData = await strapiApiClient.getNamespaces()
 
-    const namespaces = namespaceData.data.sort(sortData)
+    const namespaces = namespaceData.sort(sortByName)
 
     return namespaces
   }
@@ -178,13 +178,11 @@ export default class ServiceCatalogueService {
   }: {
     namespaceId?: number
     namespaceSlug?: string
-  }): Promise<Namespace> {
+  }): Promise<Unwrapped<Namespace>> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const namespaceData = await strapiApiClient.getNamespace({ namespaceId, namespaceSlug })
-    // @ts-expect-error Suppress any declaration
-    const namespace = namespaceSlug ? namespaceData.data[0].attributes : namespaceData.data?.attributes
 
-    return namespace
+    return namespaceData
   }
 
   async getGithubTeams(): Promise<GithubTeam[]> {
@@ -244,8 +242,8 @@ export default class ServiceCatalogueService {
   async getRdsInstances(): Promise<RdsEntry[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const namespaceData = await strapiApiClient.getNamespaces()
-    const rdsInstances = namespaceData.data.reduce((existing, namespace) => {
-      const instances = namespace.attributes.rds_instance.map(rdsInstance => {
+    const rdsInstances = namespaceData.reduce((existing, namespace) => {
+      const instances = namespace.rds_instance.map(rdsInstance => {
         return {
           tf_label: rdsInstance.tf_label,
           namespace: rdsInstance.namespace,

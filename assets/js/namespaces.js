@@ -1,15 +1,15 @@
 jQuery(function () {
   const columns = [
     {
-      data: 'attributes.name',
+      data: 'name',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/namespaces/${rowData.attributes.name}">${rowData.attributes.name}</a>`)
+        $(td).html(`<a href="/namespaces/${rowData.name}">${rowData.name}</a>`)
       },
     },
     {
-      data: 'attributes.rds_instance',
+      data: 'rds_instance',
       createdCell: function (td, _cellData, rowData) {
-        const rdsInstances = rowData.attributes.rds_instance
+        const rdsInstances = rowData.rds_instance
           .map(
             rdsInstance =>
               `<a href="/reports/rds/${rdsInstance.tf_label}-${rdsInstance.namespace}">${rdsInstance.tf_label}</a>`,
@@ -37,9 +37,9 @@ jQuery(function () {
       },
     },
     {
-      data: 'attributes.elasticache_cluster',
+      data: 'elasticache_cluster',
       createdCell: function (td, _cellData, rowData) {
-        const elasticache = rowData.attributes.elasticache_cluster.map(cache => `${cache.tf_label}`).join('')
+        const elasticache = rowData.elasticache_cluster.map(cache => `${cache.tf_label}`).join('')
         $(td).html(elasticache || 'N/A')
       },
       render: function (data, type) {

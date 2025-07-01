@@ -136,11 +136,13 @@ export default class StrapiApiClient {
     return this.restClient.get({ path, query })
   }
 
-  async getNamespaces(): Promise<ListResponse<Namespace>> {
-    return this.restClient.get({
-      path: '/v1/namespaces',
-      query: 'populate=rds_instance,elasticache_cluster',
-    })
+  async getNamespaces(): Promise<Array<Namespace>> {
+    return this.restClient
+      .get<ListResponse<Namespace>>({
+        path: '/v1/namespaces',
+        query: 'populate=rds_instance,elasticache_cluster,pingdom_check,hmpps_template',
+      })
+      .then(unwrapListResponse)
   }
 
   async getNamespace({
@@ -149,14 +151,17 @@ export default class StrapiApiClient {
   }: {
     namespaceId?: number
     namespaceSlug?: string
-  }): Promise<SingleResponse<Namespace>> {
-    const populateList = ['rds_instance']
+  }): Promise<Unwrapped<Namespace>> {
+    const populateList = ['rds_instance', 'elasticache_cluster', 'pingdom_check', 'hmpps_template']
 
     const populate = new URLSearchParams({ populate: populateList }).toString()
     const query = namespaceSlug ? `filters[name][$eq]=${namespaceSlug}&${populate}` : populate
     const path = namespaceSlug ? '/v1/namespaces' : `/v1/namespaces/${namespaceId}`
 
-    return this.restClient.get({ path, query })
+    return this.restClient
+      .get<SingleResponse<Namespace>>({ path, query })
+      .then(unwrapSingleResponse)
+      .then(data => data as unknown as Unwrapped<Namespace>)
   }
 
   async getProductSets(): Promise<ListResponse<ProductSet>> {

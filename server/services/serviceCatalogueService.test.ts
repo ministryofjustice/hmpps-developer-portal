@@ -368,22 +368,8 @@ describe('Strapi service', () => {
 
   describe('Namespaces', () => {
     describe('getNamespaces', () => {
-      const testNamespacesResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { name: 'Namespace 1' },
-          },
-          {
-            id: 2,
-            attributes: { name: 'Namespace 2' },
-          },
-        ],
-      } as ListResponse<Namespace>
-      const testNamespaces = [
-        { id: 1, attributes: { name: 'Namespace 1' } },
-        { id: 2, attributes: { name: 'Namespace 2' } },
-      ] as DataItem<Namespace>[]
+      const testNamespacesResponse = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Namespace[]
+      const testNamespaces = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Namespace[]
 
       it('should return an ordered array of namespaces', async () => {
         strapiApiClient.getNamespaces.mockResolvedValue(testNamespacesResponse)
@@ -396,12 +382,7 @@ describe('Strapi service', () => {
     })
 
     describe('getNamespace', () => {
-      const testNamespaceResponse = {
-        data: {
-          id: 1,
-          attributes: { name: 'Namespace 1' },
-        },
-      } as SingleResponse<Namespace>
+      const testNamespaceResponse = { name: 'Namespace 1' } as Unwrapped<Namespace>
       const testNamespace = { name: 'Namespace 1' } as Namespace
 
       it('should return the selected namespace', async () => {
@@ -415,23 +396,11 @@ describe('Strapi service', () => {
     })
 
     describe('getRdsInstances', () => {
-      const testNamespacesResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: {
-              rds_instance: [
-                {
-                  tf_label: 'test 2',
-                },
-                {
-                  tf_label: 'test 1',
-                },
-              ],
-            },
-          },
-        ],
-      } as ListResponse<Namespace>
+      const testNamespacesResponse = [
+        {
+          rds_instance: [{ tf_label: 'test 2' }, { tf_label: 'test 1' }],
+        },
+      ] as Namespace[]
       const testRdsInstances = [{ tf_label: 'test 1' }, { tf_label: 'test 2' }] as RdsEntry[]
 
       it('should return an ordered array of rds instances', async () => {
