@@ -259,8 +259,7 @@ export default class StrapiApiClient {
         path: '/v1/github-repo-requests',
         query: `filters[github_repo][$eq]=${repoName}`,
       })
-      .then(unwrapSingleResponse)
-      .then(data => data as unknown as Unwrapped<GithubRepoRequest>)
+      .then(response => unwrapSingleResponse<GithubRepoRequest>(response))
   }
 
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<void> {
