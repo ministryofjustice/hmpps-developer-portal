@@ -16,6 +16,7 @@ import {
   DataItem,
   Environment,
   Unwrapped,
+  GithubTeamRequest,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
@@ -186,22 +187,23 @@ export default class ServiceCatalogueService {
     return namespace
   }
 
-  async getGithubTeams(): Promise<DataItem<GithubTeam>[]> {
+  async getGithubTeams(): Promise<GithubTeam[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const teamRequestsData = await strapiApiClient.getGithubTeams()
-    const teamRequests = teamRequestsData.data.sort(sortGithubTeamsData)
-
-    return teamRequests
+    const githubTeamsData = await strapiApiClient.getGithubTeams()
+    const githubTeams = githubTeamsData.sort(sortGithubTeamsData)
+    return githubTeams
   }
 
-  async getGithubTeam({ teamName }: { teamName: string }): Promise<GithubTeam> {
+  async getGithubTeam({ teamName }: { teamName: string }): Promise<Unwrapped<GithubTeam>> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const teamRequestData = await strapiApiClient.getGithubTeam({ teamName })
-    const teamRequest =
-      Array.isArray(teamRequestData.data) && teamRequestData.data.length > 0
-        ? teamRequestData.data[0].attributes
-        : teamRequestData.data?.attributes
-    return teamRequest
+    const githubTeamData = await strapiApiClient.getGithubTeam({ teamName })
+    return githubTeamData
+  }
+
+  async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<GithubTeam[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const githubSubTeamsData = await strapiApiClient.getGithubSubTeams({ parentTeamName })
+    return githubSubTeamsData
   }
 
   async getScheduledJobs(): Promise<DataItem<ScheduledJob>[]> {

@@ -447,22 +447,14 @@ describe('Strapi service', () => {
 
   describe('GithubTeams', () => {
     describe('getGithubTeams', () => {
-      const testGithubTeamResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { team_name: 'Github Team 1' },
-          },
-          {
-            id: 2,
-            attributes: { team_name: 'Github Team 2' },
-          },
-        ],
-      } as ListResponse<GithubTeam>
-      const testGithubTeams = [
-        { id: 1, attributes: { team_name: 'Github Team 1' } },
-        { id: 2, attributes: { team_name: 'Github Team 2' } },
-      ] as DataItem<GithubTeam>[]
+      const testGithubTeamResponse = [
+        {
+          team_name: 'Github Team 1',
+        },
+        {
+          team_name: 'Github Team 2',
+        },
+      ] as GithubTeam[]
 
       it('should return an ordered array of github teams', async () => {
         strapiApiClient.getGithubTeams.mockResolvedValue(testGithubTeamResponse)
@@ -470,17 +462,14 @@ describe('Strapi service', () => {
         const results = await serviceCatalogueService.getGithubTeams()
 
         expect(strapiApiClient.getGithubTeams).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testGithubTeams)
+        expect(results).toEqual(testGithubTeamResponse)
       })
     })
 
     describe('getGithubTeam', () => {
       const testGithubTeamResponse = {
-        data: {
-          id: 1,
-          attributes: { team_name: 'Github Team 1' },
-        },
-      } as SingleResponse<GithubTeam>
+        team_name: 'Github Team 1',
+      } as Unwrapped<GithubTeam>
       const testGithubTeam = { team_name: 'Github Team 1' } as GithubTeam
 
       it('should return the selected github team', async () => {

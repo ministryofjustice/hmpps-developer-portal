@@ -270,17 +270,31 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubTeams(): Promise<ListResponse<GithubTeam>> {
-    return this.restClient.get({
-      path: '/v1/github-teams',
-    })
+  async getGithubTeams(): Promise<Array<GithubTeam>> {
+    return this.restClient
+      .get<ListResponse<GithubTeam>>({
+        path: '/v1/github-teams',
+      })
+      .then(unwrapListResponse)
   }
 
-  async getGithubTeam({ teamName }: { teamName: string }): Promise<SingleResponse<GithubTeam>> {
-    return this.restClient.get({
-      path: '/v1/github-teams',
-      query: `filters[team_name][$eq]=${teamName}`,
-    })
+  async getGithubTeam({ teamName }: { teamName: string }): Promise<Unwrapped<GithubTeam>> {
+    return this.restClient
+      .get<SingleResponse<GithubTeam>>({
+        path: '/v1/github-teams',
+        query: `filters[team_name][$eq]=${teamName}`,
+      })
+      .then(unwrapSingleResponse)
+      .then(data => data as unknown as Unwrapped<GithubTeam>)
+  }
+
+  async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<Array<GithubTeam>> {
+    return this.restClient
+      .get<ListResponse<GithubTeam>>({
+        path: '/v1/github-teams',
+        query: `filters[parent_team_name][$eq]=${parentTeamName}`,
+      })
+      .then(unwrapListResponse)
   }
 
   async getScheduledJobs(): Promise<ListResponse<ScheduledJob>> {
