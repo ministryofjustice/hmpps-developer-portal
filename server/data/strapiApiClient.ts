@@ -17,8 +17,8 @@ import {
   TrivyScan,
   Environment,
   SingleResponse,
-  DataItem,
 } from './strapiApiTypes'
+import { unwrapListResponse, unwrapSingleResponse, Transform } from '../utils/utils'
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea, TrivyScanType } from './converters/modelTypes'
 import convertTrivyScan from './converters/trivyScans'
@@ -249,16 +249,17 @@ export default class StrapiApiClient {
         path: '/v1/github-repo-requests',
         query: 'populate=github_repo',
       })
-      .then(this.unwrapListResponse)
+      .then(unwrapListResponse)
   }
 
-  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<Transform<GithubRepoRequest>> {
     return this.restClient
       .get<SingleResponse<GithubRepoRequest>>({
         path: '/v1/github-repo-requests',
         query: `filters[github_repo][$eq]=${repoName}`,
       })
-      .then(this.unwrapSingleResponse)
+      .then(unwrapSingleResponse)
+      .then(data => data as unknown as Transform<GithubRepoRequest>)
   }
 
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<void> {
@@ -313,15 +314,5 @@ export default class StrapiApiClient {
       path: '/v1/environments',
       query: 'populate=component',
     })
-  }
-
-  private unwrapSingleResponse<T>(response: SingleResponse<T>): T & { id: number } {
-    const data =
-      Array.isArray(response.data) && response.data.length > 0 ? (response.data[0] as DataItem<T>) : response.data
-    return { ...data.attributes, id: data.id }
-  }
-
-  private unwrapListResponse<T>(response: ListResponse<T>): Array<T & { id: number }> {
-    return response.data.map(({ id, attributes }) => ({ ...attributes, id }))
   }
 }

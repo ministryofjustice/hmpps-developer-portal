@@ -16,7 +16,14 @@ import {
   DataItem,
   Environment,
 } from '../data/strapiApiTypes'
-import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
+import {
+  sortData,
+  sortRdsInstances,
+  sortComponentRequestData,
+  sortGithubTeamsData,
+  sortByName,
+  Transform,
+} from '../utils/utils'
 
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -289,7 +296,7 @@ export default class ServiceCatalogueService {
     return componentRequestsData.sort(sortComponentRequestData)
   }
 
-  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<Transform<GithubRepoRequest>> {
     const strapiApiClient = this.strapiApiClientFactory('')
     return strapiApiClient.getGithubRepoRequest({ repoName })
   }
