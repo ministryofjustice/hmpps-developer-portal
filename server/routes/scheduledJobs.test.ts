@@ -3,7 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { ScheduledJob, DataItem, Unwrapped } from '../data/strapiApiTypes'
+import { ScheduledJob, Unwrapped } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService')
 
