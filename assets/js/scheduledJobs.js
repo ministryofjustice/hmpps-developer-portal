@@ -1,46 +1,34 @@
 jQuery(function () {
   const columns = [
     {
-      data: 'attributes.name',
+      data: 'name',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/scheduled-jobs/${rowData.attributes.name}">${rowData.attributes.name}</a>`)
+        $(td).html(`<a href="/scheduled-jobs/${rowData.name}">${rowData.name}</a>`)
       },
     },
     {
-      data: 'attributes.description',
+      data: 'description',
+    },
+    {
+      data: 'schedule',
+    },
+    {
+      data: 'last_scheduled_run',
+    },
+    {
+      data: 'result',
+    },
+    {
+      data: 'last_successful_run',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.attributes.description}</a>`)
+        $(td).html(formatDateToDDMONYYYYHH24MMSS(rowData.last_successful_run))
       },
     },
     {
-      data: 'attributes.schedule',
+      data: 'error_details',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.attributes.schedule}`)
-      },
-    },
-    {
-      data: 'attributes.last_scheduled_run',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(formatDateToDDMONYYYYHH24MMSS(rowData.attributes.last_scheduled_run))
-      },
-    },
-    {
-      data: 'attributes.result',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.attributes.result}`)
-      },
-    },
-    {
-      data: 'attributes.last_successful_run',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(formatDateToDDMONYYYYHH24MMSS(rowData.attributes.last_successful_run))
-      },
-    },
-    {
-      data: 'attributes.error_details',
-      createdCell: function (td, _cellData, rowData) {
-        const result = rowData.attributes.result
-        const errorDetails = rowData.attributes.error_details
+        const result = rowData.result
+        const errorDetails = rowData.error_details
         if (Array.isArray(errorDetails) && errorDetails.length > 0) {
           const errorList = errorDetails.map(error => `<li>${error}</li>`).join('')
           const detailsContent = `<details class="govuk-details">

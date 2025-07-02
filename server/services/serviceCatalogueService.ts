@@ -203,22 +203,18 @@ export default class ServiceCatalogueService {
     return githubSubTeamsData
   }
 
-  async getScheduledJobs(): Promise<DataItem<ScheduledJob>[]> {
+  async getScheduledJobs(): Promise<ScheduledJob[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const scheduledJobsData = await strapiApiClient.getScheduledJobs()
-    const scheduledJobsRequests = scheduledJobsData.data.sort(sortData)
+    const scheduledJobsRequests = scheduledJobsData.sort(sortByName)
 
     return scheduledJobsRequests
   }
 
-  async getScheduledJob({ name }: { name: string }): Promise<ScheduledJob> {
+  async getScheduledJob({ name }: { name: string }): Promise<Unwrapped<ScheduledJob>> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const scheduledJobData = await strapiApiClient.getScheduledJob({ name })
-    const scheduledJobsRequest =
-      Array.isArray(scheduledJobData.data) && scheduledJobData.data.length > 0
-        ? scheduledJobData.data[0].attributes
-        : scheduledJobData.data?.attributes
-    return scheduledJobsRequest
+    return scheduledJobData
   }
 
   async getTrivyScans(): Promise<TrivyScanType[]> {

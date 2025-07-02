@@ -300,17 +300,21 @@ export default class StrapiApiClient {
       .then(unwrapListResponse)
   }
 
-  async getScheduledJobs(): Promise<ListResponse<ScheduledJob>> {
-    return this.restClient.get({
-      path: '/v1/scheduled-jobs',
-    })
+  async getScheduledJobs(): Promise<Array<ScheduledJob>> {
+    return this.restClient
+      .get<ListResponse<ScheduledJob>>({
+        path: '/v1/scheduled-jobs',
+      })
+      .then(unwrapListResponse)
   }
 
-  async getScheduledJob({ name }: { name: string }): Promise<SingleResponse<ScheduledJob>> {
-    return this.restClient.get({
-      path: '/v1/scheduled-jobs',
-      query: `filters[name][$eq]=${name}`,
-    })
+  async getScheduledJob({ name }: { name: string }): Promise<Unwrapped<ScheduledJob>> {
+    return this.restClient
+      .get<SingleResponse<ScheduledJob>>({
+        path: '/v1/scheduled-jobs',
+        query: `filters[name][$eq]=${name}`,
+      })
+      .then(response => unwrapSingleResponse<ScheduledJob>(response))
   }
 
   async getTrivyScans(): Promise<TrivyScanType[]> {
