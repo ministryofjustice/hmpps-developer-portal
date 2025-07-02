@@ -11,8 +11,8 @@ import type { ServiceCatalogueService } from '../services'
 dayjs.extend(relativeTime.default)
 
 type HasName = { attributes?: { name: string } }
-type HasRepoName = { github_repo: string }
-type HasTeamName = { team_name: string }
+type HasRepoName = { github_repo?: string }
+type HasTeamName = { team_name?: string }
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -84,7 +84,7 @@ export const sortData = (dataItem: HasName, compareDataItem: HasName) => {
   return dataItem.attributes.name.localeCompare(compareDataItem.attributes.name)
 }
 
-export const sortByName = (dataItem: { name: string }, compareDataItem: { name: string }) => {
+export const sortByName = (dataItem: { name?: string }, compareDataItem: { name?: string }) => {
   return dataItem.name.localeCompare(compareDataItem.name)
 }
 

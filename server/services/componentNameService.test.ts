@@ -9,6 +9,7 @@ import {
   GithubRepoRequest,
   SingleResponse,
   StrapiServiceArea,
+  Unwrapped,
 } from '../data/strapiApiTypes'
 import ComponentNameService from './componentNameService'
 
@@ -223,7 +224,7 @@ describe('Component name service', () => {
       { github_repo: 'comp-3' },
       { github_repo: 'comp-1' },
       { github_repo: 'comp-2' },
-    ] as GithubRepoRequest[]
+    ] as Unwrapped<GithubRepoRequest>[]
 
     it('should return true if component exists', async () => {
       strapiApiClient.getGithubRepoRequests.mockResolvedValue(testComponentsResponse)

@@ -368,8 +368,8 @@ describe('Strapi service', () => {
 
   describe('Namespaces', () => {
     describe('getNamespaces', () => {
-      const testNamespacesResponse = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Namespace[]
-      const testNamespaces = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Namespace[]
+      const testNamespacesResponse = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Unwrapped<Namespace>[]
+      const testNamespaces = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Unwrapped<Namespace>[]
 
       it('should return an ordered array of namespaces', async () => {
         strapiApiClient.getNamespaces.mockResolvedValue(testNamespacesResponse)
@@ -400,7 +400,7 @@ describe('Strapi service', () => {
         {
           rds_instance: [{ tf_label: 'test 2' }, { tf_label: 'test 1' }],
         },
-      ] as Namespace[]
+      ] as Unwrapped<Namespace>[]
       const testRdsInstances = [{ tf_label: 'test 1' }, { tf_label: 'test 2' }] as RdsEntry[]
 
       it('should return an ordered array of rds instances', async () => {
@@ -423,7 +423,7 @@ describe('Strapi service', () => {
         {
           team_name: 'Github Team 2',
         },
-      ] as GithubTeam[]
+      ] as Unwrapped<GithubTeam>[]
 
       it('should return an ordered array of github teams', async () => {
         strapiApiClient.getGithubTeams.mockResolvedValue(testGithubTeamResponse)
@@ -484,7 +484,7 @@ describe('Strapi service', () => {
         {
           github_repo: 'github_repo-2',
         },
-      ] as GithubRepoRequest[]
+      ] as Unwrapped<GithubRepoRequest>[]
 
       it('should return an ordered array of repo requests', async () => {
         strapiApiClient.getGithubRepoRequests.mockResolvedValue(githubResponses)
