@@ -22,20 +22,21 @@ export type SingleResponse<T> = {
   meta?: Record<string, never>
 }
 
+type WithId<T> = T extends object ? T & { id: number } : T
+
 // Recursive unwrap utility
+// prettier-ignore
 export type DeepUnwrap<T> =
-  T extends ListResponse<infer U>
-    ? DeepUnwrap<U>[]
-    : T extends SingleResponse<infer U>
-      ? DeepUnwrap<U>
-      : T extends object
-        ? { [K in keyof T]: DeepUnwrap<T[K]> }
-        : T
+ T extends ListResponse<infer U> ? WithId<DeepUnwrap<U>>[] :
+ T extends SingleResponse<infer U> ? WithId<DeepUnwrap<U>> :
+ T extends object ? { [K in keyof T]: DeepUnwrap<T[K]> } :
+ T
+// prettier-enable
 
 // Transform utility that applies DeepUnwrap to each property
 export type Unwrapped<T> = {
   [K in keyof T]: DeepUnwrap<T[K]>
-}
+} & { id: number }
 
 type HasComponent = { component: SingleResponse<Component> }
 type HasComponents = { components: ListResponse<Component> }
