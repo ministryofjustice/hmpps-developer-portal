@@ -3,14 +3,18 @@ import { DataItem, SingleResponse, ListResponse, Unwrapped } from '../data/strap
 export const unwrapAttributes = <T extends Record<string, unknown>>(item: DataItem<T>): Unwrapped<T> => {
   if (!item || typeof item !== 'object') return item as Unwrapped<T>
 
-  // If the item is a data item, merge them with the id and recursively unwrap
+  // If the item has 'attributes', unwrap them recursively
   if ('attributes' in item) {
     const { id, attributes } = item as DataItem<Record<string, unknown>>
-    return { id, ...unwrapAttributes(attributes) }
+    return { id, ...unwrapAttributes(attributes) } as Unwrapped<T>
   }
+
+  // If the item has 'data', unwrap it recursively
   if ('data' in item) {
     const { data } = item as SingleResponse<Record<string, unknown>>
-    return { ...unwrapAttributes(data) } as Unwrapped<T>
+    return Array.isArray(data)
+      ? (data.map(unwrapAttributes) as unknown as Unwrapped<T>) // Explicitly cast to Unwrapped<T>
+      : (unwrapAttributes(data) as Unwrapped<T>)
   }
 
   const unwrappedItem: Record<string, unknown> = { ...item }
@@ -32,6 +36,8 @@ export function unwrapSingleResponse<T extends Record<string, unknown>>(response
   return unwrapAttributes<T>(data)
 }
 
-export function unwrapListResponse<T>(response: ListResponse<T>): Array<T & { id: number }> {
-  return response.data.map(({ id, attributes }) => ({ ...attributes, id }))
+export function unwrapListResponse<T extends Record<string, unknown>>(
+  response: ListResponse<T>,
+): Array<T & { id: number }> {
+  return response.data.map(({ id, attributes }) => ({ ...(unwrapAttributes(attributes) as T), id }))
 }
