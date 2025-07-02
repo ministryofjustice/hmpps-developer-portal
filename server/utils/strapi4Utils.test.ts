@@ -1,4 +1,4 @@
-import { SingleResponse } from '../data/strapiApiTypes'
+import { SingleResponse, Unwrapped } from '../data/strapiApiTypes'
 import { unwrapAttributes } from './strapi4Utils'
 
 test('check unwrapping simple single response', () => {
@@ -17,13 +17,13 @@ test('check unwrapping simple single response', () => {
     },
   }
 
-  const result = unwrapAttributes(testSingle.data)
-
-  expect(result).toStrictEqual({
+  const expected: Unwrapped<TestType> = {
     id: 1,
     age: 34,
     name: 'Test User',
-  })
+  }
+
+  expect(unwrapAttributes(testSingle.data)).toStrictEqual(expected)
 })
 
 test('check unwrapping a type with a nested single response', () => {
@@ -53,20 +53,17 @@ test('check unwrapping a type with a nested single response', () => {
     },
   }
 
-  const result = unwrapAttributes(testSingle.data)
-
-  expect(result).toStrictEqual({
+  const expected: Unwrapped<TestType> = {
     id: 1,
     age: 34,
     name: 'Test User',
     nestedSimpleType: {
-      // we should change the recursive algorith to remove this nested data part
-      data: {
-        id: 12,
-        age: 32,
-        name: 'Test User 2',
-        nestedSimpleType: undefined,
-      },
+      id: 12,
+      age: 32,
+      name: 'Test User 2',
+      nestedSimpleType: undefined,
     },
-  })
+  }
+
+  expect(unwrapAttributes(testSingle.data)).toStrictEqual(expected)
 })
