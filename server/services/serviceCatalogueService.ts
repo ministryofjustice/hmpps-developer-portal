@@ -16,7 +16,6 @@ import {
   DataItem,
   Environment,
   Unwrapped,
-  GithubTeamRequest,
 } from '../data/strapiApiTypes'
 import { sortData, sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 

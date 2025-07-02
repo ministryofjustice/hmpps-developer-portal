@@ -160,8 +160,7 @@ export default class StrapiApiClient {
 
     return this.restClient
       .get<SingleResponse<Namespace>>({ path, query })
-      .then(unwrapSingleResponse)
-      .then(data => data as unknown as Unwrapped<Namespace>)
+      .then(response => unwrapSingleResponse<Namespace>(response))
   }
 
   async getProductSets(): Promise<ListResponse<ProductSet>> {
