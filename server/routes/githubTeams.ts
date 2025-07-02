@@ -15,18 +15,16 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   router.get('/data', async (req, res) => {
     const githubTeams = await serviceCatalogueService.getGithubTeams()
-
     res.send(githubTeams)
   })
 
   router.get('/:github_team_name', async (req, res) => {
     const teamName = req.params.github_team_name
     const teamRequest = await serviceCatalogueService.getGithubTeam({ teamName })
-    const allGithubTeams = await serviceCatalogueService.getGithubTeams()
-    const subTeams = allGithubTeams
-      .filter(team => team.attributes.parent_team_name === teamName)
-      .map(team => team.attributes.team_name)
-
+    const githubSubTeams = await serviceCatalogueService.getGithubSubTeams({ parentTeamName: teamName })
+    const subTeams = Array.from(
+      new Set(githubSubTeams.filter(team => team.parent_team_name === teamName).map(team => team.team_name)),
+    )
     const displayTeam = {
       github_team_name: teamRequest.team_name,
       team_description: teamRequest.team_desc,

@@ -136,11 +136,13 @@ export default class StrapiApiClient {
     return this.restClient.get({ path, query })
   }
 
-  async getNamespaces(): Promise<ListResponse<Namespace>> {
-    return this.restClient.get({
-      path: '/v1/namespaces',
-      query: 'populate=rds_instance,elasticache_cluster',
-    })
+  async getNamespaces(): Promise<Array<Namespace>> {
+    return this.restClient
+      .get<ListResponse<Namespace>>({
+        path: '/v1/namespaces',
+        query: 'populate=rds_instance,elasticache_cluster,pingdom_check,hmpps_template',
+      })
+      .then(unwrapListResponse)
   }
 
   async getNamespace({
@@ -149,14 +151,16 @@ export default class StrapiApiClient {
   }: {
     namespaceId?: number
     namespaceSlug?: string
-  }): Promise<SingleResponse<Namespace>> {
-    const populateList = ['rds_instance']
+  }): Promise<Unwrapped<Namespace>> {
+    const populateList = ['rds_instance', 'elasticache_cluster', 'pingdom_check', 'hmpps_template']
 
     const populate = new URLSearchParams({ populate: populateList }).toString()
     const query = namespaceSlug ? `filters[name][$eq]=${namespaceSlug}&${populate}` : populate
     const path = namespaceSlug ? '/v1/namespaces' : `/v1/namespaces/${namespaceId}`
 
-    return this.restClient.get({ path, query })
+    return this.restClient
+      .get<SingleResponse<Namespace>>({ path, query })
+      .then(response => unwrapSingleResponse<Namespace>(response))
   }
 
   async getProductSets(): Promise<ListResponse<ProductSet>> {
@@ -269,17 +273,31 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubTeams(): Promise<ListResponse<GithubTeam>> {
-    return this.restClient.get({
-      path: '/v1/github-teams',
-    })
+  async getGithubTeams(): Promise<Array<GithubTeam>> {
+    return this.restClient
+      .get<ListResponse<GithubTeam>>({
+        path: '/v1/github-teams',
+      })
+      .then(unwrapListResponse)
   }
 
-  async getGithubTeam({ teamName }: { teamName: string }): Promise<SingleResponse<GithubTeam>> {
-    return this.restClient.get({
-      path: '/v1/github-teams',
-      query: `filters[team_name][$eq]=${teamName}`,
-    })
+  async getGithubTeam({ teamName }: { teamName: string }): Promise<Unwrapped<GithubTeam>> {
+    return this.restClient
+      .get<SingleResponse<GithubTeam>>({
+        path: '/v1/github-teams',
+        query: `filters[team_name][$eq]=${teamName}`,
+      })
+      .then(unwrapSingleResponse)
+      .then(data => data as unknown as Unwrapped<GithubTeam>)
+  }
+
+  async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<Array<GithubTeam>> {
+    return this.restClient
+      .get<ListResponse<GithubTeam>>({
+        path: '/v1/github-teams',
+        query: `filters[parent_team_name][$eq]=${parentTeamName}`,
+      })
+      .then(unwrapListResponse)
   }
 
   async getScheduledJobs(): Promise<ListResponse<ScheduledJob>> {
