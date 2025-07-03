@@ -4,7 +4,7 @@ import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import RedisService from '../services/redisService'
-import { Component, DataItem, Environment, Unwrapped } from '../data/strapiApiTypes'
+import { Component, Environment, Unwrapped } from '../data/strapiApiTypes'
 import Dependencies from '../services/Dependencies'
 import AlertsService from '../services/alertsService'
 
@@ -283,7 +283,7 @@ describe('/components', () => {
 
 function expectEnvironmentScreenToBeFilled(
   $: cheerio.CheerioAPI,
-  { attributes: devEnvironment }: DataItem<Environment>,
+  devEnvironment: Unwrapped<Environment>,
 ) {
   expect($('td[data-test="name"]').text()).toBe(devEnvironment.name)
   expect($('td[data-test="type"]').text()).toBe(devEnvironment.type)

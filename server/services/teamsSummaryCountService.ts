@@ -6,8 +6,7 @@ import ServiceCatalogueService from './serviceCatalogueService'
 import { formatMonitorName } from '../utils/utils'
 
 // Valid Veracode severity levels
-export const VALID_SEVERITIES = ['VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW'] as const
-export type Severity = (typeof VALID_SEVERITIES)[number]
+export const VALID_SEVERITIES = ['VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW']
 
 type StrapiProduct = { id?: number; attributes?: Record<string, unknown> }
 
@@ -238,24 +237,21 @@ export default class TeamsSummaryCountService {
         return productId && productIds.has(productId)
       })
 
-      const counts: Record<Severity, number> = {} as Record<Severity, number>
-
       // Initialize counts with all valid severities set to 0
-      for (const sev of VALID_SEVERITIES) {
-        counts[sev] = 0
-      }
+      const counts = Object.fromEntries(VALID_SEVERITIES.map(severity => [severity, 0]))
 
       for (const component of validComponents) {
-        const summary = component.veracode_results_summary as unknown as VeracodeResultsSummary | undefined
+        const summary = component.veracode_results_summary as unknown as VeracodeResultsSummary
 
-        for (const severity of summary?.severity || []) {
-          for (const category of severity.category) {
-            const severityKey = category.severity as Severity
-            if (VALID_SEVERITIES.includes(severityKey)) {
-              counts[severityKey] += category.count
-            } else {
-              logger.warn(`[getTeamVeracodeVulnerabilityCounts] Unexpected severity: ${category.severity}`)
-            }
+        const severities: [string, number][] = (summary?.severity || [])
+          .flatMap(severity => severity.category)
+          .map(category => [category.severity, category.count])
+
+        for (const [severity, count] of severities) {
+          if (VALID_SEVERITIES.includes(severity)) {
+            counts[severity] += count
+          } else {
+            logger.warn(`[getTeamVeracodeVulnerabilityCounts] Unexpected severity: ${severity}`)
           }
         }
       }
