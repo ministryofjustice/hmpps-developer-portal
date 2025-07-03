@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import RedisService from './redisService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import TeamHealthService from './teamHealthService'
-import { Component, DataItem, Unwrapped } from '../data/strapiApiTypes'
+import { Component, Unwrapped } from '../data/strapiApiTypes'
 
 jest.mock('./redisService')
 jest.mock('./serviceCatalogueService')

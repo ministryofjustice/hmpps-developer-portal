@@ -89,7 +89,6 @@ export default class ServiceCatalogueService {
   async getComponent({ componentName }: { componentName: string }): Promise<Unwrapped<Component>> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentItem = await strapiApiClient.getComponent({ componentName })
-    console.log(componentItem)
     return componentItem
   }
 

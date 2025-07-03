@@ -215,12 +215,11 @@ describe('/components', () => {
           expect($('[data-test="dependency-0"]').text()).toContain('bbb')
           expect($('[data-test="dependent-0"]').text()).toContain('aaa')
 
-          // const environments = testComponent.envs.reduce(
-          //   (environmentList, environment) => `${environmentList}${environment.name}`,
-          //   '',
-          // )
-          // console.log(environments)
-          // expect($('[data-test="envs"]').text()).toBe(environments)
+          const environments = testComponent.envs.reduce(
+            (environmentList, environment) => `${environmentList}${environment.name}`,
+            '',
+          )
+          expect($('[data-test="envs"]').text()).toBe(environments)
         })
     })
   })

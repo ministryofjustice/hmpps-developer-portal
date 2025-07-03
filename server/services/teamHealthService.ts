@@ -130,8 +130,6 @@ export default class TeamHealthService {
 
   async getComponentsMissingTeams(): Promise<{ component: string; product: string }[]> {
     const allComponents = await this.serviceCatalogueService.getComponents(undefined, true)
-    console.log(allComponents)
-    console.log('Problem from here')
     const componentsMissingTeams = allComponents
       .filter(component => !component?.product?.team)
       .map(component => ({
@@ -156,7 +154,6 @@ export default class TeamHealthService {
         return driftData
       })
 
-    console.log(components)
     return components
   }
 
@@ -169,8 +166,6 @@ export default class TeamHealthService {
         return { driftData, component }
       })
       .filter(({ driftData }) => driftData?.environments.length)
-    console.log('Get Team Health')
-    console.log(components)
     const teamsWithComponentHealth: Record<string, TeamWithComponentHealth> = components.reduce(
       (acc, { driftData, component }) => {
         const { product } = component

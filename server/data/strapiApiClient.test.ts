@@ -128,7 +128,6 @@ describe('strapiApiClient', () => {
           .get('/components?filters[name][$eq]=component&populate=product.team%2Cenvs.trivy_scan')
           .reply(200, component)
         const output = await strapiApiClient.getComponent({ componentName: 'component' })
-        console.log('displaying output', output)
         expect(output).toEqual(componentResponse)
       })
     })

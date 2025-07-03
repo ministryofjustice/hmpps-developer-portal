@@ -42,7 +42,6 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { envs } = component
     const prodEnvData = component.envs?.filter(environment => environment.name === 'prod')
-    console.log(prodEnvData)
     const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].alerts_slack_channel
     const displayComponent = {
       name: component.name,
@@ -95,12 +94,9 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const environmentName = getEnvironmentName(req)
 
     const component = await serviceCatalogueService.getComponent({ componentName })
-    const filteredEnvironment = component.envs?.filter(
-      environment => environment.name === environmentName,
-    )
+    const filteredEnvironment = component.envs?.filter(environment => environment.name === environmentName,)
     const envAttributes = filteredEnvironment.length === 0 ? ({} as Environment) : filteredEnvironment[0]
-    const activeAgencies =
-      filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
+    const activeAgencies = filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
     const allowList = new Map()
 
     if (envAttributes.ip_allow_list && envAttributes.ip_allow_list_enabled) {

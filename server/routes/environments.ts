@@ -2,7 +2,6 @@ import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { formatActiveAgencies, getComponentName, getEnvironmentName, utcTimestampToUtcDateTime } from '../utils/utils'
-import { Environment } from '../data/strapiApiTypes'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
   const router = Router()

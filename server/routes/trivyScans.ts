@@ -2,7 +2,6 @@ import { Router } from 'express'
 import type { Services } from '../services'
 import { utcTimestampToUtcDateTime, sortBySeverity, getComponentName, getEnvironmentName } from '../utils/utils'
 import { ScanResult, Summary, TrivyScanType } from '../data/converters/modelTypes'
-import { Environment } from '../data/strapiApiTypes'
 
 const createSummaryTable = (summary: Summary): Array<{ category: string; severity: string; count: number }> => {
   const dataTable: Array<{ category: string; severity: string; count: number }> = []
