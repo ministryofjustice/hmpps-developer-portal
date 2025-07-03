@@ -243,8 +243,7 @@ export default class TeamsSummaryCountService {
 
       const counts = validComponents.reduce(
         (total, component) => {
-          const summary = component.veracode_results_summary as VeracodeResultsSummary | undefined
-          if (!summary?.severity) return total
+          const summary = component.veracode_results_summary as unknown as VeracodeResultsSummary | undefined
 
           return summary.severity.reduce((outerTotal, severity) => {
             return severity.category.reduce((innerTotal, category) => {

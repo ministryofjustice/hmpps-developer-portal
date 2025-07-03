@@ -243,8 +243,8 @@ export const mockActiveAndInactiveAlerts = [
 ]
 
 export const mockComponents = [
-  { attributes: { name: 'ComponentA', product: { data: { id: 1 } } } },
-  { attributes: { name: 'ComponentB', product: { data: { id: 2 } } } },
+  { name: 'ComponentA', product: { id: 1 } },
+  { name: 'ComponentB', product: { id: 2 } },
 ]
 
 // Veracode mock components for getTeamVeracodeVulnerabilityCounts tests

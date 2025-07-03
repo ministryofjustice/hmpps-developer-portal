@@ -78,17 +78,18 @@ export default class ServiceCatalogueService {
     exemptionFilters: string[] = [],
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
-  ): Promise<Component[]> {
+  ): Promise<Unwrapped<Component>[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentData = await strapiApiClient.getComponents(exemptionFilters, includeTeams, includeLatestCommit)
     const components = componentData.sort(sortByName)
+
     return components
   }
 
   async getComponent({ componentName }: { componentName: string }): Promise<Unwrapped<Component>> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentItem = await strapiApiClient.getComponent({ componentName })
-
+    console.log(componentItem)
     return componentItem
   }
 

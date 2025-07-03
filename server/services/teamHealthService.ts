@@ -12,7 +12,7 @@ import {
 } from '../utils/utils'
 import RedisService from './redisService'
 import ServiceCatalogueService from './serviceCatalogueService'
-import { Component } from '../data/strapiApiTypes'
+import { Component, Unwrapped } from '../data/strapiApiTypes'
 
 export type VersionDetails = {
   component: string
@@ -105,11 +105,7 @@ export default class TeamHealthService {
     const allComponents = await this.serviceCatalogueService.getComponents()
 
     const componentsMissingHealth = allComponents
-      .filter(
-        component =>
-          (component.api || component.frontend) &&
-          !versionDetailsByComponent[component.name],
-      )
+      .filter(component => (component.api || component.frontend) && !versionDetailsByComponent[component.name])
       .map(component => ({
         component: component.name,
         reason: 'Missing version info in redis',
@@ -156,15 +152,11 @@ export default class TeamHealthService {
     const components = allComponents
       .filter(component => componentNames.includes(component.name))
       .map(component => {
-        const driftData = this.toComponentView(
-          component,
-          versionDetailsByComponent[component.name],
-          now || new Date(),
-        )
+        const driftData = this.toComponentView(component, versionDetailsByComponent[component.name], now || new Date())
         return driftData
       })
-      .filter(component => component?.environments.length)
 
+    console.log(components)
     return components
   }
 
@@ -173,11 +165,7 @@ export default class TeamHealthService {
     const allComponents = await this.serviceCatalogueService.getComponents([], true)
     const components = allComponents
       .map(component => {
-        const driftData = this.toComponentView(
-          component,
-          versionDetailsByComponent[component.name],
-          now || new Date(),
-        )
+        const driftData = this.toComponentView(component, versionDetailsByComponent[component.name], now || new Date())
         return { driftData, component }
       })
       .filter(({ driftData }) => driftData?.environments.length)
@@ -185,9 +173,9 @@ export default class TeamHealthService {
     console.log(components)
     const teamsWithComponentHealth: Record<string, TeamWithComponentHealth> = components.reduce(
       (acc, { driftData, component }) => {
-        const product = component.product
+        const { product } = component
         const teamName = product.team.name
-        const teamSlug = product?.team?.data?.attributes?.slug
+        const teamSlug = product?.team?.slug
         const serviceAreaSlug = product?.service_area?.slug
         const componentHealth = acc[teamName]?.componentHealth || ([] as ComponentHealth[])
         const { staleness, drift, name } = driftData
@@ -271,10 +259,10 @@ export default class TeamHealthService {
     return healthA.stats.max === healthB.stats.max ? teamA.localeCompare(teamB) : healthB.stats.max - healthA.stats.max
   }
 
-  toComponentView = (component: Component, versionDetails: VersionDetails[], now: Date) => {
+  toComponentView = (component: Unwrapped<Component>, versionDetails: VersionDetails[], now: Date) => {
     const versionDetailByEnv = associateBy(versionDetails, details => details.type)
 
-    const environmentsWithVersions = component.environments
+    const environmentsWithVersions = component.envs
       .map(env => {
         if (!versionDetailByEnv[env.name]) {
           return undefined

@@ -84,9 +84,9 @@ export default class StrapiApiClient {
     exemptionFilters: string[] = [],
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
-  ): Promise<Array<Component>> {
+  ): Promise<Unwrapped<Component>[]> {
     const populate = new URLSearchParams({
-      populate: `product${includeTeams ? '.team' : ''},environments${includeLatestCommit ? ',latest_commit' : ''}`,
+      populate: `product${includeTeams ? '.team' : ''},envs${includeLatestCommit ? ',latest_commit' : ''}`,
     }).toString()
     const filters = exemptionFilters.map((filterValue, index) => {
       return `filters[veracode_exempt][$in][${index}]=${filterValue}`
@@ -97,7 +97,7 @@ export default class StrapiApiClient {
         path: '/v1/components',
         query: `${populate}&${filters.join('&')}`,
       })
-      .then(unwrapListResponse)
+      .then(unwrapListResponse<Component>)
   }
 
   async getComponent({ componentName }: { componentName: string }): Promise<Unwrapped<Component>> {

@@ -28,8 +28,8 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const component = await serviceCatalogueService.getComponent({ componentName })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { envs } = component
-    const prodEnvData = component.envs?.data?.filter(environment => environment.attributes?.name === 'prod')
-    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].attributes.alerts_slack_channel
+    const prodEnvData = component.envs?.find(environment => environment.name === 'prod')
+    const alertsSlackChannel = prodEnvData.alerts_slack_channel
     const displayComponent = {
       name: component.name,
       description: component.description,
@@ -45,7 +45,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       frontEnd: component.frontend,
       partOfMonorepo: component.part_of_monorepo,
       language: component.language,
-      product: component.product?.data,
+      product: component.product,
       versions: component.versions,
       dependencyTypes: dependencies.categories,
       dependents: dependencies.dependents,
@@ -63,10 +63,11 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const environmentName = getEnvironmentName(req)
 
     const component = await serviceCatalogueService.getComponent({ componentName })
-    const filteredEnvironment = component.envs?.data?.filter(envs => envs.attributes?.name === environmentName)
-    const envAttributes = filteredEnvironment.length === 0 ? ({} as Environment) : filteredEnvironment[0].attributes
-    const activeAgencies =
-      filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
+    const envAttributes = component.envs?.find(envs => envs.name === environmentName)
+
+    const activeAgencies = envAttributes
+      ? ''
+      : formatActiveAgencies(envAttributes.active_agencies as unknown as Array<string>)
     const allowList = new Map()
 
     if (envAttributes.ip_allow_list && envAttributes?.ip_allow_list_enabled) {
@@ -97,7 +98,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const displayComponent = {
       name: componentName,
       api: component.api,
-      environment: filteredEnvironment,
+      environment: envAttributes,
       activeAgencies,
       allowList,
     }

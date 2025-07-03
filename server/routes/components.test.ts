@@ -14,14 +14,14 @@ const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked
 const redisService = new RedisService(null) as jest.Mocked<RedisService>
 
 let app: Express
-const testComponents = [{ name: 'testComponent' }] as Component[]
+const testComponents = [{ name: 'testComponent' }] as Unwrapped<Component>[]
 const testComponent = {
   name: 'testComponent',
   description: 'Test component description',
   jira_project_keys: ['TEST'],
   github_project_teams_write: ['test-write'],
   github_project_teams_admin: ['test-admin'],
-  github_project_branch_protection_restricted_teams: ['test-restricted'],
+  github_project_branch_protection_restricted_teams: ['hmpps-prison-visits-booking'],
   github_project_visibility: 'public',
   createdAt: '2023-06-07T11:07:00.459Z',
   updatedAt: '2023-10-25T01:25:05.964Z',
@@ -57,75 +57,75 @@ const testComponent = {
   },
   container_image: 'quay.io/test-image',
   product: {
-      id: 94,
-      name: 'Test Product',
-      subproduct: false,
-      legacy: false,
-      description: 'Test product description',
-      phase: 'Alpha',
-      delivery_manager: 'Test DM',
-      product_manager: 'Test PM',
-      confluence_link: '',
-      gdrive_link: '',
-      createdAt: '2023-07-04T10:48:30.760Z',
-      updatedAt: '2023-10-25T06:40:06.112Z',
-      publishedAt: '2023-07-04T10:48:30.755Z',
-      p_id: 'DPS031',
-    },
+    id: 94,
+    name: 'Test Product',
+    subproduct: false,
+    legacy: false,
+    description: 'Test product description',
+    phase: 'Alpha',
+    delivery_manager: 'Test DM',
+    product_manager: 'Test PM',
+    confluence_link: '',
+    gdrive_link: '',
+    createdAt: '2023-07-04T10:48:30.760Z',
+    updatedAt: '2023-10-25T06:40:06.112Z',
+    publishedAt: '2023-07-04T10:48:30.755Z',
+    p_id: 'DPS031',
+  },
   envs: [
-      {
-        id: 46778,
-        name: 'dev',
-        namespace: 'test-namespace-svc-dev',
-        info_path: '/info',
-        health_path: '/health',
-        url: 'https://dev.test.com',
-        cluster: 'live-cluster.com',
-        active_agencies: ['LEI', 'EAI'],
-        type: 'dev',
-        monitor: true,
-        swagger_docs: '/swagger-ui.html',
-      },
-      {
-        id: 48914,
-        name: 'staging',
-        namespace: 'test-namespace-svc-staging',
-        info_path: '/info',
-        health_path: '/health',
-        url: 'https://stage.test.com',
-        cluster: 'live-cluster.com',
-        type: 'stage',
-        monitor: true,
-        swagger_docs: '/swagger-ui.html',
-      },
-      {
-        id: 46779,
-        name: 'dev-all-agencies',
-        namespace: 'test-namespace-svc-dev-all-agencies',
-        info_path: '/info',
-        health_path: '/health',
-        url: 'https://dev.test.com',
-        cluster: 'live-cluster.com',
-        active_agencies: ['***'],
-        type: 'dev',
-        monitor: true,
-        swagger_docs: '/swagger-ui.html',
-      },
-      {
-        id: 46780,
-        name: 'dev-not-set-agencies',
-        namespace: 'test-namespace-svc-not-set-agencies',
-        info_path: '/info',
-        health_path: '/health',
-        url: 'https://dev.test.com',
-        cluster: 'live-cluster.com',
-        active_agencies: undefined,
-        type: 'dev',
-        monitor: true,
-        swagger_docs: '/swagger-ui.html',
-      },
-    ]
-} as unknown as Component
+    {
+      id: 46778,
+      name: 'dev',
+      namespace: 'test-namespace-svc-dev',
+      info_path: '/info',
+      health_path: '/health',
+      url: 'https://dev.test.com',
+      cluster: 'live-cluster.com',
+      active_agencies: ['LEI', 'EAI'],
+      type: 'dev',
+      monitor: true,
+      swagger_docs: '/swagger-ui.html',
+    },
+    {
+      id: 48914,
+      name: 'staging',
+      namespace: 'test-namespace-svc-staging',
+      info_path: '/info',
+      health_path: '/health',
+      url: 'https://stage.test.com',
+      cluster: 'live-cluster.com',
+      type: 'stage',
+      monitor: true,
+      swagger_docs: '/swagger-ui.html',
+    },
+    {
+      id: 46779,
+      name: 'dev-all-agencies',
+      namespace: 'test-namespace-svc-dev-all-agencies',
+      info_path: '/info',
+      health_path: '/health',
+      url: 'https://dev.test.com',
+      cluster: 'live-cluster.com',
+      active_agencies: ['***'],
+      type: 'dev',
+      monitor: true,
+      swagger_docs: '/swagger-ui.html',
+    },
+    {
+      id: 46780,
+      name: 'dev-not-set-agencies',
+      namespace: 'test-namespace-svc-not-set-agencies',
+      info_path: '/info',
+      health_path: '/health',
+      url: 'https://dev.test.com',
+      cluster: 'live-cluster.com',
+      active_agencies: undefined,
+      type: 'dev',
+      monitor: true,
+      swagger_docs: '/swagger-ui.html',
+    },
+  ],
+} as unknown as Unwrapped<Component>
 
 beforeEach(() => {
   serviceCatalogueService.getComponents.mockResolvedValue(testComponents)
@@ -197,17 +197,11 @@ describe('/components', () => {
           expect($('[data-test="detail-page-title"]').text()).toContain(testComponent.name)
           expect($('[data-test="description"]').text()).toBe(testComponent.description)
           expect($('[data-test="title"]').text()).toBe(testComponent.title)
-          expect($('[data-test="jira-project-keys"]').text()).toContain(
-            (testComponent.jira_project_keys as string[]).join(', '),
-          )
-          expect($('[data-test="github-write"]').text()).toContain(
-            (testComponent.github_project_teams_write as string[]).join(', '),
-          )
-          expect($('[data-test="github-admin"]').text()).toContain(
-            (testComponent.github_project_teams_admin as string[]).join(', '),
-          )
+          expect($('[data-test="jira-project-keys"]').text()).toContain(testComponent.jira_project_keys.join(', '))
+          expect($('[data-test="github-write"]').text()).toContain(testComponent.github_project_teams_write.join(', '))
+          expect($('[data-test="github-admin"]').text()).toContain(testComponent.github_project_teams_admin.join(', '))
           expect($('[data-test="github-restricted"]').text()).toContain(
-            (testComponent.github_project_branch_protection_restricted_teams as string[]).join(','),
+            testComponent.github_project_branch_protection_restricted_teams.join(','),
           )
           expect($('[data-test="github-repo"]').text()).toBe(testComponent.github_repo)
           expect($('[data-test="github-visibility"]').text()).toBe(testComponent.github_project_visibility)
@@ -216,13 +210,13 @@ describe('/components', () => {
           expect($('[data-test="frontend"]').text()).toBe(testComponent.frontend ? 'Yes' : 'No')
           expect($('[data-test="part-of-monorepo"]').text()).toBe(testComponent.part_of_monorepo ? 'Yes' : 'No')
           expect($('[data-test="language"]').text()).toBe(testComponent.language)
-          expect($('[data-test="product"]').text()).toBe(testComponent.product.data.attributes.name)
+          expect($('[data-test="product"]').text()).toBe(testComponent.product.name)
           expect($('[data-test="dependency-types"]').text()).toBe('GOTENBERG')
           expect($('[data-test="dependency-0"]').text()).toContain('bbb')
           expect($('[data-test="dependent-0"]').text()).toContain('aaa')
 
-          const environments = testComponent.envs.data.reduce(
-            (environmentList, environment) => `${environmentList}${environment.attributes.name}`,
+          const environments = testComponent.envs.reduce(
+            (environmentList, environment) => `${environmentList}${environment.name}`,
             '',
           )
 
@@ -252,7 +246,7 @@ describe('/components', () => {
           expect(devEnvironment).not.toBeNull()
           const $ = cheerio.load(res.text)
           expectEnvironmentScreenToBeFilled($, devEnvironment)
-          const activeAgencies = devEnvironment.attributes.active_agencies as Array<string>
+          const activeAgencies = devEnvironment.active_agencies
           expect($('td[data-test="active-agencies"]').text()).toBe(activeAgencies.join(', '))
         })
     })
@@ -263,7 +257,7 @@ describe('/components', () => {
       .expect(200)
       .expect('Content-Type', /html/)
       .expect(res => {
-        const devEnvironment = testComponent.envs.data.find(env => env.attributes.name === 'dev-all-agencies')
+        const devEnvironment = testComponent.envs.find(env => env.name === 'dev-all-agencies')
         expect(devEnvironment).not.toBeNull()
         const $ = cheerio.load(res.text)
         expectEnvironmentScreenToBeFilled($, devEnvironment)
@@ -275,7 +269,7 @@ describe('/components', () => {
       .get('/components/testComponent/environment/dev-not-set-agencies')
       .expect('Content-Type', /html/)
       .expect(res => {
-        const devEnvironment = testComponent.envs.data.find(env => env.attributes.name === 'dev-not-set-agencies')
+        const devEnvironment = testComponent.envs.find(env => env.name === 'dev-not-set-agencies')
         expect(devEnvironment).not.toBeNull()
         const $ = cheerio.load(res.text)
         expectEnvironmentScreenToBeFilled($, devEnvironment)

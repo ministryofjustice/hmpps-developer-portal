@@ -2,11 +2,11 @@ jQuery(function () {
   function transformData(data) {
     const transformed = []
     data.forEach(item => {
-      item.attributes.environments.forEach(env => {
-        const productData = item.attributes?.product?.data?.attributes || {}
-        const teamData = productData.team?.data ? productData.team.data.attributes : null
+      item.envs.forEach(env => {
+        const productData = item.product || {}
+        const teamData = productData.team ? productData.team : null
         transformed.push({
-          name: item.attributes.name,
+          name: item.name,
           environment: env.name,
           namespace: env.namespace,
           infoPath: env.info_path === null ? 'Not set' : env.info_path,

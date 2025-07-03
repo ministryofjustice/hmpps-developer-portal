@@ -170,22 +170,20 @@ describe('Strapi service', () => {
 
   describe('Components', () => {
     describe('getComponents', () => {
-      const testComponentsResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { name: 'Component 1' },
-          },
-          {
-            id: 2,
-            attributes: { name: 'Component 2' },
-          },
-        ],
-      } as ListResponse<Component>
+      const testComponentsResponse = [
+        {
+          id: 1,
+          name: 'Component 1',
+        },
+        {
+          id: 2,
+          name: 'Component 2',
+        },
+      ] as Unwrapped<Component>[]
       const testComponents = [
-        { id: 1, attributes: { name: 'Component 1' } },
-        { id: 2, attributes: { name: 'Component 2' } },
-      ] as DataItem<Component>[]
+        { id: 1, name: 'Component 1' },
+        { id: 2, name: 'Component 2' },
+      ] as Unwrapped<Component>[]
 
       it('should return an ordered array of components', async () => {
         strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
@@ -199,54 +197,43 @@ describe('Strapi service', () => {
 
     describe('getComponent', () => {
       const testComponentResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { name: 'Component 1' },
-          },
-        ],
-      } as SingleResponse<Component>
-      const testComponent = { name: 'Component 1' } as Component
+        id: 1,
+        name: 'Component 1',
+      } as Unwrapped<Component>
 
       it('should return the selected component', async () => {
         strapiApiClient.getComponent.mockResolvedValue(testComponentResponse)
 
-        const results = await serviceCatalogueService.getComponent({ componentName: '1' })
+        const results = await serviceCatalogueService.getComponent({ componentName: 'Component 1' })
 
         expect(strapiApiClient.getComponent).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testComponent)
+        expect(results).toEqual(testComponentResponse)
       })
     })
 
     describe('getDependencies', () => {
-      const testComponentsResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: {
-              name: 'Component 1',
-              versions: {
-                helm: {
-                  'generic-service': '2.6.5',
-                  'generic-prometheus-alerts': '1.3.2',
-                },
-                circleci: {
-                  hmpps: '7',
-                },
-                dockerfile: {
-                  base_image: 'node:18.18-bullseye-slim',
-                },
-              },
+      const testComponentsResponse = [
+        {
+          id: 1,
+          name: 'Component 1',
+          versions: {
+            helm: {
+              'generic-service': '2.6.5',
+              'generic-prometheus-alerts': '1.3.2',
+            },
+            circleci: {
+              hmpps: '7',
+            },
+            dockerfile: {
+              base_image: 'node:18.18-bullseye-slim',
             },
           },
-          {
-            id: 2,
-            attributes: {
-              name: 'Component 2',
-            },
-          },
-        ],
-      } as ListResponse<Component>
+        },
+        {
+          id: 2,
+          name: 'Component 2',
+        },
+      ] as Unwrapped<Component>[]
       const dependencies = [
         'circleci::hmpps',
         'dockerfile::base_image',

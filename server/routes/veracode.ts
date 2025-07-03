@@ -34,7 +34,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           VERY_HIGH: 0,
         }
 
-        const veracodeSummary = component.veracode_results_summary as VeracodeResultsSummary
+        const veracodeSummary = component.veracode_results_summary as unknown as VeracodeResultsSummary
 
         veracodeSummary?.severity?.forEach(severity => {
           severity.category.forEach(category => {
@@ -56,9 +56,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           hasVeracode,
           result,
           report: hasVeracode ? component.veracode_results_url : 'N/A',
-          date: hasVeracode
-            ? dayjs(component.veracode_last_completed_scan_date).format('YYYY-MM-DD HH:mm')
-            : 'N/A',
+          date: hasVeracode ? dayjs(component.veracode_last_completed_scan_date).format('YYYY-MM-DD HH:mm') : 'N/A',
           codeScore: hasVeracode ? veracodeSummary['static-analysis'].score : 0,
           severityLevels,
         }

@@ -10,9 +10,7 @@ export default class ComponentNameService {
 
     const rawComponents = componentData.sort(sortByName)
 
-    const components = rawComponents
-      .filter(component => component.environments?.length)
-      .map(component => component.name)
+    const components = rawComponents.filter(component => component.envs?.length).map(component => component.name)
 
     return components
   }
@@ -91,9 +89,7 @@ export default class ComponentNameService {
 
   async checkComponentExists(componentName: string): Promise<boolean> {
     const componentData = await this.strapiApiClientFactory('').getComponents()
-    const components = componentData.find(
-      component => formatMonitorName(component.name) === componentName,
-    )
+    const components = componentData.find(component => formatMonitorName(component.name) === componentName)
     return !!components
   }
 

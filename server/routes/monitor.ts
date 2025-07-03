@@ -154,7 +154,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         const components = await serviceCatalogueService.getComponents()
 
         components.forEach(component => {
-          environments = environments.concat(getEnvironmentData(component))
+          environments = environments.concat(getUnwrappedEnvironmentData(component))
         })
       }
 
@@ -198,8 +198,11 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   return router
 }
 
-const getEnvironmentData = (component: Unwrapped<Component>, selectedProductId?: string): MonitorEnvironment[] => {
-  const typedEnvironments = component.environments
+const getUnwrappedEnvironmentData = (
+  component: Unwrapped<Component>,
+  selectedProductId?: string,
+): MonitorEnvironment[] => {
+  const typedEnvironments = component.envs
   let productId
   if (selectedProductId) {
     productId = selectedProductId
@@ -215,6 +218,36 @@ const getEnvironmentData = (component: Unwrapped<Component>, selectedProductId?:
     if (environment.monitor) {
       environments.push({
         componentName: component.name as string,
+        environmentName: environment.name as string,
+        environmentUrl: environment.url as string,
+        environmentHealth: environment.health_path as string,
+        environmentType: environment.type as string,
+        isPrisons,
+        isProbation,
+      })
+    }
+  })
+
+  return environments
+}
+
+const getEnvironmentData = (component: DataItem<Component>, selectedProductId?: string): MonitorEnvironment[] => {
+  const typedEnvironments = component.attributes.environments as Environment[]
+  let productId
+  if (selectedProductId) {
+    productId = selectedProductId
+  } else {
+    productId = component.attributes.product?.data?.attributes?.p_id
+  }
+
+  const isPrisons = `${productId}`.startsWith('DPS')
+  const isProbation = `${productId}`.startsWith('HMPPS')
+  const environments: MonitorEnvironment[] = []
+
+  typedEnvironments.forEach(environment => {
+    if (environment.monitor) {
+      environments.push({
+        componentName: component.attributes.name as string,
         environmentName: environment.name as string,
         environmentUrl: environment.url as string,
         environmentHealth: environment.health_path as string,
