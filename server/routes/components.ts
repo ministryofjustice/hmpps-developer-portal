@@ -41,8 +41,9 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const component = await serviceCatalogueService.getComponent({ componentName })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { envs } = component
-    const prodEnvData = component.envs?.data?.filter(environment => environment.attributes.name === 'prod')
-    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].attributes.alerts_slack_channel
+    const prodEnvData = component.envs?.filter(environment => environment.name === 'prod')
+    console.log(prodEnvData)
+    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].alerts_slack_channel
     const displayComponent = {
       name: component.name,
       description: component.description,
@@ -58,7 +59,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       frontEnd: component.frontend,
       partOfMonorepo: component.part_of_monorepo,
       language: component.language,
-      product: component.product?.data,
+      product: component.product,
       versions: component.versions,
       dependencyTypes: dependencies.categories,
       dependents: dependencies.dependents,
@@ -94,10 +95,10 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const environmentName = getEnvironmentName(req)
 
     const component = await serviceCatalogueService.getComponent({ componentName })
-    const filteredEnvironment = component.envs?.data?.filter(
-      environment => environment.attributes.name === environmentName,
+    const filteredEnvironment = component.envs?.filter(
+      environment => environment.name === environmentName,
     )
-    const envAttributes = filteredEnvironment.length === 0 ? ({} as Environment) : filteredEnvironment[0].attributes
+    const envAttributes = filteredEnvironment.length === 0 ? ({} as Environment) : filteredEnvironment[0]
     const activeAgencies =
       filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
     const allowList = new Map()
@@ -128,7 +129,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
 
     const displayComponent = {
       name: componentName,
-      product: component.product?.data,
+      product: component.product,
       api: component.api,
       environment: envAttributes,
       activeAgencies,

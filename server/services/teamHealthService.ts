@@ -107,11 +107,11 @@ export default class TeamHealthService {
     const componentsMissingHealth = allComponents
       .filter(
         component =>
-          (component.attributes.api || component.attributes.frontend) &&
-          !versionDetailsByComponent[component.attributes.name],
+          (component.api || component.frontend) &&
+          !versionDetailsByComponent[component.name],
       )
       .map(component => ({
-        component: component.attributes.name,
+        component: component.name,
         reason: 'Missing version info in redis',
       }))
 
@@ -134,12 +134,14 @@ export default class TeamHealthService {
 
   async getComponentsMissingTeams(): Promise<{ component: string; product: string }[]> {
     const allComponents = await this.serviceCatalogueService.getComponents(undefined, true)
+    console.log(allComponents)
+    console.log('Problem from here')
     const componentsMissingTeams = allComponents
-      .filter(component => !component?.attributes?.product?.data.attributes.team.data)
+      .filter(component => !component?.product?.team)
       .map(component => ({
-        product: component.attributes.product.data?.attributes?.name,
-        productSlug: component.attributes.product.data?.attributes?.slug,
-        component: component.attributes.name,
+        product: component.product.name,
+        productSlug: component.product.slug,
+        component: component.name,
       }))
 
     return componentsMissingTeams.sort(({ product: p1, component: c1 }, { product: p2, component: c2 }) => {
@@ -152,11 +154,11 @@ export default class TeamHealthService {
     const versionDetailsByComponent = await this.getVersionDetailsByComponent()
     const allComponents = await this.serviceCatalogueService.getComponents([], false, true)
     const components = allComponents
-      .filter(component => componentNames.includes(component.attributes.name))
+      .filter(component => componentNames.includes(component.name))
       .map(component => {
         const driftData = this.toComponentView(
-          component.attributes,
-          versionDetailsByComponent[component.attributes.name],
+          component,
+          versionDetailsByComponent[component.name],
           now || new Date(),
         )
         return driftData
@@ -172,20 +174,21 @@ export default class TeamHealthService {
     const components = allComponents
       .map(component => {
         const driftData = this.toComponentView(
-          component.attributes,
-          versionDetailsByComponent[component.attributes.name],
+          component,
+          versionDetailsByComponent[component.name],
           now || new Date(),
         )
         return { driftData, component }
       })
       .filter(({ driftData }) => driftData?.environments.length)
-
+    console.log('Get Team Health')
+    console.log(components)
     const teamsWithComponentHealth: Record<string, TeamWithComponentHealth> = components.reduce(
       (acc, { driftData, component }) => {
-        const product = component.attributes.product?.data?.attributes
-        const teamName = product?.team?.data?.attributes?.name
+        const product = component.product
+        const teamName = product.team.name
         const teamSlug = product?.team?.data?.attributes?.slug
-        const serviceAreaSlug = product?.service_area?.data?.attributes?.slug
+        const serviceAreaSlug = product?.service_area?.slug
         const componentHealth = acc[teamName]?.componentHealth || ([] as ComponentHealth[])
         const { staleness, drift, name } = driftData
         componentHealth.push({ staleness, drift, name })

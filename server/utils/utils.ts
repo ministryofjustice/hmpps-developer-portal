@@ -194,7 +194,7 @@ export async function getDependencyNames(serviceCatalogueService: ServiceCatalog
   const namesSet = new Set<string>()
 
   components.forEach(component => {
-    const versions = component.attributes?.versions as Record<string, Record<string, string>>
+    const versions = component.versions as Record<string, Record<string, string>>
     if (versions && versions[dependencyType]) {
       Object.keys(versions[dependencyType]).forEach(name => namesSet.add(name))
     }

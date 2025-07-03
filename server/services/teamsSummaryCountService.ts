@@ -178,10 +178,10 @@ export default class TeamsSummaryCountService {
       const productIds = new Set(products.map(p => p.id))
       const validComponents = allComponents
         .filter(component => {
-          const productId = component?.attributes?.product?.data?.id
+          const productId = component?.product?.id
           return productId && productIds.has(productId)
         })
-        .map(component => formatMonitorName(component.attributes.name))
+        .map(component => formatMonitorName(component.name))
 
       const componentNamesSet = new Set(validComponents)
 
@@ -237,13 +237,13 @@ export default class TeamsSummaryCountService {
       const allComponents = await serviceCatalogueService.getComponents()
       const productIds = new Set(products.map(p => p.id))
       const validComponents = allComponents.filter(component => {
-        const productId = component?.attributes?.product?.data?.id
+        const productId = component?.product?.id
         return productId && productIds.has(productId)
       })
 
       const counts = validComponents.reduce(
         (total, component) => {
-          const summary = component.attributes?.veracode_results_summary as VeracodeResultsSummary | undefined
+          const summary = component.veracode_results_summary as VeracodeResultsSummary | undefined
           if (!summary?.severity) return total
 
           return summary.severity.reduce((outerTotal, severity) => {

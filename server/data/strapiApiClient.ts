@@ -84,7 +84,7 @@ export default class StrapiApiClient {
     exemptionFilters: string[] = [],
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
-  ): Promise<ListResponse<Component>> {
+  ): Promise<Array<Component>> {
     const populate = new URLSearchParams({
       populate: `product${includeTeams ? '.team' : ''},environments${includeLatestCommit ? ',latest_commit' : ''}`,
     }).toString()
@@ -92,19 +92,23 @@ export default class StrapiApiClient {
       return `filters[veracode_exempt][$in][${index}]=${filterValue}`
     })
 
-    return this.restClient.get({
-      path: '/v1/components',
-      query: `${populate}&${filters.join('&')}`,
-    })
+    return this.restClient
+      .get<ListResponse<Component>>({
+        path: '/v1/components',
+        query: `${populate}&${filters.join('&')}`,
+      })
+      .then(unwrapListResponse)
   }
 
-  async getComponent({ componentName }: { componentName: string }): Promise<SingleResponse<Component>> {
+  async getComponent({ componentName }: { componentName: string }): Promise<Unwrapped<Component>> {
     const populate = new URLSearchParams({ populate: 'product.team,envs.trivy_scan' }).toString()
 
-    return this.restClient.get({
-      path: '/v1/components',
-      query: `filters[name][$eq]=${componentName}&${populate}`,
-    })
+    return this.restClient
+      .get<SingleResponse<Component>>({
+        path: '/v1/components',
+        query: `filters[name][$eq]=${componentName}&${populate}`,
+      })
+      .then(response => unwrapSingleResponse<Component>(response))
   }
 
   async getTeams(): Promise<ListResponse<Team>> {

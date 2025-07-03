@@ -4,7 +4,7 @@ import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import RedisService from '../services/redisService'
-import { Component, DataItem, Environment } from '../data/strapiApiTypes'
+import { Component, DataItem, Environment, Unwrapped } from '../data/strapiApiTypes'
 import Dependencies from '../services/Dependencies'
 
 jest.mock('../services/serviceCatalogueService.ts')
@@ -14,7 +14,7 @@ const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked
 const redisService = new RedisService(null) as jest.Mocked<RedisService>
 
 let app: Express
-const testComponents = [{ id: 1, attributes: { name: 'testComponent' } }] as DataItem<Component>[]
+const testComponents = [{ name: 'testComponent' }] as Component[]
 const testComponent = {
   name: 'testComponent',
   description: 'Test component description',
@@ -34,8 +34,8 @@ const testComponent = {
   github_repo: 'test-github-repo',
   language: 'Kotlin',
   include_in_subject_access_requests: false,
-  github_project_teams_maintain: [],
-  github_topics: [],
+  github_project_teams_maintain: [] as string[],
+  github_topics: [] as string[],
   versions: {
     helm: {
       dependencies: {
@@ -57,88 +57,74 @@ const testComponent = {
   },
   container_image: 'quay.io/test-image',
   product: {
-    data: {
       id: 94,
-      attributes: {
-        name: 'Test Product',
-        subproduct: false,
-        legacy: false,
-        description: 'Test product description',
-        phase: 'Alpha',
-        delivery_manager: 'Test DM',
-        product_manager: 'Test PM',
-        confluence_link: '',
-        gdrive_link: '',
-        createdAt: '2023-07-04T10:48:30.760Z',
-        updatedAt: '2023-10-25T06:40:06.112Z',
-        publishedAt: '2023-07-04T10:48:30.755Z',
-        p_id: 'DPS031',
-      },
+      name: 'Test Product',
+      subproduct: false,
+      legacy: false,
+      description: 'Test product description',
+      phase: 'Alpha',
+      delivery_manager: 'Test DM',
+      product_manager: 'Test PM',
+      confluence_link: '',
+      gdrive_link: '',
+      createdAt: '2023-07-04T10:48:30.760Z',
+      updatedAt: '2023-10-25T06:40:06.112Z',
+      publishedAt: '2023-07-04T10:48:30.755Z',
+      p_id: 'DPS031',
     },
-  },
-  envs: {
-    data: [
+  envs: [
       {
-        attributes: {
-          id: 46778,
-          name: 'dev',
-          namespace: 'test-namespace-svc-dev',
-          info_path: '/info',
-          health_path: '/health',
-          url: 'https://dev.test.com',
-          cluster: 'live-cluster.com',
-          active_agencies: ['LEI', 'EAI'],
-          type: 'dev',
-          monitor: true,
-          swagger_docs: '/swagger-ui.html',
-        },
+        id: 46778,
+        name: 'dev',
+        namespace: 'test-namespace-svc-dev',
+        info_path: '/info',
+        health_path: '/health',
+        url: 'https://dev.test.com',
+        cluster: 'live-cluster.com',
+        active_agencies: ['LEI', 'EAI'],
+        type: 'dev',
+        monitor: true,
+        swagger_docs: '/swagger-ui.html',
       },
       {
-        attributes: {
-          id: 48914,
-          name: 'staging',
-          namespace: 'test-namespace-svc-staging',
-          info_path: '/info',
-          health_path: '/health',
-          url: 'https://stage.test.com',
-          cluster: 'live-cluster.com',
-          type: 'stage',
-          monitor: true,
-          swagger_docs: '/swagger-ui.html',
-        },
+        id: 48914,
+        name: 'staging',
+        namespace: 'test-namespace-svc-staging',
+        info_path: '/info',
+        health_path: '/health',
+        url: 'https://stage.test.com',
+        cluster: 'live-cluster.com',
+        type: 'stage',
+        monitor: true,
+        swagger_docs: '/swagger-ui.html',
       },
       {
-        attributes: {
-          id: 46779,
-          name: 'dev-all-agencies',
-          namespace: 'test-namespace-svc-dev-all-agencies',
-          info_path: '/info',
-          health_path: '/health',
-          url: 'https://dev.test.com',
-          cluster: 'live-cluster.com',
-          active_agencies: ['***'],
-          type: 'dev',
-          monitor: true,
-          swagger_docs: '/swagger-ui.html',
-        },
+        id: 46779,
+        name: 'dev-all-agencies',
+        namespace: 'test-namespace-svc-dev-all-agencies',
+        info_path: '/info',
+        health_path: '/health',
+        url: 'https://dev.test.com',
+        cluster: 'live-cluster.com',
+        active_agencies: ['***'],
+        type: 'dev',
+        monitor: true,
+        swagger_docs: '/swagger-ui.html',
       },
       {
-        attributes: {
-          id: 46780,
-          name: 'dev-not-set-agencies',
-          namespace: 'test-namespace-svc-not-set-agencies',
-          info_path: '/info',
-          health_path: '/health',
-          url: 'https://dev.test.com',
-          cluster: 'live-cluster.com',
-          active_agencies: undefined,
-          type: 'dev',
-          monitor: true,
-          swagger_docs: '/swagger-ui.html',
-        },
+        id: 46780,
+        name: 'dev-not-set-agencies',
+        namespace: 'test-namespace-svc-not-set-agencies',
+        info_path: '/info',
+        health_path: '/health',
+        url: 'https://dev.test.com',
+        cluster: 'live-cluster.com',
+        active_agencies: undefined,
+        type: 'dev',
+        monitor: true,
+        swagger_docs: '/swagger-ui.html',
       },
-    ],
-  },
+    ]
 } as unknown as Component
 
 beforeEach(() => {
@@ -262,7 +248,7 @@ describe('/components', () => {
         .get('/components/testComponent/environment/dev')
         .expect('Content-Type', /html/)
         .expect(res => {
-          const devEnvironment = testComponent.envs.data.find(env => env.attributes.name === 'dev')
+          const devEnvironment = testComponent.envs.find(env => env.name === 'dev')
           expect(devEnvironment).not.toBeNull()
           const $ = cheerio.load(res.text)
           expectEnvironmentScreenToBeFilled($, devEnvironment)
