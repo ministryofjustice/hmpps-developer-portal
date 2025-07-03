@@ -136,7 +136,7 @@ export default class StrapiApiClient {
     return this.restClient.get({ path, query })
   }
 
-  async getNamespaces(): Promise<Array<Namespace>> {
+  async getNamespaces(): Promise<Unwrapped<Namespace>[]> {
     return this.restClient
       .get<ListResponse<Namespace>>({
         path: '/v1/namespaces',
@@ -248,7 +248,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubRepoRequests(): Promise<Array<GithubRepoRequest>> {
+  async getGithubRepoRequests(): Promise<Unwrapped<GithubRepoRequest>[]> {
     return this.restClient
       .get<ListResponse<GithubRepoRequest>>({
         path: '/v1/github-repo-requests',
@@ -273,7 +273,7 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubTeams(): Promise<Array<GithubTeam>> {
+  async getGithubTeams(): Promise<Unwrapped<GithubTeam>[]> {
     return this.restClient
       .get<ListResponse<GithubTeam>>({
         path: '/v1/github-teams',
@@ -291,7 +291,7 @@ export default class StrapiApiClient {
       .then(data => data as unknown as Unwrapped<GithubTeam>)
   }
 
-  async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<Array<GithubTeam>> {
+  async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<Unwrapped<GithubTeam>[]> {
     return this.restClient
       .get<ListResponse<GithubTeam>>({
         path: '/v1/github-teams',
@@ -300,7 +300,7 @@ export default class StrapiApiClient {
       .then(unwrapListResponse)
   }
 
-  async getScheduledJobs(): Promise<Array<ScheduledJob>> {
+  async getScheduledJobs(): Promise<Unwrapped<ScheduledJob>[]> {
     return this.restClient
       .get<ListResponse<ScheduledJob>>({
         path: '/v1/scheduled-jobs',
