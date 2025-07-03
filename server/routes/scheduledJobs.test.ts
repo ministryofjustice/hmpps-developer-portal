@@ -10,7 +10,7 @@ jest.mock('../services/serviceCatalogueService')
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testScheduledJobs = [{ name: 'testScheduledJob ' }] as ScheduledJob[]
+const testScheduledJobs = [{ name: 'testScheduledJob ' }] as Unwrapped<ScheduledJob>[]
 const testScheduledJob = {
   id: 1,
   name: 'jobName',

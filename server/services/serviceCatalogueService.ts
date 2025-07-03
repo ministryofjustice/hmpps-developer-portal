@@ -156,13 +156,11 @@ export default class ServiceCatalogueService {
     return productSet
   }
 
-  async getNamespaces(): Promise<Namespace[]> {
+  async getNamespaces(): Promise<Unwrapped<Namespace>[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const namespaceData = await strapiApiClient.getNamespaces()
 
-    const namespaces = namespaceData.sort(sortByName)
-
-    return namespaces
+    return namespaceData.sort(sortByName)
   }
 
   async getNamespace({
@@ -178,7 +176,7 @@ export default class ServiceCatalogueService {
     return namespaceData
   }
 
-  async getGithubTeams(): Promise<GithubTeam[]> {
+  async getGithubTeams(): Promise<Unwrapped<GithubTeam>[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const githubTeamsData = await strapiApiClient.getGithubTeams()
     const githubTeams = githubTeamsData.sort(sortGithubTeamsData)
@@ -191,17 +189,16 @@ export default class ServiceCatalogueService {
     return githubTeamData
   }
 
-  async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<GithubTeam[]> {
+  async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<Unwrapped<GithubTeam>[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const githubSubTeamsData = await strapiApiClient.getGithubSubTeams({ parentTeamName })
     return githubSubTeamsData
   }
 
-  async getScheduledJobs(): Promise<ScheduledJob[]> {
+  async getScheduledJobs(): Promise<Unwrapped<ScheduledJob>[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const scheduledJobsData = await strapiApiClient.getScheduledJobs()
     const scheduledJobsRequests = scheduledJobsData.sort(sortByName)
-
     return scheduledJobsRequests
   }
 
@@ -273,7 +270,7 @@ export default class ServiceCatalogueService {
     return customComponentView
   }
 
-  async getGithubRepoRequests(): Promise<GithubRepoRequest[]> {
+  async getGithubRepoRequests(): Promise<Unwrapped<GithubRepoRequest>[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentRequestsData = await strapiApiClient.getGithubRepoRequests()
     return componentRequestsData.sort(sortComponentRequestData)
