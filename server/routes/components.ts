@@ -94,9 +94,10 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const environmentName = getEnvironmentName(req)
 
     const component = await serviceCatalogueService.getComponent({ componentName })
-    const filteredEnvironment = component.envs?.filter(environment => environment.name === environmentName,)
+    const filteredEnvironment = component.envs?.filter(environment => environment.name === environmentName)
     const envAttributes = filteredEnvironment.length === 0 ? ({} as Environment) : filteredEnvironment[0]
-    const activeAgencies = filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
+    const activeAgencies =
+      filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
     const allowList = new Map()
 
     if (envAttributes.ip_allow_list && envAttributes.ip_allow_list_enabled) {
