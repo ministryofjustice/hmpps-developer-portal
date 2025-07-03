@@ -29,16 +29,10 @@ export default function routes({ serviceCatalogueService, teamsSummaryCountServi
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
       logger.info(`getTeamAlertSummary for team '${teamSlug}': ${JSON.stringify(teamAlertSummary, null, 2)}`)
 
-      const teamTrivyScanSummary = await teamsSummaryCountService.getTeamTrivyVulnerabilityCounts(
-        products,
-        serviceCatalogueService,
-      )
+      const teamTrivyScanSummary = await teamsSummaryCountService.getTeamTrivyVulnerabilityCounts(products)
       logger.info(`getTeamTrivyScanSummary for team '${teamSlug}': ${JSON.stringify(teamTrivyScanSummary, null, 2)}`)
 
-      const teamVeracodeScanSummary = await teamsSummaryCountService.getTeamVeracodeVulnerabilityCounts(
-        products,
-        serviceCatalogueService,
-      )
+      const teamVeracodeScanSummary = await teamsSummaryCountService.getTeamVeracodeVulnerabilityCounts(products)
       logger.info(
         `getTeamVeracodeScanSummary for team '${teamSlug}': ${JSON.stringify(teamVeracodeScanSummary, null, 2)}`,
       )

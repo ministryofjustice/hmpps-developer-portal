@@ -6,10 +6,13 @@ import ServiceCatalogueService from '../services/serviceCatalogueService'
 import RedisService from '../services/redisService'
 import { Component, DataItem, Environment, Unwrapped } from '../data/strapiApiTypes'
 import Dependencies from '../services/Dependencies'
+import AlertsService from '../services/alertsService'
 
 jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/redisService.ts')
+jest.mock('../services/alertsService')
 
+const alertsService = new AlertsService(null) as jest.Mocked<AlertsService>
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 const redisService = new RedisService(null) as jest.Mocked<RedisService>
 
@@ -160,7 +163,7 @@ beforeEach(() => {
 
   redisService.getAllDependencies.mockResolvedValue(dependencies)
 
-  app = appWithAllRoutes({ services: { serviceCatalogueService, redisService } })
+  app = appWithAllRoutes({ services: { serviceCatalogueService, redisService, alertsService } })
 })
 
 afterEach(() => {
@@ -188,6 +191,7 @@ describe('/components', () => {
 
   describe('GET /:componentId', () => {
     it('should render component page', () => {
+      alertsService.getAlertsForComponent.mockResolvedValue([])
       return request(app)
         .get(`/components/${testComponent.name}`)
         .expect('Content-Type', /html/)
@@ -219,7 +223,7 @@ describe('/components', () => {
             (environmentList, environment) => `${environmentList}${environment.name}`,
             '',
           )
-          expect($('[data-test="envs"]').text()).toBe(environments)
+          expect($('[data-test="environment"]').text()).toBe(environments)
         })
     })
   })

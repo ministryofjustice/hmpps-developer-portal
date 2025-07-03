@@ -22,7 +22,11 @@ export const services = () => {
   const dataFilterService = new DataFilterService(strapiApiClientBuilder)
   const teamHealthService = new TeamHealthService(redisService, serviceCatalogueService)
   const alertsService = new AlertsService(alertsApiClient)
-  const teamsSummaryCountService = new TeamsSummaryCountService(alertsService, strapiApiClientBuilder)
+  const teamsSummaryCountService = new TeamsSummaryCountService(
+    alertsService,
+    serviceCatalogueService,
+    strapiApiClientBuilder,
+  )
 
   return {
     applicationInfo,
