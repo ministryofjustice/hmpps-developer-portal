@@ -78,39 +78,33 @@ export default class ServiceCatalogueService {
     exemptionFilters: string[] = [],
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
-  ): Promise<DataItem<Component>[]> {
+  ): Promise<Unwrapped<Component>[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentData = await strapiApiClient.getComponents(exemptionFilters, includeTeams, includeLatestCommit)
-
-    const components = componentData.data.sort(sortData)
+    const components = componentData.sort(sortByName)
 
     return components
   }
 
-  async getComponent({ componentName }: { componentName: string }): Promise<Component> {
+  async getComponent({ componentName }: { componentName: string }): Promise<Unwrapped<Component>> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentItem = await strapiApiClient.getComponent({ componentName })
-    const componentData = componentItem.data as DataItem<Component>[]
-
-    // @ts-expect-error Suppress any declaration
-    const component = componentData.length > 0 ? componentItem.data[0]?.attributes : {}
-
-    return component
+    return componentItem
   }
 
   async getDependencies(): Promise<string[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const componentData = await strapiApiClient.getComponents()
-    const components = componentData.data.sort(sortData)
+    const components = componentData.sort(sortByName)
     let dependencies: string[] = []
 
     components
-      .filter(component => component.attributes.versions)
+      .filter(component => component.versions)
       .forEach(component => {
-        if (component.attributes.versions) {
-          Object.keys(component.attributes.versions).forEach(versionType => {
+        if (component.versions) {
+          Object.keys(component.versions).forEach(versionType => {
             // @ts-expect-error Suppress any declaration
-            Object.keys(component.attributes.versions[versionType]).forEach(dependency => {
+            Object.keys(component.versions[versionType]).forEach(dependency => {
               dependencies = [...new Set([...dependencies, `${versionType}::${dependency}`])]
             })
           })

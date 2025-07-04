@@ -24,9 +24,9 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const unknown = resultFilters.includes('unknown')
 
     const rows = allComponents
-      .filter(component => veracodeFilters(passed, failed, unknown, component.attributes.veracode_policy_rules_status))
+      .filter(component => veracodeFilters(passed, failed, unknown, component.veracode_policy_rules_status))
       .map(component => {
-        const hasVeracode = !!component.attributes.veracode_results_summary
+        const hasVeracode = !!component.veracode_results_summary
         const severityLevels = {
           LOW: 0,
           MEDIUM: 0,
@@ -34,7 +34,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           VERY_HIGH: 0,
         }
 
-        const veracodeSummary = component.attributes.veracode_results_summary as VeracodeResultsSummary
+        const veracodeSummary = component.veracode_results_summary as unknown as VeracodeResultsSummary
 
         veracodeSummary?.severity?.forEach(severity => {
           severity.category.forEach(category => {
@@ -47,18 +47,16 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
         if (!hasVeracode) {
           result = 'N/A'
-        } else if (component.attributes.veracode_policy_rules_status === 'Pass') {
+        } else if (component.veracode_policy_rules_status === 'Pass') {
           result = 'Passed'
         }
 
         return {
-          name: component.attributes.name,
+          name: component.name,
           hasVeracode,
           result,
-          report: hasVeracode ? component.attributes.veracode_results_url : 'N/A',
-          date: hasVeracode
-            ? dayjs(component.attributes.veracode_last_completed_scan_date).format('YYYY-MM-DD HH:mm')
-            : 'N/A',
+          report: hasVeracode ? component.veracode_results_url : 'N/A',
+          date: hasVeracode ? dayjs(component.veracode_last_completed_scan_date).format('YYYY-MM-DD HH:mm') : 'N/A',
           codeScore: hasVeracode ? veracodeSummary['static-analysis'].score : 0,
           severityLevels,
         }

@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import RedisService from './redisService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import TeamHealthService from './teamHealthService'
-import { Component, DataItem } from '../data/strapiApiTypes'
+import { Component, Unwrapped } from '../data/strapiApiTypes'
 
 jest.mock('./redisService')
 jest.mock('./serviceCatalogueService')
@@ -24,18 +24,16 @@ describe('teamHealthService', () => {
 
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            part_of_monorepo: false,
-            latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-03T01:02:03.000Z' },
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
-        } as DataItem<Component>,
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          part_of_monorepo: false,
+          latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-03T01:02:03.000Z' },
+          envs: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+        } as Unwrapped<Component>,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
@@ -109,16 +107,14 @@ describe('teamHealthService', () => {
 
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
-        } as DataItem<Component>,
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          envs: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+        } as Unwrapped<Component>,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
@@ -192,18 +188,16 @@ describe('teamHealthService', () => {
 
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            part_of_monorepo: true,
-            latest_commit: { id: 1, sha: '123456789', date_time: '2023-05-02T01:02:03.000Z' },
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
-        } as DataItem<Component>,
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          part_of_monorepo: true,
+          latest_commit: { id: 1, sha: '123456789', date_time: '2023-05-02T01:02:03.000Z' },
+          envs: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+        } as Unwrapped<Component>,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
@@ -278,18 +272,16 @@ describe('teamHealthService', () => {
 
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-02T01:02:03.000Z' },
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'test1', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
-        } as DataItem<Component>,
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-02T01:02:03.000Z' },
+          envs: [
+            { name: 'dev', type: 'dev' },
+            { name: 'test1', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+        } as Unwrapped<Component>,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
@@ -358,16 +350,14 @@ describe('teamHealthService', () => {
 
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-02T01:02:03.000Z' },
-            environments: [
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
-        } as DataItem<Component>,
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-02T01:02:03.000Z' },
+          envs: [
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+        } as Unwrapped<Component>,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
@@ -419,39 +409,33 @@ describe('teamHealthService', () => {
 
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          environments: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
         },
         {
-          attributes: {
-            name: 'another-service',
-            github_repo: 'another-service-repo',
-            environments: [
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
+          name: 'another-service',
+          github_repo: 'another-service-repo',
+          environments: [
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
         },
         {
-          attributes: {
-            name: 'yet-another-service',
-            github_repo: 'yet-another-service-repo',
-            api: true,
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
+          name: 'yet-another-service',
+          github_repo: 'yet-another-service-repo',
+          api: true,
+          environments: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
         },
-      ] as DataItem<Component>[])
+      ] as Unwrapped<Component>[])
 
       const driftData = await teamHealthService.getComponentsWeCannotCalculateHealthFor()
       expect(driftData).toStrictEqual([
@@ -473,31 +457,21 @@ describe('teamHealthService', () => {
 
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-            product: {
-              data: {
-                attributes: {
-                  name: 'product-1',
-                  slug: 'product-1-slug',
-                  team: {
-                    data: { attributes: { name: 'team-1', slug: 'team-1-slug' } },
-                  },
-                  service_area: {
-                    data: { attributes: { name: 'service-area-1', slug: 'service-area-1-slug' } },
-                  },
-                },
-              },
-            },
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          envs: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+          product: {
+            name: 'product-1',
+            slug: 'product-1-slug',
+            team: { name: 'team-1', slug: 'team-1-slug' },
+            service_area: { name: 'service-area-1', slug: 'service-area-1-slug' },
           },
         },
-      ] as DataItem<Component>[])
+      ] as Unwrapped<Component>[])
 
       const driftData = await teamHealthService.getTeamHealth(now)
       expect(driftData).toStrictEqual({
@@ -633,79 +607,50 @@ describe('teamHealthService', () => {
     it('should return components with missing teams', async () => {
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-            product: {
-              data: {
-                attributes: {
-                  name: 'product-1',
-                  slug: 'product-1-slug',
-                  team: {
-                    data: { attributes: { name: 'team-1', slug: 'team-1-slug' } },
-                  },
-                  service_area: {
-                    data: { attributes: { name: 'service-area-1', slug: 'service-area-1-slug' } },
-                  },
-                },
-              },
-            },
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          environments: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+          product: {
+            name: 'product-1',
+            slug: 'product-1-slug',
+            team: { name: 'team-1', slug: 'team-1-slug' },
+            service_area: { name: 'service-area-1', slug: 'service-area-1-slug' },
           },
         },
         {
-          attributes: {
-            name: 'another-service',
-            github_repo: 'another-service-repo',
-            environments: [
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-            product: {
-              data: {
-                attributes: {
-                  name: 'product-1',
-                  slug: 'product-1-slug',
-                  team: {
-                    data: { attributes: { name: 'team-1', slug: 'team-1-slug' } },
-                  },
-                  service_area: {
-                    data: { attributes: { name: 'service-area-1', slug: 'service-area-1-slug' } },
-                  },
-                },
-              },
-            },
+          name: 'another-service',
+          github_repo: 'another-service-repo',
+          environments: [
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+          product: {
+            name: 'product-1',
+            slug: 'product-1-slug',
+            team: { name: 'team-1', slug: 'team-1-slug' },
+            service_area: { name: 'service-area-1', slug: 'service-area-1-slug' },
           },
         },
         {
-          attributes: {
-            name: 'yet-another-service',
-            github_repo: 'yet-another-service-repo',
-            api: true,
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-            product: {
-              data: {
-                attributes: {
-                  name: 'product-2',
-                  slug: 'product-2-slug',
-                  team: {},
-                  service_area: {
-                    data: { attributes: { name: 'service-area-1', slug: 'service-area-1-slug' } },
-                  },
-                },
-              },
-            },
+          name: 'yet-another-service',
+          github_repo: 'yet-another-service-repo',
+          api: true,
+          environments: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+          product: {
+            name: 'product-2',
+            slug: 'product-2-slug',
+            service_area: { name: 'service-area-1', slug: 'service-area-1-slug' },
           },
         },
-      ] as DataItem<Component>[])
+      ] as Unwrapped<Component>[])
 
       const driftData = await teamHealthService.getComponentsMissingTeams()
       expect(driftData).toStrictEqual([

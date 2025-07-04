@@ -20,17 +20,17 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const displayComponents = components
       .filter(component => {
         // @ts-expect-error Suppress any declaration
-        if (component.attributes?.versions && component.attributes?.versions[dependencyType]) {
+        if (component.versions && component.versions[dependencyType]) {
           // @ts-expect-error Suppress any declaration
-          return component.attributes.versions[dependencyType][dependencyName]
+          return component.versions[dependencyType][dependencyName]
         }
 
         return false
       })
       .map(component => {
         // @ts-expect-error Suppress any declaration
-        const dependencyData = component.attributes?.versions?.[dependencyType]?.[dependencyName]
-        const githubRepo = component.attributes?.github_repo ?? ''
+        const dependencyData = component.versions?.[dependencyType]?.[dependencyName]
+        const githubRepo = component.github_repo ?? ''
 
         let dependencyVersion = ''
         if (typeof dependencyData === 'string' || typeof dependencyData === 'number') {
@@ -45,7 +45,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
         return {
           id: component.id,
-          componentName: component.attributes?.name ?? '',
+          componentName: component?.name ?? '',
           dependencyVersion,
           location: githubUrl,
         }
