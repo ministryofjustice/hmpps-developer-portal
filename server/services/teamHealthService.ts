@@ -169,7 +169,7 @@ export default class TeamHealthService {
     const teamsWithComponentHealth: Record<string, TeamWithComponentHealth> = components.reduce(
       (acc, { driftData, component }) => {
         const { product } = component
-        const teamName = product.team.name
+        const teamName = product?.team?.name
         const teamSlug = product?.team?.slug
         const serviceAreaSlug = product?.service_area?.slug
         const componentHealth = acc[teamName]?.componentHealth || ([] as ComponentHealth[])
