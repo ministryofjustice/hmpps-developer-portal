@@ -35,7 +35,7 @@ describe('alertsApiClient', () => {
     describe('getAlerts', () => {
       it('should return an array of alerts', async () => {
         const testAlerts = [alert1, alert2] as Alert[]
-        fakeAlertsApi.get('/alerts?businessUnit="hmpps"').reply(200, testAlerts)
+        fakeAlertsApi.get('/alerts?filter=businessUnit="hmpps"').reply(200, testAlerts)
         const output = await alertsApiClient.getAlerts()
         expect(output).toEqual(testAlerts)
       })

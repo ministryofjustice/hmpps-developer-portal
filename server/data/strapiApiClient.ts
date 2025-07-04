@@ -111,11 +111,16 @@ export default class StrapiApiClient {
       .then(unwrapSingleResponse)
   }
 
-  async getTeams(): Promise<ListResponse<Team>> {
-    return this.restClient.get({
-      path: '/v1/teams',
-      query: 'populate=products',
-    })
+  async getTeams({ withComponents = false }: { withComponents?: boolean }): Promise<ListResponse<Team>> {
+    const populateList = ['products']
+
+    if (withComponents) {
+      populateList.push('products.components')
+    }
+    const path = '/v1/teams'
+    const query = new URLSearchParams({ populate: populateList }).toString()
+
+    return this.restClient.get({ path, query })
   }
 
   async getTeam({
