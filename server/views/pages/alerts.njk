@@ -117,6 +117,23 @@
             attributes: { "data-associated-select-id": "severityLabel", "data-type-name": "severity-labels"}
           }) }}
           </div>
+                  <div class="label-and-button">
+          {{ govukSelect({
+            id: "team",
+            name: "team",
+            label: {
+              text: "Team"
+            },
+            items: teams
+          }) }}
+          {{ govukButton({
+            id: "updateTeam",
+            name: "updateTeam",
+            text: "Update",
+            element: "button",
+            attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
+          }) }}
+          </div>
         </div>
         <div class="alert-reset-button">
           {{ govukButton({

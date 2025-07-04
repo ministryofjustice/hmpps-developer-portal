@@ -85,18 +85,9 @@ jQuery(function () {
     {
       data: null,
       createdCell: function (td, _cellData, rowData) {
-        const adminTeams = renderGithubTeams(
-          rowData.github_project_teams_admin,
-          'No Teams with Admin Access',
-        )
-        const writeTeams = renderGithubTeams(
-          rowData.github_project_teams_write,
-          'No Teams with Write Access',
-        )
-        const maintainTeams = renderGithubTeams(
-          rowData.github_project_teams_maintain,
-          'No Teams with Maintain Access',
-        )
+        const adminTeams = renderGithubTeams(rowData.github_project_teams_admin, 'No Teams with Admin Access')
+        const writeTeams = renderGithubTeams(rowData.github_project_teams_write, 'No Teams with Write Access')
+        const maintainTeams = renderGithubTeams(rowData.github_project_teams_maintain, 'No Teams with Maintain Access')
         const detailsContent = `<details class="govuk-details">
           <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">Links</span>

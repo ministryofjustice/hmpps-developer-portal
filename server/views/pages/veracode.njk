@@ -1,5 +1,6 @@
 {% extends "../partials/layout.njk" %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = applicationName + " - Veracode" %}
@@ -14,6 +15,25 @@
     <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
 		<div class="veracode">
+			<div class="veracodeFilter govuk-button-group">
+				<div class="label-and-button">
+					{{ govukSelect({
+						id: "team",
+						name: "team",
+						label: {
+						text: "Team"
+						},
+						items: team
+					}) }}
+					{{ govukButton({
+						id: "updateTeam",
+						name: "updateTeam",
+						text: "Update",
+						element: "button",
+						attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
+					}) }}
+				</div>
+			</div>
 			<div class="veracode-filter-block">
 				<div class="govuk-heading-s">Results</div>
 				{{ govukCheckboxes({

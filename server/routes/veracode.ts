@@ -33,7 +33,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           HIGH: 0,
           VERY_HIGH: 0,
         }
-
+        const teamName = component.product?.team?.name
         const veracodeSummary = component.veracode_results_summary as unknown as VeracodeResultsSummary
 
         veracodeSummary?.severity?.forEach(severity => {
@@ -59,6 +59,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           date: hasVeracode ? dayjs(component.veracode_last_completed_scan_date).format('YYYY-MM-DD HH:mm') : 'N/A',
           codeScore: hasVeracode ? veracodeSummary['static-analysis'].score : 0,
           severityLevels,
+          team: teamName,
         }
       })
 

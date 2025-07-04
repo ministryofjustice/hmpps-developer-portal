@@ -1,6 +1,7 @@
 {% extends "../partials/layout.njk" %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set pageTitle = applicationName + " - Trivy Scan Results" %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -12,6 +13,25 @@
 
   <h1>Trivy Scan Results</h1>
   <form>
+		<div class="trivyFilter govuk-button-group">
+      <div class="label-and-button">
+        {{ govukSelect({
+          id: "team",
+          name: "team",
+          label: {
+          text: "Team"
+          },
+          items: team
+        }) }}
+        {{ govukButton({
+          id: "updateTeam",
+          name: "updateTeam",
+          text: "Update",
+          element: "button",
+          attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
+        }) }}
+      </div>
+		</div>
     <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
     <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
     <input type="hidden" name="monitorId" id="monitorId" value="{{ monitorId }}">

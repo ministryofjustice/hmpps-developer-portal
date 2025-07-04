@@ -1,4 +1,8 @@
+const teamFilter = document.getElementById('team')
+
 jQuery(function () {
+  let currentFilters = getFiltersFromURL()
+
   const rootDataUrl = '/veracode/data'
   const columns = [
     {
@@ -106,6 +110,41 @@ jQuery(function () {
     columns,
   })
 
+  veracodeTable.on('xhr', function (_e, settings, json) {
+    const rawData = Array.isArray(json) ? json : json.data || []
+
+    if (!rawData || !rawData.length) return
+
+    populateTeamDropdown(rawData)
+
+    // Register team filter function
+    $.fn.dataTable.ext.search = []
+    $.fn.dataTable.ext.search.push(teamFilterFunction(currentFilters))
+    veracodeTable.draw()
+  })
+
+  function populateTeamDropdown(data) {
+    const teams = [...new Set(data.map(item => item.team))].sort()
+    const $teamSelect = $('#team')
+    $teamSelect.empty().append('<option value="">All teams</option>')
+
+    teams.forEach(team => {
+      $teamSelect.append(`<option value="${team}">${team}</option>`)
+    })
+
+    // Set value from URL param on load
+    if (currentFilters.team) {
+      $teamSelect.val(currentFilters.team)
+    }
+  }
+
+  function teamFilterFunction(filters) {
+    return function (_settings, _data, _dataIndex, rowData) {
+      if (filters.team && rowData.team !== filters.team) return false
+      return true
+    }
+  }
+
   $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
     'change',
     e => {
@@ -126,4 +165,35 @@ jQuery(function () {
       veracodeTable.ajax.url(newDataUrl).load()
     },
   )
+
+  $('#updateTeam').on('click', function (e) {
+    e.preventDefault()
+
+    const selectedTeam = $('#team').val()
+    currentFilters.team = selectedTeam
+
+    // Update URL without reload
+    updateURLParams(currentFilters)
+
+    // Reapply filter
+    $.fn.dataTable.ext.search = []
+    $.fn.dataTable.ext.search.push(teamFilterFunction(currentFilters))
+    veracodeTable.draw(false)
+  })
 })
+
+// function checks url params for applied filters and builds filter object
+function getFiltersFromURL() {
+  const params = new URLSearchParams(location.search)
+  return {
+    team: params.get('team') || '',
+  }
+}
+
+// add current filters to Url params
+function updateURLParams(filters) {
+  const params = new URLSearchParams()
+  if (filters.team) params.set('team', filters.team)
+
+  history.replaceState(null, '', `?${params.toString()}`)
+}

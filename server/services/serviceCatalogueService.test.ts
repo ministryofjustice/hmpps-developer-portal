@@ -122,7 +122,7 @@ describe('Strapi service', () => {
       it('should return an ordered array of teams', async () => {
         strapiApiClient.getTeams.mockResolvedValue(testTeamsResponse)
 
-        const results = await serviceCatalogueService.getTeams()
+        const results = await serviceCatalogueService.getTeams({})
 
         expect(strapiApiClient.getTeams).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testTeams)
