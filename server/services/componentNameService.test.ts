@@ -9,6 +9,7 @@ import {
   GithubRepoRequest,
   SingleResponse,
   StrapiServiceArea,
+  Unwrapped,
 } from '../data/strapiApiTypes'
 import ComponentNameService from './componentNameService'
 
@@ -31,13 +32,11 @@ describe('Component name service', () => {
   })
 
   describe('All components', () => {
-    const testComponentsResponse = {
-      data: [
-        { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-        { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
-        { attributes: { name: 'comp-2' } },
-      ],
-    } as ListResponse<Component>
+    const testComponentsResponse = [
+      { name: 'comp-3', envs: [{ name: 'prod' }] },
+      { name: 'comp-1', envs: [{ name: 'env' }] },
+      { name: 'comp-2' },
+    ] as Unwrapped<Component>[]
 
     it('should return all deployed components sorted', async () => {
       strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
@@ -191,13 +190,11 @@ describe('Component name service', () => {
   })
 
   describe('checkComponentExists()', () => {
-    const testComponentsResponse = {
-      data: [
-        { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-        { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
-        { attributes: { name: 'comp-2' } },
-      ],
-    } as ListResponse<Component>
+    const testComponentsResponse = [
+      { name: 'comp-3', envs: [{ name: 'prod' }] },
+      { name: 'comp-1', envs: [{ name: 'env' }] },
+      { name: 'comp-2' },
+    ] as Unwrapped<Component>[]
 
     it('should return true if component exists', async () => {
       strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
@@ -223,7 +220,7 @@ describe('Component name service', () => {
       { github_repo: 'comp-3' },
       { github_repo: 'comp-1' },
       { github_repo: 'comp-2' },
-    ] as GithubRepoRequest[]
+    ] as Unwrapped<GithubRepoRequest>[]
 
     it('should return true if component exists', async () => {
       strapiApiClient.getGithubRepoRequests.mockResolvedValue(testComponentsResponse)

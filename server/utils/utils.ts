@@ -11,8 +11,8 @@ import type { ServiceCatalogueService } from '../services'
 dayjs.extend(relativeTime.default)
 
 type HasName = { attributes?: { name: string } }
-type HasRepoName = { github_repo: string }
-type HasTeamName = { attributes?: { team_name: string } }
+type HasRepoName = { github_repo?: string }
+type HasTeamName = { team_name?: string }
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -84,7 +84,7 @@ export const sortData = (dataItem: HasName, compareDataItem: HasName) => {
   return dataItem.attributes.name.localeCompare(compareDataItem.attributes.name)
 }
 
-export const sortByName = (dataItem: { name: string }, compareDataItem: { name: string }) => {
+export const sortByName = (dataItem: { name?: string }, compareDataItem: { name?: string }) => {
   return dataItem.name.localeCompare(compareDataItem.name)
 }
 
@@ -102,7 +102,7 @@ export const sortComponentRequestData = (dataItem: HasRepoName, compareDataItem:
 }
 
 export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasTeamName) => {
-  return dataItem.attributes.team_name.localeCompare(compareDataItem.attributes.team_name)
+  return dataItem.team_name.localeCompare(compareDataItem.team_name)
 }
 
 export const getFormattedName = (req: Request, param: string): string => {
@@ -205,7 +205,7 @@ export async function getDependencyNames(serviceCatalogueService: ServiceCatalog
   const namesSet = new Set<string>()
 
   components.forEach(component => {
-    const versions = component.attributes?.versions as Record<string, Record<string, string>>
+    const versions = component.versions as unknown as Record<string, Record<string, string>>
     if (versions && versions[dependencyType]) {
       Object.keys(versions[dependencyType]).forEach(name => namesSet.add(name))
     }

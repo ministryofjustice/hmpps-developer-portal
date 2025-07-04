@@ -15,6 +15,7 @@ import {
   DataItem,
   Environment,
   SingleResponse,
+  Unwrapped,
 } from '../data/strapiApiTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
@@ -169,22 +170,20 @@ describe('Strapi service', () => {
 
   describe('Components', () => {
     describe('getComponents', () => {
-      const testComponentsResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { name: 'Component 1' },
-          },
-          {
-            id: 2,
-            attributes: { name: 'Component 2' },
-          },
-        ],
-      } as ListResponse<Component>
+      const testComponentsResponse = [
+        {
+          id: 1,
+          name: 'Component 1',
+        },
+        {
+          id: 2,
+          name: 'Component 2',
+        },
+      ] as Unwrapped<Component>[]
       const testComponents = [
-        { id: 1, attributes: { name: 'Component 1' } },
-        { id: 2, attributes: { name: 'Component 2' } },
-      ] as DataItem<Component>[]
+        { id: 1, name: 'Component 1' },
+        { id: 2, name: 'Component 2' },
+      ] as Unwrapped<Component>[]
 
       it('should return an ordered array of components', async () => {
         strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
@@ -198,54 +197,43 @@ describe('Strapi service', () => {
 
     describe('getComponent', () => {
       const testComponentResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { name: 'Component 1' },
-          },
-        ],
-      } as SingleResponse<Component>
-      const testComponent = { name: 'Component 1' } as Component
+        id: 1,
+        name: 'Component 1',
+      } as Unwrapped<Component>
 
       it('should return the selected component', async () => {
         strapiApiClient.getComponent.mockResolvedValue(testComponentResponse)
 
-        const results = await serviceCatalogueService.getComponent({ componentName: '1' })
+        const results = await serviceCatalogueService.getComponent({ componentName: 'Component 1' })
 
         expect(strapiApiClient.getComponent).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testComponent)
+        expect(results).toEqual(testComponentResponse)
       })
     })
 
     describe('getDependencies', () => {
-      const testComponentsResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: {
-              name: 'Component 1',
-              versions: {
-                helm: {
-                  'generic-service': '2.6.5',
-                  'generic-prometheus-alerts': '1.3.2',
-                },
-                circleci: {
-                  hmpps: '7',
-                },
-                dockerfile: {
-                  base_image: 'node:18.18-bullseye-slim',
-                },
-              },
+      const testComponentsResponse = [
+        {
+          id: 1,
+          name: 'Component 1',
+          versions: {
+            helm: {
+              'generic-service': '2.6.5',
+              'generic-prometheus-alerts': '1.3.2',
+            },
+            circleci: {
+              hmpps: '7',
+            },
+            dockerfile: {
+              base_image: 'node:18.18-bullseye-slim',
             },
           },
-          {
-            id: 2,
-            attributes: {
-              name: 'Component 2',
-            },
-          },
-        ],
-      } as ListResponse<Component>
+        },
+        {
+          id: 2,
+          name: 'Component 2',
+        },
+      ] as Unwrapped<Component>[]
       const dependencies = [
         'circleci::hmpps',
         'dockerfile::base_image',
@@ -367,22 +355,8 @@ describe('Strapi service', () => {
 
   describe('Namespaces', () => {
     describe('getNamespaces', () => {
-      const testNamespacesResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { name: 'Namespace 1' },
-          },
-          {
-            id: 2,
-            attributes: { name: 'Namespace 2' },
-          },
-        ],
-      } as ListResponse<Namespace>
-      const testNamespaces = [
-        { id: 1, attributes: { name: 'Namespace 1' } },
-        { id: 2, attributes: { name: 'Namespace 2' } },
-      ] as DataItem<Namespace>[]
+      const testNamespacesResponse = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Unwrapped<Namespace>[]
+      const testNamespaces = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Unwrapped<Namespace>[]
 
       it('should return an ordered array of namespaces', async () => {
         strapiApiClient.getNamespaces.mockResolvedValue(testNamespacesResponse)
@@ -395,12 +369,7 @@ describe('Strapi service', () => {
     })
 
     describe('getNamespace', () => {
-      const testNamespaceResponse = {
-        data: {
-          id: 1,
-          attributes: { name: 'Namespace 1' },
-        },
-      } as SingleResponse<Namespace>
+      const testNamespaceResponse = { name: 'Namespace 1' } as Unwrapped<Namespace>
       const testNamespace = { name: 'Namespace 1' } as Namespace
 
       it('should return the selected namespace', async () => {
@@ -414,23 +383,11 @@ describe('Strapi service', () => {
     })
 
     describe('getRdsInstances', () => {
-      const testNamespacesResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: {
-              rds_instance: [
-                {
-                  tf_label: 'test 2',
-                },
-                {
-                  tf_label: 'test 1',
-                },
-              ],
-            },
-          },
-        ],
-      } as ListResponse<Namespace>
+      const testNamespacesResponse = [
+        {
+          rds_instance: [{ tf_label: 'test 2' }, { tf_label: 'test 1' }],
+        },
+      ] as Unwrapped<Namespace>[]
       const testRdsInstances = [{ tf_label: 'test 1' }, { tf_label: 'test 2' }] as RdsEntry[]
 
       it('should return an ordered array of rds instances', async () => {
@@ -446,22 +403,14 @@ describe('Strapi service', () => {
 
   describe('GithubTeams', () => {
     describe('getGithubTeams', () => {
-      const testGithubTeamResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { team_name: 'Github Team 1' },
-          },
-          {
-            id: 2,
-            attributes: { team_name: 'Github Team 2' },
-          },
-        ],
-      } as ListResponse<GithubTeam>
-      const testGithubTeams = [
-        { id: 1, attributes: { team_name: 'Github Team 1' } },
-        { id: 2, attributes: { team_name: 'Github Team 2' } },
-      ] as DataItem<GithubTeam>[]
+      const testGithubTeamResponse = [
+        {
+          team_name: 'Github Team 1',
+        },
+        {
+          team_name: 'Github Team 2',
+        },
+      ] as Unwrapped<GithubTeam>[]
 
       it('should return an ordered array of github teams', async () => {
         strapiApiClient.getGithubTeams.mockResolvedValue(testGithubTeamResponse)
@@ -469,17 +418,14 @@ describe('Strapi service', () => {
         const results = await serviceCatalogueService.getGithubTeams()
 
         expect(strapiApiClient.getGithubTeams).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testGithubTeams)
+        expect(results).toEqual(testGithubTeamResponse)
       })
     })
 
     describe('getGithubTeam', () => {
       const testGithubTeamResponse = {
-        data: {
-          id: 1,
-          attributes: { team_name: 'Github Team 1' },
-        },
-      } as SingleResponse<GithubTeam>
+        team_name: 'Github Team 1',
+      } as Unwrapped<GithubTeam>
       const testGithubTeam = { team_name: 'Github Team 1' } as GithubTeam
 
       it('should return the selected github team', async () => {
@@ -525,7 +471,7 @@ describe('Strapi service', () => {
         {
           github_repo: 'github_repo-2',
         },
-      ] as GithubRepoRequest[]
+      ] as Unwrapped<GithubRepoRequest>[]
 
       it('should return an ordered array of repo requests', async () => {
         strapiApiClient.getGithubRepoRequests.mockResolvedValue(githubResponses)
@@ -539,9 +485,9 @@ describe('Strapi service', () => {
 
     describe('getGithubRepoRequest', () => {
       const githubRequestResponse = {
-        id: 1,
-        name: 'github_repo-1',
-      } as GithubRepoRequest & { id: number }
+        id: 57,
+        github_repo: 'github_repo-1',
+      } as Unwrapped<GithubRepoRequest> & { id: number }
 
       it('should return the selected repo request', async () => {
         strapiApiClient.getGithubRepoRequest.mockResolvedValue(githubRequestResponse)

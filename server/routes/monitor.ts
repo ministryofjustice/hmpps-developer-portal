@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { Environment } from '../data/strapiApiTypes'
+import { Component, DataItem, Environment, Unwrapped } from '../data/strapiApiTypes'
 import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow, formatMonitorName } from '../utils/utils'
 
 type MonitorEnvironment = {
@@ -12,20 +12,6 @@ type MonitorEnvironment = {
   environmentType: string
   isPrisons: boolean
   isProbation: boolean
-}
-
-type ComponentToMonitor = {
-  attributes?: {
-    name?: string
-    environments?: Environment[]
-    product?: {
-      data?: {
-        attributes?: {
-          p_id?: string
-        }
-      }
-    }
-  }
 }
 
 export default function routes({ serviceCatalogueService, redisService, dataFilterService }: Services): Router {
@@ -168,7 +154,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         const components = await serviceCatalogueService.getComponents()
 
         components.forEach(component => {
-          environments = environments.concat(getEnvironmentData(component))
+          environments = environments.concat(getUnwrappedEnvironmentData(component))
         })
       }
 
@@ -212,7 +198,40 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   return router
 }
 
-const getEnvironmentData = (component: ComponentToMonitor, selectedProductId?: string): MonitorEnvironment[] => {
+const getUnwrappedEnvironmentData = (
+  component: Unwrapped<Component>,
+  selectedProductId?: string,
+): MonitorEnvironment[] => {
+  const typedEnvironments = component.envs
+  let productId
+  if (selectedProductId) {
+    productId = selectedProductId
+  } else {
+    productId = component.product?.p_id
+  }
+
+  const isPrisons = `${productId}`.startsWith('DPS')
+  const isProbation = `${productId}`.startsWith('HMPPS')
+  const environments: MonitorEnvironment[] = []
+
+  typedEnvironments.forEach(environment => {
+    if (environment.monitor) {
+      environments.push({
+        componentName: component.name as string,
+        environmentName: environment.name as string,
+        environmentUrl: environment.url as string,
+        environmentHealth: environment.health_path as string,
+        environmentType: environment.type as string,
+        isPrisons,
+        isProbation,
+      })
+    }
+  })
+
+  return environments
+}
+
+const getEnvironmentData = (component: DataItem<Component>, selectedProductId?: string): MonitorEnvironment[] => {
   const typedEnvironments = component.attributes.environments as Environment[]
   let productId
   if (selectedProductId) {

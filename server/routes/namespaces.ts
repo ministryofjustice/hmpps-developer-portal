@@ -28,7 +28,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       name: namespace.name,
       rdsInstances,
     }
-
     return res.render('pages/namespace', { namespace: displayNamespace })
   })
 
