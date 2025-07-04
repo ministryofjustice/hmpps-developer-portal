@@ -1,24 +1,23 @@
 /* eslint-disable camelcase */
-import { DataItem, StrapiServiceArea } from '../strapiApiTypes'
+import { DataItem, StrapiServiceArea, Product as StrapiProduct } from '../strapiApiTypes'
 import type { Product, ServiceArea } from './modelTypes'
-
-type ServiceAreaProduct = StrapiServiceArea['products']['data'][0]
 
 export const convertServiceArea = (serviceArea: DataItem<StrapiServiceArea>): ServiceArea => {
   const { attributes, id } = serviceArea
   const { name, slug, owner, sa_id, products } = attributes
 
+  const strapiProducts: DataItem<StrapiProduct>[] = products.data
   return {
     id,
     name,
     owner,
     serviceAreaId: sa_id,
     slug,
-    products: products?.data.map(product => convertProduct(product)),
+    products: strapiProducts.map(product => convertProduct(product)),
   }
 }
 
-export const convertProduct = (product: ServiceAreaProduct): Product => {
+export const convertProduct = (product: DataItem<StrapiProduct>): Product => {
   const { attributes } = product
   const {
     name,

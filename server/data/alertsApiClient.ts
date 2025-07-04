@@ -11,7 +11,6 @@ export default class AlertsApiClient {
   }
 
   async getAlerts(): Promise<Alert[]> {
-    // const urlFilter = 'businessUnit="hmpps"'
     const urlFilter = 'filter=businessUnit="hmpps"'
 
     return this.restClient.get({

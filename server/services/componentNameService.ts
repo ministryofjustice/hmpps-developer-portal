@@ -1,6 +1,6 @@
 import type { StrapiApiClient, RestClientBuilder } from '../data'
 import { Component, DataItem } from '../data/strapiApiTypes'
-import { formatMonitorName, sortData } from '../utils/utils'
+import { formatMonitorName, sortData, sortByName } from '../utils/utils'
 
 export default class ComponentNameService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -8,17 +8,15 @@ export default class ComponentNameService {
   async getAllDeployedComponents(): Promise<string[]> {
     const componentData = await this.strapiApiClientFactory('').getComponents()
 
-    const rawComponents = componentData.data.sort(sortData)
+    const rawComponents = componentData.sort(sortByName)
 
-    const components = rawComponents
-      .filter(component => component.attributes?.environments?.length)
-      .map(component => component.attributes.name)
+    const components = rawComponents.filter(component => component.envs?.length).map(component => component.name)
 
     return components
   }
 
   async getAllDeployedComponentsForTeam(teamName: string): Promise<string[]> {
-    const teams = await this.strapiApiClientFactory('').getTeams({ withComponents: false })
+    const teams = await this.strapiApiClientFactory('').getTeams({})
 
     const teamSummary = teams.data.find(team => formatMonitorName(team.attributes.name) === teamName)
 
@@ -91,9 +89,7 @@ export default class ComponentNameService {
 
   async checkComponentExists(componentName: string): Promise<boolean> {
     const componentData = await this.strapiApiClientFactory('').getComponents()
-    const components = componentData.data.find(
-      component => formatMonitorName(component.attributes.name) === componentName,
-    )
+    const components = componentData.find(component => formatMonitorName(component.name) === componentName)
     return !!components
   }
 

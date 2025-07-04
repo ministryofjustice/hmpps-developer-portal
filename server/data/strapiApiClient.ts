@@ -17,8 +17,9 @@ import {
   TrivyScan,
   Environment,
   SingleResponse,
-  DataItem,
+  Unwrapped,
 } from './strapiApiTypes'
+import { unwrapListResponse, unwrapSingleResponse } from '../utils/strapi4Utils'
 import { convertServiceArea } from './converters/serviceArea'
 import type { ServiceArea, TrivyScanType } from './converters/modelTypes'
 import convertTrivyScan from './converters/trivyScans'
@@ -83,27 +84,31 @@ export default class StrapiApiClient {
     exemptionFilters: string[] = [],
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
-  ): Promise<ListResponse<Component>> {
+  ): Promise<Unwrapped<Component>[]> {
     const populate = new URLSearchParams({
-      populate: `product${includeTeams ? '.team' : ''},environments${includeLatestCommit ? ',latest_commit' : ''}`,
+      populate: `product${includeTeams ? '.team' : ''},envs${includeLatestCommit ? ',latest_commit' : ''}`,
     }).toString()
     const filters = exemptionFilters.map((filterValue, index) => {
       return `filters[veracode_exempt][$in][${index}]=${filterValue}`
     })
 
-    return this.restClient.get({
-      path: '/v1/components',
-      query: `${populate}&${filters.join('&')}`,
-    })
+    return this.restClient
+      .get<ListResponse<Component>>({
+        path: '/v1/components',
+        query: `${populate}&${filters.join('&')}`,
+      })
+      .then(unwrapListResponse)
   }
 
-  async getComponent({ componentName }: { componentName: string }): Promise<SingleResponse<Component>> {
+  async getComponent({ componentName }: { componentName: string }): Promise<Unwrapped<Component>> {
     const populate = new URLSearchParams({ populate: 'product.team,envs.trivy_scan' }).toString()
 
-    return this.restClient.get({
-      path: '/v1/components',
-      query: `filters[name][$eq]=${componentName}&${populate}`,
-    })
+    return this.restClient
+      .get<SingleResponse<Component>>({
+        path: '/v1/components',
+        query: `filters[name][$eq]=${componentName}&${populate}`,
+      })
+      .then(unwrapSingleResponse)
   }
 
   async getTeams({ withComponents = false }: { withComponents?: boolean }): Promise<ListResponse<Team>> {
@@ -140,11 +145,13 @@ export default class StrapiApiClient {
     return this.restClient.get({ path, query })
   }
 
-  async getNamespaces(): Promise<ListResponse<Namespace>> {
-    return this.restClient.get({
-      path: '/v1/namespaces',
-      query: 'populate=rds_instance,elasticache_cluster',
-    })
+  async getNamespaces(): Promise<Unwrapped<Namespace>[]> {
+    return this.restClient
+      .get<ListResponse<Namespace>>({
+        path: '/v1/namespaces',
+        query: 'populate=rds_instance,elasticache_cluster,pingdom_check,hmpps_template',
+      })
+      .then(unwrapListResponse)
   }
 
   async getNamespace({
@@ -153,14 +160,16 @@ export default class StrapiApiClient {
   }: {
     namespaceId?: number
     namespaceSlug?: string
-  }): Promise<SingleResponse<Namespace>> {
-    const populateList = ['rds_instance']
+  }): Promise<Unwrapped<Namespace>> {
+    const populateList = ['rds_instance', 'elasticache_cluster', 'pingdom_check', 'hmpps_template']
 
     const populate = new URLSearchParams({ populate: populateList }).toString()
     const query = namespaceSlug ? `filters[name][$eq]=${namespaceSlug}&${populate}` : populate
     const path = namespaceSlug ? '/v1/namespaces' : `/v1/namespaces/${namespaceId}`
 
-    return this.restClient.get({ path, query })
+    return this.restClient
+      .get<SingleResponse<Namespace>>({ path, query })
+      .then(response => unwrapSingleResponse<Namespace>(response))
   }
 
   async getProductSets(): Promise<ListResponse<ProductSet>> {
@@ -248,22 +257,22 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubRepoRequests(): Promise<Array<GithubRepoRequest>> {
+  async getGithubRepoRequests(): Promise<Unwrapped<GithubRepoRequest>[]> {
     return this.restClient
       .get<ListResponse<GithubRepoRequest>>({
         path: '/v1/github-repo-requests',
         query: 'populate=github_repo',
       })
-      .then(this.unwrapListResponse)
+      .then(unwrapListResponse)
   }
 
-  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<Unwrapped<GithubRepoRequest>> {
     return this.restClient
       .get<SingleResponse<GithubRepoRequest>>({
         path: '/v1/github-repo-requests',
         query: `filters[github_repo][$eq]=${repoName}`,
       })
-      .then(this.unwrapSingleResponse)
+      .then(response => unwrapSingleResponse<GithubRepoRequest>(response))
   }
 
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<void> {
@@ -273,30 +282,47 @@ export default class StrapiApiClient {
     })
   }
 
-  async getGithubTeams(): Promise<ListResponse<GithubTeam>> {
-    return this.restClient.get({
-      path: '/v1/github-teams',
-    })
+  async getGithubTeams(): Promise<Unwrapped<GithubTeam>[]> {
+    return this.restClient
+      .get<ListResponse<GithubTeam>>({
+        path: '/v1/github-teams',
+      })
+      .then(unwrapListResponse)
   }
 
-  async getGithubTeam({ teamName }: { teamName: string }): Promise<SingleResponse<GithubTeam>> {
-    return this.restClient.get({
-      path: '/v1/github-teams',
-      query: `filters[team_name][$eq]=${teamName}`,
-    })
+  async getGithubTeam({ teamName }: { teamName: string }): Promise<Unwrapped<GithubTeam>> {
+    return this.restClient
+      .get<SingleResponse<GithubTeam>>({
+        path: '/v1/github-teams',
+        query: `filters[team_name][$eq]=${teamName}`,
+      })
+      .then(unwrapSingleResponse)
   }
 
-  async getScheduledJobs(): Promise<ListResponse<ScheduledJob>> {
-    return this.restClient.get({
-      path: '/v1/scheduled-jobs',
-    })
+  async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<Unwrapped<GithubTeam>[]> {
+    return this.restClient
+      .get<ListResponse<GithubTeam>>({
+        path: '/v1/github-teams',
+        query: `filters[parent_team_name][$eq]=${parentTeamName}`,
+      })
+      .then(unwrapListResponse)
   }
 
-  async getScheduledJob({ name }: { name: string }): Promise<SingleResponse<ScheduledJob>> {
-    return this.restClient.get({
-      path: '/v1/scheduled-jobs',
-      query: `filters[name][$eq]=${name}`,
-    })
+  async getScheduledJobs(): Promise<Unwrapped<ScheduledJob>[]> {
+    return this.restClient
+      .get<ListResponse<ScheduledJob>>({
+        path: '/v1/scheduled-jobs',
+      })
+      .then(unwrapListResponse)
+  }
+
+  async getScheduledJob({ name }: { name: string }): Promise<Unwrapped<ScheduledJob>> {
+    return this.restClient
+      .get<SingleResponse<ScheduledJob>>({
+        path: '/v1/scheduled-jobs',
+        query: `filters[name][$eq]=${name}`,
+      })
+      .then(response => unwrapSingleResponse<ScheduledJob>(response))
   }
 
   async getTrivyScans(): Promise<TrivyScanType[]> {
@@ -318,15 +344,5 @@ export default class StrapiApiClient {
       path: '/v1/environments',
       query: 'populate=component',
     })
-  }
-
-  private unwrapSingleResponse<T>(response: SingleResponse<T>): T & { id: number } {
-    const data =
-      Array.isArray(response.data) && response.data.length > 0 ? (response.data[0] as DataItem<T>) : response.data
-    return { ...data.attributes, id: data.id }
-  }
-
-  private unwrapListResponse<T>(response: ListResponse<T>): Array<T & { id: number }> {
-    return response.data.map(({ id, attributes }) => ({ ...attributes, id }))
   }
 }

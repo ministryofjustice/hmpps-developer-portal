@@ -1,36 +1,30 @@
 jQuery(function () {
   const columns = [
     {
-      data: 'attributes.github_team_id',
+      data: 'github_team_id',
       visible: false,
+    },
+    {
+      data: 'team_name',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.attributes.github_team_id}`)
+        $(td).html(`<a href="/github-teams/${rowData.team_name}">${rowData.team_name}</a>`)
       },
     },
     {
-      data: 'attributes.team_name',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/github-teams/${rowData.attributes.team_name}">${rowData.attributes.team_name}</a>`)
-      },
-    },
-    {
-      data: 'attributes.parent_team_name',
+      data: 'parent_team_name',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(
-          rowData.attributes.parent_team_name === 'hmpps-developers' || rowData.attributes.parent_team_name === null
-            ? `${rowData.attributes.parent_team_name}`
-            : `<a href="/github-teams/${rowData.attributes.parent_team_name}">${rowData.attributes.parent_team_name}</a>`,
+          rowData.parent_team_name === 'hmpps-developers' || rowData.parent_team_name === null
+            ? `${rowData.parent_team_name}`
+            : `<a href="/github-teams/${rowData.parent_team_name}">${rowData.parent_team_name}</a>`,
         )
       },
     },
     {
-      data: 'attributes.team_desc',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.attributes.team_desc}`)
-      },
+      data: 'team_desc',
     },
     {
-      data: 'attributes.members',
+      data: 'members',
       createdCell: function (td, _cellData, rowData) {
         const membersList = renderGithubTeams(rowData)
         if (membersList) {
@@ -41,10 +35,7 @@ jQuery(function () {
       },
     },
     {
-      data: 'attributes.terraform_managed',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.attributes.terraform_managed}`)
-      },
+      data: 'terraform_managed',
     },
   ]
 
@@ -58,7 +49,7 @@ jQuery(function () {
 })
 
 function renderGithubTeams(rowData) {
-  const members = rowData.attributes.members
+  const members = rowData.members
     .map(
       member =>
         `<li><a href="https://github.com/orgs/ministryofjustice/people/?query=${member}" class="govuk-link govuk-link--no-visited-state">${member}</a></li>`,

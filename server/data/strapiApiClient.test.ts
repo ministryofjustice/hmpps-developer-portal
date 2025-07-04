@@ -11,6 +11,7 @@ import {
   Team,
   SingleResponse,
   StrapiServiceArea,
+  Unwrapped,
 } from './strapiApiTypes'
 import { createModelServiceArea, exampleStrapiServiceArea } from './converters/serviceArea.test'
 
@@ -107,11 +108,13 @@ describe('strapiApiClient', () => {
     describe('getComponents', () => {
       it('should return all components', async () => {
         const allComponents = {
-          data: [{ attributes: { name: 'Component' } }],
+          data: [{ id: 1, attributes: { name: 'Component' } }],
         } as ListResponse<Component>
-        fakeStrapiApi.get('/components?populate=product.team%2Cenvironments&').reply(200, allComponents)
+        const componentsResponse = [{ id: 1, name: 'Component' }] as Unwrapped<Component>[]
+        fakeStrapiApi.get('/components?populate=product.team%2Cenvs&').reply(200, allComponents)
         const output = await strapiApiClient.getComponents()
-        expect(output).toEqual(allComponents)
+
+        expect(output).toEqual(componentsResponse)
       })
     })
 
@@ -120,11 +123,12 @@ describe('strapiApiClient', () => {
         const component = {
           data: [{ id: 1, attributes: { name: 'component' } }],
         } as SingleResponse<Component>
+        const componentResponse = { id: 1, name: 'component' } as Unwrapped<Component>
         fakeStrapiApi
           .get('/components?filters[name][$eq]=component&populate=product.team%2Cenvs.trivy_scan')
           .reply(200, component)
         const output = await strapiApiClient.getComponent({ componentName: 'component' })
-        expect(output).toEqual(component)
+        expect(output).toEqual(componentResponse)
       })
     })
   })
@@ -134,7 +138,7 @@ describe('strapiApiClient', () => {
       it('should return all teams', async () => {
         const allTeams = { data: [{ attributes: { name: 'Team' } }] } as ListResponse<Team>
         fakeStrapiApi.get('/teams?populate=products').reply(200, allTeams)
-        const output = await strapiApiClient.getTeams({ withComponents: false })
+        const output = await strapiApiClient.getTeams({})
         expect(output).toEqual(allTeams)
       })
     })

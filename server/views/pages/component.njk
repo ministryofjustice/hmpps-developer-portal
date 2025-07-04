@@ -14,7 +14,7 @@
 
 {% set breadCrumbList = [
     {title: "Products", href: "/products"},
-    {title: component.product.attributes.name, href: "/products/" + component.product.attributes.slug}
+    {title: component.product.name, href: "/products/" + component.product.slug}
   ]
 %}
 
@@ -147,16 +147,16 @@
         </tr>
         <tr>
           <th>Product</th>
-          <td><a class="govuk-link--no-visited-state" href="/products/{{ component.product.attributes.slug }}" data-test="product">{{ component.product.attributes.name }}</a></td>
+          <td><a class="govuk-link--no-visited-state" href="/products/{{ component.product.slug }}" data-test="product">{{ component.product.name }}</a></td>
         </tr>
         <tr>
         <th>Product Slack</th>
           <td>
-          {% if component.product.attributes.slack_channel_id | length %}
-            <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.attributes.slack_channel_id }}">
+          {% if component.product.slack_channel_id | length %}
+            <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.slack_channel_id }}">
             <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
-            {% if component.product.attributes.slack_channel_name | length %}
-            #{{ component.product.attributes.slack_channel_name }}
+            {% if component.product.slack_channel_name | length %}
+            #{{ component.product.slack_channel_name }}
             {% else %}
             Link
             {% endif %}
@@ -168,17 +168,17 @@
         </tr>
         <tr>
           <th>Team</th>
-          <td><a class="govuk-link--no-visited-state" href="/teams/{{ component.product.attributes.team.data.attributes.slug }}" data-test="product">{{ component.product.attributes.team.data.attributes.name }}</a></td>
+          <td><a class="govuk-link--no-visited-state" href="/teams/{{ component.product.team.slug }}" data-test="product">{{ component.product.team.name }}</a></td>
         </tr>
         <tr>
         <tr>
         <th>Team Slack</th>
           <td>
-          {% if component.product.attributes.team.data.attributes.slack_channel_id | length %}
-            <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.attributes.team.data.attributes.slack_channel_id }}">
+          {% if component.product.team.slack_channel_id | length %}
+            <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.team.slack_channel_id }}">
             <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
-            {% if component.product.attributes.team.data.attributes.slack_channel_name | length %}
-            #{{ component.product.attributes.team.data.attributes.slack_channel_name }}
+            {% if component.product.team.slack_channel_name | length %}
+            #{{ component.product.team.slack_channel_name }}
             {% else %}
             Link
             {% endif %}
@@ -196,8 +196,8 @@
           <th>Environments</th>
           <td>
             {% if component.envs | length %}
-              {% for environment in component.envs.data %}
-                <a class="govuk-link--no-visited-state" href="/components/{{ component.name }}/environment/{{ environment.attributes.name }}" data-test="environment">{{ environment.attributes.name }}</a>&nbsp;
+              {% for environment in component.envs %}
+                <a class="govuk-link--no-visited-state" href="/components/{{ component.name }}/environment/{{ environment.name }}" data-test="environment">{{ environment.name }}</a>&nbsp;
               {% endfor %}
             {% else %}
             <p data-test="no-environments">None</p>

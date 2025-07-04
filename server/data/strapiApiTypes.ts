@@ -22,22 +22,51 @@ export type SingleResponse<T> = {
   meta?: Record<string, never>
 }
 
-type HasComponents = { components: { data: DataItem<Component>[] } }
+type WithId<T> = T extends object ? T & { id: number } : T
+
+// Recursive unwrap utility
+// prettier-ignore
+export type DeepUnwrap<T> =
+ T extends ListResponse<infer U> ? WithId<DeepUnwrap<U>>[] :
+ T extends SingleResponse<infer U> ? WithId<DeepUnwrap<U>> :
+ T extends object ? { [K in keyof T]: DeepUnwrap<T[K]> } :
+ T
+// prettier-enable
+
+// Transform utility that applies DeepUnwrap to each property
+export type Unwrapped<T> = {
+  [K in keyof T]: DeepUnwrap<T[K]>
+} & { id: number }
+
+type HasComponent = { component: SingleResponse<Component> }
+type HasComponents = { components: ListResponse<Component> }
+
+type HasProduct = { product: SingleResponse<Product> }
+type HasProducts = { products: ListResponse<Product> }
+type HasProductSet = { product_set: SingleResponse<ProductSet> }
 type HasTeam = { team: SingleResponse<Team> }
 type HasServiceArea = { service_area: SingleResponse<StrapiServiceArea> }
-type HasProduct = { product?: { data: { attributes: ProductWithTeamAndServiceArea } } }
+type HasNamespace = { ns: SingleResponse<Namespace> }
+type HasEnvironments = { envs: ListResponse<Environment> }
+type HasTrivyScan = { trivy_scan?: DataItem<TrivyScan> }
 
-type ProductWithTeamAndServiceArea = Omit<Omit<Product, 'team'>, 'serviceArea'> & HasTeam & HasServiceArea
+export type Product = Omit<components['schemas']['Product'], 'components' | 'team' | 'service_area' | 'product_set'> &
+  HasComponents &
+  HasTeam &
+  HasServiceArea &
+  HasProductSet
 
-export type Product = Omit<components['schemas']['Product'], 'components'> & HasComponents
-export type Component = components['schemas']['Component'] & HasProduct
-export type Team = components['schemas']['Team']
-export type ProductSet = components['schemas']['ProductSet']
-export type StrapiServiceArea = components['schemas']['ServiceArea']
+export type Component = Omit<components['schemas']['Component'], 'product' | 'envs'> & HasProduct & HasEnvironments
+export type Team = Omit<components['schemas']['Team'], 'products'> & HasProducts
+export type ProductSet = components['schemas']['ProductSet'] & HasProducts
+export type StrapiServiceArea = Omit<components['schemas']['ServiceArea'], 'products'> & HasProducts
 
-export type CustomComponentView = components['schemas']['CustomComponentView']
+export type CustomComponentView = Omit<components['schemas']['CustomComponentView'], 'components'> & HasComponents
 
-export type Environment = components['schemas']['PropertiesEnvironmentComponent']
+export type Environment = components['schemas']['Component']['envs']['data'][0]['attributes'] &
+  HasNamespace &
+  HasTrivyScan &
+  HasComponent
 export type EnvironmentForMapping = SingleResponse<Environment>
 
 export type Namespace = components['schemas']['Namespace']
@@ -55,9 +84,6 @@ export type ScheduledJobRequest = components['schemas']['ScheduledJobRequest']
 
 export type TrivyScan = components['schemas']['TrivyScan']
 export type TrivyScanRequest = components['schemas']['TrivyScanRequest']
-
-export type Env = components['schemas']['Environment']
-export type EnvRequest = components['schemas']['EnvironmentRequest']
 
 export type VeracodeResultsSummary = {
   'static-analysis': {
