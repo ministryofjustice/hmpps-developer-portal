@@ -128,7 +128,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const trivyScans = await serviceCatalogueService.getTrivyScans()
     const teams = await serviceCatalogueService.getTeams({ withComponents: true })
     const revisedScans = await addTeamToTrivyScan(teams, trivyScans)
-    // console.log(revisedScans)
 
     res.json(revisedScans)
   })
