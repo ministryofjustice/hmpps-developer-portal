@@ -97,7 +97,7 @@ export default class StrapiApiClient {
         path: '/v1/components',
         query: `${populate}&${filters.join('&')}`,
       })
-      .then(unwrapListResponse<Component>)
+      .then(unwrapListResponse)
   }
 
   async getComponent({ componentName }: { componentName: string }): Promise<Unwrapped<Component>> {
@@ -108,7 +108,7 @@ export default class StrapiApiClient {
         path: '/v1/components',
         query: `filters[name][$eq]=${componentName}&${populate}`,
       })
-      .then(response => unwrapSingleResponse<Component>(response))
+      .then(unwrapSingleResponse)
   }
 
   async getTeams(): Promise<ListResponse<Team>> {
@@ -292,7 +292,6 @@ export default class StrapiApiClient {
         query: `filters[team_name][$eq]=${teamName}`,
       })
       .then(unwrapSingleResponse)
-      .then(data => data as unknown as Unwrapped<GithubTeam>)
   }
 
   async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<Unwrapped<GithubTeam>[]> {
