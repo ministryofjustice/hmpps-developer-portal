@@ -1,4 +1,8 @@
+const teamFilter = document.getElementById('team')
+
 jQuery(function () {
+  let currentFilters = getFiltersFromURL()
+
   function transformData(data) {
     const transformed = []
     data.forEach(item => {
@@ -28,6 +32,7 @@ jQuery(function () {
           environment: env,
           name: item.name,
           build_image_tag: item.build_image_tag,
+          team: item.team ? item.team : undefined,
           trivy_scan_timestamp: item.trivy_scan_timestamp,
           total_fixed_critical:
             (summary?.['os-pkgs']?.fixed?.CRITICAL ?? 0) + (summary?.['lang-pkgs']?.fixed?.CRITICAL ?? 0),
@@ -238,15 +243,48 @@ jQuery(function () {
     url: '/trivy-scans/data',
     success: function (data) {
       const transformedData = transformData(data)
+      filteredTableData = setupTeamDropdown(transformedData)
       createTable({
         id: 'trivyScansTable',
-        data: transformedData,
+        data: filteredTableData,
         orderColumn: 0,
         orderType: 'asc',
         columns,
       })
     },
   })
+
+  function setupTeamDropdown(allData) {
+    const uniqueTeams = getUniqueTeams(allData)
+    renderTeamDropdownOptions(uniqueTeams)
+
+    // Pre-select value from URL if provided
+    if (currentFilters.team) {
+      teamFilter.value = currentFilters.team
+    }
+
+    // Store the full data for future filtering without refetching
+    $('#trivyScansTable').data('fullData', allData)
+
+    // Return filtered or full dataset depending on URL param
+    return currentFilters.team ? allData.filter(item => item.team === currentFilters.team) : allData
+  }
+
+  // Extracts a deduplicated list of valid teams.
+  function getUniqueTeams(data) {
+    return [...new Set(data.map(item => item.team).filter(Boolean))]
+  }
+
+  // Populates the #team dropdown with the given list of teams.
+  function renderTeamDropdownOptions(teams) {
+    teamFilter.innerHTML = `<option value="">All teams</option>`
+    teams.forEach(team => {
+      const option = document.createElement('option')
+      option.value = team
+      option.textContent = team
+      teamFilter.appendChild(option)
+    })
+  }
 
   $('.severity').on('change', e => {
     updateRowVisibility('severity')
@@ -258,6 +296,12 @@ jQuery(function () {
 
   $('.environments').on('change', e => {
     updateEnvironmentList()
+  })
+
+  $('#updateTeam').on('click', function (e) {
+    e.preventDefault()
+
+    updateScansByTeam()
   })
 
   function updateEnvironmentList() {
@@ -365,7 +409,39 @@ jQuery(function () {
     }
     table.draw(false)
   }
+
+  function updateScansByTeam(event) {
+    const selectedTeam = teamFilter.value
+    currentFilters.team = selectedTeam
+    updateURLParams(currentFilters)
+
+    // Retrieve original data from the table DOM element
+    const fullData = $('#trivyScansTable').data('fullData') || []
+
+    const filtered = selectedTeam ? fullData.filter(item => item.team === selectedTeam) : fullData
+
+    const table = $('#trivyScansTable').DataTable()
+    table.clear()
+    table.rows.add(filtered)
+    table.draw()
+  }
 })
+
+// function checks url params for applied filters and builds filter object
+function getFiltersFromURL() {
+  const params = new URLSearchParams(location.search)
+  return {
+    team: params.get('team') || '',
+  }
+}
+
+// add current filters to Url params
+function updateURLParams(filters) {
+  const params = new URLSearchParams()
+  if (filters.team) params.set('team', filters.team)
+
+  history.replaceState(null, '', `?${params.toString()}`)
+}
 
 function formatDateToDDMONYYYYHH24MMSS(dateString) {
   if (!dateString) return 'N/A'

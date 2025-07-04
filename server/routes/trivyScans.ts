@@ -1,6 +1,12 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import { utcTimestampToUtcDateTime, sortBySeverity, getComponentName, getEnvironmentName } from '../utils/utils'
+import {
+  utcTimestampToUtcDateTime,
+  sortBySeverity,
+  getComponentName,
+  getEnvironmentName,
+  addTeamToTrivyScan,
+} from '../utils/utils'
 import { ScanResult, Summary, TrivyScanType } from '../data/converters/modelTypes'
 
 const createSummaryTable = (summary: Summary): Array<{ category: string; severity: string; count: number }> => {
@@ -121,10 +127,10 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   router.get('/data', async (req, res) => {
     const trivyScans = await serviceCatalogueService.getTrivyScans()
     const teams = await serviceCatalogueService.getTeams({ withComponents: true })
+    const revisedScans = await addTeamToTrivyScan(teams, trivyScans)
+    // console.log(revisedScans)
 
-    console.log('trivyScans: ', trivyScans)
-
-    res.json(trivyScans)
+    res.json(revisedScans)
   })
 
   router.get('/:componentName/environments/:environmentName', async (req, res) => {
@@ -152,6 +158,5 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       secretResultTable,
     })
   })
-
   return router
 }

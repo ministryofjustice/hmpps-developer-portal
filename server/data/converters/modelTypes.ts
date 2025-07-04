@@ -86,4 +86,5 @@ export type TrivyScanType = {
   scan_status: string
   environments: string[]
   scan_summary: ScanSummary
+  team?: string
 }

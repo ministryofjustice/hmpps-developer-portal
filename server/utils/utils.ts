@@ -6,6 +6,8 @@ import { formatDate } from 'date-fns'
 
 import { Alert, RdsEntry } from '../@types'
 import { DataItem, Environment, Team } from '../data/strapiApiTypes'
+import { TrivyScanType } from '../data/converters/modelTypes'
+
 import type { ServiceCatalogueService } from '../services'
 
 dayjs.extend(relativeTime.default)
@@ -144,6 +146,14 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
   return 'none'
 }
 
+function findTeamMatch(teams: DataItem<Team>[], name: string) {
+  return teams.find(team =>
+    team?.attributes?.products?.data?.some(product =>
+      product?.attributes?.components?.data?.some(component => component.attributes?.name === name),
+    ),
+  )
+}
+
 // Match alert data to corresponding environments and components to get slack channel and team properties
 export const addNewPropertiesToAlert = (
   revisedAlerts: Alert[],
@@ -152,13 +162,7 @@ export const addNewPropertiesToAlert = (
 ) => {
   return revisedAlerts.map(alert => {
     const envMatch = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
-    const teamMatch = teams.find(team =>
-      team?.attributes?.products?.data?.some(product =>
-        product?.attributes?.components?.data?.some(
-          component => component.attributes?.name === alert.labels.application,
-        ),
-      ),
-    )
+    const teamMatch = findTeamMatch(teams, alert.labels.application)
 
     const updatedAlert = { ...alert }
 
@@ -166,6 +170,18 @@ export const addNewPropertiesToAlert = (
     if (teamMatch) updatedAlert.labels.team = teamMatch.attributes.name
 
     return updatedAlert
+  })
+}
+
+export async function addTeamToTrivyScan(teams: DataItem<Team>[], trivyScan: TrivyScanType[]) {
+  return trivyScan.map(scan => {
+    const scanMatch = findTeamMatch(teams, scan.name)
+
+    const updatedScan = { ...scan }
+
+    if (scanMatch) updatedScan.team = scanMatch.attributes.name
+
+    return updatedScan
   })
 }
 

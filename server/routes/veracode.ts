@@ -33,7 +33,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           HIGH: 0,
           VERY_HIGH: 0,
         }
-
+        const teamName = component.attributes?.product?.data?.attributes?.team?.data?.attributes?.name
         const veracodeSummary = component.attributes.veracode_results_summary as VeracodeResultsSummary
 
         veracodeSummary?.severity?.forEach(severity => {
@@ -61,6 +61,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
             : 'N/A',
           codeScore: hasVeracode ? veracodeSummary['static-analysis'].score : 0,
           severityLevels,
+          team: teamName,
         }
       })
 
