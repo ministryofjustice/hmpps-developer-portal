@@ -1,4 +1,5 @@
-import { Component, Product, Team, DataItem, SingleResponse } from '../data/strapiApiTypes'
+import { TrivyScanType } from '../data/converters/modelTypes'
+import { Component, Product, Team, DataItem, SingleResponse, Unwrapped } from '../data/strapiApiTypes'
 
 export const mockProducts = [
   { id: 1, attributes: { name: 'Product 1', p_id: 'p1' } },
@@ -245,7 +246,7 @@ export const mockActiveAndInactiveAlerts = [
 export const mockComponents = [
   { name: 'ComponentA', product: { id: 1 } },
   { name: 'ComponentB', product: { id: 2 } },
-]
+] as Unwrapped<Component>[]
 
 // Veracode mock components for getTeamVeracodeVulnerabilityCounts tests
 export const mockVeracodeComponents = [
@@ -308,7 +309,7 @@ export const mockVeracodeComponents = [
       ],
     },
   },
-]
+] as Unwrapped<Component>[]
 
 export const mockTrivyScans = [
   {
@@ -338,4 +339,4 @@ export const mockTrivyScans = [
       },
     },
   },
-]
+] as TrivyScanType[]

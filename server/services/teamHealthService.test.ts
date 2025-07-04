@@ -109,7 +109,7 @@ describe('teamHealthService', () => {
         {
           name: 'some-service',
           github_repo: 'some-service-repo',
-          environments: [
+          envs: [
             { name: 'dev', type: 'dev' },
             { name: 'preprod', type: 'preprod' },
             { name: 'prod', type: 'prod' },
@@ -192,7 +192,7 @@ describe('teamHealthService', () => {
           github_repo: 'some-service-repo',
           part_of_monorepo: true,
           latest_commit: { id: 1, sha: '123456789', date_time: '2023-05-02T01:02:03.000Z' },
-          environments: [
+          envs: [
             { name: 'dev', type: 'dev' },
             { name: 'preprod', type: 'preprod' },
             { name: 'prod', type: 'prod' },
@@ -275,7 +275,7 @@ describe('teamHealthService', () => {
           name: 'some-service',
           github_repo: 'some-service-repo',
           latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-02T01:02:03.000Z' },
-          environments: [
+          envs: [
             { name: 'dev', type: 'dev' },
             { name: 'test1', type: 'dev' },
             { name: 'preprod', type: 'preprod' },
@@ -353,7 +353,7 @@ describe('teamHealthService', () => {
           name: 'some-service',
           github_repo: 'some-service-repo',
           latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-02T01:02:03.000Z' },
-          environments: [
+          envs: [
             { name: 'preprod', type: 'preprod' },
             { name: 'prod', type: 'prod' },
           ],
@@ -459,7 +459,7 @@ describe('teamHealthService', () => {
         {
           name: 'some-service',
           github_repo: 'some-service-repo',
-          environments: [
+          envs: [
             { name: 'dev', type: 'dev' },
             { name: 'preprod', type: 'preprod' },
             { name: 'prod', type: 'prod' },
@@ -647,7 +647,6 @@ describe('teamHealthService', () => {
           product: {
             name: 'product-2',
             slug: 'product-2-slug',
-            team: {},
             service_area: { name: 'service-area-1', slug: 'service-area-1-slug' },
           },
         },
