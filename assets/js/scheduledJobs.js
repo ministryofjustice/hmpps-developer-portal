@@ -14,6 +14,9 @@ jQuery(function () {
     },
     {
       data: 'last_scheduled_run',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(formatDateToDDMONYYYYHH24MMSS(rowData.last_scheduled_run))
+      },
     },
     {
       data: 'result',
