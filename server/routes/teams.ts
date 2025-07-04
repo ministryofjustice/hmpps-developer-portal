@@ -15,7 +15,7 @@ export default function routes({ serviceCatalogueService, teamsSummaryCountServi
   })
 
   router.get('/data', async (req, res) => {
-    const teams = await serviceCatalogueService.getTeams({ withComponents: false })
+    const teams = await serviceCatalogueService.getTeams({})
 
     res.send(teams)
   })

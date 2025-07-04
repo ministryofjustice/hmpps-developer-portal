@@ -63,7 +63,7 @@ export default class DataFilterService {
     useFormattedName?: boolean
   }): Promise<MoJSelectDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const teamsData = await strapiApiClient.getTeams({ withComponents: false })
+    const teamsData = await strapiApiClient.getTeams({})
     const teams = teamsData.data.sort(sortData)
     const teamsList = teams.map(team => {
       const formattedName = formatMonitorName(team.attributes.name)
