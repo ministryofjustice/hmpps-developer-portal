@@ -258,24 +258,24 @@ jQuery(function () {
     const uniqueTeams = getUniqueTeams(allData)
     renderTeamDropdownOptions(uniqueTeams)
 
-    // Pre-select value from URL if provided
+    // Get filter value from URL
     if (currentFilters.team) {
       teamFilter.value = currentFilters.team
     }
 
-    // Store the full data for future filtering without refetching
+    // Store data for future filtering without refetching
     $('#trivyScansTable').data('fullData', allData)
 
     // Return filtered or full dataset depending on URL param
     return currentFilters.team ? allData.filter(item => item.team === currentFilters.team) : allData
   }
 
-  // Extracts a deduplicated list of valid teams.
+  // Extracts a set of valid teams
   function getUniqueTeams(data) {
     return [...new Set(data.map(item => item.team).filter(Boolean))]
   }
 
-  // Populates the #team dropdown with the given list of teams.
+  // Populates the #team dropdown with the team list
   function renderTeamDropdownOptions(teams) {
     teamFilter.innerHTML = `<option value="">All teams</option>`
     teams.forEach(team => {
@@ -415,7 +415,7 @@ jQuery(function () {
     currentFilters.team = selectedTeam
     updateURLParams(currentFilters)
 
-    // Retrieve original data from the table DOM element
+    // Get original data from the table DOM element
     const fullData = $('#trivyScansTable').data('fullData') || []
 
     const filtered = selectedTeam ? fullData.filter(item => item.team === selectedTeam) : fullData
