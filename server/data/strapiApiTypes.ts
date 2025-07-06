@@ -45,7 +45,7 @@ type HasProduct = { product: SingleResponse<Product> }
 type HasProducts = { products: ListResponse<Product> }
 type HasProductSet = { product_set: SingleResponse<ProductSet> }
 type HasTeam = { team: SingleResponse<Team> }
-type HasServiceArea = { service_area: SingleResponse<StrapiServiceArea> }
+type HasServiceArea = { service_area: SingleResponse<ServiceArea> }
 type HasNamespace = { ns: SingleResponse<Namespace> }
 type HasEnvironments = { envs: ListResponse<Environment> }
 type HasTrivyScan = { trivy_scan?: DataItem<TrivyScan> }
@@ -59,7 +59,7 @@ export type Product = Omit<components['schemas']['Product'], 'components' | 'tea
 export type Component = Omit<components['schemas']['Component'], 'product' | 'envs'> & HasProduct & HasEnvironments
 export type Team = Omit<components['schemas']['Team'], 'products'> & HasProducts
 export type ProductSet = components['schemas']['ProductSet'] & HasProducts
-export type StrapiServiceArea = Omit<components['schemas']['ServiceArea'], 'products'> & HasProducts
+export type ServiceArea = Omit<components['schemas']['ServiceArea'], 'products'> & HasProducts
 
 export type CustomComponentView = Omit<components['schemas']['CustomComponentView'], 'components'> & HasComponents
 

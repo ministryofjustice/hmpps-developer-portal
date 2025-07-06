@@ -20,7 +20,7 @@ export type ServiceArea = {
   id: number
   name: string
   owner: string
-  serviceAreaId: string
+  sa_id: string
   slug: string
   products: Product[]
 }

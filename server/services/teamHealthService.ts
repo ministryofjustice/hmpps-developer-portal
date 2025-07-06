@@ -153,7 +153,6 @@ export default class TeamHealthService {
         const driftData = this.toComponentView(component, versionDetailsByComponent[component.name], now || new Date())
         return driftData
       })
-
     return components
   }
 

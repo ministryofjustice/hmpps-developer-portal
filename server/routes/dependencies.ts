@@ -86,7 +86,6 @@ export const getDropDownOptions = async (
   }
 
   const dependencies = await serviceCatalogueService.getDependencies()
-
   const dependencyTypesSet = new Set<string>()
   const dependencyNamesSet = new Set<string>()
 

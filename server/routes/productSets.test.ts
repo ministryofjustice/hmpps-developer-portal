@@ -3,28 +3,24 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { DataItem, ProductSet } from '../data/strapiApiTypes'
+import { ProductSet, Unwrapped } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testProductSets = [{ id: 1, attributes: { name: 'testProductSet' } }] as DataItem<ProductSet>[]
+const testProductSets = [{ id: 1, name: 'testProductSet' }] as Unwrapped<ProductSet>[]
 const testProductSet = {
   ps_id: 'testProductSetId',
   name: 'testProductSetName',
-  products: {
-    data: [
-      {
-        id: 23,
-        attributes: {
-          name: 'productName',
-        },
-      },
-    ],
-  },
-} as ProductSet
+  products: [
+    {
+      id: 23,
+      name: 'productName',
+    },
+  ],
+} as Unwrapped<ProductSet>
 
 beforeEach(() => {
   serviceCatalogueService.getProductSets.mockResolvedValue(testProductSets)
@@ -65,8 +61,8 @@ describe('/product-sets', () => {
           expect($('[data-test="detail-page-title"]').text()).toContain(testProductSet.name)
           expect($('[data-test="product-set-id"]').text()).toBe(testProductSet.ps_id)
           expect($('[data-test="no-products"]').text()).toBe('')
-          expect($(`[data-test="product-${testProductSet.products.data[0].id}"]`).text()).toBe(
-            testProductSet.products.data[0].attributes.name,
+          expect($(`[data-test="product-${testProductSet.products[0].id}"]`).text()).toBe(
+            testProductSet.products[0].name,
           )
         })
     })
@@ -76,7 +72,7 @@ describe('/product-sets', () => {
         ps_id: 'testProductSetId',
         name: 'testProductSetName',
         products: {},
-      } as ProductSet
+      } as Unwrapped<ProductSet>
 
       serviceCatalogueService.getProductSet.mockResolvedValue(testProductSetNoProducts)
 
