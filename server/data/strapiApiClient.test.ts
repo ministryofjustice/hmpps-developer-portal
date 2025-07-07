@@ -163,7 +163,7 @@ describe('strapiApiClient', () => {
     describe('getComponent', () => {
       it('should return a single component', async () => {
         const component = {
-          data: [{ id: 1, attributes: { name: 'component' } }],
+          data: { id: 1, attributes: { name: 'component' } },
         } as SingleResponse<Component>
         const componentResponse = { id: 1, name: 'component' } as Unwrapped<Component>
         fakeStrapiApi
@@ -244,7 +244,7 @@ describe('strapiApiClient', () => {
 
     describe('getServiceArea', () => {
       it('should return a single service area', async () => {
-        const serviceArea = { data: [{ id: 1, attributes: { name: 'Service Area' } }] } as SingleResponse<ServiceArea>
+        const serviceArea = { data: { id: 1, attributes: { name: 'Service Area' } } } as SingleResponse<ServiceArea>
         const serviceAreaResponse = { id: 1, name: 'Service Area' } as Unwrapped<ServiceArea>
         fakeStrapiApi.get('/service-areas/1?populate=products').reply(200, serviceArea)
         const output = await strapiApiClient.getServiceArea({ serviceAreaId: 1 })

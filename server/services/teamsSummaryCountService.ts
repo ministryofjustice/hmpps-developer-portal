@@ -1,6 +1,6 @@
 import logger from '../../logger'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Component, Unwrapped, Product, VeracodeResultsSummary } from '../data/strapiApiTypes'
+import { Component, Product, Unwrapped } from '../data/strapiApiTypes'
 import AlertsService from './alertsService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { formatMonitorName } from '../utils/utils'
@@ -227,7 +227,7 @@ export default class TeamsSummaryCountService {
       const counts = Object.fromEntries(VALID_SEVERITIES.map(severity => [severity, 0]))
 
       for (const component of validComponents) {
-        const summary = component.veracode_results_summary as unknown as VeracodeResultsSummary
+        const summary = component.veracode_results_summary
 
         const severities: [string, number][] = (summary?.severity || [])
           .flatMap(severity => severity.category)

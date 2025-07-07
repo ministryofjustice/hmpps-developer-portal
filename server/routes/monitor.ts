@@ -14,6 +14,8 @@ type MonitorEnvironment = {
   isProbation: boolean
 }
 
+type HealthResult = { version: string; lastMessageTime: string; dateAdded: string; healthStatus: string }
+
 export default function routes({ serviceCatalogueService, redisService, dataFilterService }: Services): Router {
   const router = Router()
 
@@ -171,17 +173,19 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
     const envNames = Array.from(new Set([health, versions].flatMap(Object.keys)))
 
-    const result = envNames.reduce((acc, key) => {
-      const { v: version } = versions[key] || {}
-      const { json, dateAdded } = health[key] || {}
+    const result = envNames.reduce(
+      (acc, key) => {
+        const { v: version } = versions[key] || {}
+        const { json, dateAdded } = health[key] || {}
 
-      const lastMessageTime = relativeTimeFromNow(new Date(dateAdded))
-      const healthStatus = getHealthStatus(json)
+        const lastMessageTime = relativeTimeFromNow(new Date(dateAdded))
+        const healthStatus = getHealthStatus(json)
 
-      // @ts-expect-error Suppress any declaration
-      acc[key] = { version, lastMessageTime, dateAdded, healthStatus }
-      return acc
-    }, {})
+        acc[key] = { version, lastMessageTime, dateAdded, healthStatus }
+        return acc
+      },
+      {} as Record<string, HealthResult>,
+    )
 
     res.send(JSON.stringify(Object.entries(result)))
   })

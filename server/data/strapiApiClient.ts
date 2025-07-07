@@ -56,7 +56,7 @@ export default class StrapiApiClient {
         path: '/v1/products',
         query: `${new URLSearchParams({ populate: populate.join(',') }).toString()}`,
       })
-      .then(unwrapListResponse)
+      .then(unwrapListResponse<Product>)
   }
 
   async getProduct({
@@ -98,7 +98,7 @@ export default class StrapiApiClient {
         path: '/v1/components',
         query: `${populate}&${filters.join('&')}`,
       })
-      .then(unwrapListResponse)
+      .then(unwrapListResponse<Component>)
   }
 
   async getComponent({ componentName }: { componentName: string }): Promise<Unwrapped<Component>> {
@@ -109,7 +109,7 @@ export default class StrapiApiClient {
         path: '/v1/components',
         query: `filters[name][$eq]=${componentName}&${populate}`,
       })
-      .then(unwrapSingleResponse)
+      .then(unwrapSingleResponse<Component>)
   }
 
   async getTeams(): Promise<Unwrapped<Team>[]> {
@@ -118,7 +118,7 @@ export default class StrapiApiClient {
         path: '/v1/teams',
         query: 'populate=products',
       })
-      .then(unwrapListResponse)
+      .then(unwrapListResponse<Team>)
   }
 
   async getTeam({
@@ -176,7 +176,7 @@ export default class StrapiApiClient {
         path: '/v1/product-sets',
         query: 'populate=products',
       })
-      .then(unwrapListResponse)
+      .then(unwrapListResponse<ProductSet>)
   }
 
   async getProductSet({ productSetId = 0 }: { productSetId: number }): Promise<Unwrapped<ProductSet>> {
@@ -185,7 +185,7 @@ export default class StrapiApiClient {
         path: `/v1/product-sets/${productSetId}`,
         query: new URLSearchParams({ populate: 'products' }).toString(),
       })
-      .then(unwrapSingleResponse)
+      .then(unwrapSingleResponse<ProductSet>)
   }
 
   async getServiceAreas(): Promise<Unwrapped<ServiceArea>[]> {
@@ -194,7 +194,7 @@ export default class StrapiApiClient {
         path: '/v1/service-areas',
         query: 'populate=products',
       })
-      .then(unwrapListResponse)
+      .then(unwrapListResponse<ServiceArea>)
   }
 
   async getServiceArea({
@@ -216,7 +216,7 @@ export default class StrapiApiClient {
     const query = serviceAreaSlug ? `filters[slug][$eq]=${serviceAreaSlug}&${populate}` : populate
     const path = serviceAreaSlug ? '/v1/service-areas' : `/v1/service-areas/${serviceAreaId}`
 
-    return this.restClient.get<SingleResponse<ServiceArea>>({ path, query }).then(unwrapSingleResponse)
+    return this.restClient.get<SingleResponse<ServiceArea>>({ path, query }).then(unwrapSingleResponse<ServiceArea>)
   }
 
   async getCustomComponentViews({
@@ -237,7 +237,7 @@ export default class StrapiApiClient {
           populate: populate.join(','),
         }).toString(),
       })
-      .then(unwrapListResponse)
+      .then(unwrapListResponse<CustomComponentView>)
   }
 
   async getCustomComponentView({
@@ -260,7 +260,7 @@ export default class StrapiApiClient {
           populate: populate.join(','),
         }).toString(),
       })
-      .then(unwrapSingleResponse)
+      .then(unwrapSingleResponse<CustomComponentView>)
   }
 
   async getGithubRepoRequests(): Promise<Unwrapped<GithubRepoRequest>[]> {
@@ -269,7 +269,7 @@ export default class StrapiApiClient {
         path: '/v1/github-repo-requests',
         query: 'populate=github_repo',
       })
-      .then(unwrapListResponse)
+      .then(unwrapListResponse<GithubRepoRequest>)
   }
 
   async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<Unwrapped<GithubRepoRequest>> {
@@ -278,7 +278,7 @@ export default class StrapiApiClient {
         path: '/v1/github-repo-requests',
         query: `filters[github_repo][$eq]=${repoName}`,
       })
-      .then(response => unwrapSingleResponse<GithubRepoRequest>(response))
+      .then(unwrapSingleResponse<GithubRepoRequest>)
   }
 
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<void> {
@@ -293,7 +293,7 @@ export default class StrapiApiClient {
       .get<ListResponse<GithubTeam>>({
         path: '/v1/github-teams',
       })
-      .then(unwrapListResponse)
+      .then(unwrapListResponse<GithubTeam>)
   }
 
   async getGithubTeam({ teamName }: { teamName: string }): Promise<Unwrapped<GithubTeam>> {
@@ -302,7 +302,7 @@ export default class StrapiApiClient {
         path: '/v1/github-teams',
         query: `filters[team_name][$eq]=${teamName}`,
       })
-      .then(unwrapSingleResponse)
+      .then(unwrapSingleResponse<GithubTeam>)
   }
 
   async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<Unwrapped<GithubTeam>[]> {
@@ -311,7 +311,7 @@ export default class StrapiApiClient {
         path: '/v1/github-teams',
         query: `filters[parent_team_name][$eq]=${parentTeamName}`,
       })
-      .then(unwrapListResponse)
+      .then(unwrapListResponse<GithubTeam>)
   }
 
   async getScheduledJobs(): Promise<Unwrapped<ScheduledJob>[]> {
@@ -319,7 +319,7 @@ export default class StrapiApiClient {
       .get<ListResponse<ScheduledJob>>({
         path: '/v1/scheduled-jobs',
       })
-      .then(unwrapListResponse)
+      .then(unwrapListResponse<ScheduledJob>)
   }
 
   async getScheduledJob({ name }: { name: string }): Promise<Unwrapped<ScheduledJob>> {
@@ -328,7 +328,7 @@ export default class StrapiApiClient {
         path: '/v1/scheduled-jobs',
         query: `filters[name][$eq]=${name}`,
       })
-      .then(response => unwrapSingleResponse<ScheduledJob>(response))
+      .then(unwrapSingleResponse<ScheduledJob>)
   }
 
   async getTrivyScans(): Promise<TrivyScanType[]> {
@@ -344,7 +344,7 @@ export default class StrapiApiClient {
         path: '/v1/trivy-scans',
         query: `filters[name][$eq]=${name}`,
       })
-      .then(unwrapSingleResponse)
+      .then(unwrapSingleResponse<TrivyScan>)
   }
 
   async getEnvironments() {

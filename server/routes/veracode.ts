@@ -2,7 +2,6 @@ import { Router } from 'express'
 import dayjs from 'dayjs'
 import type { Services } from '../services'
 import { veracodeFilters, utcTimestampToUtcDateTime } from '../utils/utils'
-import { VeracodeResultsSummary } from '../data/strapiApiTypes'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -33,13 +32,13 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           HIGH: 0,
           VERY_HIGH: 0,
         }
+        type Severity = keyof typeof severityLevels
 
-        const veracodeSummary = component.veracode_results_summary as unknown as VeracodeResultsSummary
+        const veracodeSummary = component.veracode_results_summary
 
         veracodeSummary?.severity?.forEach(severity => {
           severity.category.forEach(category => {
-            // @ts-expect-error Suppress any declaration
-            severityLevels[category.severity] += category.count
+            severityLevels[category.severity as Severity] += category.count
           })
         })
 

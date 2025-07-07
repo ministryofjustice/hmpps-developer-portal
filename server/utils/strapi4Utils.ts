@@ -27,7 +27,7 @@ export const unwrapAttributes = <T extends Payload>(item: Unwrappable<T>): Unwra
   const unwrappedItem: Record<string, unknown> = { ...item }
 
   for (const key of Object.keys(unwrappedItem)) {
-    unwrappedItem[key] = unwrapAttributes<T>(unwrappedItem[key])
+    unwrappedItem[key] = unwrapAttributes<T>(unwrappedItem[key] as Unwrappable<T>)
   }
 
   return unwrappedItem as Unwrapped<T>

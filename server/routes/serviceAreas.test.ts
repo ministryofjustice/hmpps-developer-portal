@@ -19,25 +19,15 @@ const testServiceAreas = [
     slug: 'a-service-area-name',
     products: [
       {
-        confluenceLink: 'https://atlassian.net/wiki/spaces/SOME/overview',
-        deliveryManager: 'Delivery Manager',
-        description: 'A description of the project',
-        gDriveLink: '',
         id: 456,
-        leadDeveloper: 'Lead Developer',
-        legacy: false,
         name: 'A Product name',
-        phase: 'Private Beta',
-        productId: 'DPS000',
-        productManager: 'Product Manager',
-        slackChannelId: 'C01ABC0ABCD',
-        slackChannelName: 'some-slack-channel',
+        p_id: 'DPS000',
         slug: 'a-product-name-1',
         subproduct: false,
       },
     ],
   },
-] as unknown as Unwrapped<ServiceArea>[]
+] as Unwrapped<ServiceArea>[]
 const testServiceArea = {
   id: 123,
   sa_id: 'testsa_id',
@@ -50,7 +40,7 @@ const testServiceArea = {
       components: [{ id: 1, name: 'component-1' }],
     },
   ],
-} as unknown as Unwrapped<ServiceArea>
+} as Unwrapped<ServiceArea>
 
 beforeEach(() => {
   serviceCatalogueService.getServiceAreas.mockResolvedValue(testServiceAreas)
@@ -106,7 +96,7 @@ describe('/service-areas', () => {
         sa_id: 'testsa_id',
         name: 'testServiceAreaName',
         products: {},
-      } as unknown as Unwrapped<ServiceArea>
+      } as Unwrapped<ServiceArea>
 
       serviceCatalogueService.getServiceArea.mockResolvedValue(testServiceAreaNoProducts)
 

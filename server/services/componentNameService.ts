@@ -1,5 +1,4 @@
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Component, Unwrapped } from '../data/strapiApiTypes'
 import { formatMonitorName, sortByName } from '../utils/utils'
 
 export default class ComponentNameService {
@@ -49,6 +48,7 @@ export default class ComponentNameService {
       serviceAreaId: serviceAreaSummary.id,
       withProducts: true,
     })
+
     const componentNames = serviceAreaDetails.products
       .filter(product => product?.components)
       .sort(sortByName)
@@ -71,6 +71,7 @@ export default class ComponentNameService {
       .filter(component => component.envs?.length)
       .sort(sortByName)
       .map(component => component.name)
+
     return componentNames
   }
 
@@ -83,7 +84,7 @@ export default class ComponentNameService {
 
     if (!customComponentDetails) throw Error(`No custom component called: ${customComponentName}`)
 
-    const components = customComponentDetails.components as unknown as Unwrapped<Component>[]
+    const { components } = customComponentDetails
 
     return components
       .filter(component => component.envs && component.envs.length > 0)
