@@ -242,14 +242,16 @@ describe('strapiApiClient', () => {
       })
     })
 
-    // describe('getServiceArea', () => {
-    //   it('should return a single service area', async () => {
-    //     fakeStrapiApi.get('/service-areas/123?populate=products').reply(200, exampleServiceArea)
-    //     const output = await strapiApiClient.getServiceArea({ serviceAreaId: 123 })
-
-    //     expect(output).toContain(exampleServiceArea.name)
-    //   })
-    // })
+    describe('getServiceArea', () => {
+      it('should return a single service area', async () => {
+        const serviceArea = { data: [{ id: 1, attributes: { name: 'Service Area' } }] } as SingleResponse<ServiceArea>
+        const serviceAreaResponse = { id: 1, name: 'Service Area' } as Unwrapped<ServiceArea>
+        fakeStrapiApi.get('/service-areas/1?populate=products').reply(200, serviceArea)
+        const output = await strapiApiClient.getServiceArea({ serviceAreaId: 1 })
+        console.log('output', output)
+        expect(output).toEqual(serviceAreaResponse)
+      })
+    })
   })
 
   describe('postGithubRepoRequest', () => {
