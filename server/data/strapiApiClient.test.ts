@@ -10,7 +10,6 @@ import {
   Environment,
   Team,
   SingleResponse,
-  ServiceArea,
   Unwrapped,
 } from './strapiApiTypes'
 

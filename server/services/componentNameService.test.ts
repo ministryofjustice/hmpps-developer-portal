@@ -128,7 +128,7 @@ describe('Component name service', () => {
       strapiApiClient.getServiceArea.mockResolvedValue(serviceAreaResponse)
 
       const results = await componentNameService.getAllDeployedComponentsForServiceArea('service-area-1')
-      console.log('Service Area:', results)
+
       expect(strapiApiClient.getServiceArea).toHaveBeenCalledWith({ serviceAreaId: 2, withProducts: true })
       expect(results).toStrictEqual(['comp-3', 'comp-1'])
     })

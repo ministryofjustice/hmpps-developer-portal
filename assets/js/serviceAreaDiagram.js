@@ -20,16 +20,16 @@ jQuery(async function () {
 
   $('#updateServiceArea').on('click', async e => {
     e.preventDefault(e)
-    const sa_id = document.getElementById('serviceArea').value
-    window.location = `/service-areas/${sa_id}/diagram`
+    const serviceAreaId = document.getElementById('serviceArea').value
+    window.location = `/service-areas/${serviceAreaId}/diagram`
   })
 
   $('#toggleOrientation').on('click', async e => {
     e.preventDefault(e)
     const urlParams = new URLSearchParams(window.location.search)
     const orientation = urlParams.get('orientation') == 'TB' ? 'LR' : 'TB'
-    const sa_id = document.getElementById('serviceAreaSlug').value
+    const serviceAreaId = document.getElementById('serviceAreaSlug').value
 
-    window.location = `/service-areas/${sa_id}/diagram?orientation=${orientation}`
+    window.location = `/service-areas/${serviceAreaId}/diagram?orientation=${orientation}`
   })
 })
