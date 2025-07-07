@@ -3,7 +3,7 @@ jQuery(function () {
     {
       data: 'name',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/service-areas/${rowData.slug}">${rowData.name}</a>`)
+        $(td).html(`<a href="/service-areas/${rowData.id}">${rowData.name}</a>`)
       },
     },
     {

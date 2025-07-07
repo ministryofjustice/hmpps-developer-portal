@@ -18,13 +18,15 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     res.send(serviceAreas)
   })
 
-  router.get('/:serviceAreaSlug', async (req, res) => {
-    const { serviceAreaSlug } = req.params
-    const serviceArea = await serviceCatalogueService.getServiceArea({ serviceAreaSlug, withProducts: true })
+  router.get('/:serviceAreaId', async (req, res) => {
+    const serviceAreaId = Number(req.params.serviceAreaId)
+
+    const serviceArea = await serviceCatalogueService.getServiceArea({ serviceAreaId, withProducts: true })
     const { products } = serviceArea
 
     const displayServiceArea = {
-      id: serviceArea.sa_id,
+      id: serviceAreaId,
+      sa_id: serviceArea.sa_id,
       name: serviceArea.name,
       slug: serviceArea.slug,
       owner: serviceArea.owner,
@@ -48,7 +50,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         components,
       }
     })
-
+    console.log(serviceArea, serviceAreaSlug, products)
     const displayServiceArea = {
       id: serviceArea.sa_id,
       slug: serviceAreaSlug,
