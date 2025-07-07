@@ -248,7 +248,7 @@ describe('strapiApiClient', () => {
         const serviceAreaResponse = { id: 1, name: 'Service Area' } as Unwrapped<ServiceArea>
         fakeStrapiApi.get('/service-areas/1?populate=products').reply(200, serviceArea)
         const output = await strapiApiClient.getServiceArea({ serviceAreaId: 1 })
-        console.log('output', output)
+
         expect(output).toEqual(serviceAreaResponse)
       })
     })
