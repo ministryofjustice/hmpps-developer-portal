@@ -50,7 +50,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         components,
       }
     })
-    console.log(serviceArea, serviceAreaSlug, products)
+
     const displayServiceArea = {
       id: serviceArea.sa_id,
       slug: serviceAreaSlug,
