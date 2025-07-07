@@ -33,7 +33,7 @@ import {
   mockVeracodeComponents,
 } from './teamsSummaryCountService.test-helpers'
 import ServiceCatalogueService from './serviceCatalogueService'
-import { Component, TrivyScan, Unwrapped } from '../data/strapiApiTypes'
+import { Component, TrivyScan, Unwrapped, Product } from '../data/strapiApiTypes'
 import { TrivyScanType } from '../data/converters/modelTypes'
 
 jest.mock('../../logger')
@@ -148,7 +148,6 @@ describe('TeamsSummaryCountService', () => {
       alertSerice.getAlerts.mockResolvedValue(mockAlerts)
 
       const result = await service.getTeamAlertSummary(teamSlug)
-
       expect(mockStrapiClient.getTeam).toHaveBeenCalledWith({ teamSlug })
       expect(mockStrapiClient.getProduct).toHaveBeenCalledTimes(2)
       expect(alertSerice.getAlerts).toHaveBeenCalled()
@@ -293,14 +292,14 @@ describe('TeamsSummaryCountService', () => {
       serviceCatalogueService.getComponents.mockResolvedValue([
         { name: 'ComponentX', product: { id: 99 } } as Unwrapped<Component>,
       ])
-      const products = [{ id: 1, name: 'Product 1' }]
+      const products = [{ id: 1, name: 'Product 1' }] as Unwrapped<Product>[]
       const result = await service.getTeamTrivyVulnerabilityCounts(products)
       expect(result).toEqual({ critical: 0, high: 0 })
     })
 
     it('should log error and return 0,0 on exception', async () => {
       serviceCatalogueService.getTrivyScans!.mockRejectedValue(new Error('fail'))
-      const products = [{ id: 1, attributes: { name: 'Product 1' } }]
+      const products = [{ id: 1, name: 'Product 1' }] as Unwrapped<Product>[]
       const result = await service.getTeamTrivyVulnerabilityCounts(products)
       expect(result).toEqual({ critical: 0, high: 0 })
       expect(mockLogger.error).toHaveBeenCalledWith(
@@ -314,9 +313,9 @@ describe('TeamsSummaryCountService', () => {
     it('should aggregate severities from matching components', async () => {
       serviceCatalogueService.getComponents.mockResolvedValue(mockVeracodeComponents)
       const result = await service.getTeamVeracodeVulnerabilityCounts([
-        { id: 1, attributes: { name: 'Product 1' } },
-        { id: 2, attributes: { name: 'Product 2' } },
-      ])
+        { id: 1, name: 'Product 1' },
+        { id: 2, name: 'Product 2' },
+      ] as Unwrapped<Product>[])
       expect(result).toEqual({ veryHigh: 2, high: 4, medium: 5, low: 9 })
     })
 
@@ -333,7 +332,9 @@ describe('TeamsSummaryCountService', () => {
           veracode_results_summary: { severity: [{ category: [{ Severity: 'VERY_HIGH', count: 10 }] }] } as TrivyScan,
         } as Unwrapped<Component>,
       ])
-      const result = await service.getTeamVeracodeVulnerabilityCounts([{ id: 1, attributes: { name: 'Product 1' } }])
+      const result = await service.getTeamVeracodeVulnerabilityCounts([
+        { id: 1, name: 'Product 1' },
+      ] as Unwrapped<Product>[])
       expect(result).toEqual({ veryHigh: 0, high: 0, medium: 0, low: 0 })
     })
 
@@ -346,13 +347,17 @@ describe('TeamsSummaryCountService', () => {
           veracode_results_summary: { severity: [] },
         },
       ] as Unwrapped<Component>[])
-      const result = await service.getTeamVeracodeVulnerabilityCounts([{ id: 1, attributes: { name: 'Product 1' } }])
+      const result = await service.getTeamVeracodeVulnerabilityCounts([
+        { id: 1, name: 'Product 1' },
+      ] as Unwrapped<Product>[])
       expect(result).toEqual({ veryHigh: 0, high: 0, medium: 0, low: 0 })
     })
 
     it('should log error and return all zeros on exception', async () => {
       serviceCatalogueService.getComponents!.mockRejectedValue(new Error('fail'))
-      const result = await service.getTeamVeracodeVulnerabilityCounts([{ id: 1, attributes: { name: 'Product 1' } }])
+      const result = await service.getTeamVeracodeVulnerabilityCounts([
+        { id: 1, name: 'Product 1' },
+      ] as Unwrapped<Product>[])
       expect(result).toEqual({ veryHigh: 0, high: 0, medium: 0, low: 0 })
       expect(mockLogger.error).toHaveBeenCalledWith(
         expect.stringContaining('Error in getTeamVeracodeVulnerabilityCounts'),

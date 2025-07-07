@@ -1,29 +1,31 @@
 jQuery(function () {
   const columns = [
     {
-      data: 'attributes.name',
+      data: 'name',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/teams/${rowData.attributes.slug}">${rowData.attributes.name}</a>`)
+        $(td).html(`<a href="/teams/${rowData.slug}">${rowData.name}</a>`)
       },
     },
     {
-      data: 'attributes.slack_channel_name',
+      data: 'slack_channel_name',
       createdCell: function (td, _cellData, rowData) {
-        if (rowData.attributes.slack_channel_id)
+        if (rowData.slack_channel_id)
           $(td).html(
-            `<a href="slack://channel?team=T02DYEB3A&id=${rowData.attributes.slack_channel_id}">#${rowData.attributes.slack_channel_name}</a>`,
+            `<a href="slack://channel?team=T02DYEB3A&id=${rowData.slack_channel_id}">#${rowData.slack_channel_name}</a>`,
           )
       },
     },
     {
-      data: 'attributes.products',
+      data: 'products',
       createdCell: function (td, _cellData, rowData) {
-        const products = rowData.attributes.products.data
-          .map(
-            product =>
-              `<li><a href="/products/${product.attributes.slug}" data-test="product-${product.id}">${product.attributes.name}</a></li>`,
-          )
-          .join('')
+        const products = rowData.products
+          ? rowData.products
+              .map(
+                product =>
+                  `<li><a href="/products/${product.slug}" data-test="product-${product.id}">${product.name}</a></li>`,
+              )
+              .join('')
+          : null
         if (products) {
           $(td).html(`${products}`)
         } else {
@@ -32,9 +34,9 @@ jQuery(function () {
       },
     },
     {
-      data: 'attributes.slug',
+      data: 'slug',
       createdCell: function (td, _cellData, rowData) {
-        const monitor_name = `${formatMonitorName(rowData.attributes.name)}`
+        const monitor_name = `${formatMonitorName(rowData.name)}`
         $(td).html(
           `<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Links</span></summary><li><a class="govuk-link--no-visited-state" href="/monitor/team/${monitor_name}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${monitor_name}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" href="/trivy-scans/${monitor_name}">Trivy</a></li>`,
         )

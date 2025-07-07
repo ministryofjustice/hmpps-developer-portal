@@ -107,7 +107,6 @@ export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasT
 
 export const getFormattedName = (req: Request, param: string): string => {
   const paramName = req.params[param]
-
   return paramName.replace(/[^-a-zA-Z0-9_.]/g, '')
 }
 

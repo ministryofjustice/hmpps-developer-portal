@@ -1,25 +1,25 @@
 jQuery(function () {
   const columns = [
     {
-      data: 'attributes.ps_id',
+      data: 'ps_id',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/product-sets/${rowData.id}">${rowData.attributes.ps_id}</a>`)
+        $(td).html(`<a href="/product-sets/${rowData.id}">${rowData.ps_id}</a>`)
       },
     },
     {
-      data: 'attributes.name',
+      data: 'name',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/product-sets/${rowData.id}">${rowData.attributes.name}</a>`)
+        $(td).html(`<a href="/product-sets/${rowData.id}">${rowData.name}</a>`)
       },
     },
     {
-      data: 'attributes.products',
+      data: 'products',
       createdCell: function (td, _cellData, rowData) {
         const header = `<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Product List</span></summary>`
-        const products = rowData.attributes.products.data
+        const products = rowData.products
           .map(
             product =>
-              `<li><a href="/products/${product.attributes.slug}" data-test="product-${product.id}">${product.attributes.name}</a></li>`,
+              `<li><a href="/products/${product.slug}" data-test="product-${product.id}">${product.name}</a></li>`,
           )
           .join('')
         if (products) {

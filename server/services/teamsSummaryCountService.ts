@@ -1,14 +1,12 @@
 import logger from '../../logger'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Component, DataItem, Product, SingleResponse, VeracodeResultsSummary } from '../data/strapiApiTypes'
+import { Component, Unwrapped, Product, VeracodeResultsSummary } from '../data/strapiApiTypes'
 import AlertsService from './alertsService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { formatMonitorName } from '../utils/utils'
 
 // Valid Veracode severity levels
 export const VALID_SEVERITIES = ['VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW']
-
-type StrapiProduct = { id?: number; attributes?: Record<string, unknown> }
 
 type TeamAlertSummary = {
   products: Record<string, Record<string, number>>
@@ -25,12 +23,10 @@ export default class TeamsSummaryCountService {
   /**
    * Helper: Fetch all products for a team by team slug
    */
-  async getProductsForTeam(teamSlug: string): Promise<DataItem<Product>[]> {
+  async getProductsForTeam(teamSlug: string): Promise<Unwrapped<Product>[]> {
     try {
       const team = await this.strapiClient('').getTeam({ teamSlug })
-      const products = Array.isArray(team.data)
-        ? team.data[0]?.attributes?.products?.data || []
-        : team.data?.attributes?.products?.data || []
+      const products = team.products || []
       logger.info(`[getProductsForTeam] Found ${products.length} products for team ${teamSlug}`)
       return products
     } catch (err) {
@@ -42,32 +38,25 @@ export default class TeamsSummaryCountService {
   /**
    * Helper: Fetch all components for a list of products
    */
-  async getComponentsForProducts(products: DataItem<Product>[]): Promise<Record<string, DataItem<Component>[]>> {
-    const promises = products.map(async product => {
-      const productSlug = product.attributes?.slug
+  async getComponentsForProducts(products: Unwrapped<Product>[]): Promise<Record<string, Unwrapped<Component>[]>> {
+    const promises = products?.map(async product => {
+      const productSlug = product?.slug
       try {
-        const productResp: SingleResponse<Product> = await this.strapiClient('').getProduct({ productSlug })
-        const components = Array.isArray(productResp.data)
-          ? productResp.data[0]?.attributes?.components?.data || []
-          : productResp.data?.attributes?.components?.data || []
+        const productResp: Unwrapped<Product> = await this.strapiClient('').getProduct({ productSlug })
+        const components = Array.isArray(productResp) ? productResp[0]?.components || [] : productResp?.components || []
 
-        logger.info(
-          `[getComponentsForProducts] Found ${components.length} components for product ${product.attributes.name}`,
-        )
-        return { name: product.attributes.name, components }
+        logger.info(`[getComponentsForProducts] Found ${components.length} components for product ${product.name}`)
+        return { name: product.name, components }
       } catch (err) {
-        logger.error(
-          `[getComponentsForProducts] Error fetching components for product ${product.attributes.name}:`,
-          err,
-        )
-        return { name: product.attributes.name, components: [] }
+        logger.error(`[getComponentsForProducts] Error fetching components for product ${product.name}:`, err)
+        return { name: product.name, components: [] }
       }
     })
 
     const results = await Promise.all(promises)
 
     const entries = results.map(({ name, components }) => [name, components])
-    const result = Object.fromEntries(entries) as Record<string, DataItem<Component>[]>
+    const result = Object.fromEntries(entries) as Record<string, Unwrapped<Component>[]>
 
     return result
   }
@@ -82,10 +71,7 @@ export default class TeamsSummaryCountService {
     try {
       const products = await this.getProductsForTeam(teamSlug)
       const productComponentMap = await this.getComponentsForProducts(products)
-
-      const allComponentNames = Object.values(productComponentMap).flatMap(components =>
-        components.map(c => c.attributes.name),
-      )
+      const allComponentNames = Object.values(productComponentMap).flatMap(components => components.map(c => c.name))
       logger.info(`[getTeamAlertSummary] Total components found: ${allComponentNames.length}`)
 
       const alertCounts = await this.getFiringAlertCountsForComponents(allComponentNames)
@@ -93,7 +79,7 @@ export default class TeamsSummaryCountService {
         (accumulatedSummary, [productName, components]) => {
           const componentAlertCounts = components.reduce(
             (componentCounts, component) => {
-              const componentName = component.attributes?.name
+              const componentName = component.name
               if (!componentName) return componentCounts
               const alertCount = alertCounts[componentName] || 0
               return {
@@ -163,7 +149,7 @@ export default class TeamsSummaryCountService {
   /**
    * Helper: Get Trivy CRITICAL & HIGH vuln counts for a team's products
    */
-  async getTeamTrivyVulnerabilityCounts(products: StrapiProduct[]): Promise<{ critical: number; high: number }> {
+  async getTeamTrivyVulnerabilityCounts(products: Unwrapped<Product>[]): Promise<{ critical: number; high: number }> {
     if (!Array.isArray(products) || products.length === 0) {
       return { critical: 0, high: 0 }
     }
@@ -224,7 +210,7 @@ export default class TeamsSummaryCountService {
    * Helper: Get Veracode VERY_HIGH, HIGH, MEDIUM, LOW vuln counts for a team's products
    */
   async getTeamVeracodeVulnerabilityCounts(
-    products: StrapiProduct[],
+    products: Unwrapped<Product>[],
   ): Promise<{ veryHigh: number; high: number; medium: number; low: number }> {
     if (!Array.isArray(products) || products.length === 0) {
       return { veryHigh: 0, high: 0, medium: 0, low: 0 }

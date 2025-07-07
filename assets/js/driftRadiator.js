@@ -36,55 +36,57 @@ class DeploymentRenderer {
     $('#dependencyDriftRows').empty()
 
     components.forEach(component => {
-      const environments = component.environments
-        .map(environment => {
-          const gitDiffUrl = `https://github.com/ministryofjustice/${component.repo}/compare/${environment.sha}...${component.baseSha}`
-          const showDiff = Boolean(component.baseSha) && environment.sha !== component.baseSha
-          const diffAnchor = showDiff ? `(<a class="govuk-link--no-visited-state" href="${gitDiffUrl}">diff</a>)` : ''
-          return `
-        <li>
-          <a class="env govuk-link--no-visited-state" href="/components/${component.name}/environment/${environment.name}">
-              ${environment.name}${environment.daysSinceUpdated > 0 ? '&#129301' : ''}
-              <!-- ${environment.daysSinceUpdated} days since last update --!>
-          </a> 
-              ${environment.version}
-              ${diffAnchor}
-        </li>`
-        })
-        .join('')
+      if (component?.environments) {
+        const environments = component.environments // This is defined in teamHealthService.ts
+          .map(env => {
+            const gitDiffUrl = `https://github.com/ministryofjustice/${component.repo}/compare/${env.sha}...${component.baseSha}`
+            const showDiff = Boolean(component.baseSha) && env.sha !== component.baseSha
+            const diffAnchor = showDiff ? `(<a class="govuk-link--no-visited-state" href="${gitDiffUrl}">diff</a>)` : ''
+            return `
+          <li>
+            <a class="env govuk-link--no-visited-state" href="/components/${component.name}/environment/${env.name}">
+                ${env.name}${env.daysSinceUpdated > 0 ? '&#129301' : ''}
+                <!-- ${env.daysSinceUpdated} days since last update --!>
+            </a> 
+                ${env.version}
+                ${diffAnchor}
+          </li>`
+          })
+          .join('')
 
-      $('#dependencyDriftRows').append(`<tr class= "govuk-table__row">
-        <td class="govuk-table__cell"><a href="/components/${component.name}" class="govuk-link--no-visited-state">${component.name}</a></td>
-        <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="${component.staleness.sortValue}">
-          <div id="radiator-${component.name}-staleness" class="radiator-indicator">&nbsp;</div>
-          ${component.staleness.description}
-        </td>
-        <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="${component.drift.sortValue}">
-          <div id="radiator-${component.name}-drift" class="radiator-indicator">&nbsp;</div>
-          ${component.drift.description === 'no difference' && component.prodEnvSha !== component.baseSha ? 'less than 1 day' : component.drift.description}
-        </td>
-        <td class="govuk-table__cell">
-          <div>
-            <span class="env">Main:</span> 
-            <span class="govuk-!-padding-left-7">${component.latestCommit.date} <span class="govuk-!-padding-left-8">${component.latestCommit.sha}</span></span>
-          </div>
-          <div class="govuk-!-margin-top-0"">
-            Environments:<ul class="govuk-!-margin-top-0">
-            ${environments}
-            </ul>
-          </div>
+        $('#dependencyDriftRows').append(`<tr class= "govuk-table__row">
+          <td class="govuk-table__cell"><a href="/components/${component.name}" class="govuk-link--no-visited-state">${component.name}</a></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="${component.staleness.sortValue}">
+            <div id="radiator-${component.name}-staleness" class="radiator-indicator">&nbsp;</div>
+            ${component.staleness.description}
           </td>
-        </tr>`)
-      // red after around 30 days
-      $(`#radiator-${component.name}-staleness`).css(
-        'background-color',
-        !component.staleness.present ? 'hsl(180,0%,50%)' : getIndicatorColour(component.staleness.days * 0.3),
-      )
-      // red after around 10 days
-      $(`#radiator-${component.name}-drift`).css(
-        'background-color',
-        !component.drift.present ? 'hsl(180,0%,50%)' : getIndicatorColour(component.drift.days * 0.8),
-      )
+          <td class="govuk-table__cell govuk-table__cell--numeric" data-sort-value="${component.drift.sortValue}">
+            <div id="radiator-${component.name}-drift" class="radiator-indicator">&nbsp;</div>
+            ${component.drift.description === 'no difference' && component.prodEnvSha !== component.baseSha ? 'less than 1 day' : component.drift.description}
+          </td>
+          <td class="govuk-table__cell">
+            <div>
+              <span class="env">Main:</span> 
+              <span class="govuk-!-padding-left-7">${component.latestCommit.date} <span class="govuk-!-padding-left-8">${component.latestCommit.sha}</span></span>
+            </div>
+            <div class="govuk-!-margin-top-0"">
+              Environments:<ul class="govuk-!-margin-top-0">
+              ${environments}
+              </ul>
+            </div>
+            </td>
+          </tr>`)
+        // red after around 30 days
+        $(`#radiator-${component.name}-staleness`).css(
+          'background-color',
+          !component.staleness.present ? 'hsl(180,0%,50%)' : getIndicatorColour(component.staleness.days * 0.3),
+        )
+        // red after around 10 days
+        $(`#radiator-${component.name}-drift`).css(
+          'background-color',
+          !component.drift.present ? 'hsl(180,0%,50%)' : getIndicatorColour(component.drift.days * 0.8),
+        )
+      }
     })
   }
 

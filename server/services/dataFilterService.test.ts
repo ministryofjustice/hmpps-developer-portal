@@ -1,10 +1,64 @@
 import StrapiApiClient from '../data/strapiApiClient'
 import { MoJSelectDataItem } from '../@types'
-import { CustomComponentView, ListResponse, Product, Team } from '../data/strapiApiTypes'
+import { Unwrapped, CustomComponentView, Product, Team, ServiceArea } from '../data/strapiApiTypes'
 import DataFilterService from './dataFilterService'
-import { createModelServiceArea } from '../data/converters/serviceArea.test'
 
 jest.mock('../data/strapiApiClient')
+
+const testServiceAreasResponse = [
+  {
+    id: 1,
+    name: 'Service Area 1',
+    owner: 'The Owner',
+    serviceAreaId: 'SA01',
+    slug: 'a-service-area-name',
+    products: [
+      {
+        confluenceLink: 'https://atlassian.net/wiki/spaces/SOME/overview',
+        deliveryManager: 'Delivery Manager',
+        description: 'A description of the project',
+        gDriveLink: '',
+        id: 456,
+        leadDeveloper: 'Lead Developer',
+        legacy: false,
+        name: 'A Product name',
+        phase: 'Private Beta',
+        productId: 'DPS000',
+        productManager: 'Product Manager',
+        slackChannelId: 'C01ABC0ABCD',
+        slackChannelName: 'some-slack-channel',
+        slug: 'a-product-name-1',
+        subproduct: false,
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: 'Service Area 2',
+    owner: 'The Owner',
+    serviceAreaId: 'SA01',
+    slug: 'a-service-area-name',
+    products: [
+      {
+        confluenceLink: 'https://atlassian.net/wiki/spaces/SOME/overview',
+        deliveryManager: 'Delivery Manager',
+        description: 'A description of the project',
+        gDriveLink: '',
+        id: 456,
+        leadDeveloper: 'Lead Developer',
+        legacy: false,
+        name: 'A Product name',
+        phase: 'Private Beta',
+        productId: 'DPS000',
+        productManager: 'Product Manager',
+        slackChannelId: 'C01ABC0ABCD',
+        slackChannelName: 'some-slack-channel',
+        slug: 'a-product-name-1',
+        subproduct: false,
+      },
+    ],
+  },
+] as unknown as Unwrapped<ServiceArea>[]
 
 describe('Data Filter service', () => {
   const strapiApiClient = new StrapiApiClient() as jest.Mocked<StrapiApiClient>
@@ -23,18 +77,16 @@ describe('Data Filter service', () => {
   })
 
   describe('getCustomComponentsDropDownList', () => {
-    const testCustomComponentsResponse = {
-      data: [
-        {
-          id: 1,
-          attributes: { name: 'Custom Component 1' },
-        },
-        {
-          id: 2,
-          attributes: { name: 'Custom Component 2' },
-        },
-      ],
-    } as ListResponse<CustomComponentView>
+    const testCustomComponentsResponse = [
+      {
+        id: 1,
+        name: 'Custom Component 1',
+      },
+      {
+        id: 2,
+        name: 'Custom Component 2',
+      },
+    ] as Unwrapped<CustomComponentView>[]
 
     it('should return all custom compoentns as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -95,11 +147,6 @@ describe('Data Filter service', () => {
   })
 
   describe('getServiceAreasDropDownList', () => {
-    const testServiceAreasResponse = [
-      createModelServiceArea(1, 'Service Area 1'),
-      createModelServiceArea(2, 'Service Area 2'),
-    ]
-
     it('should return all service areas as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
         {
@@ -157,18 +204,16 @@ describe('Data Filter service', () => {
   })
 
   describe('getTeamsDropDownList', () => {
-    const testTeamsResponse = {
-      data: [
-        {
-          id: 1,
-          attributes: { name: 'Team 1' },
-        },
-        {
-          id: 2,
-          attributes: { name: 'Team 2' },
-        },
-      ],
-    } as ListResponse<Team>
+    const testTeamsResponse = [
+      {
+        id: 1,
+        name: 'Team 1',
+      },
+      {
+        id: 2,
+        name: 'Team 2',
+      },
+    ] as Unwrapped<Team>[]
 
     it('should return all teams as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -224,18 +269,18 @@ describe('Data Filter service', () => {
   })
 
   describe('getProductsDropDownList', () => {
-    const testProductsResponse = {
-      data: [
-        {
-          id: 1,
-          attributes: { name: 'Product 1', p_id: '1' },
-        },
-        {
-          id: 2,
-          attributes: { name: 'Product 2', p_id: '2' },
-        },
-      ],
-    } as ListResponse<Product>
+    const testProductsResponse = [
+      {
+        id: 1,
+        name: 'Product 1',
+        p_id: '1',
+      },
+      {
+        id: 2,
+        name: 'Product 2',
+        p_id: '2',
+      },
+    ] as Unwrapped<Product>[]
 
     it('should return all products as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -294,18 +339,18 @@ describe('Data Filter service', () => {
   })
 
   describe('getProductsIdDropDownList', () => {
-    const testProductsResponse = {
-      data: [
-        {
-          id: 1,
-          attributes: { name: 'Product 1', p_id: '1' },
-        },
-        {
-          id: 2,
-          attributes: { name: 'Product 2', p_id: '2' },
-        },
-      ],
-    } as ListResponse<Product>
+    const testProductsResponse = [
+      {
+        id: 1,
+        name: 'Product 1',
+        p_id: '1',
+      },
+      {
+        id: 2,
+        name: 'Product 2',
+        p_id: '2',
+      },
+    ] as Unwrapped<Product>[]
 
     it('should return all products with id as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [

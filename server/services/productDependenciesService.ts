@@ -23,12 +23,12 @@ export default class ServiceCatalogueService {
   ) {}
 
   async getProducts(): Promise<ProductDependencies[]> {
-    const products = (await this.strapiApiClientFactory('').getProducts({ withComponents: true })).data
-      .filter(product => product.attributes.components?.data.length)
+    const products = (await this.strapiApiClientFactory('').getProducts({ withComponents: true }))
+      .filter(product => product.components?.length)
       .map(product => ({
-        productName: product.attributes.name,
-        productCode: formatMonitorName(product.attributes.name),
-        componentNames: product.attributes.components.data.map(components => components.attributes.name),
+        productName: product.name,
+        productCode: formatMonitorName(product.name),
+        componentNames: product.components.map(components => components.name),
       }))
 
     const componentToProduct = Object.fromEntries(
@@ -54,12 +54,12 @@ export default class ServiceCatalogueService {
   }
 
   async getComponentsWithUnknownProducts(): Promise<string[]> {
-    const products = (await this.strapiApiClientFactory('').getProducts({ withComponents: true })).data
-      .filter(product => product.attributes.components?.data.length)
+    const products = (await this.strapiApiClientFactory('').getProducts({ withComponents: true }))
+      .filter(product => product.components?.length)
       .map(product => ({
-        productName: product.attributes.name,
-        productCode: formatMonitorName(product.attributes.name),
-        componentNames: product.attributes.components.data.map(components => components.attributes.name),
+        productName: product.name,
+        productCode: formatMonitorName(product.name),
+        componentNames: product.components.map(components => components.name),
       }))
 
     const componentToProduct = Object.fromEntries(

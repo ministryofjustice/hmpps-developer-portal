@@ -23,8 +23,7 @@ export default function routes({ serviceCatalogueService, teamsSummaryCountServi
   router.get('/:teamSlug', async (req, res) => {
     const teamSlug = getFormattedName(req, 'teamSlug')
     const team = await serviceCatalogueService.getTeam({ teamSlug })
-    const products = team.products?.data?.map(product => product)
-
+    const products = team.products && team.products.length > 0 ? team.products.map(product => product) : null
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
       logger.info(`getTeamAlertSummary for team '${teamSlug}': ${JSON.stringify(teamAlertSummary, null, 2)}`)

@@ -52,8 +52,8 @@
     <tr>
       <th>Team</th>
       <td>
-        {% if product.team.attributes.name | length %}
-        <a href="/teams/{{ product.team.attributes.slug }}">{{ product.team.attributes.name }} ({{ product.team.attributes.t_id }})</a>
+        {% if product.team.name | length %}
+        <a href="/teams/{{ product.team.slug }}">{{ product.team.name }} ({{ product.team.t_id }})</a>
         {% else %}
         No team associated with this product &#129301;
         {% endif %}
@@ -62,11 +62,11 @@
     <tr>
       <th>Team Slack</th>
       <td>
-        {% if product.team.attributes.slack_channel_id | length %}
-        <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.team.attributes.slack_channel_id }}">
+        {% if product.team.slack_channel_id | length %}
+        <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.team.slack_channel_id }}">
         <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
-          {% if product.team.attributes.slack_channel_name | length %}
-          #{{ product.team.attributes.slack_channel_name }}
+          {% if product.team.slack_channel_name | length %}
+          #{{ product.team.slack_channel_name }}
           {% else %}
           Link
           {% endif %}
@@ -96,7 +96,7 @@
     {% if product.productSet.id | length %}
     <tr>
       <th>Product Set</th>
-      <td><a href="/product-sets/{{ product.productSet.id }}">{{ product.productSet.attributes.name }} ({{ product.productSet.attributes.ps_id }})</a></td>
+      <td><a href="/product-sets/{{ product.productSet.id }}">{{ product.productSet.name }} ({{ product.productSet.ps_id }})</a></td>
     </tr>
     {% endif %}
     <tr>
@@ -105,7 +105,7 @@
         {% if product.components | length %}
         <ul>
           {% for component in product.components %}
-            <li><a href="/components/{{ component.attributes.name }}">{{ component.attributes.name }}</a></li>
+            <li><a href="/components/{{ component.name }}">{{ component.name }}</a></li>
           {% endfor %}
         </ul>
         {% else %}

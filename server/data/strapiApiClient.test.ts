@@ -8,12 +8,48 @@ import {
   Component,
   ProductSet,
   Environment,
+  ServiceArea,
   Team,
   SingleResponse,
-  StrapiServiceArea,
   Unwrapped,
 } from './strapiApiTypes'
-import { createModelServiceArea, exampleStrapiServiceArea } from './converters/serviceArea.test'
+
+const exampleServiceArea = {
+  id: 123,
+  name: 'A Service Area name',
+  owner: 'The Owner',
+  createdAt: '2023-07-04T10:44:59.491Z',
+  updatedAt: '2025-03-28T09:33:19.417Z',
+  publishedAt: '2023-07-04T10:44:59.489Z',
+  sa_id: 'SA01',
+  slug: 'a-service-area-name',
+  products: [
+    {
+      id: 456,
+      name: 'A Product name',
+      subproduct: false,
+      legacy: false,
+      description: 'A description of the project',
+      phase: 'Private Beta',
+      delivery_manager: 'Delivery Manager',
+      product_manager: 'Product Manager',
+      confluence_link: 'https://atlassian.net/wiki/spaces/SOME/overview',
+      gdrive_link: '',
+      createdAt: '2024-06-26T10:09:15.667Z',
+      updatedAt: '2025-03-28T09:33:49.200Z',
+      publishedAt: '2024-06-26T10:09:15.663Z',
+      p_id: 'DPS000',
+      slack_channel_id: 'C01ABC0ABCD',
+      slug: 'a-product-name-1',
+      slack_channel_name: 'some-slack-channel',
+      lead_developer: 'Lead Developer',
+      components: [],
+      team: undefined,
+      service_area: undefined,
+      product_set: undefined,
+    },
+  ],
+} as Unwrapped<ServiceArea>
 
 describe('strapiApiClient', () => {
   let fakeStrapiApi: nock.Scope
@@ -39,18 +75,20 @@ describe('strapiApiClient', () => {
         const allProducts = {
           data: [{ id: 1, attributes: { name: 'Product', p_id: '1' } }],
         } as ListResponse<Product>
+        const productsResponse = [{ id: 1, name: 'Product', p_id: '1' }] as Unwrapped<Product>[]
         fakeStrapiApi.get('/products?populate=product_set').reply(200, allProducts)
         const output = await strapiApiClient.getProducts({})
-        expect(output).toEqual(allProducts)
+        expect(output).toEqual(productsResponse)
       })
 
       it('should return products with environments if selected', async () => {
         const allProducts = {
           data: [{ id: 1, attributes: { name: 'Product', p_id: '1' } }],
         } as ListResponse<Product>
-        fakeStrapiApi.get('/products?populate=product_set%2Ccomponents.environments').reply(200, allProducts)
+        const productsResponse = [{ id: 1, name: 'Product', p_id: '1' }] as Unwrapped<Product>[]
+        fakeStrapiApi.get('/products?populate=product_set%2Ccomponents.envs').reply(200, allProducts)
         const output = await strapiApiClient.getProducts({ withEnvironments: true })
-        expect(output).toEqual(allProducts)
+        expect(output).toEqual(productsResponse)
       })
     })
 
@@ -60,20 +98,22 @@ describe('strapiApiClient', () => {
           const product = {
             data: { id: 1, attributes: { name: 'Product', p_id: '1', slug: 'product' } },
           } as SingleResponse<Product>
+          const productsResponse = { id: 1, name: 'Product', p_id: '1', slug: 'product' } as Unwrapped<Product>
           fakeStrapiApi.get('/products/1?populate=product_set%2Cteam%2Ccomponents%2Cservice_area').reply(200, product)
           const output = await strapiApiClient.getProduct({ productId: 1 })
-          expect(output).toEqual(product)
+          expect(output).toEqual(productsResponse)
         })
 
         it('should return a single product with environments if selected', async () => {
           const product = {
             data: { id: 1, attributes: { name: 'Product', p_id: '1', slug: 'product' } },
           } as SingleResponse<Product>
+          const productsResponse = { id: 1, name: 'Product', p_id: '1', slug: 'product' } as Unwrapped<Product>
           fakeStrapiApi
-            .get('/products/1?populate=product_set%2Cteam%2Ccomponents%2Cservice_area%2Ccomponents.environments')
+            .get('/products/1?populate=product_set%2Cteam%2Ccomponents%2Cservice_area%2Ccomponents.envs')
             .reply(200, product)
           const output = await strapiApiClient.getProduct({ productId: 1, withEnvironments: true })
-          expect(output).toEqual(product)
+          expect(output).toEqual(productsResponse)
         })
       })
       describe('with productSlug', () => {
@@ -81,24 +121,26 @@ describe('strapiApiClient', () => {
           const product = {
             data: { id: 1, attributes: { name: 'Product', p_id: '1', slug: 'product' } },
           } as SingleResponse<Product>
+          const productsResponse = { id: 1, name: 'Product', p_id: '1', slug: 'product' } as Unwrapped<Product>
           fakeStrapiApi
             .get('/products?filters[slug][$eq]=product&populate=product_set%2Cteam%2Ccomponents%2Cservice_area')
             .reply(200, product)
           const output = await strapiApiClient.getProduct({ productSlug: 'product' })
-          expect(output).toEqual(product)
+          expect(output).toEqual(productsResponse)
         })
 
         it('should return a single product with environments if selected', async () => {
           const product = {
             data: { id: 1, attributes: { name: 'Product', p_id: '1', slug: 'product' } },
           } as SingleResponse<Product>
+          const productsResponse = { id: 1, name: 'Product', p_id: '1', slug: 'product' } as Unwrapped<Product>
           fakeStrapiApi
             .get(
-              '/products?filters[slug][$eq]=product&populate=product_set%2Cteam%2Ccomponents%2Cservice_area%2Ccomponents.environments',
+              '/products?filters[slug][$eq]=product&populate=product_set%2Cteam%2Ccomponents%2Cservice_area%2Ccomponents.envs',
             )
             .reply(200, product)
           const output = await strapiApiClient.getProduct({ productSlug: 'product', withEnvironments: true })
-          expect(output).toEqual(product)
+          expect(output).toEqual(productsResponse)
         })
       })
     })
@@ -137,25 +179,28 @@ describe('strapiApiClient', () => {
     describe('getTeams', () => {
       it('should return all teams', async () => {
         const allTeams = { data: [{ attributes: { name: 'Team' } }] } as ListResponse<Team>
+        const teamsResponse = [{ name: 'Team' }] as Unwrapped<Team>[]
         fakeStrapiApi.get('/teams?populate=products').reply(200, allTeams)
         const output = await strapiApiClient.getTeams()
-        expect(output).toEqual(allTeams)
+        expect(output).toEqual(teamsResponse)
       })
     })
 
     describe('getTeam', () => {
       it('should return a single team', async () => {
         const team = { data: { id: 1, attributes: { name: 'Team' } } } as SingleResponse<Team>
+        const teamResponse = { id: 1, name: 'Team' } as Unwrapped<Team>
         fakeStrapiApi.get('/teams/1?populate=products').reply(200, team)
         const output = await strapiApiClient.getTeam({ teamId: 1 })
-        expect(output).toEqual(team)
+        expect(output).toEqual(teamResponse)
       })
 
       it('should return a single team with environments if selected', async () => {
         const team = { data: { id: 1, attributes: { name: 'Team' } } } as SingleResponse<Team>
-        fakeStrapiApi.get('/teams/1?populate=products%2Cproducts.components.environments').reply(200, team)
+        const teamResponse = { id: 1, name: 'Team' } as Unwrapped<Team>
+        fakeStrapiApi.get('/teams/1?populate=products%2Cproducts.components.envs').reply(200, team)
         const output = await strapiApiClient.getTeam({ teamId: 1, withEnvironments: true })
-        expect(output).toEqual(team)
+        expect(output).toEqual(teamResponse)
       })
     })
   })
@@ -166,9 +211,10 @@ describe('strapiApiClient', () => {
         const allProductSets = {
           data: [{ attributes: { name: 'Product Set' } }],
         } as ListResponse<ProductSet>
+        const productSetsResponse = [{ name: 'Product Set' }] as Unwrapped<ProductSet>[]
         fakeStrapiApi.get('/product-sets?populate=products').reply(200, allProductSets)
         const output = await strapiApiClient.getProductSets()
-        expect(output).toEqual(allProductSets)
+        expect(output).toEqual(productSetsResponse)
       })
     })
 
@@ -177,9 +223,10 @@ describe('strapiApiClient', () => {
         const productSet = {
           data: { id: 1, attributes: { name: 'Product Set' } },
         } as SingleResponse<ProductSet>
+        const productSetResponse = { id: 1, name: 'Product Set' } as Unwrapped<ProductSet>
         fakeStrapiApi.get('/product-sets/1?populate=products').reply(200, productSet)
         const output = await strapiApiClient.getProductSet({ productSetId: 1 })
-        expect(output).toEqual(productSet)
+        expect(output).toEqual(productSetResponse)
       })
     })
   })
@@ -187,23 +234,22 @@ describe('strapiApiClient', () => {
   describe('Service Areas', () => {
     describe('getServiceAreas', () => {
       it('should return all service areas', async () => {
-        const allServiceAreas = { data: [exampleStrapiServiceArea] }
+        const allServiceAreas = { data: [exampleServiceArea] }
         fakeStrapiApi.get('/service-areas?populate=products').reply(200, allServiceAreas)
         const output = await strapiApiClient.getServiceAreas()
-        expect(output).toContainEqual(
-          createModelServiceArea(exampleStrapiServiceArea.id, exampleStrapiServiceArea.attributes.name),
-        )
+
+        expect(output.map(serviceArea => serviceArea.name)).toContain(exampleServiceArea.name)
       })
     })
 
     describe('getServiceArea', () => {
       it('should return a single service area', async () => {
-        const serviceArea = {
-          data: { id: 1, attributes: { name: 'Service Area' } },
-        } as SingleResponse<StrapiServiceArea>
+        const serviceArea = { data: [{ id: 1, attributes: { name: 'Service Area' } }] } as SingleResponse<ServiceArea>
+        const serviceAreaResponse = { id: 1, name: 'Service Area' } as Unwrapped<ServiceArea>
         fakeStrapiApi.get('/service-areas/1?populate=products').reply(200, serviceArea)
         const output = await strapiApiClient.getServiceArea({ serviceAreaId: 1 })
-        expect(output).toEqual(serviceArea)
+
+        expect(output).toEqual(serviceAreaResponse)
       })
     })
   })
