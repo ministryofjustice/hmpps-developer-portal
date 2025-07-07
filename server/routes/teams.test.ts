@@ -3,14 +3,14 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { Team, Unwrapped } from '../data/strapiApiTypes'
+import { Team } from '../data/modelTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testTeams = [{ id: 1, name: 'testTeam' }] as Unwrapped<Team>[]
+const testTeams = [{ id: 1, name: 'testTeam' }] as Team[]
 const testTeam = {
   id: 1,
   t_id: 'testTeamId',
@@ -21,7 +21,7 @@ const testTeam = {
       name: 'productName',
     },
   ],
-} as Unwrapped<Team>
+} as Team
 
 beforeEach(() => {
   serviceCatalogueService.getTeams.mockResolvedValue(testTeams)
@@ -71,7 +71,7 @@ describe('/teams', () => {
         t_id: 'testTeamId',
         name: 'testTeamName',
         products: {},
-      } as Unwrapped<Team>
+      } as Team
 
       serviceCatalogueService.getTeam.mockResolvedValue(testTeamNoProducts)
 

@@ -1,41 +1,12 @@
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// NOTE: This file should only be referenced by the strapi 4 client
+// Use types defined in modelTypes.ts for service layer onward
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 import { components } from '../@types/strapi-api'
-import { TrivyScanType } from './converters/modelTypes'
 
-export type DataItem<T> = {
-  attributes: T
-  id?: number
-}
-
-export type ListResponse<T> = {
-  data: DataItem<T>[]
-  meta?: {
-    pagination?: {
-      page?: number
-      pageCount?: number
-      pageSize?: number
-      total?: number
-    }
-  }
-}
-
-export type SingleResponse<T> = {
-  data: DataItem<T>
-  meta?: Record<string, never>
-}
-
-// Recursive unwrap utility
-// prettier-ignore
-export type DeepUnwrap<T> =
-  T extends ListResponse<infer U> ? Unwrapped<U>[] :
-  T extends SingleResponse<infer U> ? Unwrapped<U> :
-  T extends Record<string | number | symbol, unknown>? T:
-  T;
-// prettier-enable
-
-// Transform utility that applies DeepUnwrap to each property
-export type Unwrapped<T> = {
-  [K in keyof T]: DeepUnwrap<T[K]>
-} & { id?: number }
+import { TrivyScanType, VeracodeResultsSummary } from './modelTypes'
+import { ListResponse, SingleResponse } from './strapiClientTypes'
 
 type HasComponent = { component: SingleResponse<Component> }
 type HasComponents = { components: ListResponse<Component> }
@@ -53,7 +24,7 @@ type Version = { ref: string; version: string; path: string }
 type HasVersions = { versions: Record<string, Record<string, Version | string | Record<string, string>>> }
 type HasIpAllowlist = { ip_allow_list: Record<string, Record<string, string | Record<string, string>>> }
 
-export type Product = Omit<
+type Product = Omit<
   components['schemas']['Product'],
   'components' | 'team' | 'service_area' | 'product_set' | 'veracode_results_summary'
 > &
@@ -62,52 +33,57 @@ export type Product = Omit<
   HasServiceArea &
   HasProductSet
 
-export type Component = Omit<components['schemas']['Component'], 'product' | 'envs'> &
+type Component = Omit<components['schemas']['Component'], 'product' | 'envs'> &
   HasProduct &
   HasEnvironments &
   HasVeracodeSummary &
   HasVersions
 
-export type Team = Omit<components['schemas']['Team'], 'products'> & HasProducts
-export type ProductSet = components['schemas']['ProductSet'] & HasProducts
-export type ServiceArea = Omit<components['schemas']['ServiceArea'], 'products'> & HasProducts
+type Team = Omit<components['schemas']['Team'], 'products'> & HasProducts
+type ProductSet = components['schemas']['ProductSet'] & HasProducts
+type ServiceArea = Omit<components['schemas']['ServiceArea'], 'products'> & HasProducts
 
-export type CustomComponentView = Omit<components['schemas']['CustomComponentView'], 'components'> & HasComponents
+type CustomComponentView = Omit<components['schemas']['CustomComponentView'], 'components'> & HasComponents
 
-export type Environment = components['schemas']['Component']['envs']['data'][0]['attributes'] &
+type Environment = components['schemas']['Component']['envs']['data'][0]['attributes'] &
   HasNamespace &
   HasTrivyScan &
   HasComponent &
   HasIpAllowlist
 
-export type EnvironmentForMapping = SingleResponse<Environment>
+type EnvironmentForMapping = SingleResponse<Environment>
 
-export type Namespace = components['schemas']['Namespace']
+type Namespace = components['schemas']['Namespace']
 
-export type GithubRepoRequest = components['schemas']['GithubRepoRequest']
+type GithubRepoRequest = components['schemas']['GithubRepoRequest']
 
-export type GithubRepoRequestRequest = components['schemas']['GithubRepoRequestRequest']
-export type GithubProjectVisibility = GithubRepoRequestRequest['data']['github_project_visibility']
+type GithubRepoRequestRequest = components['schemas']['GithubRepoRequestRequest']
 
-export type GithubTeam = components['schemas']['GithubTeam']
-export type GithubTeamRequest = components['schemas']['GithubTeamRequest']
+type GithubTeam = components['schemas']['GithubTeam']
+type GithubTeamRequest = components['schemas']['GithubTeamRequest']
 
-export type ScheduledJob = components['schemas']['ScheduledJob']
-export type ScheduledJobRequest = components['schemas']['ScheduledJobRequest']
+type ScheduledJob = components['schemas']['ScheduledJob']
+type ScheduledJobRequest = components['schemas']['ScheduledJobRequest']
 
-export type TrivyScan = components['schemas']['TrivyScan']
-export type TrivyScanRequest = components['schemas']['TrivyScanRequest']
+type TrivyScan = components['schemas']['TrivyScan']
+type TrivyScanRequest = components['schemas']['TrivyScanRequest']
 
-export type VeracodeResultsSummary = {
-  'static-analysis': {
-    score: number
-  }
-  severity: {
-    level: number
-    category: {
-      count: number
-      severity: string
-      categoryname: string
-    }[]
-  }[]
+export {
+  Product,
+  Component,
+  Team,
+  ProductSet,
+  ServiceArea,
+  CustomComponentView,
+  Environment,
+  EnvironmentForMapping,
+  Namespace,
+  GithubRepoRequest,
+  GithubRepoRequestRequest,
+  GithubTeam,
+  GithubTeamRequest,
+  ScheduledJob,
+  ScheduledJobRequest,
+  TrivyScan,
+  TrivyScanRequest,
 }

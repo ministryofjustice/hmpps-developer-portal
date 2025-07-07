@@ -1,4 +1,4 @@
-import { DataItem, SingleResponse, ListResponse, Unwrapped } from '../data/strapiApiTypes'
+import { DataItem, SingleResponse, ListResponse, Unwrapped } from '../data/strapiClientTypes'
 
 type Payload = Record<string, unknown>
 type Unwrappable<T extends Payload> = DataItem<T> | SingleResponse<T> | ListResponse<T> | Array<T> | T

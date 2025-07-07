@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
-import { DataItem, TrivyScan } from '../strapiApiTypes'
-import type { ScanSummary, TrivyScanType } from './modelTypes'
+import { TrivyScan } from '../strapiApiTypes'
+import type { ScanSummary, TrivyScanType } from '../modelTypes'
+import { DataItem } from '../strapiClientTypes'
 
 const convertTrivyScan = (trivyScan: DataItem<TrivyScan>): TrivyScanType => {
   const { attributes, id } = trivyScan

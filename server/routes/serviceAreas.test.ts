@@ -3,7 +3,7 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { ServiceArea, Unwrapped } from '../data/strapiApiTypes'
+import { ServiceArea } from '../data/modelTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
@@ -27,7 +27,7 @@ const testServiceAreas = [
       },
     ],
   },
-] as Unwrapped<ServiceArea>[]
+] as ServiceArea[]
 const testServiceArea = {
   id: 123,
   sa_id: 'testsa_id',
@@ -40,7 +40,7 @@ const testServiceArea = {
       components: [{ id: 1, name: 'component-1' }],
     },
   ],
-} as Unwrapped<ServiceArea>
+} as ServiceArea
 
 beforeEach(() => {
   serviceCatalogueService.getServiceAreas.mockResolvedValue(testServiceAreas)
@@ -96,7 +96,7 @@ describe('/service-areas', () => {
         sa_id: 'testsa_id',
         name: 'testServiceAreaName',
         products: {},
-      } as Unwrapped<ServiceArea>
+      } as ServiceArea
 
       serviceCatalogueService.getServiceArea.mockResolvedValue(testServiceAreaNoProducts)
 

@@ -4,9 +4,9 @@ import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import RedisService from '../services/redisService'
-import { Component, Environment, Product, Unwrapped } from '../data/strapiApiTypes'
 import Dependencies from '../services/Dependencies'
 import AlertsService from '../services/alertsService'
+import { Component, Environment, Product } from '../data/modelTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/redisService.ts')
@@ -17,8 +17,8 @@ const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked
 const redisService = new RedisService(null) as jest.Mocked<RedisService>
 
 let app: Express
-const testComponents = [{ name: 'testComponent' }] as Unwrapped<Component>[]
-const testComponent: Unwrapped<Component> = {
+const testComponents = [{ name: 'testComponent' }] as Component[]
+const testComponent: Component = {
   name: 'testComponent',
   description: 'Test component description',
   jira_project_keys: ['TEST'],
@@ -74,7 +74,7 @@ const testComponent: Unwrapped<Component> = {
     updatedAt: '2023-10-25T06:40:06.112Z',
     publishedAt: '2023-07-04T10:48:30.755Z',
     p_id: 'DPS031',
-  } as Unwrapped<Product>,
+  } as Product,
   envs: [
     {
       id: 46778,
@@ -127,7 +127,7 @@ const testComponent: Unwrapped<Component> = {
       monitor: true,
       swagger_docs: '/swagger-ui.html',
     },
-  ] as Unwrapped<Environment>[],
+  ] as Environment[],
 }
 
 beforeEach(() => {
@@ -287,7 +287,7 @@ describe('/components', () => {
   })
 })
 
-function expectEnvironmentScreenToBeFilled($: cheerio.CheerioAPI, devEnvironment: Unwrapped<Environment>) {
+function expectEnvironmentScreenToBeFilled($: cheerio.CheerioAPI, devEnvironment: Environment) {
   expect($('td[data-test="name"]').text()).toBe(devEnvironment.name)
   expect($('td[data-test="type"]').text()).toBe(devEnvironment.type)
   expect($('a[data-test="url"]').attr('href')).toBe(devEnvironment.url)

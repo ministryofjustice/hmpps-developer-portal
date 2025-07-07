@@ -1,57 +1,54 @@
-import { TrivyScanType } from '../data/converters/modelTypes'
-import { Component, Product, Team, Unwrapped } from '../data/strapiApiTypes'
+import { Product, TrivyScanType, Team, Component } from '../data/modelTypes'
 
 export const mockProducts = [
   { id: 1, name: 'Product 1', p_id: 'p1' },
   { id: 2, name: 'Product 2', p_id: 'p2' },
-] as Unwrapped<Product>[]
+] as Product[]
 
-export const mockOneProduct = [{ id: 3, name: 'Product 3', slug: 'product-3', p_id: 'p3' }] as Unwrapped<Product>[]
+export const mockOneProduct = [{ id: 3, name: 'Product 3', slug: 'product-3', p_id: 'p3' }] as Product[]
 
 export const mockTwoProduct = [
   { id: 1, name: 'Product A', slug: 'product-a', p_id: 'pa' },
   { id: 2, name: 'Product B', slug: 'product-b', p_id: 'pb' },
-] as Unwrapped<Product>[]
+] as Product[]
 
-export const mockEmptyProducts = [
-  { name: 'Empty Product', slug: 'empty-product', p_id: 'empty1' },
-] as Unwrapped<Product>[]
+export const mockEmptyProducts = [{ name: 'Empty Product', slug: 'empty-product', p_id: 'empty1' }] as Product[]
 
 export const mockProductList = [
   { name: 'Product 1', slug: 'product-1', p_id: 'p1' },
   { name: 'Product 2', slug: 'product-2', p_id: 'p2' },
-] as Unwrapped<Product>[]
+] as Product[]
 
 export const mockComponents1 = [
   { id: 1, name: 'Comp1A' },
   { id: 2, name: 'Comp1B' },
-] as Unwrapped<Component>[]
+] as Component[]
 
-export const mockComponents2 = [{ id: 3, name: 'Comp2A' }] as Unwrapped<Component>[]
+export const mockComponents2 = [{ id: 3, name: 'Comp2A' }] as Component[]
 
-export const mockProductResponse1 = { components: mockComponents1 } as Unwrapped<Product>
+export const mockProductResponse1 = { components: mockComponents1 } as Product
 
-export const mockProductResponse2 = { components: mockComponents2 } as Unwrapped<Product>
+export const mockProductResponse2 = { components: mockComponents2 } as Product
 
-export const mockProductResponseEmpty = { components: [] } as Unwrapped<Product>
+export const mockProductResponseEmpty = { components: [] } as Product
 
 export const mockTeamResponseWithProducts = {
   id: 1,
   name: 'Team Name',
   t_id: 'team-id',
   products: mockProducts,
-} as Unwrapped<Team>
+} as Team
 
 export const mockTeamResponseWithoutProducts = {
   id: 1,
   name: 'Team Name',
   t_id: 'team-id',
-  products: [] as Unwrapped<Product>[],
+  products: [] as Product[],
   createdAt: '2023-01-01T00:00:00Z',
   createdBy: { id: 1 },
   updatedAt: '2023-01-01T00:00:00Z',
   updatedBy: { id: 1 },
-} as Unwrapped<Team>
+} as Team
 
 export const mockTeamResponseWithTwoProducts = {
   id: 1,
@@ -62,7 +59,7 @@ export const mockTeamResponseWithTwoProducts = {
   createdBy: { id: 1 },
   updatedAt: '2023-01-01T00:00:00Z',
   updatedBy: { id: 1 },
-} as Unwrapped<Team>
+} as Team
 
 export const mockTeamResponseWithOneProduct = {
   id: 1,
@@ -73,7 +70,7 @@ export const mockTeamResponseWithOneProduct = {
   createdBy: { id: 1 },
   updatedAt: '2023-01-01T00:00:00Z',
   updatedBy: { id: 1 },
-} as Unwrapped<Team>
+} as Team
 
 export const mockProductResponseWithComponents = {
   id: 1,
@@ -84,7 +81,7 @@ export const mockProductResponseWithComponents = {
     { id: 1, name: 'ComponentA1' },
     { id: 2, name: 'ComponentA2' },
   ],
-} as Unwrapped<Product>
+} as Product
 
 export const mockTeamResponseWithEmptyProduct = {
   id: 1,
@@ -95,7 +92,7 @@ export const mockTeamResponseWithEmptyProduct = {
   createdBy: { id: 1 },
   updatedAt: '2023-01-01T00:00:00Z',
   updatedBy: { id: 1 },
-} as Unwrapped<Team>
+} as Team
 
 export const mockProductResponseWithComponents2 = {
   id: 2,
@@ -103,13 +100,13 @@ export const mockProductResponseWithComponents2 = {
   slug: 'product-b',
   p_id: 'pb',
   components: [{ id: 3, name: 'ComponentB1' }],
-} as Unwrapped<Product>
+} as Product
 
 export const mockProductResponseWithNoComponents = {
   name: 'Test Product',
   p_id: 'test-prod-id',
   components: [],
-} as Unwrapped<Product>
+} as Product
 
 export const mockTeamAlertSummary = {
   products: {
@@ -145,7 +142,7 @@ export const mockProductResponseWithComponentsAndAlerts = {
   name: 'Test Product',
   p_id: 'test-prod-id',
   components: [{ name: 'CompWithAlerts' }, { name: 'CompWithNoAlerts' }, { name: 'CompMissingFromAlertMap' }],
-} as Unwrapped<Product>
+} as Product
 
 export const mockAlertsForProductWithComponentsAndAlerts = [
   { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
@@ -184,7 +181,7 @@ export const mockActiveAndInactiveAlerts = [
 export const mockComponents = [
   { name: 'ComponentA', product: { id: 1 } },
   { name: 'ComponentB', product: { id: 2 } },
-] as Unwrapped<Component>[]
+] as Component[]
 
 // Veracode mock components for getTeamVeracodeVulnerabilityCounts tests
 export const mockVeracodeComponents = [
@@ -247,7 +244,7 @@ export const mockVeracodeComponents = [
       ],
     },
   },
-] as Unwrapped<Component>[]
+] as Component[]
 
 export const mockTrivyScans = [
   {
