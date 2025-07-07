@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import type { Services } from '../services'
 import { utcTimestampToUtcDateTime, sortBySeverity, getComponentName, getEnvironmentName } from '../utils/utils'
-import { ScanResult, Summary, TrivyScanType } from '../data/converters/modelTypes'
+import { ScanResult, Summary } from '../data/converters/modelTypes'
 
 const createSummaryTable = (summary: Summary): Array<{ category: string; severity: string; count: number }> => {
   const dataTable: Array<{ category: string; severity: string; count: number }> = []
@@ -129,7 +129,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const environmentName = getEnvironmentName(req)
     const component = await serviceCatalogueService.getComponent({ componentName })
     const filteredEnvironment = component.envs?.find(environment => environment.name === environmentName)
-    const scan = filteredEnvironment.trivy_scan as unknown as TrivyScanType
+    const scan = filteredEnvironment.trivy_scan
     const summary = scan.scan_summary?.summary
     const scanResults = scan.scan_summary?.scan_result
     const scanDate = utcTimestampToUtcDateTime(scan.trivy_scan_timestamp)

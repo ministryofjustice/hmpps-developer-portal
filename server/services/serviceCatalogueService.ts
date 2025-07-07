@@ -98,7 +98,6 @@ export default class ServiceCatalogueService {
       .forEach(component => {
         if (component.versions) {
           Object.keys(component.versions).forEach(versionType => {
-            // @ts-expect-error Suppress any declaration
             Object.keys(component.versions[versionType]).forEach(dependency => {
               dependencies = [...new Set([...dependencies, `${versionType}::${dependency}`])]
             })

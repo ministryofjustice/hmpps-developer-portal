@@ -1,5 +1,5 @@
 import { TrivyScanType } from '../data/converters/modelTypes'
-import { Component, Product, Team, DataItem, Unwrapped } from '../data/strapiApiTypes'
+import { Component, Product, Team, Unwrapped } from '../data/strapiApiTypes'
 
 export const mockProducts = [
   { id: 1, name: 'Product 1', p_id: 'p1' },
@@ -11,7 +11,7 @@ export const mockOneProduct = [{ id: 3, name: 'Product 3', slug: 'product-3', p_
 export const mockTwoProduct = [
   { id: 1, name: 'Product A', slug: 'product-a', p_id: 'pa' },
   { id: 2, name: 'Product B', slug: 'product-b', p_id: 'pb' },
-]
+] as Unwrapped<Product>[]
 
 export const mockEmptyProducts = [
   { name: 'Empty Product', slug: 'empty-product', p_id: 'empty1' },
@@ -27,7 +27,7 @@ export const mockComponents1 = [
   { id: 2, name: 'Comp1B' },
 ] as Unwrapped<Component>[]
 
-export const mockComponents2 = [{ id: 3, attributes: { name: 'Comp2A' } }] as DataItem<Component>[]
+export const mockComponents2 = [{ id: 3, name: 'Comp2A' }] as Unwrapped<Component>[]
 
 export const mockProductResponse1 = { components: mockComponents1 } as Unwrapped<Product>
 
@@ -40,7 +40,7 @@ export const mockTeamResponseWithProducts = {
   name: 'Team Name',
   t_id: 'team-id',
   products: mockProducts,
-} as unknown as Unwrapped<Team>
+} as Unwrapped<Team>
 
 export const mockTeamResponseWithoutProducts = {
   id: 1,

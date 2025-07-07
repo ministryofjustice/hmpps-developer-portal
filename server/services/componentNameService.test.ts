@@ -21,25 +21,14 @@ const serviceAreasResponse = [
     slug: 'a-service-area-name',
     products: [
       {
-        confluenceLink: 'https://atlassian.net/wiki/spaces/SOME/overview',
-        deliveryManager: 'Delivery Manager',
-        description: 'A description of the project',
-        gDriveLink: '',
-        id: 456,
-        leadDeveloper: 'Lead Developer',
-        legacy: false,
         name: 'A Product name',
         phase: 'Private Beta',
-        productId: 'DPS000',
-        productManager: 'Product Manager',
-        slackChannelId: 'C01ABC0ABCD',
-        slackChannelName: 'some-slack-channel',
+        product_manager: 'Product Manager',
         slug: 'a-product-name-1',
-        subproduct: false,
-      },
+      } as Unwrapped<Product>,
     ],
   },
-] as unknown as Unwrapped<ServiceArea>[]
+] as Unwrapped<ServiceArea>[]
 
 describe('Component name service', () => {
   const strapiApiClient = new StrapiApiClient() as jest.Mocked<StrapiApiClient>
@@ -80,7 +69,7 @@ describe('Component name service', () => {
         id: 2,
         name: 'testteam',
       },
-    ] as unknown as Unwrapped<Team>[]
+    ] as Unwrapped<Team>[]
 
     const testTeamResponse = {
       id: 1,
@@ -145,7 +134,7 @@ describe('Component name service', () => {
           { id: 3, name: 'comp-2' },
         ],
       },
-    ] as unknown as Unwrapped<Product>[]
+    ] as Unwrapped<Product>[]
 
     it('should return deployed components sorted for the selected product', async () => {
       strapiApiClient.getProducts.mockResolvedValue(productsResponse)
@@ -168,7 +157,7 @@ describe('Component name service', () => {
           { id: 3, name: 'comp-2' },
         ],
       },
-    ] as unknown as Unwrapped<CustomComponentView>[]
+    ] as Unwrapped<CustomComponentView>[]
 
     it('should return deployed components sorted for the selected custom component', async () => {
       strapiApiClient.getCustomComponentViews.mockResolvedValue(customComponentsResponse)

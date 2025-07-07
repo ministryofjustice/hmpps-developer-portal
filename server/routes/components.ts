@@ -104,20 +104,18 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       const ipAllowListFiles = Object.keys(envAttributes.ip_allow_list)
       allowList.set('groups', [])
       ipAllowListFiles.forEach(fileName => {
-        // @ts-expect-error Suppress any declaration
         Object.keys(envAttributes.ip_allow_list[fileName]).forEach(item => {
           if (item === 'generic-service') {
-            // @ts-expect-error Suppress any declaration
             const genericService = envAttributes.ip_allow_list[fileName]['generic-service']
             Object.keys(genericService).forEach(ipName => {
-              if (ipName !== 'groups') {
+              if (ipName !== 'groups' && typeof genericService === 'object') {
                 allowList.set(ipName, genericService[ipName])
               } else {
-                allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...genericService[ipName]])]))
+                const groups = genericService as Record<string, string>
+                allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...groups[ipName]])]))
               }
             })
           } else {
-            // @ts-expect-error Suppress any declaration
             allowList.set(item, envAttributes.ip_allow_list[fileName][item])
           }
         })
