@@ -8,10 +8,48 @@ import {
   Component,
   ProductSet,
   Environment,
+  ServiceArea,
   Team,
   SingleResponse,
   Unwrapped,
 } from './strapiApiTypes'
+
+const exampleServiceArea = {
+  id: 123,
+  name: 'A Service Area name',
+  owner: 'The Owner',
+  createdAt: '2023-07-04T10:44:59.491Z',
+  updatedAt: '2025-03-28T09:33:19.417Z',
+  publishedAt: '2023-07-04T10:44:59.489Z',
+  sa_id: 'SA01',
+  slug: 'a-service-area-name',
+  products: [
+    {
+      id: 456,
+      name: 'A Product name',
+      subproduct: false,
+      legacy: false,
+      description: 'A description of the project',
+      phase: 'Private Beta',
+      delivery_manager: 'Delivery Manager',
+      product_manager: 'Product Manager',
+      confluence_link: 'https://atlassian.net/wiki/spaces/SOME/overview',
+      gdrive_link: '',
+      createdAt: '2024-06-26T10:09:15.667Z',
+      updatedAt: '2025-03-28T09:33:49.200Z',
+      publishedAt: '2024-06-26T10:09:15.663Z',
+      p_id: 'DPS000',
+      slack_channel_id: 'C01ABC0ABCD',
+      slug: 'a-product-name-1',
+      slack_channel_name: 'some-slack-channel',
+      lead_developer: 'Lead Developer',
+      components: [],
+      team: undefined,
+      service_area: undefined,
+      product_set: undefined,
+    },
+  ],
+} as Unwrapped<ServiceArea>
 
 describe('strapiApiClient', () => {
   let fakeStrapiApi: nock.Scope
@@ -193,29 +231,26 @@ describe('strapiApiClient', () => {
     })
   })
 
-  // describe('Service Areas', () => {
-  //   describe('getServiceAreas', () => {
-  //     it('should return all service areas', async () => {
-  //       const allServiceAreas = { data: [exampleServiceArea] }
-  //       fakeStrapiApi.get('/service-areas?populate=products').reply(200, allServiceAreas)
-  //       const output = await strapiApiClient.getServiceAreas()
-  //       expect(output).toContainEqual(
-  //         createModelServiceArea(exampleServiceArea.id, exampleServiceArea.attributes.name),
-  //       )
-  //     })
-  //   })
+  describe('Service Areas', () => {
+    describe('getServiceAreas', () => {
+      it('should return all service areas', async () => {
+        const allServiceAreas = { data: [exampleServiceArea] }
+        fakeStrapiApi.get('/service-areas?populate=products').reply(200, allServiceAreas)
+        const output = await strapiApiClient.getServiceAreas()
 
-  //   describe('getServiceArea', () => {
-  //     it('should return a single service area', async () => {
-  //       const serviceArea = {
-  //         data: { id: 1, attributes: { name: 'Service Area' } },
-  //       } as SingleResponse<StrapiServiceArea>
-  //       fakeStrapiApi.get('/service-areas/1?populate=products').reply(200, serviceArea)
-  //       const output = await strapiApiClient.getServiceArea({ serviceAreaId: 1 })
-  //       expect(output).toEqual(serviceArea)
-  //     })
-  //   })
-  // })
+        expect(output.map(serviceArea => serviceArea.name)).toContain(exampleServiceArea.name)
+      })
+    })
+
+    // describe('getServiceArea', () => {
+    //   it('should return a single service area', async () => {
+    //     fakeStrapiApi.get('/service-areas/123?populate=products').reply(200, exampleServiceArea)
+    //     const output = await strapiApiClient.getServiceArea({ serviceAreaId: 123 })
+
+    //     expect(output).toContain(exampleServiceArea.name)
+    //   })
+    // })
+  })
 
   describe('postGithubRepoRequest', () => {
     it('should insert a single form request', async () => {

@@ -103,16 +103,6 @@ describe('Strapi service', () => {
           p_id: '2',
         },
       ] as Unwrapped<Product>[]
-      // const testProducts = [
-      //   {
-      //     id: 1,
-      //     attributes: { name: 'Product 1', p_id: '1' },
-      //   },
-      //   {
-      //     id: 2,
-      //     attributes: { name: 'Product 2', p_id: '2' },
-      //   },
-      // ] as DataItem<Product>[]
 
       it('should return an ordered array of products', async () => {
         strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
@@ -131,7 +121,6 @@ describe('Strapi service', () => {
         p_id: '1',
         slug: 'product-1',
       } as Unwrapped<Product>
-      // const testProduct = { name: 'Product 1', p_id: '1', slug: 'product-1' } as Product
 
       it('should return the selected product', async () => {
         strapiApiClient.getProduct.mockResolvedValue(testProductResponse)
