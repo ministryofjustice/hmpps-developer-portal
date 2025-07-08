@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { Component, Unwrapped } from '../data/strapiApiTypes'
 import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow, formatMonitorName } from '../utils/utils'
+import { Component } from '../data/modelTypes'
 
 type MonitorEnvironment = {
   componentName: string
@@ -193,10 +193,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   return router
 }
 
-const getUnwrappedEnvironmentData = (
-  component: Unwrapped<Component>,
-  selectedProductId?: string,
-): MonitorEnvironment[] => {
+const getUnwrappedEnvironmentData = (component: Component, selectedProductId?: string): MonitorEnvironment[] => {
   const typedEnvironments = component.envs
   let productId
   if (selectedProductId) {

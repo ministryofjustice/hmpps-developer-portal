@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import RedisService from './redisService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import TeamHealthService from './teamHealthService'
-import { Component, Unwrapped } from '../data/strapiApiTypes'
+import { Component } from '../data/modelTypes'
 
 jest.mock('./redisService')
 jest.mock('./serviceCatalogueService')
@@ -33,7 +33,7 @@ describe('teamHealthService', () => {
             { name: 'preprod', type: 'preprod' },
             { name: 'prod', type: 'prod' },
           ],
-        } as Unwrapped<Component>,
+        } as Component,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
@@ -114,7 +114,7 @@ describe('teamHealthService', () => {
             { name: 'preprod', type: 'preprod' },
             { name: 'prod', type: 'prod' },
           ],
-        } as Unwrapped<Component>,
+        } as Component,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
@@ -197,7 +197,7 @@ describe('teamHealthService', () => {
             { name: 'preprod', type: 'preprod' },
             { name: 'prod', type: 'prod' },
           ],
-        } as Unwrapped<Component>,
+        } as Component,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
@@ -281,7 +281,7 @@ describe('teamHealthService', () => {
             { name: 'preprod', type: 'preprod' },
             { name: 'prod', type: 'prod' },
           ],
-        } as Unwrapped<Component>,
+        } as Component,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
@@ -357,7 +357,7 @@ describe('teamHealthService', () => {
             { name: 'preprod', type: 'preprod' },
             { name: 'prod', type: 'prod' },
           ],
-        } as Unwrapped<Component>,
+        } as Component,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
@@ -435,7 +435,7 @@ describe('teamHealthService', () => {
             { name: 'prod', type: 'prod' },
           ],
         },
-      ] as Unwrapped<Component>[])
+      ] as Component[])
 
       const driftData = await teamHealthService.getComponentsWeCannotCalculateHealthFor()
       expect(driftData).toStrictEqual([
@@ -471,7 +471,7 @@ describe('teamHealthService', () => {
             service_area: { name: 'service-area-1', slug: 'service-area-1-slug' },
           },
         },
-      ] as Unwrapped<Component>[])
+      ] as Component[])
 
       const driftData = await teamHealthService.getTeamHealth(now)
       expect(driftData).toStrictEqual({
@@ -650,7 +650,7 @@ describe('teamHealthService', () => {
             service_area: { name: 'service-area-1', slug: 'service-area-1-slug' },
           },
         },
-      ] as Unwrapped<Component>[])
+      ] as Component[])
 
       const driftData = await teamHealthService.getComponentsMissingTeams()
       expect(driftData).toStrictEqual([

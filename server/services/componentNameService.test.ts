@@ -1,13 +1,5 @@
+import { Component, CustomComponentView, GithubRepoRequest, Product, ServiceArea, Team } from '../data/modelTypes'
 import StrapiApiClient from '../data/strapiApiClient'
-import {
-  Component,
-  Team,
-  Product,
-  CustomComponentView,
-  GithubRepoRequest,
-  ServiceArea,
-  Unwrapped,
-} from '../data/strapiApiTypes'
 import ComponentNameService from './componentNameService'
 
 jest.mock('../data/strapiApiClient')
@@ -25,10 +17,10 @@ const serviceAreasResponse = [
         phase: 'Private Beta',
         product_manager: 'Product Manager',
         slug: 'a-product-name-1',
-      } as Unwrapped<Product>,
+      } as Product,
     ],
   },
-] as Unwrapped<ServiceArea>[]
+] as ServiceArea[]
 
 describe('Component name service', () => {
   const strapiApiClient = new StrapiApiClient() as jest.Mocked<StrapiApiClient>
@@ -51,7 +43,7 @@ describe('Component name service', () => {
       { name: 'comp-3', envs: [{ name: 'prod' }] },
       { name: 'comp-1', envs: [{ name: 'env' }] },
       { name: 'comp-2' },
-    ] as Unwrapped<Component>[]
+    ] as Component[]
 
     it('should return all deployed components sorted', async () => {
       strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
@@ -69,7 +61,7 @@ describe('Component name service', () => {
         id: 2,
         name: 'testteam',
       },
-    ] as Unwrapped<Team>[]
+    ] as Team[]
 
     const testTeamResponse = {
       id: 1,
@@ -84,7 +76,7 @@ describe('Component name service', () => {
           ],
         },
       ],
-    } as Unwrapped<Team>
+    } as Team
 
     it('should return deployed components sorted for the selected team', async () => {
       strapiApiClient.getTeams.mockResolvedValue(testTeamsResponse)
@@ -110,7 +102,7 @@ describe('Component name service', () => {
           ],
         },
       ],
-    } as Unwrapped<ServiceArea>
+    } as ServiceArea
 
     it('should return deployed components sorted for the selected service area', async () => {
       strapiApiClient.getServiceAreas.mockResolvedValue(serviceAreasResponse)
@@ -134,7 +126,7 @@ describe('Component name service', () => {
           { id: 3, name: 'comp-2' },
         ],
       },
-    ] as Unwrapped<Product>[]
+    ] as Product[]
 
     it('should return deployed components sorted for the selected product', async () => {
       strapiApiClient.getProducts.mockResolvedValue(productsResponse)
@@ -157,7 +149,7 @@ describe('Component name service', () => {
           { id: 3, name: 'comp-2' },
         ],
       },
-    ] as Unwrapped<CustomComponentView>[]
+    ] as CustomComponentView[]
 
     it('should return deployed components sorted for the selected custom component', async () => {
       strapiApiClient.getCustomComponentViews.mockResolvedValue(customComponentsResponse)
@@ -174,7 +166,7 @@ describe('Component name service', () => {
       { name: 'comp-3', envs: [{ name: 'prod' }] },
       { name: 'comp-1', envs: [{ name: 'env' }] },
       { name: 'comp-2' },
-    ] as Unwrapped<Component>[]
+    ] as Component[]
 
     it('should return true if component exists', async () => {
       strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
@@ -200,7 +192,7 @@ describe('Component name service', () => {
       { github_repo: 'comp-3' },
       { github_repo: 'comp-1' },
       { github_repo: 'comp-2' },
-    ] as Unwrapped<GithubRepoRequest>[]
+    ] as GithubRepoRequest[]
 
     it('should return true if component exists', async () => {
       strapiApiClient.getGithubRepoRequests.mockResolvedValue(testComponentsResponse)

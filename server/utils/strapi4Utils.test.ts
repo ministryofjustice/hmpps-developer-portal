@@ -1,4 +1,4 @@
-import { ListResponse, SingleResponse, Unwrapped } from '../data/strapiApiTypes'
+import { ListResponse, SingleResponse, Unwrapped } from '../data/strapiClientTypes'
 import { unwrapAttributes, unwrapListResponse } from './strapi4Utils'
 
 describe('test unwrapping responses', () => {

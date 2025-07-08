@@ -116,7 +116,6 @@ export default class ServiceCatalogueService {
         } else {
           reference.componentNames.push(i.component)
         }
-
         return acc
       }, [] as ProductReference[])
   }

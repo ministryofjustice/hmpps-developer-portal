@@ -1,7 +1,7 @@
 import StrapiApiClient from '../data/strapiApiClient'
 import { MoJSelectDataItem } from '../@types'
-import { Unwrapped, CustomComponentView, Product, Team, ServiceArea } from '../data/strapiApiTypes'
 import DataFilterService from './dataFilterService'
+import { CustomComponentView, Product, ServiceArea, Team } from '../data/modelTypes'
 
 jest.mock('../data/strapiApiClient')
 
@@ -36,7 +36,7 @@ const testServiceAreasResponse = [
       },
     ],
   },
-] as Unwrapped<ServiceArea>[]
+] as ServiceArea[]
 
 describe('Data Filter service', () => {
   const strapiApiClient = new StrapiApiClient() as jest.Mocked<StrapiApiClient>
@@ -64,7 +64,7 @@ describe('Data Filter service', () => {
         id: 2,
         name: 'Custom Component 2',
       },
-    ] as Unwrapped<CustomComponentView>[]
+    ] as CustomComponentView[]
 
     it('should return all custom compoentns as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -191,7 +191,7 @@ describe('Data Filter service', () => {
         id: 2,
         name: 'Team 2',
       },
-    ] as Unwrapped<Team>[]
+    ] as Team[]
 
     it('should return all teams as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -258,7 +258,7 @@ describe('Data Filter service', () => {
         name: 'Product 2',
         p_id: '2',
       },
-    ] as Unwrapped<Product>[]
+    ] as Product[]
 
     it('should return all products as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -328,7 +328,7 @@ describe('Data Filter service', () => {
         name: 'Product 2',
         p_id: '2',
       },
-    ] as Unwrapped<Product>[]
+    ] as Product[]
 
     it('should return all products with id as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [

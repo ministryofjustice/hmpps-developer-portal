@@ -1,9 +1,9 @@
 import logger from '../../logger'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Component, Product, Unwrapped } from '../data/strapiApiTypes'
 import AlertsService from './alertsService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { formatMonitorName } from '../utils/utils'
+import { Component, Product } from '../data/modelTypes'
 
 // Valid Veracode severity levels
 export const VALID_SEVERITIES = ['VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW']
@@ -23,7 +23,7 @@ export default class TeamsSummaryCountService {
   /**
    * Helper: Fetch all products for a team by team slug
    */
-  async getProductsForTeam(teamSlug: string): Promise<Unwrapped<Product>[]> {
+  async getProductsForTeam(teamSlug: string): Promise<Product[]> {
     try {
       const team = await this.strapiClient('').getTeam({ teamSlug })
       const products = team.products || []
@@ -38,11 +38,11 @@ export default class TeamsSummaryCountService {
   /**
    * Helper: Fetch all components for a list of products
    */
-  async getComponentsForProducts(products: Unwrapped<Product>[]): Promise<Record<string, Unwrapped<Component>[]>> {
+  async getComponentsForProducts(products: Product[]): Promise<Record<string, Component[]>> {
     const promises = products?.map(async product => {
       const productSlug = product?.slug
       try {
-        const productResp: Unwrapped<Product> = await this.strapiClient('').getProduct({ productSlug })
+        const productResp: Product = await this.strapiClient('').getProduct({ productSlug })
         const components = Array.isArray(productResp) ? productResp[0]?.components || [] : productResp?.components || []
 
         logger.info(`[getComponentsForProducts] Found ${components.length} components for product ${product.name}`)
@@ -56,7 +56,7 @@ export default class TeamsSummaryCountService {
     const results = await Promise.all(promises)
 
     const entries = results.map(({ name, components }) => [name, components])
-    const result = Object.fromEntries(entries) as Record<string, Unwrapped<Component>[]>
+    const result = Object.fromEntries(entries) as Record<string, Component[]>
 
     return result
   }
@@ -149,7 +149,7 @@ export default class TeamsSummaryCountService {
   /**
    * Helper: Get Trivy CRITICAL & HIGH vuln counts for a team's products
    */
-  async getTeamTrivyVulnerabilityCounts(products: Unwrapped<Product>[]): Promise<{ critical: number; high: number }> {
+  async getTeamTrivyVulnerabilityCounts(products: Product[]): Promise<{ critical: number; high: number }> {
     if (!Array.isArray(products) || products.length === 0) {
       return { critical: 0, high: 0 }
     }
@@ -210,7 +210,7 @@ export default class TeamsSummaryCountService {
    * Helper: Get Veracode VERY_HIGH, HIGH, MEDIUM, LOW vuln counts for a team's products
    */
   async getTeamVeracodeVulnerabilityCounts(
-    products: Unwrapped<Product>[],
+    products: Product[],
   ): Promise<{ veryHigh: number; high: number; medium: number; low: number }> {
     if (!Array.isArray(products) || products.length === 0) {
       return { veryHigh: 0, high: 0, medium: 0, low: 0 }
