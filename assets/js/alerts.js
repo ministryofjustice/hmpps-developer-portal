@@ -40,25 +40,16 @@ jQuery(async function () {
       e.preventDefault(e)
 
       // check which filter has been updated
-      let dropDownType = ''
-      switch (e.target.id) {
-        case 'updateApplicationName':
-          dropDownType = 'application'
-          break
-        case 'updateEnvironment':
-          dropDownType = 'environment'
-          break
-        case 'updateNamespace':
-          dropDownType = 'namespace'
-          break
-        case 'updateSeverityLabel':
-          dropDownType = 'severity'
-          break
-        case 'updateTeam':
-          dropDownType = 'team'
-          break
-        default:
-          return false
+      const DROP_DOWN_TYPES = {
+        updateApplicationName: 'application',
+        updateEnvironment: 'environment',
+        updateNamespace: 'namespace',
+        updateSeverityLabel: 'severity',
+        updateTeam: 'team',
+      }
+      const dropDownType = DROP_DOWN_TYPES[e.target.id]
+      if (!dropDownType) {
+        return false
       }
       // get the selectec dropdown option
       const dropDownText = $(`#${dropDownType} option:selected`).text()
@@ -234,7 +225,7 @@ function populateAlertTable(alerts) {
       const generatorLink = alert.generatorURL
         ? `<a href="${alert.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
         : ''
-      const slackLink = alert.labels.alert_slack_channel ? alert.labels.alert_slack_channel : 'N/A'
+      const slackLink = alert.labels.alert_slack_channel || 'N/A'
       $('#statusRows')
         .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" data-silenced="${alert.status.state}" id="tile-${alert.labels.application}-${alert.labels.environment}">
           <td>${alert.labels.alertname}</td>
