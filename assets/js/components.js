@@ -13,7 +13,7 @@ jQuery(function () {
     {
       data: 'product.p_id',
       createdCell: function (td, _cellData, rowData) {
-        const link = rowData.product.data
+        const link = rowData.product.p_id
           ? `<a class="govuk-link--no-visited-state" href="/products/${rowData.product.slug}">${cleanColumnOutput(
               rowData.product.p_id,
             )}</a>`
@@ -24,7 +24,7 @@ jQuery(function () {
     {
       data: 'product.name',
       createdCell: function (td, _cellData, rowData) {
-        const link = rowData.product.data
+        const link = rowData.product.name
           ? `<a class="govuk-link--no-visited-state" href="/products/${rowData.product.slug}">${cleanColumnOutput(
               rowData.product.name,
             )}</a>`
@@ -48,9 +48,9 @@ jQuery(function () {
       },
     },
     {
-      data: 'environments',
-      render: function (data, type, row, meta) {
-        const prodEnvironments = (data || []).filter(env => env.name === 'prod')
+      data: null,
+      render: function (data, type, rowData, meta) {
+        const prodEnvironments = (rowData?.envs || []).filter(env => env.name === 'prod')
 
         if (prodEnvironments.length === 0) {
           const displayVal = 'No Prod Environment'
@@ -85,18 +85,9 @@ jQuery(function () {
     {
       data: null,
       createdCell: function (td, _cellData, rowData) {
-        const adminTeams = renderGithubTeams(
-          rowData.github_project_teams_admin,
-          'No Teams with Admin Access',
-        )
-        const writeTeams = renderGithubTeams(
-          rowData.github_project_teams_write,
-          'No Teams with Write Access',
-        )
-        const maintainTeams = renderGithubTeams(
-          rowData.github_project_teams_maintain,
-          'No Teams with Maintain Access',
-        )
+        const adminTeams = renderGithubTeams(rowData.github_project_teams_admin, 'No Teams with Admin Access')
+        const writeTeams = renderGithubTeams(rowData.github_project_teams_write, 'No Teams with Write Access')
+        const maintainTeams = renderGithubTeams(rowData.github_project_teams_maintain, 'No Teams with Maintain Access')
         const detailsContent = `<details class="govuk-details">
           <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">Links</span>
