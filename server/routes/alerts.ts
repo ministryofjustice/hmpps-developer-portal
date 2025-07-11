@@ -32,7 +32,9 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
     try {
       const alerts = await alertsService.getAlerts()
       const environments = await serviceCatalogueService.getEnvironments()
-      const revisedAlerts = await reviseAlerts(alerts, environments)
+      const teams = await serviceCatalogueService.getTeams({ withComponents: true })
+
+      const revisedAlerts = await reviseAlerts(alerts, environments, teams)
       res.json(revisedAlerts)
     } catch (error) {
       logger.warn(`Failed to get alerts`, error)

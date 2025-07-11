@@ -2,6 +2,8 @@ const applicationFilter = document.getElementById('application')
 const environmentFilter = document.getElementById('environment')
 const namespaceFilter = document.getElementById('namespace')
 const severityFilter = document.getElementById('severity')
+const teamFilter = document.getElementById('team')
+
 let isDropDownOpen = false
 
 jQuery(async function () {
@@ -32,36 +34,33 @@ jQuery(async function () {
     }
   }, 5000)
   // on click of any 'Update' button to apply filters
-  $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel').on('click', async e => {
-    e.preventDefault(e)
+  $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel,#updateTeam').on(
+    'click',
+    async e => {
+      e.preventDefault(e)
 
-    // check which filter has been updated
-    let dropDownType = ''
-    switch (e.target.id) {
-      case 'updateApplicationName':
-        dropDownType = 'application'
-        break
-      case 'updateEnvironment':
-        dropDownType = 'environment'
-        break
-      case 'updateNamespace':
-        dropDownType = 'namespace'
-        break
-      case 'updateSeverityLabel':
-        dropDownType = 'severity'
-        break
-      default:
+      // check which filter has been updated
+      const DROP_DOWN_TYPES = {
+        updateApplicationName: 'application',
+        updateEnvironment: 'environment',
+        updateNamespace: 'namespace',
+        updateSeverityLabel: 'severity',
+        updateTeam: 'team',
+      }
+      const dropDownType = DROP_DOWN_TYPES[e.target.id]
+      if (!dropDownType) {
         return false
-    }
-    // get the selectec dropdown option
-    const dropDownText = $(`#${dropDownType} option:selected`).text()
+      }
+      // get the selectec dropdown option
+      const dropDownText = $(`#${dropDownType} option:selected`).text()
 
-    // update current filters
-    currentFilters[`${dropDownType}`] = dropDownText
-    // update alert table and filters
-    isReset = false
-    updateAll(alerts, currentFilters, isReset)
-  })
+      // update current filters
+      currentFilters[`${dropDownType}`] = dropDownText
+      // update alert table and filters
+      isReset = false
+      updateAll(alerts, currentFilters, isReset)
+    },
+  )
 
   // on click of 'Reset Filters' button, clear filters, reset url params and update table and filters
   $('#resetFilters').on('click', async e => {
@@ -72,6 +71,7 @@ jQuery(async function () {
       environment: '',
       namespace: '',
       severity: '',
+      team: '',
     }
     isReset = true
     dropdownHandler.clearPendingValues()
@@ -86,6 +86,7 @@ const dropdownHandler = {
     environment: '',
     namespace: '',
     severity: '',
+    team: '',
   },
   clearPendingValues: function () {
     this.pendingValues = {
@@ -93,6 +94,7 @@ const dropdownHandler = {
       environment: '',
       namespace: '',
       severity: '',
+      team: '',
     }
   },
   updateDropdowns: function (filteredData, currentFilters, isReset) {
@@ -100,11 +102,13 @@ const dropdownHandler = {
     const environments = this.getOptions(filteredData, 'environment')
     const namespaces = this.getOptions(filteredData, 'namespace')
     const severities = this.getOptions(filteredData, 'severity')
+    const teams = this.getOptions(filteredData, 'team')
 
     this.renderDropdown(applicationFilter, applications, currentFilters.application, 'application', isReset)
     this.renderDropdown(environmentFilter, environments, currentFilters.environment, 'environment', isReset)
     this.renderDropdown(namespaceFilter, namespaces, currentFilters.namespace, 'namespace', isReset)
     this.renderDropdown(severityFilter, severities, currentFilters.severity, 'severity', isReset)
+    this.renderDropdown(teamFilter, teams, currentFilters.team, 'team', isReset)
   },
   getOptions: function (data, key) {
     const set = new Set(data.map(a => a.labels[`${key}`]))
@@ -163,6 +167,8 @@ function updateURLParams(filters) {
   if (filters.environment) params.set('environment', filters.environment)
   if (filters.namespace) params.set('namespace', filters.namespace)
   if (filters.severity) params.set('severity', filters.severity)
+  if (filters.team) params.set('team', filters.team)
+
   history.replaceState(null, '', `?${params.toString()}`)
 }
 
@@ -174,6 +180,7 @@ function getFiltersFromURL() {
     environment: params.get('environment') || '',
     namespace: params.get('namespace') || '',
     severity: params.get('severity') || '',
+    team: params.get('team') || '',
   }
 }
 
@@ -216,10 +223,9 @@ function populateAlertTable(alerts) {
         ? `<a href="${alert.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook<a>`
         : ''
       const generatorLink = alert.generatorURL
-        ? `<a href="${alert.generatorURL}" class="statusTileHealth" target="_blank">Generator</a>`
+        ? `<a href="${alert.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
         : ''
-
-      const slackLink = alert.alert_slack_channel ? alert.alert_slack_channel : 'N/A'
+      const slackLink = alert.labels.alert_slack_channel || 'N/A'
       $('#statusRows')
         .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" data-silenced="${alert.status.state}" id="tile-${alert.labels.application}-${alert.labels.environment}">
           <td>${alert.labels.alertname}</td>
@@ -250,13 +256,14 @@ function applyFilters(alerts, filters) {
       (!filters.application || alert.labels.application === filters.application) &&
       (!filters.environment || alert.labels.environment === filters.environment) &&
       (!filters.namespace || alert.labels.namespace === filters.namespace) &&
-      (!filters.severity || alert.labels.severity === filters.severity),
+      (!filters.severity || alert.labels.severity === filters.severity) &&
+      (!filters.team || alert.labels.team === filters.team),
   )
 }
 
 // return false if no filter is selected
 function isFiltersEmpty(filters) {
-  return !filters.application && !filters.environment && !filters.namespace && !filters.severity
+  return !filters.application && !filters.environment && !filters.namespace && !filters.severity && !filters.team
 }
 
 // update alert table, dropdowns and the url

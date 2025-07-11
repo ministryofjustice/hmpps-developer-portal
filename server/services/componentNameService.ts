@@ -15,7 +15,7 @@ export default class ComponentNameService {
   }
 
   async getAllDeployedComponentsForTeam(teamName: string): Promise<string[]> {
-    const teams = await this.strapiApiClientFactory('').getTeams()
+    const teams = await this.strapiApiClientFactory('').getTeams({})
 
     const teamSummary = teams.find(team => formatMonitorName(team.name) === teamName)
 

@@ -172,7 +172,7 @@ describe('strapiApiClient', () => {
         const allTeams = { data: [{ attributes: { name: 'Team' } }] } as ListResponse<Strapi.Team>
         const teamsResponse = [{ name: 'Team' }] as Team[]
         fakeStrapiApi.get('/teams?populate=products').reply(200, allTeams)
-        const output = await strapiApiClient.getTeams()
+        const output = await strapiApiClient.getTeams({})
         expect(output).toEqual(teamsResponse)
       })
     })
