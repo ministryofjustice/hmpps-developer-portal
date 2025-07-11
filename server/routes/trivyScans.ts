@@ -7,7 +7,7 @@ import {
   getEnvironmentName,
   addTeamToTrivyScan,
 } from '../utils/utils'
-import { ScanResult, Summary, TrivyScanType } from '../data/converters/modelTypes'
+import { ScanResult, Summary } from '../data/converters/modelTypes'
 
 const createSummaryTable = (summary: Summary): Array<{ category: string; severity: string; count: number }> => {
   const dataTable: Array<{ category: string; severity: string; count: number }> = []
