@@ -1,19 +1,26 @@
-import { createModelServiceArea } from '../data/converters/serviceArea.test'
+import { Component, CustomComponentView, GithubRepoRequest, Product, ServiceArea, Team } from '../data/modelTypes'
 import StrapiApiClient from '../data/strapiApiClient'
-import {
-  ListResponse,
-  Component,
-  Team,
-  Product,
-  CustomComponentView,
-  GithubRepoRequest,
-  SingleResponse,
-  StrapiServiceArea,
-  Unwrapped,
-} from '../data/strapiApiTypes'
 import ComponentNameService from './componentNameService'
 
 jest.mock('../data/strapiApiClient')
+
+const serviceAreasResponse = [
+  {
+    id: 2,
+    name: 'service-area-1',
+    owner: 'The Owner',
+    sa_id: 'SA01',
+    slug: 'a-service-area-name',
+    products: [
+      {
+        name: 'A Product name',
+        phase: 'Private Beta',
+        product_manager: 'Product Manager',
+        slug: 'a-product-name-1',
+      } as Product,
+    ],
+  },
+] as ServiceArea[]
 
 describe('Component name service', () => {
   const strapiApiClient = new StrapiApiClient() as jest.Mocked<StrapiApiClient>
@@ -36,7 +43,7 @@ describe('Component name service', () => {
       { name: 'comp-3', envs: [{ name: 'prod' }] },
       { name: 'comp-1', envs: [{ name: 'env' }] },
       { name: 'comp-2' },
-    ] as Unwrapped<Component>[]
+    ] as Component[]
 
     it('should return all deployed components sorted', async () => {
       strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
@@ -49,38 +56,27 @@ describe('Component name service', () => {
   })
 
   describe('Teams', () => {
-    const testTeamsResponse = {
-      data: [
-        {
-          id: 2,
-          attributes: { name: 'testteam' },
-        },
-      ],
-    } as ListResponse<Team>
+    const testTeamsResponse = [
+      {
+        id: 2,
+        name: 'testteam',
+      },
+    ] as Team[]
 
     const testTeamResponse = {
-      data: {
-        id: 1,
-        attributes: {
-          name: 'testteam',
-          products: {
-            data: [
-              {
-                attributes: {
-                  components: {
-                    data: [
-                      { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-                      { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
-                      { attributes: { name: 'comp-2' } },
-                    ],
-                  },
-                },
-              },
-            ],
-          },
+      id: 1,
+      name: 'testteam',
+      products: [
+        {
+          id: 2,
+          components: [
+            { id: 1, name: 'comp-3', envs: [{ name: 'prod' }] },
+            { id: 2, name: 'comp-1', envs: [{ name: 'env' }] },
+            { id: 3, name: 'comp-2' },
+          ],
         },
-      },
-    } as SingleResponse<Team>
+      ],
+    } as Team
 
     it('should return deployed components sorted for the selected team', async () => {
       strapiApiClient.getTeams.mockResolvedValue(testTeamsResponse)
@@ -89,36 +85,24 @@ describe('Component name service', () => {
       const results = await componentNameService.getAllDeployedComponentsForTeam('testteam')
 
       expect(strapiApiClient.getTeam).toHaveBeenCalledWith({ teamId: 2, withEnvironments: true })
-      expect(results).toStrictEqual(['comp-1', 'comp-3'])
+      expect(results).toEqual(['comp-3', 'comp-1'])
     })
   })
 
   describe('Service area', () => {
-    const serviceAreasResponse = [createModelServiceArea(2, 'service-area-1')]
-
     const serviceAreaResponse = {
-      data: {
-        id: 2,
-        attributes: {
-          name: 'service-area-1',
-          products: {
-            data: [
-              {
-                attributes: {
-                  components: {
-                    data: [
-                      { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-                      { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
-                      { attributes: { name: 'comp-2' } },
-                    ],
-                  },
-                },
-              },
-            ],
-          },
+      id: 2,
+      name: 'service-area-1',
+      products: [
+        {
+          components: [
+            { id: 1, name: 'comp-3', envs: [{ name: 'prod' }] },
+            { id: 2, name: 'comp-1', envs: [{ name: 'env' }] },
+            { id: 3, name: 'comp-2' },
+          ],
         },
-      },
-    } as SingleResponse<StrapiServiceArea>
+      ],
+    } as ServiceArea
 
     it('should return deployed components sorted for the selected service area', async () => {
       strapiApiClient.getServiceAreas.mockResolvedValue(serviceAreasResponse)
@@ -127,28 +111,22 @@ describe('Component name service', () => {
       const results = await componentNameService.getAllDeployedComponentsForServiceArea('service-area-1')
 
       expect(strapiApiClient.getServiceArea).toHaveBeenCalledWith({ serviceAreaId: 2, withProducts: true })
-      expect(results).toStrictEqual(['comp-1', 'comp-3'])
+      expect(results).toStrictEqual(['comp-3', 'comp-1'])
     })
   })
 
   describe('Products', () => {
-    const productsResponse = {
-      data: [
-        {
-          id: 2,
-          attributes: {
-            name: 'product-1',
-            components: {
-              data: [
-                { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-                { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
-                { attributes: { name: 'comp-2' } },
-              ],
-            },
-          },
-        },
-      ],
-    } as unknown as ListResponse<Product>
+    const productsResponse = [
+      {
+        id: 2,
+        name: 'product-1',
+        components: [
+          { id: 1, name: 'comp-3', envs: [{ name: 'prod' }] },
+          { id: 2, name: 'comp-1', envs: [{ name: 'env' }] },
+          { id: 3, name: 'comp-2' },
+        ],
+      },
+    ] as Product[]
 
     it('should return deployed components sorted for the selected product', async () => {
       strapiApiClient.getProducts.mockResolvedValue(productsResponse)
@@ -161,23 +139,17 @@ describe('Component name service', () => {
   })
 
   describe('Custom Components', () => {
-    const customComponentsResponse = {
-      data: [
-        {
-          id: 2,
-          attributes: {
-            name: 'custom-component-1',
-            components: {
-              data: [
-                { attributes: { name: 'comp-3', environments: [{ name: 'prod' }] } },
-                { attributes: { name: 'comp-1', environments: [{ name: 'env' }] } },
-                { attributes: { name: 'comp-2' } },
-              ],
-            },
-          },
-        },
-      ],
-    } as unknown as ListResponse<CustomComponentView>
+    const customComponentsResponse = [
+      {
+        id: 2,
+        name: 'custom-component-1',
+        components: [
+          { id: 1, name: 'comp-3', envs: [{ id: 9, name: 'prod' }] },
+          { id: 2, name: 'comp-1', envs: [{ id: 10, name: 'env' }] },
+          { id: 3, name: 'comp-2' },
+        ],
+      },
+    ] as CustomComponentView[]
 
     it('should return deployed components sorted for the selected custom component', async () => {
       strapiApiClient.getCustomComponentViews.mockResolvedValue(customComponentsResponse)
@@ -194,7 +166,7 @@ describe('Component name service', () => {
       { name: 'comp-3', envs: [{ name: 'prod' }] },
       { name: 'comp-1', envs: [{ name: 'env' }] },
       { name: 'comp-2' },
-    ] as Unwrapped<Component>[]
+    ] as Component[]
 
     it('should return true if component exists', async () => {
       strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
@@ -220,7 +192,7 @@ describe('Component name service', () => {
       { github_repo: 'comp-3' },
       { github_repo: 'comp-1' },
       { github_repo: 'comp-2' },
-    ] as Unwrapped<GithubRepoRequest>[]
+    ] as GithubRepoRequest[]
 
     it('should return true if component exists', async () => {
       strapiApiClient.getGithubRepoRequests.mockResolvedValue(testComponentsResponse)

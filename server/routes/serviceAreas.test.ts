@@ -3,31 +3,44 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { StrapiServiceArea } from '../data/strapiApiTypes'
-import { createModelServiceArea } from '../data/converters/serviceArea.test'
+import { ServiceArea } from '../data/modelTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testServiceAreas = [createModelServiceArea(1, 'testServiceArea')]
-const testServiceArea = {
-  sa_id: 'testServiceAreaId',
-  name: 'testServiceAreaName',
-  owner: 'testServiceAreaOwner',
-  products: {
-    data: [
+const testServiceAreas = [
+  {
+    id: 1,
+    name: 'testServiceArea',
+    owner: 'The Owner',
+    sa_id: 'SA01',
+    slug: 'a-service-area-name',
+    products: [
       {
-        id: 23,
-        attributes: {
-          name: 'productName',
-          components: { data: [{ id: 1, attributes: { name: 'component-1' } }] },
-        },
+        id: 456,
+        name: 'A Product name',
+        p_id: 'DPS000',
+        slug: 'a-product-name-1',
+        subproduct: false,
       },
     ],
   },
-} as StrapiServiceArea
+] as ServiceArea[]
+const testServiceArea = {
+  id: 123,
+  sa_id: 'testsa_id',
+  name: 'testServiceAreaName',
+  owner: 'testServiceAreaOwner',
+  products: [
+    {
+      id: 23,
+      name: 'productName',
+      components: [{ id: 1, name: 'component-1' }],
+    },
+  ],
+} as ServiceArea
 
 beforeEach(() => {
   serviceCatalogueService.getServiceAreas.mockResolvedValue(testServiceAreas)
@@ -58,7 +71,7 @@ describe('/service-areas', () => {
     })
   })
 
-  describe('GET /:serviceAreaId', () => {
+  describe('GET /:sa_id', () => {
     it('should render service area page with products list if there are products', () => {
       return request(app)
         .get('/service-areas/1')
@@ -70,21 +83,20 @@ describe('/service-areas', () => {
           expect($('[data-test="service-area-owner"]').text()).toBe(testServiceArea.owner)
           expect($('[data-test="no-products"]').text()).toBe('')
 
-          const product = testServiceArea.products.data[0]
-          const component = product.attributes.components.data[0]
-          expect($(`[data-test="product-${product.id}"]`).text()).toBe(product.attributes.name)
-          expect($(`[data-test="product-${product.id}-component-${component.id}"]`).text()).toBe(
-            component.attributes.name,
-          )
+          const product = testServiceArea.products[0]
+          const component = product.components[0]
+          expect($(`[data-test="product-${product.id}"]`).text()).toBe(product.name)
+          expect($(`[data-test="product-${product.id}-component-${component.id}"]`).text()).toBe(component.name)
         })
     })
 
     it('should render service area page with none shown if there are no products', () => {
       const testServiceAreaNoProducts = {
-        sa_id: 'testServiceAreaId',
+        id: 1,
+        sa_id: 'testsa_id',
         name: 'testServiceAreaName',
         products: {},
-      } as StrapiServiceArea
+      } as ServiceArea
 
       serviceCatalogueService.getServiceArea.mockResolvedValue(testServiceAreaNoProducts)
 

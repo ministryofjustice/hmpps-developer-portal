@@ -64,30 +64,26 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const component = await serviceCatalogueService.getComponent({ componentName })
     const envAttributes = component.envs?.find(envs => envs.name === environmentName)
 
-    const activeAgencies = envAttributes
-      ? ''
-      : formatActiveAgencies(envAttributes.active_agencies as unknown as Array<string>)
+    const activeAgencies = envAttributes ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
     const allowList = new Map()
 
     if (envAttributes.ip_allow_list && envAttributes?.ip_allow_list_enabled) {
       const ipAllowListFiles = Object.keys(envAttributes.ip_allow_list)
 
       ipAllowListFiles.forEach(fileName => {
-        // @ts-expect-error Suppress any declaration
         Object.keys(envAttributes.ip_allow_list[fileName]).forEach(item => {
           if (item === 'generic-service') {
             allowList.set('groups', [])
-            // @ts-expect-error Suppress any declaration
             const genericService = envAttributes.ip_allow_list[fileName]['generic-service']
             Object.keys(genericService).forEach(ipName => {
-              if (ipName !== 'groups') {
+              if (ipName !== 'groups' && typeof genericService === 'object') {
                 allowList.set(ipName, genericService[ipName])
               } else {
-                allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...genericService[ipName]])]))
+                const groups = genericService as Record<string, string>
+                allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...groups[ipName]])]))
               }
             })
           } else {
-            // @ts-expect-error Suppress any declaration
             allowList.set(item, envAttributes.ip_allow_list[fileName][item])
           }
         })

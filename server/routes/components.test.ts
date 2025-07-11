@@ -4,9 +4,9 @@ import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import RedisService from '../services/redisService'
-import { Component, Environment, Unwrapped } from '../data/strapiApiTypes'
 import Dependencies from '../services/Dependencies'
 import AlertsService from '../services/alertsService'
+import { Component, Environment, Product } from '../data/modelTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/redisService.ts')
@@ -17,8 +17,8 @@ const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked
 const redisService = new RedisService(null) as jest.Mocked<RedisService>
 
 let app: Express
-const testComponents = [{ name: 'testComponent' }] as Unwrapped<Component>[]
-const testComponent = {
+const testComponents = [{ name: 'testComponent' }] as Component[]
+const testComponent: Component = {
   name: 'testComponent',
   description: 'Test component description',
   jira_project_keys: ['TEST'],
@@ -36,9 +36,9 @@ const testComponent = {
   part_of_monorepo: false,
   github_repo: 'test-github-repo',
   language: 'Kotlin',
-  include_in_subject_access_requests: false,
   github_project_teams_maintain: [] as string[],
   github_topics: [] as string[],
+  veracode_results_summary: undefined,
   versions: {
     helm: {
       dependencies: {
@@ -74,7 +74,7 @@ const testComponent = {
     updatedAt: '2023-10-25T06:40:06.112Z',
     publishedAt: '2023-07-04T10:48:30.755Z',
     p_id: 'DPS031',
-  },
+  } as Product,
   envs: [
     {
       id: 46778,
@@ -127,8 +127,8 @@ const testComponent = {
       monitor: true,
       swagger_docs: '/swagger-ui.html',
     },
-  ],
-} as unknown as Unwrapped<Component>
+  ] as Environment[],
+}
 
 beforeEach(() => {
   serviceCatalogueService.getComponents.mockResolvedValue(testComponents)
@@ -201,11 +201,17 @@ describe('/components', () => {
           expect($('[data-test="detail-page-title"]').text()).toContain(testComponent.name)
           expect($('[data-test="description"]').text()).toBe(testComponent.description)
           expect($('[data-test="title"]').text()).toBe(testComponent.title)
-          expect($('[data-test="jira-project-keys"]').text()).toContain(testComponent.jira_project_keys.join(', '))
-          expect($('[data-test="github-write"]').text()).toContain(testComponent.github_project_teams_write.join(', '))
-          expect($('[data-test="github-admin"]').text()).toContain(testComponent.github_project_teams_admin.join(', '))
+          expect($('[data-test="jira-project-keys"]').text()).toContain(
+            (testComponent.jira_project_keys as string[]).join(', '),
+          )
+          expect($('[data-test="github-write"]').text()).toContain(
+            (testComponent.github_project_teams_write as string[]).join(', '),
+          )
+          expect($('[data-test="github-admin"]').text()).toContain(
+            (testComponent.github_project_teams_admin as string[]).join(', '),
+          )
           expect($('[data-test="github-restricted"]').text()).toContain(
-            testComponent.github_project_branch_protection_restricted_teams.join(','),
+            (testComponent.github_project_branch_protection_restricted_teams as string[]).join(','),
           )
           expect($('[data-test="github-repo"]').text()).toBe(testComponent.github_repo)
           expect($('[data-test="github-visibility"]').text()).toBe(testComponent.github_project_visibility)
@@ -249,7 +255,7 @@ describe('/components', () => {
           expect(devEnvironment).not.toBeNull()
           const $ = cheerio.load(res.text)
           expectEnvironmentScreenToBeFilled($, devEnvironment)
-          const activeAgencies = devEnvironment.active_agencies
+          const activeAgencies = devEnvironment.active_agencies as string[]
           expect($('td[data-test="active-agencies"]').text()).toBe(activeAgencies.join(', '))
         })
     })
@@ -281,7 +287,7 @@ describe('/components', () => {
   })
 })
 
-function expectEnvironmentScreenToBeFilled($: cheerio.CheerioAPI, devEnvironment: Unwrapped<Environment>) {
+function expectEnvironmentScreenToBeFilled($: cheerio.CheerioAPI, devEnvironment: Environment) {
   expect($('td[data-test="name"]').text()).toBe(devEnvironment.name)
   expect($('td[data-test="type"]').text()).toBe(devEnvironment.type)
   expect($('a[data-test="url"]').attr('href')).toBe(devEnvironment.url)

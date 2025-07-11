@@ -1,4 +1,4 @@
-import { DataItem, SingleResponse, ListResponse, Unwrapped } from '../data/strapiApiTypes'
+import { DataItem, SingleResponse, ListResponse, Unwrapped } from '../data/strapiClientTypes'
 
 type Payload = Record<string, unknown>
 type Unwrappable<T extends Payload> = DataItem<T> | SingleResponse<T> | ListResponse<T> | Array<T> | T
@@ -27,7 +27,7 @@ export const unwrapAttributes = <T extends Payload>(item: Unwrappable<T>): Unwra
   const unwrappedItem: Record<string, unknown> = { ...item }
 
   for (const key of Object.keys(unwrappedItem)) {
-    unwrappedItem[key] = unwrapAttributes<T>(unwrappedItem[key])
+    unwrappedItem[key] = unwrapAttributes<T>(unwrappedItem[key] as Unwrappable<T>)
   }
 
   return unwrappedItem as Unwrapped<T>

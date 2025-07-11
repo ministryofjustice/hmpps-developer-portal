@@ -1,13 +1,13 @@
 import { URLSearchParams } from 'url'
 import RestClient from './restClient'
-import config, { ApiConfig } from '../config'
+import config from '../config'
 import { Alert } from '../@types'
 
 export default class AlertsApiClient {
   private restClient: RestClient
 
   constructor() {
-    this.restClient = new RestClient('alertsApiClient', config.apis.alertManager as ApiConfig, '')
+    this.restClient = new RestClient('alertsApiClient', config.apis.alertManager, '')
   }
 
   async getAlerts(): Promise<Alert[]> {

@@ -1,26 +1,56 @@
 import { RdsEntry } from '../@types'
-import { createModelServiceArea } from '../data/converters/serviceArea.test'
-import StrapiApiClient from '../data/strapiApiClient'
 import {
   Component,
-  Product,
-  ProductSet,
-  StrapiServiceArea,
-  Team,
-  Namespace,
-  GithubTeam,
   CustomComponentView,
   GithubRepoRequest,
-  ListResponse,
-  DataItem,
-  Environment,
-  SingleResponse,
-  Unwrapped,
-} from '../data/strapiApiTypes'
+  GithubTeam,
+  Namespace,
+  Product,
+  ProductSet,
+  ServiceArea,
+  Team,
+} from '../data/modelTypes'
+import StrapiApiClient from '../data/strapiApiClient'
+import { Environment } from '../data/strapiApiTypes'
+import { DataItem, ListResponse } from '../data/strapiClientTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
 jest.mock('../data/strapiApiClient')
 
+const serviceAreas = [
+  {
+    id: 123,
+    name: 'service-1',
+    owner: 'The Owner',
+    sa_id: 'SA01',
+    slug: 'a-service-area-name',
+    products: [
+      {
+        description: 'A description of the project',
+        id: 456,
+        name: 'A Product name',
+        p_id: 'DPS000',
+        slug: 'a-product-name-1',
+      },
+    ],
+  },
+  {
+    id: 234,
+    name: 'service-2',
+    owner: 'The Owner',
+    sa_id: 'SA01',
+    slug: 'a-service-area-name',
+    products: [
+      {
+        description: 'A description of the project',
+        id: 456,
+        name: 'A Product name',
+        p_id: 'DPS000',
+        slug: 'a-product-name-1',
+      },
+    ],
+  },
+] as ServiceArea[]
 describe('Strapi service', () => {
   const strapiApiClient = new StrapiApiClient() as jest.Mocked<StrapiApiClient>
 
@@ -39,28 +69,18 @@ describe('Strapi service', () => {
 
   describe('Products', () => {
     describe('getProducts', () => {
-      const testProductsResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { name: 'Product 1', p_id: '1' },
-          },
-          {
-            id: 2,
-            attributes: { name: 'Product 2', p_id: '2' },
-          },
-        ],
-      } as ListResponse<Product>
-      const testProducts = [
+      const testProductsResponse = [
         {
           id: 1,
-          attributes: { name: 'Product 1', p_id: '1' },
+          name: 'Product 1',
+          p_id: '1',
         },
         {
           id: 2,
-          attributes: { name: 'Product 2', p_id: '2' },
+          name: 'Product 2',
+          p_id: '2',
         },
-      ] as DataItem<Product>[]
+      ] as Product[]
 
       it('should return an ordered array of products', async () => {
         strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
@@ -68,20 +88,17 @@ describe('Strapi service', () => {
         const results = await serviceCatalogueService.getProducts({})
 
         expect(strapiApiClient.getProducts).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testProducts)
+        expect(results).toEqual(testProductsResponse)
       })
     })
 
     describe('getProduct', () => {
       const testProductResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { name: 'Product 1', p_id: '1', slug: 'product-1' },
-          },
-        ],
-      } as SingleResponse<Product>
-      const testProduct = { name: 'Product 1', p_id: '1', slug: 'product-1' } as Product
+        id: 1,
+        name: 'Product 1',
+        p_id: '1',
+        slug: 'product-1',
+      } as Product
 
       it('should return the selected product', async () => {
         strapiApiClient.getProduct.mockResolvedValue(testProductResponse)
@@ -89,35 +106,23 @@ describe('Strapi service', () => {
         const results = await serviceCatalogueService.getProduct({ productSlug: 'product-1' })
 
         expect(strapiApiClient.getProduct).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testProduct)
+        expect(results).toEqual(testProductResponse)
       })
     })
   })
 
   describe('Teams', () => {
     describe('getTeams', () => {
-      const testTeamsResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { name: 'Team 1' },
-          },
-          {
-            id: 2,
-            attributes: { name: 'Team 2' },
-          },
-        ],
-      } as ListResponse<Team>
-      const testTeams = [
+      const testTeamsResponse = [
         {
           id: 1,
-          attributes: { name: 'Team 1' },
+          name: 'Team 1',
         },
         {
           id: 2,
-          attributes: { name: 'Team 2' },
+          name: 'Team 2',
         },
-      ] as DataItem<Team>[]
+      ] as Team[]
 
       it('should return an ordered array of teams', async () => {
         strapiApiClient.getTeams.mockResolvedValue(testTeamsResponse)
@@ -125,20 +130,19 @@ describe('Strapi service', () => {
         const results = await serviceCatalogueService.getTeams({})
 
         expect(strapiApiClient.getTeams).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testTeams)
+        expect(results).toEqual(testTeamsResponse)
       })
     })
 
     describe('getTeam', () => {
-      const testTeam = { name: 'Team 1', slug: 'team-1' } as Team
+      const testTeam = { id: 1, name: 'Team 1', slug: 'team-1' } as Team
 
       it('should return the selected team by ID', async () => {
         const testTeamResponse = {
-          data: {
-            id: 1,
-            attributes: { name: 'Team 1', slug: 'team-1' },
-          },
-        } as SingleResponse<Team>
+          id: 1,
+          name: 'Team 1',
+          slug: 'team-1',
+        } as Team
 
         strapiApiClient.getTeam.mockResolvedValue(testTeamResponse)
 
@@ -150,13 +154,10 @@ describe('Strapi service', () => {
 
       it('should return the selected team by slug', async () => {
         const testTeamResponse = {
-          data: [
-            {
-              id: 1,
-              attributes: { name: 'Team 1', slug: 'team-1' },
-            },
-          ],
-        } as SingleResponse<Team>
+          id: 1,
+          name: 'Team 1',
+          slug: 'team-1',
+        } as Team
 
         strapiApiClient.getTeam.mockResolvedValue(testTeamResponse)
 
@@ -179,11 +180,11 @@ describe('Strapi service', () => {
           id: 2,
           name: 'Component 2',
         },
-      ] as Unwrapped<Component>[]
+      ] as Component[]
       const testComponents = [
         { id: 1, name: 'Component 1' },
         { id: 2, name: 'Component 2' },
-      ] as Unwrapped<Component>[]
+      ] as Component[]
 
       it('should return an ordered array of components', async () => {
         strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
@@ -199,7 +200,7 @@ describe('Strapi service', () => {
       const testComponentResponse = {
         id: 1,
         name: 'Component 1',
-      } as Unwrapped<Component>
+      } as Component
 
       it('should return the selected component', async () => {
         strapiApiClient.getComponent.mockResolvedValue(testComponentResponse)
@@ -233,7 +234,7 @@ describe('Strapi service', () => {
           id: 2,
           name: 'Component 2',
         },
-      ] as Unwrapped<Component>[]
+      ] as Component[]
       const dependencies = [
         'circleci::hmpps',
         'dockerfile::base_image',
@@ -255,7 +256,6 @@ describe('Strapi service', () => {
   describe('Service Areas', () => {
     describe('getServiceAreas', () => {
       it('should return an ordered array of product sets', async () => {
-        const serviceAreas = [createModelServiceArea(123, 'service-1'), createModelServiceArea(234, 'service-2')]
         strapiApiClient.getServiceAreas.mockResolvedValue(serviceAreas)
 
         const results = await serviceCatalogueService.getServiceAreas()
@@ -266,15 +266,14 @@ describe('Strapi service', () => {
     })
 
     describe('getServiceArea', () => {
-      const testServiceArea = { name: 'Service Area 1', slug: 'service-area-1' } as StrapiServiceArea
+      const testServiceArea = { id: 1, name: 'Service Area 1', slug: 'service-area-1' } as ServiceArea
 
       it('should return the selected service area by ID', async () => {
         const testServiceAreaResponse = {
-          data: {
-            id: 1,
-            attributes: { name: 'Service Area 1', slug: 'service-area-1' },
-          },
-        } as SingleResponse<StrapiServiceArea>
+          id: 1,
+          name: 'Service Area 1',
+          slug: 'service-area-1',
+        } as ServiceArea
 
         strapiApiClient.getServiceArea.mockResolvedValue(testServiceAreaResponse)
 
@@ -286,13 +285,10 @@ describe('Strapi service', () => {
 
       it('should return the selected service area by slug', async () => {
         const testServiceAreaResponse = {
-          data: [
-            {
-              id: 1,
-              attributes: { name: 'Service Area 1', slug: 'service-area-1' },
-            },
-          ],
-        } as SingleResponse<StrapiServiceArea>
+          id: 1,
+          name: 'Service Area 1',
+          slug: 'service-area-1',
+        } as ServiceArea
 
         strapiApiClient.getServiceArea.mockResolvedValue(testServiceAreaResponse)
 
@@ -306,22 +302,20 @@ describe('Strapi service', () => {
 
   describe('Product Sets', () => {
     describe('getProductSets', () => {
-      const testProductSetsResponse = {
-        data: [
-          {
-            id: 1,
-            attributes: { name: 'Product Set 1' },
-          },
-          {
-            id: 2,
-            attributes: { name: 'Product Set 2' },
-          },
-        ],
-      } as ListResponse<ProductSet>
+      const testProductSetsResponse = [
+        {
+          id: 1,
+          name: 'Product Set 1',
+        },
+        {
+          id: 2,
+          name: 'Product Set 2',
+        },
+      ] as ProductSet[]
       const testProductSets = [
-        { id: 1, attributes: { name: 'Product Set 1' } },
-        { id: 2, attributes: { name: 'Product Set 2' } },
-      ] as DataItem<ProductSet>[]
+        { id: 1, name: 'Product Set 1' },
+        { id: 2, name: 'Product Set 2' },
+      ] as ProductSet[]
 
       it('should return an ordered array of product sets', async () => {
         strapiApiClient.getProductSets.mockResolvedValue(testProductSetsResponse)
@@ -335,12 +329,10 @@ describe('Strapi service', () => {
 
     describe('getProductSet', () => {
       const testProductSetResponse = {
-        data: {
-          id: 1,
-          attributes: { name: 'Product Set 1' },
-        },
-      } as SingleResponse<ProductSet>
-      const testProductSet = { name: 'Product Set 1' } as ProductSet
+        id: 1,
+        name: 'Product Set 1',
+      } as ProductSet
+      const testProductSet = { id: 1, name: 'Product Set 1' } as ProductSet
 
       it('should return the selected product set', async () => {
         strapiApiClient.getProductSet.mockResolvedValue(testProductSetResponse)
@@ -355,8 +347,8 @@ describe('Strapi service', () => {
 
   describe('Namespaces', () => {
     describe('getNamespaces', () => {
-      const testNamespacesResponse = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Unwrapped<Namespace>[]
-      const testNamespaces = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Unwrapped<Namespace>[]
+      const testNamespacesResponse = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Namespace[]
+      const testNamespaces = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Namespace[]
 
       it('should return an ordered array of namespaces', async () => {
         strapiApiClient.getNamespaces.mockResolvedValue(testNamespacesResponse)
@@ -369,7 +361,7 @@ describe('Strapi service', () => {
     })
 
     describe('getNamespace', () => {
-      const testNamespaceResponse = { name: 'Namespace 1' } as Unwrapped<Namespace>
+      const testNamespaceResponse = { name: 'Namespace 1' } as Namespace
       const testNamespace = { name: 'Namespace 1' } as Namespace
 
       it('should return the selected namespace', async () => {
@@ -387,7 +379,7 @@ describe('Strapi service', () => {
         {
           rds_instance: [{ tf_label: 'test 2' }, { tf_label: 'test 1' }],
         },
-      ] as Unwrapped<Namespace>[]
+      ] as Namespace[]
       const testRdsInstances = [{ tf_label: 'test 1' }, { tf_label: 'test 2' }] as RdsEntry[]
 
       it('should return an ordered array of rds instances', async () => {
@@ -410,7 +402,7 @@ describe('Strapi service', () => {
         {
           team_name: 'Github Team 2',
         },
-      ] as Unwrapped<GithubTeam>[]
+      ] as GithubTeam[]
 
       it('should return an ordered array of github teams', async () => {
         strapiApiClient.getGithubTeams.mockResolvedValue(testGithubTeamResponse)
@@ -425,7 +417,7 @@ describe('Strapi service', () => {
     describe('getGithubTeam', () => {
       const testGithubTeamResponse = {
         team_name: 'Github Team 1',
-      } as Unwrapped<GithubTeam>
+      } as GithubTeam
       const testGithubTeam = { team_name: 'Github Team 1' } as GithubTeam
 
       it('should return the selected github team', async () => {
@@ -441,14 +433,11 @@ describe('Strapi service', () => {
 
   describe('getCustomComponentView', () => {
     const testCustomComponentResponse = {
-      data: {
-        id: 1,
-        attributes: {
-          name: 'custom component 1',
-        },
-      },
-    } as SingleResponse<CustomComponentView>
+      id: 1,
+      name: 'custom component 1',
+    } as CustomComponentView
     const testCustomComponentView = {
+      id: 1,
       name: 'custom component 1',
     } as CustomComponentView
 
@@ -471,7 +460,7 @@ describe('Strapi service', () => {
         {
           github_repo: 'github_repo-2',
         },
-      ] as Unwrapped<GithubRepoRequest>[]
+      ] as GithubRepoRequest[]
 
       it('should return an ordered array of repo requests', async () => {
         strapiApiClient.getGithubRepoRequests.mockResolvedValue(githubResponses)
@@ -487,7 +476,7 @@ describe('Strapi service', () => {
       const githubRequestResponse = {
         id: 57,
         github_repo: 'github_repo-1',
-      } as Unwrapped<GithubRepoRequest> & { id: number }
+      } as GithubRepoRequest & { id: number }
 
       it('should return the selected repo request', async () => {
         strapiApiClient.getGithubRepoRequest.mockResolvedValue(githubRequestResponse)

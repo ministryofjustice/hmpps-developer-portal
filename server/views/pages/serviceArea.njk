@@ -13,7 +13,7 @@
   <tbody>
     <tr>
       <th>ID</th>
-      <td data-test="service-area-id">{{ serviceArea.id }}</td>
+      <td data-test="service-area-id">{{ serviceArea.sa_id }}</td>
     </tr>
     <tr>
       <th>Owner</th>
@@ -26,10 +26,10 @@
         <ul>
           {% for product in serviceArea.products %}
             <li>
-              <a class="govuk-link--no-visited-state govuk-!-margin-bottom-0 govuk-!-margin-top-3 govuk-heading-s" href="/products/{{ product.attributes.slug }}" data-test="product-{{ product.id }}">{{ product.attributes.name }}</a>
+              <a class="govuk-link--no-visited-state govuk-!-margin-bottom-0 govuk-!-margin-top-3 govuk-heading-s" href="/products/{{ product.slug }}" data-test="product-{{ product.id }}">{{ product.name }}</a>
               <ul>
-              {% for component in product.attributes.components.data %}
-                <li><a class="govuk-link--no-visited-state" href="/components/{{component.attributes.name}}" data-test="product-{{ product.id }}-component-{{ component.id }}">{{component.attributes.name}}</a></li>
+              {% for component in product.components %}
+                <li><a class="govuk-link--no-visited-state" href="/components/{{component.name}}" data-test="product-{{ product.id }}-component-{{ component.id }}">{{component.name}}</a></li>
               {% endfor %} 
               </ul>
             </li>

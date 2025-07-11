@@ -3,14 +3,14 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { ScheduledJob, Unwrapped } from '../data/strapiApiTypes'
+import { ScheduledJob } from '../data/modelTypes'
 
 jest.mock('../services/serviceCatalogueService')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testScheduledJobs = [{ name: 'testScheduledJob ' }] as Unwrapped<ScheduledJob>[]
+const testScheduledJobs = [{ name: 'testScheduledJob ' }] as ScheduledJob[]
 const testScheduledJob = {
   id: 1,
   name: 'jobName',
@@ -19,7 +19,7 @@ const testScheduledJob = {
   last_scheduled_run: '2025-04-11T08:46:23.746Z',
   result: 'Succeeded',
   last_successful_run: '2025-04-11T08:46:23.746Z',
-} as Unwrapped<ScheduledJob>
+} as ScheduledJob
 
 beforeEach(() => {
   serviceCatalogueService.getScheduledJobs.mockResolvedValue(testScheduledJobs)

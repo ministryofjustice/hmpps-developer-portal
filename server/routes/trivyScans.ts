@@ -137,7 +137,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const environmentName = getEnvironmentName(req)
     const component = await serviceCatalogueService.getComponent({ componentName })
     const filteredEnvironment = component.envs?.find(environment => environment.name === environmentName)
-    const scan = filteredEnvironment.trivy_scan as unknown as TrivyScanType
+    const scan = filteredEnvironment.trivy_scan
     const summary = scan.scan_summary?.summary
     const scanResults = scan.scan_summary?.scan_result
     const scanDate = utcTimestampToUtcDateTime(scan.trivy_scan_timestamp)

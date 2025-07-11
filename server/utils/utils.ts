@@ -5,10 +5,12 @@ import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
 import { Alert, RdsEntry } from '../@types'
-import { DataItem, Environment, Team } from '../data/strapiApiTypes'
+import { Environment } from '../data/strapiApiTypes'
 import { TrivyScanType } from '../data/converters/modelTypes'
 
 import type { ServiceCatalogueService } from '../services'
+import { DataItem } from '../data/strapiClientTypes'
+import type { Team } from '../data/modelTypes'
 
 dayjs.extend(relativeTime.default)
 
@@ -109,7 +111,6 @@ export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasT
 
 export const getFormattedName = (req: Request, param: string): string => {
   const paramName = req.params[param]
-
   return paramName.replace(/[^-a-zA-Z0-9_.]/g, '')
 }
 
@@ -146,11 +147,9 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
   return 'none'
 }
 
-function findTeamMatch(teams: DataItem<Team>[], name: string) {
+function findTeamMatch(teams: Team[], name: string) {
   return teams.find(team =>
-    team?.attributes?.products?.data?.some(product =>
-      product?.attributes?.components?.data?.some(component => component.attributes?.name === name),
-    ),
+    team?.products?.some(product => product?.components?.some(component => component.name === name)),
   )
 }
 
@@ -158,7 +157,7 @@ function findTeamMatch(teams: DataItem<Team>[], name: string) {
 export const addNewPropertiesToAlert = (
   revisedAlerts: Alert[],
   environments: DataItem<Environment>[],
-  teams: DataItem<Team>[],
+  teams: Team[],
 ) => {
   return revisedAlerts.map(alert => {
     const envMatch = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
@@ -167,19 +166,19 @@ export const addNewPropertiesToAlert = (
     const updatedAlert = { ...alert }
 
     if (envMatch) updatedAlert.labels.alert_slack_channel = envMatch.attributes.alerts_slack_channel
-    if (teamMatch) updatedAlert.labels.team = teamMatch.attributes.name
+    if (teamMatch) updatedAlert.labels.team = teamMatch.name
 
     return updatedAlert
   })
 }
 
-export async function addTeamToTrivyScan(teams: DataItem<Team>[], trivyScan: TrivyScanType[]) {
+export async function addTeamToTrivyScan(teams: Team[], trivyScan: TrivyScanType[]) {
   return trivyScan.map(scan => {
     const scanMatch = findTeamMatch(teams, scan.name)
 
     const updatedScan = { ...scan }
 
-    if (scanMatch) updatedScan.team = scanMatch.attributes.name
+    if (scanMatch) updatedScan.team = scanMatch.name
 
     return updatedScan
   })
@@ -197,7 +196,7 @@ export const mapAlertEnvironments = (alerts: Alert[]) => {
     return updatedAlert
   })
 }
-export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[], teams: DataItem<Team>[]) => {
+export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[], teams: Team[]) => {
   const revisedEnvAlerts = mapAlertEnvironments(alerts)
   const revisedAlerts = addNewPropertiesToAlert(revisedEnvAlerts, environments, teams)
 
@@ -221,7 +220,7 @@ export async function getDependencyNames(serviceCatalogueService: ServiceCatalog
   const namesSet = new Set<string>()
 
   components.forEach(component => {
-    const versions = component.versions as unknown as Record<string, Record<string, string>>
+    const { versions } = component
     if (versions && versions[dependencyType]) {
       Object.keys(versions[dependencyType]).forEach(name => namesSet.add(name))
     }

@@ -12,7 +12,7 @@ import {
 } from '../utils/utils'
 import RedisService from './redisService'
 import ServiceCatalogueService from './serviceCatalogueService'
-import { Component, Unwrapped } from '../data/strapiApiTypes'
+import { Component } from '../data/modelTypes'
 
 export type VersionDetails = {
   component: string
@@ -153,7 +153,6 @@ export default class TeamHealthService {
         const driftData = this.toComponentView(component, versionDetailsByComponent[component.name], now || new Date())
         return driftData
       })
-
     return components
   }
 
@@ -254,7 +253,7 @@ export default class TeamHealthService {
     return healthA.stats.max === healthB.stats.max ? teamA.localeCompare(teamB) : healthB.stats.max - healthA.stats.max
   }
 
-  toComponentView = (component: Unwrapped<Component>, versionDetails: VersionDetails[], now: Date) => {
+  toComponentView = (component: Component, versionDetails: VersionDetails[], now: Date) => {
     const versionDetailByEnv = associateBy(versionDetails, details => details.type)
 
     const environmentsWithVersions = component.envs

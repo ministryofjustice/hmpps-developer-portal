@@ -1,29 +1,25 @@
 jQuery(function () {
   const columns = [
     {
-      data: 'attributes.p_id',
+      data: 'p_id',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/products/${rowData.attributes.slug}">${rowData.attributes.p_id}</a>`)
+        $(td).html(`<a href="/products/${rowData.slug}">${rowData.p_id}</a>`)
       },
     },
-    { data: 'attributes.name', render: cleanColumnOutput },
+    { data: 'name', render: cleanColumnOutput },
     {
-      data: 'attributes.product_set.data.attributes.ps_id',
+      data: 'product_set.ps_id',
       createdCell: function (td, _cellData, rowData) {
-        const link = rowData.attributes.product_set.data
-          ? `<a href="/product-sets/${rowData.attributes.product_set.data.id}">${cleanColumnOutput(
-              rowData.attributes.product_set.data.attributes.ps_id,
-            )}</a>`
+        const link = rowData.product_set
+          ? `<a href="/product-sets/${rowData.product_set.id}">${cleanColumnOutput(rowData.product_set.ps_id)}</a>`
           : 'N/A'
         $(td).html(link)
       },
     },
     {
-      data: 'attributes.product_set.data.attributes.name',
+      data: 'product_set.name',
       createdCell: function (td, _cellData, rowData) {
-        const link = rowData.attributes.product_set.data
-          ? cleanColumnOutput(rowData.attributes.product_set.data.attributes.name)
-          : 'N/A'
+        const link = rowData.product_set ? cleanColumnOutput(rowData.product_set.name) : 'N/A'
         $(td).html(link)
       },
     },

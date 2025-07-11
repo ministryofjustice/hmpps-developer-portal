@@ -20,11 +20,13 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   router.get('/:serviceAreaSlug', async (req, res) => {
     const { serviceAreaSlug } = req.params
+
     const serviceArea = await serviceCatalogueService.getServiceArea({ serviceAreaSlug, withProducts: true })
-    const products = serviceArea.products?.data?.map(product => product)
+    const { products } = serviceArea
 
     const displayServiceArea = {
-      id: serviceArea.sa_id,
+      id: serviceArea.id,
+      sa_id: serviceArea.sa_id,
       name: serviceArea.name,
       slug: serviceArea.slug,
       owner: serviceArea.owner,
@@ -41,11 +43,11 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       slug,
     }))
     const serviceArea = await serviceCatalogueService.getServiceArea({ serviceAreaSlug, withProducts: true })
-    const products = serviceArea.products?.data?.map(({ attributes }) => {
+    const products = serviceArea.products.map(({ name, slug, components }) => {
       return {
-        productName: attributes.name,
-        productCode: attributes.slug,
-        components: attributes.components.data.map(component => component.attributes),
+        productName: name,
+        productCode: slug,
+        components,
       }
     })
 

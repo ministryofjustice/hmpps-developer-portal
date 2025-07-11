@@ -3,27 +3,24 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
-import { DataItem, Team } from '../data/strapiApiTypes'
+import { Team } from '../data/modelTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testTeams = [{ id: 1, attributes: { name: 'testTeam' } }] as DataItem<Team>[]
+const testTeams = [{ id: 1, name: 'testTeam' }] as Team[]
 const testTeam = {
+  id: 1,
   t_id: 'testTeamId',
   name: 'testTeamName',
-  products: {
-    data: [
-      {
-        id: 23,
-        attributes: {
-          name: 'productName',
-        },
-      },
-    ],
-  },
+  products: [
+    {
+      id: 23,
+      name: 'productName',
+    },
+  ],
 } as Team
 
 beforeEach(() => {
@@ -55,7 +52,7 @@ describe('/teams', () => {
     })
   })
 
-  describe('GET /:teamId', () => {
+  describe('GET /:teamSlug', () => {
     it('should render team page with products list if there are products', () => {
       return request(app)
         .get('/teams/1')
@@ -65,9 +62,7 @@ describe('/teams', () => {
           expect($('[data-test="detail-page-title"]').text()).toContain(testTeam.name)
           expect($('[data-test="team-id"]').text()).toBe(testTeam.t_id)
           expect($('[data-test="no-products"]').text()).toBe('')
-          expect($(`[data-test="product-${testTeam.products.data[0].id}"]`).text()).toBe(
-            testTeam.products.data[0].attributes.name,
-          )
+          expect($(`[data-test="product-${testTeam.products[0]?.id}"]`).text()).toBe(testTeam.products[0]?.name)
         })
     })
 

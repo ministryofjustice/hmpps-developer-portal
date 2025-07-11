@@ -33,8 +33,7 @@ import {
   mockVeracodeComponents,
 } from './teamsSummaryCountService.test-helpers'
 import ServiceCatalogueService from './serviceCatalogueService'
-import { Component, TrivyScan, Unwrapped } from '../data/strapiApiTypes'
-import { TrivyScanType } from '../data/converters/modelTypes'
+import { Component, Product, TrivyScan, TrivyScanType } from '../data/modelTypes'
 
 jest.mock('../../logger')
 jest.mock('../data/strapiApiClient')
@@ -148,7 +147,6 @@ describe('TeamsSummaryCountService', () => {
       alertSerice.getAlerts.mockResolvedValue(mockAlerts)
 
       const result = await service.getTeamAlertSummary(teamSlug)
-
       expect(mockStrapiClient.getTeam).toHaveBeenCalledWith({ teamSlug })
       expect(mockStrapiClient.getProduct).toHaveBeenCalledTimes(2)
       expect(alertSerice.getAlerts).toHaveBeenCalled()
@@ -291,16 +289,16 @@ describe('TeamsSummaryCountService', () => {
         } as TrivyScanType,
       ])
       serviceCatalogueService.getComponents.mockResolvedValue([
-        { name: 'ComponentX', product: { id: 99 } } as Unwrapped<Component>,
+        { name: 'ComponentX', product: { id: 99 } } as Component,
       ])
-      const products = [{ id: 1, name: 'Product 1' }]
+      const products = [{ id: 1, name: 'Product 1' }] as Product[]
       const result = await service.getTeamTrivyVulnerabilityCounts(products)
       expect(result).toEqual({ critical: 0, high: 0 })
     })
 
     it('should log error and return 0,0 on exception', async () => {
       serviceCatalogueService.getTrivyScans!.mockRejectedValue(new Error('fail'))
-      const products = [{ id: 1, attributes: { name: 'Product 1' } }]
+      const products = [{ id: 1, name: 'Product 1' }] as Product[]
       const result = await service.getTeamTrivyVulnerabilityCounts(products)
       expect(result).toEqual({ critical: 0, high: 0 })
       expect(mockLogger.error).toHaveBeenCalledWith(
@@ -314,9 +312,9 @@ describe('TeamsSummaryCountService', () => {
     it('should aggregate severities from matching components', async () => {
       serviceCatalogueService.getComponents.mockResolvedValue(mockVeracodeComponents)
       const result = await service.getTeamVeracodeVulnerabilityCounts([
-        { id: 1, attributes: { name: 'Product 1' } },
-        { id: 2, attributes: { name: 'Product 2' } },
-      ])
+        { id: 1, name: 'Product 1' },
+        { id: 2, name: 'Product 2' },
+      ] as Product[])
       expect(result).toEqual({ veryHigh: 2, high: 4, medium: 5, low: 9 })
     })
 
@@ -331,9 +329,9 @@ describe('TeamsSummaryCountService', () => {
           name: 'OtherComponent',
           product: { id: 99 },
           veracode_results_summary: { severity: [{ category: [{ Severity: 'VERY_HIGH', count: 10 }] }] } as TrivyScan,
-        } as Unwrapped<Component>,
+        } as Component,
       ])
-      const result = await service.getTeamVeracodeVulnerabilityCounts([{ id: 1, attributes: { name: 'Product 1' } }])
+      const result = await service.getTeamVeracodeVulnerabilityCounts([{ id: 1, name: 'Product 1' }] as Product[])
       expect(result).toEqual({ veryHigh: 0, high: 0, medium: 0, low: 0 })
     })
 
@@ -345,14 +343,14 @@ describe('TeamsSummaryCountService', () => {
           product: { id: 1 },
           veracode_results_summary: { severity: [] },
         },
-      ] as Unwrapped<Component>[])
-      const result = await service.getTeamVeracodeVulnerabilityCounts([{ id: 1, attributes: { name: 'Product 1' } }])
+      ] as Component[])
+      const result = await service.getTeamVeracodeVulnerabilityCounts([{ id: 1, name: 'Product 1' }] as Product[])
       expect(result).toEqual({ veryHigh: 0, high: 0, medium: 0, low: 0 })
     })
 
     it('should log error and return all zeros on exception', async () => {
       serviceCatalogueService.getComponents!.mockRejectedValue(new Error('fail'))
-      const result = await service.getTeamVeracodeVulnerabilityCounts([{ id: 1, attributes: { name: 'Product 1' } }])
+      const result = await service.getTeamVeracodeVulnerabilityCounts([{ id: 1, name: 'Product 1' }] as Product[])
       expect(result).toEqual({ veryHigh: 0, high: 0, medium: 0, low: 0 })
       expect(mockLogger.error).toHaveBeenCalledWith(
         expect.stringContaining('Error in getTeamVeracodeVulnerabilityCounts'),
