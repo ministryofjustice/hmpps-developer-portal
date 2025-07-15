@@ -18,10 +18,6 @@
       <td>{% if product.confluenceLinks | length %}<ul>{% for confluenceLink in product.confluenceLinks %}<li><a href="{{ confluenceLink }}">{{ confluenceLink }}</a></li>{% endfor %}</ul>{% endif %}</td>
     </tr>
     <tr>
-      <th>G Drive</th>
-      <td><a href="{{ product.gDriveLink }}">{{ product.gDriveLink }}</a></td>
-    </tr>
-    <tr>
       <th>ID</th>
       <td>{{ product.id }}</td>
     </tr>
