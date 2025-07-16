@@ -15,7 +15,7 @@ export default function routes({ serviceCatalogueService, teamsSummaryCountServi
   })
 
   router.get('/data', async (req, res) => {
-    const teams = await serviceCatalogueService.getTeams()
+    const teams = await serviceCatalogueService.getTeams({})
 
     res.send(teams)
   })
@@ -23,22 +23,15 @@ export default function routes({ serviceCatalogueService, teamsSummaryCountServi
   router.get('/:teamSlug', async (req, res) => {
     const teamSlug = getFormattedName(req, 'teamSlug')
     const team = await serviceCatalogueService.getTeam({ teamSlug })
-    const products = team.products?.data?.map(product => product)
-
+    const products = team.products && team.products.length > 0 ? team.products.map(product => product) : null
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
       logger.info(`getTeamAlertSummary for team '${teamSlug}': ${JSON.stringify(teamAlertSummary, null, 2)}`)
 
-      const teamTrivyScanSummary = await teamsSummaryCountService.getTeamTrivyVulnerabilityCounts(
-        products,
-        serviceCatalogueService,
-      )
+      const teamTrivyScanSummary = await teamsSummaryCountService.getTeamTrivyVulnerabilityCounts(products)
       logger.info(`getTeamTrivyScanSummary for team '${teamSlug}': ${JSON.stringify(teamTrivyScanSummary, null, 2)}`)
 
-      const teamVeracodeScanSummary = await teamsSummaryCountService.getTeamVeracodeVulnerabilityCounts(
-        products,
-        serviceCatalogueService,
-      )
+      const teamVeracodeScanSummary = await teamsSummaryCountService.getTeamVeracodeVulnerabilityCounts(products)
       logger.info(
         `getTeamVeracodeScanSummary for team '${teamSlug}': ${JSON.stringify(teamVeracodeScanSummary, null, 2)}`,
       )

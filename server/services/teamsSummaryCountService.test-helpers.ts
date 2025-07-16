@@ -1,166 +1,112 @@
-import { Component, Product, Team, DataItem, SingleResponse } from '../data/strapiApiTypes'
+import { Product, TrivyScanType, Team, Component } from '../data/modelTypes'
 
 export const mockProducts = [
-  { id: 1, attributes: { name: 'Product 1', p_id: 'p1' } },
-  { id: 2, attributes: { name: 'Product 2', p_id: 'p2' } },
-]
+  { id: 1, name: 'Product 1', p_id: 'p1' },
+  { id: 2, name: 'Product 2', p_id: 'p2' },
+] as Product[]
 
-export const mockOneProduct = [
-  { id: 3, attributes: { name: 'Product 3', slug: 'product-3', p_id: 'p3' } },
-] as DataItem<Product>[]
+export const mockOneProduct = [{ id: 3, name: 'Product 3', slug: 'product-3', p_id: 'p3' }] as Product[]
 
 export const mockTwoProduct = [
-  { id: 1, attributes: { name: 'Product A', slug: 'product-a', p_id: 'pa' } },
-  { id: 2, attributes: { name: 'Product B', slug: 'product-b', p_id: 'pb' } },
-]
+  { id: 1, name: 'Product A', slug: 'product-a', p_id: 'pa' },
+  { id: 2, name: 'Product B', slug: 'product-b', p_id: 'pb' },
+] as Product[]
 
-export const mockEmptyProducts = [
-  { attributes: { name: 'Empty Product', slug: 'empty-product', p_id: 'empty1' } },
-] as DataItem<Product>[]
+export const mockEmptyProducts = [{ name: 'Empty Product', slug: 'empty-product', p_id: 'empty1' }] as Product[]
 
 export const mockProductList = [
-  { attributes: { name: 'Product 1', slug: 'product-1', p_id: 'p1' } },
-  { attributes: { name: 'Product 2', slug: 'product-2', p_id: 'p2' } },
-] as DataItem<Product>[]
+  { name: 'Product 1', slug: 'product-1', p_id: 'p1' },
+  { name: 'Product 2', slug: 'product-2', p_id: 'p2' },
+] as Product[]
 
-export const mockComponents1: DataItem<Component>[] = [
-  { id: 1, attributes: { name: 'Comp1A' } },
-  { id: 2, attributes: { name: 'Comp1B' } },
-]
+export const mockComponents1 = [
+  { id: 1, name: 'Comp1A' },
+  { id: 2, name: 'Comp1B' },
+] as Component[]
 
-export const mockComponents2: DataItem<Component>[] = [{ id: 3, attributes: { name: 'Comp2A' } }]
+export const mockComponents2 = [{ id: 3, name: 'Comp2A' }] as Component[]
 
-export const mockProductResponse1 = {
-  data: [{ attributes: { components: { data: mockComponents1 } } }],
-} as SingleResponse<Product>
+export const mockProductResponse1 = { components: mockComponents1 } as Product
 
-export const mockProductResponse2 = {
-  data: [{ attributes: { components: { data: mockComponents2 } } }],
-} as SingleResponse<Product>
+export const mockProductResponse2 = { components: mockComponents2 } as Product
 
-export const mockProductResponseEmpty = {
-  data: [{ attributes: { components: { data: [] } } }],
-} as SingleResponse<Product>
+export const mockProductResponseEmpty = { components: [] } as Product
 
 export const mockTeamResponseWithProducts = {
-  data: [
-    {
-      id: 1,
-      attributes: {
-        name: 'Team Name',
-        t_id: 'team-id',
-        products: {
-          data: mockProducts,
-        },
-        createdAt: '2023-01-01T00:00:00Z',
-        createdBy: { data: { attributes: {}, id: 1 } },
-        updatedAt: '2023-01-01T00:00:00Z',
-        updatedBy: { data: { attributes: {}, id: 1 } },
-      },
-    },
-  ],
-} as SingleResponse<Team>
+  id: 1,
+  name: 'Team Name',
+  t_id: 'team-id',
+  products: mockProducts,
+} as Team
 
 export const mockTeamResponseWithoutProducts = {
-  data: [
-    {
-      id: 1,
-      attributes: {
-        name: 'Team Name',
-        t_id: 'team-id',
-        products: {
-          data: [],
-        },
-        createdAt: '2023-01-01T00:00:00Z',
-        createdBy: { data: { attributes: {}, id: 1 } },
-        updatedAt: '2023-01-01T00:00:00Z',
-        updatedBy: { data: { attributes: {}, id: 1 } },
-      },
-    },
-  ],
-} as SingleResponse<Team>
+  id: 1,
+  name: 'Team Name',
+  t_id: 'team-id',
+  products: [] as Product[],
+  createdAt: '2023-01-01T00:00:00Z',
+  createdBy: { id: 1 },
+  updatedAt: '2023-01-01T00:00:00Z',
+  updatedBy: { id: 1 },
+} as Team
 
 export const mockTeamResponseWithTwoProducts = {
-  data: [
-    {
-      id: 1,
-      attributes: {
-        t_id: 'team-alpha-id',
-        name: 'Team Alpha',
-        products: { data: mockTwoProduct },
-        createdAt: '2023-01-01T00:00:00Z',
-        createdBy: { data: { attributes: {}, id: 1 } },
-        updatedAt: '2023-01-01T00:00:00Z',
-        updatedBy: { data: { attributes: {}, id: 1 } },
-      },
-    },
-  ],
-} as SingleResponse<Team>
+  id: 1,
+  t_id: 'team-alpha-id',
+  name: 'Team Alpha',
+  products: mockTwoProduct,
+  createdAt: '2023-01-01T00:00:00Z',
+  createdBy: { id: 1 },
+  updatedAt: '2023-01-01T00:00:00Z',
+  updatedBy: { id: 1 },
+} as Team
 
 export const mockTeamResponseWithOneProduct = {
-  data: [
-    {
-      attributes: {
-        t_id: 'team-gamma-id',
-        name: 'Team Gamma',
-        products: { data: mockOneProduct },
-        createdAt: '2023-01-01T00:00:00Z',
-        createdBy: { data: { attributes: {}, id: 1 } },
-        updatedAt: '2023-01-01T00:00:00Z',
-        updatedBy: { data: { attributes: {}, id: 1 } },
-      },
-    },
-  ],
-} as SingleResponse<Team>
+  id: 1,
+  t_id: 'team-gamma-id',
+  name: 'Team Gamma',
+  products: mockOneProduct,
+  createdAt: '2023-01-01T00:00:00Z',
+  createdBy: { id: 1 },
+  updatedAt: '2023-01-01T00:00:00Z',
+  updatedBy: { id: 1 },
+} as Team
 
 export const mockProductResponseWithComponents = {
-  data: {
-    id: 1,
-    attributes: {
-      name: 'Product A',
-      slug: 'product-a',
-      p_id: 'pa',
-      components: {
-        data: [
-          { id: 1, attributes: { name: 'ComponentA1' } },
-          { id: 2, attributes: { name: 'ComponentA2' } },
-        ],
-      },
-    },
-  },
-} as SingleResponse<Product>
+  id: 1,
+  name: 'Product A',
+  slug: 'product-a',
+  p_id: 'pa',
+  components: [
+    { id: 1, name: 'ComponentA1' },
+    { id: 2, name: 'ComponentA2' },
+  ],
+} as Product
 
 export const mockTeamResponseWithEmptyProduct = {
-  data: [
-    {
-      attributes: {
-        t_id: 'team-gamma-id',
-        name: 'Team Gamma',
-        products: { data: mockEmptyProducts },
-        createdAt: '2023-01-01T00:00:00Z',
-        createdBy: { data: { attributes: {}, id: 1 } },
-        updatedAt: '2023-01-01T00:00:00Z',
-        updatedBy: { data: { attributes: {}, id: 1 } },
-      },
-    },
-  ],
-} as SingleResponse<Team>
+  id: 1,
+  t_id: 'team-gamma-id',
+  name: 'Team Gamma',
+  products: mockEmptyProducts,
+  createdAt: '2023-01-01T00:00:00Z',
+  createdBy: { id: 1 },
+  updatedAt: '2023-01-01T00:00:00Z',
+  updatedBy: { id: 1 },
+} as Team
 
 export const mockProductResponseWithComponents2 = {
-  data: {
-    id: 2,
-    attributes: {
-      name: 'Product B',
-      slug: 'product-b',
-      p_id: 'pb',
-      components: { data: [{ id: 3, attributes: { name: 'ComponentB1' } }] },
-    },
-  },
-} as SingleResponse<Product>
+  id: 2,
+  name: 'Product B',
+  slug: 'product-b',
+  p_id: 'pb',
+  components: [{ id: 3, name: 'ComponentB1' }],
+} as Product
 
 export const mockProductResponseWithNoComponents = {
-  data: { attributes: { name: 'Test Product', p_id: 'test-prod-id', components: { data: [] } } },
-} as SingleResponse<Product>
+  name: 'Test Product',
+  p_id: 'test-prod-id',
+  components: [],
+} as Product
 
 export const mockTeamAlertSummary = {
   products: {
@@ -193,20 +139,10 @@ export const mockAlerts = [
 ]
 
 export const mockProductResponseWithComponentsAndAlerts = {
-  data: {
-    attributes: {
-      name: 'Test Product',
-      p_id: 'test-prod-id',
-      components: {
-        data: [
-          { attributes: { name: 'CompWithAlerts' } },
-          { attributes: { name: 'CompWithNoAlerts' } },
-          { attributes: { name: 'CompMissingFromAlertMap' } },
-        ],
-      },
-    },
-  },
-} as SingleResponse<Product>
+  name: 'Test Product',
+  p_id: 'test-prod-id',
+  components: [{ name: 'CompWithAlerts' }, { name: 'CompWithNoAlerts' }, { name: 'CompMissingFromAlertMap' }],
+} as Product
 
 export const mockAlertsForProductWithComponentsAndAlerts = [
   { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
@@ -243,82 +179,72 @@ export const mockActiveAndInactiveAlerts = [
 ]
 
 export const mockComponents = [
-  { attributes: { name: 'ComponentA', product: { data: { id: 1 } } } },
-  { attributes: { name: 'ComponentB', product: { data: { id: 2 } } } },
-]
+  { name: 'ComponentA', product: { id: 1 } },
+  { name: 'ComponentB', product: { id: 2 } },
+] as Component[]
 
 // Veracode mock components for getTeamVeracodeVulnerabilityCounts tests
 export const mockVeracodeComponents = [
   {
-    attributes: {
-      name: 'ComponentA',
-      product: { data: { id: 1 } },
-      veracode_results_summary: {
-        severity: [
-          {
-            category: [
-              { severity: 'VERY_HIGH', count: 2 },
-              { severity: 'HIGH', count: 3 },
-            ],
-          },
-          {
-            category: [
-              { severity: 'MEDIUM', count: 5 },
-              { severity: 'LOW', count: 7 },
-            ],
-          },
-        ],
-      },
+    name: 'ComponentA',
+    product: { id: 1 },
+    veracode_results_summary: {
+      severity: [
+        {
+          category: [
+            { severity: 'VERY_HIGH', count: 2 },
+            { severity: 'HIGH', count: 3 },
+          ],
+        },
+        {
+          category: [
+            { severity: 'MEDIUM', count: 5 },
+            { severity: 'LOW', count: 7 },
+          ],
+        },
+      ],
     },
   },
   {
-    attributes: {
-      name: 'ComponentB',
-      product: { data: { id: 2 } },
-      veracode_results_summary: {
-        severity: [
-          {
-            category: [
-              { severity: 'HIGH', count: 1 },
-              { severity: 'LOW', count: 2 },
-            ],
-          },
-        ],
-      },
+    name: 'ComponentB',
+    product: { id: 2 },
+    veracode_results_summary: {
+      severity: [
+        {
+          category: [
+            { severity: 'HIGH', count: 1 },
+            { severity: 'LOW', count: 2 },
+          ],
+        },
+      ],
     },
   },
   // Component with no veracode_results_summary
   {
-    attributes: {
-      name: 'ComponentC',
-      product: { data: { id: 1 } },
-    },
+    name: 'ComponentC',
+    product: { id: 1 },
   },
   // Component with empty severity array
   {
-    attributes: {
-      name: 'ComponentD',
-      product: { data: { id: 2 } },
-      veracode_results_summary: {
-        severity: [],
-      },
+    name: 'ComponentD',
+    product: { id: 2 },
+    veracode_results_summary: {
+      severity: [],
     },
   },
   // Component with non-matching product id
   {
-    attributes: {
-      name: 'ComponentE',
-      product: { data: { id: 99 } },
-      veracode_results_summary: {
-        severity: [
-          {
-            category: [{ severity: 'VERY_HIGH', count: 10 }],
-          },
-        ],
-      },
+    name: 'ComponentE',
+    product: { id: 99 },
+    veracode_results_summary: {
+      severity: [
+        {
+          category: [{ severity: 'VERY_HIGH', count: 10 }],
+        },
+      ],
     },
   },
-]
+] as Component[]
 
 export const mockTrivyScans = [
   {
@@ -348,4 +274,4 @@ export const mockTrivyScans = [
       },
     },
   },
-]
+] as TrivyScanType[]

@@ -22,15 +22,16 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   router.get('/:productSlug', async (req, res) => {
     const productSlug = getFormattedName(req, 'productSlug')
     const product = await serviceCatalogueService.getProduct({ productSlug })
-    const productSet = product.product_set?.data
-    const team = product.team?.data
-    const components = product.components?.data
+
+    const productSet = product.product_set
+    const { team } = product
+    const components = product.components
       ?.map(component => component)
       .sort((a, b) => {
-        if (a.attributes.name > b.attributes.name) {
+        if (a.name > b.name) {
           return 1
         }
-        if (a.attributes.name < b.attributes.name) {
+        if (a.name < b.name) {
           return -1
         }
         return 0

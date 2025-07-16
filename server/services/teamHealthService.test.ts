@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import RedisService from './redisService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import TeamHealthService from './teamHealthService'
-import { Component, DataItem } from '../data/strapiApiTypes'
+import { Component } from '../data/modelTypes'
 
 jest.mock('./redisService')
 jest.mock('./serviceCatalogueService')
@@ -24,16 +24,97 @@ describe('teamHealthService', () => {
 
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          part_of_monorepo: false,
+          latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-03T01:02:03.000Z' },
+          envs: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+        } as Component,
+      ])
+
+      const driftData = await teamHealthService.getDriftData(['some-service'], now)
+      expect(driftData).toStrictEqual([
+        {
+          baseSha: '1234567',
+          drift: {
+            days: 19,
+            description: '19 days',
+            hours: 456,
+            millis: 1641600000,
+            present: true,
+            sortValue: 19,
           },
-        } as DataItem<Component>,
+          environments: [
+            {
+              buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'dev',
+              sha: 'abc1234',
+              type: 'dev',
+              version: '2023-02-02.123.abc1234',
+            },
+            {
+              buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'preprod',
+              sha: 'abc1234',
+              type: 'preprod',
+              version: '2023-02-02.123.abc1234',
+            },
+            {
+              buildDate: dayjs('2023-01-15', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'prod',
+              sha: 'abc1230',
+              type: 'prod',
+              version: '2023-01-15.120.abc1230',
+            },
+          ],
+          latestCommit: { date: '2023-02-03', sha: '1234567' },
+          name: 'some-service',
+          prodEnvSha: 'abc1230',
+          repo: 'some-service-repo',
+          staleness: {
+            days: 8,
+            description: '8 days',
+            hours: 192,
+            millis: 691200000,
+            present: true,
+            sortValue: 8,
+          },
+        },
+      ])
+    })
+
+    it('missing latest commit', async () => {
+      const now = new Date('2023-02-11')
+
+      redisService.readLatest.mockResolvedValue({
+        'some-service:dev': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'some-service:preprod': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'some-service:prod': { v: '2023-01-15.120.abc1230', dateAdded: '2023-02-11' },
+      })
+
+      serviceCatalogueService.getComponents.mockResolvedValue([
+        {
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          envs: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+        } as Component,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
@@ -96,6 +177,89 @@ describe('teamHealthService', () => {
       ])
     })
 
+    it('monorepo', async () => {
+      const now = new Date('2023-02-11')
+
+      redisService.readLatest.mockResolvedValue({
+        'some-service:dev': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'some-service:preprod': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'some-service:prod': { v: '2023-01-15.120.abc1230', dateAdded: '2023-02-11' },
+      })
+
+      serviceCatalogueService.getComponents.mockResolvedValue([
+        {
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          part_of_monorepo: true,
+          latest_commit: { id: 1, sha: '123456789', date_time: '2023-05-02T01:02:03.000Z' },
+          envs: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+        } as Component,
+      ])
+
+      const driftData = await teamHealthService.getDriftData(['some-service'], now)
+      expect(driftData).toStrictEqual([
+        {
+          baseSha: 'abc1234',
+          drift: {
+            days: 18,
+            description: '18 days',
+            hours: 432,
+            millis: 1555200000,
+            present: true,
+            sortValue: 18,
+          },
+          environments: [
+            {
+              buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'dev',
+              sha: 'abc1234',
+              type: 'dev',
+              version: '2023-02-02.123.abc1234',
+            },
+            {
+              buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'preprod',
+              sha: 'abc1234',
+              type: 'preprod',
+              version: '2023-02-02.123.abc1234',
+            },
+            {
+              buildDate: dayjs('2023-01-15', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'prod',
+              sha: 'abc1230',
+              type: 'prod',
+              version: '2023-01-15.120.abc1230',
+            },
+          ],
+          latestCommit: { date: '2023-05-02', sha: '1234567' },
+          name: 'some-service',
+          prodEnvSha: 'abc1230',
+          repo: 'some-service-repo',
+          staleness: {
+            days: 9,
+            description: '9 days',
+            hours: 216,
+            millis: 777600000,
+            present: true,
+            sortValue: 9,
+          },
+        },
+      ])
+    })
+
     it('multiple dev envs', async () => {
       const now = new Date('2023-02-11')
 
@@ -108,25 +272,23 @@ describe('teamHealthService', () => {
 
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-02T01:02:03.000Z' },
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'test1', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
-        } as DataItem<Component>,
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-02T01:02:03.000Z' },
+          envs: [
+            { name: 'dev', type: 'dev' },
+            { name: 'test1', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+        } as Component,
       ])
 
       const driftData = await teamHealthService.getDriftData(['some-service'], now)
       expect(driftData).toStrictEqual([
         {
-          baseSha: '1234567',
-          drift: { days: 18, description: '18 days', hours: 432, millis: 1555200000, present: true, sortValue: 18 },
+          baseSha: 'abc1235',
+          drift: { days: 24, description: '24 days', hours: 576, millis: 2073600000, present: true, sortValue: 24 },
           environments: [
             {
               buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
@@ -173,6 +335,62 @@ describe('teamHealthService', () => {
           name: 'some-service',
           prodEnvSha: 'abc1230',
           repo: 'some-service-repo',
+          staleness: { days: 3, description: '3 days', hours: 72, millis: 259200000, present: true, sortValue: 3 },
+        },
+      ])
+    })
+
+    it('no dev envs', async () => {
+      const now = new Date('2023-02-11')
+
+      redisService.readLatest.mockResolvedValue({
+        'some-service:preprod': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'some-service:prod': { v: '2023-01-15.120.abc1230', dateAdded: '2023-02-11' },
+      })
+
+      serviceCatalogueService.getComponents.mockResolvedValue([
+        {
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          latest_commit: { id: 1, sha: '123456789', date_time: '2023-02-02T01:02:03.000Z' },
+          envs: [
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+        } as Component,
+      ])
+
+      const driftData = await teamHealthService.getDriftData(['some-service'], now)
+      expect(driftData).toStrictEqual([
+        {
+          baseSha: '1234567',
+          drift: { days: 18, description: '18 days', hours: 432, millis: 1555200000, present: true, sortValue: 18 },
+          environments: [
+            {
+              buildDate: dayjs('2023-02-02', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'preprod',
+              sha: 'abc1234',
+              type: 'preprod',
+              version: '2023-02-02.123.abc1234',
+            },
+            {
+              buildDate: dayjs('2023-01-15', 'YYYY-MM-DD').toDate(),
+              componentName: 'some-service',
+              dateAdded: dayjs('2023-02-11', 'YYYY-MM-DD').toDate(),
+              daysSinceUpdated: 0,
+              name: 'prod',
+              sha: 'abc1230',
+              type: 'prod',
+              version: '2023-01-15.120.abc1230',
+            },
+          ],
+          latestCommit: { date: '2023-02-02', sha: '1234567' },
+          name: 'some-service',
+          prodEnvSha: 'abc1230',
+          repo: 'some-service-repo',
           staleness: { days: 9, description: '9 days', hours: 216, millis: 777600000, present: true, sortValue: 9 },
         },
       ])
@@ -191,39 +409,33 @@ describe('teamHealthService', () => {
 
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          environments: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
         },
         {
-          attributes: {
-            name: 'another-service',
-            github_repo: 'another-service-repo',
-            environments: [
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
+          name: 'another-service',
+          github_repo: 'another-service-repo',
+          environments: [
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
         },
         {
-          attributes: {
-            name: 'yet-another-service',
-            github_repo: 'yet-another-service-repo',
-            api: true,
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-          },
+          name: 'yet-another-service',
+          github_repo: 'yet-another-service-repo',
+          api: true,
+          environments: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
         },
-      ] as DataItem<Component>[])
+      ] as Component[])
 
       const driftData = await teamHealthService.getComponentsWeCannotCalculateHealthFor()
       expect(driftData).toStrictEqual([
@@ -245,31 +457,21 @@ describe('teamHealthService', () => {
 
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-            product: {
-              data: {
-                attributes: {
-                  name: 'product-1',
-                  slug: 'product-1-slug',
-                  team: {
-                    data: { attributes: { name: 'team-1', slug: 'team-1-slug' } },
-                  },
-                  service_area: {
-                    data: { attributes: { name: 'service-area-1', slug: 'service-area-1-slug' } },
-                  },
-                },
-              },
-            },
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          envs: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+          product: {
+            name: 'product-1',
+            slug: 'product-1-slug',
+            team: { name: 'team-1', slug: 'team-1-slug' },
+            service_area: { name: 'service-area-1', slug: 'service-area-1-slug' },
           },
         },
-      ] as DataItem<Component>[])
+      ] as Component[])
 
       const driftData = await teamHealthService.getTeamHealth(now)
       expect(driftData).toStrictEqual({
@@ -405,79 +607,50 @@ describe('teamHealthService', () => {
     it('should return components with missing teams', async () => {
       serviceCatalogueService.getComponents.mockResolvedValue([
         {
-          attributes: {
-            name: 'some-service',
-            github_repo: 'some-service-repo',
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-            product: {
-              data: {
-                attributes: {
-                  name: 'product-1',
-                  slug: 'product-1-slug',
-                  team: {
-                    data: { attributes: { name: 'team-1', slug: 'team-1-slug' } },
-                  },
-                  service_area: {
-                    data: { attributes: { name: 'service-area-1', slug: 'service-area-1-slug' } },
-                  },
-                },
-              },
-            },
+          name: 'some-service',
+          github_repo: 'some-service-repo',
+          environments: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+          product: {
+            name: 'product-1',
+            slug: 'product-1-slug',
+            team: { name: 'team-1', slug: 'team-1-slug' },
+            service_area: { name: 'service-area-1', slug: 'service-area-1-slug' },
           },
         },
         {
-          attributes: {
-            name: 'another-service',
-            github_repo: 'another-service-repo',
-            environments: [
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-            product: {
-              data: {
-                attributes: {
-                  name: 'product-1',
-                  slug: 'product-1-slug',
-                  team: {
-                    data: { attributes: { name: 'team-1', slug: 'team-1-slug' } },
-                  },
-                  service_area: {
-                    data: { attributes: { name: 'service-area-1', slug: 'service-area-1-slug' } },
-                  },
-                },
-              },
-            },
+          name: 'another-service',
+          github_repo: 'another-service-repo',
+          environments: [
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+          product: {
+            name: 'product-1',
+            slug: 'product-1-slug',
+            team: { name: 'team-1', slug: 'team-1-slug' },
+            service_area: { name: 'service-area-1', slug: 'service-area-1-slug' },
           },
         },
         {
-          attributes: {
-            name: 'yet-another-service',
-            github_repo: 'yet-another-service-repo',
-            api: true,
-            environments: [
-              { name: 'dev', type: 'dev' },
-              { name: 'preprod', type: 'preprod' },
-              { name: 'prod', type: 'prod' },
-            ],
-            product: {
-              data: {
-                attributes: {
-                  name: 'product-2',
-                  slug: 'product-2-slug',
-                  team: {},
-                  service_area: {
-                    data: { attributes: { name: 'service-area-1', slug: 'service-area-1-slug' } },
-                  },
-                },
-              },
-            },
+          name: 'yet-another-service',
+          github_repo: 'yet-another-service-repo',
+          api: true,
+          environments: [
+            { name: 'dev', type: 'dev' },
+            { name: 'preprod', type: 'preprod' },
+            { name: 'prod', type: 'prod' },
+          ],
+          product: {
+            name: 'product-2',
+            slug: 'product-2-slug',
+            service_area: { name: 'service-area-1', slug: 'service-area-1-slug' },
           },
         },
-      ] as DataItem<Component>[])
+      ] as Component[])
 
       const driftData = await teamHealthService.getComponentsMissingTeams()
       expect(driftData).toStrictEqual([

@@ -1,15 +1,12 @@
 import logger from '../../logger'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Component, DataItem, Product, SingleResponse, VeracodeResultsSummary } from '../data/strapiApiTypes'
 import AlertsService from './alertsService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { formatMonitorName } from '../utils/utils'
+import { Component, Product } from '../data/modelTypes'
 
 // Valid Veracode severity levels
-export const VALID_SEVERITIES = ['VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW'] as const
-export type Severity = (typeof VALID_SEVERITIES)[number]
-
-type StrapiProduct = { id?: number; attributes?: Record<string, unknown> }
+export const VALID_SEVERITIES = ['VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW']
 
 type TeamAlertSummary = {
   products: Record<string, Record<string, number>>
@@ -19,18 +16,17 @@ type TeamAlertSummary = {
 export default class TeamsSummaryCountService {
   constructor(
     private readonly alertsService: AlertsService,
+    private readonly serviceCatalogueService: ServiceCatalogueService,
     private readonly strapiClient: RestClientBuilder<StrapiApiClient>,
   ) {}
 
   /**
    * Helper: Fetch all products for a team by team slug
    */
-  async getProductsForTeam(teamSlug: string): Promise<DataItem<Product>[]> {
+  async getProductsForTeam(teamSlug: string): Promise<Product[]> {
     try {
       const team = await this.strapiClient('').getTeam({ teamSlug })
-      const products = Array.isArray(team.data)
-        ? team.data[0]?.attributes?.products?.data || []
-        : team.data?.attributes?.products?.data || []
+      const products = team.products || []
       logger.info(`[getProductsForTeam] Found ${products.length} products for team ${teamSlug}`)
       return products
     } catch (err) {
@@ -42,32 +38,25 @@ export default class TeamsSummaryCountService {
   /**
    * Helper: Fetch all components for a list of products
    */
-  async getComponentsForProducts(products: DataItem<Product>[]): Promise<Record<string, DataItem<Component>[]>> {
-    const promises = products.map(async product => {
-      const productSlug = product.attributes?.slug
+  async getComponentsForProducts(products: Product[]): Promise<Record<string, Component[]>> {
+    const promises = products?.map(async product => {
+      const productSlug = product?.slug
       try {
-        const productResp: SingleResponse<Product> = await this.strapiClient('').getProduct({ productSlug })
-        const components = Array.isArray(productResp.data)
-          ? productResp.data[0]?.attributes?.components?.data || []
-          : productResp.data?.attributes?.components?.data || []
+        const productResp: Product = await this.strapiClient('').getProduct({ productSlug })
+        const components = Array.isArray(productResp) ? productResp[0]?.components || [] : productResp?.components || []
 
-        logger.info(
-          `[getComponentsForProducts] Found ${components.length} components for product ${product.attributes.name}`,
-        )
-        return { name: product.attributes.name, components }
+        logger.info(`[getComponentsForProducts] Found ${components.length} components for product ${product.name}`)
+        return { name: product.name, components }
       } catch (err) {
-        logger.error(
-          `[getComponentsForProducts] Error fetching components for product ${product.attributes.name}:`,
-          err,
-        )
-        return { name: product.attributes.name, components: [] }
+        logger.error(`[getComponentsForProducts] Error fetching components for product ${product.name}:`, err)
+        return { name: product.name, components: [] }
       }
     })
 
     const results = await Promise.all(promises)
 
     const entries = results.map(({ name, components }) => [name, components])
-    const result = Object.fromEntries(entries) as Record<string, DataItem<Component>[]>
+    const result = Object.fromEntries(entries) as Record<string, Component[]>
 
     return result
   }
@@ -82,10 +71,7 @@ export default class TeamsSummaryCountService {
     try {
       const products = await this.getProductsForTeam(teamSlug)
       const productComponentMap = await this.getComponentsForProducts(products)
-
-      const allComponentNames = Object.values(productComponentMap).flatMap(components =>
-        components.map(c => c.attributes.name),
-      )
+      const allComponentNames = Object.values(productComponentMap).flatMap(components => components.map(c => c.name))
       logger.info(`[getTeamAlertSummary] Total components found: ${allComponentNames.length}`)
 
       const alertCounts = await this.getFiringAlertCountsForComponents(allComponentNames)
@@ -93,7 +79,7 @@ export default class TeamsSummaryCountService {
         (accumulatedSummary, [productName, components]) => {
           const componentAlertCounts = components.reduce(
             (componentCounts, component) => {
-              const componentName = component.attributes?.name
+              const componentName = component.name
               if (!componentName) return componentCounts
               const alertCount = alertCounts[componentName] || 0
               return {
@@ -163,25 +149,22 @@ export default class TeamsSummaryCountService {
   /**
    * Helper: Get Trivy CRITICAL & HIGH vuln counts for a team's products
    */
-  async getTeamTrivyVulnerabilityCounts(
-    products: StrapiProduct[],
-    serviceCatalogueService: ServiceCatalogueService,
-  ): Promise<{ critical: number; high: number }> {
+  async getTeamTrivyVulnerabilityCounts(products: Product[]): Promise<{ critical: number; high: number }> {
     if (!Array.isArray(products) || products.length === 0) {
       return { critical: 0, high: 0 }
     }
 
     try {
-      const trivyScans = await serviceCatalogueService.getTrivyScans()
-      const allComponents = await serviceCatalogueService.getComponents()
+      const trivyScans = await this.serviceCatalogueService.getTrivyScans()
+      const allComponents = await this.serviceCatalogueService.getComponents()
 
       const productIds = new Set(products.map(p => p.id))
       const validComponents = allComponents
         .filter(component => {
-          const productId = component?.attributes?.product?.data?.id
+          const productId = component?.product?.id
           return productId && productIds.has(productId)
         })
-        .map(component => formatMonitorName(component.attributes.name))
+        .map(component => formatMonitorName(component.name))
 
       const componentNamesSet = new Set(validComponents)
 
@@ -227,40 +210,38 @@ export default class TeamsSummaryCountService {
    * Helper: Get Veracode VERY_HIGH, HIGH, MEDIUM, LOW vuln counts for a team's products
    */
   async getTeamVeracodeVulnerabilityCounts(
-    products: StrapiProduct[],
-    serviceCatalogueService: ServiceCatalogueService,
+    products: Product[],
   ): Promise<{ veryHigh: number; high: number; medium: number; low: number }> {
     if (!Array.isArray(products) || products.length === 0) {
       return { veryHigh: 0, high: 0, medium: 0, low: 0 }
     }
     try {
-      const allComponents = await serviceCatalogueService.getComponents()
+      const allComponents = await this.serviceCatalogueService.getComponents()
       const productIds = new Set(products.map(p => p.id))
       const validComponents = allComponents.filter(component => {
-        const productId = component?.attributes?.product?.data?.id
+        const productId = component?.product?.id
         return productId && productIds.has(productId)
       })
 
-      const counts = validComponents.reduce(
-        (total, component) => {
-          const summary = component.attributes?.veracode_results_summary as VeracodeResultsSummary | undefined
-          if (!summary?.severity) return total
+      // Initialize counts with all valid severities set to 0
+      const counts = Object.fromEntries(VALID_SEVERITIES.map(severity => [severity, 0]))
 
-          return summary.severity.reduce((outerTotal, severity) => {
-            return severity.category.reduce((innerTotal, category) => {
-              if (VALID_SEVERITIES.includes(category.severity as Severity)) {
-                return {
-                  ...innerTotal,
-                  [category.severity]: innerTotal[category.severity as Severity] + category.count,
-                }
-              }
-              logger.warn(`[getTeamVeracodeVulnerabilityCounts] Unexpected severity: ${category.severity}`)
-              return innerTotal
-            }, outerTotal)
-          }, total)
-        },
-        VALID_SEVERITIES.reduce((acc, sev) => ({ ...acc, [sev]: 0 }), {} as Record<Severity, number>),
-      )
+      for (const component of validComponents) {
+        const summary = component.veracode_results_summary
+
+        const severities: [string, number][] = (summary?.severity || [])
+          .flatMap(severity => severity.category)
+          .map(category => [category.severity, category.count])
+
+        for (const [severity, count] of severities) {
+          if (VALID_SEVERITIES.includes(severity)) {
+            counts[severity] += count
+          } else {
+            logger.warn(`[getTeamVeracodeVulnerabilityCounts] Unexpected severity: ${severity}`)
+          }
+        }
+      }
+
       logger.info(
         `[Veracode] VERY_HIGH: ${counts.VERY_HIGH}, HIGH: ${counts.HIGH}, MEDIUM: ${counts.MEDIUM}, LOW: ${counts.LOW}`,
       )

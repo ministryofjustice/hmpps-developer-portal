@@ -8,6 +8,7 @@ import {
   utcTimestampToUtcDateTime,
   mapToCanonicalEnv,
 } from '../utils/utils'
+import { Environment } from '../data/strapiApiTypes'
 
 interface DisplayAlert {
   alertname: string
@@ -40,8 +41,8 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const component = await serviceCatalogueService.getComponent({ componentName })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { envs } = component
-    const prodEnvData = component.envs?.data?.filter(environment => environment.attributes.name === 'prod')
-    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].attributes.alerts_slack_channel
+    const prodEnvData = component.envs?.filter(environment => environment.name === 'prod')
+    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].alerts_slack_channel
     const displayComponent = {
       name: component.name,
       description: component.description,
@@ -57,7 +58,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       frontEnd: component.frontend,
       partOfMonorepo: component.part_of_monorepo,
       language: component.language,
-      product: component.product?.data,
+      product: component.product,
       versions: component.versions,
       dependencyTypes: dependencies.categories,
       dependents: dependencies.dependents,
@@ -93,10 +94,8 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const environmentName = getEnvironmentName(req)
 
     const component = await serviceCatalogueService.getComponent({ componentName })
-    const filteredEnvironment = component.envs?.data?.filter(
-      environment => environment.attributes.name === environmentName,
-    )
-    const envAttributes = filteredEnvironment.length === 0 ? {} : filteredEnvironment[0].attributes
+    const filteredEnvironment = component.envs?.filter(environment => environment.name === environmentName)
+    const envAttributes = filteredEnvironment.length === 0 ? ({} as Environment) : filteredEnvironment[0]
     const activeAgencies =
       filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
     const allowList = new Map()
@@ -105,20 +104,18 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       const ipAllowListFiles = Object.keys(envAttributes.ip_allow_list)
       allowList.set('groups', [])
       ipAllowListFiles.forEach(fileName => {
-        // @ts-expect-error Suppress any declaration
         Object.keys(envAttributes.ip_allow_list[fileName]).forEach(item => {
           if (item === 'generic-service') {
-            // @ts-expect-error Suppress any declaration
             const genericService = envAttributes.ip_allow_list[fileName]['generic-service']
             Object.keys(genericService).forEach(ipName => {
-              if (ipName !== 'groups') {
+              if (ipName !== 'groups' && typeof genericService === 'object') {
                 allowList.set(ipName, genericService[ipName])
               } else {
-                allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...genericService[ipName]])]))
+                const groups = genericService as Record<string, string>
+                allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...groups[ipName]])]))
               }
             })
           } else {
-            // @ts-expect-error Suppress any declaration
             allowList.set(item, envAttributes.ip_allow_list[fileName][item])
           }
         })
@@ -127,7 +124,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
 
     const displayComponent = {
       name: componentName,
-      product: component.product?.data,
+      product: component.product,
       api: component.api,
       environment: envAttributes,
       activeAgencies,

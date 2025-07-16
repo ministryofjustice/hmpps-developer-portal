@@ -2,7 +2,6 @@ import { Router } from 'express'
 import dayjs from 'dayjs'
 import type { Services } from '../services'
 import { veracodeFilters, utcTimestampToUtcDateTime } from '../utils/utils'
-import { VeracodeResultsSummary } from '../data/strapiApiTypes'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -24,22 +23,23 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const unknown = resultFilters.includes('unknown')
 
     const rows = allComponents
-      .filter(component => veracodeFilters(passed, failed, unknown, component.attributes.veracode_policy_rules_status))
+      .filter(component => veracodeFilters(passed, failed, unknown, component.veracode_policy_rules_status))
       .map(component => {
-        const hasVeracode = !!component.attributes.veracode_results_summary
+        const hasVeracode = !!component.veracode_results_summary
         const severityLevels = {
           LOW: 0,
           MEDIUM: 0,
           HIGH: 0,
           VERY_HIGH: 0,
         }
+        type Severity = keyof typeof severityLevels
 
-        const veracodeSummary = component.attributes.veracode_results_summary as VeracodeResultsSummary
+        const teamName = component.product?.team?.name
+        const veracodeSummary = component.veracode_results_summary
 
         veracodeSummary?.severity?.forEach(severity => {
           severity.category.forEach(category => {
-            // @ts-expect-error Suppress any declaration
-            severityLevels[category.severity] += category.count
+            severityLevels[category.severity as Severity] += category.count
           })
         })
 
@@ -47,20 +47,19 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
         if (!hasVeracode) {
           result = 'N/A'
-        } else if (component.attributes.veracode_policy_rules_status === 'Pass') {
+        } else if (component.veracode_policy_rules_status === 'Pass') {
           result = 'Passed'
         }
 
         return {
-          name: component.attributes.name,
+          name: component.name,
           hasVeracode,
           result,
-          report: hasVeracode ? component.attributes.veracode_results_url : 'N/A',
-          date: hasVeracode
-            ? dayjs(component.attributes.veracode_last_completed_scan_date).format('YYYY-MM-DD HH:mm')
-            : 'N/A',
+          report: hasVeracode ? component.veracode_results_url : 'N/A',
+          date: hasVeracode ? dayjs(component.veracode_last_completed_scan_date).format('YYYY-MM-DD HH:mm') : 'N/A',
           codeScore: hasVeracode ? veracodeSummary['static-analysis'].score : 0,
           severityLevels,
+          team: teamName,
         }
       })
 

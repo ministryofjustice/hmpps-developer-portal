@@ -1,6 +1,6 @@
 import { MoJSelectDataItem } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { formatMonitorName, sortByName, sortData } from '../utils/utils'
+import { formatMonitorName, sortByName } from '../utils/utils'
 
 export default class DataFilterService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -14,16 +14,16 @@ export default class DataFilterService {
   }): Promise<MoJSelectDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const customComponentsData = await strapiApiClient.getCustomComponentViews({})
-    const customComponents = customComponentsData.data.sort(sortData)
+    const customComponents = customComponentsData.sort(sortByName)
     const customComponentsList = customComponents.map(customComponentView => {
-      const formattedName = formatMonitorName(customComponentView.attributes.name)
+      const formattedName = formatMonitorName(customComponentView.name)
 
       return {
         value: useFormattedName ? formattedName : customComponentView.id.toString(),
-        text: customComponentView.attributes.name,
+        text: customComponentView.name,
         selected: useFormattedName
           ? formattedName === customComponentName
-          : customComponentView.attributes.name === customComponentName,
+          : customComponentView.name === customComponentName,
       }
     })
     customComponentsList.unshift({ value: '', text: '', selected: false })
@@ -63,15 +63,15 @@ export default class DataFilterService {
     useFormattedName?: boolean
   }): Promise<MoJSelectDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const teamsData = await strapiApiClient.getTeams()
-    const teams = teamsData.data.sort(sortData)
+    const teamsData = await strapiApiClient.getTeams({})
+    const teams = teamsData.sort(sortByName)
     const teamsList = teams.map(team => {
-      const formattedName = formatMonitorName(team.attributes.name)
+      const formattedName = formatMonitorName(team.name)
 
       return {
         value: useFormattedName ? formattedName : team.id.toString(),
-        text: team.attributes.name,
-        selected: useFormattedName ? formattedName === teamName : team.attributes.name === teamName,
+        text: team.name,
+        selected: useFormattedName ? formattedName === teamName : team.name === teamName,
       }
     })
     teamsList.unshift({ value: '', text: '', selected: false })
@@ -88,14 +88,14 @@ export default class DataFilterService {
   }): Promise<MoJSelectDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const productsData = await strapiApiClient.getProducts({})
-    const products = productsData.data.sort(sortData)
+    const products = productsData.sort(sortByName)
     const productsList = products.map(product => {
-      const formattedName = formatMonitorName(product.attributes.name)
+      const formattedName = formatMonitorName(product.name)
 
       return {
         value: useFormattedName ? formattedName : product.id.toString(),
-        text: product.attributes.name,
-        selected: useFormattedName ? formattedName === productName : product.attributes.name === productName,
+        text: product.name,
+        selected: useFormattedName ? formattedName === productName : product.name === productName,
       }
     })
     productsList.unshift({ value: '', text: '', selected: false })
@@ -112,15 +112,15 @@ export default class DataFilterService {
   }): Promise<MoJSelectDataItem[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const productsData = await strapiApiClient.getProducts({})
-    const products = productsData.data.sort(sortData)
+    const products = productsData.sort(sortByName)
     const productsIdList = products.map(product => {
-      const formattedName = formatMonitorName(product.attributes.name)
-      const concatenatedformattedName = `${formattedName} [${product.attributes.p_id}]`
+      const formattedName = formatMonitorName(product.name)
+      const concatenatedformattedName = `${formattedName} [${product.p_id}]`
 
       return {
-        value: product.attributes.p_id,
-        text: useFormattedName ? concatenatedformattedName : `${product.attributes.name} [${product.attributes.p_id}]`,
-        selected: product.attributes.p_id === productId,
+        value: product.p_id,
+        text: useFormattedName ? concatenatedformattedName : `${product.name} [${product.p_id}]`,
+        selected: product.p_id === productId,
       }
     })
     productsIdList.unshift({ value: '', text: '', selected: false })

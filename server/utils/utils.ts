@@ -5,14 +5,18 @@ import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
 import { Alert, RdsEntry } from '../@types'
-import { DataItem, Environment } from '../data/strapiApiTypes'
+import { Environment } from '../data/strapiApiTypes'
+import { TrivyScanType } from '../data/converters/modelTypes'
+
 import type { ServiceCatalogueService } from '../services'
+import { DataItem } from '../data/strapiClientTypes'
+import type { Team } from '../data/modelTypes'
 
 dayjs.extend(relativeTime.default)
 
 type HasName = { attributes?: { name: string } }
-type HasRepoName = { github_repo: string }
-type HasTeamName = { attributes?: { team_name: string } }
+type HasRepoName = { github_repo?: string }
+type HasTeamName = { team_name?: string }
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -84,7 +88,7 @@ export const sortData = (dataItem: HasName, compareDataItem: HasName) => {
   return dataItem.attributes.name.localeCompare(compareDataItem.attributes.name)
 }
 
-export const sortByName = (dataItem: { name: string }, compareDataItem: { name: string }) => {
+export const sortByName = (dataItem: { name?: string }, compareDataItem: { name?: string }) => {
   return dataItem.name.localeCompare(compareDataItem.name)
 }
 
@@ -102,12 +106,11 @@ export const sortComponentRequestData = (dataItem: HasRepoName, compareDataItem:
 }
 
 export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasTeamName) => {
-  return dataItem.attributes.team_name.localeCompare(compareDataItem.attributes.team_name)
+  return dataItem.team_name.localeCompare(compareDataItem.team_name)
 }
 
 export const getFormattedName = (req: Request, param: string): string => {
   const paramName = req.params[param]
-
   return paramName.replace(/[^-a-zA-Z0-9_.]/g, '')
 }
 
@@ -144,16 +147,40 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
   return 'none'
 }
 
-export const addAlertSlackChannel = (revisedEnvAlerts: Alert[], environments: DataItem<Environment>[]) => {
-  return revisedEnvAlerts.map(alert => {
-    const match = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
-    if (match) {
-      return {
-        ...alert,
-        alert_slack_channel: match.attributes.alerts_slack_channel,
-      }
-    }
-    return alert
+function findTeamMatch(teams: Team[], name: string) {
+  return teams.find(team =>
+    team?.products?.some(product => product?.components?.some(component => component.name === name)),
+  )
+}
+
+// Match alert data to corresponding environments and components to get slack channel and team properties
+export const addNewPropertiesToAlert = (
+  revisedAlerts: Alert[],
+  environments: DataItem<Environment>[],
+  teams: Team[],
+) => {
+  return revisedAlerts.map(alert => {
+    const envMatch = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
+    const teamMatch = findTeamMatch(teams, alert.labels.application)
+
+    const updatedAlert = { ...alert }
+
+    if (envMatch) updatedAlert.labels.alert_slack_channel = envMatch.attributes.alerts_slack_channel
+    if (teamMatch) updatedAlert.labels.team = teamMatch.name
+
+    return updatedAlert
+  })
+}
+
+export async function addTeamToTrivyScan(teams: Team[], trivyScan: TrivyScanType[]) {
+  return trivyScan.map(scan => {
+    const scanMatch = findTeamMatch(teams, scan.name)
+
+    const updatedScan = { ...scan }
+
+    if (scanMatch) updatedScan.team = scanMatch.name
+
+    return updatedScan
   })
 }
 
@@ -169,10 +196,9 @@ export const mapAlertEnvironments = (alerts: Alert[]) => {
     return updatedAlert
   })
 }
-
-export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[]) => {
+export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[], teams: Team[]) => {
   const revisedEnvAlerts = mapAlertEnvironments(alerts)
-  const revisedAlerts = addAlertSlackChannel(revisedEnvAlerts, environments)
+  const revisedAlerts = addNewPropertiesToAlert(revisedEnvAlerts, environments, teams)
 
   return revisedAlerts
 }
@@ -194,7 +220,7 @@ export async function getDependencyNames(serviceCatalogueService: ServiceCatalog
   const namesSet = new Set<string>()
 
   components.forEach(component => {
-    const versions = component.attributes?.versions as Record<string, Record<string, string>>
+    const { versions } = component
     if (versions && versions[dependencyType]) {
       Object.keys(versions[dependencyType]).forEach(name => namesSet.add(name))
     }

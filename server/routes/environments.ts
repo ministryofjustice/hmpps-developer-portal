@@ -27,8 +27,8 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const component = await serviceCatalogueService.getComponent({ componentName })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { envs } = component
-    const prodEnvData = component.envs?.data?.filter(environment => environment.attributes?.name === 'prod')
-    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].attributes.alerts_slack_channel
+    const prodEnvData = component.envs?.find(environment => environment.name === 'prod')
+    const alertsSlackChannel = prodEnvData.alerts_slack_channel
     const displayComponent = {
       name: component.name,
       description: component.description,
@@ -44,7 +44,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
       frontEnd: component.frontend,
       partOfMonorepo: component.part_of_monorepo,
       language: component.language,
-      product: component.product?.data,
+      product: component.product,
       versions: component.versions,
       dependencyTypes: dependencies.categories,
       dependents: dependencies.dependents,
@@ -62,31 +62,28 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const environmentName = getEnvironmentName(req)
 
     const component = await serviceCatalogueService.getComponent({ componentName })
-    const filteredEnvironment = component.envs?.data?.filter(envs => envs.attributes?.name === environmentName)
-    const envAttributes = filteredEnvironment.length === 0 ? {} : filteredEnvironment[0].attributes
-    const activeAgencies =
-      filteredEnvironment.length === 0 ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
+    const envAttributes = component.envs?.find(envs => envs.name === environmentName)
+
+    const activeAgencies = envAttributes ? '' : formatActiveAgencies(envAttributes.active_agencies as Array<string>)
     const allowList = new Map()
 
     if (envAttributes.ip_allow_list && envAttributes?.ip_allow_list_enabled) {
       const ipAllowListFiles = Object.keys(envAttributes.ip_allow_list)
 
       ipAllowListFiles.forEach(fileName => {
-        // @ts-expect-error Suppress any declaration
         Object.keys(envAttributes.ip_allow_list[fileName]).forEach(item => {
           if (item === 'generic-service') {
             allowList.set('groups', [])
-            // @ts-expect-error Suppress any declaration
             const genericService = envAttributes.ip_allow_list[fileName]['generic-service']
             Object.keys(genericService).forEach(ipName => {
-              if (ipName !== 'groups') {
+              if (ipName !== 'groups' && typeof genericService === 'object') {
                 allowList.set(ipName, genericService[ipName])
               } else {
-                allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...genericService[ipName]])]))
+                const groups = genericService as Record<string, string>
+                allowList.set(ipName, Array.from([...new Set([...allowList.get(ipName), ...groups[ipName]])]))
               }
             })
           } else {
-            // @ts-expect-error Suppress any declaration
             allowList.set(item, envAttributes.ip_allow_list[fileName][item])
           }
         })
@@ -96,7 +93,7 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const displayComponent = {
       name: componentName,
       api: component.api,
-      environment: filteredEnvironment,
+      environment: envAttributes,
       activeAgencies,
       allowList,
     }

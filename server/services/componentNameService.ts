@@ -1,6 +1,5 @@
 import type { StrapiApiClient, RestClientBuilder } from '../data'
-import { Component, DataItem } from '../data/strapiApiTypes'
-import { formatMonitorName, sortData } from '../utils/utils'
+import { formatMonitorName, sortByName } from '../utils/utils'
 
 export default class ComponentNameService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
@@ -8,19 +7,17 @@ export default class ComponentNameService {
   async getAllDeployedComponents(): Promise<string[]> {
     const componentData = await this.strapiApiClientFactory('').getComponents()
 
-    const rawComponents = componentData.data.sort(sortData)
+    const rawComponents = componentData.sort(sortByName)
 
-    const components = rawComponents
-      .filter(component => component.attributes?.environments?.length)
-      .map(component => component.attributes.name)
+    const components = rawComponents.filter(component => component.envs?.length).map(component => component.name)
 
     return components
   }
 
   async getAllDeployedComponentsForTeam(teamName: string): Promise<string[]> {
-    const teams = await this.strapiApiClientFactory('').getTeams()
+    const teams = await this.strapiApiClientFactory('').getTeams({})
 
-    const teamSummary = teams.data.find(team => formatMonitorName(team.attributes.name) === teamName)
+    const teamSummary = teams.find(team => formatMonitorName(team.name) === teamName)
 
     if (!teamSummary) throw Error(`No team called: ${teamName}`)
 
@@ -29,12 +26,15 @@ export default class ComponentNameService {
       withEnvironments: true,
     })
 
-    return teamDetails.data.attributes.products.data.flatMap(product =>
-      product.attributes?.components?.data
-        .filter(component => component.attributes?.environments?.length)
-        .sort(sortData)
-        .map(component => component.attributes.name),
-    )
+    const componentNames = teamDetails.products
+      .filter(product => product?.components)
+      .sort(sortByName)
+      .flatMap(product =>
+        product.components
+          .filter(component => component.envs?.length > 0) // Ensure only components with envs are included
+          .map(component => component.name),
+      )
+    return componentNames
   }
 
   async getAllDeployedComponentsForServiceArea(serviceAreaName: string): Promise<string[]> {
@@ -49,51 +49,52 @@ export default class ComponentNameService {
       withProducts: true,
     })
 
-    return serviceAreaDetails.data.attributes.products.data.flatMap(product =>
-      product.attributes?.components?.data
-        .filter(component => component.attributes?.environments?.length)
-        .sort(sortData)
-        .map(component => component.attributes.name),
-    )
+    const componentNames = serviceAreaDetails.products
+      .filter(product => product?.components)
+      .sort(sortByName)
+      .flatMap(product =>
+        product.components
+          .filter(component => component.envs?.length > 0) // Ensure only components with envs are included
+          .map(component => component.name),
+      )
+    return componentNames
   }
 
   async getAllDeployedComponentsForProduct(productName: string): Promise<string[]> {
     const products = await this.strapiApiClientFactory('').getProducts({ withEnvironments: true })
 
-    const productDetails = products.data.find(product => formatMonitorName(product.attributes.name) === productName)
+    const productDetails = products.find(product => formatMonitorName(product.name) === productName)
 
     if (!productDetails) throw Error(`No product called: ${productName}`)
 
-    const components = productDetails.attributes?.components?.data as unknown as DataItem<Component>[]
+    const componentNames = productDetails.components
+      .filter(component => component.envs?.length)
+      .sort(sortByName)
+      .map(component => component.name)
 
-    return components
-      .filter(component => component.attributes?.environments?.length)
-      .sort(sortData)
-      .map(component => component.attributes.name)
+    return componentNames
   }
 
   async getAllDeployedComponentsForCustomComponents(customComponentName: string): Promise<string[]> {
     const customComponents = await this.strapiApiClientFactory('').getCustomComponentViews({ withEnvironments: true })
 
-    const customComponentDetails = customComponents.data.find(
-      customComponentView => formatMonitorName(customComponentView.attributes.name) === customComponentName,
+    const customComponentDetails = customComponents.find(
+      customComponentView => formatMonitorName(customComponentView.name) === customComponentName,
     )
 
     if (!customComponentDetails) throw Error(`No custom component called: ${customComponentName}`)
 
-    const components = customComponentDetails.attributes?.components?.data as unknown as DataItem<Component>[]
+    const { components } = customComponentDetails
 
     return components
-      .filter(component => component.attributes?.environments?.length)
-      .sort(sortData)
-      .map(component => component.attributes.name)
+      .filter(component => component.envs && component.envs.length > 0)
+      .sort(sortByName)
+      .map(component => component.name)
   }
 
   async checkComponentExists(componentName: string): Promise<boolean> {
     const componentData = await this.strapiApiClientFactory('').getComponents()
-    const components = componentData.data.find(
-      component => formatMonitorName(component.attributes.name) === componentName,
-    )
+    const components = componentData.find(component => formatMonitorName(component.name) === componentName)
     return !!components
   }
 

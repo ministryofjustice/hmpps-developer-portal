@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import { GithubRepoRequestRequest, GithubProjectVisibility } from '../data/strapiApiTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
 import { FieldValidationError } from '../@types/FieldValidationError'
+import { GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
 
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()

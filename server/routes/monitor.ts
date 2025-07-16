@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { Environment } from '../data/strapiApiTypes'
 import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow, formatMonitorName } from '../utils/utils'
+import { Component } from '../data/modelTypes'
 
 type MonitorEnvironment = {
   componentName: string
@@ -14,19 +14,7 @@ type MonitorEnvironment = {
   isProbation: boolean
 }
 
-type ComponentToMonitor = {
-  attributes?: {
-    name?: string
-    environments?: Environment[]
-    product?: {
-      data?: {
-        attributes?: {
-          p_id?: string
-        }
-      }
-    }
-  }
-}
+type HealthResult = { version: string; lastMessageTime: string; dateAdded: string; healthStatus: string }
 
 export default function routes({ serviceCatalogueService, redisService, dataFilterService }: Services): Router {
   const router = Router()
@@ -44,9 +32,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         logger.info(`Looking for product with name that matches: ${monitorName}`)
 
         // Try to match by name, slug, or formatted name
-        const matchingProduct = products.find(
-          p => p.attributes.name === monitorName || formatMonitorName(p.attributes.name) === monitorName,
-        )
+        const matchingProduct = products.find(p => p.name === monitorName || formatMonitorName(p.name) === monitorName)
 
         if (matchingProduct?.id) {
           monitorId = matchingProduct.id
@@ -54,7 +40,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         } else {
           logger.warn(`No product found matching name: ${monitorName}`)
           // List all available products for debugging
-          logger.info(`Available products: ${products.map(p => p.attributes.name).join(', ')}`)
+          logger.info(`Available products: ${products.map(p => p.name).join(', ')}`)
         }
       } catch (error) {
         logger.warn(`Failed to find product by name ${monitorName}`, error)
@@ -97,7 +83,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       const monitorType = getMonitorType(req)
       let monitorId = getNumericId(req, 'monitorId')
       logger.info(`Request for /monitor/components/${monitorType}/${monitorId}, query: ${JSON.stringify(req.query)}`)
-
       let environments: MonitorEnvironment[] = []
 
       // If we have no ID but have a product name in query, look it up
@@ -106,12 +91,9 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           const products = await serviceCatalogueService.getProducts({})
           const productName = req.query.name as string
           logger.info(`Looking up product by name: ${productName}`)
-
           // Try to match by name, slug, or formatted name
           const matchingProduct = products.find(
-            p =>
-              p.attributes.name === productName ||
-              formatMonitorName(p.attributes.name) === formatMonitorName(productName),
+            p => p.name === productName || formatMonitorName(p.name) === formatMonitorName(productName),
           )
 
           if (matchingProduct?.id) {
@@ -119,7 +101,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
             logger.info(`Found product ID: ${monitorId} for name: ${productName}`)
           } else {
             logger.warn(`No product found with name: ${productName}`)
-            logger.info(`Available products: ${products.map(p => p.attributes.name).join(', ')}`)
+            logger.info(`Available products: ${products.map(p => p.name).join(', ')}`)
           }
         } catch (error) {
           logger.warn(`Failed to find product by name ${req.query.name}`, error)
@@ -133,8 +115,8 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           customComponentId: monitorId,
           withEnvironments: true,
         })
-        customComponentView.components.data.forEach(component => {
-          environments = environments.concat(getEnvironmentData(component))
+        customComponentView.components.forEach(component => {
+          environments = environments.concat(getUnwrappedEnvironmentData(component))
         })
       } else if (monitorType === 'product') {
         const product = await serviceCatalogueService.getProduct({
@@ -142,15 +124,14 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           withEnvironments: true,
         })
 
-        product.components.data.forEach(component => {
-          environments = environments.concat(getEnvironmentData(component, product.p_id))
+        product.components.forEach(component => {
+          environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
         })
       } else if (monitorType === 'team') {
         const team = await serviceCatalogueService.getTeam({ teamId: monitorId, withEnvironments: true })
-
-        team.products.data.forEach(product => {
-          product.attributes.components.data.forEach(component => {
-            environments = environments.concat(getEnvironmentData(component, product.attributes.p_id))
+        team.products.forEach(product => {
+          product.components.forEach(component => {
+            environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
           })
         })
       } else if (monitorType === 'serviceArea') {
@@ -158,20 +139,18 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           serviceAreaId: monitorId,
           withProducts: true,
         })
-
-        serviceArea.products.data.forEach(product => {
-          product.attributes.components.data.forEach(component => {
-            environments = environments.concat(getEnvironmentData(component, product.attributes.p_id))
+        serviceArea.products.forEach(product => {
+          product.components.forEach(component => {
+            environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
           })
         })
       } else {
         const components = await serviceCatalogueService.getComponents()
 
         components.forEach(component => {
-          environments = environments.concat(getEnvironmentData(component))
+          environments = environments.concat(getUnwrappedEnvironmentData(component))
         })
       }
-
       res.json(environments)
     } catch (error) {
       logger.error('Error fetching component environments', error)
@@ -194,17 +173,19 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
     const envNames = Array.from(new Set([health, versions].flatMap(Object.keys)))
 
-    const result = envNames.reduce((acc, key) => {
-      const { v: version } = versions[key] || {}
-      const { json, dateAdded } = health[key] || {}
+    const result = envNames.reduce(
+      (acc, key) => {
+        const { v: version } = versions[key] || {}
+        const { json, dateAdded } = health[key] || {}
 
-      const lastMessageTime = relativeTimeFromNow(new Date(dateAdded))
-      const healthStatus = getHealthStatus(json)
+        const lastMessageTime = relativeTimeFromNow(new Date(dateAdded))
+        const healthStatus = getHealthStatus(json)
 
-      // @ts-expect-error Suppress any declaration
-      acc[key] = { version, lastMessageTime, dateAdded, healthStatus }
-      return acc
-    }, {})
+        acc[key] = { version, lastMessageTime, dateAdded, healthStatus }
+        return acc
+      },
+      {} as Record<string, HealthResult>,
+    )
 
     res.send(JSON.stringify(Object.entries(result)))
   })
@@ -212,32 +193,34 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   return router
 }
 
-const getEnvironmentData = (component: ComponentToMonitor, selectedProductId?: string): MonitorEnvironment[] => {
-  const typedEnvironments = component.attributes.environments as Environment[]
+const getUnwrappedEnvironmentData = (component: Component, selectedProductId?: string): MonitorEnvironment[] => {
+  const typedEnvironments = component.envs
   let productId
   if (selectedProductId) {
     productId = selectedProductId
   } else {
-    productId = component.attributes.product?.data?.attributes?.p_id
+    productId = component.product?.p_id
   }
 
   const isPrisons = `${productId}`.startsWith('DPS')
   const isProbation = `${productId}`.startsWith('HMPPS')
   const environments: MonitorEnvironment[] = []
 
-  typedEnvironments.forEach(environment => {
-    if (environment.monitor) {
-      environments.push({
-        componentName: component.attributes.name as string,
-        environmentName: environment.name as string,
-        environmentUrl: environment.url as string,
-        environmentHealth: environment.health_path as string,
-        environmentType: environment.type as string,
-        isPrisons,
-        isProbation,
-      })
-    }
-  })
+  if (Array.isArray(typedEnvironments) && typedEnvironments.length > 0) {
+    typedEnvironments.forEach(environment => {
+      if (environment.monitor) {
+        environments.push({
+          componentName: component.name as string,
+          environmentName: environment.name as string,
+          environmentUrl: environment.url as string,
+          environmentHealth: environment.health_path as string,
+          environmentType: environment.type as string,
+          isPrisons,
+          isProbation,
+        })
+      }
+    })
+  }
 
   return environments
 }

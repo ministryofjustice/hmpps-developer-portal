@@ -1,7 +1,13 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import { utcTimestampToUtcDateTime, sortBySeverity, getComponentName, getEnvironmentName } from '../utils/utils'
-import { ScanResult, Summary, TrivyScanType } from '../data/converters/modelTypes'
+import {
+  utcTimestampToUtcDateTime,
+  sortBySeverity,
+  getComponentName,
+  getEnvironmentName,
+  addTeamToTrivyScan,
+} from '../utils/utils'
+import { ScanResult, Summary } from '../data/converters/modelTypes'
 
 const createSummaryTable = (summary: Summary): Array<{ category: string; severity: string; count: number }> => {
   const dataTable: Array<{ category: string; severity: string; count: number }> = []
@@ -120,19 +126,18 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   router.get('/data', async (req, res) => {
     const trivyScans = await serviceCatalogueService.getTrivyScans()
+    const teams = await serviceCatalogueService.getTeams({ withComponents: true })
+    const revisedScans = await addTeamToTrivyScan(teams, trivyScans)
 
-    res.json(trivyScans)
+    res.json(revisedScans)
   })
 
   router.get('/:componentName/environments/:environmentName', async (req, res) => {
     const componentName = getComponentName(req)
     const environmentName = getEnvironmentName(req)
     const component = await serviceCatalogueService.getComponent({ componentName })
-    const filteredEnvironment = component.envs?.data?.filter(
-      environment => environment.attributes.name === environmentName,
-    )
-    const envAttributes = filteredEnvironment.length === 0 ? {} : filteredEnvironment[0].attributes
-    const scan = envAttributes.trivy_scan.data.attributes as TrivyScanType
+    const filteredEnvironment = component.envs?.find(environment => environment.name === environmentName)
+    const scan = filteredEnvironment.trivy_scan
     const summary = scan.scan_summary?.summary
     const scanResults = scan.scan_summary?.scan_result
     const scanDate = utcTimestampToUtcDateTime(scan.trivy_scan_timestamp)
@@ -149,6 +154,5 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       secretResultTable,
     })
   })
-
   return router
 }

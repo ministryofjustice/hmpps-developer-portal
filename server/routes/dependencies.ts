@@ -19,33 +19,31 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const displayComponents = components
       .filter(component => {
-        // @ts-expect-error Suppress any declaration
-        if (component.attributes?.versions && component.attributes?.versions[dependencyType]) {
-          // @ts-expect-error Suppress any declaration
-          return component.attributes.versions[dependencyType][dependencyName]
+        if (component.versions && component.versions[dependencyType]) {
+          return component.versions[dependencyType][dependencyName]
         }
 
         return false
       })
       .map(component => {
-        // @ts-expect-error Suppress any declaration
-        const dependencyData = component.attributes?.versions?.[dependencyType]?.[dependencyName]
-        const githubRepo = component.attributes?.github_repo ?? ''
+        const dependencyData = component.versions?.[dependencyType]?.[dependencyName]
+        const githubRepo = component.github_repo ?? ''
 
         let dependencyVersion = ''
+        let location = ''
         if (typeof dependencyData === 'string' || typeof dependencyData === 'number') {
           dependencyVersion = String(dependencyData)
         } else if (typeof dependencyData === 'object' && dependencyData !== null) {
           dependencyVersion = dependencyData.ref ?? dependencyData.version ?? ''
+          location = dependencyData?.path
         }
 
-        const location = dependencyData?.path ?? ''
         const githubUrl =
           githubRepo && location ? `https://github.com/ministryofjustice/${githubRepo}/blob/main/${location}` : ''
 
         return {
           id: component.id,
-          componentName: component.attributes?.name ?? '',
+          componentName: component?.name ?? '',
           dependencyVersion,
           location: githubUrl,
         }
@@ -86,7 +84,6 @@ export const getDropDownOptions = async (
   }
 
   const dependencies = await serviceCatalogueService.getDependencies()
-
   const dependencyTypesSet = new Set<string>()
   const dependencyNamesSet = new Set<string>()
 

@@ -1,10 +1,42 @@
 import StrapiApiClient from '../data/strapiApiClient'
 import { MoJSelectDataItem } from '../@types'
-import { CustomComponentView, ListResponse, Product, Team } from '../data/strapiApiTypes'
 import DataFilterService from './dataFilterService'
-import { createModelServiceArea } from '../data/converters/serviceArea.test'
+import { CustomComponentView, Product, ServiceArea, Team } from '../data/modelTypes'
 
 jest.mock('../data/strapiApiClient')
+
+const testServiceAreasResponse = [
+  {
+    id: 1,
+    name: 'Service Area 1',
+    owner: 'The Owner',
+    sa_id: 'SA01',
+    slug: 'a-service-area-name',
+    products: [
+      {
+        id: 456,
+        name: 'A Product name',
+        p_id: 'DPS000',
+        slug: 'a-product-name-1',
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: 'Service Area 2',
+    owner: 'The Owner',
+    sa_id: 'SA01',
+    slug: 'a-service-area-name',
+    products: [
+      {
+        id: 456,
+        name: 'A Product name',
+        p_id: 'DPS000',
+        slug: 'a-product-name-1',
+      },
+    ],
+  },
+] as ServiceArea[]
 
 describe('Data Filter service', () => {
   const strapiApiClient = new StrapiApiClient() as jest.Mocked<StrapiApiClient>
@@ -23,18 +55,16 @@ describe('Data Filter service', () => {
   })
 
   describe('getCustomComponentsDropDownList', () => {
-    const testCustomComponentsResponse = {
-      data: [
-        {
-          id: 1,
-          attributes: { name: 'Custom Component 1' },
-        },
-        {
-          id: 2,
-          attributes: { name: 'Custom Component 2' },
-        },
-      ],
-    } as ListResponse<CustomComponentView>
+    const testCustomComponentsResponse = [
+      {
+        id: 1,
+        name: 'Custom Component 1',
+      },
+      {
+        id: 2,
+        name: 'Custom Component 2',
+      },
+    ] as CustomComponentView[]
 
     it('should return all custom compoentns as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -95,11 +125,6 @@ describe('Data Filter service', () => {
   })
 
   describe('getServiceAreasDropDownList', () => {
-    const testServiceAreasResponse = [
-      createModelServiceArea(1, 'Service Area 1'),
-      createModelServiceArea(2, 'Service Area 2'),
-    ]
-
     it('should return all service areas as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
         {
@@ -157,18 +182,16 @@ describe('Data Filter service', () => {
   })
 
   describe('getTeamsDropDownList', () => {
-    const testTeamsResponse = {
-      data: [
-        {
-          id: 1,
-          attributes: { name: 'Team 1' },
-        },
-        {
-          id: 2,
-          attributes: { name: 'Team 2' },
-        },
-      ],
-    } as ListResponse<Team>
+    const testTeamsResponse = [
+      {
+        id: 1,
+        name: 'Team 1',
+      },
+      {
+        id: 2,
+        name: 'Team 2',
+      },
+    ] as Team[]
 
     it('should return all teams as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -224,18 +247,18 @@ describe('Data Filter service', () => {
   })
 
   describe('getProductsDropDownList', () => {
-    const testProductsResponse = {
-      data: [
-        {
-          id: 1,
-          attributes: { name: 'Product 1', p_id: '1' },
-        },
-        {
-          id: 2,
-          attributes: { name: 'Product 2', p_id: '2' },
-        },
-      ],
-    } as ListResponse<Product>
+    const testProductsResponse = [
+      {
+        id: 1,
+        name: 'Product 1',
+        p_id: '1',
+      },
+      {
+        id: 2,
+        name: 'Product 2',
+        p_id: '2',
+      },
+    ] as Product[]
 
     it('should return all products as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
@@ -294,18 +317,18 @@ describe('Data Filter service', () => {
   })
 
   describe('getProductsIdDropDownList', () => {
-    const testProductsResponse = {
-      data: [
-        {
-          id: 1,
-          attributes: { name: 'Product 1', p_id: '1' },
-        },
-        {
-          id: 2,
-          attributes: { name: 'Product 2', p_id: '2' },
-        },
-      ],
-    } as ListResponse<Product>
+    const testProductsResponse = [
+      {
+        id: 1,
+        name: 'Product 1',
+        p_id: '1',
+      },
+      {
+        id: 2,
+        name: 'Product 2',
+        p_id: '2',
+      },
+    ] as Product[]
 
     it('should return all products with id as a sorted list for Select component with value set to the id by default', async () => {
       const sortedDropDownList: MoJSelectDataItem[] = [

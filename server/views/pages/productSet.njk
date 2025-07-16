@@ -21,7 +21,7 @@
         {% if productSet.products | length %}
         <ul>
           {% for product in productSet.products %}
-            <li><a href="/products/{{ product.attributes.slug }}" data-test="product-{{ product.id }}">{{ product.attributes.name }}</a></li>
+            <li><a href="/products/{{ product.slug }}" data-test="product-{{ product.id }}">{{ product.name }}</a></li>
           {% endfor %}
         </ul>
         {% else %}

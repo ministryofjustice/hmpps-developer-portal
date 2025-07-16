@@ -1,27 +1,25 @@
 import { URLSearchParams } from 'url'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
-import {
-  GithubRepoRequestRequest,
-  ListResponse,
-  Product,
+import * as Strapi from './strapiApiTypes'
+import { unwrapListResponse, unwrapSingleResponse } from '../utils/strapi4Utils'
+import type {
   Component,
-  Team,
-  Namespace,
-  ProductSet,
-  StrapiServiceArea,
   CustomComponentView,
   GithubRepoRequest,
+  GithubRepoRequestRequest,
   GithubTeam,
+  Namespace,
+  Product,
+  ProductSet,
   ScheduledJob,
+  ServiceArea,
+  Team,
   TrivyScan,
-  Environment,
-  SingleResponse,
-  DataItem,
-} from './strapiApiTypes'
-import { convertServiceArea } from './converters/serviceArea'
-import type { ServiceArea, TrivyScanType } from './converters/modelTypes'
+  TrivyScanType,
+} from './modelTypes'
 import convertTrivyScan from './converters/trivyScans'
+import { ListResponse, SingleResponse } from './strapiClientTypes'
 
 export default class StrapiApiClient {
   private restClient: RestClient
@@ -40,7 +38,7 @@ export default class StrapiApiClient {
   }: {
     withEnvironments?: boolean
     withComponents?: boolean
-  }): Promise<ListResponse<Product>> {
+  }): Promise<Product[]> {
     const populate = ['product_set']
 
     if (withComponents) {
@@ -48,13 +46,15 @@ export default class StrapiApiClient {
     }
 
     if (withEnvironments) {
-      populate.push('components.environments')
+      populate.push('components.envs')
     }
 
-    return this.restClient.get({
-      path: '/v1/products',
-      query: `${new URLSearchParams({ populate: populate.join(',') }).toString()}`,
-    })
+    return this.restClient
+      .get<ListResponse<Strapi.Product>>({
+        path: '/v1/products',
+        query: `${new URLSearchParams({ populate: populate.join(',') }).toString()}`,
+      })
+      .then(unwrapListResponse)
   }
 
   async getProduct({
@@ -65,52 +65,64 @@ export default class StrapiApiClient {
     productSlug?: string
     productId?: number
     withEnvironments?: boolean
-  }): Promise<SingleResponse<Product>> {
+  }): Promise<Product> {
     const populateList = ['product_set', 'team', 'components', 'service_area']
 
     if (withEnvironments) {
-      populateList.push('components.environments')
+      populateList.push('components.envs')
     }
 
     const populate = new URLSearchParams({ populate: populateList }).toString()
     const query = productSlug ? `filters[slug][$eq]=${productSlug}&${populate}` : populate
     const path = productSlug ? '/v1/products' : `/v1/products/${productId}`
 
-    return this.restClient.get({ path, query })
+    return this.restClient.get<SingleResponse<Strapi.Product>>({ path, query }).then(unwrapSingleResponse)
   }
 
   async getComponents(
     exemptionFilters: string[] = [],
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
-  ): Promise<ListResponse<Component>> {
+  ): Promise<Component[]> {
     const populate = new URLSearchParams({
-      populate: `product${includeTeams ? '.team' : ''},environments${includeLatestCommit ? ',latest_commit' : ''}`,
+      populate: `product${includeTeams ? '.team' : ''},envs${includeLatestCommit ? ',latest_commit' : ''}`,
     }).toString()
     const filters = exemptionFilters.map((filterValue, index) => {
       return `filters[veracode_exempt][$in][${index}]=${filterValue}`
     })
 
-    return this.restClient.get({
-      path: '/v1/components',
-      query: `${populate}&${filters.join('&')}`,
-    })
+    return this.restClient
+      .get<ListResponse<Strapi.Component>>({
+        path: '/v1/components',
+        query: `${populate}&${filters.join('&')}`,
+      })
+      .then(unwrapListResponse)
   }
 
-  async getComponent({ componentName }: { componentName: string }): Promise<SingleResponse<Component>> {
+  async getComponent({ componentName }: { componentName: string }): Promise<Component> {
     const populate = new URLSearchParams({ populate: 'product.team,envs.trivy_scan' }).toString()
 
-    return this.restClient.get({
-      path: '/v1/components',
-      query: `filters[name][$eq]=${componentName}&${populate}`,
-    })
+    return this.restClient
+      .get<SingleResponse<Strapi.Component>>({
+        path: '/v1/components',
+        query: `filters[name][$eq]=${componentName}&${populate}`,
+      })
+      .then(unwrapSingleResponse)
   }
 
-  async getTeams(): Promise<ListResponse<Team>> {
-    return this.restClient.get({
-      path: '/v1/teams',
-      query: 'populate=products',
-    })
+  async getTeams({ withComponents = false }: { withComponents?: boolean }): Promise<Team[]> {
+    const populateList = ['products']
+    if (withComponents) {
+      populateList.push('products.components')
+    }
+    const path = '/v1/teams'
+    const query = new URLSearchParams({ populate: populateList }).toString()
+    return this.restClient
+      .get<ListResponse<Strapi.Team>>({
+        path,
+        query,
+      })
+      .then(unwrapListResponse)
   }
 
   async getTeam({
@@ -121,25 +133,27 @@ export default class StrapiApiClient {
     teamId?: number
     teamSlug?: string
     withEnvironments?: boolean
-  }): Promise<SingleResponse<Team>> {
+  }): Promise<Team> {
     const populateList = ['products']
 
     if (withEnvironments) {
-      populateList.push('products.components.environments')
+      populateList.push('products.components.envs')
     }
 
     const populate = new URLSearchParams({ populate: populateList }).toString()
     const query = teamSlug ? `filters[slug][$eq]=${teamSlug}&${populate}` : populate
     const path = teamSlug ? '/v1/teams' : `/v1/teams/${teamId}`
 
-    return this.restClient.get({ path, query })
+    return this.restClient.get<SingleResponse<Strapi.Team>>({ path, query }).then(unwrapSingleResponse)
   }
 
-  async getNamespaces(): Promise<ListResponse<Namespace>> {
-    return this.restClient.get({
-      path: '/v1/namespaces',
-      query: 'populate=rds_instance,elasticache_cluster',
-    })
+  async getNamespaces(): Promise<Namespace[]> {
+    return this.restClient
+      .get<ListResponse<Strapi.Namespace>>({
+        path: '/v1/namespaces',
+        query: 'populate=rds_instance,elasticache_cluster,pingdom_check,hmpps_template',
+      })
+      .then(unwrapListResponse)
   }
 
   async getNamespace({
@@ -148,37 +162,41 @@ export default class StrapiApiClient {
   }: {
     namespaceId?: number
     namespaceSlug?: string
-  }): Promise<SingleResponse<Namespace>> {
-    const populateList = ['rds_instance']
+  }): Promise<Namespace> {
+    const populateList = ['rds_instance', 'elasticache_cluster', 'pingdom_check', 'hmpps_template']
 
     const populate = new URLSearchParams({ populate: populateList }).toString()
     const query = namespaceSlug ? `filters[name][$eq]=${namespaceSlug}&${populate}` : populate
     const path = namespaceSlug ? '/v1/namespaces' : `/v1/namespaces/${namespaceId}`
 
-    return this.restClient.get({ path, query })
+    return this.restClient.get<SingleResponse<Strapi.Namespace>>({ path, query }).then(response => unwrapSingleResponse)
   }
 
-  async getProductSets(): Promise<ListResponse<ProductSet>> {
-    return this.restClient.get({
-      path: '/v1/product-sets',
-      query: 'populate=products',
-    })
+  async getProductSets(): Promise<ProductSet[]> {
+    return this.restClient
+      .get<ListResponse<Strapi.ProductSet>>({
+        path: '/v1/product-sets',
+        query: 'populate=products',
+      })
+      .then(unwrapListResponse)
   }
 
-  async getProductSet({ productSetId = 0 }: { productSetId: number }): Promise<SingleResponse<ProductSet>> {
-    return this.restClient.get({
-      path: `/v1/product-sets/${productSetId}`,
-      query: new URLSearchParams({ populate: 'products' }).toString(),
-    })
+  async getProductSet({ productSetId = 0 }: { productSetId: number }): Promise<ProductSet> {
+    return this.restClient
+      .get<SingleResponse<Strapi.ProductSet>>({
+        path: `/v1/product-sets/${productSetId}`,
+        query: new URLSearchParams({ populate: 'products' }).toString(),
+      })
+      .then(unwrapSingleResponse)
   }
 
   async getServiceAreas(): Promise<ServiceArea[]> {
-    const results = await this.restClient.get<ListResponse<StrapiServiceArea>>({
-      path: '/v1/service-areas',
-      query: 'populate=products',
-    })
-
-    return results.data.map(convertServiceArea)
+    return this.restClient
+      .get<ListResponse<Strapi.ServiceArea>>({
+        path: '/v1/service-areas',
+        query: 'populate=products',
+      })
+      .then(unwrapListResponse)
   }
 
   async getServiceArea({
@@ -189,37 +207,39 @@ export default class StrapiApiClient {
     serviceAreaId?: number
     serviceAreaSlug?: string
     withProducts?: boolean
-  }): Promise<SingleResponse<StrapiServiceArea>> {
+  }): Promise<ServiceArea> {
     const populateList = ['products']
 
     if (withProducts) {
-      populateList.push('products.components.environments')
+      populateList.push('products.components.envs')
     }
 
     const populate = new URLSearchParams({ populate: populateList }).toString()
     const query = serviceAreaSlug ? `filters[slug][$eq]=${serviceAreaSlug}&${populate}` : populate
     const path = serviceAreaSlug ? '/v1/service-areas' : `/v1/service-areas/${serviceAreaId}`
 
-    return this.restClient.get({ path, query })
+    return this.restClient.get<SingleResponse<Strapi.ServiceArea>>({ path, query }).then(unwrapSingleResponse)
   }
 
   async getCustomComponentViews({
     withEnvironments = false,
   }: {
     withEnvironments?: boolean
-  }): Promise<ListResponse<CustomComponentView>> {
+  }): Promise<CustomComponentView[]> {
     const populate = ['components']
 
     if (withEnvironments) {
-      populate.push('components.environments')
+      populate.push('components.envs')
     }
 
-    return this.restClient.get({
-      path: '/v1/custom-component-views',
-      query: new URLSearchParams({
-        populate: populate.join(','),
-      }).toString(),
-    })
+    return this.restClient
+      .get<ListResponse<Strapi.CustomComponentView>>({
+        path: '/v1/custom-component-views',
+        query: new URLSearchParams({
+          populate: populate.join(','),
+        }).toString(),
+      })
+      .then(unwrapListResponse)
   }
 
   async getCustomComponentView({
@@ -228,100 +248,111 @@ export default class StrapiApiClient {
   }: {
     customComponentId: number
     withEnvironments?: boolean
-  }): Promise<SingleResponse<CustomComponentView>> {
+  }): Promise<CustomComponentView> {
     const populate = ['components', 'components.product']
 
     if (withEnvironments) {
-      populate.push('components.environments')
+      populate.push('components.envs')
     }
 
-    return this.restClient.get({
-      path: `/v1/custom-component-views/${customComponentId}`,
-      query: new URLSearchParams({
-        populate: populate.join(','),
-      }).toString(),
-    })
+    return this.restClient
+      .get<SingleResponse<CustomComponentView>>({
+        path: `/v1/custom-component-views/${customComponentId}`,
+        query: new URLSearchParams({
+          populate: populate.join(','),
+        }).toString(),
+      })
+      .then(unwrapSingleResponse)
   }
 
-  async getGithubRepoRequests(): Promise<Array<GithubRepoRequest>> {
+  async getGithubRepoRequests(): Promise<GithubRepoRequest[]> {
     return this.restClient
-      .get<ListResponse<GithubRepoRequest>>({
+      .get<ListResponse<Strapi.GithubRepoRequest>>({
         path: '/v1/github-repo-requests',
         query: 'populate=github_repo',
       })
-      .then(this.unwrapListResponse)
+      .then(unwrapListResponse)
   }
 
   async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
     return this.restClient
-      .get<SingleResponse<GithubRepoRequest>>({
+      .get<SingleResponse<Strapi.GithubRepoRequest>>({
         path: '/v1/github-repo-requests',
         query: `filters[github_repo][$eq]=${repoName}`,
       })
-      .then(this.unwrapSingleResponse)
+      .then(unwrapSingleResponse)
   }
 
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<void> {
-    await this.restClient.post<SingleResponse<GithubRepoRequest>>({
+    await this.restClient.post<SingleResponse<Strapi.GithubRepoRequest>>({
       path: '/v1/github-repo-requests',
       data: request,
     })
   }
 
-  async getGithubTeams(): Promise<ListResponse<GithubTeam>> {
-    return this.restClient.get({
-      path: '/v1/github-teams',
-    })
+  async getGithubTeams(): Promise<GithubTeam[]> {
+    return this.restClient
+      .get<ListResponse<Strapi.GithubTeam>>({
+        path: '/v1/github-teams',
+      })
+      .then(unwrapListResponse)
   }
 
-  async getGithubTeam({ teamName }: { teamName: string }): Promise<SingleResponse<GithubTeam>> {
-    return this.restClient.get({
-      path: '/v1/github-teams',
-      query: `filters[team_name][$eq]=${teamName}`,
-    })
+  async getGithubTeam({ teamName }: { teamName: string }): Promise<GithubTeam> {
+    return this.restClient
+      .get<SingleResponse<Strapi.GithubTeam>>({
+        path: '/v1/github-teams',
+        query: `filters[team_name][$eq]=${teamName}`,
+      })
+      .then(unwrapSingleResponse)
   }
 
-  async getScheduledJobs(): Promise<ListResponse<ScheduledJob>> {
-    return this.restClient.get({
-      path: '/v1/scheduled-jobs',
-    })
+  async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<GithubTeam[]> {
+    return this.restClient
+      .get<ListResponse<Strapi.GithubTeam>>({
+        path: '/v1/github-teams',
+        query: `filters[parent_team_name][$eq]=${parentTeamName}`,
+      })
+      .then(unwrapListResponse)
   }
 
-  async getScheduledJob({ name }: { name: string }): Promise<SingleResponse<ScheduledJob>> {
-    return this.restClient.get({
-      path: '/v1/scheduled-jobs',
-      query: `filters[name][$eq]=${name}`,
-    })
+  async getScheduledJobs(): Promise<ScheduledJob[]> {
+    return this.restClient
+      .get<ListResponse<Strapi.ScheduledJob>>({
+        path: '/v1/scheduled-jobs',
+      })
+      .then(unwrapListResponse)
+  }
+
+  async getScheduledJob({ name }: { name: string }): Promise<ScheduledJob> {
+    return this.restClient
+      .get<SingleResponse<Strapi.ScheduledJob>>({
+        path: '/v1/scheduled-jobs',
+        query: `filters[name][$eq]=${name}`,
+      })
+      .then(unwrapSingleResponse)
   }
 
   async getTrivyScans(): Promise<TrivyScanType[]> {
-    const results = await this.restClient.get<ListResponse<TrivyScan>>({
+    const results = await this.restClient.get<ListResponse<Strapi.TrivyScan>>({
       path: '/v1/trivy-scans',
     })
     return results.data.map(convertTrivyScan)
   }
 
-  async getTrivyScan({ name }: { name: string }): Promise<SingleResponse<TrivyScan>> {
-    return this.restClient.get({
-      path: '/v1/trivy-scans',
-      query: `filters[name][$eq]=${name}`,
-    })
+  async getTrivyScan({ name }: { name: string }): Promise<TrivyScan> {
+    return this.restClient
+      .get<SingleResponse<Strapi.TrivyScan>>({
+        path: '/v1/trivy-scans',
+        query: `filters[name][$eq]=${name}`,
+      })
+      .then(unwrapSingleResponse)
   }
 
-  async getEnvironments() {
-    return this.restClient.get<ListResponse<Environment>>({
+  async getEnvironments(): Promise<ListResponse<Strapi.Environment>> {
+    return this.restClient.get<ListResponse<Strapi.Environment>>({
       path: '/v1/environments',
       query: 'populate=component',
     })
-  }
-
-  private unwrapSingleResponse<T>(response: SingleResponse<T>): T & { id: number } {
-    const data =
-      Array.isArray(response.data) && response.data.length > 0 ? (response.data[0] as DataItem<T>) : response.data
-    return { ...data.attributes, id: data.id }
-  }
-
-  private unwrapListResponse<T>(response: ListResponse<T>): Array<T & { id: number }> {
-    return response.data.map(({ id, attributes }) => ({ ...attributes, id }))
   }
 }
