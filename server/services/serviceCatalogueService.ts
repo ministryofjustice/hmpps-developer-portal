@@ -44,9 +44,9 @@ export default class ServiceCatalogueService {
     return productData
   }
 
-  async getTeams(): Promise<Team[]> {
+  async getTeams({ withComponents = false }: { withComponents?: boolean }): Promise<Team[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const teamData = await strapiApiClient.getTeams()
+    const teamData = await strapiApiClient.getTeams({ withComponents })
 
     const teams = teamData.sort(sortByName)
 

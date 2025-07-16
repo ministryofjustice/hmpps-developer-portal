@@ -72,6 +72,23 @@
   }
 }
 
+.veracodeFilter, .trivyFilter {
+  .label-and-button {
+    .govuk-button {
+      margin: 0 0 0 0;
+    }
+    .govuk-form-group {
+      display: inline-flex;
+      margin: 0 0 0 0;
+
+      label {
+        margin: 10px 10px 0 0;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
 .govuk-checkboxes--inline:after {
   content: "";
   display: block;
