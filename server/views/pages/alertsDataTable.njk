@@ -1,0 +1,76 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% set pageTitle = applicationName + " - Alerts V2" %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{%- set applicationNames = [{text: '', selected: false}] -%}
+
+{%- set namespaces = [{text: '', selected: false}] -%}
+{%- set severityLabels = [{text: '', selected: false}] -%}
+{%- for applicationName in applicationNameList -%}
+  {%- set applicationNames = (applicationNames.push({
+    text: applicationName.text,
+    selected: applicationName.selected
+  }), applicationNames) -%}
+{%- endfor -%}
+{%- for environment in environmentList -%}
+  {%- set environments = (environments.push({
+    text: environment.text,
+    selected: environment.selected
+  }), environments) -%}
+{%- endfor -%}
+{%- for namespace in namespaceList -%}
+  {%- set namespaces = (namespaces.push({
+    text: namespace.text,
+    selected: namespace.selected
+  }), namespaces) -%}
+{%- endfor -%}
+{%- for severityLabel in severityList -%}
+  {%- set severityLabels = (severityLabels.push({
+    text: severityLabel.text,
+    selected: severityLabel.selected
+  }), severityLabels) -%}
+{%- endfor -%}
+
+{% block content %}
+{{ breadCrumb("Alerts DataTable!", []) }}
+  <h1>Alerts V2 🔥 - DataTable</h1>
+
+  <div id="alertsFetchStatus"></div>
+
+  <p id="lastUpdated"></p>
+
+  <table id="alertsTable" class="stripe">
+    <thead>
+      <tr>
+        <th>Alertname</th>
+        <th>Started at</th>
+        <th>Message</th>
+        <th>Slack Channel</th>
+        <th>Links</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Alertname</th>
+        <th>Started at</th>
+        <th>Message</th>
+        <th>Slack Channel</th>
+        <th>Links</th>
+      </tr>
+    </tfoot>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+  <script src="/assets/js/dayjs/dayjs.min.js"></script>
+  <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/alertsDataTable.js"></script>
+{% endblock %}
