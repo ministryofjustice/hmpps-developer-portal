@@ -4,60 +4,75 @@ const namespaceFilter = document.getElementById('namespace')
 const severityFilter = document.getElementById('severity')
 const teamFilter = document.getElementById('team')
 
-jQuery(async function () {
+jQuery(function () {
   const columns = [
     {
-      data: 'Alertname',
+      data: 'labels.alertname',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(`${rowData.labels.alertname}`)
       },
     },
     {
-      data: 'Started at',
+      data: 'startsAt',
       createdCell: function (td, _cellData, rowData) {
-        const startsAt = formatTimeStamp(new Date(rowData.startsAt))
+        // const startsAt = formatTimeStamp(new Date(rowData.startsAt))
+        const startsAt = formatTimeStamp(rowData.startsAt)
+        // const startsAt = Date.parse(rowData.startsAt)
         $(td).html(`${startsAt}`)
+        // $(td).html(`${rowData.startsAt}`)
       },
     },
     {
-      data: 'Message',
+      data: 'annotations.message',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(`${rowData.annotations.message}`)
       },
     },
     {
-      data: 'Slack Channel',
+      data: 'labels.alert_slack_channel',
       createdCell: function (td, _cellData, rowData) {
         const slackLink = rowData.labels.alert_slack_channel || 'N/A'
         if (slackLink) $(td).html(`<a href="slack://channel?team=T02DYEB3A&id=${slackLink}">${slackLink}</a>`)
       },
     },
     {
-      data: 'Links',
+      data: 'annotations',
       createdCell: function (td, _cellData, rowData) {
         const dashboardLink = rowData.annotations.dashboard_url
           ? `<a href="${rowData.annotations.dashboard_url}" class="statusTileHealth" target="_blank">Dashboard</a>`
           : ''
         const runbookLink = rowData.annotations.runbook_url
-          ? `<a href="${rowData.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook<a>`
+          ? `<a href="${rowData.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook</a>`
           : ''
         const generatorLink = rowData.generatorURL
           ? `<a href="${rowData.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
           : ''
 
-        $(td).html(`${[dashboardLink, runbookLink, generatorLink].filter(link => link !== '').join(' ') || 'N/A'}`)
+        $(td).html(`<ul><li>${dashboardLink}</li><li>${runbookLink}</li><li>${generatorLink}</li></ul>`)
       },
     },
   ]
 
-  createTable({
+  const alertsTable = createTable({
     id: 'alertsTable',
     ajaxUrl: '/alerts/all',
     orderColumn: 2,
     orderType: 'asc',
     columns,
+    responsive: true,
   })
   console.log('create table', createTable)
+
+  let count = 0
+
+  setInterval(function () {
+    alertsTable.ajax.reload(null, false) // user paging is not reset on reload
+    console.log('data reloaded, count =', (count += 1))
+    lastUpdatedTime()
+  }, 5000)
+
+  lastUpdatedTime()
+  alertsUpdateFrequencyMessage()
 })
 
 function formatTimeStamp(dateString) {
@@ -80,4 +95,17 @@ function formatTimeStamp(dateString) {
   } catch (error) {
     return 'Invalid date'
   }
+}
+
+function alertsUpdateFrequencyMessage() {
+  $('#alertsFetchStatus').empty()
+  return $('#alertsFetchStatus').append(
+    `<div class="govuk-inset-text">Alerts are being updated every <strong>5</strong> seconds</div>`,
+  )
+}
+
+function lastUpdatedTime() {
+  const currentTime = new Date()
+  const lastUpdatedTimestamp = formatTimeStamp(currentTime)
+  document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdatedTimestamp}`
 }

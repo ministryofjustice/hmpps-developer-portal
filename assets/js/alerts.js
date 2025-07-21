@@ -306,6 +306,6 @@ function alertsUpdateFrequencyMessage() {
   const frequency = isDropDownOpen ? 30 : 5
   $('#alertsFetchStatus').empty()
   return $('#alertsFetchStatus').append(
-    `<div class="govuk-inset-text">Alerts are being updated every <strong>${frequency}</strong> seconds!</div>`,
+    `<div class="govuk-inset-text">Alerts are being updated every <strong>${frequency}</strong> seconds</div>`,
   )
 }
