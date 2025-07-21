@@ -9,7 +9,6 @@ import { Environment } from '../data/strapiApiTypes'
 import { TrivyScanType } from '../data/converters/modelTypes'
 
 import type { ServiceCatalogueService } from '../services'
-import { DataItem } from '../data/strapiClientTypes'
 import type { Team } from '../data/modelTypes'
 
 dayjs.extend(relativeTime.default)
@@ -154,18 +153,14 @@ function findTeamMatch(teams: Team[], name: string) {
 }
 
 // Match alert data to corresponding environments and components to get slack channel and team properties
-export const addNewPropertiesToAlert = (
-  revisedAlerts: Alert[],
-  environments: DataItem<Environment>[],
-  teams: Team[],
-) => {
+export const addNewPropertiesToAlert = (revisedAlerts: Alert[], environments: Environment[], teams: Team[]) => {
   return revisedAlerts.map(alert => {
-    const envMatch = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
+    const envMatch = environments.find(env => env.alert_severity_label === alert.labels.severity)
     const teamMatch = findTeamMatch(teams, alert.labels.application)
 
     const updatedAlert = { ...alert }
 
-    if (envMatch) updatedAlert.labels.alert_slack_channel = envMatch.attributes.alerts_slack_channel
+    if (envMatch) updatedAlert.labels.alert_slack_channel = envMatch.alerts_slack_channel
     if (teamMatch) updatedAlert.labels.team = teamMatch.name
 
     return updatedAlert
@@ -196,7 +191,7 @@ export const mapAlertEnvironments = (alerts: Alert[]) => {
     return updatedAlert
   })
 }
-export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[], teams: Team[]) => {
+export const reviseAlerts = (alerts: Alert[], environments: Environment[], teams: Team[]) => {
   const revisedEnvAlerts = mapAlertEnvironments(alerts)
   const revisedAlerts = addNewPropertiesToAlert(revisedEnvAlerts, environments, teams)
 

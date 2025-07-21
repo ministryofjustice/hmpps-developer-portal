@@ -15,7 +15,6 @@ import type {
   CustomComponentView,
 } from '../data/modelTypes'
 import { Environment } from '../data/strapiApiTypes'
-import { DataItem } from '../data/strapiClientTypes'
 import { sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
 export default class ServiceCatalogueService {
@@ -270,7 +269,7 @@ export default class ServiceCatalogueService {
     return strapiApiClient.postGithubRepoRequest(request)
   }
 
-  async getEnvironments(): Promise<DataItem<Environment>[]> {
+  async getEnvironments(): Promise<Environment[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const environmentData = await strapiApiClient.getEnvironments()
     const environmentList = environmentData.data
