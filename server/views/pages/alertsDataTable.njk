@@ -38,15 +38,33 @@
 
 {% block content %}
 {{ breadCrumb("Alerts DataTable!", []) }}
-  <h1>Alerts V2 🔥 - DataTable</h1>
-
-  <div id="alertsFetchStatus"></div>
+  <h1>Alerts V2 - DataTable</h1>
 
   <p id="alertsFetchStatus"></p>
+
+    <div class="alertsFilter govuk-button-group">
+        <div class="label-and-button">
+            {{ govukSelect({
+                id: "team",
+                name: "team",
+                label: {
+                text: "Team"
+                },
+                items: team
+            }) }}
+            {{ govukButton({
+                id: "updateTeam",
+                name: "updateTeam",
+                text: "Update",
+                element: "button",
+                attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
+            }) }}
+        </div>
+    </div>
   
   <p id="lastUpdated"></p>
 
-  <table id="alertsTable" class="stripe">
+  <table id="alertsTable" class="stripe display" style="width:100%; word-break:break-word" cellspacing="0">
     <thead>
       <tr>
         <th>Alertname</th>
@@ -54,6 +72,7 @@
         <th>Message</th>
         <th>Slack Channel</th>
         <th>Links</th>
+        <th>Team</th>
       </tr>
     </thead>
     <tfoot>
@@ -63,6 +82,7 @@
         <th>Message</th>
         <th>Slack Channel</th>
         <th>Links</th>
+        <th>Team</th>
       </tr>
     </tfoot>
   </table>

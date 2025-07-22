@@ -70,6 +70,42 @@
   float: right;
 }
 
+#alertsTable {
+  color: white !important;
+
+  a {
+    color: white !important;
+  }
+
+  th {
+    background-color: grey;
+  }
+
+  th:hover {
+    border-color: #990;
+  }
+
+  tr  {
+    background-color: grey;
+  }
+  
+  th, td {
+    border: 1px solid white;
+  }
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+}
+
+.silenced-alert {
+  background-color: #990 !important;
+}
+
+.active-alert {
+  background-color: govuk-colour('red') !important;
+}
+
 // For update buttons when page is bigger than 640px
 @media(width > 640px) {
   .alert-selectors .label-and-button {
