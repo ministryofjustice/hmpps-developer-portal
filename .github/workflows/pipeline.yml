@@ -95,4 +95,4 @@ jobs:
       app_version: '${{ needs.build.outputs.app_version }}'
       helm_timeout: '5m'
       k8s_deployment_name: 'hmpps-develper-portal-strapi5'
-      helm_chart_name: 'hmpps-develper-portal-strapi5'
+
