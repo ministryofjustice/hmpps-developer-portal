@@ -17,7 +17,7 @@ jQuery(function () {
     teamFilter.value = currentFilters.team
     setCheckboxes(currentFilters)
   }
-  const ajaxUrl = buildAjaxUrl(currentFilters)
+  const rootDataUrl = buildAjaxUrl(currentFilters)
 
   const columns = [
     {
@@ -119,7 +119,7 @@ jQuery(function () {
 
   const veracodeTable = createTable({
     id: 'veracodeTable',
-    ajaxUrl: `${ajaxUrl}`,
+    ajaxUrl: `${rootDataUrl}`,
     orderColumn: 6,
     orderType: 'desc',
     columns,
