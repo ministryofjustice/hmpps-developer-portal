@@ -2,7 +2,7 @@
 # Per environment values which override defaults in hmpps-developer-portal/values.yaml
 
 generic-service:
-  nameOverride: hmpps-developer-portal--strapi5
+  nameOverride: hmpps-developer-portal-strapi5
   replicaCount: 1
 
   ingress:
