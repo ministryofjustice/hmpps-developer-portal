@@ -1,9 +1,26 @@
 const teamFilter = document.getElementById('team')
+const form = document.getElementById('veracodeForm')
+const checkboxes = document.querySelectorAll('input[type="checkbox"]')
 
 jQuery(function () {
   let currentFilters = getFiltersFromURL()
 
-  const rootDataUrl = '/veracode/data'
+  if (isFiltersBlank(currentFilters)) {
+    const failCheckbox = document.querySelector('input[name="results"][value="failed"]')
+    if (failCheckbox) {
+      failCheckbox.checked = true
+      updateURLParams()
+      currentFilters = getFiltersFromURL()
+    }
+  } else {
+    team.value = currentFilters.team
+    confirmCheckboxes(currentFilters)
+  }
+  let newDataUrl = updateURLParams()
+
+  confirmCheckboxes(currentFilters)
+
+  // const rootDataUrl = '/veracode/data'
   const columns = [
     {
       data: 'name',
@@ -104,7 +121,7 @@ jQuery(function () {
 
   const veracodeTable = createTable({
     id: 'veracodeTable',
-    ajaxUrl: `${rootDataUrl}?results=failed`,
+    ajaxUrl: `${newDataUrl}`,
     orderColumn: 6,
     orderType: 'desc',
     columns,
@@ -116,6 +133,9 @@ jQuery(function () {
     if (!rawData || !rawData.length) return
 
     populateTeamDropdown(rawData)
+
+    currentFilters = getFiltersFromURL()
+    confirmCheckboxes(currentFilters)
 
     // Register team filter function
     $.fn.dataTable.ext.search = []
@@ -145,55 +165,78 @@ jQuery(function () {
     }
   }
 
-  $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
-    'change',
-    e => {
-      e.preventDefault(e)
-      const selectedResultFilters = []
-      const selectedExemptionFilters = []
-
-      $('input:checkbox[name=results]:checked').each(function () {
-        selectedResultFilters.push($(this).val())
-      })
-
-      $('input:checkbox[name=exemption]:checked').each(function () {
-        selectedExemptionFilters.push($(this).val())
-      })
-
-      const newDataUrl = `${rootDataUrl}?results=${selectedResultFilters.join(',')}&exemption=${selectedExemptionFilters.join(',')}`
-
-      veracodeTable.ajax.url(newDataUrl).load()
-    },
-  )
-
-  $('#updateTeam').on('click', function (e) {
+  $(
+    '#updateTeam,.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input',
+  ).on('click change', e => {
     e.preventDefault()
-
-    const selectedTeam = $('#team').val()
-    currentFilters.team = selectedTeam
-
-    // Update URL without reload
-    updateURLParams(currentFilters)
-
-    // Reapply filter
-    $.fn.dataTable.ext.search = []
-    $.fn.dataTable.ext.search.push(teamFilterFunction(currentFilters))
-    veracodeTable.draw(false)
+    newDataUrl = updateURLParams()
+    currentFilters = getFiltersFromURL()
+    veracodeTable.ajax.url(newDataUrl).load(() => {
+      $.fn.dataTable.ext.search = []
+      $.fn.dataTable.ext.search.push(teamFilterFunction(currentFilters))
+      veracodeTable.draw()
+    })
   })
 })
+
+function isFiltersBlank(currentfilters) {
+  return currentfilters.team === '' && currentfilters.results.length === 0 && currentfilters.exemption.length === 0
+}
 
 // function checks url params for applied filters and builds filter object
 function getFiltersFromURL() {
   const params = new URLSearchParams(location.search)
   return {
     team: params.get('team') || '',
+    results: params.get('results') ? params.get('results').split(',') : [],
+    exemption: params.get('exemption') ? params.get('exemption').split(',') : [],
   }
 }
 
 // add current filters to Url params
-function updateURLParams(filters) {
-  const params = new URLSearchParams()
-  if (filters.team) params.set('team', filters.team)
+function updateURLParams() {
+  const newParams = new URLSearchParams()
 
-  history.replaceState(null, '', `?${params.toString()}`)
+  const selectedTeamFilter = teamFilter.value
+  if (selectedTeamFilter) newParams.set('team', selectedTeamFilter)
+
+  const selectedResultFilters = []
+  const selectedExemptionFilters = []
+
+  $('input:checkbox[name=results]:checked').each(function () {
+    selectedResultFilters.push($(this).val())
+  })
+
+  $('input:checkbox[name=exemption]:checked').each(function () {
+    selectedExemptionFilters.push($(this).val())
+  })
+
+  if (selectedResultFilters.length) newParams.set('results', selectedResultFilters.join(','))
+
+  if (selectedExemptionFilters.length) newParams.set('exemption', selectedExemptionFilters.join(','))
+
+  const newUrl = `${window.location.pathname}?${newParams.toString()}`
+  window.history.replaceState({}, '', newUrl)
+
+  const ajaxParams = new URLSearchParams()
+  if (selectedResultFilters.length) ajaxParams.set('results', selectedResultFilters.join(','))
+  if (selectedExemptionFilters.length) ajaxParams.set('exemption', selectedExemptionFilters.join(','))
+
+  const newDataUrl = `/veracode/data?${ajaxParams.toString()}`
+
+  return newDataUrl
+}
+
+function confirmCheckboxes(currentFilters) {
+  checkboxes.forEach(checkbox => {
+    const { name, value } = checkbox
+    if (
+      (name === 'results' && currentFilters.results.includes(value)) ||
+      (name === 'exemption' && currentFilters.exemption.includes(value))
+    ) {
+      checkbox.checked = true
+    } else {
+      checkbox.checked = false
+    }
+  })
 }
