@@ -39,7 +39,7 @@ jobs:
   helm_lint:
     strategy:
       matrix:
-        environments: ['dev', 'prod']
+        environments: ['dev', 'stage', 'prod']
     name: helm lint
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
@@ -58,8 +58,32 @@ jobs:
       additional_docker_tag: ${{ inputs.additional_docker_tag }}
       push: ${{ inputs.push || true }}
       docker_multiplatform: false
-  deploy_dev:
-    name: Deploy to the dev environment
+  # deploy_dev:
+  #   name: Deploy to the dev environment
+  #   # if: github.ref == 'refs/heads/main'
+  #   needs:
+  #     - build
+  #     - helm_lint
+  #   uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+  #   secrets: inherit
+  #   with:
+  #     environment: 'dev'
+  #     app_version: '${{ needs.build.outputs.app_version }}'
+  #     helm_timeout: '5m'
+  # deploy_prod:
+  #   name: Deploy to the prod environment
+  #   needs:
+  #     - build
+  #     - helm_lint
+  #     - deploy_dev
+  #   uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+  #   secrets: inherit
+  #   with:
+  #     environment: 'prod'
+  #     app_version: '${{ needs.build.outputs.app_version }}'
+  #     helm_timeout: '5m'
+  deploy_stage:
+    name: Deploy to the stage environment
     # if: github.ref == 'refs/heads/main'
     needs:
       - build
@@ -67,18 +91,6 @@ jobs:
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
-      environment: 'dev'
-      app_version: '${{ needs.build.outputs.app_version }}'
-      helm_timeout: '5m'
-  deploy_prod:
-    name: Deploy to the prod environment
-    needs:
-      - build
-      - helm_lint
-      - deploy_dev
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
-    secrets: inherit
-    with:
-      environment: 'prod'
+      environment: 'stage'
       app_version: '${{ needs.build.outputs.app_version }}'
       helm_timeout: '5m'

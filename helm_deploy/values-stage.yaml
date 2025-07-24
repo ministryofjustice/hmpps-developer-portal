@@ -1,0 +1,23 @@
+---
+# Per environment values which override defaults in hmpps-developer-portal/values.yaml
+
+generic-service:
+  nameOverride: hmpps-developer-portal--strapi5
+  replicaCount: 1
+
+  ingress:
+    host: developer-portal-strapi5-dev.hmpps.service.justice.gov.uk
+
+  env:
+    INGRESS_URL: "https://developer-portal-strapi5-dev.hmpps.service.justice.gov.uk"
+    SERVICE_CATALOGUE_URL: "https://service-catalogue-strapi5-dev.hmpps.service.justice.gov.uk"
+    NODE_ENV: "development"
+
+  namespace_secrets:
+    elasticache-redis:
+      REDIS_HOST: "primary_endpoint_address"
+      REDIS_AUTH_TOKEN: "auth_token"
+
+generic-prometheus-alerts:
+  targetApplication: hmpps-developer-portal-strapi5
+  alertSeverity: hmpps-sre-alerts-nonprod
