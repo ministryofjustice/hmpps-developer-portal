@@ -9,7 +9,7 @@ jQuery(function () {
     {
       data: 'name',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/product-sets/${rowData.id}">${rowData.name}</a>`)
+        $(td).html(`<a href="/product-sets/${rowData.documentId}">${rowData.name}</a>`)
       },
     },
     {
