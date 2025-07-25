@@ -12,7 +12,7 @@ import {
 } from '../data/modelTypes'
 import StrapiApiClient from '../data/strapiApiClient'
 import { Environment } from '../data/strapiApiTypes'
-import { DataItem, ListResponse } from '../data/strapiClientTypes'
+import { ListResponse } from '../data/strapiClientTypes'
 import ServiceCatalogueService from './serviceCatalogueService'
 
 jest.mock('../data/strapiApiClient')
@@ -492,14 +492,10 @@ describe('Strapi service', () => {
     describe('getEnvironments', () => {
       const testEnvironmentsResponse = {
         data: [
-          { id: 1, attributes: { name: 'Environment 1' } },
-          { id: 2, attributes: { name: 'Environment 2' } },
+          { id: 1, name: 'Environment 1' },
+          { id: 2, name: 'Environment 2' },
         ],
       } as ListResponse<Environment>
-      const testEnvironments = [
-        { id: 1, attributes: { name: 'Environment 1' } },
-        { id: 2, attributes: { name: 'Environment 2' } },
-      ] as DataItem<Environment>[]
 
       it('should return an ordered array of environments', async () => {
         strapiApiClient.getEnvironments.mockResolvedValue(testEnvironmentsResponse)
@@ -507,7 +503,7 @@ describe('Strapi service', () => {
         const results = await serviceCatalogueService.getEnvironments()
 
         expect(strapiApiClient.getEnvironments).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testEnvironments)
+        expect(results).toEqual(testEnvironmentsResponse.data)
       })
     })
   })

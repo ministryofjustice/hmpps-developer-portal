@@ -1833,365 +1833,300 @@ export interface components {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
       description?: string
       disabled_workflows?: unknown
+      documentId?: string
       environments?: components['schemas']['PropertiesEnvironmentComponent'][]
       envs?: {
-        data?: {
-          attributes?: {
-            active_agencies?: unknown
-            alert_severity_label?: string
-            alerts_slack_channel?: string
-            build_image_tag?: string
-            cluster?: string
-            component?: {
-              data?: {
-                attributes?: {
-                  api?: boolean
-                  app_insights_cloud_role_name?: string
-                  codescanning_summary?: unknown
-                  container_image?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  disabled_workflows?: unknown
-                  environments?: {
-                    active_agencies?: unknown
-                    alert_severity_label?: string
-                    alerts_slack_channel?: string
-                    build_image_tag?: string
-                    cluster?: string
-                    health_path?: string
-                    id?: number
-                    include_in_subject_access_requests?: boolean
-                    info_path?: string
-                    ip_allow_list?: unknown
-                    ip_allow_list_enabled?: boolean
-                    manually_managed?: boolean
-                    modsecurity_audit_enabled?: boolean
-                    modsecurity_enabled?: boolean
-                    modsecurity_snippet?: string
-                    monitor?: boolean
-                    name?: string
-                    namespace?: string
-                    ns?: {
-                      data?: {
-                        attributes?: Record<string, never>
-                        id?: number
-                      }
-                    }
-                    swagger_docs?: string
-                    /** @enum {string} */
-                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                    url?: string
-                  }[]
-                  envs?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  frontend?: boolean
-                  github_enforce_admins_enabled?: boolean
-                  github_only?: boolean
-                  github_project_branch_protection_restricted_teams?: unknown
-                  github_project_teams_admin?: unknown
-                  github_project_teams_maintain?: unknown
-                  github_project_teams_write?: unknown
-                  /** @enum {string} */
-                  github_project_visibility?: 'public' | 'internal' | 'private'
-                  github_repo?: string
-                  github_repo_is_template?: boolean
-                  github_template_repo?: string
-                  github_topics?: unknown
-                  jira_project_keys?: unknown
-                  language?: string
-                  latest_commit?: {
-                    /** Format: date-time */
-                    date_time?: string
-                    id?: number
-                    sha?: string
-                  }
-                  name?: string
-                  part_of_monorepo?: boolean
-                  path_to_helm_dir?: string
-                  path_to_project?: string
-                  product?: {
-                    data?: {
-                      attributes?: {
-                        children?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }[]
-                        }
-                        components?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }[]
-                        }
-                        confluence_link?: string
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        delivery_manager?: string
-                        description?: string
-                        gdrive_link?: string
-                        lead_developer?: string
-                        legacy?: boolean
-                        name?: string
-                        p_id?: string
-                        parent?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        phase?: string
-                        product_manager?: string
-                        product_set?: {
-                          data?: {
-                            attributes?: {
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              lead_developer?: string
-                              name?: string
-                              products?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }[]
-                              }
-                              ps_id?: string
-                              /** Format: date-time */
-                              publishedAt?: string
-                              slug?: string
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                            }
-                            id?: number
-                          }
-                        }
-                        /** Format: date-time */
-                        publishedAt?: string
-                        service_area?: {
-                          data?: {
-                            attributes?: {
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              name?: string
-                              owner?: string
-                              products?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }[]
-                              }
-                              /** Format: date-time */
-                              publishedAt?: string
-                              sa_id?: string
-                              slug?: string
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                            }
-                            id?: number
-                          }
-                        }
-                        slack_channel_id?: string
-                        slack_channel_name?: string
-                        slug?: string
-                        subproduct?: boolean
-                        team?: {
-                          data?: {
-                            attributes?: {
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              name?: string
-                              products?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }[]
-                              }
-                              /** Format: date-time */
-                              publishedAt?: string
-                              slack_channel_id?: string
-                              slack_channel_name?: string
-                              slug?: string
-                              t_id?: string
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                            }
-                            id?: number
-                          }
-                        }
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slack_channel_nonprod_release_notify?: string
-                  slack_channel_prod_release_notify?: string
-                  slack_channel_security_scans_notify?: string
-                  standards_compliance?: unknown
-                  title?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  veracode_exempt?: boolean
-                  veracode_last_completed_scan_date?: string
-                  veracode_policy_rules_status?: string
-                  veracode_results_summary?: unknown
-                  veracode_results_url?: string
-                  versions?: unknown
-                }
-                id?: number
-              }
-            }
+        active_agencies?: unknown
+        alert_severity_label?: string
+        alerts_slack_channel?: string
+        build_image_tag?: string
+        cluster?: string
+        component?: {
+          api?: boolean
+          app_insights_cloud_role_name?: string
+          codescanning_summary?: unknown
+          container_image?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          disabled_workflows?: unknown
+          documentId?: string
+          environments?: components['schemas']['PropertiesEnvironmentComponent'][]
+          envs?: {
+            documentId?: string
+            id?: number
+          }[]
+          frontend?: boolean
+          github_enforce_admins_enabled?: boolean
+          github_only?: boolean
+          github_project_branch_protection_restricted_teams?: unknown
+          github_project_teams_admin?: unknown
+          github_project_teams_maintain?: unknown
+          github_project_teams_write?: unknown
+          /** @enum {string} */
+          github_project_visibility?: 'public' | 'internal' | 'private'
+          github_repo?: string
+          github_repo_is_template?: boolean
+          github_template_repo?: string
+          github_topics?: unknown
+          id?: number
+          jira_project_keys?: unknown
+          language?: string
+          latest_commit?: components['schemas']['PropertiesCommitComponent']
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          part_of_monorepo?: boolean
+          path_to_helm_dir?: string
+          path_to_project?: string
+          product?: {
+            children?: {
+              documentId?: string
+              id?: number
+            }[]
+            components?: {
+              documentId?: string
+              id?: number
+            }[]
+            confluence_link?: string
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
+              documentId?: string
+              id?: number
+            }
+            delivery_manager?: string
+            description?: string
+            documentId?: string
+            gdrive_link?: string
+            id?: number
+            lead_developer?: string
+            legacy?: boolean
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            name?: string
+            p_id?: string
+            parent?: {
+              documentId?: string
+              id?: number
+            }
+            phase?: string
+            product_manager?: string
+            product_set?: {
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
                 id?: number
               }
-            }
-            health_path?: string
-            include_in_subject_access_requests?: boolean
-            info_path?: string
-            ip_allow_list?: unknown
-            ip_allow_list_enabled?: boolean
-            manually_managed?: boolean
-            modsecurity_audit_enabled?: boolean
-            modsecurity_enabled?: boolean
-            modsecurity_snippet?: string
-            monitor?: boolean
-            name?: string
-            namespace?: string
-            ns?: {
-              data?: {
-                attributes?: Record<string, never>
+              documentId?: string
+              id?: number
+              lead_developer?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: number
+              }[]
+              name?: string
+              products?: {
+                documentId?: string
+                id?: number
+              }[]
+              ps_id?: string
+              /** Format: date-time */
+              publishedAt?: string
+              slug?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
                 id?: number
               }
             }
             /** Format: date-time */
             publishedAt?: string
-            swagger_docs?: string
-            trivy_scan?: {
-              data?: {
-                attributes?: {
-                  build_image_tag?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  environments?: unknown
-                  image_id?: string
-                  name?: string
-                  /** Format: date-time */
-                  publishedAt?: string
-                  /** @enum {string} */
-                  scan_status?: 'Failed' | 'Succeeded'
-                  scan_summary?: unknown
-                  trivy_scan_timestamp?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
+            service_area?: {
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: number
+              }
+              documentId?: string
+              id?: number
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: number
+              }[]
+              name?: string
+              owner?: string
+              products?: {
+                documentId?: string
+                id?: number
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              sa_id?: string
+              slug?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
                 id?: number
               }
             }
-            /** @enum {string} */
-            type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
+            slack_channel_id?: string
+            slack_channel_name?: string
+            slug?: string
+            subproduct?: boolean
+            team?: {
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: number
+              }
+              documentId?: string
+              id?: number
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: number
+              }[]
+              name?: string
+              products?: {
+                documentId?: string
+                id?: number
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              slack_channel_id?: string
+              slack_channel_name?: string
+              slug?: string
+              t_id?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: number
+              }
+            }
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            url?: string
           }
+          /** Format: date-time */
+          publishedAt?: string
+          slack_channel_nonprod_release_notify?: string
+          slack_channel_prod_release_notify?: string
+          slack_channel_security_scans_notify?: string
+          standards_compliance?: unknown
+          title?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+          veracode_exempt?: boolean
+          veracode_last_completed_scan_date?: string
+          veracode_policy_rules_status?: string
+          veracode_results_summary?: unknown
+          veracode_results_url?: string
+          versions?: unknown
+        }
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        health_path?: string
+        id?: number
+        include_in_subject_access_requests?: boolean
+        info_path?: string
+        ip_allow_list?: unknown
+        ip_allow_list_enabled?: boolean
+        locale?: string
+        localizations?: {
+          documentId?: string
           id?: number
         }[]
-      }
+        manually_managed?: boolean
+        modsecurity_audit_enabled?: boolean
+        modsecurity_enabled?: boolean
+        modsecurity_snippet?: string
+        monitor?: boolean
+        name?: string
+        namespace?: string
+        ns?: {
+          documentId?: string
+          id?: number
+        }
+        /** Format: date-time */
+        publishedAt?: string
+        swagger_docs?: string
+        trivy_scan?: {
+          build_image_tag?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          documentId?: string
+          environments?: unknown
+          id?: number
+          image_id?: string
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          /** Format: date-time */
+          publishedAt?: string
+          /** @enum {string} */
+          scan_status?: 'Failed' | 'Succeeded'
+          scan_summary?: unknown
+          trivy_scan_timestamp?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        /** @enum {string} */
+        type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+        url?: string
+      }[]
       frontend?: boolean
       github_enforce_admins_enabled?: boolean
       github_only?: boolean
@@ -2205,18 +2140,22 @@ export interface components {
       github_repo_is_template?: boolean
       github_template_repo?: string
       github_topics?: unknown
+      id?: number
       jira_project_keys?: unknown
       language?: string
       latest_commit?: components['schemas']['PropertiesCommitComponent']
+      locale?: string
+      localizations?: {
+        documentId?: string
+        id?: number
+      }[]
       name: string
       part_of_monorepo?: boolean
       path_to_helm_dir?: string
       path_to_project?: string
       product?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
       /** Format: date-time */
       publishedAt?: string
@@ -2228,10 +2167,8 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
       veracode_exempt?: boolean
       veracode_last_completed_scan_date?: string
@@ -2241,7 +2178,7 @@ export interface components {
       versions?: unknown
     }
     ComponentListResponse: {
-      data?: components['schemas']['ComponentListResponseDataItem'][]
+      data?: components['schemas']['Component'][]
       meta?: {
         pagination?: {
           page?: number
@@ -2250,10 +2187,6 @@ export interface components {
           total?: number
         }
       }
-    }
-    ComponentListResponseDataItem: {
-      attributes?: components['schemas']['Component']
-      id?: number
     }
     ComponentRequest: {
       data: {
@@ -2281,6 +2214,8 @@ export interface components {
         jira_project_keys?: unknown
         language?: string
         latest_commit?: components['schemas']['PropertiesCommitComponent']
+        locale?: string
+        localizations?: (number | string)[]
         name: string
         part_of_monorepo?: boolean
         path_to_helm_dir?: string
@@ -2301,118 +2236,149 @@ export interface components {
       }
     }
     ComponentResponse: {
-      data?: components['schemas']['ComponentResponseDataObject']
+      data?: components['schemas']['Component']
       meta?: Record<string, never>
-    }
-    ComponentResponseDataObject: {
-      attributes?: components['schemas']['Component']
-      id?: number
     }
     CpNamespaceRequest: {
       certificate_dns_name?: string
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: {
-            blocked?: boolean
+        blocked?: boolean
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        /** Format: email */
+        email?: string
+        firstname?: string
+        id?: number
+        isActive?: boolean
+        lastname?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        preferedLanguage?: string
+        /** Format: date-time */
+        publishedAt?: string
+        registrationToken?: string
+        resetPasswordToken?: string
+        roles?: {
+          code?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          permissions?: {
+            action?: string
+            actionParameters?: unknown
+            conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            /** Format: email */
-            email?: string
-            firstname?: string
-            isActive?: boolean
-            lastname?: string
-            preferedLanguage?: string
-            registrationToken?: string
-            resetPasswordToken?: string
-            roles?: {
-              data?: {
-                attributes?: {
-                  code?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  name?: string
-                  permissions?: {
-                    data?: {
-                      attributes?: {
-                        action?: string
-                        actionParameters?: unknown
-                        conditions?: unknown
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        properties?: unknown
-                        role?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        subject?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  users?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                }
-                id?: number
-              }[]
+            documentId?: string
+            id?: number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            properties?: unknown
+            /** Format: date-time */
+            publishedAt?: string
+            role?: {
+              documentId?: string
+              id?: number
             }
+            subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            username?: string
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
           }
+          users?: {
+            documentId?: string
+            id?: number
+          }[]
+        }[]
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
           id?: number
         }
+        username?: string
       }
+      documentId?: string
       env_name?: string
+      id?: number
       is_production?: boolean
+      locale?: string
+      localizations?: {
+        certificate_dns_name?: string
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        env_name?: string
+        id?: number
+        is_production?: boolean
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        namespace?: string
+        /** Format: date-time */
+        publishedAt?: string
+        request_github_pr_number?: number
+        request_github_pr_status?: string
+        requester_email?: string
+        requester_name?: string
+        requester_team?: string
+        secret_name?: string
+        source_code?: string
+        /** @enum {string} */
+        type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+      }[]
       namespace?: string
       /** Format: date-time */
       publishedAt?: string
@@ -2428,14 +2394,12 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
     }
     CpNamespaceRequestListResponse: {
-      data?: components['schemas']['CpNamespaceRequestListResponseDataItem'][]
+      data?: components['schemas']['CpNamespaceRequest'][]
       meta?: {
         pagination?: {
           page?: number
@@ -2445,15 +2409,13 @@ export interface components {
         }
       }
     }
-    CpNamespaceRequestListResponseDataItem: {
-      attributes?: components['schemas']['CpNamespaceRequest']
-      id?: number
-    }
     CpNamespaceRequestRequest: {
       data: {
         certificate_dns_name?: string
         env_name?: string
         is_production?: boolean
+        locale?: string
+        localizations?: (number | string)[]
         namespace?: string
         request_github_pr_number?: number
         request_github_pr_status?: string
@@ -2467,574 +2429,335 @@ export interface components {
       }
     }
     CpNamespaceRequestResponse: {
-      data?: components['schemas']['CpNamespaceRequestResponseDataObject']
+      data?: components['schemas']['CpNamespaceRequest']
       meta?: Record<string, never>
-    }
-    CpNamespaceRequestResponseDataObject: {
-      attributes?: components['schemas']['CpNamespaceRequest']
-      id?: number
     }
     CustomComponentView: {
       components?: {
-        data?: {
-          attributes?: {
-            api?: boolean
-            app_insights_cloud_role_name?: string
-            codescanning_summary?: unknown
-            container_image?: string
+        api?: boolean
+        app_insights_cloud_role_name?: string
+        codescanning_summary?: unknown
+        container_image?: string
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        description?: string
+        disabled_workflows?: unknown
+        documentId?: string
+        environments?: components['schemas']['PropertiesEnvironmentComponent'][]
+        envs?: {
+          active_agencies?: unknown
+          alert_severity_label?: string
+          alerts_slack_channel?: string
+          build_image_tag?: string
+          cluster?: string
+          component?: {
+            documentId?: string
+            id?: number
+          }
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          documentId?: string
+          health_path?: string
+          id?: number
+          include_in_subject_access_requests?: boolean
+          info_path?: string
+          ip_allow_list?: unknown
+          ip_allow_list_enabled?: boolean
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          manually_managed?: boolean
+          modsecurity_audit_enabled?: boolean
+          modsecurity_enabled?: boolean
+          modsecurity_snippet?: string
+          monitor?: boolean
+          name?: string
+          namespace?: string
+          ns?: {
+            documentId?: string
+            id?: number
+          }
+          /** Format: date-time */
+          publishedAt?: string
+          swagger_docs?: string
+          trivy_scan?: {
+            build_image_tag?: string
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
-            }
-            description?: string
-            disabled_workflows?: unknown
-            environments?: {
-              active_agencies?: unknown
-              alert_severity_label?: string
-              alerts_slack_channel?: string
-              build_image_tag?: string
-              cluster?: string
-              health_path?: string
+              documentId?: string
               id?: number
-              include_in_subject_access_requests?: boolean
-              info_path?: string
-              ip_allow_list?: unknown
-              ip_allow_list_enabled?: boolean
-              manually_managed?: boolean
-              modsecurity_audit_enabled?: boolean
-              modsecurity_enabled?: boolean
-              modsecurity_snippet?: string
-              monitor?: boolean
-              name?: string
-              namespace?: string
-              ns?: {
-                data?: {
-                  attributes?: {
-                    /** Format: date-time */
-                    createdAt?: string
-                    createdBy?: {
-                      data?: {
-                        attributes?: {
-                          blocked?: boolean
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          /** Format: email */
-                          email?: string
-                          firstname?: string
-                          isActive?: boolean
-                          lastname?: string
-                          preferedLanguage?: string
-                          registrationToken?: string
-                          resetPasswordToken?: string
-                          roles?: {
-                            data?: {
-                              attributes?: {
-                                code?: string
-                                /** Format: date-time */
-                                createdAt?: string
-                                createdBy?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }
-                                }
-                                description?: string
-                                name?: string
-                                permissions?: {
-                                  data?: {
-                                    attributes?: {
-                                      action?: string
-                                      actionParameters?: unknown
-                                      conditions?: unknown
-                                      /** Format: date-time */
-                                      createdAt?: string
-                                      createdBy?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                      properties?: unknown
-                                      role?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                      subject?: string
-                                      /** Format: date-time */
-                                      updatedAt?: string
-                                      updatedBy?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                    }
-                                    id?: number
-                                  }[]
-                                }
-                                /** Format: date-time */
-                                updatedAt?: string
-                                updatedBy?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }
-                                }
-                                users?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }[]
-                                }
-                              }
-                              id?: number
-                            }[]
-                          }
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          username?: string
-                        }
-                        id?: number
-                      }
-                    }
-                    elasticache_cluster?: {
-                      application?: string
-                      business_unit?: string
-                      engine_version?: string
-                      environment_name?: string
-                      id?: number
-                      infrastructure_support?: string
-                      is_production?: boolean
-                      namespace?: string
-                      node_type?: string
-                      number_cache_clusters?: number
-                      parameter_group_name?: string
-                      team_name?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    hmpps_template?: {
-                      application?: string
-                      application_insights_instance?: string
-                      environment_name?: string
-                      github_repo?: string
-                      github_team_name?: string
-                      id?: number
-                      is_production?: boolean
-                      namespace?: string
-                      prevent_self_review?: boolean
-                      protected_branches_only?: boolean
-                      reviewer_teams?: unknown
-                      selected_branch_patterns?: unknown
-                      source_template_repo?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    name?: string
-                    pingdom_check?: {
-                      encryption?: boolean
-                      host?: string
-                      id?: number
-                      integrationids?: unknown
-                      name?: string
-                      notifyagainevery?: number
-                      notifywhenbackup?: boolean
-                      port?: number
-                      probefilters?: string
-                      resolution?: number
-                      sendnotificationwhendown?: number
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_path?: string
-                      type?: string
-                      url?: string
-                    }[]
-                    /** Format: date-time */
-                    publishedAt?: string
-                    rds_instance?: {
-                      allow_major_version_upgrade?: boolean
-                      allow_minor_version_upgrade?: boolean
-                      application?: string
-                      backup_window?: string
-                      business_unit?: string
-                      db_engine_version?: string
-                      db_instance_class?: string
-                      db_max_allocated_storage?: string
-                      db_parameter?: unknown
-                      deletion_protection?: boolean
-                      environment_name?: string
-                      id?: number
-                      infrastructure_support?: string
-                      is_production?: string
-                      maintenance_window?: string
-                      namespace?: string
-                      performance_insights_enabled?: boolean
-                      rds_family?: string
-                      team_name?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    /** Format: date-time */
-                    updatedAt?: string
-                    updatedBy?: {
-                      data?: {
-                        attributes?: Record<string, never>
-                        id?: number
-                      }
-                    }
-                  }
-                  id?: number
-                }
-              }
-              swagger_docs?: string
-              /** @enum {string} */
-              type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-              url?: string
+            }
+            documentId?: string
+            environments?: unknown
+            id?: number
+            image_id?: string
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
             }[]
-            envs?: {
-              data?: {
-                attributes?: {
-                  active_agencies?: unknown
-                  alert_severity_label?: string
-                  alerts_slack_channel?: string
-                  build_image_tag?: string
-                  cluster?: string
-                  component?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  health_path?: string
-                  include_in_subject_access_requests?: boolean
-                  info_path?: string
-                  ip_allow_list?: unknown
-                  ip_allow_list_enabled?: boolean
-                  manually_managed?: boolean
-                  modsecurity_audit_enabled?: boolean
-                  modsecurity_enabled?: boolean
-                  modsecurity_snippet?: string
-                  monitor?: boolean
-                  name?: string
-                  namespace?: string
-                  ns?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  swagger_docs?: string
-                  trivy_scan?: {
-                    data?: {
-                      attributes?: {
-                        build_image_tag?: string
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        environments?: unknown
-                        image_id?: string
-                        name?: string
-                        /** Format: date-time */
-                        publishedAt?: string
-                        /** @enum {string} */
-                        scan_status?: 'Failed' | 'Succeeded'
-                        scan_summary?: unknown
-                        trivy_scan_timestamp?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }
-                  }
-                  /** @enum {string} */
-                  type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  url?: string
-                }
-                id?: number
-              }[]
-            }
-            frontend?: boolean
-            github_enforce_admins_enabled?: boolean
-            github_only?: boolean
-            github_project_branch_protection_restricted_teams?: unknown
-            github_project_teams_admin?: unknown
-            github_project_teams_maintain?: unknown
-            github_project_teams_write?: unknown
-            /** @enum {string} */
-            github_project_visibility?: 'public' | 'internal' | 'private'
-            github_repo?: string
-            github_repo_is_template?: boolean
-            github_template_repo?: string
-            github_topics?: unknown
-            jira_project_keys?: unknown
-            language?: string
-            latest_commit?: {
-              /** Format: date-time */
-              date_time?: string
-              id?: number
-              sha?: string
-            }
             name?: string
-            part_of_monorepo?: boolean
-            path_to_helm_dir?: string
-            path_to_project?: string
-            product?: {
-              data?: {
-                attributes?: {
-                  children?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  components?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  confluence_link?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  delivery_manager?: string
-                  description?: string
-                  gdrive_link?: string
-                  lead_developer?: string
-                  legacy?: boolean
-                  name?: string
-                  p_id?: string
-                  parent?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  phase?: string
-                  product_manager?: string
-                  product_set?: {
-                    data?: {
-                      attributes?: {
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        lead_developer?: string
-                        name?: string
-                        products?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }[]
-                        }
-                        ps_id?: string
-                        /** Format: date-time */
-                        publishedAt?: string
-                        slug?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  service_area?: {
-                    data?: {
-                      attributes?: {
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        name?: string
-                        owner?: string
-                        products?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }[]
-                        }
-                        /** Format: date-time */
-                        publishedAt?: string
-                        sa_id?: string
-                        slug?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }
-                  }
-                  slack_channel_id?: string
-                  slack_channel_name?: string
-                  slug?: string
-                  subproduct?: boolean
-                  team?: {
-                    data?: {
-                      attributes?: {
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        name?: string
-                        products?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }[]
-                        }
-                        /** Format: date-time */
-                        publishedAt?: string
-                        slack_channel_id?: string
-                        slack_channel_name?: string
-                        slug?: string
-                        t_id?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
-                id?: number
-              }
-            }
             /** Format: date-time */
             publishedAt?: string
-            slack_channel_nonprod_release_notify?: string
-            slack_channel_prod_release_notify?: string
-            slack_channel_security_scans_notify?: string
-            standards_compliance?: unknown
-            title?: string
+            /** @enum {string} */
+            scan_status?: 'Failed' | 'Succeeded'
+            scan_summary?: unknown
+            trivy_scan_timestamp?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            veracode_exempt?: boolean
-            veracode_last_completed_scan_date?: string
-            veracode_policy_rules_status?: string
-            veracode_results_summary?: unknown
-            veracode_results_url?: string
-            versions?: unknown
           }
+          /** @enum {string} */
+          type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+          url?: string
+        }[]
+        frontend?: boolean
+        github_enforce_admins_enabled?: boolean
+        github_only?: boolean
+        github_project_branch_protection_restricted_teams?: unknown
+        github_project_teams_admin?: unknown
+        github_project_teams_maintain?: unknown
+        github_project_teams_write?: unknown
+        /** @enum {string} */
+        github_project_visibility?: 'public' | 'internal' | 'private'
+        github_repo?: string
+        github_repo_is_template?: boolean
+        github_template_repo?: string
+        github_topics?: unknown
+        id?: number
+        jira_project_keys?: unknown
+        language?: string
+        latest_commit?: components['schemas']['PropertiesCommitComponent']
+        locale?: string
+        localizations?: {
+          documentId?: string
           id?: number
         }[]
-      }
+        name?: string
+        part_of_monorepo?: boolean
+        path_to_helm_dir?: string
+        path_to_project?: string
+        product?: {
+          children?: {
+            documentId?: string
+            id?: number
+          }[]
+          components?: {
+            documentId?: string
+            id?: number
+          }[]
+          confluence_link?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          delivery_manager?: string
+          description?: string
+          documentId?: string
+          gdrive_link?: string
+          id?: number
+          lead_developer?: string
+          legacy?: boolean
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          p_id?: string
+          parent?: {
+            documentId?: string
+            id?: number
+          }
+          phase?: string
+          product_manager?: string
+          product_set?: {
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: number
+            }
+            documentId?: string
+            id?: number
+            lead_developer?: string
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            name?: string
+            products?: {
+              documentId?: string
+              id?: number
+            }[]
+            ps_id?: string
+            /** Format: date-time */
+            publishedAt?: string
+            slug?: string
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: number
+            }
+          }
+          /** Format: date-time */
+          publishedAt?: string
+          service_area?: {
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: number
+            }
+            documentId?: string
+            id?: number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            name?: string
+            owner?: string
+            products?: {
+              documentId?: string
+              id?: number
+            }[]
+            /** Format: date-time */
+            publishedAt?: string
+            sa_id?: string
+            slug?: string
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: number
+            }
+          }
+          slack_channel_id?: string
+          slack_channel_name?: string
+          slug?: string
+          subproduct?: boolean
+          team?: {
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: number
+            }
+            documentId?: string
+            id?: number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            name?: string
+            products?: {
+              documentId?: string
+              id?: number
+            }[]
+            /** Format: date-time */
+            publishedAt?: string
+            slack_channel_id?: string
+            slack_channel_name?: string
+            slug?: string
+            t_id?: string
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: number
+            }
+          }
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        /** Format: date-time */
+        publishedAt?: string
+        slack_channel_nonprod_release_notify?: string
+        slack_channel_prod_release_notify?: string
+        slack_channel_security_scans_notify?: string
+        standards_compliance?: unknown
+        title?: string
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+        veracode_exempt?: boolean
+        veracode_last_completed_scan_date?: string
+        veracode_policy_rules_status?: string
+        veracode_results_summary?: unknown
+        veracode_results_url?: string
+        versions?: unknown
+      }[]
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: Record<string, never>
+        documentId?: string
+        id?: number
+      }
+      documentId?: string
+      id?: number
+      locale?: string
+      localizations?: {
+        components?: {
+          documentId?: string
+          id?: number
+        }[]
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
           id?: number
         }
-      }
+        documentId?: string
+        id?: number
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        name?: string
+        /** Format: date-time */
+        publishedAt?: string
+        slug?: string
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+      }[]
       name: string
       /** Format: date-time */
       publishedAt?: string
@@ -3042,14 +2765,12 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
     }
     CustomComponentViewListResponse: {
-      data?: components['schemas']['CustomComponentViewListResponseDataItem'][]
+      data?: components['schemas']['CustomComponentView'][]
       meta?: {
         pagination?: {
           page?: number
@@ -3059,24 +2780,18 @@ export interface components {
         }
       }
     }
-    CustomComponentViewListResponseDataItem: {
-      attributes?: components['schemas']['CustomComponentView']
-      id?: number
-    }
     CustomComponentViewRequest: {
       data: {
         components?: (number | string)[]
+        locale?: string
+        localizations?: (number | string)[]
         name: string
         slug?: string
       }
     }
     CustomComponentViewResponse: {
-      data?: components['schemas']['CustomComponentViewResponseDataObject']
+      data?: components['schemas']['CustomComponentView']
       meta?: Record<string, never>
-    }
-    CustomComponentViewResponseDataObject: {
-      attributes?: components['schemas']['CustomComponentView']
-      id?: number
     }
     Environment: {
       active_agencies?: unknown
@@ -3085,570 +2800,310 @@ export interface components {
       build_image_tag?: string
       cluster?: string
       component?: {
-        data?: {
-          attributes?: {
-            api?: boolean
-            app_insights_cloud_role_name?: string
-            codescanning_summary?: unknown
-            container_image?: string
+        api?: boolean
+        app_insights_cloud_role_name?: string
+        codescanning_summary?: unknown
+        container_image?: string
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        description?: string
+        disabled_workflows?: unknown
+        documentId?: string
+        environments?: components['schemas']['PropertiesEnvironmentComponent'][]
+        envs?: {
+          active_agencies?: unknown
+          alert_severity_label?: string
+          alerts_slack_channel?: string
+          build_image_tag?: string
+          cluster?: string
+          component?: {
+            documentId?: string
+            id?: number
+          }
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          documentId?: string
+          health_path?: string
+          id?: number
+          include_in_subject_access_requests?: boolean
+          info_path?: string
+          ip_allow_list?: unknown
+          ip_allow_list_enabled?: boolean
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          manually_managed?: boolean
+          modsecurity_audit_enabled?: boolean
+          modsecurity_enabled?: boolean
+          modsecurity_snippet?: string
+          monitor?: boolean
+          name?: string
+          namespace?: string
+          ns?: {
+            documentId?: string
+            id?: number
+          }
+          /** Format: date-time */
+          publishedAt?: string
+          swagger_docs?: string
+          trivy_scan?: {
+            build_image_tag?: string
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
-            }
-            description?: string
-            disabled_workflows?: unknown
-            environments?: {
-              active_agencies?: unknown
-              alert_severity_label?: string
-              alerts_slack_channel?: string
-              build_image_tag?: string
-              cluster?: string
-              health_path?: string
+              documentId?: string
               id?: number
-              include_in_subject_access_requests?: boolean
-              info_path?: string
-              ip_allow_list?: unknown
-              ip_allow_list_enabled?: boolean
-              manually_managed?: boolean
-              modsecurity_audit_enabled?: boolean
-              modsecurity_enabled?: boolean
-              modsecurity_snippet?: string
-              monitor?: boolean
-              name?: string
-              namespace?: string
-              ns?: {
-                data?: {
-                  attributes?: {
-                    /** Format: date-time */
-                    createdAt?: string
-                    createdBy?: {
-                      data?: {
-                        attributes?: {
-                          blocked?: boolean
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          /** Format: email */
-                          email?: string
-                          firstname?: string
-                          isActive?: boolean
-                          lastname?: string
-                          preferedLanguage?: string
-                          registrationToken?: string
-                          resetPasswordToken?: string
-                          roles?: {
-                            data?: {
-                              attributes?: {
-                                code?: string
-                                /** Format: date-time */
-                                createdAt?: string
-                                createdBy?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }
-                                }
-                                description?: string
-                                name?: string
-                                permissions?: {
-                                  data?: {
-                                    attributes?: {
-                                      action?: string
-                                      actionParameters?: unknown
-                                      conditions?: unknown
-                                      /** Format: date-time */
-                                      createdAt?: string
-                                      createdBy?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                      properties?: unknown
-                                      role?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                      subject?: string
-                                      /** Format: date-time */
-                                      updatedAt?: string
-                                      updatedBy?: {
-                                        data?: {
-                                          attributes?: Record<string, never>
-                                          id?: number
-                                        }
-                                      }
-                                    }
-                                    id?: number
-                                  }[]
-                                }
-                                /** Format: date-time */
-                                updatedAt?: string
-                                updatedBy?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }
-                                }
-                                users?: {
-                                  data?: {
-                                    attributes?: Record<string, never>
-                                    id?: number
-                                  }[]
-                                }
-                              }
-                              id?: number
-                            }[]
-                          }
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          username?: string
-                        }
-                        id?: number
-                      }
-                    }
-                    elasticache_cluster?: {
-                      application?: string
-                      business_unit?: string
-                      engine_version?: string
-                      environment_name?: string
-                      id?: number
-                      infrastructure_support?: string
-                      is_production?: boolean
-                      namespace?: string
-                      node_type?: string
-                      number_cache_clusters?: number
-                      parameter_group_name?: string
-                      team_name?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    hmpps_template?: {
-                      application?: string
-                      application_insights_instance?: string
-                      environment_name?: string
-                      github_repo?: string
-                      github_team_name?: string
-                      id?: number
-                      is_production?: boolean
-                      namespace?: string
-                      prevent_self_review?: boolean
-                      protected_branches_only?: boolean
-                      reviewer_teams?: unknown
-                      selected_branch_patterns?: unknown
-                      source_template_repo?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    name?: string
-                    pingdom_check?: {
-                      encryption?: boolean
-                      host?: string
-                      id?: number
-                      integrationids?: unknown
-                      name?: string
-                      notifyagainevery?: number
-                      notifywhenbackup?: boolean
-                      port?: number
-                      probefilters?: string
-                      resolution?: number
-                      sendnotificationwhendown?: number
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_path?: string
-                      type?: string
-                      url?: string
-                    }[]
-                    /** Format: date-time */
-                    publishedAt?: string
-                    rds_instance?: {
-                      allow_major_version_upgrade?: boolean
-                      allow_minor_version_upgrade?: boolean
-                      application?: string
-                      backup_window?: string
-                      business_unit?: string
-                      db_engine_version?: string
-                      db_instance_class?: string
-                      db_max_allocated_storage?: string
-                      db_parameter?: unknown
-                      deletion_protection?: boolean
-                      environment_name?: string
-                      id?: number
-                      infrastructure_support?: string
-                      is_production?: string
-                      maintenance_window?: string
-                      namespace?: string
-                      performance_insights_enabled?: boolean
-                      rds_family?: string
-                      team_name?: string
-                      tf_filename?: string
-                      tf_label?: string
-                      tf_line_end?: number
-                      tf_line_start?: number
-                      tf_mod_version?: string
-                      tf_path?: string
-                    }[]
-                    /** Format: date-time */
-                    updatedAt?: string
-                    updatedBy?: {
-                      data?: {
-                        attributes?: Record<string, never>
-                        id?: number
-                      }
-                    }
-                  }
-                  id?: number
-                }
-              }
-              swagger_docs?: string
-              /** @enum {string} */
-              type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-              url?: string
+            }
+            documentId?: string
+            environments?: unknown
+            id?: number
+            image_id?: string
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
             }[]
-            envs?: {
-              data?: {
-                attributes?: {
-                  active_agencies?: unknown
-                  alert_severity_label?: string
-                  alerts_slack_channel?: string
-                  build_image_tag?: string
-                  cluster?: string
-                  component?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  health_path?: string
-                  include_in_subject_access_requests?: boolean
-                  info_path?: string
-                  ip_allow_list?: unknown
-                  ip_allow_list_enabled?: boolean
-                  manually_managed?: boolean
-                  modsecurity_audit_enabled?: boolean
-                  modsecurity_enabled?: boolean
-                  modsecurity_snippet?: string
-                  monitor?: boolean
-                  name?: string
-                  namespace?: string
-                  ns?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  swagger_docs?: string
-                  trivy_scan?: {
-                    data?: {
-                      attributes?: {
-                        build_image_tag?: string
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        environments?: unknown
-                        image_id?: string
-                        name?: string
-                        /** Format: date-time */
-                        publishedAt?: string
-                        /** @enum {string} */
-                        scan_status?: 'Failed' | 'Succeeded'
-                        scan_summary?: unknown
-                        trivy_scan_timestamp?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }
-                  }
-                  /** @enum {string} */
-                  type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  url?: string
-                }
-                id?: number
-              }[]
-            }
-            frontend?: boolean
-            github_enforce_admins_enabled?: boolean
-            github_only?: boolean
-            github_project_branch_protection_restricted_teams?: unknown
-            github_project_teams_admin?: unknown
-            github_project_teams_maintain?: unknown
-            github_project_teams_write?: unknown
-            /** @enum {string} */
-            github_project_visibility?: 'public' | 'internal' | 'private'
-            github_repo?: string
-            github_repo_is_template?: boolean
-            github_template_repo?: string
-            github_topics?: unknown
-            jira_project_keys?: unknown
-            language?: string
-            latest_commit?: {
-              /** Format: date-time */
-              date_time?: string
-              id?: number
-              sha?: string
-            }
             name?: string
-            part_of_monorepo?: boolean
-            path_to_helm_dir?: string
-            path_to_project?: string
-            product?: {
-              data?: {
-                attributes?: {
-                  children?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  components?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  confluence_link?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  delivery_manager?: string
-                  description?: string
-                  gdrive_link?: string
-                  lead_developer?: string
-                  legacy?: boolean
-                  name?: string
-                  p_id?: string
-                  parent?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  phase?: string
-                  product_manager?: string
-                  product_set?: {
-                    data?: {
-                      attributes?: {
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        lead_developer?: string
-                        name?: string
-                        products?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }[]
-                        }
-                        ps_id?: string
-                        /** Format: date-time */
-                        publishedAt?: string
-                        slug?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  service_area?: {
-                    data?: {
-                      attributes?: {
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        name?: string
-                        owner?: string
-                        products?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }[]
-                        }
-                        /** Format: date-time */
-                        publishedAt?: string
-                        sa_id?: string
-                        slug?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }
-                  }
-                  slack_channel_id?: string
-                  slack_channel_name?: string
-                  slug?: string
-                  subproduct?: boolean
-                  team?: {
-                    data?: {
-                      attributes?: {
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        name?: string
-                        products?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }[]
-                        }
-                        /** Format: date-time */
-                        publishedAt?: string
-                        slack_channel_id?: string
-                        slack_channel_name?: string
-                        slug?: string
-                        t_id?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
-                id?: number
-              }
-            }
             /** Format: date-time */
             publishedAt?: string
-            slack_channel_nonprod_release_notify?: string
-            slack_channel_prod_release_notify?: string
-            slack_channel_security_scans_notify?: string
-            standards_compliance?: unknown
-            title?: string
+            /** @enum {string} */
+            scan_status?: 'Failed' | 'Succeeded'
+            scan_summary?: unknown
+            trivy_scan_timestamp?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            veracode_exempt?: boolean
-            veracode_last_completed_scan_date?: string
-            veracode_policy_rules_status?: string
-            veracode_results_summary?: unknown
-            veracode_results_url?: string
-            versions?: unknown
           }
+          /** @enum {string} */
+          type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+          url?: string
+        }[]
+        frontend?: boolean
+        github_enforce_admins_enabled?: boolean
+        github_only?: boolean
+        github_project_branch_protection_restricted_teams?: unknown
+        github_project_teams_admin?: unknown
+        github_project_teams_maintain?: unknown
+        github_project_teams_write?: unknown
+        /** @enum {string} */
+        github_project_visibility?: 'public' | 'internal' | 'private'
+        github_repo?: string
+        github_repo_is_template?: boolean
+        github_template_repo?: string
+        github_topics?: unknown
+        id?: number
+        jira_project_keys?: unknown
+        language?: string
+        latest_commit?: components['schemas']['PropertiesCommitComponent']
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        name?: string
+        part_of_monorepo?: boolean
+        path_to_helm_dir?: string
+        path_to_project?: string
+        product?: {
+          children?: {
+            documentId?: string
+            id?: number
+          }[]
+          components?: {
+            documentId?: string
+            id?: number
+          }[]
+          confluence_link?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          delivery_manager?: string
+          description?: string
+          documentId?: string
+          gdrive_link?: string
+          id?: number
+          lead_developer?: string
+          legacy?: boolean
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          p_id?: string
+          parent?: {
+            documentId?: string
+            id?: number
+          }
+          phase?: string
+          product_manager?: string
+          product_set?: {
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: number
+            }
+            documentId?: string
+            id?: number
+            lead_developer?: string
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            name?: string
+            products?: {
+              documentId?: string
+              id?: number
+            }[]
+            ps_id?: string
+            /** Format: date-time */
+            publishedAt?: string
+            slug?: string
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: number
+            }
+          }
+          /** Format: date-time */
+          publishedAt?: string
+          service_area?: {
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: number
+            }
+            documentId?: string
+            id?: number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            name?: string
+            owner?: string
+            products?: {
+              documentId?: string
+              id?: number
+            }[]
+            /** Format: date-time */
+            publishedAt?: string
+            sa_id?: string
+            slug?: string
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: number
+            }
+          }
+          slack_channel_id?: string
+          slack_channel_name?: string
+          slug?: string
+          subproduct?: boolean
+          team?: {
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: number
+            }
+            documentId?: string
+            id?: number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            name?: string
+            products?: {
+              documentId?: string
+              id?: number
+            }[]
+            /** Format: date-time */
+            publishedAt?: string
+            slack_channel_id?: string
+            slack_channel_name?: string
+            slug?: string
+            t_id?: string
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: number
+            }
+          }
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        /** Format: date-time */
+        publishedAt?: string
+        slack_channel_nonprod_release_notify?: string
+        slack_channel_prod_release_notify?: string
+        slack_channel_security_scans_notify?: string
+        standards_compliance?: unknown
+        title?: string
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
           id?: number
         }
+        veracode_exempt?: boolean
+        veracode_last_completed_scan_date?: string
+        veracode_policy_rules_status?: string
+        veracode_results_summary?: unknown
+        veracode_results_url?: string
+        versions?: unknown
       }
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
+      documentId?: string
       health_path?: string
+      id?: number
       include_in_subject_access_requests?: boolean
       info_path?: string
       ip_allow_list?: unknown
       ip_allow_list_enabled?: boolean
+      locale?: string
+      localizations?: {
+        documentId?: string
+        id?: number
+      }[]
       manually_managed?: boolean
       modsecurity_audit_enabled?: boolean
       modsecurity_enabled?: boolean
@@ -3657,34 +3112,28 @@ export interface components {
       name: string
       namespace?: string
       ns?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
       /** Format: date-time */
       publishedAt?: string
       swagger_docs?: string
       trivy_scan?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
       /** @enum {string} */
       type: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
       url?: string
     }
     EnvironmentListResponse: {
-      data?: components['schemas']['EnvironmentListResponseDataItem'][]
+      data?: components['schemas']['Environment'][]
       meta?: {
         pagination?: {
           page?: number
@@ -3693,10 +3142,6 @@ export interface components {
           total?: number
         }
       }
-    }
-    EnvironmentListResponseDataItem: {
-      attributes?: components['schemas']['Environment']
-      id?: number
     }
     EnvironmentRequest: {
       data: {
@@ -3712,6 +3157,8 @@ export interface components {
         info_path?: string
         ip_allow_list?: unknown
         ip_allow_list_enabled?: boolean
+        locale?: string
+        localizations?: (number | string)[]
         manually_managed?: boolean
         modsecurity_audit_enabled?: boolean
         modsecurity_enabled?: boolean
@@ -3730,12 +3177,8 @@ export interface components {
       }
     }
     EnvironmentResponse: {
-      data?: components['schemas']['EnvironmentResponseDataObject']
+      data?: components['schemas']['Environment']
       meta?: Record<string, never>
-    }
-    EnvironmentResponseDataObject: {
-      attributes?: components['schemas']['Environment']
-      id?: number
     }
     Error: {
       data?: (Record<string, never> | Record<string, never>[]) | null
@@ -3753,111 +3196,156 @@ export interface components {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: {
-            blocked?: boolean
+        blocked?: boolean
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        /** Format: email */
+        email?: string
+        firstname?: string
+        id?: number
+        isActive?: boolean
+        lastname?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        preferedLanguage?: string
+        /** Format: date-time */
+        publishedAt?: string
+        registrationToken?: string
+        resetPasswordToken?: string
+        roles?: {
+          code?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          permissions?: {
+            action?: string
+            actionParameters?: unknown
+            conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            /** Format: email */
-            email?: string
-            firstname?: string
-            isActive?: boolean
-            lastname?: string
-            preferedLanguage?: string
-            registrationToken?: string
-            resetPasswordToken?: string
-            roles?: {
-              data?: {
-                attributes?: {
-                  code?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  name?: string
-                  permissions?: {
-                    data?: {
-                      attributes?: {
-                        action?: string
-                        actionParameters?: unknown
-                        conditions?: unknown
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        properties?: unknown
-                        role?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        subject?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  users?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                }
-                id?: number
-              }[]
+            documentId?: string
+            id?: number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            properties?: unknown
+            /** Format: date-time */
+            publishedAt?: string
+            role?: {
+              documentId?: string
+              id?: number
             }
+            subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            username?: string
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
           }
+          users?: {
+            documentId?: string
+            id?: number
+          }[]
+        }[]
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
           id?: number
         }
+        username?: string
       }
+      documentId?: string
       github_project_branch_protection_restricted_teams?: unknown
       github_project_teams_write?: unknown
       /** @enum {string} */
       github_project_visibility?: 'public' | 'internal' | 'private'
       github_projects_teams_admin?: unknown
       github_repo?: string
+      id?: number
       jira_project_keys?: unknown
+      locale?: string
+      localizations?: {
+        alerts_nonprod_slack_channel?: string
+        alerts_prod_slack_channel?: string
+        base_template?: string
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        github_project_branch_protection_restricted_teams?: unknown
+        github_project_teams_write?: unknown
+        /** @enum {string} */
+        github_project_visibility?: 'public' | 'internal' | 'private'
+        github_projects_teams_admin?: unknown
+        github_repo?: string
+        id?: number
+        jira_project_keys?: unknown
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        namespace?: string
+        nonprod_alerts_severity_label?: string
+        prod_alerts_severity_label?: string
+        product?: string
+        /** Format: date-time */
+        publishedAt?: string
+        repo_description?: string
+        request_github_pr_number?: number
+        request_github_pr_status?: string
+        requester_email?: string
+        requester_name?: string
+        requester_team?: string
+        slack_channel_nonprod_release_notify?: string
+        slack_channel_prod_release_notify?: string
+        slack_channel_security_scans_notify?: string
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+      }[]
       namespace?: string
       nonprod_alerts_severity_label?: string
       prod_alerts_severity_label?: string
@@ -3876,14 +3364,12 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
     }
     GithubRepoRequestListResponse: {
-      data?: components['schemas']['GithubRepoRequestListResponseDataItem'][]
+      data?: components['schemas']['GithubRepoRequest'][]
       meta?: {
         pagination?: {
           page?: number
@@ -3892,10 +3378,6 @@ export interface components {
           total?: number
         }
       }
-    }
-    GithubRepoRequestListResponseDataItem: {
-      attributes?: components['schemas']['GithubRepoRequest']
-      id?: number
     }
     GithubRepoRequestRequest: {
       data: {
@@ -3909,6 +3391,8 @@ export interface components {
         github_projects_teams_admin?: unknown
         github_repo?: string
         jira_project_keys?: unknown
+        locale?: string
+        localizations?: (number | string)[]
         namespace?: string
         nonprod_alerts_severity_label?: string
         prod_alerts_severity_label?: string
@@ -3925,116 +3409,140 @@ export interface components {
       }
     }
     GithubRepoRequestResponse: {
-      data?: components['schemas']['GithubRepoRequestResponseDataObject']
+      data?: components['schemas']['GithubRepoRequest']
       meta?: Record<string, never>
-    }
-    GithubRepoRequestResponseDataObject: {
-      attributes?: components['schemas']['GithubRepoRequest']
-      id?: number
     }
     GithubTeam: {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: {
-            blocked?: boolean
+        blocked?: boolean
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        /** Format: email */
+        email?: string
+        firstname?: string
+        id?: number
+        isActive?: boolean
+        lastname?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        preferedLanguage?: string
+        /** Format: date-time */
+        publishedAt?: string
+        registrationToken?: string
+        resetPasswordToken?: string
+        roles?: {
+          code?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          permissions?: {
+            action?: string
+            actionParameters?: unknown
+            conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            /** Format: email */
-            email?: string
-            firstname?: string
-            isActive?: boolean
-            lastname?: string
-            preferedLanguage?: string
-            registrationToken?: string
-            resetPasswordToken?: string
-            roles?: {
-              data?: {
-                attributes?: {
-                  code?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  name?: string
-                  permissions?: {
-                    data?: {
-                      attributes?: {
-                        action?: string
-                        actionParameters?: unknown
-                        conditions?: unknown
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        properties?: unknown
-                        role?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        subject?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  users?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                }
-                id?: number
-              }[]
+            documentId?: string
+            id?: number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            properties?: unknown
+            /** Format: date-time */
+            publishedAt?: string
+            role?: {
+              documentId?: string
+              id?: number
             }
+            subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            username?: string
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
           }
+          users?: {
+            documentId?: string
+            id?: number
+          }[]
+        }[]
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
           id?: number
         }
+        username?: string
       }
+      documentId?: string
       github_team_id?: number
+      id?: number
+      locale?: string
+      localizations?: {
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        github_team_id?: number
+        id?: number
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        members?: unknown
+        parent_team_name?: string
+        /** Format: date-time */
+        publishedAt?: string
+        team_desc?: string
+        team_name?: string
+        terraform_managed?: boolean
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+      }[]
       members?: unknown
       parent_team_name?: string
       /** Format: date-time */
@@ -4045,14 +3553,12 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
     }
     GithubTeamListResponse: {
-      data?: components['schemas']['GithubTeamListResponseDataItem'][]
+      data?: components['schemas']['GithubTeam'][]
       meta?: {
         pagination?: {
           page?: number
@@ -4062,13 +3568,11 @@ export interface components {
         }
       }
     }
-    GithubTeamListResponseDataItem: {
-      attributes?: components['schemas']['GithubTeam']
-      id?: number
-    }
     GithubTeamRequest: {
       data: {
         github_team_id?: number
+        locale?: string
+        localizations?: (number | string)[]
         members?: unknown
         parent_team_name?: string
         team_desc?: string
@@ -4077,117 +3581,140 @@ export interface components {
       }
     }
     GithubTeamResponse: {
-      data?: components['schemas']['GithubTeamResponseDataObject']
+      data?: components['schemas']['GithubTeam']
       meta?: Record<string, never>
-    }
-    GithubTeamResponseDataObject: {
-      attributes?: components['schemas']['GithubTeam']
-      id?: number
     }
     Namespace: {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: {
-            blocked?: boolean
+        blocked?: boolean
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        /** Format: email */
+        email?: string
+        firstname?: string
+        id?: number
+        isActive?: boolean
+        lastname?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        preferedLanguage?: string
+        /** Format: date-time */
+        publishedAt?: string
+        registrationToken?: string
+        resetPasswordToken?: string
+        roles?: {
+          code?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          permissions?: {
+            action?: string
+            actionParameters?: unknown
+            conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            /** Format: email */
-            email?: string
-            firstname?: string
-            isActive?: boolean
-            lastname?: string
-            preferedLanguage?: string
-            registrationToken?: string
-            resetPasswordToken?: string
-            roles?: {
-              data?: {
-                attributes?: {
-                  code?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  name?: string
-                  permissions?: {
-                    data?: {
-                      attributes?: {
-                        action?: string
-                        actionParameters?: unknown
-                        conditions?: unknown
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        properties?: unknown
-                        role?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        subject?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  users?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                }
-                id?: number
-              }[]
+            documentId?: string
+            id?: number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            properties?: unknown
+            /** Format: date-time */
+            publishedAt?: string
+            role?: {
+              documentId?: string
+              id?: number
             }
+            subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            username?: string
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
           }
+          users?: {
+            documentId?: string
+            id?: number
+          }[]
+        }[]
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
           id?: number
         }
+        username?: string
       }
+      documentId?: string
       elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
       hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
+      id?: number
+      locale?: string
+      localizations?: {
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
+        hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
+        id?: number
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        name?: string
+        pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
+        /** Format: date-time */
+        publishedAt?: string
+        rds_instance?: components['schemas']['TfModulesRdsInstanceComponent'][]
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+      }[]
       name: string
       pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
       /** Format: date-time */
@@ -4196,14 +3723,12 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
     }
     NamespaceListResponse: {
-      data?: components['schemas']['NamespaceListResponseDataItem'][]
+      data?: components['schemas']['Namespace'][]
       meta?: {
         pagination?: {
           page?: number
@@ -4213,645 +3738,458 @@ export interface components {
         }
       }
     }
-    NamespaceListResponseDataItem: {
-      attributes?: components['schemas']['Namespace']
-      id?: number
-    }
     NamespaceRequest: {
       data: {
         elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
         hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
+        locale?: string
+        localizations?: (number | string)[]
         name: string
         pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
         rds_instance?: components['schemas']['TfModulesRdsInstanceComponent'][]
       }
     }
     NamespaceResponse: {
-      data?: components['schemas']['NamespaceResponseDataObject']
+      data?: components['schemas']['Namespace']
       meta?: Record<string, never>
-    }
-    NamespaceResponseDataObject: {
-      attributes?: components['schemas']['Namespace']
-      id?: number
     }
     Product: {
       children?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }[]
-      }
+        documentId?: string
+        id?: number
+      }[]
       components?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }[]
-      }
+        documentId?: string
+        id?: number
+      }[]
       confluence_link?: string
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
       delivery_manager?: string
       description?: string
+      documentId?: string
       gdrive_link?: string
+      id?: number
       lead_developer?: string
       legacy?: boolean
+      locale?: string
+      localizations?: {
+        documentId?: string
+        id?: number
+      }[]
       name: string
       p_id: string
       parent?: {
-        data?: {
-          attributes?: {
-            children?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }[]
+        children?: {
+          documentId?: string
+          id?: number
+        }[]
+        components?: {
+          api?: boolean
+          app_insights_cloud_role_name?: string
+          codescanning_summary?: unknown
+          container_image?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          disabled_workflows?: unknown
+          documentId?: string
+          environments?: components['schemas']['PropertiesEnvironmentComponent'][]
+          envs?: {
+            active_agencies?: unknown
+            alert_severity_label?: string
+            alerts_slack_channel?: string
+            build_image_tag?: string
+            cluster?: string
+            component?: {
+              documentId?: string
+              id?: number
             }
-            components?: {
-              data?: {
-                attributes?: {
-                  api?: boolean
-                  app_insights_cloud_role_name?: string
-                  codescanning_summary?: unknown
-                  container_image?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  disabled_workflows?: unknown
-                  environments?: {
-                    active_agencies?: unknown
-                    alert_severity_label?: string
-                    alerts_slack_channel?: string
-                    build_image_tag?: string
-                    cluster?: string
-                    health_path?: string
-                    id?: number
-                    include_in_subject_access_requests?: boolean
-                    info_path?: string
-                    ip_allow_list?: unknown
-                    ip_allow_list_enabled?: boolean
-                    manually_managed?: boolean
-                    modsecurity_audit_enabled?: boolean
-                    modsecurity_enabled?: boolean
-                    modsecurity_snippet?: string
-                    monitor?: boolean
-                    name?: string
-                    namespace?: string
-                    ns?: {
-                      data?: {
-                        attributes?: {
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          elasticache_cluster?: {
-                            application?: string
-                            business_unit?: string
-                            engine_version?: string
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: boolean
-                            namespace?: string
-                            node_type?: string
-                            number_cache_clusters?: number
-                            parameter_group_name?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          hmpps_template?: {
-                            application?: string
-                            application_insights_instance?: string
-                            environment_name?: string
-                            github_repo?: string
-                            github_team_name?: string
-                            id?: number
-                            is_production?: boolean
-                            namespace?: string
-                            prevent_self_review?: boolean
-                            protected_branches_only?: boolean
-                            reviewer_teams?: unknown
-                            selected_branch_patterns?: unknown
-                            source_template_repo?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          name?: string
-                          pingdom_check?: {
-                            encryption?: boolean
-                            host?: string
-                            id?: number
-                            integrationids?: unknown
-                            name?: string
-                            notifyagainevery?: number
-                            notifywhenbackup?: boolean
-                            port?: number
-                            probefilters?: string
-                            resolution?: number
-                            sendnotificationwhendown?: number
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_path?: string
-                            type?: string
-                            url?: string
-                          }[]
-                          /** Format: date-time */
-                          publishedAt?: string
-                          rds_instance?: {
-                            allow_major_version_upgrade?: boolean
-                            allow_minor_version_upgrade?: boolean
-                            application?: string
-                            backup_window?: string
-                            business_unit?: string
-                            db_engine_version?: string
-                            db_instance_class?: string
-                            db_max_allocated_storage?: string
-                            db_parameter?: unknown
-                            deletion_protection?: boolean
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: string
-                            maintenance_window?: string
-                            namespace?: string
-                            performance_insights_enabled?: boolean
-                            rds_family?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                        }
-                        id?: number
-                      }
-                    }
-                    swagger_docs?: string
-                    /** @enum {string} */
-                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                    url?: string
-                  }[]
-                  envs?: {
-                    data?: {
-                      attributes?: {
-                        active_agencies?: unknown
-                        alert_severity_label?: string
-                        alerts_slack_channel?: string
-                        build_image_tag?: string
-                        cluster?: string
-                        component?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        health_path?: string
-                        include_in_subject_access_requests?: boolean
-                        info_path?: string
-                        ip_allow_list?: unknown
-                        ip_allow_list_enabled?: boolean
-                        manually_managed?: boolean
-                        modsecurity_audit_enabled?: boolean
-                        modsecurity_enabled?: boolean
-                        modsecurity_snippet?: string
-                        monitor?: boolean
-                        name?: string
-                        namespace?: string
-                        ns?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: date-time */
-                        publishedAt?: string
-                        swagger_docs?: string
-                        trivy_scan?: {
-                          data?: {
-                            attributes?: {
-                              build_image_tag?: string
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              environments?: unknown
-                              image_id?: string
-                              name?: string
-                              /** Format: date-time */
-                              publishedAt?: string
-                              /** @enum {string} */
-                              scan_status?: 'Failed' | 'Succeeded'
-                              scan_summary?: unknown
-                              trivy_scan_timestamp?: string
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                            }
-                            id?: number
-                          }
-                        }
-                        /** @enum {string} */
-                        type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        url?: string
-                      }
-                      id?: number
-                    }[]
-                  }
-                  frontend?: boolean
-                  github_enforce_admins_enabled?: boolean
-                  github_only?: boolean
-                  github_project_branch_protection_restricted_teams?: unknown
-                  github_project_teams_admin?: unknown
-                  github_project_teams_maintain?: unknown
-                  github_project_teams_write?: unknown
-                  /** @enum {string} */
-                  github_project_visibility?: 'public' | 'internal' | 'private'
-                  github_repo?: string
-                  github_repo_is_template?: boolean
-                  github_template_repo?: string
-                  github_topics?: unknown
-                  jira_project_keys?: unknown
-                  language?: string
-                  latest_commit?: {
-                    /** Format: date-time */
-                    date_time?: string
-                    id?: number
-                    sha?: string
-                  }
-                  name?: string
-                  part_of_monorepo?: boolean
-                  path_to_helm_dir?: string
-                  path_to_project?: string
-                  product?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slack_channel_nonprod_release_notify?: string
-                  slack_channel_prod_release_notify?: string
-                  slack_channel_security_scans_notify?: string
-                  standards_compliance?: unknown
-                  title?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  veracode_exempt?: boolean
-                  veracode_last_completed_scan_date?: string
-                  veracode_policy_rules_status?: string
-                  veracode_results_summary?: unknown
-                  veracode_results_url?: string
-                  versions?: unknown
-                }
-                id?: number
-              }[]
-            }
-            confluence_link?: string
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            delivery_manager?: string
-            description?: string
-            gdrive_link?: string
-            lead_developer?: string
-            legacy?: boolean
+            documentId?: string
+            health_path?: string
+            id?: number
+            include_in_subject_access_requests?: boolean
+            info_path?: string
+            ip_allow_list?: unknown
+            ip_allow_list_enabled?: boolean
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            manually_managed?: boolean
+            modsecurity_audit_enabled?: boolean
+            modsecurity_enabled?: boolean
+            modsecurity_snippet?: string
+            monitor?: boolean
             name?: string
-            p_id?: string
-            parent?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
-            }
-            phase?: string
-            product_manager?: string
-            product_set?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  lead_developer?: string
-                  name?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  ps_id?: string
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slug?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
-                id?: number
-              }
+            namespace?: string
+            ns?: {
+              documentId?: string
+              id?: number
             }
             /** Format: date-time */
             publishedAt?: string
-            service_area?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  name?: string
-                  owner?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  sa_id?: string
-                  slug?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
+            swagger_docs?: string
+            trivy_scan?: {
+              build_image_tag?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: number
+              }
+              documentId?: string
+              environments?: unknown
+              id?: number
+              image_id?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: number
+              }[]
+              name?: string
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              scan_status?: 'Failed' | 'Succeeded'
+              scan_summary?: unknown
+              trivy_scan_timestamp?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
                 id?: number
               }
             }
-            slack_channel_id?: string
-            slack_channel_name?: string
-            slug?: string
-            subproduct?: boolean
-            team?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: {
-                        blocked?: boolean
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: email */
-                        email?: string
-                        firstname?: string
-                        isActive?: boolean
-                        lastname?: string
-                        preferedLanguage?: string
-                        registrationToken?: string
-                        resetPasswordToken?: string
-                        roles?: {
-                          data?: {
-                            attributes?: {
-                              code?: string
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              description?: string
-                              name?: string
-                              permissions?: {
-                                data?: {
-                                  attributes?: {
-                                    action?: string
-                                    actionParameters?: unknown
-                                    conditions?: unknown
-                                    /** Format: date-time */
-                                    createdAt?: string
-                                    createdBy?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                    properties?: unknown
-                                    role?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                    subject?: string
-                                    /** Format: date-time */
-                                    updatedAt?: string
-                                    updatedBy?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                  }
-                                  id?: number
-                                }[]
-                              }
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              users?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }[]
-                              }
-                            }
-                            id?: number
-                          }[]
-                        }
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        username?: string
-                      }
-                      id?: number
-                    }
-                  }
-                  name?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slack_channel_id?: string
-                  slack_channel_name?: string
-                  slug?: string
-                  t_id?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
-                id?: number
-              }
-            }
+            /** @enum {string} */
+            type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
+              documentId?: string
+              id?: number
+            }
+            url?: string
+          }[]
+          frontend?: boolean
+          github_enforce_admins_enabled?: boolean
+          github_only?: boolean
+          github_project_branch_protection_restricted_teams?: unknown
+          github_project_teams_admin?: unknown
+          github_project_teams_maintain?: unknown
+          github_project_teams_write?: unknown
+          /** @enum {string} */
+          github_project_visibility?: 'public' | 'internal' | 'private'
+          github_repo?: string
+          github_repo_is_template?: boolean
+          github_template_repo?: string
+          github_topics?: unknown
+          id?: number
+          jira_project_keys?: unknown
+          language?: string
+          latest_commit?: components['schemas']['PropertiesCommitComponent']
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          part_of_monorepo?: boolean
+          path_to_helm_dir?: string
+          path_to_project?: string
+          product?: {
+            documentId?: string
+            id?: number
+          }
+          /** Format: date-time */
+          publishedAt?: string
+          slack_channel_nonprod_release_notify?: string
+          slack_channel_prod_release_notify?: string
+          slack_channel_security_scans_notify?: string
+          standards_compliance?: unknown
+          title?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+          veracode_exempt?: boolean
+          veracode_last_completed_scan_date?: string
+          veracode_policy_rules_status?: string
+          veracode_results_summary?: unknown
+          veracode_results_url?: string
+          versions?: unknown
+        }[]
+        confluence_link?: string
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        delivery_manager?: string
+        description?: string
+        documentId?: string
+        gdrive_link?: string
+        id?: number
+        lead_developer?: string
+        legacy?: boolean
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        name?: string
+        p_id?: string
+        parent?: {
+          documentId?: string
+          id?: number
+        }
+        phase?: string
+        product_manager?: string
+        product_set?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          documentId?: string
+          id?: number
+          lead_developer?: string
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          ps_id?: string
+          /** Format: date-time */
+          publishedAt?: string
+          slug?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        /** Format: date-time */
+        publishedAt?: string
+        service_area?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          owner?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          sa_id?: string
+          slug?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        slack_channel_id?: string
+        slack_channel_name?: string
+        slug?: string
+        subproduct?: boolean
+        team?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            blocked?: boolean
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: number
+            }
+            documentId?: string
+            /** Format: email */
+            email?: string
+            firstname?: string
+            id?: number
+            isActive?: boolean
+            lastname?: string
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            preferedLanguage?: string
+            /** Format: date-time */
+            publishedAt?: string
+            registrationToken?: string
+            resetPasswordToken?: string
+            roles?: {
+              code?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
                 id?: number
               }
+              description?: string
+              documentId?: string
+              id?: number
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                actionParameters?: unknown
+                conditions?: unknown
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: number
+                }
+                documentId?: string
+                id?: number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: number
+                }[]
+                properties?: unknown
+                /** Format: date-time */
+                publishedAt?: string
+                role?: {
+                  documentId?: string
+                  id?: number
+                }
+                subject?: string
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: number
+              }
+              users?: {
+                documentId?: string
+                id?: number
+              }[]
+            }[]
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: number
             }
+            username?: string
           }
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          slack_channel_id?: string
+          slack_channel_name?: string
+          slug?: string
+          t_id?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
           id?: number
         }
       }
       phase?: string
       product_manager?: string
       product_set?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
       /** Format: date-time */
       publishedAt?: string
       service_area?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
       slack_channel_id?: string
       slack_channel_name?: string
       slug?: string
       subproduct?: boolean
       team?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
     }
     ProductListResponse: {
-      data?: components['schemas']['ProductListResponseDataItem'][]
+      data?: components['schemas']['Product'][]
       meta?: {
         pagination?: {
           page?: number
@@ -4860,10 +4198,6 @@ export interface components {
           total?: number
         }
       }
-    }
-    ProductListResponseDataItem: {
-      attributes?: components['schemas']['Product']
-      id?: number
     }
     ProductRequest: {
       data: {
@@ -4875,6 +4209,8 @@ export interface components {
         gdrive_link?: string
         lead_developer?: string
         legacy?: boolean
+        locale?: string
+        localizations?: (number | string)[]
         name: string
         p_id: string
         /** @example string or id */
@@ -4894,576 +4230,403 @@ export interface components {
       }
     }
     ProductResponse: {
-      data?: components['schemas']['ProductResponseDataObject']
+      data?: components['schemas']['Product']
       meta?: Record<string, never>
-    }
-    ProductResponseDataObject: {
-      attributes?: components['schemas']['Product']
-      id?: number
     }
     ProductSet: {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
+      documentId?: string
+      id?: number
       lead_developer?: string
+      locale?: string
+      localizations?: {
+        documentId?: string
+        id?: number
+      }[]
       name: string
       products?: {
-        data?: {
-          attributes?: {
-            children?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }[]
+        children?: {
+          documentId?: string
+          id?: number
+        }[]
+        components?: {
+          api?: boolean
+          app_insights_cloud_role_name?: string
+          codescanning_summary?: unknown
+          container_image?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          disabled_workflows?: unknown
+          documentId?: string
+          environments?: components['schemas']['PropertiesEnvironmentComponent'][]
+          envs?: {
+            active_agencies?: unknown
+            alert_severity_label?: string
+            alerts_slack_channel?: string
+            build_image_tag?: string
+            cluster?: string
+            component?: {
+              documentId?: string
+              id?: number
             }
-            components?: {
-              data?: {
-                attributes?: {
-                  api?: boolean
-                  app_insights_cloud_role_name?: string
-                  codescanning_summary?: unknown
-                  container_image?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  disabled_workflows?: unknown
-                  environments?: {
-                    active_agencies?: unknown
-                    alert_severity_label?: string
-                    alerts_slack_channel?: string
-                    build_image_tag?: string
-                    cluster?: string
-                    health_path?: string
-                    id?: number
-                    include_in_subject_access_requests?: boolean
-                    info_path?: string
-                    ip_allow_list?: unknown
-                    ip_allow_list_enabled?: boolean
-                    manually_managed?: boolean
-                    modsecurity_audit_enabled?: boolean
-                    modsecurity_enabled?: boolean
-                    modsecurity_snippet?: string
-                    monitor?: boolean
-                    name?: string
-                    namespace?: string
-                    ns?: {
-                      data?: {
-                        attributes?: {
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          elasticache_cluster?: {
-                            application?: string
-                            business_unit?: string
-                            engine_version?: string
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: boolean
-                            namespace?: string
-                            node_type?: string
-                            number_cache_clusters?: number
-                            parameter_group_name?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          hmpps_template?: {
-                            application?: string
-                            application_insights_instance?: string
-                            environment_name?: string
-                            github_repo?: string
-                            github_team_name?: string
-                            id?: number
-                            is_production?: boolean
-                            namespace?: string
-                            prevent_self_review?: boolean
-                            protected_branches_only?: boolean
-                            reviewer_teams?: unknown
-                            selected_branch_patterns?: unknown
-                            source_template_repo?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          name?: string
-                          pingdom_check?: {
-                            encryption?: boolean
-                            host?: string
-                            id?: number
-                            integrationids?: unknown
-                            name?: string
-                            notifyagainevery?: number
-                            notifywhenbackup?: boolean
-                            port?: number
-                            probefilters?: string
-                            resolution?: number
-                            sendnotificationwhendown?: number
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_path?: string
-                            type?: string
-                            url?: string
-                          }[]
-                          /** Format: date-time */
-                          publishedAt?: string
-                          rds_instance?: {
-                            allow_major_version_upgrade?: boolean
-                            allow_minor_version_upgrade?: boolean
-                            application?: string
-                            backup_window?: string
-                            business_unit?: string
-                            db_engine_version?: string
-                            db_instance_class?: string
-                            db_max_allocated_storage?: string
-                            db_parameter?: unknown
-                            deletion_protection?: boolean
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: string
-                            maintenance_window?: string
-                            namespace?: string
-                            performance_insights_enabled?: boolean
-                            rds_family?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                        }
-                        id?: number
-                      }
-                    }
-                    swagger_docs?: string
-                    /** @enum {string} */
-                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                    url?: string
-                  }[]
-                  envs?: {
-                    data?: {
-                      attributes?: {
-                        active_agencies?: unknown
-                        alert_severity_label?: string
-                        alerts_slack_channel?: string
-                        build_image_tag?: string
-                        cluster?: string
-                        component?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        health_path?: string
-                        include_in_subject_access_requests?: boolean
-                        info_path?: string
-                        ip_allow_list?: unknown
-                        ip_allow_list_enabled?: boolean
-                        manually_managed?: boolean
-                        modsecurity_audit_enabled?: boolean
-                        modsecurity_enabled?: boolean
-                        modsecurity_snippet?: string
-                        monitor?: boolean
-                        name?: string
-                        namespace?: string
-                        ns?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: date-time */
-                        publishedAt?: string
-                        swagger_docs?: string
-                        trivy_scan?: {
-                          data?: {
-                            attributes?: {
-                              build_image_tag?: string
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              environments?: unknown
-                              image_id?: string
-                              name?: string
-                              /** Format: date-time */
-                              publishedAt?: string
-                              /** @enum {string} */
-                              scan_status?: 'Failed' | 'Succeeded'
-                              scan_summary?: unknown
-                              trivy_scan_timestamp?: string
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                            }
-                            id?: number
-                          }
-                        }
-                        /** @enum {string} */
-                        type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        url?: string
-                      }
-                      id?: number
-                    }[]
-                  }
-                  frontend?: boolean
-                  github_enforce_admins_enabled?: boolean
-                  github_only?: boolean
-                  github_project_branch_protection_restricted_teams?: unknown
-                  github_project_teams_admin?: unknown
-                  github_project_teams_maintain?: unknown
-                  github_project_teams_write?: unknown
-                  /** @enum {string} */
-                  github_project_visibility?: 'public' | 'internal' | 'private'
-                  github_repo?: string
-                  github_repo_is_template?: boolean
-                  github_template_repo?: string
-                  github_topics?: unknown
-                  jira_project_keys?: unknown
-                  language?: string
-                  latest_commit?: {
-                    /** Format: date-time */
-                    date_time?: string
-                    id?: number
-                    sha?: string
-                  }
-                  name?: string
-                  part_of_monorepo?: boolean
-                  path_to_helm_dir?: string
-                  path_to_project?: string
-                  product?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slack_channel_nonprod_release_notify?: string
-                  slack_channel_prod_release_notify?: string
-                  slack_channel_security_scans_notify?: string
-                  standards_compliance?: unknown
-                  title?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  veracode_exempt?: boolean
-                  veracode_last_completed_scan_date?: string
-                  veracode_policy_rules_status?: string
-                  veracode_results_summary?: unknown
-                  veracode_results_url?: string
-                  versions?: unknown
-                }
-                id?: number
-              }[]
-            }
-            confluence_link?: string
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            delivery_manager?: string
-            description?: string
-            gdrive_link?: string
-            lead_developer?: string
-            legacy?: boolean
+            documentId?: string
+            health_path?: string
+            id?: number
+            include_in_subject_access_requests?: boolean
+            info_path?: string
+            ip_allow_list?: unknown
+            ip_allow_list_enabled?: boolean
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            manually_managed?: boolean
+            modsecurity_audit_enabled?: boolean
+            modsecurity_enabled?: boolean
+            modsecurity_snippet?: string
+            monitor?: boolean
             name?: string
-            p_id?: string
-            parent?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
-            }
-            phase?: string
-            product_manager?: string
-            product_set?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  lead_developer?: string
-                  name?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  ps_id?: string
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slug?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
-                id?: number
-              }
+            namespace?: string
+            ns?: {
+              documentId?: string
+              id?: number
             }
             /** Format: date-time */
             publishedAt?: string
-            service_area?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  name?: string
-                  owner?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  sa_id?: string
-                  slug?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
+            swagger_docs?: string
+            trivy_scan?: {
+              build_image_tag?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: number
+              }
+              documentId?: string
+              environments?: unknown
+              id?: number
+              image_id?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: number
+              }[]
+              name?: string
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              scan_status?: 'Failed' | 'Succeeded'
+              scan_summary?: unknown
+              trivy_scan_timestamp?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
                 id?: number
               }
             }
-            slack_channel_id?: string
-            slack_channel_name?: string
-            slug?: string
-            subproduct?: boolean
-            team?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: {
-                        blocked?: boolean
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: email */
-                        email?: string
-                        firstname?: string
-                        isActive?: boolean
-                        lastname?: string
-                        preferedLanguage?: string
-                        registrationToken?: string
-                        resetPasswordToken?: string
-                        roles?: {
-                          data?: {
-                            attributes?: {
-                              code?: string
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              description?: string
-                              name?: string
-                              permissions?: {
-                                data?: {
-                                  attributes?: {
-                                    action?: string
-                                    actionParameters?: unknown
-                                    conditions?: unknown
-                                    /** Format: date-time */
-                                    createdAt?: string
-                                    createdBy?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                    properties?: unknown
-                                    role?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                    subject?: string
-                                    /** Format: date-time */
-                                    updatedAt?: string
-                                    updatedBy?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                  }
-                                  id?: number
-                                }[]
-                              }
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              users?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }[]
-                              }
-                            }
-                            id?: number
-                          }[]
-                        }
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        username?: string
-                      }
-                      id?: number
-                    }
-                  }
-                  name?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slack_channel_id?: string
-                  slack_channel_name?: string
-                  slug?: string
-                  t_id?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
-                id?: number
-              }
-            }
+            /** @enum {string} */
+            type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
+            url?: string
+          }[]
+          frontend?: boolean
+          github_enforce_admins_enabled?: boolean
+          github_only?: boolean
+          github_project_branch_protection_restricted_teams?: unknown
+          github_project_teams_admin?: unknown
+          github_project_teams_maintain?: unknown
+          github_project_teams_write?: unknown
+          /** @enum {string} */
+          github_project_visibility?: 'public' | 'internal' | 'private'
+          github_repo?: string
+          github_repo_is_template?: boolean
+          github_template_repo?: string
+          github_topics?: unknown
+          id?: number
+          jira_project_keys?: unknown
+          language?: string
+          latest_commit?: components['schemas']['PropertiesCommitComponent']
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          part_of_monorepo?: boolean
+          path_to_helm_dir?: string
+          path_to_project?: string
+          product?: {
+            documentId?: string
+            id?: number
           }
+          /** Format: date-time */
+          publishedAt?: string
+          slack_channel_nonprod_release_notify?: string
+          slack_channel_prod_release_notify?: string
+          slack_channel_security_scans_notify?: string
+          standards_compliance?: unknown
+          title?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+          veracode_exempt?: boolean
+          veracode_last_completed_scan_date?: string
+          veracode_policy_rules_status?: string
+          veracode_results_summary?: unknown
+          veracode_results_url?: string
+          versions?: unknown
+        }[]
+        confluence_link?: string
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        delivery_manager?: string
+        description?: string
+        documentId?: string
+        gdrive_link?: string
+        id?: number
+        lead_developer?: string
+        legacy?: boolean
+        locale?: string
+        localizations?: {
+          documentId?: string
           id?: number
         }[]
-      }
+        name?: string
+        p_id?: string
+        parent?: {
+          documentId?: string
+          id?: number
+        }
+        phase?: string
+        product_manager?: string
+        product_set?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          documentId?: string
+          id?: number
+          lead_developer?: string
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          ps_id?: string
+          /** Format: date-time */
+          publishedAt?: string
+          slug?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        /** Format: date-time */
+        publishedAt?: string
+        service_area?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          owner?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          sa_id?: string
+          slug?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        slack_channel_id?: string
+        slack_channel_name?: string
+        slug?: string
+        subproduct?: boolean
+        team?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            blocked?: boolean
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: number
+            }
+            documentId?: string
+            /** Format: email */
+            email?: string
+            firstname?: string
+            id?: number
+            isActive?: boolean
+            lastname?: string
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            preferedLanguage?: string
+            /** Format: date-time */
+            publishedAt?: string
+            registrationToken?: string
+            resetPasswordToken?: string
+            roles?: {
+              code?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: number
+              }
+              description?: string
+              documentId?: string
+              id?: number
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                actionParameters?: unknown
+                conditions?: unknown
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: number
+                }
+                documentId?: string
+                id?: number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: number
+                }[]
+                properties?: unknown
+                /** Format: date-time */
+                publishedAt?: string
+                role?: {
+                  documentId?: string
+                  id?: number
+                }
+                subject?: string
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: number
+              }
+              users?: {
+                documentId?: string
+                id?: number
+              }[]
+            }[]
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: number
+            }
+            username?: string
+          }
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          slack_channel_id?: string
+          slack_channel_name?: string
+          slug?: string
+          t_id?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+      }[]
       ps_id: string
       /** Format: date-time */
       publishedAt?: string
@@ -5471,14 +4634,12 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
     }
     ProductSetListResponse: {
-      data?: components['schemas']['ProductSetListResponseDataItem'][]
+      data?: components['schemas']['ProductSet'][]
       meta?: {
         pagination?: {
           page?: number
@@ -5488,13 +4649,11 @@ export interface components {
         }
       }
     }
-    ProductSetListResponseDataItem: {
-      attributes?: components['schemas']['ProductSet']
-      id?: number
-    }
     ProductSetRequest: {
       data: {
         lead_developer?: string
+        locale?: string
+        localizations?: (number | string)[]
         name: string
         products?: (number | string)[]
         ps_id: string
@@ -5502,12 +4661,8 @@ export interface components {
       }
     }
     ProductSetResponse: {
-      data?: components['schemas']['ProductSetResponseDataObject']
+      data?: components['schemas']['ProductSet']
       meta?: Record<string, never>
-    }
-    ProductSetResponseDataObject: {
-      attributes?: components['schemas']['ProductSet']
-      id?: number
     }
     PropertiesCommitComponent: {
       /** Format: date-time */
@@ -5535,209 +4690,30 @@ export interface components {
       name?: string
       namespace?: string
       ns?: {
-        data?: {
-          attributes?: {
-            /** Format: date-time */
-            createdAt?: string
-            createdBy?: {
-              data?: {
-                attributes?: {
-                  blocked?: boolean
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  /** Format: email */
-                  email?: string
-                  firstname?: string
-                  isActive?: boolean
-                  lastname?: string
-                  preferedLanguage?: string
-                  registrationToken?: string
-                  resetPasswordToken?: string
-                  roles?: {
-                    data?: {
-                      attributes?: {
-                        code?: string
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        description?: string
-                        name?: string
-                        permissions?: {
-                          data?: {
-                            attributes?: {
-                              action?: string
-                              actionParameters?: unknown
-                              conditions?: unknown
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              properties?: unknown
-                              role?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              subject?: string
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                            }
-                            id?: number
-                          }[]
-                        }
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        users?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }[]
-                        }
-                      }
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  username?: string
-                }
-                id?: number
-              }
-            }
-            elasticache_cluster?: {
-              application?: string
-              business_unit?: string
-              engine_version?: string
-              environment_name?: string
-              id?: number
-              infrastructure_support?: string
-              is_production?: boolean
-              namespace?: string
-              node_type?: string
-              number_cache_clusters?: number
-              parameter_group_name?: string
-              team_name?: string
-              tf_filename?: string
-              tf_label?: string
-              tf_line_end?: number
-              tf_line_start?: number
-              tf_mod_version?: string
-              tf_path?: string
-            }[]
-            hmpps_template?: {
-              application?: string
-              application_insights_instance?: string
-              environment_name?: string
-              github_repo?: string
-              github_team_name?: string
-              id?: number
-              is_production?: boolean
-              namespace?: string
-              prevent_self_review?: boolean
-              protected_branches_only?: boolean
-              reviewer_teams?: unknown
-              selected_branch_patterns?: unknown
-              source_template_repo?: string
-              tf_filename?: string
-              tf_label?: string
-              tf_line_end?: number
-              tf_line_start?: number
-              tf_mod_version?: string
-              tf_path?: string
-            }[]
-            name?: string
-            pingdom_check?: {
-              encryption?: boolean
-              host?: string
-              id?: number
-              integrationids?: unknown
-              name?: string
-              notifyagainevery?: number
-              notifywhenbackup?: boolean
-              port?: number
-              probefilters?: string
-              resolution?: number
-              sendnotificationwhendown?: number
-              tf_filename?: string
-              tf_label?: string
-              tf_line_end?: number
-              tf_line_start?: number
-              tf_path?: string
-              type?: string
-              url?: string
-            }[]
-            /** Format: date-time */
-            publishedAt?: string
-            rds_instance?: {
-              allow_major_version_upgrade?: boolean
-              allow_minor_version_upgrade?: boolean
-              application?: string
-              backup_window?: string
-              business_unit?: string
-              db_engine_version?: string
-              db_instance_class?: string
-              db_max_allocated_storage?: string
-              db_parameter?: unknown
-              deletion_protection?: boolean
-              environment_name?: string
-              id?: number
-              infrastructure_support?: string
-              is_production?: string
-              maintenance_window?: string
-              namespace?: string
-              performance_insights_enabled?: boolean
-              rds_family?: string
-              team_name?: string
-              tf_filename?: string
-              tf_label?: string
-              tf_line_end?: number
-              tf_line_start?: number
-              tf_mod_version?: string
-              tf_path?: string
-            }[]
-            /** Format: date-time */
-            updatedAt?: string
-            updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
-            }
-          }
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
+        hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
+        id?: number
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        name?: string
+        pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
+        /** Format: date-time */
+        publishedAt?: string
+        rds_instance?: components['schemas']['TfModulesRdsInstanceComponent'][]
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
           id?: number
         }
       }
@@ -5750,110 +4726,142 @@ export interface components {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: {
-            blocked?: boolean
+        blocked?: boolean
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        /** Format: email */
+        email?: string
+        firstname?: string
+        id?: number
+        isActive?: boolean
+        lastname?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        preferedLanguage?: string
+        /** Format: date-time */
+        publishedAt?: string
+        registrationToken?: string
+        resetPasswordToken?: string
+        roles?: {
+          code?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          permissions?: {
+            action?: string
+            actionParameters?: unknown
+            conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            /** Format: email */
-            email?: string
-            firstname?: string
-            isActive?: boolean
-            lastname?: string
-            preferedLanguage?: string
-            registrationToken?: string
-            resetPasswordToken?: string
-            roles?: {
-              data?: {
-                attributes?: {
-                  code?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  name?: string
-                  permissions?: {
-                    data?: {
-                      attributes?: {
-                        action?: string
-                        actionParameters?: unknown
-                        conditions?: unknown
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        properties?: unknown
-                        role?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        subject?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  users?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                }
-                id?: number
-              }[]
+            documentId?: string
+            id?: number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            properties?: unknown
+            /** Format: date-time */
+            publishedAt?: string
+            role?: {
+              documentId?: string
+              id?: number
             }
+            subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            username?: string
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
           }
+          users?: {
+            documentId?: string
+            id?: number
+          }[]
+        }[]
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
           id?: number
         }
+        username?: string
       }
       description?: string
+      documentId?: string
       error_details?: unknown
+      id?: number
       /** Format: date-time */
       last_scheduled_run?: string
       /** Format: date-time */
       last_successful_run?: string
+      locale?: string
+      localizations?: {
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        description?: string
+        documentId?: string
+        error_details?: unknown
+        id?: number
+        /** Format: date-time */
+        last_scheduled_run?: string
+        /** Format: date-time */
+        last_successful_run?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        name?: string
+        /** Format: date-time */
+        publishedAt?: string
+        /** @enum {string} */
+        result?: 'None' | 'Succeeded' | 'Failed' | 'Errors'
+        schedule?: string
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+      }[]
       name?: string
       /** Format: date-time */
       publishedAt?: string
@@ -5863,14 +4871,12 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
     }
     ScheduledJobListResponse: {
-      data?: components['schemas']['ScheduledJobListResponseDataItem'][]
+      data?: components['schemas']['ScheduledJob'][]
       meta?: {
         pagination?: {
           page?: number
@@ -5879,10 +4885,6 @@ export interface components {
           total?: number
         }
       }
-    }
-    ScheduledJobListResponseDataItem: {
-      attributes?: components['schemas']['ScheduledJob']
-      id?: number
     }
     ScheduledJobRequest: {
       data: {
@@ -5892,6 +4894,8 @@ export interface components {
         last_scheduled_run?: string
         /** Format: date-time */
         last_successful_run?: string
+        locale?: string
+        localizations?: (number | string)[]
         name?: string
         /** @enum {string} */
         result?: 'None' | 'Succeeded' | 'Failed' | 'Errors'
@@ -5899,576 +4903,403 @@ export interface components {
       }
     }
     ScheduledJobResponse: {
-      data?: components['schemas']['ScheduledJobResponseDataObject']
+      data?: components['schemas']['ScheduledJob']
       meta?: Record<string, never>
-    }
-    ScheduledJobResponseDataObject: {
-      attributes?: components['schemas']['ScheduledJob']
-      id?: number
     }
     ServiceArea: {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
+      documentId?: string
+      id?: number
+      locale?: string
+      localizations?: {
+        documentId?: string
+        id?: number
+      }[]
       name: string
       owner: string
       products?: {
-        data?: {
-          attributes?: {
-            children?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }[]
+        children?: {
+          documentId?: string
+          id?: number
+        }[]
+        components?: {
+          api?: boolean
+          app_insights_cloud_role_name?: string
+          codescanning_summary?: unknown
+          container_image?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          disabled_workflows?: unknown
+          documentId?: string
+          environments?: components['schemas']['PropertiesEnvironmentComponent'][]
+          envs?: {
+            active_agencies?: unknown
+            alert_severity_label?: string
+            alerts_slack_channel?: string
+            build_image_tag?: string
+            cluster?: string
+            component?: {
+              documentId?: string
+              id?: number
             }
-            components?: {
-              data?: {
-                attributes?: {
-                  api?: boolean
-                  app_insights_cloud_role_name?: string
-                  codescanning_summary?: unknown
-                  container_image?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  disabled_workflows?: unknown
-                  environments?: {
-                    active_agencies?: unknown
-                    alert_severity_label?: string
-                    alerts_slack_channel?: string
-                    build_image_tag?: string
-                    cluster?: string
-                    health_path?: string
-                    id?: number
-                    include_in_subject_access_requests?: boolean
-                    info_path?: string
-                    ip_allow_list?: unknown
-                    ip_allow_list_enabled?: boolean
-                    manually_managed?: boolean
-                    modsecurity_audit_enabled?: boolean
-                    modsecurity_enabled?: boolean
-                    modsecurity_snippet?: string
-                    monitor?: boolean
-                    name?: string
-                    namespace?: string
-                    ns?: {
-                      data?: {
-                        attributes?: {
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          elasticache_cluster?: {
-                            application?: string
-                            business_unit?: string
-                            engine_version?: string
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: boolean
-                            namespace?: string
-                            node_type?: string
-                            number_cache_clusters?: number
-                            parameter_group_name?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          hmpps_template?: {
-                            application?: string
-                            application_insights_instance?: string
-                            environment_name?: string
-                            github_repo?: string
-                            github_team_name?: string
-                            id?: number
-                            is_production?: boolean
-                            namespace?: string
-                            prevent_self_review?: boolean
-                            protected_branches_only?: boolean
-                            reviewer_teams?: unknown
-                            selected_branch_patterns?: unknown
-                            source_template_repo?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          name?: string
-                          pingdom_check?: {
-                            encryption?: boolean
-                            host?: string
-                            id?: number
-                            integrationids?: unknown
-                            name?: string
-                            notifyagainevery?: number
-                            notifywhenbackup?: boolean
-                            port?: number
-                            probefilters?: string
-                            resolution?: number
-                            sendnotificationwhendown?: number
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_path?: string
-                            type?: string
-                            url?: string
-                          }[]
-                          /** Format: date-time */
-                          publishedAt?: string
-                          rds_instance?: {
-                            allow_major_version_upgrade?: boolean
-                            allow_minor_version_upgrade?: boolean
-                            application?: string
-                            backup_window?: string
-                            business_unit?: string
-                            db_engine_version?: string
-                            db_instance_class?: string
-                            db_max_allocated_storage?: string
-                            db_parameter?: unknown
-                            deletion_protection?: boolean
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: string
-                            maintenance_window?: string
-                            namespace?: string
-                            performance_insights_enabled?: boolean
-                            rds_family?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                        }
-                        id?: number
-                      }
-                    }
-                    swagger_docs?: string
-                    /** @enum {string} */
-                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                    url?: string
-                  }[]
-                  envs?: {
-                    data?: {
-                      attributes?: {
-                        active_agencies?: unknown
-                        alert_severity_label?: string
-                        alerts_slack_channel?: string
-                        build_image_tag?: string
-                        cluster?: string
-                        component?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        health_path?: string
-                        include_in_subject_access_requests?: boolean
-                        info_path?: string
-                        ip_allow_list?: unknown
-                        ip_allow_list_enabled?: boolean
-                        manually_managed?: boolean
-                        modsecurity_audit_enabled?: boolean
-                        modsecurity_enabled?: boolean
-                        modsecurity_snippet?: string
-                        monitor?: boolean
-                        name?: string
-                        namespace?: string
-                        ns?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: date-time */
-                        publishedAt?: string
-                        swagger_docs?: string
-                        trivy_scan?: {
-                          data?: {
-                            attributes?: {
-                              build_image_tag?: string
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              environments?: unknown
-                              image_id?: string
-                              name?: string
-                              /** Format: date-time */
-                              publishedAt?: string
-                              /** @enum {string} */
-                              scan_status?: 'Failed' | 'Succeeded'
-                              scan_summary?: unknown
-                              trivy_scan_timestamp?: string
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                            }
-                            id?: number
-                          }
-                        }
-                        /** @enum {string} */
-                        type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        url?: string
-                      }
-                      id?: number
-                    }[]
-                  }
-                  frontend?: boolean
-                  github_enforce_admins_enabled?: boolean
-                  github_only?: boolean
-                  github_project_branch_protection_restricted_teams?: unknown
-                  github_project_teams_admin?: unknown
-                  github_project_teams_maintain?: unknown
-                  github_project_teams_write?: unknown
-                  /** @enum {string} */
-                  github_project_visibility?: 'public' | 'internal' | 'private'
-                  github_repo?: string
-                  github_repo_is_template?: boolean
-                  github_template_repo?: string
-                  github_topics?: unknown
-                  jira_project_keys?: unknown
-                  language?: string
-                  latest_commit?: {
-                    /** Format: date-time */
-                    date_time?: string
-                    id?: number
-                    sha?: string
-                  }
-                  name?: string
-                  part_of_monorepo?: boolean
-                  path_to_helm_dir?: string
-                  path_to_project?: string
-                  product?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slack_channel_nonprod_release_notify?: string
-                  slack_channel_prod_release_notify?: string
-                  slack_channel_security_scans_notify?: string
-                  standards_compliance?: unknown
-                  title?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  veracode_exempt?: boolean
-                  veracode_last_completed_scan_date?: string
-                  veracode_policy_rules_status?: string
-                  veracode_results_summary?: unknown
-                  veracode_results_url?: string
-                  versions?: unknown
-                }
-                id?: number
-              }[]
-            }
-            confluence_link?: string
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            delivery_manager?: string
-            description?: string
-            gdrive_link?: string
-            lead_developer?: string
-            legacy?: boolean
+            documentId?: string
+            health_path?: string
+            id?: number
+            include_in_subject_access_requests?: boolean
+            info_path?: string
+            ip_allow_list?: unknown
+            ip_allow_list_enabled?: boolean
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            manually_managed?: boolean
+            modsecurity_audit_enabled?: boolean
+            modsecurity_enabled?: boolean
+            modsecurity_snippet?: string
+            monitor?: boolean
             name?: string
-            p_id?: string
-            parent?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
-            }
-            phase?: string
-            product_manager?: string
-            product_set?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  lead_developer?: string
-                  name?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  ps_id?: string
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slug?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
-                id?: number
-              }
+            namespace?: string
+            ns?: {
+              documentId?: string
+              id?: number
             }
             /** Format: date-time */
             publishedAt?: string
-            service_area?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  name?: string
-                  owner?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  sa_id?: string
-                  slug?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
+            swagger_docs?: string
+            trivy_scan?: {
+              build_image_tag?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: number
+              }
+              documentId?: string
+              environments?: unknown
+              id?: number
+              image_id?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: number
+              }[]
+              name?: string
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              scan_status?: 'Failed' | 'Succeeded'
+              scan_summary?: unknown
+              trivy_scan_timestamp?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
                 id?: number
               }
             }
-            slack_channel_id?: string
-            slack_channel_name?: string
-            slug?: string
-            subproduct?: boolean
-            team?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: {
-                        blocked?: boolean
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: email */
-                        email?: string
-                        firstname?: string
-                        isActive?: boolean
-                        lastname?: string
-                        preferedLanguage?: string
-                        registrationToken?: string
-                        resetPasswordToken?: string
-                        roles?: {
-                          data?: {
-                            attributes?: {
-                              code?: string
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              description?: string
-                              name?: string
-                              permissions?: {
-                                data?: {
-                                  attributes?: {
-                                    action?: string
-                                    actionParameters?: unknown
-                                    conditions?: unknown
-                                    /** Format: date-time */
-                                    createdAt?: string
-                                    createdBy?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                    properties?: unknown
-                                    role?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                    subject?: string
-                                    /** Format: date-time */
-                                    updatedAt?: string
-                                    updatedBy?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                  }
-                                  id?: number
-                                }[]
-                              }
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              users?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }[]
-                              }
-                            }
-                            id?: number
-                          }[]
-                        }
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        username?: string
-                      }
-                      id?: number
-                    }
-                  }
-                  name?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slack_channel_id?: string
-                  slack_channel_name?: string
-                  slug?: string
-                  t_id?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
-                id?: number
-              }
-            }
+            /** @enum {string} */
+            type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
+            url?: string
+          }[]
+          frontend?: boolean
+          github_enforce_admins_enabled?: boolean
+          github_only?: boolean
+          github_project_branch_protection_restricted_teams?: unknown
+          github_project_teams_admin?: unknown
+          github_project_teams_maintain?: unknown
+          github_project_teams_write?: unknown
+          /** @enum {string} */
+          github_project_visibility?: 'public' | 'internal' | 'private'
+          github_repo?: string
+          github_repo_is_template?: boolean
+          github_template_repo?: string
+          github_topics?: unknown
+          id?: number
+          jira_project_keys?: unknown
+          language?: string
+          latest_commit?: components['schemas']['PropertiesCommitComponent']
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          part_of_monorepo?: boolean
+          path_to_helm_dir?: string
+          path_to_project?: string
+          product?: {
+            documentId?: string
+            id?: number
           }
+          /** Format: date-time */
+          publishedAt?: string
+          slack_channel_nonprod_release_notify?: string
+          slack_channel_prod_release_notify?: string
+          slack_channel_security_scans_notify?: string
+          standards_compliance?: unknown
+          title?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+          veracode_exempt?: boolean
+          veracode_last_completed_scan_date?: string
+          veracode_policy_rules_status?: string
+          veracode_results_summary?: unknown
+          veracode_results_url?: string
+          versions?: unknown
+        }[]
+        confluence_link?: string
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        delivery_manager?: string
+        description?: string
+        documentId?: string
+        gdrive_link?: string
+        id?: number
+        lead_developer?: string
+        legacy?: boolean
+        locale?: string
+        localizations?: {
+          documentId?: string
           id?: number
         }[]
-      }
+        name?: string
+        p_id?: string
+        parent?: {
+          documentId?: string
+          id?: number
+        }
+        phase?: string
+        product_manager?: string
+        product_set?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          documentId?: string
+          id?: number
+          lead_developer?: string
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          ps_id?: string
+          /** Format: date-time */
+          publishedAt?: string
+          slug?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        /** Format: date-time */
+        publishedAt?: string
+        service_area?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          owner?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          sa_id?: string
+          slug?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        slack_channel_id?: string
+        slack_channel_name?: string
+        slug?: string
+        subproduct?: boolean
+        team?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            blocked?: boolean
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: number
+            }
+            documentId?: string
+            /** Format: email */
+            email?: string
+            firstname?: string
+            id?: number
+            isActive?: boolean
+            lastname?: string
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            preferedLanguage?: string
+            /** Format: date-time */
+            publishedAt?: string
+            registrationToken?: string
+            resetPasswordToken?: string
+            roles?: {
+              code?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: number
+              }
+              description?: string
+              documentId?: string
+              id?: number
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                actionParameters?: unknown
+                conditions?: unknown
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: number
+                }
+                documentId?: string
+                id?: number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: number
+                }[]
+                properties?: unknown
+                /** Format: date-time */
+                publishedAt?: string
+                role?: {
+                  documentId?: string
+                  id?: number
+                }
+                subject?: string
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: number
+              }
+              users?: {
+                documentId?: string
+                id?: number
+              }[]
+            }[]
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: number
+            }
+            username?: string
+          }
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          slack_channel_id?: string
+          slack_channel_name?: string
+          slug?: string
+          t_id?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+      }[]
       /** Format: date-time */
       publishedAt?: string
       sa_id: string
@@ -6476,14 +5307,12 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
     }
     ServiceAreaListResponse: {
-      data?: components['schemas']['ServiceAreaListResponseDataItem'][]
+      data?: components['schemas']['ServiceArea'][]
       meta?: {
         pagination?: {
           page?: number
@@ -6493,12 +5322,10 @@ export interface components {
         }
       }
     }
-    ServiceAreaListResponseDataItem: {
-      attributes?: components['schemas']['ServiceArea']
-      id?: number
-    }
     ServiceAreaRequest: {
       data: {
+        locale?: string
+        localizations?: (number | string)[]
         name: string
         owner: string
         products?: (number | string)[]
@@ -6507,575 +5334,402 @@ export interface components {
       }
     }
     ServiceAreaResponse: {
-      data?: components['schemas']['ServiceAreaResponseDataObject']
+      data?: components['schemas']['ServiceArea']
       meta?: Record<string, never>
-    }
-    ServiceAreaResponseDataObject: {
-      attributes?: components['schemas']['ServiceArea']
-      id?: number
     }
     Team: {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
+      documentId?: string
+      id?: number
+      locale?: string
+      localizations?: {
+        documentId?: string
+        id?: number
+      }[]
       name: string
       products?: {
-        data?: {
-          attributes?: {
-            children?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }[]
+        children?: {
+          documentId?: string
+          id?: number
+        }[]
+        components?: {
+          api?: boolean
+          app_insights_cloud_role_name?: string
+          codescanning_summary?: unknown
+          container_image?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          disabled_workflows?: unknown
+          documentId?: string
+          environments?: components['schemas']['PropertiesEnvironmentComponent'][]
+          envs?: {
+            active_agencies?: unknown
+            alert_severity_label?: string
+            alerts_slack_channel?: string
+            build_image_tag?: string
+            cluster?: string
+            component?: {
+              documentId?: string
+              id?: number
             }
-            components?: {
-              data?: {
-                attributes?: {
-                  api?: boolean
-                  app_insights_cloud_role_name?: string
-                  codescanning_summary?: unknown
-                  container_image?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  disabled_workflows?: unknown
-                  environments?: {
-                    active_agencies?: unknown
-                    alert_severity_label?: string
-                    alerts_slack_channel?: string
-                    build_image_tag?: string
-                    cluster?: string
-                    health_path?: string
-                    id?: number
-                    include_in_subject_access_requests?: boolean
-                    info_path?: string
-                    ip_allow_list?: unknown
-                    ip_allow_list_enabled?: boolean
-                    manually_managed?: boolean
-                    modsecurity_audit_enabled?: boolean
-                    modsecurity_enabled?: boolean
-                    modsecurity_snippet?: string
-                    monitor?: boolean
-                    name?: string
-                    namespace?: string
-                    ns?: {
-                      data?: {
-                        attributes?: {
-                          /** Format: date-time */
-                          createdAt?: string
-                          createdBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                          elasticache_cluster?: {
-                            application?: string
-                            business_unit?: string
-                            engine_version?: string
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: boolean
-                            namespace?: string
-                            node_type?: string
-                            number_cache_clusters?: number
-                            parameter_group_name?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          hmpps_template?: {
-                            application?: string
-                            application_insights_instance?: string
-                            environment_name?: string
-                            github_repo?: string
-                            github_team_name?: string
-                            id?: number
-                            is_production?: boolean
-                            namespace?: string
-                            prevent_self_review?: boolean
-                            protected_branches_only?: boolean
-                            reviewer_teams?: unknown
-                            selected_branch_patterns?: unknown
-                            source_template_repo?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          name?: string
-                          pingdom_check?: {
-                            encryption?: boolean
-                            host?: string
-                            id?: number
-                            integrationids?: unknown
-                            name?: string
-                            notifyagainevery?: number
-                            notifywhenbackup?: boolean
-                            port?: number
-                            probefilters?: string
-                            resolution?: number
-                            sendnotificationwhendown?: number
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_path?: string
-                            type?: string
-                            url?: string
-                          }[]
-                          /** Format: date-time */
-                          publishedAt?: string
-                          rds_instance?: {
-                            allow_major_version_upgrade?: boolean
-                            allow_minor_version_upgrade?: boolean
-                            application?: string
-                            backup_window?: string
-                            business_unit?: string
-                            db_engine_version?: string
-                            db_instance_class?: string
-                            db_max_allocated_storage?: string
-                            db_parameter?: unknown
-                            deletion_protection?: boolean
-                            environment_name?: string
-                            id?: number
-                            infrastructure_support?: string
-                            is_production?: string
-                            maintenance_window?: string
-                            namespace?: string
-                            performance_insights_enabled?: boolean
-                            rds_family?: string
-                            team_name?: string
-                            tf_filename?: string
-                            tf_label?: string
-                            tf_line_end?: number
-                            tf_line_start?: number
-                            tf_mod_version?: string
-                            tf_path?: string
-                          }[]
-                          /** Format: date-time */
-                          updatedAt?: string
-                          updatedBy?: {
-                            data?: {
-                              attributes?: Record<string, never>
-                              id?: number
-                            }
-                          }
-                        }
-                        id?: number
-                      }
-                    }
-                    swagger_docs?: string
-                    /** @enum {string} */
-                    type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                    url?: string
-                  }[]
-                  envs?: {
-                    data?: {
-                      attributes?: {
-                        active_agencies?: unknown
-                        alert_severity_label?: string
-                        alerts_slack_channel?: string
-                        build_image_tag?: string
-                        cluster?: string
-                        component?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        health_path?: string
-                        include_in_subject_access_requests?: boolean
-                        info_path?: string
-                        ip_allow_list?: unknown
-                        ip_allow_list_enabled?: boolean
-                        manually_managed?: boolean
-                        modsecurity_audit_enabled?: boolean
-                        modsecurity_enabled?: boolean
-                        modsecurity_snippet?: string
-                        monitor?: boolean
-                        name?: string
-                        namespace?: string
-                        ns?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: date-time */
-                        publishedAt?: string
-                        swagger_docs?: string
-                        trivy_scan?: {
-                          data?: {
-                            attributes?: {
-                              build_image_tag?: string
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              environments?: unknown
-                              image_id?: string
-                              name?: string
-                              /** Format: date-time */
-                              publishedAt?: string
-                              /** @enum {string} */
-                              scan_status?: 'Failed' | 'Succeeded'
-                              scan_summary?: unknown
-                              trivy_scan_timestamp?: string
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                            }
-                            id?: number
-                          }
-                        }
-                        /** @enum {string} */
-                        type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        url?: string
-                      }
-                      id?: number
-                    }[]
-                  }
-                  frontend?: boolean
-                  github_enforce_admins_enabled?: boolean
-                  github_only?: boolean
-                  github_project_branch_protection_restricted_teams?: unknown
-                  github_project_teams_admin?: unknown
-                  github_project_teams_maintain?: unknown
-                  github_project_teams_write?: unknown
-                  /** @enum {string} */
-                  github_project_visibility?: 'public' | 'internal' | 'private'
-                  github_repo?: string
-                  github_repo_is_template?: boolean
-                  github_template_repo?: string
-                  github_topics?: unknown
-                  jira_project_keys?: unknown
-                  language?: string
-                  latest_commit?: {
-                    /** Format: date-time */
-                    date_time?: string
-                    id?: number
-                    sha?: string
-                  }
-                  name?: string
-                  part_of_monorepo?: boolean
-                  path_to_helm_dir?: string
-                  path_to_project?: string
-                  product?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slack_channel_nonprod_release_notify?: string
-                  slack_channel_prod_release_notify?: string
-                  slack_channel_security_scans_notify?: string
-                  standards_compliance?: unknown
-                  title?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  veracode_exempt?: boolean
-                  veracode_last_completed_scan_date?: string
-                  veracode_policy_rules_status?: string
-                  veracode_results_summary?: unknown
-                  veracode_results_url?: string
-                  versions?: unknown
-                }
-                id?: number
-              }[]
-            }
-            confluence_link?: string
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            delivery_manager?: string
-            description?: string
-            gdrive_link?: string
-            lead_developer?: string
-            legacy?: boolean
+            documentId?: string
+            health_path?: string
+            id?: number
+            include_in_subject_access_requests?: boolean
+            info_path?: string
+            ip_allow_list?: unknown
+            ip_allow_list_enabled?: boolean
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            manually_managed?: boolean
+            modsecurity_audit_enabled?: boolean
+            modsecurity_enabled?: boolean
+            modsecurity_snippet?: string
+            monitor?: boolean
             name?: string
-            p_id?: string
-            parent?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
-            }
-            phase?: string
-            product_manager?: string
-            product_set?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  lead_developer?: string
-                  name?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  ps_id?: string
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slug?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
-                id?: number
-              }
+            namespace?: string
+            ns?: {
+              documentId?: string
+              id?: number
             }
             /** Format: date-time */
             publishedAt?: string
-            service_area?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  name?: string
-                  owner?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  sa_id?: string
-                  slug?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
+            swagger_docs?: string
+            trivy_scan?: {
+              build_image_tag?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: number
+              }
+              documentId?: string
+              environments?: unknown
+              id?: number
+              image_id?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: number
+              }[]
+              name?: string
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              scan_status?: 'Failed' | 'Succeeded'
+              scan_summary?: unknown
+              trivy_scan_timestamp?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
                 id?: number
               }
             }
-            slack_channel_id?: string
-            slack_channel_name?: string
-            slug?: string
-            subproduct?: boolean
-            team?: {
-              data?: {
-                attributes?: {
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: {
-                        blocked?: boolean
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        /** Format: email */
-                        email?: string
-                        firstname?: string
-                        isActive?: boolean
-                        lastname?: string
-                        preferedLanguage?: string
-                        registrationToken?: string
-                        resetPasswordToken?: string
-                        roles?: {
-                          data?: {
-                            attributes?: {
-                              code?: string
-                              /** Format: date-time */
-                              createdAt?: string
-                              createdBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              description?: string
-                              name?: string
-                              permissions?: {
-                                data?: {
-                                  attributes?: {
-                                    action?: string
-                                    actionParameters?: unknown
-                                    conditions?: unknown
-                                    /** Format: date-time */
-                                    createdAt?: string
-                                    createdBy?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                    properties?: unknown
-                                    role?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                    subject?: string
-                                    /** Format: date-time */
-                                    updatedAt?: string
-                                    updatedBy?: {
-                                      data?: {
-                                        attributes?: Record<string, never>
-                                        id?: number
-                                      }
-                                    }
-                                  }
-                                  id?: number
-                                }[]
-                              }
-                              /** Format: date-time */
-                              updatedAt?: string
-                              updatedBy?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }
-                              }
-                              users?: {
-                                data?: {
-                                  attributes?: Record<string, never>
-                                  id?: number
-                                }[]
-                              }
-                            }
-                            id?: number
-                          }[]
-                        }
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        username?: string
-                      }
-                      id?: number
-                    }
-                  }
-                  name?: string
-                  products?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  publishedAt?: string
-                  slack_channel_id?: string
-                  slack_channel_name?: string
-                  slug?: string
-                  t_id?: string
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                }
-                id?: number
-              }
-            }
+            /** @enum {string} */
+            type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
+            url?: string
+          }[]
+          frontend?: boolean
+          github_enforce_admins_enabled?: boolean
+          github_only?: boolean
+          github_project_branch_protection_restricted_teams?: unknown
+          github_project_teams_admin?: unknown
+          github_project_teams_maintain?: unknown
+          github_project_teams_write?: unknown
+          /** @enum {string} */
+          github_project_visibility?: 'public' | 'internal' | 'private'
+          github_repo?: string
+          github_repo_is_template?: boolean
+          github_template_repo?: string
+          github_topics?: unknown
+          id?: number
+          jira_project_keys?: unknown
+          language?: string
+          latest_commit?: components['schemas']['PropertiesCommitComponent']
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          part_of_monorepo?: boolean
+          path_to_helm_dir?: string
+          path_to_project?: string
+          product?: {
+            documentId?: string
+            id?: number
           }
+          /** Format: date-time */
+          publishedAt?: string
+          slack_channel_nonprod_release_notify?: string
+          slack_channel_prod_release_notify?: string
+          slack_channel_security_scans_notify?: string
+          standards_compliance?: unknown
+          title?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+          veracode_exempt?: boolean
+          veracode_last_completed_scan_date?: string
+          veracode_policy_rules_status?: string
+          veracode_results_summary?: unknown
+          veracode_results_url?: string
+          versions?: unknown
+        }[]
+        confluence_link?: string
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        delivery_manager?: string
+        description?: string
+        documentId?: string
+        gdrive_link?: string
+        id?: number
+        lead_developer?: string
+        legacy?: boolean
+        locale?: string
+        localizations?: {
+          documentId?: string
           id?: number
         }[]
-      }
+        name?: string
+        p_id?: string
+        parent?: {
+          documentId?: string
+          id?: number
+        }
+        phase?: string
+        product_manager?: string
+        product_set?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          documentId?: string
+          id?: number
+          lead_developer?: string
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          ps_id?: string
+          /** Format: date-time */
+          publishedAt?: string
+          slug?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        /** Format: date-time */
+        publishedAt?: string
+        service_area?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          owner?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          sa_id?: string
+          slug?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        slack_channel_id?: string
+        slack_channel_name?: string
+        slug?: string
+        subproduct?: boolean
+        team?: {
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            blocked?: boolean
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: number
+            }
+            documentId?: string
+            /** Format: email */
+            email?: string
+            firstname?: string
+            id?: number
+            isActive?: boolean
+            lastname?: string
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            preferedLanguage?: string
+            /** Format: date-time */
+            publishedAt?: string
+            registrationToken?: string
+            resetPasswordToken?: string
+            roles?: {
+              code?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: number
+              }
+              description?: string
+              documentId?: string
+              id?: number
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                actionParameters?: unknown
+                conditions?: unknown
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: number
+                }
+                documentId?: string
+                id?: number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: number
+                }[]
+                properties?: unknown
+                /** Format: date-time */
+                publishedAt?: string
+                role?: {
+                  documentId?: string
+                  id?: number
+                }
+                subject?: string
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: number
+              }
+              users?: {
+                documentId?: string
+                id?: number
+              }[]
+            }[]
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: number
+            }
+            username?: string
+          }
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          products?: {
+            documentId?: string
+            id?: number
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          slack_channel_id?: string
+          slack_channel_name?: string
+          slug?: string
+          t_id?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+        }
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+      }[]
       /** Format: date-time */
       publishedAt?: string
       slack_channel_id?: string
@@ -7085,14 +5739,12 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
     }
     TeamListResponse: {
-      data?: components['schemas']['TeamListResponseDataItem'][]
+      data?: components['schemas']['Team'][]
       meta?: {
         pagination?: {
           page?: number
@@ -7102,12 +5754,10 @@ export interface components {
         }
       }
     }
-    TeamListResponseDataItem: {
-      attributes?: components['schemas']['Team']
-      id?: number
-    }
     TeamRequest: {
       data: {
+        locale?: string
+        localizations?: (number | string)[]
         name: string
         products?: (number | string)[]
         slack_channel_id?: string
@@ -7117,12 +5767,8 @@ export interface components {
       }
     }
     TeamResponse: {
-      data?: components['schemas']['TeamResponseDataObject']
+      data?: components['schemas']['Team']
       meta?: Record<string, never>
-    }
-    TeamResponseDataObject: {
-      attributes?: components['schemas']['Team']
-      id?: number
     }
     TfModulesElasticacheClusterComponent: {
       application?: string
@@ -7217,106 +5863,136 @@ export interface components {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
-        data?: {
-          attributes?: {
-            blocked?: boolean
+        blocked?: boolean
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        /** Format: email */
+        email?: string
+        firstname?: string
+        id?: number
+        isActive?: boolean
+        lastname?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        preferedLanguage?: string
+        /** Format: date-time */
+        publishedAt?: string
+        registrationToken?: string
+        resetPasswordToken?: string
+        roles?: {
+          code?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          permissions?: {
+            action?: string
+            actionParameters?: unknown
+            conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            /** Format: email */
-            email?: string
-            firstname?: string
-            isActive?: boolean
-            lastname?: string
-            preferedLanguage?: string
-            registrationToken?: string
-            resetPasswordToken?: string
-            roles?: {
-              data?: {
-                attributes?: {
-                  code?: string
-                  /** Format: date-time */
-                  createdAt?: string
-                  createdBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  description?: string
-                  name?: string
-                  permissions?: {
-                    data?: {
-                      attributes?: {
-                        action?: string
-                        actionParameters?: unknown
-                        conditions?: unknown
-                        /** Format: date-time */
-                        createdAt?: string
-                        createdBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        properties?: unknown
-                        role?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                        subject?: string
-                        /** Format: date-time */
-                        updatedAt?: string
-                        updatedBy?: {
-                          data?: {
-                            attributes?: Record<string, never>
-                            id?: number
-                          }
-                        }
-                      }
-                      id?: number
-                    }[]
-                  }
-                  /** Format: date-time */
-                  updatedAt?: string
-                  updatedBy?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }
-                  }
-                  users?: {
-                    data?: {
-                      attributes?: Record<string, never>
-                      id?: number
-                    }[]
-                  }
-                }
-                id?: number
-              }[]
+            documentId?: string
+            id?: number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            properties?: unknown
+            /** Format: date-time */
+            publishedAt?: string
+            role?: {
+              documentId?: string
+              id?: number
             }
+            subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
-              data?: {
-                attributes?: Record<string, never>
-                id?: number
-              }
+              documentId?: string
+              id?: number
             }
-            username?: string
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
           }
+          users?: {
+            documentId?: string
+            id?: number
+          }[]
+        }[]
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
           id?: number
         }
+        username?: string
       }
+      documentId?: string
       environments?: unknown
+      id?: number
       image_id?: string
+      locale?: string
+      localizations?: {
+        build_image_tag?: string
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        environments?: unknown
+        id?: number
+        image_id?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        name?: string
+        /** Format: date-time */
+        publishedAt?: string
+        /** @enum {string} */
+        scan_status?: 'Failed' | 'Succeeded'
+        scan_summary?: unknown
+        trivy_scan_timestamp?: string
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+      }[]
       name?: string
       /** Format: date-time */
       publishedAt?: string
@@ -7327,14 +6003,12 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
-        data?: {
-          attributes?: Record<string, never>
-          id?: number
-        }
+        documentId?: string
+        id?: number
       }
     }
     TrivyScanListResponse: {
-      data?: components['schemas']['TrivyScanListResponseDataItem'][]
+      data?: components['schemas']['TrivyScan'][]
       meta?: {
         pagination?: {
           page?: number
@@ -7344,15 +6018,13 @@ export interface components {
         }
       }
     }
-    TrivyScanListResponseDataItem: {
-      attributes?: components['schemas']['TrivyScan']
-      id?: number
-    }
     TrivyScanRequest: {
       data: {
         build_image_tag?: string
         environments?: unknown
         image_id?: string
+        locale?: string
+        localizations?: (number | string)[]
         name?: string
         /** @enum {string} */
         scan_status?: 'Failed' | 'Succeeded'
@@ -7361,12 +6033,8 @@ export interface components {
       }
     }
     TrivyScanResponse: {
-      data?: components['schemas']['TrivyScanResponseDataObject']
+      data?: components['schemas']['TrivyScan']
       meta?: Record<string, never>
-    }
-    TrivyScanResponseDataObject: {
-      attributes?: components['schemas']['TrivyScan']
-      id?: number
     }
     UploadFile: {
       alternativeText?: string

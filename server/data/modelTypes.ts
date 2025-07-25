@@ -1,26 +1,25 @@
 import type * as Strapi from './strapiApiTypes'
-import type { Unwrapped } from './strapiClientTypes'
 
 // Requests
 export type GithubRepoRequestRequest = Strapi.GithubRepoRequestRequest
 
 // Responses
-export type Product = Unwrapped<Strapi.Product>
-export type Component = Unwrapped<Strapi.Component>
-export type Team = Unwrapped<Strapi.Team>
-export type ProductSet = Unwrapped<Strapi.ProductSet>
-export type ServiceArea = Unwrapped<Strapi.ServiceArea>
-export type CustomComponentView = Unwrapped<Strapi.CustomComponentView>
-export type Environment = Unwrapped<Strapi.Environment>
-export type EnvironmentForMapping = Unwrapped<Strapi.EnvironmentForMapping>
-export type Namespace = Unwrapped<Strapi.Namespace>
-export type GithubRepoRequest = Unwrapped<Strapi.GithubRepoRequest>
-export type GithubTeam = Unwrapped<Strapi.GithubTeam>
-export type GithubTeamRequest = Unwrapped<Strapi.GithubTeamRequest>
-export type ScheduledJob = Unwrapped<Strapi.ScheduledJob>
-export type ScheduledJobRequest = Unwrapped<Strapi.ScheduledJobRequest>
-export type TrivyScan = Unwrapped<Strapi.TrivyScan>
-export type TrivyScanRequest = Unwrapped<Strapi.TrivyScanRequest>
+export type Product = Strapi.Product
+export type Component = Strapi.Component
+export type Team = Strapi.Team
+export type ProductSet = Strapi.ProductSet
+export type ServiceArea = Strapi.ServiceArea
+export type CustomComponentView = Strapi.CustomComponentView
+export type Environment = Strapi.Environment
+export type EnvironmentForMapping = Strapi.EnvironmentForMapping
+export type Namespace = Strapi.Namespace
+export type GithubRepoRequest = Strapi.GithubRepoRequest
+export type GithubTeam = Strapi.GithubTeam
+export type GithubTeamRequest = Strapi.GithubTeamRequest
+export type ScheduledJob = Strapi.ScheduledJob
+export type ScheduledJobRequest = Strapi.ScheduledJobRequest
+export type TrivyScan = Strapi.TrivyScan
+export type TrivyScanRequest = Strapi.TrivyScanRequest
 
 export type Summary = {
   config?: Record<string, number>
