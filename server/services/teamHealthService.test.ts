@@ -429,7 +429,7 @@ describe('teamHealthService', () => {
           name: 'yet-another-service',
           github_repo: 'yet-another-service-repo',
           api: true,
-          environments: [
+          envs: [
             { name: 'dev', type: 'dev' },
             { name: 'preprod', type: 'preprod' },
             { name: 'prod', type: 'prod' },
@@ -639,7 +639,7 @@ describe('teamHealthService', () => {
           name: 'yet-another-service',
           github_repo: 'yet-another-service-repo',
           api: true,
-          environments: [
+          envs: [
             { name: 'dev', type: 'dev' },
             { name: 'preprod', type: 'preprod' },
             { name: 'prod', type: 'prod' },

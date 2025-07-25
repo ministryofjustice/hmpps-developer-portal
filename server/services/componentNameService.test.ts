@@ -6,6 +6,7 @@ jest.mock('../data/strapiApiClient')
 
 const serviceAreasResponse = [
   {
+    documentId: 'bfdbfdbfdfbdfg',
     id: 2,
     name: 'service-area-1',
     owner: 'The Owner',
@@ -58,7 +59,7 @@ describe('Component name service', () => {
   describe('Teams', () => {
     const testTeamsResponse = [
       {
-        id: 2,
+        documentId: 'cfdbfdbfdfbdfg',
         name: 'testteam',
       },
     ] as Team[]
@@ -68,11 +69,11 @@ describe('Component name service', () => {
       name: 'testteam',
       products: [
         {
-          id: 2,
+          documentId: 'zfdbfdbfdfbdfg',
           components: [
-            { id: 1, name: 'comp-3', envs: [{ name: 'prod' }] },
-            { id: 2, name: 'comp-1', envs: [{ name: 'env' }] },
-            { id: 3, name: 'comp-2' },
+            { documentId: 'afdbfdbfdfbdfg', name: 'comp-3', envs: [{ name: 'prod' }] },
+            { documentId: 'bfdbfdbfdfbdfg', name: 'comp-1', envs: [{ name: 'env' }] },
+            { documentId: 'cfdbfdbfdfbdfg', name: 'comp-2' },
           ],
         },
       ],
@@ -84,7 +85,7 @@ describe('Component name service', () => {
 
       const results = await componentNameService.getAllDeployedComponentsForTeam('testteam')
 
-      expect(strapiApiClient.getTeam).toHaveBeenCalledWith({ teamId: 2, withEnvironments: true })
+      expect(strapiApiClient.getTeam).toHaveBeenCalledWith({ teamDocumentId: 'cfdbfdbfdfbdfg', withEnvironments: true })
       expect(results).toEqual(['comp-3', 'comp-1'])
     })
   })
@@ -96,9 +97,9 @@ describe('Component name service', () => {
       products: [
         {
           components: [
-            { id: 1, name: 'comp-3', envs: [{ name: 'prod' }] },
-            { id: 2, name: 'comp-1', envs: [{ name: 'env' }] },
-            { id: 3, name: 'comp-2' },
+            { documentId: 'afdbfdbfdfbdfg', name: 'comp-3', envs: [{ name: 'prod' }] },
+            { documentId: 'bfdbfdbfdfbdfg', name: 'comp-1', envs: [{ name: 'env' }] },
+            { documentId: 'cfdbfdbfdfbdfg', name: 'comp-2' },
           ],
         },
       ],
@@ -110,7 +111,11 @@ describe('Component name service', () => {
 
       const results = await componentNameService.getAllDeployedComponentsForServiceArea('service-area-1')
 
-      expect(strapiApiClient.getServiceArea).toHaveBeenCalledWith({ serviceAreaId: 2, withProducts: true })
+      expect(strapiApiClient.getServiceArea).toHaveBeenCalledWith({
+        serviceAreaDocumentId: 'bfdbfdbfdfbdfg',
+        withProducts: true,
+      })
+      console.log(results)
       expect(results).toStrictEqual(['comp-3', 'comp-1'])
     })
   })
@@ -118,12 +123,12 @@ describe('Component name service', () => {
   describe('Products', () => {
     const productsResponse = [
       {
-        id: 2,
+        documentId: 'xfdbfdbfdfbdfg',
         name: 'product-1',
         components: [
-          { id: 1, name: 'comp-3', envs: [{ name: 'prod' }] },
-          { id: 2, name: 'comp-1', envs: [{ name: 'env' }] },
-          { id: 3, name: 'comp-2' },
+          { documentId: 'afdbfdbfdfbdfg', name: 'comp-3', envs: [{ name: 'prod' }] },
+          { documentId: 'bfdbfdbfdfbdfg', name: 'comp-1', envs: [{ name: 'env' }] },
+          { documentId: 'cfdbfdbfdfbdfg', name: 'comp-2' },
         ],
       },
     ] as Product[]
@@ -141,12 +146,12 @@ describe('Component name service', () => {
   describe('Custom Components', () => {
     const customComponentsResponse = [
       {
-        id: 2,
+        documentId: 'xfdbfdbfdfbdfg',
         name: 'custom-component-1',
         components: [
-          { id: 1, name: 'comp-3', envs: [{ id: 9, name: 'prod' }] },
-          { id: 2, name: 'comp-1', envs: [{ id: 10, name: 'env' }] },
-          { id: 3, name: 'comp-2' },
+          { documentId: 'afdbfdbfdfbdfg', name: 'comp-3', envs: [{ documentId: 'yfdbfdbfdfbdfg', name: 'prod' }] },
+          { documentId: 'bfdbfdbfdfbdfg', name: 'comp-1', envs: [{ documentId: 'zfdbfdbfdfbdfg', name: 'env' }] },
+          { documentId: 'cfdbfdbfdfbdfg', name: 'comp-2' },
         ],
       },
     ] as CustomComponentView[]
