@@ -115,7 +115,6 @@ describe('Component name service', () => {
         serviceAreaDocumentId: 'bfdbfdbfdfbdfg',
         withProducts: true,
       })
-      console.log(results)
       expect(results).toStrictEqual(['comp-3', 'comp-1'])
     })
   })
