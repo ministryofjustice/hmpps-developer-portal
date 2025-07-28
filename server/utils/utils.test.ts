@@ -448,7 +448,7 @@ describe('veracodeFilters', () => {
         ['product.team.extra', 'envs.trivy_scan.extra'],
         'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D%5Bpopulate%5D%5Bextra%5D=true',
       ],
-    ])('%s convertToTitleCase(%s, %s)', (_: string, a: string[], expected: string) => {
+    ])('%s createStrapiQuery(%s)', (_: string, a: string[], expected: string) => {
       expect(createStrapiQuery(a)).toEqual(expected)
     })
   })
