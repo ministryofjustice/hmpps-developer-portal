@@ -10,13 +10,13 @@ jest.mock('../services/serviceCatalogueService.ts')
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
 let app: Express
-const testProductSets = [{ documentId: 'bfdbfdbfdfbdfg', id: 1, name: 'testProductSet' }] as ProductSet[]
+const testProductSets = [{ documentId: 'documentid1', id: 1, name: 'testProductSet' }] as ProductSet[]
 const testProductSet = {
   ps_id: 'testProductSetId',
   name: 'testProductSetName',
   products: [
     {
-      documentId: 'bfdbfdbfdfbdfg',
+      documentId: 'documentid1',
       id: 1,
       name: 'productName',
     },
@@ -55,7 +55,7 @@ describe('/product-sets', () => {
   describe('GET /:productSetDocumentId', () => {
     it('should render product set page with products list if there are products', () => {
       return request(app)
-        .get('/product-sets/bfdbfdbfdfbdfg')
+        .get('/product-sets/documentid1')
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
@@ -78,7 +78,7 @@ describe('/product-sets', () => {
       serviceCatalogueService.getProductSet.mockResolvedValue(testProductSetNoProducts)
 
       return request(app)
-        .get('/product-sets/bfdbfdbfdfbdfg')
+        .get('/product-sets/documentid1')
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)

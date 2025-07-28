@@ -6,7 +6,7 @@ import { Component, Product, ProductSet, ServiceArea, Team } from './modelTypes'
 import { ListResponse, SingleResponse } from './strapiClientTypes'
 
 const exampleServiceArea = {
-  documentId: 'bfdbfdbfdfbdfg',
+  documentId: 'documentid1',
   name: 'A Service Area name',
   owner: 'The Owner',
   createdAt: '2023-07-04T10:44:59.491Z',
@@ -64,9 +64,9 @@ describe('strapiApiClient', () => {
     describe('getProducts', () => {
       it('should return all products by default', async () => {
         const allProducts = {
-          data: [{ documentId: 'bfdbfdbfdfbdfg', name: 'Product', p_id: '1' }],
+          data: [{ documentId: 'documentid1', name: 'Product', p_id: '1' }],
         } as ListResponse<Strapi.Product>
-        const productsResponse = [{ documentId: 'bfdbfdbfdfbdfg', name: 'Product', p_id: '1' }] as Product[]
+        const productsResponse = [{ documentId: 'documentid1', name: 'Product', p_id: '1' }] as Product[]
         fakeStrapiApi.get('/products?populate[product_set]=true').reply(200, allProducts)
         const output = await strapiApiClient.getProducts({})
         expect(output).toEqual(productsResponse)
@@ -74,9 +74,9 @@ describe('strapiApiClient', () => {
 
       it('should return products with environments if selected', async () => {
         const allProducts = {
-          data: [{ documentId: 'bfdbfdbfdfbdfg', name: 'Product', p_id: '1' }],
+          data: [{ documentId: 'documentid1', name: 'Product', p_id: '1' }],
         } as ListResponse<Strapi.Product>
-        const productsResponse = [{ documentId: 'bfdbfdbfdfbdfg', name: 'Product', p_id: '1' }] as Product[]
+        const productsResponse = [{ documentId: 'documentid1', name: 'Product', p_id: '1' }] as Product[]
         fakeStrapiApi
           .get('/products?populate[product_set]=true&populate[components][populate][envs]=true')
           .reply(200, allProducts)
@@ -89,40 +89,40 @@ describe('strapiApiClient', () => {
       describe('with productDocumentId', () => {
         it('should return a single product', async () => {
           const product = {
-            data: { documentId: 'bfdbfdbfdfbdfg', name: 'Product', p_id: '1', slug: 'product' },
+            data: { documentId: 'documentid1', name: 'Product', p_id: '1', slug: 'product' },
           } as SingleResponse<Strapi.Product>
           const productsResponse = {
-            documentId: 'bfdbfdbfdfbdfg',
+            documentId: 'documentid1',
             name: 'Product',
             p_id: '1',
             slug: 'product',
           } as Product
           fakeStrapiApi
             .get(
-              '/products/bfdbfdbfdfbdfg?populate[product_set]=true&populate[team]=true&populate[components]=true&populate[service_area]=true',
+              '/products/documentid1?populate[product_set]=true&populate[team]=true&populate[components]=true&populate[service_area]=true',
             )
             .reply(200, product)
-          const output = await strapiApiClient.getProduct({ productDocumentId: 'bfdbfdbfdfbdfg' })
+          const output = await strapiApiClient.getProduct({ productDocumentId: 'documentid1' })
           expect(output).toEqual(productsResponse)
         })
 
         it('should return a single product with environments if selected', async () => {
           const product = {
-            data: { documentId: 'bfdbfdbfdfbdfg', name: 'Product', p_id: '1', slug: 'product' },
+            data: { documentId: 'documentid1', name: 'Product', p_id: '1', slug: 'product' },
           } as SingleResponse<Strapi.Product>
           const productsResponse = {
-            documentId: 'bfdbfdbfdfbdfg',
+            documentId: 'documentid1',
             name: 'Product',
             p_id: '1',
             slug: 'product',
           } as Product
           fakeStrapiApi
             .get(
-              '/products/bfdbfdbfdfbdfg?populate[product_set]=true&populate[team]=true&populate[components][populate][envs]=true&populate[service_area]=true',
+              '/products/documentid1?populate[product_set]=true&populate[team]=true&populate[components][populate][envs]=true&populate[service_area]=true',
             )
             .reply(200, product)
           const output = await strapiApiClient.getProduct({
-            productDocumentId: 'bfdbfdbfdfbdfg',
+            productDocumentId: 'documentid1',
             withEnvironments: true,
           })
           expect(output).toEqual(productsResponse)
@@ -131,10 +131,10 @@ describe('strapiApiClient', () => {
       describe('with productSlug', () => {
         it('should return a single product', async () => {
           const product = {
-            data: { documentId: 'bfdbfdbfdfbdfg', name: 'Product', p_id: '1', slug: 'product' },
+            data: { documentId: 'documentid1', name: 'Product', p_id: '1', slug: 'product' },
           } as SingleResponse<Strapi.Product>
           const productsResponse = {
-            documentId: 'bfdbfdbfdfbdfg',
+            documentId: 'documentid1',
             name: 'Product',
             p_id: '1',
             slug: 'product',
@@ -150,10 +150,10 @@ describe('strapiApiClient', () => {
 
         it('should return a single product with environments if selected', async () => {
           const product = {
-            data: { documentId: 'bfdbfdbfdfbdfg', name: 'Product', p_id: '1', slug: 'product' },
+            data: { documentId: 'documentid1', name: 'Product', p_id: '1', slug: 'product' },
           } as SingleResponse<Strapi.Product>
           const productsResponse = {
-            documentId: 'bfdbfdbfdfbdfg',
+            documentId: 'documentid1',
             name: 'Product',
             p_id: '1',
             slug: 'product',
@@ -174,9 +174,9 @@ describe('strapiApiClient', () => {
     describe('getComponents', () => {
       it('should return all components', async () => {
         const allComponents = {
-          data: [{ documentId: 'bfdbfdbfdfbdfg', name: 'Component' }],
+          data: [{ documentId: 'documentid1', name: 'Component' }],
         } as ListResponse<Strapi.Component>
-        const componentsResponse = [{ documentId: 'bfdbfdbfdfbdfg', name: 'Component' }] as Component[]
+        const componentsResponse = [{ documentId: 'documentid1', name: 'Component' }] as Component[]
         fakeStrapiApi
           .get('/components?populate[product][populate][team]=true&populate[envs]=true&')
           .reply(200, allComponents)
@@ -189,9 +189,9 @@ describe('strapiApiClient', () => {
     describe('getComponent', () => {
       it('should return a single component', async () => {
         const component = {
-          data: { documentId: 'bfdbfdbfdfbdfg', name: 'component' },
+          data: { documentId: 'documentid1', name: 'component' },
         } as SingleResponse<Strapi.Component>
-        const componentResponse = { documentId: 'bfdbfdbfdfbdfg', name: 'component' } as Component
+        const componentResponse = { documentId: 'documentid1', name: 'component' } as Component
         fakeStrapiApi
           .get(
             '/components?filters[name][$eq]=component&populate[product][populate][team]=true&populate[envs][populate][trivy_scan]=true',
@@ -216,20 +216,20 @@ describe('strapiApiClient', () => {
 
     describe('getTeam', () => {
       it('should return a single team', async () => {
-        const team = { data: { documentId: 'bfdbfdbfdfbdfg', name: 'Team' } } as SingleResponse<Strapi.Team>
-        const teamResponse = { documentId: 'bfdbfdbfdfbdfg', name: 'Team' } as Team
-        fakeStrapiApi.get('/teams/bfdbfdbfdfbdfg?populate[products]=true').reply(200, team)
-        const output = await strapiApiClient.getTeam({ teamDocumentId: 'bfdbfdbfdfbdfg' })
+        const team = { data: { documentId: 'documentid1', name: 'Team' } } as SingleResponse<Strapi.Team>
+        const teamResponse = { documentId: 'documentid1', name: 'Team' } as Team
+        fakeStrapiApi.get('/teams/documentid1?populate[products]=true').reply(200, team)
+        const output = await strapiApiClient.getTeam({ teamDocumentId: 'documentid1' })
         expect(output).toEqual(teamResponse)
       })
 
       it('should return a single team with environments if selected', async () => {
-        const team = { data: { documentId: 'bfdbfdbfdfbdfg', name: 'Team' } } as SingleResponse<Strapi.Team>
-        const teamResponse = { documentId: 'bfdbfdbfdfbdfg', name: 'Team' } as Team
+        const team = { data: { documentId: 'documentid1', name: 'Team' } } as SingleResponse<Strapi.Team>
+        const teamResponse = { documentId: 'documentid1', name: 'Team' } as Team
         fakeStrapiApi
-          .get('/teams/bfdbfdbfdfbdfg?populate[products][populate][components][populate][envs]=true')
+          .get('/teams/documentid1?populate[products][populate][components][populate][envs]=true')
           .reply(200, team)
-        const output = await strapiApiClient.getTeam({ teamDocumentId: 'bfdbfdbfdfbdfg', withEnvironments: true })
+        const output = await strapiApiClient.getTeam({ teamDocumentId: 'documentid1', withEnvironments: true })
         expect(output).toEqual(teamResponse)
       })
     })
@@ -251,11 +251,11 @@ describe('strapiApiClient', () => {
     describe('getProductSet', () => {
       it('should return a single product set', async () => {
         const productSet = {
-          data: { documentId: 'bfdbfdbfdfbdfg', name: 'Product Set' },
+          data: { documentId: 'documentid1', name: 'Product Set' },
         } as SingleResponse<Strapi.ProductSet>
-        const productSetResponse = { documentId: 'bfdbfdbfdfbdfg', name: 'Product Set' } as ProductSet
-        fakeStrapiApi.get('/product-sets/bfdbfdbfdfbdfg?populate[products]=true').reply(200, productSet)
-        const output = await strapiApiClient.getProductSet({ productSetDocumentId: 'bfdbfdbfdfbdfg' })
+        const productSetResponse = { documentId: 'documentid1', name: 'Product Set' } as ProductSet
+        fakeStrapiApi.get('/product-sets/documentid1?populate[products]=true').reply(200, productSet)
+        const output = await strapiApiClient.getProductSet({ productSetDocumentId: 'documentid1' })
         expect(output).toEqual(productSetResponse)
       })
     })
@@ -275,11 +275,11 @@ describe('strapiApiClient', () => {
     describe('getServiceArea', () => {
       it('should return a single service area', async () => {
         const serviceArea = {
-          data: { documentId: 'bfdbfdbfdfbdfg', name: 'Service Area' },
+          data: { documentId: 'documentid1', name: 'Service Area' },
         } as SingleResponse<Strapi.ServiceArea>
-        const serviceAreaResponse = { documentId: 'bfdbfdbfdfbdfg', name: 'Service Area' } as ServiceArea
-        fakeStrapiApi.get('/service-areas/bfdbfdbfdfbdfg?populate[products]=true').reply(200, serviceArea)
-        const output = await strapiApiClient.getServiceArea({ serviceAreaDocumentId: 'bfdbfdbfdfbdfg' })
+        const serviceAreaResponse = { documentId: 'documentid1', name: 'Service Area' } as ServiceArea
+        fakeStrapiApi.get('/service-areas/documentid1?populate[products]=true').reply(200, serviceArea)
+        const output = await strapiApiClient.getServiceArea({ serviceAreaDocumentId: 'documentid1' })
 
         expect(output).toEqual(serviceAreaResponse)
       })
@@ -289,7 +289,7 @@ describe('strapiApiClient', () => {
   describe('postGithubRepoRequest', () => {
     it('should insert a single form request', async () => {
       const response = {
-        data: { documentId: 'bfdbfdbfdfbdfg', name: 'GIthub repo request form' },
+        data: { documentId: 'documentid1', name: 'GIthub repo request form' },
       } as Strapi.GithubRepoRequestRequest
       fakeStrapiApi.post('/github-repo-requests').reply(200, response)
 

@@ -6,7 +6,7 @@ jest.mock('../data/strapiApiClient')
 
 const serviceAreasResponse = [
   {
-    documentId: 'bfdbfdbfdfbdfg',
+    documentId: 'documentid1',
     id: 2,
     name: 'service-area-1',
     owner: 'The Owner',
@@ -59,7 +59,7 @@ describe('Component name service', () => {
   describe('Teams', () => {
     const testTeamsResponse = [
       {
-        documentId: 'cfdbfdbfdfbdfg',
+        documentId: 'documentid3',
         name: 'testteam',
       },
     ] as Team[]
@@ -69,11 +69,11 @@ describe('Component name service', () => {
       name: 'testteam',
       products: [
         {
-          documentId: 'zfdbfdbfdfbdfg',
+          documentId: 'documentid9',
           components: [
-            { documentId: 'afdbfdbfdfbdfg', name: 'comp-3', envs: [{ name: 'prod' }] },
-            { documentId: 'bfdbfdbfdfbdfg', name: 'comp-1', envs: [{ name: 'env' }] },
-            { documentId: 'cfdbfdbfdfbdfg', name: 'comp-2' },
+            { documentId: 'documentid3', name: 'comp-3', envs: [{ name: 'prod' }] },
+            { documentId: 'documentid1', name: 'comp-1', envs: [{ name: 'env' }] },
+            { documentId: 'documentid3', name: 'comp-2' },
           ],
         },
       ],
@@ -85,7 +85,7 @@ describe('Component name service', () => {
 
       const results = await componentNameService.getAllDeployedComponentsForTeam('testteam')
 
-      expect(strapiApiClient.getTeam).toHaveBeenCalledWith({ teamDocumentId: 'cfdbfdbfdfbdfg', withEnvironments: true })
+      expect(strapiApiClient.getTeam).toHaveBeenCalledWith({ teamDocumentId: 'documentid3', withEnvironments: true })
       expect(results).toEqual(['comp-3', 'comp-1'])
     })
   })
@@ -97,9 +97,9 @@ describe('Component name service', () => {
       products: [
         {
           components: [
-            { documentId: 'afdbfdbfdfbdfg', name: 'comp-3', envs: [{ name: 'prod' }] },
-            { documentId: 'bfdbfdbfdfbdfg', name: 'comp-1', envs: [{ name: 'env' }] },
-            { documentId: 'cfdbfdbfdfbdfg', name: 'comp-2' },
+            { documentId: 'documentid3', name: 'comp-3', envs: [{ name: 'prod' }] },
+            { documentId: 'documentid1', name: 'comp-1', envs: [{ name: 'env' }] },
+            { documentId: 'documentid3', name: 'comp-2' },
           ],
         },
       ],
@@ -112,7 +112,7 @@ describe('Component name service', () => {
       const results = await componentNameService.getAllDeployedComponentsForServiceArea('service-area-1')
 
       expect(strapiApiClient.getServiceArea).toHaveBeenCalledWith({
-        serviceAreaDocumentId: 'bfdbfdbfdfbdfg',
+        serviceAreaDocumentId: 'documentid1',
         withProducts: true,
       })
       expect(results).toStrictEqual(['comp-3', 'comp-1'])
@@ -122,12 +122,12 @@ describe('Component name service', () => {
   describe('Products', () => {
     const productsResponse = [
       {
-        documentId: 'xfdbfdbfdfbdfg',
+        documentId: 'documentid8',
         name: 'product-1',
         components: [
-          { documentId: 'afdbfdbfdfbdfg', name: 'comp-3', envs: [{ name: 'prod' }] },
-          { documentId: 'bfdbfdbfdfbdfg', name: 'comp-1', envs: [{ name: 'env' }] },
-          { documentId: 'cfdbfdbfdfbdfg', name: 'comp-2' },
+          { documentId: 'documentid3', name: 'comp-3', envs: [{ name: 'prod' }] },
+          { documentId: 'documentid1', name: 'comp-1', envs: [{ name: 'env' }] },
+          { documentId: 'documentid2', name: 'comp-2' },
         ],
       },
     ] as Product[]
@@ -145,12 +145,12 @@ describe('Component name service', () => {
   describe('Custom Components', () => {
     const customComponentsResponse = [
       {
-        documentId: 'xfdbfdbfdfbdfg',
+        documentId: 'documentid8',
         name: 'custom-component-1',
         components: [
-          { documentId: 'afdbfdbfdfbdfg', name: 'comp-3', envs: [{ documentId: 'yfdbfdbfdfbdfg', name: 'prod' }] },
-          { documentId: 'bfdbfdbfdfbdfg', name: 'comp-1', envs: [{ documentId: 'zfdbfdbfdfbdfg', name: 'env' }] },
-          { documentId: 'cfdbfdbfdfbdfg', name: 'comp-2' },
+          { documentId: 'documentid3', name: 'comp-3', envs: [{ documentId: 'documentid7', name: 'prod' }] },
+          { documentId: 'documentid1', name: 'comp-1', envs: [{ documentId: 'documentid9', name: 'env' }] },
+          { documentId: 'documentid3', name: 'comp-2' },
         ],
       },
     ] as CustomComponentView[]

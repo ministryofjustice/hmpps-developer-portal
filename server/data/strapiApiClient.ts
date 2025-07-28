@@ -303,7 +303,6 @@ export default class StrapiApiClient {
     return this.restClient
       .get<ListResponse<Strapi.GithubRepoRequest>>({
         path: '/v1/github-repo-requests',
-        query: 'populate[github_repo]=true',
       })
       .then(unwrapListResponse)
   }

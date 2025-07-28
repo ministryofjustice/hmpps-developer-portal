@@ -19,7 +19,7 @@ jest.mock('../data/strapiApiClient')
 
 const serviceAreas = [
   {
-    documentId: 'bfdbfdbfdfbdfg',
+    documentId: 'documentid1',
     name: 'service-1',
     owner: 'The Owner',
     sa_id: 'SA01',
@@ -35,7 +35,7 @@ const serviceAreas = [
     ],
   },
   {
-    documentId: 'bfdbfdbdsdsfdfbdfg',
+    documentId: 'documentid6',
     name: 'service-2',
     owner: 'The Owner',
     sa_id: 'SA01',
@@ -43,7 +43,7 @@ const serviceAreas = [
     products: [
       {
         description: 'A description of the project',
-        documentId: 'ddsdbfdbfdfbdfg',
+        documentId: 'documentid5',
         name: 'A Product name',
         p_id: 'DPS000',
         slug: 'a-product-name-1',
@@ -71,12 +71,12 @@ describe('Strapi service', () => {
     describe('getProducts', () => {
       const testProductsResponse = [
         {
-          documentId: 'bfdbfdbfdfbdfg',
+          documentId: 'documentid1',
           name: 'Product 1',
           p_id: '1',
         },
         {
-          documentId: 'cfdbfdbfdfbdfg',
+          documentId: 'documentid3',
           name: 'Product 2',
           p_id: '2',
         },
@@ -94,7 +94,7 @@ describe('Strapi service', () => {
 
     describe('getProduct', () => {
       const testProductResponse = {
-        documentId: 'bfdbfdbfdfbdfg',
+        documentId: 'documentid1',
         name: 'Product 1',
         p_id: '1',
         slug: 'product-1',
@@ -115,11 +115,11 @@ describe('Strapi service', () => {
     describe('getTeams', () => {
       const testTeamsResponse = [
         {
-          documentId: 'bfdbfdbfdfbdfg',
+          documentId: 'documentid1',
           name: 'Team 1',
         },
         {
-          documentId: 'cfdbfdbfdfbdfg',
+          documentId: 'documentid3',
           name: 'Team 2',
         },
       ] as Team[]
@@ -135,18 +135,18 @@ describe('Strapi service', () => {
     })
 
     describe('getTeam', () => {
-      const testTeam = { documentId: 'bfdbfdbfdfbdfg', name: 'Team 1', slug: 'team-1' } as Team
+      const testTeam = { documentId: 'documentid1', name: 'Team 1', slug: 'team-1' } as Team
 
       it('should return the selected team by ID', async () => {
         const testTeamResponse = {
-          documentId: 'bfdbfdbfdfbdfg',
+          documentId: 'documentid1',
           name: 'Team 1',
           slug: 'team-1',
         } as Team
 
         strapiApiClient.getTeam.mockResolvedValue(testTeamResponse)
 
-        const results = await serviceCatalogueService.getTeam({ teamDocumentId: 'bfdbfdbfdfbdfg' })
+        const results = await serviceCatalogueService.getTeam({ teamDocumentId: 'documentid1' })
 
         expect(strapiApiClient.getTeam).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testTeam)
@@ -154,7 +154,7 @@ describe('Strapi service', () => {
 
       it('should return the selected team by slug', async () => {
         const testTeamResponse = {
-          documentId: 'bfdbfdbfdfbdfg',
+          documentId: 'documentid1',
           name: 'Team 1',
           slug: 'team-1',
         } as Team
@@ -173,17 +173,17 @@ describe('Strapi service', () => {
     describe('getComponents', () => {
       const testComponentsResponse = [
         {
-          documentId: 'bfdbfdbfdfbdfg',
+          documentId: 'documentid1',
           name: 'Component 1',
         },
         {
-          documentId: 'cfdbfdbfdfbdfg',
+          documentId: 'documentid3',
           name: 'Component 2',
         },
       ] as Component[]
       const testComponents = [
-        { documentId: 'bfdbfdbfdfbdfg', name: 'Component 1' },
-        { documentId: 'cfdbfdbfdfbdfg', name: 'Component 2' },
+        { documentId: 'documentid1', name: 'Component 1' },
+        { documentId: 'documentid3', name: 'Component 2' },
       ] as Component[]
 
       it('should return an ordered array of components', async () => {
@@ -198,7 +198,7 @@ describe('Strapi service', () => {
 
     describe('getComponent', () => {
       const testComponentResponse = {
-        documentId: 'bfdbfdbfdfbdfg',
+        documentId: 'documentid1',
         name: 'Component 1',
       } as Component
 
@@ -215,7 +215,7 @@ describe('Strapi service', () => {
     describe('getDependencies', () => {
       const testComponentsResponse = [
         {
-          documentId: 'bfdbfdbfdfbdfg',
+          documentId: 'documentid1',
           name: 'Component 1',
           versions: {
             helm: {
@@ -231,7 +231,7 @@ describe('Strapi service', () => {
           },
         },
         {
-          documentId: 'cfdbfdbfdfbdfg',
+          documentId: 'documentid3',
           name: 'Component 2',
         },
       ] as Component[]
@@ -267,21 +267,21 @@ describe('Strapi service', () => {
 
     describe('getServiceArea', () => {
       const testServiceArea = {
-        documentId: 'bfdbfdbfdfbdfg',
+        documentId: 'documentid1',
         name: 'Service Area 1',
         slug: 'service-area-1',
       } as ServiceArea
 
       it('should return the selected service area by ID', async () => {
         const testServiceAreaResponse = {
-          documentId: 'bfdbfdbfdfbdfg',
+          documentId: 'documentid1',
           name: 'Service Area 1',
           slug: 'service-area-1',
         } as ServiceArea
 
         strapiApiClient.getServiceArea.mockResolvedValue(testServiceAreaResponse)
 
-        const results = await serviceCatalogueService.getServiceArea({ serviceAreaDocumentId: 'bfdbfdbfdfbdfg' })
+        const results = await serviceCatalogueService.getServiceArea({ serviceAreaDocumentId: 'documentid1' })
 
         expect(strapiApiClient.getServiceArea).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testServiceArea)
@@ -289,7 +289,7 @@ describe('Strapi service', () => {
 
       it('should return the selected service area by slug', async () => {
         const testServiceAreaResponse = {
-          documentId: 'bfdbfdbfdfbdfg',
+          documentId: 'documentid1',
           name: 'Service Area 1',
           slug: 'service-area-1',
         } as ServiceArea
@@ -308,7 +308,7 @@ describe('Strapi service', () => {
     describe('getProductSets', () => {
       const testProductSetsResponse = [
         {
-          documentId: 'bfdbfdbfdfbdfg',
+          documentId: 'documentid1',
           name: 'Product Set 1',
         },
         {
@@ -317,7 +317,7 @@ describe('Strapi service', () => {
         },
       ] as ProductSet[]
       const testProductSets = [
-        { documentId: 'bfdbfdbfdfbdfg', name: 'Product Set 1' },
+        { documentId: 'documentid1', name: 'Product Set 1' },
         { id: 2, name: 'Product Set 2' },
       ] as ProductSet[]
 
@@ -333,15 +333,15 @@ describe('Strapi service', () => {
 
     describe('getProductSet', () => {
       const testProductSetResponse = {
-        documentId: 'bfdbfdbfdfbdfg',
+        documentId: 'documentid1',
         name: 'Product Set 1',
       } as ProductSet
-      const testProductSet = { documentId: 'bfdbfdbfdfbdfg', name: 'Product Set 1' } as ProductSet
+      const testProductSet = { documentId: 'documentid1', name: 'Product Set 1' } as ProductSet
 
       it('should return the selected product set', async () => {
         strapiApiClient.getProductSet.mockResolvedValue(testProductSetResponse)
 
-        const results = await serviceCatalogueService.getProductSet({ productSetDocumentId: 'bfdbfdbfdfbdfg' })
+        const results = await serviceCatalogueService.getProductSet({ productSetDocumentId: 'documentid1' })
 
         expect(strapiApiClient.getProductSet).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testProductSet)
@@ -365,13 +365,13 @@ describe('Strapi service', () => {
     })
 
     describe('getNamespace', () => {
-      const testNamespaceResponse = { documentId: 'bfdbfdbfdfbdfg', name: 'Namespace 1' } as Namespace
-      const testNamespace = { documentId: 'bfdbfdbfdfbdfg', name: 'Namespace 1' } as Namespace
+      const testNamespaceResponse = { documentId: 'documentid1', name: 'Namespace 1' } as Namespace
+      const testNamespace = { documentId: 'documentid1', name: 'Namespace 1' } as Namespace
 
       it('should return the selected namespace', async () => {
         strapiApiClient.getNamespace.mockResolvedValue(testNamespaceResponse)
 
-        const results = await serviceCatalogueService.getNamespace({ namespaceDocumentId: 'bfdbfdbfdfbdfg' })
+        const results = await serviceCatalogueService.getNamespace({ namespaceDocumentId: 'documentid1' })
 
         expect(strapiApiClient.getNamespace).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testNamespace)
@@ -437,11 +437,11 @@ describe('Strapi service', () => {
 
   describe('getCustomComponentView', () => {
     const testCustomComponentResponse = {
-      documentId: 'bfdbfdbfdfbdfg',
+      documentId: 'documentid1',
       name: 'custom component 1',
     } as CustomComponentView
     const testCustomComponentView = {
-      documentId: 'bfdbfdbfdfbdfg',
+      documentId: 'documentid1',
       name: 'custom component 1',
     } as CustomComponentView
 
@@ -449,7 +449,7 @@ describe('Strapi service', () => {
       strapiApiClient.getCustomComponentView.mockResolvedValue(testCustomComponentResponse)
 
       const results = await serviceCatalogueService.getCustomComponentView({
-        customComponentDocumentId: 'bfdbfdbfdfbdfg',
+        customComponentDocumentId: 'documentid1',
       })
 
       expect(strapiApiClient.getCustomComponentView).toHaveBeenCalledTimes(1)
@@ -498,7 +498,7 @@ describe('Strapi service', () => {
     describe('getEnvironments', () => {
       const testEnvironmentsResponse = {
         data: [
-          { documentId: 'bfdbfdbfdfbdfg', name: 'Environment 1' },
+          { documentId: 'documentid1', name: 'Environment 1' },
           { id: 2, name: 'Environment 2' },
         ],
       } as ListResponse<Environment>
