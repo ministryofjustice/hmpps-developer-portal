@@ -8,7 +8,7 @@ jQuery(function () {
   currentFilters = getFiltersFromURL()
 
   // If no filters on load, default to 'failed' results
-  if (isFiltersBlank(currentFilters)) {
+  if (areFiltersBlank(currentFilters)) {
     const failCheckbox = document.querySelector('input[name="results"][value="failed"]')
     if (failCheckbox) failCheckbox.checked = true
     currentFilters = getFiltersFromUI()
@@ -178,24 +178,13 @@ function populateTeamDropdown(data) {
 }
 
 function teamFilterFunction(filters) {
-  return function (_settings, _data, _dataIndex, rowData) {
-    if (filters.team && rowData.team !== filters.team) return false
-    return true
-  }
+  return filters.team && rowData.team !== filters.team
 }
 
 function getFiltersFromUI() {
-  const results = $('input:checkbox[name=results]:checked')
-    .map(function () {
-      return $(this).val()
-    })
-    .get()
+  const results = $('input:checkbox[name=results]:checked').map(checkbox => checkbox.val())
 
-  const exemption = $('input:checkbox[name=exemption]:checked')
-    .map(function () {
-      return $(this).val()
-    })
-    .get()
+  const exemption = $('input:checkbox[name=exemption]:checked').map(checkbox => checkbox.val())
 
   return {
     team: teamFilter.value,
@@ -224,7 +213,7 @@ function buildAjaxUrl(currentFilters) {
 }
 
 function setCheckboxes(currentFilters) {
-  checkboxes.forEach(checkbox => {
+  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
     const { name, value } = checkbox
     checkbox.checked =
       (name === 'results' && currentFilters.results.includes(value)) ||
@@ -232,6 +221,6 @@ function setCheckboxes(currentFilters) {
   })
 }
 
-function isFiltersBlank(currentfilters) {
+function areFiltersBlank(currentfilters) {
   return currentfilters.team === '' && currentfilters.results.length === 0 && currentfilters.exemption.length === 0
 }
