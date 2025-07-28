@@ -355,11 +355,9 @@ export const createStrapiQuery = (fields: string[]): string => {
     return ''
   }
 
-  const parts: string[] = []
-
-  fields.forEach(fieldName => {
-    parts.push(`${encodeURIComponent(`populate[${fieldName.replaceAll('.', '][populate][')}]`)}=true`)
-  })
-
-  return parts.join('&')
+  return fields
+    .reduce((querystring, fieldName) => {
+      return `${querystring}&${encodeURIComponent(`populate[${fieldName.replaceAll('.', '][populate][')}]`)}=true`
+    }, '')
+    .slice(1)
 }
