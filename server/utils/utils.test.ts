@@ -21,6 +21,7 @@ import {
   median,
   mapToCanonicalEnv,
   mapAlertEnvironments,
+  createStrapiQuery,
 } from './utils'
 
 describe('Utils', () => {
@@ -422,6 +423,33 @@ describe('veracodeFilters', () => {
 
     it('even number of elements', () => {
       expect(median([1, 2, 3, 4])).toStrictEqual(2.5)
+    })
+  })
+
+  describe('createStrapiQuery', () => {
+    it.each([
+      [null, null, ''],
+      ['empty array', [], ''],
+      ['Single item', ['product_set'], 'populate%5Bproduct_set%5D=true'],
+      ['Multiple items', ['product_set', 'team'], 'populate%5Bproduct_set%5D=true&populate%5Bteam%5D=true'],
+      ['Single dotted entry', ['product.team'], 'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true'],
+      [
+        'Multiple dotted entries',
+        ['product.team', 'envs.trivy_scan'],
+        'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D=true',
+      ],
+      [
+        'Single deep dotted entry',
+        ['product.team.extra'],
+        'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true',
+      ],
+      [
+        'Multiple deep dotted entries',
+        ['product.team.extra', 'envs.trivy_scan.extra'],
+        'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D%5Bpopulate%5D%5Bextra%5D=true',
+      ],
+    ])('%s convertToTitleCase(%s, %s)', (_: string, a: string[], expected: string) => {
+      expect(createStrapiQuery(a)).toEqual(expected)
     })
   })
 })
