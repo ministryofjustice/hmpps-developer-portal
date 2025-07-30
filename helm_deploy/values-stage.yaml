@@ -7,7 +7,7 @@ generic-service:
 
   ingress:
     host: developer-portal-stage.hmpps.service.justice.gov.uk
-    tlsSecretName: hmpps-deloper-portal-cert
+    tlsSecretName: hmpps-developer-portal-cert
 
   env:
     INGRESS_URL: "https://developer-portal-stage.hmpps.service.justice.gov.uk"
