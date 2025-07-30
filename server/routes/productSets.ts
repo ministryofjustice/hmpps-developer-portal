@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import { getNumericId, utcTimestampToUtcDateTime } from '../utils/utils'
+import { getDocumentID, utcTimestampToUtcDateTime } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
@@ -19,10 +19,9 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     res.send(productSets)
   })
 
-  router.get('/:productSetId', async (req, res) => {
-    const productSetId = getNumericId(req, 'productSetId')
-    const productSet = await serviceCatalogueService.getProductSet({ productSetId })
-
+  router.get('/:productSetDocumentId', async (req, res) => {
+    const productSetDocumentId = getDocumentID(req, 'productSetDocumentId')
+    const productSet = await serviceCatalogueService.getProductSet({ productSetDocumentId })
     const products =
       productSet.products && productSet.products.length > 0 ? productSet.products.map(product => product) : null
 
