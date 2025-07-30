@@ -2,16 +2,16 @@
 # Per environment values which override defaults in hmpps-developer-portal/values.yaml
 
 generic-service:
-  nameOverride: hmpps-developer-portal-strapi5
+  nameOverride: hmpps-developer-portal
   replicaCount: 1
 
   ingress:
-    host: developer-portal-strapi5-dev.hmpps.service.justice.gov.uk
-    tlsSecretName: hmpps-developer-portal-strapi5-cert
+    host: developer-portal-stage.hmpps.service.justice.gov.uk
+    tlsSecretName: hmpps-deloper-portal-cert
 
   env:
-    INGRESS_URL: "https://developer-portal-strapi5-dev.hmpps.service.justice.gov.uk"
-    SERVICE_CATALOGUE_URL: "https://service-catalogue-strapi5-dev.hmpps.service.justice.gov.uk"
+    INGRESS_URL: "https://developer-portal-stage.hmpps.service.justice.gov.uk"
+    SERVICE_CATALOGUE_URL: "https://service-catalogue-stage.hmpps.service.justice.gov.uk"
     NODE_ENV: "development"
 
   namespace_secrets:
@@ -20,5 +20,5 @@ generic-service:
       REDIS_AUTH_TOKEN: "auth_token"
 
 generic-prometheus-alerts:
-  targetApplication: hmpps-developer-portal-strapi5
+  targetApplication: hmpps-developer-portal
   alertSeverity: hmpps-sre-alerts-nonprod

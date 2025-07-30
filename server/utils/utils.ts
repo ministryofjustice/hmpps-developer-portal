@@ -348,3 +348,15 @@ export const utcTimestampToUtcDate = (str: string) => (str ? formatDate(new Date
 
 export const utcTimestampToUtcDateTime = (str: string) =>
   str ? formatDate(new Date(str), 'dd-MMM-yyyy HH:mm:ss').toUpperCase() : undefined
+
+export const createStrapiQuery = (fields: string[]): string => {
+  if (!fields || fields?.length === 0) {
+    return ''
+  }
+
+  return fields
+    .reduce((querystring, fieldName) => {
+      return `${querystring}&${encodeURIComponent(`populate[${fieldName.replaceAll('.', '][populate][')}]`)}=true`
+    }, '')
+    .slice(1)
+}
