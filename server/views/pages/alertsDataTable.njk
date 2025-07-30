@@ -42,25 +42,109 @@
 
   <p id="alertsFetchStatus"></p>
 
-    <div class="alertsFilter govuk-button-group">
+  <form>
+    <input type="hidden" name="alertName" id="alertName" value="{{ alertName }}">
+    <input type="hidden" name="alertType" id="alertType" value="{{ alertType }}">
+    <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
+    
+    <div class="alert-selectors govuk-button-group">
+      <div class="alert-labels">
         <div class="label-and-button">
-            {{ govukSelect({
-                id: "team",
-                name: "team",
-                label: {
-                text: "Team"
-                },
-                items: team
-            }) }}
-            {{ govukButton({
-                id: "updateTeam",
-                name: "updateTeam",
-                text: "Update",
-                element: "button",
-                attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
-            }) }}
+          {{- govukSelect({
+            id: "application",
+            name: "application",
+            label: {
+              text: "Application Name"
+            },
+            items: applicationNames
+          }) -}}
+          {{ govukButton({
+            id: "updateApplicationName",
+            name: "updateApplicationName",
+            text: "Update",
+            element: "button",
+            attributes: { "data-associated-select-id": "applicationName", "data-type-name": "application-name"}
+          }) }}
+        </div>
+        <div class="label-and-button">
+          {{ govukSelect({
+            id: "environment",
+            name: "environment",
+            label: {
+              text: "Environment"
+            },
+            items: environments
+          }) }}
+          {{ govukButton({
+            id: "updateEnvironment",
+            name: "updateEnvironment",
+            text: "Update",
+            element: "button",
+            attributes: { "data-associated-select-id": "environment", "data-type-name": "environments"}
+          }) }}
+        </div>
+        <div class="label-and-button">
+          {{ govukSelect({
+            id: "namespace",
+            name: "namespace",
+            label: {
+              text: "Namespace"
+            },
+            items: namespaces
+          }) }}
+          {{ govukButton({
+            id: "updateNamespace",
+            name: "updateNamespace",
+            text: "Update",
+            element: "button",
+            attributes: { "data-associated-select-id": "namespace", "data-type-name": "namespaces"}
+          }) }}
+        </div>
+        <div class="label-and-button">
+          {{ govukSelect({
+            id: "severity",
+            name: "severity",
+            label: {
+              text: "Severity Label"
+            },
+            items: severityLabels
+          }) }}
+          {{ govukButton({
+            id: "updateSeverityLabel",
+            name: "updateSeverityLabel",
+            text: "Update",
+            element: "button",
+            attributes: { "data-associated-select-id": "severityLabel", "data-type-name": "severity-labels"}
+          }) }}
+        </div>
+        <div class="label-and-button">
+          {{ govukSelect({
+            id: "team",
+            name: "team",
+            label: {
+              text: "Team"
+            },
+            items: teams
+          }) }}
+          {{ govukButton({
+            id: "updateTeam",
+            name: "updateTeam",
+            text: "Update",
+            element: "button",
+            attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
+          }) }}
+        </div>
+      </div>
+        <div class="alert-reset-button">
+          {{ govukButton({
+            id: "resetFilters",
+            name: "resetFilters",
+            text: "Reset Filters",
+            element: "button"
+          }) }}
         </div>
     </div>
+  </form>
   
   <p id="lastUpdated"></p>
 

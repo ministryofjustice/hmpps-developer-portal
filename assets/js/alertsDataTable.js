@@ -5,8 +5,10 @@ const severityFilter = document.getElementById('severity')
 const teamFilter = document.getElementById('team')
 
 jQuery(function () {
+  // checks URL, to see if any filters are currently applied
   let currentFilters = getFiltersFromURL()
-  const rootDataUrl = '/alerts/all'
+  // alertsData will hold the most recently fetched data
+  let alertsData = []
 
   const columns = [
     {
@@ -18,8 +20,6 @@ jQuery(function () {
     {
       data: 'startsAt',
       createdCell: function (td, _cellData, rowData) {
-        // const startsAt = formatTimeStamp(new Date(rowData.startsAt))
-        // const startsAt = Date.parse(rowData.startsAt)
         const startsAt = formatTimeStamp(rowData.startsAt)
         $(td).html(`${startsAt}`)
       },
@@ -71,8 +71,7 @@ jQuery(function () {
 
   const alertsTable = createTable({
     id: 'alertsTable',
-    // ajaxUrl: '/alerts/all',
-    ajaxUrl: rootDataUrl,
+    ajaxUrl: '/alerts/all',
     orderColumn: 1,
     orderType: 'asc',
     columns,
@@ -85,89 +84,81 @@ jQuery(function () {
       }
     },
   })
-  console.log('create table', createTable)
 
-  let count = 0
+  let count = 0 // will remove, just keeping whilst I deal with fetch frequency and dropdowns jumping every 5 seconds
 
   setInterval(function () {
     alertsTable.ajax.reload(null, false) // user paging is not reset on reload
     console.log('data reloaded, count =', (count += 1))
     lastUpdatedTime()
-  }, 5000)
+  }, 60000) // set to once a minute for now
 
   lastUpdatedTime()
   alertsUpdateFrequencyMessage()
 
-  // Trying to add filters to alerts same style as Veracode
-
+  // xhr event is fired when an Ajax request is completed, whether it is successful (data refreshes) or there's an error
   alertsTable.on('xhr', function (_e, settings, json) {
-    const rawData = Array.isArray(json) ? json : json.data || []
-    console.log('1 - rawData', rawData)
+    alertsData = Array.isArray(json) ? json : json.data || []
+    if (!alertsData || !alertsData.length) return
 
-    if (!rawData || !rawData.length) return
+    filterOrResetDropdowns(alertsData, currentFilters)
 
-    populateTeamDropdown(rawData)
-
-    // Register team filter function
+    // Registers allFiltersChecker as a Datatable custom filter function. Determines if a row should be displayed in the table
     $.fn.dataTable.ext.search = []
-    $.fn.dataTable.ext.search.push(teamFilterFunction(currentFilters))
+    $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
     alertsTable.draw()
   })
 
-  function populateTeamDropdown(data) {
-    console.log('2 - data in popTeamDropdown', data)
-    const teams = [...new Set(data.map(item => item.labels.team))].sort()
-    console.log('3 - teams:', teams)
-    const $teamSelect = $('#team')
-    $teamSelect.empty().append('<option value="">All teams</option>')
+  // Using ids for all the update buttons, which are mapped to the corresponding filter's key
+  $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel,#updateTeam').on(
+    'click',
+    function (e) {
+      e.preventDefault()
 
-    teams.forEach(team => {
-      $teamSelect.append(`<option value="${team}">${team}</option>`)
-    })
+      const idToKey = {
+        updateApplicationName: 'application',
+        updateEnvironment: 'environment',
+        updateNamespace: 'namespace',
+        updateSeverityLabel: 'severity',
+        updateTeam: 'team',
+      }
 
-    // Set value from URL param on load
-    if (currentFilters.team) {
-      $teamSelect.val(currentFilters.team)
-    }
-  }
+      // changed from e.target to this so it always refers to the button's id
+      const key = idToKey[this.id]
+      if (!key) return
 
-  function teamFilterFunction(filters) {
-    return function (_settings, _data, _dataIndex, rowData) {
-      if (filters.team && rowData.team !== filters.team) return false
-      return true
-    }
-  }
+      // creating filter object with values from the dropdowns
+      currentFilters[key] = $(`#${key}`).val()
 
-  console.log('4 - .team', $('.team'))
+      // Update URL without reload
+      updateURLParams(currentFilters)
 
-  // Pick up from here
-  $('#team').on('change', e => {
-    e.preventDefault(e)
-    const selectedResultFilters = []
+      // Reapply all filters
+      $.fn.dataTable.ext.search = []
+      $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
+      alertsTable.draw(false)
+      filterOrResetDropdowns(alertsData, currentFilters)
+    },
+  )
 
-    $('#team').each(function () {
-      selectedResultFilters.push($(this).val())
-    })
-
-    const newDataUrl = `${rootDataUrl}?team=${selectedResultFilters.join(',')}}`
-    console.log('5 - newDataURL', newDataUrl)
-
-    alertsTable.ajax.url(newDataUrl).load()
-  })
-
-  $('#updateTeam').on('click', function (e) {
+  // When reset filters clicked, this clear all filters, reset URL params and updates table
+  $('#resetFilters').on('click', function (e) {
     e.preventDefault()
-
-    const selectedTeam = $('#team').val()
-    currentFilters.team = selectedTeam
-
-    // Update URL without reload
+    // Clear filters
+    currentFilters = {
+      application: '',
+      environment: '',
+      namespace: '',
+      severity: '',
+      team: '',
+    }
+    // Reset selects
+    $('#application,#environment,#namespace,#severity,#team').val('')
     updateURLParams(currentFilters)
-
-    // Reapply filter
+    // Remove all filters and redraw
     $.fn.dataTable.ext.search = []
-    $.fn.dataTable.ext.search.push(teamFilterFunction(currentFilters))
     alertsTable.draw(false)
+    filterOrResetDropdowns(alertsData, currentFilters)
   })
 })
 
@@ -196,24 +187,24 @@ function formatTimeStamp(dateString) {
 function alertsUpdateFrequencyMessage() {
   $('#alertsFetchStatus').empty()
   return $('#alertsFetchStatus').append(
-    `<div class="govuk-inset-text">Alerts are being updated every <strong>5</strong> seconds</div>`,
+    `<div class="govuk-inset-text">Alerts are being updated every <strong>60</strong> seconds</div>`,
   )
 }
 
 function lastUpdatedTime() {
   const currentTime = new Date()
-  // console.log("current date -", currentTime)
-  // console.log("get Time - ", currentTime.getTime())
   const lastUpdatedTimestamp = formatTimeStamp(currentTime)
   document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdatedTimestamp}`
 }
-
-// Team's filters
 
 // function checks url params for applied filters and builds filter object
 function getFiltersFromURL() {
   const params = new URLSearchParams(location.search)
   return {
+    application: params.get('application') || '',
+    environment: params.get('environment') || '',
+    namespace: params.get('namespace') || '',
+    severity: params.get('severity') || '',
     team: params.get('team') || '',
   }
 }
@@ -221,7 +212,63 @@ function getFiltersFromURL() {
 // add current filters to Url params
 function updateURLParams(filters) {
   const params = new URLSearchParams()
+  if (filters.application.length) params.set('application', filters.application)
+  if (filters.environment) params.set('environment', filters.environment)
+  if (filters.namespace) params.set('namespace', filters.namespace)
+  if (filters.severity) params.set('severity', filters.severity)
   if (filters.team) params.set('team', filters.team)
 
   history.replaceState(null, '', `?${params.toString()}`)
+}
+
+// Checks all filters for each row, filtering out any false rows. Returns true where all filters match (or are empty)
+function allFiltersChecker(filters) {
+  return function (_settings, _data, _dataIndex, rowData) {
+    if (filters.application && rowData.labels.application !== filters.application) return false
+    if (filters.environment && rowData.labels.environment !== filters.environment) return false
+    if (filters.namespace && rowData.labels.namespace !== filters.namespace) return false
+    if (filters.severity && rowData.labels.severity !== filters.severity) return false
+    if (filters.team && rowData.labels.team !== filters.team) return false
+    return true
+  }
+}
+
+// Filters data by dropdowns, returning an array of matching rows. Used for updating dropdown options
+function getFilteredData(data, filters) {
+  return data.filter(
+    rowData =>
+      (!filters.application || rowData.labels.application === filters.application) &&
+      (!filters.environment || rowData.labels.environment === filters.environment) &&
+      (!filters.namespace || rowData.labels.namespace === filters.namespace) &&
+      (!filters.severity || rowData.labels.severity === filters.severity) &&
+      (!filters.team || rowData.labels.team === filters.team),
+  )
+}
+
+// Updates dropdowns with the options related to the current filters or all when reset
+function filterOrResetDropdowns(alertsData, currentFilters) {
+  const filteredData = getFilteredData(alertsData, currentFilters)
+
+  populateAlertsDropdowns(filteredData, 'application', currentFilters)
+  populateAlertsDropdowns(filteredData, 'environment', currentFilters)
+  populateAlertsDropdowns(filteredData, 'namespace', currentFilters)
+  populateAlertsDropdowns(filteredData, 'severity', currentFilters)
+  populateAlertsDropdowns(filteredData, 'team', currentFilters)
+}
+
+// Populates a dropdown with options from the filtered data, or to the current filter if present
+function populateAlertsDropdowns(data, key, currentFilters) {
+  const allOptions = [...new Set(data.map(a => a.labels[`${key}`]))].sort()
+
+  const $dropdownSelect = $(`#${key}`)
+  $dropdownSelect.empty().append('<option value=""></option>')
+
+  allOptions.forEach(option => {
+    $dropdownSelect.append(`<option value="${option}">${option}</option>`)
+  })
+
+  // Set value from URL param on load
+  if (currentFilters[`${key}`]) {
+    $dropdownSelect.val(currentFilters[`${key}`])
+  }
 }
