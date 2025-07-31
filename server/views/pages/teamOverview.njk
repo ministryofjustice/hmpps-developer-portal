@@ -48,7 +48,7 @@
         </div>
           <div class="govuk-summary-list__row">
             <dd class="govuk-summary-list__value">
-              <a class="govuk-link" href="/alerts?team={{ formatURL(teamName) }}">See active alerts</a>
+              <a class="govuk-link" href="/alerts?team={{ formatTeamNameURL }}">See active alerts</a>
             </dd>
           </div>
         </dl>
@@ -69,7 +69,7 @@
           </div>
           <div class="govuk-summary-list__row">
             <dd class="govuk-summary-list__value">
-              <a class="govuk-link" href="/trivy-scans?team={{ formatURL(teamName) }}">See Trivy scan results</a>
+              <a class="govuk-link" href="/trivy-scans?team={{ formatTeamNameURL }}">See Trivy scan results</a>
             </dd>
           </div>
         </dl>
@@ -90,7 +90,7 @@
           </div>
           <div class="govuk-summary-list__row">
             <dd class="govuk-summary-list__value">
-              <a class="govuk-link" href="/veracode?team={{ formatURL(teamName) }}">See veracode scan results</a>
+              <a class="govuk-link" href="/veracode?team={{ formatTeamNameURL }}">See veracode scan results</a>
             </dd>
           </div>
         </dl>
@@ -105,6 +105,4 @@
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  <script src="/assets/js/teamOverview.js"></script>
-
 {% endblock %}

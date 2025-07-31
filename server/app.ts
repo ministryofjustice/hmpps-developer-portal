@@ -35,7 +35,6 @@ import componentRequestRoutes from './routes/componentRequests'
 import githubTeamsRoutes from './routes/githubTeams'
 import scheduledJobsRoutes from './routes/scheduledJobs'
 import alertsRoutes from './routes/alerts'
-import teamOverviewRoutes from './routes/teamOverview'
 
 import type { Services } from './services'
 
@@ -77,7 +76,6 @@ export default function createApp(services: Services): express.Application {
   app.use('/scheduled-jobs', scheduledJobsRoutes(services))
   app.use('/alerts', alertsRoutes(services))
   app.use('/trivy-scans', trivyScansRoutes(services))
-  app.use('/team-overview', teamOverviewRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

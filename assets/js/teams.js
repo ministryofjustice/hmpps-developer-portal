@@ -38,7 +38,7 @@ jQuery(function () {
       createdCell: function (td, _cellData, rowData) {
         const monitor_name = `${formatMonitorName(rowData.name)}`
         $(td).html(
-          `<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Links</span></summary><li><a class="govuk-link--no-visited-state" href="/monitor/team/${monitor_name}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${monitor_name}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" href="/trivy-scans/${monitor_name}">Trivy</a></li><li><a class="govuk-link--no-visited-state" href="/team-overview/teams/${rowData.slug}">Team Overview</a></li>`,
+          `<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Links</span></summary><li><a class="govuk-link--no-visited-state" href="/monitor/team/${monitor_name}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${monitor_name}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" href="/trivy-scans/${monitor_name}">Trivy</a></li><li><a class="govuk-link--no-visited-state" href="teams/team-overview/${rowData.slug}">Team Overview</a></li>`,
         )
       },
     },
