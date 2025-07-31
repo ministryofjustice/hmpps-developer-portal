@@ -9,6 +9,9 @@ jQuery(function () {
   let currentFilters = getFiltersFromURL()
   // alertsData will hold the most recently fetched data
   let alertsData = []
+  // timer ticks if a dropdown is open, data fetches every 30 seconds instead of 5
+  let isDropDownOpen = false
+  let timer = 0
 
   const columns = [
     {
@@ -28,6 +31,12 @@ jQuery(function () {
       data: 'annotations.message',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(`${rowData.annotations.message}`)
+      },
+    },
+    {
+      data: 'labels.application',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.labels.application}`)
       },
     },
     {
@@ -60,13 +69,6 @@ jQuery(function () {
         $(td).html(`<ul><li>${dashboardLink}</li><li>${runbookLink}</li><li>${generatorLink}</li></ul>`)
       },
     },
-    {
-      data: 'labels',
-      createdCell: function (td, _cellData, rowData) {
-        const teamName = rowData.labels.team || 'N/A'
-        $(td).html(`${teamName}`)
-      },
-    },
   ]
 
   const alertsTable = createTable({
@@ -85,16 +87,21 @@ jQuery(function () {
     },
   })
 
-  let count = 0 // will remove, just keeping whilst I deal with fetch frequency and dropdowns jumping every 5 seconds
-
+  // Alerts API called every 5 seconds. If a dropdown is open, timer increases and API called every 30 seconds
   setInterval(function () {
-    alertsTable.ajax.reload(null, false) // user paging is not reset on reload
-    console.log('data reloaded, count =', (count += 1))
-    lastUpdatedTime()
-  }, 60000) // set to once a minute for now
+    const { newTime, dataShouldRefresh } = isDataThirtySecondsOld(timer)
+    timer = newTime
+
+    // Timer resets to 0 when API called
+    if (!isDropDownOpen || dataShouldRefresh) {
+      alertsTable.ajax.reload(null, false) // user paging is not reset on reload
+      timer = 0
+      lastUpdatedTime()
+    }
+  }, 5000)
 
   lastUpdatedTime()
-  alertsUpdateFrequencyMessage()
+  alertsUpdateFrequencyMessage(isDropDownOpen)
 
   // xhr event is fired when an Ajax request is completed, whether it is successful (data refreshes) or there's an error
   alertsTable.on('xhr', function (_e, settings, json) {
@@ -141,7 +148,7 @@ jQuery(function () {
     },
   )
 
-  // When reset filters clicked, this clear all filters, reset URL params and updates table
+  // When reset filters clicked, this clears all filters, resets URL params and updates table
   $('#resetFilters').on('click', function (e) {
     e.preventDefault()
     // Clear filters
@@ -159,6 +166,16 @@ jQuery(function () {
     $.fn.dataTable.ext.search = []
     alertsTable.draw(false)
     filterOrResetDropdowns(alertsData, currentFilters)
+  })
+
+  // Toggles fetch frequency between 5 and 30 seconds, and changes message when using dropdowns
+  $(document).on('mousedown', e => {
+    if (e.target.tagName.toLowerCase() === 'select') {
+      isDropDownOpen = true
+    } else {
+      isDropDownOpen = false
+    }
+    alertsUpdateFrequencyMessage(isDropDownOpen)
   })
 })
 
@@ -184,11 +201,21 @@ function formatTimeStamp(dateString) {
   }
 }
 
-function alertsUpdateFrequencyMessage() {
+function alertsUpdateFrequencyMessage(isDropDownOpen) {
+  const frequency = isDropDownOpen ? 30 : 5
   $('#alertsFetchStatus').empty()
   return $('#alertsFetchStatus').append(
-    `<div class="govuk-inset-text">Alerts are being updated every <strong>60</strong> seconds</div>`,
+    `<div class="govuk-inset-text">Alerts are being updated every <strong>${frequency}</strong> seconds</div>`,
   )
+}
+
+// Refreshes data if stale - when 30 seconds old
+function isDataThirtySecondsOld(timer) {
+  if (timer >= 25) {
+    // next interval will tick at 30 seconds
+    return { dataShouldRefresh: true, newTime: 0 }
+  }
+  return { dataShouldRefresh: false, newTime: timer + 5 }
 }
 
 function lastUpdatedTime() {
@@ -233,7 +260,7 @@ function allFiltersChecker(filters) {
   }
 }
 
-// Filters data by dropdowns, returning an array of matching rows. Used for updating dropdown options
+// Filters alerts data by dropdowns, returning an array of matching rows. Used to dynamically update dropdown options
 function getFilteredData(data, filters) {
   return data.filter(
     rowData =>

@@ -3,6 +3,7 @@
 
 {% set pageTitle = applicationName + " - Alerts V2" %}
 {% set mainClasses = "app-container govuk-body" %}
+{% set containerClasses = "wide-screen" %}
 
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
@@ -38,7 +39,7 @@
 
 {% block content %}
 {{ breadCrumb("Alerts DataTable!", []) }}
-  <h1>Alerts V2 - DataTable</h1>
+  <h1>Alerts - DataTable</h1>
 
   <p id="alertsFetchStatus"></p>
 
@@ -154,9 +155,9 @@
         <th>Alertname</th>
         <th>Started at</th>
         <th>Message</th>
+        <th>Application</th>
         <th>Slack Channel</th>
         <th>Links</th>
-        <th>Team</th>
       </tr>
     </thead>
     <tfoot>
@@ -164,9 +165,9 @@
         <th>Alertname</th>
         <th>Started at</th>
         <th>Message</th>
+        <th>Application</th>
         <th>Slack Channel</th>
         <th>Links</th>
-        <th>Team</th>
       </tr>
     </tfoot>
   </table>
