@@ -55,16 +55,9 @@ export default function routes({ serviceCatalogueService, teamsSummaryCountServi
       )
       const veryHighAndHighVeracode = teamVeracodeScanSummary.veryHigh + teamVeracodeScanSummary.high
 
-      function formatTeamNameURL(teamName: string) {
-        return teamName.replace(/[ &()]/g, (char: string) => {
-          const replacements: Record<string, string> = { ' ': '+', '&': '%26', '(': '%28', ')': '%29' }
-          return replacements[char] || char
-        })
-      }
-
       res.render('pages/teamOverview', {
         teamName: team.name,
-        formatTeamNameURL: formatTeamNameURL(team.name),
+        formatTeamNameURL: encodeURIComponent(team.name),
         teamSlug: team.slug,
         teamAlertSummary,
         criticalAndHighTrivy,
