@@ -13,6 +13,7 @@ function createTable({
   pageLength = 10,
   columnDropdowns = false,
   columnSearchText = true,
+  createdRow,
 }) {
   const semverTidy = semVer => {
     // sometimes comes through as a number which has no match method
@@ -80,6 +81,7 @@ function createTable({
     ajax,
     data,
     columns,
+    createdRow,
     initComplete: function () {
       if (columnDropdowns) {
         this.api()
