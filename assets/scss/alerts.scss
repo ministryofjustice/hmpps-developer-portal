@@ -31,47 +31,14 @@
   flex-flow: row wrap;
 }
 
-#alertsStatusTable {
-  width: 100%;
-
-  th {
-    word-break: normal;
-    &.col-alertname { width: 15%; }
-    &.col-startedAt { width: 11%; }
-    &.col-message { width: 45%; }
-    &.col-slackChannel { width: 20%; }
-    &.col-links { width: 9%; }
-  }
-
-  tr {
-    background-color: grey;
-    word-break: break-word;
-
-    &[data-silenced="active"] {
-      background-color: govuk-colour('red');
-    }
-
-    &[data-silenced="suppressed"] {
-      background-color: #990;
-    }
-  } 
-
-  th, td {
-    color: white;
-    padding: govuk-spacing(1);
-
-    a:link, a:visited {
-      color: white;
-    }
-  }
-}
-
 #lastUpdated {
   float: right;
 }
 
 #alertsTable {
   color: white !important;
+  width: 100%;
+  word-break: break-word;
 
   a {
     color: white !important;
@@ -98,6 +65,7 @@
   }
 }
 
+// For active alerts (red) and silenced (green) rows on alerts table 
 .silenced-alert {
   background-color: #990 !important;
 }
