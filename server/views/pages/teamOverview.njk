@@ -1,0 +1,102 @@
+{%- from "moj/components/alert/macro.njk" import mojAlert -%}More actions
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{%- from "moj/components/badge/macro.njk" import mojBadge -%}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + teamName %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb(teamName, [{title: "Teams", href: "/teams"}]) }}
+
+<h1>{% if teamName %}{{ teamName }}{% else %}Team Overview{% endif %}</h1>
+
+{% if teamAlertSummary.total > 0 %}
+{{ mojAlert({
+  variant: "warning",
+  title: "Active Alerts",
+  showTitleAsHeading: true,
+  dismissible: false,
+  html: 'There are actively triggering alerts on one or more components. <a href="#">Please see active alerts for more</a>.'
+}) }}
+{% else %}
+{{ mojAlert({
+  variant: "information",
+  title: "No Active Alerts",
+  showTitleAsHeading: true,
+  dismissible: false,
+  html: 'There are currently no actively triggering alerts.'
+}) }}
+{% endif %}
+
+<h3 class="govuk-heading-m">Alerts and scans requiring investigation</h3>
+
+<div class="govuk-grid-row hmpps-miniSummaryWrapper govuk-!-margin-bottom-6">
+  <div class="govuk-grid-column-one-third">
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+          <dt class="govuk-summary-list__key">
+            Active Alerts
+          </dt>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key govuk-body govuk-!-font-size-48">
+           {{ teamAlertSummary.total }}
+          </dt>
+        </div>
+          <div class="govuk-summary-list__row">
+            <dd class="govuk-summary-list__value">
+              <a class="govuk-link" href="/alerts?team={{ formatTeamNameURL }}">See active alerts</a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+    </div>
+    <div class="govuk-grid-column-one-third">
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+            <dt class="govuk-summary-list__key">
+              Trivy (critical & high)
+            </dt>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-body govuk-!-font-size-48">
+              {{ criticalAndHighTrivy }}
+            </dt>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dd class="govuk-summary-list__value">
+              <a class="govuk-link" href="/trivy-scans?team={{ formatTeamNameURL }}">See Trivy scan results</a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+    </div>
+    <div class="govuk-grid-column-one-third">
+    <div class="govuk-summary-card">
+      <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+            <dt class="govuk-summary-list__key">
+              Veracode (very high & high)
+            </dt>
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-body govuk-!-font-size-48">
+              {{ veryHighAndHighVeracode }}
+            </dt>
+          </div>
+          <div class="govuk-summary-list__row">
+            <dd class="govuk-summary-list__value">
+              <a class="govuk-link" href="/veracode?team={{ formatTeamNameURL }}">See veracode scan results</a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
