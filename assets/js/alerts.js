@@ -122,7 +122,7 @@ jQuery(function () {
     function (e) {
       e.preventDefault()
 
-      const idToKey = {
+      const buttonIdToFilterKey = {
         updateApplicationName: 'application',
         updateEnvironment: 'environment',
         updateNamespace: 'namespace',
@@ -130,8 +130,7 @@ jQuery(function () {
         updateTeam: 'team',
       }
 
-      // changed from e.target to this so it always refers to the button's id
-      const key = idToKey[this.id]
+      const key = buttonIdToFilterKey[this.id]
       if (!key) return
 
       // creating filter object with values from the dropdowns
@@ -170,11 +169,7 @@ jQuery(function () {
 
   // Toggles fetch frequency between 5 and 30 seconds, and changes message when using dropdowns
   $(document).on('mousedown', e => {
-    if (e.target.tagName.toLowerCase() === 'select') {
-      isDropDownOpen = true
-    } else {
-      isDropDownOpen = false
-    }
+    isDropDownOpen = e.target.tagName.toLowerCase() === 'select'
     alertsUpdateFrequencyMessage(isDropDownOpen)
   })
 })
@@ -248,15 +243,16 @@ function updateURLParams(filters) {
   history.replaceState(null, '', `?${params.toString()}`)
 }
 
-// Checks all filters for each row, filtering out any false rows. Returns true where all filters match (or are empty)
+// Checks all filters for each row, filtering out any false rows. Returns true (!false) where all filters match (or are empty)
 function allFiltersChecker(filters) {
   return function (_settings, _data, _dataIndex, rowData) {
-    if (filters.application && rowData.labels.application !== filters.application) return false
-    if (filters.environment && rowData.labels.environment !== filters.environment) return false
-    if (filters.namespace && rowData.labels.namespace !== filters.namespace) return false
-    if (filters.severity && rowData.labels.severity !== filters.severity) return false
-    if (filters.team && rowData.labels.team !== filters.team) return false
-    return true
+    return !(
+      (filters.application && rowData.labels.application !== filters.application) ||
+      (filters.environment && rowData.labels.environment !== filters.environment) ||
+      (filters.namespace && rowData.labels.namespace !== filters.namespace) ||
+      (filters.severity && rowData.labels.severity !== filters.severity) ||
+      (filters.team && rowData.labels.team !== filters.team)
+    )
   }
 }
 
