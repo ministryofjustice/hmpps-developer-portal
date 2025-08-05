@@ -4,68 +4,153 @@ const namespaceFilter = document.getElementById('namespace')
 const severityFilter = document.getElementById('severity')
 const teamFilter = document.getElementById('team')
 
-let isDropDownOpen = false
-
-jQuery(async function () {
-  alertsUpdateFrequencyMessage()
-  // check url to see if any filters are currently applied
+jQuery(function () {
+  // checks URL, to see if any filters are currently applied
   let currentFilters = getFiltersFromURL()
-  // get alerts from the api
-  let alerts = await getAlerts()
-  // is the alert data being refreshed?
-  let isReset = false
-
-  // use filters and alerts to update alert table and filters
-  updateAll(alerts, currentFilters, isReset)
-  // ensures first interval check for updateAlerts is a match so UI doesn't refresh after 5 seconds
-  let previousDataJSON = alerts
+  // alertsData will hold the most recently fetched data
+  let alertsData = []
+  // timer ticks if a dropdown is open, data fetches every 30 seconds instead of 5
+  let isDropDownOpen = false
   let timer = 0
 
-  // Watch function updates Alerts on a timeout
-  setInterval(async function () {
-    const timerCheck = isDataThirtySecondsOld(timer)
-    timer = timerCheck.timer
-    result = timerCheck.result
-    // Timer only starts ticking if a drop down is 'active'
-    if (!isDropDownOpen || result) {
-      alerts = await getAlerts()
+  const columns = [
+    {
+      data: 'labels.alertname',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.labels.alertname}`)
+      },
+    },
+    {
+      data: 'startsAt',
+      createdCell: function (td, _cellData, rowData) {
+        const startsAt = formatTimeStamp(rowData.startsAt)
+        $(td).html(`${startsAt}`)
+      },
+    },
+    {
+      data: 'annotations.message',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.annotations.message}`)
+      },
+    },
+    {
+      data: 'labels.application',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.labels.application}`)
+      },
+    },
+    {
+      data: 'labels.alert_slack_channel',
+      createdCell: function (td, _cellData, rowData) {
+        const slackName = rowData.labels.alert_slack_channel || 'N/A'
+        const slackNameNoHashtag = slackName.slice(1) // removes #
+        if (slackName !== 'N/A') {
+          $(td).html(
+            `<a href="https://slack.com/app_redirect?channel=${slackNameNoHashtag}" target="_blank">${slackName}</a>`,
+          )
+        } else {
+          $(td).html(`${slackName}`)
+        }
+      },
+    },
+    {
+      data: 'annotations',
+      createdCell: function (td, _cellData, rowData) {
+        const dashboardLink = rowData.annotations.dashboard_url
+          ? `<a href="${rowData.annotations.dashboard_url}" class="statusTileHealth" target="_blank">Dashboard</a>`
+          : ''
+        const runbookLink = rowData.annotations.runbook_url
+          ? `<a href="${rowData.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook</a>`
+          : ''
+        const generatorLink = rowData.generatorURL
+          ? `<a href="${rowData.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
+          : ''
+
+        $(td).html(`<ul><li>${dashboardLink}</li><li>${runbookLink}</li><li>${generatorLink}</li></ul>`)
+      },
+    },
+  ]
+
+  const alertsTable = createTable({
+    id: 'alertsTable',
+    ajaxUrl: '/alerts/all',
+    orderColumn: 1,
+    orderType: 'asc',
+    columns,
+    responsive: true,
+    createdRow: function (row, data, dataIndex) {
+      if (data.status.state === 'suppressed') {
+        $(row).addClass('silenced-alert')
+      } else if (data.status.state === 'active') {
+        $(row).addClass('active-alert')
+      }
+    },
+  })
+
+  // Alerts API called every 5 seconds. If a dropdown is open, timer increases and API called every 30 seconds
+  setInterval(function () {
+    const { newTime, dataShouldRefresh } = isDataThirtySecondsOld(timer)
+    timer = newTime
+
+    // Timer resets to 0 when API called
+    if (!isDropDownOpen || dataShouldRefresh) {
+      alertsTable.ajax.reload(null, false) // user paging is not reset on reload
       timer = 0
-      previousDataJSON = updateAlerts(alerts, previousDataJSON, isReset)
+      lastUpdatedTime()
     }
   }, 5000)
-  // on click of any 'Update' button to apply filters
+
+  lastUpdatedTime()
+  alertsUpdateFrequencyMessage(isDropDownOpen)
+
+  // xhr event is fired when an Ajax request is completed, whether it is successful (data refreshes) or there's an error
+  alertsTable.on('xhr', function (_e, settings, json) {
+    alertsData = Array.isArray(json) ? json : json.data || []
+    if (!alertsData || !alertsData.length) return
+
+    filterOrResetDropdowns(alertsData, currentFilters)
+
+    // Registers allFiltersChecker as a Datatable custom filter function. Determines if a row should be displayed in the table
+    $.fn.dataTable.ext.search = []
+    $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
+    alertsTable.draw()
+  })
+
+  // On click of any 'Update' button to apply filters. Button ids mapped to corresponding filter's key
   $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel,#updateTeam').on(
     'click',
-    async e => {
-      e.preventDefault(e)
+    function (e) {
+      e.preventDefault()
 
-      // check which filter has been updated
-      const DROP_DOWN_TYPES = {
+      const buttonIdToFilterKey = {
         updateApplicationName: 'application',
         updateEnvironment: 'environment',
         updateNamespace: 'namespace',
         updateSeverityLabel: 'severity',
         updateTeam: 'team',
       }
-      const dropDownType = DROP_DOWN_TYPES[e.target.id]
-      if (!dropDownType) {
-        return false
-      }
-      // get the selectec dropdown option
-      const dropDownText = $(`#${dropDownType} option:selected`).text()
 
-      // update current filters
-      currentFilters[`${dropDownType}`] = dropDownText
-      // update alert table and filters
-      isReset = false
-      updateAll(alerts, currentFilters, isReset)
+      const key = buttonIdToFilterKey[this.id]
+      if (!key) return
+
+      // creating filter object with values from the dropdowns
+      currentFilters[key] = $(`#${key}`).val()
+
+      // Update URL without reload
+      updateURLParams(currentFilters)
+
+      // Reapply all filters
+      $.fn.dataTable.ext.search = []
+      $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
+      alertsTable.draw(false)
+      filterOrResetDropdowns(alertsData, currentFilters)
     },
   )
 
-  // on click of 'Reset Filters' button, clear filters, reset url params and update table and filters
-  $('#resetFilters').on('click', async e => {
-    e.preventDefault(e)
-    history.replaceState(null, '', '/alerts')
+  // When reset filters clicked, this clears all filters, resets URL params and updates table
+  $('#resetFilters').on('click', function (e) {
+    e.preventDefault()
+    // Clear filters
     currentFilters = {
       application: '',
       environment: '',
@@ -73,116 +158,21 @@ jQuery(async function () {
       severity: '',
       team: '',
     }
-    isReset = true
-    dropdownHandler.clearPendingValues()
-    updateAll(alerts, currentFilters, isReset)
+    // Reset selects
+    $('#application,#environment,#namespace,#severity,#team').val('')
+    updateURLParams(currentFilters)
+    // Remove all filters and redraw
+    $.fn.dataTable.ext.search = []
+    alertsTable.draw(false)
+    filterOrResetDropdowns(alertsData, currentFilters)
+  })
+
+  // Toggles fetch frequency between 5 and 30 seconds, and changes message when using dropdowns
+  $(document).on('mousedown', e => {
+    isDropDownOpen = e.target.tagName.toLowerCase() === 'select'
+    alertsUpdateFrequencyMessage(isDropDownOpen)
   })
 })
-
-const dropdownHandler = {
-  // values for unapplied dropdowns
-  pendingValues: {
-    application: '',
-    environment: '',
-    namespace: '',
-    severity: '',
-    team: '',
-  },
-  clearPendingValues: function () {
-    this.pendingValues = {
-      application: '',
-      environment: '',
-      namespace: '',
-      severity: '',
-      team: '',
-    }
-  },
-  updateDropdowns: function (filteredData, currentFilters, isReset) {
-    const applications = this.getOptions(filteredData, 'application')
-    const environments = this.getOptions(filteredData, 'environment')
-    const namespaces = this.getOptions(filteredData, 'namespace')
-    const severities = this.getOptions(filteredData, 'severity')
-    const teams = this.getOptions(filteredData, 'team')
-
-    this.renderDropdown(applicationFilter, applications, currentFilters.application, 'application', isReset)
-    this.renderDropdown(environmentFilter, environments, currentFilters.environment, 'environment', isReset)
-    this.renderDropdown(namespaceFilter, namespaces, currentFilters.namespace, 'namespace', isReset)
-    this.renderDropdown(severityFilter, severities, currentFilters.severity, 'severity', isReset)
-    this.renderDropdown(teamFilter, teams, currentFilters.team, 'team', isReset)
-  },
-  getOptions: function (data, key) {
-    const set = new Set(data.map(a => a.labels[`${key}`]))
-    return Array.from(set).sort()
-  },
-  removeOptions: function (selectElement) {
-    Array.from(selectElement.options).forEach(() => {
-      selectElement.remove(0)
-    })
-    const opt = document.createElement('option')
-    opt.value = ''
-    opt.textContent = ''
-    selectElement.appendChild(opt)
-  },
-  renderDropdown: function (select, options, selectedValue, key, isReset) {
-    this.pendingValues[key] = selectedValue === select.value ? '' : select.value
-    //  clear dropDown options to prevent duplicates
-    this.removeOptions(select)
-    // append options
-    options.forEach(option => {
-      const newOption = document.createElement('option')
-      newOption.value = option
-      newOption.textContent = option
-      newOption.selected = selectedValue !== '' ? option === selectedValue : option === this.pendingValues[key]
-      select.appendChild(newOption)
-    })
-    if (isReset) {
-      select.selectedIndex = 0
-    }
-  },
-}
-
-// gets alerts every 5 seconds
-function updateAlerts(currentData, previousDataJSON, isReset) {
-  //check against existing alerts
-  if (currentData !== previousDataJSON) {
-    const filters = getFiltersFromURL()
-    isReset = false
-    updateAll(currentData, filters, isReset)
-  }
-  return currentData
-}
-
-async function getAlerts() {
-  const response = await fetch(`/alerts/all`)
-  if (!response.ok) {
-    throw new Error('There was a problem fetching the alert data')
-  }
-  return await response.json()
-}
-
-// add current filters to Url params
-function updateURLParams(filters) {
-  const params = new URLSearchParams()
-  if (filters.application.length) params.set('application', filters.application)
-  if (filters.environment) params.set('environment', filters.environment)
-  if (filters.namespace) params.set('namespace', filters.namespace)
-  if (filters.severity) params.set('severity', filters.severity)
-  if (filters.team) params.set('team', filters.team)
-
-  history.replaceState(null, '', `?${params.toString()}`)
-}
-
-// function checks url params for applied filters and builds filter object
-function getFiltersFromURL() {
-  const params = new URLSearchParams(location.search)
-  return {
-    application: params.get('application') || '',
-    environment: params.get('environment') || '',
-    namespace: params.get('namespace') || '',
-    severity: params.get('severity') || '',
-    team: params.get('team') || '',
-  }
-}
 
 function formatTimeStamp(dateString) {
   if (!dateString) return 'N/A'
@@ -206,106 +196,102 @@ function formatTimeStamp(dateString) {
   }
 }
 
-//  append tabledata to the #alertsStatusTable
-function populateAlertTable(alerts) {
-  const currentTime = new Date()
-  const lastUpdatedTimestamp = formatTimeStamp(currentTime)
-  try {
-    $('#statusRows').empty()
-    document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdatedTimestamp}`
-    alerts.forEach(alert => {
-      const startsAt = formatTimeStamp(new Date(alert.startsAt))
-      // create links for alert urls
-      const dashboardLink = alert.annotations.dashboard_url
-        ? `<a href="${alert.annotations.dashboard_url}" class="statusTileHealth" target="_blank">Dashboard</a>`
-        : ''
-      const runbookLink = alert.annotations.runbook_url
-        ? `<a href="${alert.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook<a>`
-        : ''
-      const generatorLink = alert.generatorURL
-        ? `<a href="${alert.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
-        : ''
-      const slackLink = alert.labels.alert_slack_channel || 'N/A'
-      $('#statusRows')
-        .append(`<tr data-alert-name="${alert.labels.application}" data-environment="${alert.labels.application}" data-environment-type="${alert.labels.environment}" data-silenced="${alert.status.state}" id="tile-${alert.labels.application}-${alert.labels.environment}">
-          <td>${alert.labels.alertname}</td>
-          <td>${startsAt}</td>
-          <td>${alert.annotations.message} </td>
-          <td>${slackLink}</td>
-          <td>${[dashboardLink, runbookLink, generatorLink].filter(link => link !== '').join(' ') || 'N/A'}</td>
-        </tr>`)
-    })
-  } catch (e) {
-    console.error(e)
-  }
-}
-
-function populateAlertFilters(dropDownFilters) {
-  dropDownFilters.forEach(filter => {
-    filter.forEach(item => {
-      const select = document.getElementById(`${item.type}`)
-      select.add(new Option(item.text, item.text, false, item.selected))
-    })
-  })
-}
-
-// filter alters by selected filters
-function applyFilters(alerts, filters) {
-  return alerts.filter(
-    alert =>
-      (!filters.application || alert.labels.application === filters.application) &&
-      (!filters.environment || alert.labels.environment === filters.environment) &&
-      (!filters.namespace || alert.labels.namespace === filters.namespace) &&
-      (!filters.severity || alert.labels.severity === filters.severity) &&
-      (!filters.team || alert.labels.team === filters.team),
-  )
-}
-
-// return false if no filter is selected
-function isFiltersEmpty(filters) {
-  return !filters.application && !filters.environment && !filters.namespace && !filters.severity && !filters.team
-}
-
-// update alert table, dropdowns and the url
-function updateAll(alerts, currentFilters, isReset) {
-  const filtered = applyFilters(alerts, currentFilters)
-  populateAlertTable(filtered)
-  // if no filters are selected populate dropdowns with all data, otherwise populate with an already filtered selection
-  const dataForDropdowns = isFiltersEmpty(currentFilters) ? alerts : filtered
-  dropdownHandler.updateDropdowns(dataForDropdowns, currentFilters, isReset)
-  updateURLParams(currentFilters)
-}
-
-// Slows fetch frequency and changes message when user interacting with drop downs
-// uses event listeners for instant change in UI when drop down open
-document.addEventListener('mousedown', e => {
-  if (e.target.tagName.toLowerCase() === 'select') {
-    isDropDownOpen = true
-    alertsUpdateFrequencyMessage()
-  }
-})
-
-document.addEventListener('click', e => {
-  if (e.target.tagName.toLowerCase() !== 'select') {
-    isDropDownOpen = false
-    alertsUpdateFrequencyMessage()
-  }
-})
-
-// Refreshes data if stale - more than 30 seconds old
-function isDataThirtySecondsOld(timer) {
-  if (timer >= 25) {
-    // next interval will tick at 30 seconds
-    return { result: true, timer: 0 }
-  }
-  return { result: false, timer: timer + 5 }
-}
-
-// Message changes if drop down is open - from every 5 seconds to 30 seconds
-function alertsUpdateFrequencyMessage() {
+function alertsUpdateFrequencyMessage(isDropDownOpen) {
   const frequency = isDropDownOpen ? 30 : 5
   $('#alertsFetchStatus').empty()
   return $('#alertsFetchStatus').append(
-    `<div class="govuk-inset-text">Alerts are being updated every <strong>${frequency}</strong> seconds!</div>`,
+    `<div class="govuk-inset-text">Alerts are being updated every <strong>${frequency}</strong> seconds</div>`,
   )
+}
+
+// Refreshes data if stale - when 30 seconds old
+function isDataThirtySecondsOld(timer) {
+  if (timer >= 25) {
+    // next interval will tick at 30 seconds
+    return { dataShouldRefresh: true, newTime: 0 }
+  }
+  return { dataShouldRefresh: false, newTime: timer + 5 }
+}
+
+function lastUpdatedTime() {
+  const currentTime = new Date()
+  const lastUpdatedTimestamp = formatTimeStamp(currentTime)
+  document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdatedTimestamp}`
+}
+
+// function checks url params for applied filters and builds filter object
+function getFiltersFromURL() {
+  const params = new URLSearchParams(location.search)
+  return {
+    application: params.get('application') || '',
+    environment: params.get('environment') || '',
+    namespace: params.get('namespace') || '',
+    severity: params.get('severity') || '',
+    team: params.get('team') || '',
+  }
+}
+
+// add current filters to Url params
+function updateURLParams(filters) {
+  const params = new URLSearchParams()
+  if (filters.application.length) params.set('application', filters.application)
+  if (filters.environment) params.set('environment', filters.environment)
+  if (filters.namespace) params.set('namespace', filters.namespace)
+  if (filters.severity) params.set('severity', filters.severity)
+  if (filters.team) params.set('team', filters.team)
+
+  history.replaceState(null, '', `?${params.toString()}`)
+}
+
+// Checks all filters for each row, filtering out any false rows. Returns true (!false) where all filters match (or are empty)
+function allFiltersChecker(filters) {
+  return function (_settings, _data, _dataIndex, rowData) {
+    return !(
+      (filters.application && rowData.labels.application !== filters.application) ||
+      (filters.environment && rowData.labels.environment !== filters.environment) ||
+      (filters.namespace && rowData.labels.namespace !== filters.namespace) ||
+      (filters.severity && rowData.labels.severity !== filters.severity) ||
+      (filters.team && rowData.labels.team !== filters.team)
+    )
+  }
+}
+
+// Filters alerts data by dropdowns, returning an array of matching rows. Used to dynamically update dropdown options
+function getFilteredData(data, filters) {
+  return data.filter(
+    rowData =>
+      (!filters.application || rowData.labels.application === filters.application) &&
+      (!filters.environment || rowData.labels.environment === filters.environment) &&
+      (!filters.namespace || rowData.labels.namespace === filters.namespace) &&
+      (!filters.severity || rowData.labels.severity === filters.severity) &&
+      (!filters.team || rowData.labels.team === filters.team),
+  )
+}
+
+// Updates dropdowns with the options related to the current filters or all when reset
+function filterOrResetDropdowns(alertsData, currentFilters) {
+  const filteredData = getFilteredData(alertsData, currentFilters)
+
+  populateAlertsDropdowns(filteredData, 'application', currentFilters)
+  populateAlertsDropdowns(filteredData, 'environment', currentFilters)
+  populateAlertsDropdowns(filteredData, 'namespace', currentFilters)
+  populateAlertsDropdowns(filteredData, 'severity', currentFilters)
+  populateAlertsDropdowns(filteredData, 'team', currentFilters)
+}
+
+// Populates a dropdown with options from the filtered data, or to the current filter if present
+function populateAlertsDropdowns(data, key, currentFilters) {
+  const allOptions = [...new Set(data.map(a => a.labels[`${key}`]))].sort()
+
+  const $dropdownSelect = $(`#${key}`)
+  $dropdownSelect.empty().append('<option value=""></option>')
+
+  allOptions.forEach(option => {
+    $dropdownSelect.append(`<option value="${option}">${option}</option>`)
+  })
+
+  // Set value from URL param on load
+  if (currentFilters[`${key}`]) {
+    $dropdownSelect.val(currentFilters[`${key}`])
+  }
 }
