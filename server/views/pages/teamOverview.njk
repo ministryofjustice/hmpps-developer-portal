@@ -14,21 +14,21 @@
 <h1>{% if teamName %}{{ teamName }}{% else %}Team Overview{% endif %}</h1>
 
 {% if teamAlertSummary.total > 0 %}
-{{ mojAlert({
-  variant: "warning",
-  title: "Active Alerts",
-  showTitleAsHeading: true,
-  dismissible: false,
-  html: 'There are actively triggering alerts on one or more components. <a href="#">Please see active alerts for more</a>.'
-}) }}
+  {{ mojAlert({
+    variant: "warning",
+    title: "Active Alerts",
+    showTitleAsHeading: true,
+    dismissible: false,
+    html: 'There are actively triggering alerts on one or more components. <a href="/alerts?team=' + formatTeamNameURL + '">Please see active alerts for more</a>.'
+  }) }}
 {% else %}
-{{ mojAlert({
-  variant: "information",
-  title: "No Active Alerts",
-  showTitleAsHeading: true,
-  dismissible: false,
-  html: 'There are currently no actively triggering alerts.'
-}) }}
+  {{ mojAlert({
+    variant: "information",
+    title: "No Active Alerts",
+    showTitleAsHeading: true,
+    dismissible: false,
+    html: 'There are currently no actively triggering alerts.'
+  }) }}
 {% endif %}
 
 <h3 class="govuk-heading-m">Alerts and scans requiring investigation</h3>
