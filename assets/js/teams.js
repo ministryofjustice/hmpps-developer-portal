@@ -58,8 +58,5 @@ function formatMonitorName(name) {
 }
 
 function formatTrivyLink(link) {
-  return link
-    .replace(/&/g, '%26') // Replace all '&' with '%26'
-    .split(' ') // Split by hyphen
-    .join('+') // Join with '+'
+  return link.replace(/&/g, '%26').split(' ').join('+')
 }
