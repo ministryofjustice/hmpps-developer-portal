@@ -1,3 +1,4 @@
+import { type Request } from 'express'
 import type { AlertsApiClient, RestClientBuilder } from '../data'
 import { Alert } from '../@types'
 import { Environment } from '../data/strapiApiTypes'
@@ -90,5 +91,15 @@ export default class AlertsService {
       ...alertEnvironments.map(env => ({ text: env, value: env, selected: false })),
     ]
     return environments
+  }
+
+  getAlertType = (req: Request): string => {
+    const { alertType } = req.params
+    return ['application', 'environment', 'namespace', 'severity'].includes(alertType) ? alertType : 'all'
+  }
+
+  getAlertName = (req: Request): string => {
+    const alertName = req.params?.alertName || ''
+    return alertName // .replace(/[^-a-z0-9]/g, '')
   }
 }
