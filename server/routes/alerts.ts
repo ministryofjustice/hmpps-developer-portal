@@ -10,20 +10,7 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
     const alertType = getAlertType(req)
     const alertName = getAlertName(req)
     // Get alerts to determine which environments actually have data
-    const alertsData = await alertsService.getAlerts()
-
-    // Extract unique canonical environment values from actual alerts and deduplicate
-    const alertEnvironments = [
-      ...new Set(
-        alertsData.map(alert => alert.labels?.environment || 'none').map(mapToCanonicalEnv), // Map to canonical form
-      ),
-    ].sort()
-
-    // Format environments for dropdown with blank default option
-    const environments = [
-      { text: '', value: '', selected: true },
-      ...alertEnvironments.map(env => ({ text: env, value: env, selected: false })),
-    ]
+    const environments = await alertsService.getAlertEnvironments()
     logger.info(`Request for /alerts/${alertType}/${alertName}`)
     return res.render('pages/alerts', { environments })
   })

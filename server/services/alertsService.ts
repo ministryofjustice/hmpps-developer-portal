@@ -74,4 +74,21 @@ export default class AlertsService {
     const revisedAlerts = this.reviseAlerts(alerts, environments, teams)
     return revisedAlerts
   }
+
+  async getAlertEnvironments() {
+    const alertsData = await this.getAlerts()
+    // Extract unique canonical environment values from actual alerts and deduplicate
+    const alertEnvironments = [
+      ...new Set(
+        alertsData.map(alert => alert.labels?.environment || 'none').map(mapToCanonicalEnv), // Map to canonical form
+      ),
+    ].sort()
+
+    // Format environments for dropdown with blank default option
+    const environments = [
+      { text: '', value: '', selected: true },
+      ...alertEnvironments.map(env => ({ text: env, value: env, selected: false })),
+    ]
+    return environments
+  }
 }
