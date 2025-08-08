@@ -4,12 +4,10 @@ import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
-import { Alert, RdsEntry } from '../@types'
-import { Environment } from '../data/strapiApiTypes'
+import { RdsEntry } from '../@types'
 import { TrivyScanType } from '../data/converters/modelTypes'
 
 import type { ServiceCatalogueService } from '../services'
-import { DataItem } from '../data/strapiClientTypes'
 import type { Team } from '../data/modelTypes'
 
 dayjs.extend(relativeTime.default)
@@ -147,29 +145,10 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
   return 'none'
 }
 
-function findTeamMatch(teams: Team[], name: string) {
+export function findTeamMatch(teams: Team[], name: string) {
   return teams.find(team =>
     team?.products?.some(product => product?.components?.some(component => component.name === name)),
   )
-}
-
-// Match alert data to corresponding environments and components to get slack channel and team properties
-export const addNewPropertiesToAlert = (
-  revisedAlerts: Alert[],
-  environments: DataItem<Environment>[],
-  teams: Team[],
-) => {
-  return revisedAlerts.map(alert => {
-    const envMatch = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
-    const teamMatch = findTeamMatch(teams, alert.labels.application)
-
-    const updatedAlert = { ...alert }
-
-    if (envMatch) updatedAlert.labels.alert_slack_channel = envMatch.attributes.alerts_slack_channel
-    if (teamMatch) updatedAlert.labels.team = teamMatch.name
-
-    return updatedAlert
-  })
 }
 
 export async function addTeamToTrivyScan(teams: Team[], trivyScan: TrivyScanType[]) {
@@ -182,25 +161,6 @@ export async function addTeamToTrivyScan(teams: Team[], trivyScan: TrivyScanType
 
     return updatedScan
   })
-}
-
-// map environment keys to the alert environment
-export const mapAlertEnvironments = (alerts: Alert[]) => {
-  const updatedAlerts = Array.isArray(alerts) ? [...alerts] : []
-  return updatedAlerts.map(alert => {
-    const updatedAlert = { ...alert }
-    // Map alert environment to canonical form, even if it's an empty string
-    if (updatedAlert.labels && 'environment' in updatedAlert.labels) {
-      updatedAlert.labels.environment = mapToCanonicalEnv(updatedAlert.labels.environment)
-    }
-    return updatedAlert
-  })
-}
-export const reviseAlerts = (alerts: Alert[], environments: DataItem<Environment>[], teams: Team[]) => {
-  const revisedEnvAlerts = mapAlertEnvironments(alerts)
-  const revisedAlerts = addNewPropertiesToAlert(revisedEnvAlerts, environments, teams)
-
-  return revisedAlerts
 }
 
 export const getDependencyName = (req: Request): string => {

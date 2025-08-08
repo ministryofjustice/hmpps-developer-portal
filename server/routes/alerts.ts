@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { getAlertType, getAlertName, reviseAlerts, mapToCanonicalEnv } from '../utils/utils'
+import { getAlertType, getAlertName, mapToCanonicalEnv } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, alertsService }: Services): Router {
   const router = Router()
@@ -30,12 +30,8 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
 
   router.get('/all', async (req, res) => {
     try {
-      const alerts = await alertsService.getAlerts()
-      const environments = await serviceCatalogueService.getEnvironments()
-      const teams = await serviceCatalogueService.getTeams({ withComponents: true })
-
-      const revisedAlerts = await reviseAlerts(alerts, environments, teams)
-      res.json(revisedAlerts)
+      const alerts = alertsService.getAndSortAlerts(serviceCatalogueService)
+      res.json(alerts)
     } catch (error) {
       logger.warn(`Failed to get alerts`, error)
     }
