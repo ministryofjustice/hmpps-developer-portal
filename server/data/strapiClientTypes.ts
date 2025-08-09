@@ -1,23 +1,9 @@
-export type DataItem<T> = {
-  attributes: T
-  id?: number
-}
-
 export type ListResponse<T> = {
-  data: DataItem<T>[]
-  meta?: {
-    pagination?: {
-      page?: number
-      pageCount?: number
-      pageSize?: number
-      total?: number
-    }
-  }
+  data: T[]
 }
 
 export type SingleResponse<T> = {
-  data: DataItem<T>
-  meta?: Record<string, never>
+  data: T
 }
 
 // Recursive unwrap utility
@@ -30,6 +16,4 @@ export type DeepUnwrap<T> =
 // prettier-enable
 
 // Transform utility that applies DeepUnwrap to each property
-export type Unwrapped<T> = {
-  [K in keyof T]: DeepUnwrap<T[K]>
-} & { id?: number }
+export type Unwrapped<T> = T
