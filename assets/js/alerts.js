@@ -41,6 +41,8 @@ jQuery(function () {
     },
     {
       data: 'labels.alert_slack_channel',
+      // default content to handle missing column data - prevents rendering issues for when no data for slack channel
+      defaultContent: 'N/A',
       createdCell: function (td, _cellData, rowData) {
         const slackName = rowData.labels.alert_slack_channel || 'N/A'
         const slackNameNoHashtag = slackName.slice(1) // removes #
