@@ -182,9 +182,13 @@ function teamFilterFunction(filters) {
 }
 
 function getFiltersFromUI() {
-  const results = $('input:checkbox[name=results]:checked').map(checkbox => checkbox.val())
+  const results = $('input:checkbox[name=results]:checked')
+    .map((i, el) => $(el).val())
+    .get()
 
-  const exemption = $('input:checkbox[name=exemption]:checked').map(checkbox => checkbox.val())
+  const exemption = $('input:checkbox[name=exemption]:checked')
+    .map((i, el) => $(el).val())
+    .get()
 
   return {
     team: teamFilter.value,
