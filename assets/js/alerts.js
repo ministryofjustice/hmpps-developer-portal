@@ -9,8 +9,9 @@ jQuery(function () {
   let currentFilters = getFiltersFromURL()
   // alertsData will hold the most recently fetched data
   let alertsData = []
-  // timer ticks if a dropdown is open, data fetches every 30 seconds instead of 5
+  // timer ticks if a dropdown is open or when navigating table pages, data fetches every 30 seconds instead of 5
   let isDropDownOpen = false
+  let isPaginationActive = false
   let timer = 0
 
   const columns = [
@@ -78,6 +79,9 @@ jQuery(function () {
     orderType: 'asc',
     columns,
     responsive: true,
+    // scrollY: '300px',
+    // scrollCollapse: true,
+    // stateSave: true,
     createdRow: function (row, data, dataIndex) {
       if (data.status.state === 'suppressed') {
         $(row).addClass('silenced-alert')
@@ -89,11 +93,12 @@ jQuery(function () {
 
   // Alerts API called every 5 seconds. If a dropdown is open, timer increases and API called every 30 seconds
   setInterval(function () {
+    const slowMode = isDropDownOpen || isPaginationActive
     const { newTime, dataShouldRefresh } = isDataThirtySecondsOld(timer)
     timer = newTime
 
     // Timer resets to 0 when API called
-    if (!isDropDownOpen || dataShouldRefresh) {
+    if (!slowMode || dataShouldRefresh) {
       alertsTable.ajax.reload(null, false) // user paging is not reset on reload
       timer = 0
       lastUpdatedTime()
@@ -106,6 +111,7 @@ jQuery(function () {
   // xhr event is fired when an Ajax request is completed, whether it is successful (data refreshes) or there's an error
   alertsTable.on('xhr', function (_e, settings, json) {
     alertsData = Array.isArray(json) ? json : json.data || []
+    console.log('Alerts -', alertsData)
     if (!alertsData || !alertsData.length) return
 
     filterOrResetDropdowns(alertsData, currentFilters)
@@ -113,7 +119,18 @@ jQuery(function () {
     // Registers allFiltersChecker as a Datatable custom filter function. Determines if a row should be displayed in the table
     $.fn.dataTable.ext.search = []
     $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
-    alertsTable.draw()
+    alertsTable.draw(false)
+  })
+
+  // Error handler for issues with API response
+  alertsTable.on('error.dt', function (e, settings, techNote, message) {
+    // Displays custom error message to the user
+    // $('#alertsFetchStatus').html(
+    //   `<div class="govuk-inset-text">
+    //     <strong>Error:</strong> Unable to load alerts data. Please try again later.
+    //   </div>`
+    // )
+    console.error('DataTables error:', message)
   })
 
   // On click of any 'Update' button to apply filters. Button ids mapped to corresponding filter's key
@@ -167,10 +184,14 @@ jQuery(function () {
     filterOrResetDropdowns(alertsData, currentFilters)
   })
 
-  // Toggles fetch frequency between 5 and 30 seconds, and changes message when using dropdowns
+  // Toggles fetch frequency between 5 and 30 seconds, and changes message when using dropdowns / pages
   $(document).on('mousedown', e => {
-    isDropDownOpen = e.target.tagName.toLowerCase() === 'select'
-    alertsUpdateFrequencyMessage(isDropDownOpen)
+    // isDropDownOpen = e.target.tagName.toLowerCase() === 'select'
+    isDropDownOpen = $(e.target).is('select')
+    isPaginationActive = $(e.target).closest('.dt-paging-button').length > 0
+    console.log('dropdown open -', isDropDownOpen)
+    console.log('pagination active -', isPaginationActive)
+    alertsUpdateFrequencyMessage(isDropDownOpen || isPaginationActive)
   })
 })
 
@@ -196,8 +217,8 @@ function formatTimeStamp(dateString) {
   }
 }
 
-function alertsUpdateFrequencyMessage(isDropDownOpen) {
-  const frequency = isDropDownOpen ? 30 : 5
+function alertsUpdateFrequencyMessage(isSlowMode) {
+  const frequency = isSlowMode ? 30 : 5
   $('#alertsFetchStatus').empty()
   return $('#alertsFetchStatus').append(
     `<div class="govuk-inset-text">Alerts are being updated every <strong>${frequency}</strong> seconds</div>`,
