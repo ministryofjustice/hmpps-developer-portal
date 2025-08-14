@@ -11,7 +11,7 @@ jQuery(function () {
       data: 'product_set.ps_id',
       createdCell: function (td, _cellData, rowData) {
         const link = rowData.product_set
-          ? `<a href="/product-sets/${rowData.product_set.id}">${cleanColumnOutput(rowData.product_set.ps_id)}</a>`
+          ? `<a href="/product-sets/${rowData.product_set.documentId}">${cleanColumnOutput(rowData.product_set.ps_id)}</a>`
           : 'N/A'
         $(td).html(link)
       },

@@ -15,7 +15,6 @@ import type {
   CustomComponentView,
 } from '../data/modelTypes'
 import { Environment } from '../data/strapiApiTypes'
-import { DataItem } from '../data/strapiClientTypes'
 import { sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
 export default class ServiceCatalogueService {
@@ -31,15 +30,15 @@ export default class ServiceCatalogueService {
 
   async getProduct({
     productSlug = '',
-    productId = 0,
+    productDocumentId = '',
     withEnvironments = false,
   }: {
     productSlug?: string
-    productId?: number
+    productDocumentId?: string
     withEnvironments?: boolean
   }): Promise<Product> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const productData = await strapiApiClient.getProduct({ productSlug, productId, withEnvironments })
+    const productData = await strapiApiClient.getProduct({ productSlug, productDocumentId, withEnvironments })
 
     return productData
   }
@@ -54,16 +53,16 @@ export default class ServiceCatalogueService {
   }
 
   async getTeam({
-    teamId = 0,
+    teamDocumentId = '',
     teamSlug = '',
     withEnvironments = false,
   }: {
-    teamId?: number
+    teamDocumentId?: string
     teamSlug?: string
     withEnvironments?: boolean
   }): Promise<Team> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const teamData = await strapiApiClient.getTeam({ teamId, teamSlug, withEnvironments })
+    const teamData = await strapiApiClient.getTeam({ teamDocumentId, teamSlug, withEnvironments })
 
     return teamData
   }
@@ -114,16 +113,20 @@ export default class ServiceCatalogueService {
   }
 
   async getServiceArea({
-    serviceAreaId = 0,
+    serviceAreaDocumentId = '',
     serviceAreaSlug = '',
     withProducts = false,
   }: {
-    serviceAreaId?: number
+    serviceAreaDocumentId?: string
     serviceAreaSlug?: string
     withProducts?: boolean
   }): Promise<ServiceArea> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const serviceAreaData = await strapiApiClient.getServiceArea({ serviceAreaId, serviceAreaSlug, withProducts })
+    const serviceAreaData = await strapiApiClient.getServiceArea({
+      serviceAreaDocumentId,
+      serviceAreaSlug,
+      withProducts,
+    })
 
     return serviceAreaData
   }
@@ -137,10 +140,9 @@ export default class ServiceCatalogueService {
     return productSets
   }
 
-  async getProductSet({ productSetId = 0 }: { productSetId: number }): Promise<ProductSet> {
+  async getProductSet({ productSetDocumentId = '' }: { productSetDocumentId: string }): Promise<ProductSet> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const productSetData = await strapiApiClient.getProductSet({ productSetId })
-
+    const productSetData = await strapiApiClient.getProductSet({ productSetDocumentId })
     return productSetData
   }
 
@@ -152,14 +154,14 @@ export default class ServiceCatalogueService {
   }
 
   async getNamespace({
-    namespaceId = 0,
+    namespaceDocumentId = '',
     namespaceSlug = '',
   }: {
-    namespaceId?: number
+    namespaceDocumentId?: string
     namespaceSlug?: string
   }): Promise<Namespace> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const namespaceData = await strapiApiClient.getNamespace({ namespaceId, namespaceSlug })
+    const namespaceData = await strapiApiClient.getNamespace({ namespaceDocumentId, namespaceSlug })
 
     return namespaceData
   }
@@ -242,14 +244,17 @@ export default class ServiceCatalogueService {
   }
 
   async getCustomComponentView({
-    customComponentId = 0,
+    customComponentDocumentId = '',
     withEnvironments = false,
   }: {
-    customComponentId: number
+    customComponentDocumentId: string
     withEnvironments?: boolean
   }): Promise<CustomComponentView> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const customComponentData = await strapiApiClient.getCustomComponentView({ customComponentId, withEnvironments })
+    const customComponentData = await strapiApiClient.getCustomComponentView({
+      customComponentDocumentId,
+      withEnvironments,
+    })
 
     return customComponentData
   }
@@ -270,7 +275,7 @@ export default class ServiceCatalogueService {
     return strapiApiClient.postGithubRepoRequest(request)
   }
 
-  async getEnvironments(): Promise<DataItem<Environment>[]> {
+  async getEnvironments(): Promise<Environment[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const environmentData = await strapiApiClient.getEnvironments()
     const environmentList = environmentData.data
