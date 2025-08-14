@@ -87,6 +87,34 @@ jQuery(function () {
         $(row).addClass('active-alert')
       }
     },
+    ajaxErrorHandler: function (jqXHR, textStatus, errorThrown) {
+      $('#alertsErrorStatus').html(
+        `<div role="region" class="moj-alert moj-alert--error" aria-label="error: Unable to load alerts data. Please try again later" data-module="moj-alert">
+          <div>
+            <svg
+              class="moj-alert__icon"
+              role="presentation"
+              focusable="false"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 30 30"
+              height="30"
+              width="30"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M20.1777 2.5H9.82233L2.5 9.82233V20.1777L9.82233 27.5H20.1777L27.5 20.1777V9.82233L20.1777 2.5ZM10.9155 8.87769L15.0001 12.9623L19.0847 8.87771L21.1224 10.9154L17.0378 15L21.1224 19.0846L19.0847 21.1222L15.0001 17.0376L10.9155 21.1223L8.87782 19.0846L12.9624 15L8.87783 10.9153L10.9155 8.87769Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+          <div class="moj-alert__content">
+            Unable to load alerts data. Please try again later
+          </div>
+        </div>`,
+      )
+      console.error('DataTables error:', textStatus, errorThrown, jqXHR)
+    },
   })
 
   // Alerts API called every 5 seconds. If a dropdown is open, timer increases and API called every 30 seconds
@@ -107,6 +135,8 @@ jQuery(function () {
 
   // xhr event is fired when an Ajax request is completed, whether it is successful (data refreshes) or there's an error
   alertsTable.on('xhr', function (_e, settings, json) {
+    $('#alertsErrorStatus').empty()
+
     alertsData = Array.isArray(json) ? json : json.data || []
     if (!alertsData || !alertsData.length) return
 
