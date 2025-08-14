@@ -178,7 +178,9 @@ function populateTeamDropdown(data) {
 }
 
 function teamFilterFunction(filters) {
-  return filters.team && rowData.team !== filters.team
+  return function (_settings, _data, _dataIndex, rowData) {
+    return !(filters.team && rowData.team !== filters.team)
+  }
 }
 
 function getFiltersFromUI() {
