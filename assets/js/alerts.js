@@ -9,8 +9,9 @@ jQuery(function () {
   let currentFilters = getFiltersFromURL()
   // alertsData will hold the most recently fetched data
   let alertsData = []
-  // timer ticks if a dropdown is open, data fetches every 30 seconds instead of 5
+  // timer ticks if a dropdown is open or when navigating table pages, data fetches every 30 seconds instead of 5
   let isDropDownOpen = false
+  let isPaginationActive = false
   let timer = 0
 
   const columns = [
@@ -41,6 +42,8 @@ jQuery(function () {
     },
     {
       data: 'labels.alert_slack_channel',
+      // default content to handle missing column data - prevents rendering issues for when no data for slack channel
+      defaultContent: 'N/A',
       createdCell: function (td, _cellData, rowData) {
         const slackName = rowData.labels.alert_slack_channel || 'N/A'
         const slackNameNoHashtag = slackName.slice(1) // removes #
@@ -85,15 +88,44 @@ jQuery(function () {
         $(row).addClass('active-alert')
       }
     },
+    ajaxErrorHandler: function (jqXHR, textStatus, errorThrown) {
+      $('#alertsErrorStatus').html(
+        `<div role="region" class="moj-alert moj-alert--error" aria-label="error: Unable to load alerts data. Please try again later" data-module="moj-alert">
+          <div>
+            <svg
+              class="moj-alert__icon"
+              role="presentation"
+              focusable="false"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 30 30"
+              height="30"
+              width="30"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M20.1777 2.5H9.82233L2.5 9.82233V20.1777L9.82233 27.5H20.1777L27.5 20.1777V9.82233L20.1777 2.5ZM10.9155 8.87769L15.0001 12.9623L19.0847 8.87771L21.1224 10.9154L17.0378 15L21.1224 19.0846L19.0847 21.1222L15.0001 17.0376L10.9155 21.1223L8.87782 19.0846L12.9624 15L8.87783 10.9153L10.9155 8.87769Z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
+          <div class="moj-alert__content">
+            Unable to load alerts data. Please try again later
+          </div>
+        </div>`,
+      )
+      console.error('DataTables error:', textStatus, errorThrown, jqXHR)
+    },
   })
 
-  // Alerts API called every 5 seconds. If a dropdown is open, timer increases and API called every 30 seconds
+  // Alerts API called every 5 seconds. If slow mode, timer increases and API called every 30 seconds
   setInterval(function () {
+    const slowMode = isDropDownOpen || isPaginationActive
     const { newTime, dataShouldRefresh } = isDataThirtySecondsOld(timer)
     timer = newTime
 
     // Timer resets to 0 when API called
-    if (!isDropDownOpen || dataShouldRefresh) {
+    if (!slowMode || dataShouldRefresh) {
       alertsTable.ajax.reload(null, false) // user paging is not reset on reload
       timer = 0
       lastUpdatedTime()
@@ -105,6 +137,8 @@ jQuery(function () {
 
   // xhr event is fired when an Ajax request is completed, whether it is successful (data refreshes) or there's an error
   alertsTable.on('xhr', function (_e, settings, json) {
+    $('#alertsErrorStatus').empty()
+
     alertsData = Array.isArray(json) ? json : json.data || []
     if (!alertsData || !alertsData.length) return
 
@@ -113,7 +147,7 @@ jQuery(function () {
     // Registers allFiltersChecker as a Datatable custom filter function. Determines if a row should be displayed in the table
     $.fn.dataTable.ext.search = []
     $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
-    alertsTable.draw()
+    alertsTable.draw(false)
   })
 
   // On click of any 'Update' button to apply filters. Button ids mapped to corresponding filter's key
@@ -167,10 +201,11 @@ jQuery(function () {
     filterOrResetDropdowns(alertsData, currentFilters)
   })
 
-  // Toggles fetch frequency between 5 and 30 seconds, and changes message when using dropdowns
+  // Toggles fetch frequency between 5 and 30 seconds, and changes message when using dropdowns / pages
   $(document).on('mousedown', e => {
-    isDropDownOpen = e.target.tagName.toLowerCase() === 'select'
-    alertsUpdateFrequencyMessage(isDropDownOpen)
+    isDropDownOpen = $(e.target).is('select')
+    isPaginationActive = $(e.target).closest('.dt-paging-button').length > 0
+    alertsUpdateFrequencyMessage(isDropDownOpen || isPaginationActive)
   })
 })
 
@@ -196,8 +231,8 @@ function formatTimeStamp(dateString) {
   }
 }
 
-function alertsUpdateFrequencyMessage(isDropDownOpen) {
-  const frequency = isDropDownOpen ? 30 : 5
+function alertsUpdateFrequencyMessage(isSlowMode) {
+  const frequency = isSlowMode ? 30 : 5
   $('#alertsFetchStatus').empty()
   return $('#alertsFetchStatus').append(
     `<div class="govuk-inset-text">Alerts are being updated every <strong>${frequency}</strong> seconds</div>`,

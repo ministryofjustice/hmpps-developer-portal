@@ -178,13 +178,19 @@ function populateTeamDropdown(data) {
 }
 
 function teamFilterFunction(filters) {
-  return filters.team && rowData.team !== filters.team
+  return function (_settings, _data, _dataIndex, rowData) {
+    return !(filters.team && rowData.team !== filters.team)
+  }
 }
 
 function getFiltersFromUI() {
-  const results = $('input:checkbox[name=results]:checked').map(checkbox => checkbox.val())
+  const results = $('input:checkbox[name=results]:checked')
+    .map((i, el) => $(el).val())
+    .get()
 
-  const exemption = $('input:checkbox[name=exemption]:checked').map(checkbox => checkbox.val())
+  const exemption = $('input:checkbox[name=exemption]:checked')
+    .map((i, el) => $(el).val())
+    .get()
 
   return {
     team: teamFilter.value,

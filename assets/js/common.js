@@ -14,6 +14,7 @@ function createTable({
   columnDropdowns = false,
   columnSearchText = true,
   createdRow,
+  ajaxErrorHandler,
 }) {
   const semverTidy = semVer => {
     // sometimes comes through as a number which has no match method
@@ -30,11 +31,13 @@ function createTable({
   const ajax = ajaxUrl && {
     url: ajaxUrl,
     dataSrc: '',
-    error: function () {
-      if (ajaxUrl !== undefined) {
-        alert('An error occurred when loading table data.') // eslint-disable-line no-undef
-      }
-    },
+    error:
+      ajaxErrorHandler ||
+      function () {
+        if (ajaxUrl !== undefined) {
+          alert('An error occurred when loading table data.') // eslint-disable-line no-undef
+        }
+      },
   }
   $.extend($.fn.dataTable.ext.type.order, {
     'semver-asc': function (a, b) {
