@@ -258,7 +258,6 @@ function allFiltersChecker(filters) {
 
 // Filters alerts data by dropdowns, returning an array of matching rows. Used to dynamically update dropdown options
 function getFilteredData(data, filters) {
-  console.log(data)
   return data.filter(
     rowData =>
       (!filters.application || rowData.labels.application === filters.application) &&

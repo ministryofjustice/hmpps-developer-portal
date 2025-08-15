@@ -99,6 +99,6 @@ export default class AlertsService {
 
   getAlertName = (req: Request): string => {
     const alertName = req.params?.alertName || ''
-    return alertName // .replace(/[^-a-z0-9]/g, '')
+    return alertName
   }
 }
