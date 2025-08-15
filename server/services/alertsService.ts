@@ -49,7 +49,7 @@ export default class AlertsService {
   }
 
   // map environment keys to the alert environment
-  async mapAlertEnvironments(alerts: Alert[]) {
+  async mapAlertEnvironments(alerts: Alert[]): Promise<Alert[]> {
     const updatedAlerts = Array.isArray(alerts) ? [...alerts] : []
     return updatedAlerts.map(alert => {
       const updatedAlert = { ...alert }
@@ -84,7 +84,6 @@ export default class AlertsService {
         alertsData.map(alert => alert.labels?.environment || 'none').map(mapToCanonicalEnv), // Map to canonical form
       ),
     ].sort()
-
     // Format environments for dropdown with blank default option
     const environments = [
       { text: '', value: '', selected: true },
