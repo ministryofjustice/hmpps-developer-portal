@@ -45,7 +45,6 @@ export default class TeamsSummaryCountService {
         const productResp: Product = await this.strapiClient('').getProduct({ productSlug })
         const components = Array.isArray(productResp) ? productResp[0]?.components || [] : productResp?.components || []
 
-        logger.info(`[getComponentsForProducts] Found ${components.length} components for product ${product.name}`)
         return { name: product.name, components }
       } catch (err) {
         logger.error(`[getComponentsForProducts] Error fetching components for product ${product.name}:`, err)
@@ -169,36 +168,35 @@ export default class TeamsSummaryCountService {
       const componentNamesSet = new Set(validComponents)
 
       const counts = trivyScans.reduce(
-        (accumulator, scan) => {
+        (vulnerabilityCounts, scan) => {
           if (!componentNamesSet.has(formatMonitorName(scan.name))) {
-            return accumulator
+            return vulnerabilityCounts
           }
 
           const vulns = [
-            ...(scan?.scan_summary?.scan_result?.['os-pkgs'] || []),
-            ...(scan?.scan_summary?.scan_result?.['lang-pkgs'] || []),
+            ...(scan?.scan_summary?.scan_result?.['os-pkgs'] ?? []),
+            ...(scan?.scan_summary?.scan_result?.['lang-pkgs'] ?? []),
           ]
 
-          return vulns.reduce((innerAccumulator, vuln) => {
+          return vulns.reduce((innerCounts, vuln) => {
             if (vuln.Severity === 'CRITICAL') {
               return {
-                ...innerAccumulator,
-                critical: innerAccumulator.critical + 1,
+                ...innerCounts,
+                critical: innerCounts.critical + 1,
               }
             }
             if (vuln.Severity === 'HIGH') {
               return {
-                ...innerAccumulator,
-                high: innerAccumulator.high + 1,
+                ...innerCounts,
+                high: innerCounts.high + 1,
               }
             }
-            return innerAccumulator
-          }, accumulator)
+            return innerCounts
+          }, vulnerabilityCounts)
         },
         { critical: 0, high: 0 },
       )
 
-      logger.info(`[Trivy] Total CRITICAL: ${counts.critical}, HIGH: ${counts.high}`)
       return counts
     } catch (err) {
       logger.error('Error in getTeamTrivyVulnerabilityCounts:', err)
