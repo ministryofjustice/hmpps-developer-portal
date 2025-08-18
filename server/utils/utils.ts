@@ -136,8 +136,11 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
 }
 
 export function findTeamMatch(teams: Team[], name: string) {
+  const formattedName = formatMonitorName(name)
   return teams.find(team =>
-    team?.products?.some(product => product?.components?.some(component => component.name === name)),
+    team?.products?.some(product =>
+      product?.components?.some(component => formatMonitorName(component.name) === formattedName),
+    ),
   )
 }
 
