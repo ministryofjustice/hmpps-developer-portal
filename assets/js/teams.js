@@ -9,10 +9,13 @@ jQuery(function () {
     {
       data: 'slack_channel_name',
       createdCell: function (td, _cellData, rowData) {
-        if (rowData.slack_channel_id)
+        if (rowData.slack_channel_id && rowData.slack_channel_name) {
           $(td).html(
             `<a href="slack://channel?team=T02DYEB3A&id=${rowData.slack_channel_id}">#${rowData.slack_channel_name}</a>`,
           )
+        } else {
+          $(td).html('N/A')
+        }
       },
     },
     {
