@@ -149,7 +149,7 @@
     </tr>
     <tr>
       <th>Alerts Slack Channel</th>
-      <td>{{ component.environment.alerts_slack_channel }}</td>
+      <td>{% if component.environment.alerts_slack_channel %}{{ component.environment.alerts_slack_channel }}{% else %}N/A{% endif %}</td>
     </tr>
     <tr>
       <th>Trivy Scan Results</th>
