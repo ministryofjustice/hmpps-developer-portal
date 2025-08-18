@@ -45,7 +45,6 @@ export default class TeamsSummaryCountService {
         const productResp: Product = await this.strapiClient('').getProduct({ productSlug })
         const components = Array.isArray(productResp) ? productResp[0]?.components || [] : productResp?.components || []
 
-        logger.info(`[getComponentsForProducts] Found ${components.length} components for product ${product.name}`)
         return { name: product.name, components }
       } catch (err) {
         logger.error(`[getComponentsForProducts] Error fetching components for product ${product.name}:`, err)
@@ -175,72 +174,53 @@ export default class TeamsSummaryCountService {
       let summaryUnfixedHigh = 0
 
       const counts = trivyScans.reduce(
-        (accumulator, scan) => {
+        (vulnerabilityCounts, scan) => {
           if (!componentNamesSet.has(formatMonitorName(scan.name))) {
-            return accumulator
+            return vulnerabilityCounts
           }
 
           // Log summary-based counts (like Trivy table uses)
           const summary = scan?.scan_summary?.summary
-          if (summary) {
-            const osFixedCritical = summary?.['os-pkgs']?.fixed?.CRITICAL || 0
-            const langFixedCritical = summary?.['lang-pkgs']?.fixed?.CRITICAL || 0
-            const osFixedHigh = summary?.['os-pkgs']?.fixed?.HIGH || 0
-            const langFixedHigh = summary?.['lang-pkgs']?.fixed?.HIGH || 0
-            const osUnfixedCritical = summary?.['os-pkgs']?.unfixed?.CRITICAL || 0
-            const langUnfixedCritical = summary?.['lang-pkgs']?.unfixed?.CRITICAL || 0
-            const osUnfixedHigh = summary?.['os-pkgs']?.unfixed?.HIGH || 0
-            const langUnfixedHigh = summary?.['lang-pkgs']?.unfixed?.HIGH || 0
+          const osFixedCritical = summary?.['os-pkgs']?.fixed?.CRITICAL ?? 0
+          const langFixedCritical = summary?.['lang-pkgs']?.fixed?.CRITICAL ?? 0
+          const osFixedHigh = summary?.['os-pkgs']?.fixed?.HIGH ?? 0
+          const langFixedHigh = summary?.['lang-pkgs']?.fixed?.HIGH ?? 0
+          const osUnfixedCritical = summary?.['os-pkgs']?.unfixed?.CRITICAL ?? 0
+          const langUnfixedCritical = summary?.['lang-pkgs']?.unfixed?.CRITICAL ?? 0
+          const osUnfixedHigh = summary?.['os-pkgs']?.unfixed?.HIGH ?? 0
+          const langUnfixedHigh = summary?.['lang-pkgs']?.unfixed?.HIGH ?? 0
 
-            summaryFixedCritical += osFixedCritical + langFixedCritical
-            summaryFixedHigh += osFixedHigh + langFixedHigh
-            summaryUnfixedCritical += osUnfixedCritical + langUnfixedCritical
-            summaryUnfixedHigh += osUnfixedHigh + langUnfixedHigh
-
-            logger.info(
-              `[Trivy Summary] Component: ${scan.name}, Fixed Critical: ${osFixedCritical + langFixedCritical}, Fixed High: ${osFixedHigh + langFixedHigh}, Unfixed Critical: ${osUnfixedCritical + langUnfixedCritical}, Unfixed High: ${osUnfixedHigh + langUnfixedHigh}`,
-            )
-          }
+          summaryFixedCritical += osFixedCritical + langFixedCritical
+          summaryFixedHigh += osFixedHigh + langFixedHigh
+          summaryUnfixedCritical += osUnfixedCritical + langUnfixedCritical
+          summaryUnfixedHigh += osUnfixedHigh + langUnfixedHigh
 
           const vulns = [
-            ...(scan?.scan_summary?.scan_result?.['os-pkgs'] || []),
-            ...(scan?.scan_summary?.scan_result?.['lang-pkgs'] || []),
+            ...(scan?.scan_summary?.scan_result?.['os-pkgs'] ?? []),
+            ...(scan?.scan_summary?.scan_result?.['lang-pkgs'] ?? []),
           ]
 
-          return vulns.reduce((innerAccumulator, vuln) => {
+          return vulns.reduce((innerCounts, vuln) => {
             if (vuln.Severity === 'CRITICAL') {
               return {
-                ...innerAccumulator,
-                critical: innerAccumulator.critical + 1,
+                ...innerCounts,
+                critical: innerCounts.critical + 1,
               }
             }
             if (vuln.Severity === 'HIGH') {
               return {
-                ...innerAccumulator,
-                high: innerAccumulator.high + 1,
+                ...innerCounts,
+                high: innerCounts.high + 1,
               }
             }
-            return innerAccumulator
-          }, accumulator)
+            return innerCounts
+          }, vulnerabilityCounts)
         },
         { critical: 0, high: 0 },
       )
 
       const totalSummaryCount = summaryFixedCritical + summaryFixedHigh + summaryUnfixedCritical + summaryUnfixedHigh
       const totalScanResultCount = counts.critical + counts.high
-
-      logger.info(
-        `[Trivy Comparison] Summary-based total (Fixed Critical + Fixed High + Unfixed Critical + Unfixed High): ${totalSummaryCount}`,
-      )
-      logger.info(`[Trivy Comparison] Scan result-based total (CRITICAL + HIGH): ${totalScanResultCount}`)
-      logger.info(
-        `[Trivy Comparison] Summary breakdown - Fixed Critical: ${summaryFixedCritical}, Fixed High: ${summaryFixedHigh}, Unfixed Critical: ${summaryUnfixedCritical}, Unfixed High: ${summaryUnfixedHigh}`,
-      )
-      logger.info(`[Trivy] Total CRITICAL: ${counts.critical}, HIGH: ${counts.high}`)
-      logger.info(`[Trivy Debug] Valid components for team: ${JSON.stringify(Array.from(componentNamesSet))}`)
-      logger.info(
-        `[Trivy Debug] Components that matched and had vulnerabilities: ${trivyScans.filter(scan => componentNamesSet.has(formatMonitorName(scan.name))).map(scan => scan.name)}`,
-      )
 
       return counts
     } catch (err) {
