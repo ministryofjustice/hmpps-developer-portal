@@ -53,7 +53,7 @@ jQuery(function () {
         const prodEnvironments = (rowData?.envs || []).filter(env => env.name === 'prod')
 
         if (prodEnvironments.length === 0) {
-          const displayVal = 'No Prod Environment'
+          const displayVal = 'N/A'
           const filterVal = displayVal
           const sortVal = 'zzzzz'
           if (type === 'display') return displayVal
@@ -62,9 +62,9 @@ jQuery(function () {
         }
 
         const displayList = prodEnvironments.map(env =>
-          env.alerts_slack_channel === null ? 'Not set' : env.alerts_slack_channel,
+          env.alerts_slack_channel === null ? 'N/A' : env.alerts_slack_channel,
         )
-        const filterList = prodEnvironments.map(env => env.alerts_slack_channel || 'Not set')
+        const filterList = prodEnvironments.map(env => env.alerts_slack_channel || 'N/A')
         const sortList = prodEnvironments
           .map(env => {
             const channel = env.alerts_slack_channel
