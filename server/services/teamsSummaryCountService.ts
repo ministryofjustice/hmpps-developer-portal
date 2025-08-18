@@ -167,33 +167,11 @@ export default class TeamsSummaryCountService {
 
       const componentNamesSet = new Set(validComponents)
 
-      // Track summary-based counts for comparison
-      let summaryFixedCritical = 0
-      let summaryFixedHigh = 0
-      let summaryUnfixedCritical = 0
-      let summaryUnfixedHigh = 0
-
       const counts = trivyScans.reduce(
         (vulnerabilityCounts, scan) => {
           if (!componentNamesSet.has(formatMonitorName(scan.name))) {
             return vulnerabilityCounts
           }
-
-          // Log summary-based counts (like Trivy table uses)
-          const summary = scan?.scan_summary?.summary
-          const osFixedCritical = summary?.['os-pkgs']?.fixed?.CRITICAL ?? 0
-          const langFixedCritical = summary?.['lang-pkgs']?.fixed?.CRITICAL ?? 0
-          const osFixedHigh = summary?.['os-pkgs']?.fixed?.HIGH ?? 0
-          const langFixedHigh = summary?.['lang-pkgs']?.fixed?.HIGH ?? 0
-          const osUnfixedCritical = summary?.['os-pkgs']?.unfixed?.CRITICAL ?? 0
-          const langUnfixedCritical = summary?.['lang-pkgs']?.unfixed?.CRITICAL ?? 0
-          const osUnfixedHigh = summary?.['os-pkgs']?.unfixed?.HIGH ?? 0
-          const langUnfixedHigh = summary?.['lang-pkgs']?.unfixed?.HIGH ?? 0
-
-          summaryFixedCritical += osFixedCritical + langFixedCritical
-          summaryFixedHigh += osFixedHigh + langFixedHigh
-          summaryUnfixedCritical += osUnfixedCritical + langUnfixedCritical
-          summaryUnfixedHigh += osUnfixedHigh + langUnfixedHigh
 
           const vulns = [
             ...(scan?.scan_summary?.scan_result?.['os-pkgs'] ?? []),
