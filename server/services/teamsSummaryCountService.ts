@@ -219,9 +219,6 @@ export default class TeamsSummaryCountService {
         { critical: 0, high: 0 },
       )
 
-      const totalSummaryCount = summaryFixedCritical + summaryFixedHigh + summaryUnfixedCritical + summaryUnfixedHigh
-      const totalScanResultCount = counts.critical + counts.high
-
       return counts
     } catch (err) {
       logger.error('Error in getTeamTrivyVulnerabilityCounts:', err)
