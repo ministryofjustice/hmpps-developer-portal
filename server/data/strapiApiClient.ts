@@ -209,7 +209,7 @@ export default class StrapiApiClient {
     const query = namespaceSlug ? `filters[name][$eq]=${namespaceSlug}&${populate}` : populate
     const path = namespaceSlug ? '/v1/namespaces' : `/v1/namespaces/${namespaceDocumentId}`
 
-    return this.restClient.get<SingleResponse<Strapi.Namespace>>({ path, query }).then(response => unwrapSingleResponse)
+    return this.restClient.get<SingleResponse<Strapi.Namespace>>({ path, query }).then(unwrapSingleResponse)
   }
 
   async getProductSets(): Promise<ProductSet[]> {
