@@ -1,9 +1,24 @@
 const teamFilter = document.getElementById('team')
+const form = document.getElementById('veracodeForm')
+const checkboxes = document.querySelectorAll('input[type="checkbox"]')
+
+let currentFilters = {}
 
 jQuery(function () {
-  let currentFilters = getFiltersFromURL()
+  currentFilters = getFiltersFromURL()
 
-  const rootDataUrl = '/veracode/data'
+  // If no filters on load, default to 'failed' results
+  if (areFiltersBlank(currentFilters)) {
+    const failCheckbox = document.querySelector('input[name="results"][value="failed"]')
+    if (failCheckbox) failCheckbox.checked = true
+    currentFilters = getFiltersFromUI()
+    updateURLParams(currentFilters)
+  } else {
+    teamFilter.value = currentFilters.team
+    setCheckboxes(currentFilters)
+  }
+  const rootDataUrl = buildAjaxUrl(currentFilters)
+
   const columns = [
     {
       data: 'name',
@@ -104,7 +119,7 @@ jQuery(function () {
 
   const veracodeTable = createTable({
     id: 'veracodeTable',
-    ajaxUrl: `${rootDataUrl}?results=failed`,
+    ajaxUrl: `${rootDataUrl}`,
     orderColumn: 6,
     orderType: 'desc',
     columns,
@@ -112,73 +127,28 @@ jQuery(function () {
 
   veracodeTable.on('xhr', function (_e, settings, json) {
     const rawData = Array.isArray(json) ? json : json.data || []
-
     if (!rawData || !rawData.length) return
 
     populateTeamDropdown(rawData)
+    setCheckboxes(currentFilters)
 
-    // Register team filter function
-    $.fn.dataTable.ext.search = []
     $.fn.dataTable.ext.search.push(teamFilterFunction(currentFilters))
     veracodeTable.draw()
   })
 
-  function populateTeamDropdown(data) {
-    const teams = [...new Set(data.map(item => item.team))].sort()
-    const $teamSelect = $('#team')
-    $teamSelect.empty().append('<option value="">All teams</option>')
-
-    teams.forEach(team => {
-      $teamSelect.append(`<option value="${team}">${team}</option>`)
-    })
-
-    // Set value from URL param on load
-    if (currentFilters.team) {
-      $teamSelect.val(currentFilters.team)
-    }
-  }
-
-  function teamFilterFunction(filters) {
-    return function (_settings, _data, _dataIndex, rowData) {
-      if (filters.team && rowData.team !== filters.team) return false
-      return true
-    }
-  }
-
-  $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
-    'change',
-    e => {
-      e.preventDefault(e)
-      const selectedResultFilters = []
-      const selectedExemptionFilters = []
-
-      $('input:checkbox[name=results]:checked').each(function () {
-        selectedResultFilters.push($(this).val())
-      })
-
-      $('input:checkbox[name=exemption]:checked').each(function () {
-        selectedExemptionFilters.push($(this).val())
-      })
-
-      const newDataUrl = `${rootDataUrl}?results=${selectedResultFilters.join(',')}&exemption=${selectedExemptionFilters.join(',')}`
-
-      veracodeTable.ajax.url(newDataUrl).load()
-    },
-  )
-
-  $('#updateTeam').on('click', function (e) {
+  // On dropdown update or checkbox change
+  $(
+    '#updateTeam,.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input',
+  ).on('click change', e => {
     e.preventDefault()
-
-    const selectedTeam = $('#team').val()
-    currentFilters.team = selectedTeam
-
-    // Update URL without reload
+    //newDataUrl = updateURLParams()
+    currentFilters = getFiltersFromUI()
     updateURLParams(currentFilters)
-
-    // Reapply filter
-    $.fn.dataTable.ext.search = []
-    $.fn.dataTable.ext.search.push(teamFilterFunction(currentFilters))
-    veracodeTable.draw(false)
+    const newDataUrl = buildAjaxUrl(currentFilters)
+    veracodeTable.ajax.url(newDataUrl).load(() => {
+      $.fn.dataTable.ext.search = [teamFilterFunction(currentFilters)]
+      veracodeTable.draw()
+    })
   })
 })
 
@@ -187,13 +157,76 @@ function getFiltersFromURL() {
   const params = new URLSearchParams(location.search)
   return {
     team: params.get('team') || '',
+    results: params.get('results') ? params.get('results').split(',') : [],
+    exemption: params.get('exemption') ? params.get('exemption').split(',') : [],
   }
 }
 
-// add current filters to Url params
-function updateURLParams(filters) {
-  const params = new URLSearchParams()
-  if (filters.team) params.set('team', filters.team)
+function populateTeamDropdown(data) {
+  const teams = [...new Set(data.map(item => item.team))].sort()
+  const $teamSelect = $('#team')
+  $teamSelect.empty().append('<option value="">All teams</option>')
 
-  history.replaceState(null, '', `?${params.toString()}`)
+  teams.forEach(team => {
+    $teamSelect.append(`<option value="${team}">${team}</option>`)
+  })
+
+  // Set value from URL param on load
+  if (currentFilters.team) {
+    $teamSelect.val(currentFilters.team)
+  }
+}
+
+function teamFilterFunction(filters) {
+  return function (_settings, _data, _dataIndex, rowData) {
+    return !(filters.team && rowData.team !== filters.team)
+  }
+}
+
+function getFiltersFromUI() {
+  const results = $('input:checkbox[name=results]:checked')
+    .map((i, el) => $(el).val())
+    .get()
+
+  const exemption = $('input:checkbox[name=exemption]:checked')
+    .map((i, el) => $(el).val())
+    .get()
+
+  return {
+    team: teamFilter.value,
+    results,
+    exemption,
+  }
+}
+
+// Add current filters to Url params
+function updateURLParams(currentFilters) {
+  const newParams = new URLSearchParams()
+
+  if (currentFilters.team) newParams.set('team', currentFilters.team)
+  if (currentFilters.results.length) newParams.set('results', currentFilters.results.join(','))
+  if (currentFilters.exemption.length) newParams.set('exemption', currentFilters.exemption.join(','))
+
+  const newUrl = `${window.location.pathname}?${newParams.toString()}`
+  window.history.replaceState({}, '', newUrl)
+}
+
+function buildAjaxUrl(currentFilters) {
+  const params = new URLSearchParams()
+  if (currentFilters.results.length) params.set('results', currentFilters.results.join(','))
+  if (currentFilters.exemption.length) params.set('exemption', currentFilters.exemption.join(','))
+  return `/veracode/data?${params.toString()}`
+}
+
+function setCheckboxes(currentFilters) {
+  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    const { name, value } = checkbox
+    checkbox.checked =
+      (name === 'results' && currentFilters.results.includes(value)) ||
+      (name === 'exemption' && currentFilters.exemption.includes(value))
+  })
+}
+
+function areFiltersBlank(currentfilters) {
+  return currentfilters.team === '' && currentfilters.results.length === 0 && currentfilters.exemption.length === 0
 }

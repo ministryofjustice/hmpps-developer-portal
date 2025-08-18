@@ -3,6 +3,7 @@
 
 {% set pageTitle = applicationName + " - Alerts" %}
 {% set mainClasses = "app-container govuk-body" %}
+{% set containerClasses = "wide-screen" %}
 
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
@@ -98,7 +99,7 @@
             text: "Update",
             element: "button",
             attributes: { "data-associated-select-id": "namespace", "data-type-name": "namespaces"}
-        }) }}
+          }) }}
         </div>
         <div class="label-and-button">
           {{ govukSelect({
@@ -116,8 +117,8 @@
             element: "button",
             attributes: { "data-associated-select-id": "severityLabel", "data-type-name": "severity-labels"}
           }) }}
-          </div>
-                  <div class="label-and-button">
+        </div>
+        <div class="label-and-button">
           {{ govukSelect({
             id: "team",
             name: "team",
@@ -133,33 +134,43 @@
             element: "button",
             attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
           }) }}
-          </div>
         </div>
-        <div class="alert-reset-button">
-          {{ govukButton({
-            id: "resetFilters",
-            name: "resetFilters",
-            text: "Reset Filters",
-            element: "button"
-          }) }}
-        </div>
+      </div>
+      <div class="alert-reset-button">
+        {{ govukButton({
+          id: "resetFilters",
+          name: "resetFilters",
+          text: "Reset Filters",
+          element: "button"
+        }) }}
+      </div>
     </div>
   </form>
-
+  
   <p id="lastUpdated"></p>
+  <div id="alertsErrorStatus"></div>
 
-  <table id="alertsStatusTable">
+  <table id="alertsTable" class="stripe display" cellspacing="0">
     <thead>
       <tr>
-        <th class="col-alertname">Alertname</th>
-        <th class="col-startedAt">Started at</th>
-        <th class="col-message">Message</th>
-        <th class="col-slackChannel">Slack Channel</th>
-        <th class="col-links">Links</th>
+        <th>Alertname</th>
+        <th>Started at</th>
+        <th>Message</th>
+        <th>Application</th>
+        <th>Slack Channel</th>
+        <th>Links</th>
       </tr>
     </thead>
-    <tbody id="statusRows">
-    </tbody>
+    <tfoot>
+      <tr>
+        <th>Alertname</th>
+        <th>Started at</th>
+        <th>Message</th>
+        <th>Application</th>
+        <th>Slack Channel</th>
+        <th>Links</th>
+      </tr>
+    </tfoot>
   </table>
 
 {% endblock %}
@@ -168,5 +179,6 @@
   <script type="module" src="/assets/frontendInit.js"></script>
   <script src="/assets/js/dayjs/dayjs.min.js"></script>
   <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
+  <script src="/assets/js/common.js"></script>
   <script src="/assets/js/alerts.js"></script>
 {% endblock %}

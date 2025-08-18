@@ -4,8 +4,7 @@ import * as dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { formatDate } from 'date-fns'
 
-import { Alert, RdsEntry } from '../@types'
-import { Environment } from '../data/strapiApiTypes'
+import { RdsEntry } from '../@types'
 import { TrivyScanType } from '../data/converters/modelTypes'
 
 import type { ServiceCatalogueService } from '../services'
@@ -13,7 +12,7 @@ import type { Team } from '../data/modelTypes'
 
 dayjs.extend(relativeTime.default)
 
-type HasName = { attributes?: { name: string } }
+type HasName = { name: string }
 type HasRepoName = { github_repo?: string }
 type HasTeamName = { team_name?: string }
 
@@ -73,18 +72,8 @@ export const formatMonitorName = (name: string): string => {
     .replace(/-+/g, '-')
 }
 
-export const getAlertType = (req: Request): string => {
-  const { alertType } = req.params
-  return ['application', 'environment', 'namespace', 'severity'].includes(alertType) ? alertType : 'all'
-}
-
-export const getAlertName = (req: Request): string => {
-  const alertName = req.params?.alertName || ''
-  return alertName // .replace(/[^-a-z0-9]/g, '')
-}
-
 export const sortData = (dataItem: HasName, compareDataItem: HasName) => {
-  return dataItem.attributes.name.localeCompare(compareDataItem.attributes.name)
+  return dataItem.name.localeCompare(compareDataItem.name)
 }
 
 export const sortByName = (dataItem: { name?: string }, compareDataItem: { name?: string }) => {
@@ -150,25 +139,13 @@ export function mapToCanonicalEnv(envName: string): CanonicalEnv {
   return 'none'
 }
 
-function findTeamMatch(teams: Team[], name: string) {
+export function findTeamMatch(teams: Team[], name: string) {
+  const formattedName = formatMonitorName(name)
   return teams.find(team =>
-    team?.products?.some(product => product?.components?.some(component => component.name === name)),
+    team?.products?.some(product =>
+      product?.components?.some(component => formatMonitorName(component.name) === formattedName),
+    ),
   )
-}
-
-// Match alert data to corresponding environments and components to get slack channel and team properties
-export const addNewPropertiesToAlert = (revisedAlerts: Alert[], environments: Environment[], teams: Team[]) => {
-  return revisedAlerts.map(alert => {
-    const envMatch = environments.find(env => env.alert_severity_label === alert.labels.severity)
-    const teamMatch = findTeamMatch(teams, alert.labels.application)
-
-    const updatedAlert = { ...alert }
-
-    if (envMatch) updatedAlert.labels.alert_slack_channel = envMatch.alerts_slack_channel
-    if (teamMatch) updatedAlert.labels.team = teamMatch.name
-
-    return updatedAlert
-  })
 }
 
 export async function addTeamToTrivyScan(teams: Team[], trivyScan: TrivyScanType[]) {
@@ -181,25 +158,6 @@ export async function addTeamToTrivyScan(teams: Team[], trivyScan: TrivyScanType
 
     return updatedScan
   })
-}
-
-// map environment keys to the alert environment
-export const mapAlertEnvironments = (alerts: Alert[]) => {
-  const updatedAlerts = Array.isArray(alerts) ? [...alerts] : []
-  return updatedAlerts.map(alert => {
-    const updatedAlert = { ...alert }
-    // Map alert environment to canonical form, even if it's an empty string
-    if (updatedAlert.labels && 'environment' in updatedAlert.labels) {
-      updatedAlert.labels.environment = mapToCanonicalEnv(updatedAlert.labels.environment)
-    }
-    return updatedAlert
-  })
-}
-export const reviseAlerts = (alerts: Alert[], environments: Environment[], teams: Team[]) => {
-  const revisedEnvAlerts = mapAlertEnvironments(alerts)
-  const revisedAlerts = addNewPropertiesToAlert(revisedEnvAlerts, environments, teams)
-
-  return revisedAlerts
 }
 
 export const getDependencyName = (req: Request): string => {
