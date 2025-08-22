@@ -76,9 +76,10 @@ export default class MonitoringChannelService {
   private formatChannelName(name: string): string {
     return name
       .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
+      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and dashes
+      .replace(/\s+/g, '-') // Replace spaces with single dash
+      .replace(/-+/g, '-') // Replace multiple consecutive dashes with single dash
+      .replace(/^-+|-+$/g, '') // Remove leading and trailing dashes
       .trim()
   }
 
