@@ -46,8 +46,6 @@ export default class MonitoringChannelService {
       team.products.forEach((product: Product) => {
         if (product.components && product.components.length > 0) {
           product.components.forEach((component: Component) => {
-            const componentSlug = this.formatChannelName(component.name)
-
             recommendations.push({
               componentName: component.name,
               environments: {
