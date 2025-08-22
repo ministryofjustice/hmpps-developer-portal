@@ -20,8 +20,9 @@ export interface TeamChannelStructure {
   teamSlug: string
   recommendations: ChannelRecommendation[]
   suggestedChannels: {
-    nonLive: string
-    live: string
+    nonProd: string
+    prod: string
+    prodAlt: string
   }
 }
 
@@ -34,8 +35,9 @@ export default class MonitoringChannelService {
 
     const teamSlug = this.formatChannelName(team.name)
     const suggestedChannels = {
-      nonLive: `#${teamSlug}-alerts-non-live`,
-      live: `#${teamSlug}-alerts-live`,
+      nonProd: `#${teamSlug}-alerts-non-prod`,
+      prod: `#${teamSlug}-alerts-prod`,
+      prodAlt: `#${teamSlug}-alerts`,
     }
 
     const recommendations: ChannelRecommendation[] = []
@@ -49,9 +51,9 @@ export default class MonitoringChannelService {
             recommendations.push({
               componentName: component.name,
               environments: {
-                dev: suggestedChannels.nonLive,
-                preprod: suggestedChannels.nonLive,
-                prod: suggestedChannels.live,
+                dev: suggestedChannels.nonProd,
+                preprod: suggestedChannels.nonProd,
+                prod: suggestedChannels.prod,
               },
               currentChannels: this.extractCurrentChannels(component),
             })
@@ -82,7 +84,7 @@ export default class MonitoringChannelService {
 
   /**
    * Extract current alert channels from component data
-   * This is a placeholder - in reality, this would query the alerting system
+   * This simulates common channel patterns teams currently use
    */
   private extractCurrentChannels(component: Component): { dev?: string; preprod?: string; prod?: string } {
     // Placeholder logic - in a real implementation, this would:
@@ -92,18 +94,43 @@ export default class MonitoringChannelService {
 
     const currentChannels: { dev?: string; preprod?: string; prod?: string } = {}
 
-    // For now, we'll simulate some existing channels based on component environments
-    if (component.envs && component.envs.length > 0) {
-      component.envs.forEach(env => {
-        const envName = env.name.toLowerCase()
-        if (envName.includes('dev')) {
-          currentChannels.dev = `#existing-${this.formatChannelName(component.name)}-dev`
-        } else if (envName.includes('preprod') || envName.includes('staging')) {
-          currentChannels.preprod = `#existing-${this.formatChannelName(component.name)}-preprod`
-        } else if (envName.includes('prod')) {
-          currentChannels.prod = `#existing-${this.formatChannelName(component.name)}-prod`
-        }
-      })
+    // Simulate common current channel patterns that teams use
+    const componentSlug = this.formatChannelName(component.name)
+    const hasEnvironments = component.envs && component.envs.length > 0
+
+    if (hasEnvironments) {
+      // Simulate different channel patterns teams currently use
+      const channelPatterns = [
+        // Pattern 1: Old DPS shared channels (what we want to migrate away from)
+        {
+          dev: '#dps_alerts_non_prod',
+          preprod: '#dps_alerts_non_prod',
+          prod: '#dps_alerts',
+        },
+        // Pattern 2: Component-specific but inconsistent naming
+        {
+          dev: `#${componentSlug}-dev-alerts`,
+          preprod: `#${componentSlug}-staging-alerts`,
+          prod: `#${componentSlug}-alerts`,
+        },
+        // Pattern 3: Mixed patterns (some envs configured, others not)
+        {
+          dev: '#dps_alerts_non_prod',
+          preprod: undefined,
+          prod: `#${componentSlug}-prod`,
+        },
+        // Pattern 4: No current channels configured
+        {
+          dev: undefined,
+          preprod: undefined,
+          prod: undefined,
+        },
+      ]
+
+      // Randomly assign a pattern to simulate variety (in real implementation, this would be actual data)
+      const patternIndex =
+        Math.abs(componentSlug.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % channelPatterns.length
+      return channelPatterns[patternIndex]
     }
 
     return currentChannels

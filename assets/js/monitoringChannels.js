@@ -128,6 +128,13 @@ jQuery(function () {
         if (current === 'Not configured') {
           currentCell.style.backgroundColor = '#fff2d3'
           currentCell.style.borderLeft = '4px solid #ffbf47'
+        } else if (current.includes('#dps_alerts')) {
+          // Highlight legacy DPS channels that need migration
+          currentCell.style.backgroundColor = '#fef7f7'
+          currentCell.style.borderLeft = '4px solid #d4351c'
+          currentCell.innerHTML += ' <span style="color: #d4351c; font-weight: bold;">(Legacy - migrate)</span>'
+          recommendedCell.style.backgroundColor = '#f3f9f1'
+          recommendedCell.style.borderLeft = '4px solid #00703c'
         } else if (current !== recommended && !current.includes('Not configured')) {
           currentCell.style.backgroundColor = '#fef7f7'
           currentCell.style.borderLeft = '4px solid #d4351c'
@@ -161,8 +168,9 @@ jQuery(function () {
 
     // Extract channel recommendations
     const suggestedChannels = {
-      nonLive: document.querySelector('.govuk-list--bullet li strong')?.textContent.trim() || '',
-      live: document.querySelectorAll('.govuk-list--bullet li strong')[1]?.textContent.trim() || '',
+      nonProd: document.querySelector('.govuk-list--bullet li strong')?.textContent.trim() || '',
+      prod: document.querySelectorAll('.govuk-list--bullet li strong')[1]?.textContent.trim() || '',
+      prodAlt: document.querySelectorAll('.govuk-list--bullet li strong')[2]?.textContent.trim() || '',
     }
 
     // Extract component recommendations

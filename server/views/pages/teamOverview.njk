@@ -115,8 +115,9 @@
           <div class="govuk-grid-column-one-half">
             <h4 class="govuk-heading-s">Recommended Channels</h4>
             <ul class="govuk-list govuk-list--bullet">
-              <li><strong>{{ channelRecommendations.suggestedChannels.nonLive }}</strong> - For dev and preprod alerts</li>
-              <li><strong>{{ channelRecommendations.suggestedChannels.live }}</strong> - For production alerts</li>
+              <li><strong>{{ channelRecommendations.suggestedChannels.nonProd }}</strong> - For dev and preprod alerts</li>
+              <li><strong>{{ channelRecommendations.suggestedChannels.prod }}</strong> - For production alerts</li>
+              <li class="govuk-hint govuk-body-s">Alternative: <strong>{{ channelRecommendations.suggestedChannels.prodAlt }}</strong> - Shorter prod channel name</li>
             </ul>
           </div>
           <div class="govuk-grid-column-one-half">
@@ -195,8 +196,27 @@
             <li>Centralizes team alerts in dedicated channels</li>
             <li>Follows consistent naming conventions</li>
             <li>Enables better alert management and response times</li>
+            <li><strong>Migrates away from shared channels like #dps_alerts</strong> to team-specific channels</li>
           </ul>
         </div>
+
+        {% set hasLegacyChannels = false %}
+        {% for rec in channelRecommendations.recommendations %}
+          {% if rec.currentChannels.dev == '#dps_alerts_non_prod' or rec.currentChannels.preprod == '#dps_alerts_non_prod' or rec.currentChannels.prod == '#dps_alerts' %}
+            {% set hasLegacyChannels = true %}
+          {% endif %}
+        {% endfor %}
+
+        {% if hasLegacyChannels %}
+        <div class="govuk-warning-text">
+          <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+          <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Warning</span>
+            Your team is currently using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod). 
+            We recommend migrating to dedicated team channels for better alert management and reduced noise.
+          </strong>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>
