@@ -86,11 +86,6 @@ export default class MonitoringChannelService {
    * This simulates common channel patterns teams currently use
    */
   private extractCurrentChannels(component: Component): { dev?: string; preprod?: string; prod?: string } {
-    // Placeholder logic - in a real implementation, this would:
-    // 1. Query the alerting system (e.g., AlertManager, PagerDuty)
-    // 2. Look up current channel configurations
-    // 3. Map them to environments
-
     const currentChannels: { dev?: string; preprod?: string; prod?: string } = {}
 
     // Simulate common current channel patterns that teams use
