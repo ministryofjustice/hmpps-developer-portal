@@ -99,4 +99,132 @@
   </div>
 </div>
 
+{% if channelRecommendations %}
+<h3 class="govuk-heading-m">Monitoring Channel Recommendations</h3>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <div class="govuk-summary-card" data-test-id="monitoring-recommendations">
+      <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">Suggested Channel Structure</h2>
+      </div>
+      <div class="govuk-summary-card__content">
+        <p class="govuk-body">Based on your team's components, we recommend the following Slack channel structure for monitoring alerts:</p>
+        
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+            <h4 class="govuk-heading-s">Recommended Channels</h4>
+            <ul class="govuk-list govuk-list--bullet">
+              <li><strong>{{ channelRecommendations.suggestedChannels.nonProd }}</strong> - For dev and preprod alerts</li>
+              <li><strong>{{ channelRecommendations.suggestedChannels.prod }}</strong> - For production alerts</li>
+              <li class="govuk-hint govuk-body-s">Alternative: <strong>{{ channelRecommendations.suggestedChannels.prodAlt }}</strong> - Shorter prod channel name</li>
+            </ul>
+          </div>
+          <div class="govuk-grid-column-one-half">
+            <h4 class="govuk-heading-s">Channel Structure</h4>
+            <pre class="govuk-body-s" style="background-color: #f3f2f1; padding: 15px; border-radius: 4px; font-family: monospace;">{% for line in channelTree %}{{ line }}
+{% endfor %}</pre>
+          </div>
+        </div>
+
+        {% if channelRecommendations.recommendations.length > 0 %}
+        <details class="govuk-details" data-module="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+              Component-by-component breakdown
+            </span>
+          </summary>
+          <div class="govuk-details__text">
+            <table class="govuk-table">
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header">Component</th>
+                  <th scope="col" class="govuk-table__header">Environment</th>
+                  <th scope="col" class="govuk-table__header">Recommended Channel</th>
+                  <th scope="col" class="govuk-table__header">Current Channel</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                {% for rec in channelRecommendations.recommendations %}
+                  <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" rowspan="3">{{ rec.componentName }}</td>
+                    <td class="govuk-table__cell">Dev</td>
+                    <td class="govuk-table__cell">{{ rec.environments.dev }}</td>
+                    <td class="govuk-table__cell">
+                      {% if rec.currentChannels.dev %}
+                        {{ rec.currentChannels.dev }}
+                      {% else %}
+                        <span class="govuk-hint">Not configured</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Preprod</td>
+                    <td class="govuk-table__cell">{{ rec.environments.preprod }}</td>
+                    <td class="govuk-table__cell">
+                      {% if rec.currentChannels.preprod %}
+                        {{ rec.currentChannels.preprod }}
+                      {% else %}
+                        <span class="govuk-hint">Not configured</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                  <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">Prod</td>
+                    <td class="govuk-table__cell">{{ rec.environments.prod }}</td>
+                    <td class="govuk-table__cell">
+                      {% if rec.currentChannels.prod %}
+                        {{ rec.currentChannels.prod }}
+                      {% else %}
+                        <span class="govuk-hint">Not configured</span>
+                      {% endif %}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </details>
+        {% endif %}
+
+        <div class="govuk-inset-text">
+          <p class="govuk-body-s">
+            <strong>Benefits of this structure:</strong>
+          </p>
+          <ul class="govuk-list govuk-list--bullet govuk-body-s">
+            <li>Separates production alerts from non-production to reduce noise</li>
+            <li>Centralizes team alerts in dedicated channels</li>
+            <li>Follows consistent naming conventions</li>
+            <li>Enables better alert management and response times</li>
+            <li><strong>Migrates away from shared channels like #dps_alerts</strong> to team-specific channels</li>
+          </ul>
+        </div>
+
+        {% set hasLegacyChannels = false %}
+        {% for rec in channelRecommendations.recommendations %}
+          {% if rec.currentChannels.dev == '#dps_alerts_non_prod' or rec.currentChannels.preprod == '#dps_alerts_non_prod' or rec.currentChannels.prod == '#dps_alerts' %}
+            {% set hasLegacyChannels = true %}
+          {% endif %}
+        {% endfor %}
+
+        {% if hasLegacyChannels %}
+        <div class="govuk-warning-text">
+          <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+          <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Warning</span>
+            Your team is currently using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod). 
+            We recommend migrating to dedicated team channels for better alert management and reduced noise.
+          </strong>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block pageScripts %}
+<script src="/assets/js/monitoringChannels.js"></script>
 {% endblock %}
