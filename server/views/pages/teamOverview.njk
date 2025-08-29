@@ -13,6 +13,14 @@
 
 <h1>{% if teamName %}{{ teamName }}{% else %}Team Overview{% endif %}</h1>
 
+{% if slackChannelId and slackChannelName %}
+  <h3 class="team-slack-channel">
+    <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image> Slack Channel:
+    <a href="slack://channel?team=T02DYEB3A&id={{ slackChannelId }}">#{{ slackChannelName }}</a>
+  </h3>
+{% endif %}
+
+
 {% if teamAlertSummary.total > 0 %}
   {{ mojAlert({
     variant: "warning",

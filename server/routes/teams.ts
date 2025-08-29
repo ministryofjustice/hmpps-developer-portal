@@ -69,6 +69,8 @@ export default function routes({
         teamName: team.name,
         formatTeamNameURL: encodeURIComponent(team.name),
         teamSlug: team.slug,
+        slackChannelId: team.slack_channel_id,
+        slackChannelName: team.slack_channel_name,
         teamAlertSummary,
         criticalAndHighTrivy,
         veryHighAndHighVeracode,
