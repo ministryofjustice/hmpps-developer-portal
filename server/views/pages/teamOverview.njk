@@ -104,12 +104,51 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
+    {% set hasLegacyChannels = false %}
+    {% set legacyChannelCount = 0 %}
+    {% for rec in channelRecommendations.recommendations %}
+      {% if rec.currentChannels.dev == '#dps_alerts_non_prod' or rec.currentChannels.preprod == '#dps_alerts_non_prod' or rec.currentChannels.prod == '#dps_alerts' %}
+        {% set hasLegacyChannels = true %}
+        {% set legacyChannelCount = legacyChannelCount + 1 %}
+      {% endif %}
+    {% endfor %}
+
+    {% if hasLegacyChannels %}
+    <div class="govuk-warning-text" style="background-color: #fef7f7; padding: 20px; border-left: 5px solid #d4351c; margin-bottom: 30px; border-radius: 4px;">
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <div style="background: linear-gradient(135deg, #d4351c 0%, #b91c1c 100%); color: white; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; box-shadow: 0 2px 8px rgba(212, 53, 28, 0.3); flex-shrink: 0;">
+          {{ legacyChannelCount }}
+        </div>
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
+            <span class="govuk-warning-text__icon" aria-hidden="true" style="font-size: 20px; color: #d4351c;">!</span>
+            <strong style="font-size: 16px; color: #d4351c;">Action Required</strong>
+          </div>
+          <p class="govuk-body" style="margin: 0; font-size: 16px; line-height: 1.4;">
+            Your team has <strong>{{ legacyChannelCount }} component{{ 's' if legacyChannelCount != 1 else '' }}</strong> using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod). 
+            We recommend migrating to dedicated team channels for better alert management and reduced noise.
+          </p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if channelRecommendations.recommendations.length == 0 %}
+    <div class="govuk-inset-text">
+      <p class="govuk-body">This team currently has no components. If you create one, consider using the suggested alerting channel.</p>
+    </div>
+    {% endif %}
+    
     <div class="govuk-summary-card" data-test-id="monitoring-recommendations">
       <div class="govuk-summary-card__title-wrapper">
         <h2 class="govuk-summary-card__title">Suggested Channel Structure</h2>
       </div>
       <div class="govuk-summary-card__content">
+        {% if channelRecommendations.recommendations.length > 0 %}
         <p class="govuk-body">Based on your team's components, we recommend the following Slack channel structure for monitoring alerts:</p>
+        {% else %}
+        <p class="govuk-body">We recommend the following Slack channel structure for monitoring alerts when you create components:</p>
+        {% endif %}
         
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-half">
@@ -200,23 +239,6 @@
           </ul>
         </div>
 
-        {% set hasLegacyChannels = false %}
-        {% for rec in channelRecommendations.recommendations %}
-          {% if rec.currentChannels.dev == '#dps_alerts_non_prod' or rec.currentChannels.preprod == '#dps_alerts_non_prod' or rec.currentChannels.prod == '#dps_alerts' %}
-            {% set hasLegacyChannels = true %}
-          {% endif %}
-        {% endfor %}
-
-        {% if hasLegacyChannels %}
-        <div class="govuk-warning-text">
-          <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-          <strong class="govuk-warning-text__text">
-            <span class="govuk-warning-text__assistive">Warning</span>
-            Your team is currently using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod). 
-            We recommend migrating to dedicated team channels for better alert management and reduced noise.
-          </strong>
-        </div>
-        {% endif %}
       </div>
     </div>
   </div>
