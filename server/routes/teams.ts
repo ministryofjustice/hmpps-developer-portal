@@ -65,18 +65,22 @@ export default function routes({
       const channelRecommendations = monitoringChannelService.generateChannelRecommendations(team)
       const channelTree = monitoringChannelService.generateChannelTree(channelRecommendations)
 
-      res.render('pages/teamOverview', {
-        teamName: team.name,
-        formatTeamNameURL: encodeURIComponent(team.name),
-        teamSlug: team.slug,
+      const slackTeamId = 'T02DYEB3A'
+
+      const displayTeamOverview = {
+        name: team.name,
+        encodedTeamName: encodeURIComponent(team.name),
+        slackTeamId,
         slackChannelId: team.slack_channel_id,
         slackChannelName: team.slack_channel_name,
-        teamAlertSummary,
+        alertSummary: teamAlertSummary,
         criticalAndHighTrivy,
         veryHighAndHighVeracode,
         channelRecommendations,
         channelTree,
-      })
+      }
+
+      res.render('pages/teamOverview', { team: displayTeamOverview })
     } catch (err) {
       logger.error(`Error calling getTeamAlertSummary for team '${teamSlug}':`, err)
     }
