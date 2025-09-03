@@ -133,26 +133,26 @@ describe('TeamsSummaryCountService', () => {
       })
     })
 
-    // it('should orchestrate data flow correctly to build product->component->alert mapping', async () => {
-    //   const teamSlug = 'team-alpha'
-    //   mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithTwoProducts)
-    //
-    //   mockStrapiClient.getProduct.mockImplementation((params: ProductParams) => {
-    //     if (params.productSlug === 'product-a') {
-    //       return Promise.resolve(mockProductResponseWithComponents)
-    //     }
-    //     return Promise.resolve(mockProductResponseWithComponents2)
-    //   })
-    //
-    //   alertSerice.getAlerts.mockResolvedValue(mockAlerts)
-    //
-    //   const result = await service.getTeamAlertSummary(teamSlug)
-    //   expect(mockStrapiClient.getTeam).toHaveBeenCalledWith({ teamSlug })
-    //   expect(mockStrapiClient.getProduct).toHaveBeenCalledTimes(2)
-    //   expect(alertSerice.getAlerts).toHaveBeenCalled()
-    //
-    //   expect(result).toEqual(mockTeamAlertSummary)
-    // })
+    it('should orchestrate data flow correctly to build product->component->alert mapping', async () => {
+      const teamSlug = 'team-alpha'
+      mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithTwoProducts)
+
+      mockStrapiClient.getProduct.mockImplementation((params: ProductParams) => {
+        if (params.productSlug === 'product-a') {
+          return Promise.resolve(mockProductResponseWithComponents)
+        }
+        return Promise.resolve(mockProductResponseWithComponents2)
+      })
+
+      alertSerice.getAlerts.mockResolvedValue(mockAlerts)
+
+      const result = await service.getTeamAlertSummary(teamSlug)
+      expect(mockStrapiClient.getTeam).toHaveBeenCalledWith({ teamSlug })
+      expect(mockStrapiClient.getProduct).toHaveBeenCalledTimes(2)
+      expect(alertSerice.getAlerts).toHaveBeenCalled()
+
+      expect(result).toEqual(mockTeamAlertSummary)
+    })
 
     it('should handle empty product list', async () => {
       mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithoutProducts)
@@ -173,45 +173,45 @@ describe('TeamsSummaryCountService', () => {
       })
     })
 
-    //   it('should handle various alert count scenarios', async () => {
-    //     mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithOneProduct)
-    //     mockStrapiClient.getProduct.mockResolvedValue(mockProductResponseWithComponentsAndAlerts)
-    //     alertSerice.getAlerts.mockResolvedValue(mockAlertsForProductWithComponentsAndAlerts)
-    //
-    //     const result = await service.getTeamAlertSummary('team-gamma')
-    //
-    //     expect(result).toEqual(mockTeamAlertSummaryForProductWithComponentsAndAlerts)
-    //   })
-    // })
+    it('should handle various alert count scenarios', async () => {
+      mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithOneProduct)
+      mockStrapiClient.getProduct.mockResolvedValue(mockProductResponseWithComponentsAndAlerts)
+      alertSerice.getAlerts.mockResolvedValue(mockAlertsForProductWithComponentsAndAlerts)
 
-    // describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
-    //   it('should count active alerts for matching components', async () => {
-    //     const componentNames = ['component-1', 'component-2', 'component-3']
-    //     alertSerice.getAlerts.mockResolvedValue(mockAlertsCount)
-    //     const result = await service.getFiringAlertCountsForComponents(componentNames)
-    //
-    //     expect(result).toEqual({
-    //       'component-1': 2,
-    //       'component-2': 1,
-    //       'component-3': 1,
-    //     })
-    //   })
+      const result = await service.getTeamAlertSummary('team-gamma')
 
-    // it('should handle component names with no active alerts', async () => {
-    //   const componentNames = ['no-alerts-component', 'component-with-alert']
-    //   alertSerice.getAlerts.mockResolvedValue(mockActiveAndInactiveAlerts)
-    //   const result = await service.getFiringAlertCountsForComponents(componentNames)
-    //
-    //   expect(result).toEqual({
-    //     'no-alerts-component': 0,
-    //     'component-with-alert': 1,
-    //   })
-    // })
+      expect(result).toEqual(mockTeamAlertSummaryForProductWithComponentsAndAlerts)
+    })
+  })
+
+  describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
+    it('should count active alerts for matching components', async () => {
+      const componentNames = ['component-1', 'component-2', 'component-3']
+      alertSerice.getAlerts.mockResolvedValue(mockAlertsCount)
+      const result = await service.getFiringAlertCountsForComponents(componentNames)
+
+      expect(result).toEqual({
+        'component-1': 2,
+        'component-2': 1,
+        'component-3': 1,
+      })
+    })
+
+    it('should handle component names with no active alerts', async () => {
+      const componentNames = ['no-alerts-component', 'component-with-alert']
+      alertSerice.getAlerts.mockResolvedValue(mockActiveAndInactiveAlerts)
+      const result = await service.getFiringAlertCountsForComponents(componentNames)
+
+      expect(result).toEqual({
+        'no-alerts-component': 0,
+        'component-with-alert': 1,
+      })
+    })
 
     it('should handle component names not present in any alert', async () => {
       const componentNames = ['unknown-component-1', 'unknown-component-2']
       const mockAlertsWithMissingComponent = [
-        { status: { state: 'active' }, labels: { component: 'some-other-component' } },
+        { status: { state: 'active' }, labels: { component: 'some-other-component', environment: 'prod' } },
       ]
       alertSerice.getAlerts.mockResolvedValue(mockAlertsWithMissingComponent)
       const result = await service.getFiringAlertCountsForComponents(componentNames)
@@ -222,23 +222,23 @@ describe('TeamsSummaryCountService', () => {
       })
     })
 
-    // it('should handle alerts with missing labels or status', async () => {
-    //   const componentNames = ['component-1', 'component-2']
-    //   const mockAlertsWithMissingLabelsOrStatus = [
-    //     { status: { state: 'active' }, labels: { component: 'component-1' } },
-    //     { status: {}, labels: { component: 'component-1' } },
-    //     { status: { state: 'active' } },
-    //     { labels: { component: 'component-2' } },
-    //     {},
-    //   ]
-    //   alertSerice.getAlerts.mockResolvedValue(mockAlertsWithMissingLabelsOrStatus)
-    //   const result = await service.getFiringAlertCountsForComponents(componentNames)
-    //
-    //   expect(result).toEqual({
-    //     'component-1': 1,
-    //     'component-2': 0,
-    //   })
-    // })
+    it('should handle alerts with missing labels or status', async () => {
+      const componentNames = ['component-1', 'component-2']
+      const mockAlertsWithMissingLabelsOrStatus = [
+        { status: { state: 'active' }, labels: { component: 'component-1', environment: 'prod' } },
+        { status: {}, labels: { component: 'component-1', environment: 'prod' } },
+        { status: { state: 'active' }, labels: { environment: 'prod' } },
+        { labels: { component: 'component-2', environment: 'prod' } },
+        { labels: { environment: 'prod' } },
+      ]
+      alertSerice.getAlerts.mockResolvedValue(mockAlertsWithMissingLabelsOrStatus)
+      const result = await service.getFiringAlertCountsForComponents(componentNames)
+
+      expect(result).toEqual({
+        'component-1': 1,
+        'component-2': 0,
+      })
+    })
 
     it('should handle empty alerts array', async () => {
       const componentNames = ['component-1', 'component-2']
