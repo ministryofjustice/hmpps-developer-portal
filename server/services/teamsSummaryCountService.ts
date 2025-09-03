@@ -4,6 +4,7 @@ import AlertsService from './alertsService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { formatMonitorName } from '../utils/utils'
 import { Component, Product } from '../data/modelTypes'
+import { Alert } from '../@types'
 
 // Valid Veracode severity levels
 export const VALID_SEVERITIES = ['VERY_HIGH', 'HIGH', 'MEDIUM', 'LOW']
@@ -116,7 +117,7 @@ export default class TeamsSummaryCountService {
    */
   async getFiringAlertCountsForComponents(componentNames: string[]): Promise<Record<string, number>> {
     try {
-      const allAlerts = await this.alertsService.getAlerts()
+      const allAlerts = await this.getActiveAlertsForProd()
       logger.info(`[getFiringAlertCountsForComponents] Total alerts fetched: ${allAlerts.length}`)
 
       const nameSet = new Set(componentNames)
@@ -143,6 +144,14 @@ export default class TeamsSummaryCountService {
       logger.error(`[getFiringAlertCountsForComponents] Error:`, err)
       return {}
     }
+  }
+
+  /**
+   * Helper: Get active alerts for prod environment only
+   */
+  async getActiveAlertsForProd(): Promise<Alert[]> {
+    const allAlerts = await this.alertsService.getAlerts()
+    return allAlerts.filter(alerts => alerts.labels.environment === 'prod')
   }
 
   /**
