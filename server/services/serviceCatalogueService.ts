@@ -203,14 +203,6 @@ export default class ServiceCatalogueService {
     return trivyScans
   }
 
-  async getTrivyScan({ name }: { name: string }): Promise<TrivyScanType> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const trivyScansData = await strapiApiClient.getTrivyScan({ name })
-    const trivyScansRequest =
-      Array.isArray(trivyScansData) && trivyScansData.length > 0 ? trivyScansData[0].attributes : trivyScansData
-    return trivyScansRequest
-  }
-
   async getRdsInstances(): Promise<RdsEntry[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const namespaceData = await strapiApiClient.getNamespaces()
