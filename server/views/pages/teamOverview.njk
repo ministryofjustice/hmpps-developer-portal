@@ -128,7 +128,7 @@
             <strong style="font-size: 16px; color: #d4351c;">Action Required</strong>
           </div>
           <p class="govuk-body" style="margin: 0; font-size: 16px; line-height: 1.4;">
-            Your team has <strong>{{ legacyChannelCount }} component{{ 's' if legacyChannelCount != 1 else '' }}</strong> using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod). 
+            Your team has <strong>{{ legacyChannelCount }} component{{ 's' if legacyChannelCount != 1 else '' }}</strong> using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod).
             We recommend migrating to dedicated team channels for better alert management and reduced noise.
           </p>
         </div>
@@ -141,7 +141,7 @@
       <p class="govuk-body">This team currently has no components. If you create one, consider using the suggested alerting channel.</p>
     </div>
     {% endif %}
-    
+
     <div class="govuk-summary-card" data-test-id="monitoring-recommendations">
       <div class="govuk-summary-card__title-wrapper">
         <h2 class="govuk-summary-card__title">Suggested Channel Structure</h2>
@@ -152,7 +152,7 @@
         {% else %}
         <p class="govuk-body">We recommend the following Slack channel structure for monitoring alerts when you create components:</p>
         {% endif %}
-        
+
         <div class="govuk-grid-row">
           <div class="govuk-grid-column-one-half">
             <h4 class="govuk-heading-s">Recommended Channels</h4>
@@ -250,14 +250,14 @@
         {% endfor %}
 
         {% if hasLegacyChannels %}
-        <div class="govuk-warning-text">
-          <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-          <strong class="govuk-warning-text__text">
-            <span class="govuk-warning-text__assistive">Warning</span>
+          <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+              <span class="govuk-warning-text__assistive">Warning</span>
             Your team is currently using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod).
             We recommend migrating to dedicated team channels for better alert management and reduced noise.
-          </strong>
-        </div>
+            </strong>
+          </div>
         {% endif %}
       </div>
     </div>

@@ -151,7 +151,7 @@ export default class TeamsSummaryCountService {
    */
   async filterAlertsByEnv(env: string): Promise<Alert[]> {
     const allAlerts = await this.alertsService.getAlerts()
-    return allAlerts.filter(alerts => alerts.labels.environment === (env || 'prod'))
+    return allAlerts.filter(alerts => alerts.labels.environment === env)
   }
 
   /**
