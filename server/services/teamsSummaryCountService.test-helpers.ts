@@ -131,11 +131,11 @@ export const mockProductSingleComponentMapResponse = {
 }
 
 export const mockAlerts = [
-  { status: { state: 'active' }, labels: { component: 'ComponentA1' } },
-  { status: { state: 'active' }, labels: { component: 'ComponentA1' } },
-  { status: { state: 'active' }, labels: { component: 'ComponentA1' } },
-  { status: { state: 'active' }, labels: { component: 'ComponentB1' } },
-  { status: { state: 'active' }, labels: { component: 'ComponentB1' } },
+  { status: { state: 'active' }, labels: { component: 'ComponentA1', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { component: 'ComponentA1', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { component: 'ComponentA1', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { component: 'ComponentB1', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { component: 'ComponentB1', environment: 'prod' } },
 ]
 
 export const mockProductResponseWithComponentsAndAlerts = {
@@ -145,12 +145,12 @@ export const mockProductResponseWithComponentsAndAlerts = {
 } as Product
 
 export const mockAlertsForProductWithComponentsAndAlerts = [
-  { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
-  { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
-  { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
-  { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
-  { status: { state: 'active' }, labels: { component: 'CompWithAlerts' } },
-  { status: { state: 'inactive' }, labels: { component: 'CompWithNoAlerts' } },
+  { status: { state: 'active' }, labels: { component: 'CompWithAlerts', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { component: 'CompWithAlerts', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { component: 'CompWithAlerts', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { component: 'CompWithAlerts', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { component: 'CompWithAlerts', environment: 'prod' } },
+  { status: { state: 'inactive' }, labels: { component: 'CompWithNoAlerts', environment: 'prod' } },
 ]
 
 export const mockTeamAlertSummaryForProductWithComponentsAndAlerts = {
@@ -165,17 +165,17 @@ export const mockTeamAlertSummaryForProductWithComponentsAndAlerts = {
 }
 
 export const mockAlertsCount = [
-  { status: { state: 'active' }, labels: { component: 'component-1' } },
-  { status: { state: 'active' }, labels: { component: 'component-1' } },
-  { status: { state: 'active' }, labels: { application: 'component-2' } },
-  { status: { state: 'inactive' }, labels: { component: 'component-1' } },
-  { status: { state: 'active' }, labels: { component: 'other-component' } },
-  { status: { state: 'active' }, labels: { component: 'component-3' } },
+  { status: { state: 'active' }, labels: { component: 'component-1', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { component: 'component-1', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { application: 'component-2', environment: 'prod' } },
+  { status: { state: 'inactive' }, labels: { component: 'component-1', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { component: 'other-component', environment: 'prod' } },
+  { status: { state: 'active' }, labels: { component: 'component-3', environment: 'prod' } },
 ]
 
 export const mockActiveAndInactiveAlerts = [
-  { status: { state: 'active' }, labels: { component: 'component-with-alert' } },
-  { status: { state: 'inactive' }, labels: { component: 'no-alerts-component' } },
+  { status: { state: 'active' }, labels: { component: 'component-with-alert', environment: 'prod' } },
+  { status: { state: 'inactive' }, labels: { component: 'no-alerts-component', environment: 'prod' } },
 ]
 
 export const mockComponents = [

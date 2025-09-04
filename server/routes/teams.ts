@@ -65,6 +65,14 @@ export default function routes({
       const channelRecommendations = monitoringChannelService.generateChannelRecommendations(team)
       const channelTree = monitoringChannelService.generateChannelTree(channelRecommendations)
 
+      // Check for legacy channels
+      const hasLegacyChannels = channelRecommendations.recommendations.some(
+        rec =>
+          rec.currentChannels.dev === '#dps_alerts_non_prod' ||
+          rec.currentChannels.preprod === '#dps_alerts_non_prod' ||
+          rec.currentChannels.prod === '#dps_alerts',
+      )
+
       const slackTeamId = 'T02DYEB3A'
 
       const displayTeamOverview = {
@@ -78,6 +86,7 @@ export default function routes({
         veryHighAndHighVeracode,
         channelRecommendations,
         channelTree,
+        hasLegacyChannels,
       }
 
       res.render('pages/teamOverview', { team: displayTeamOverview })
