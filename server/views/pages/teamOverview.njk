@@ -242,12 +242,6 @@
           </ul>
         </div>
 
-        {% set hasLegacyChannels = false %}
-        {% for rec in channelRecommendations.recommendations %}
-          {% if rec.currentChannels.dev == '#dps_alerts_non_prod' or rec.currentChannels.preprod == '#dps_alerts_non_prod' or rec.currentChannels.prod == '#dps_alerts' %}
-            {% set hasLegacyChannels = true %}
-          {% endif %}
-        {% endfor %}
 
         {% if hasLegacyChannels %}
           <div class="govuk-warning-text">
