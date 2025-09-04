@@ -117,7 +117,7 @@ export default class TeamsSummaryCountService {
    */
   async getFiringAlertCountsForComponents(componentNames: string[]): Promise<Record<string, number>> {
     try {
-      const allAlerts = await this.getActiveAlertsForProd()
+      const allAlerts = await this.filterAlertsByEnv('prod')
       logger.info(`[getFiringAlertCountsForComponents] Total alerts fetched: ${allAlerts.length}`)
 
       const nameSet = new Set(componentNames)
@@ -147,11 +147,11 @@ export default class TeamsSummaryCountService {
   }
 
   /**
-   * Helper: Get active alerts for prod environment only
+   * Helper: Function to filter by specified env, or default to prod if none provided
    */
-  async getActiveAlertsForProd(): Promise<Alert[]> {
+  async filterAlertsByEnv(env: string): Promise<Alert[]> {
     const allAlerts = await this.alertsService.getAlerts()
-    return allAlerts.filter(alerts => alerts.labels.environment === 'prod')
+    return allAlerts.filter(alerts => alerts.labels.environment === (env || 'prod'))
   }
 
   /**
