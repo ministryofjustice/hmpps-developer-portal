@@ -16,9 +16,9 @@
 <h1>{% if team.name %}{{ team.name }}{% else %}Team Overview{% endif %}</h1>
 
 {% if team.slackChannelId and team.slackChannelName %}
-  <h3 class="team-slack-channel">
-    <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image> Slack Channel:
-    <a href="slack://channel?team={{ team.slackTeamId }}&id={{ team.slackChannelId }}">#{{ team.slackChannelName }}</a>
+  <h3>
+    Slack Channel: 
+    <a href="slack://channel?team={{ team.slackWorkspaceId }}&id={{ team.slackChannelId }}" class="slack-icon">#{{ team.slackChannelName }}</a>
   </h3>
 {% endif %}
 

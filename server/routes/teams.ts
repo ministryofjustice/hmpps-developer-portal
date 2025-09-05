@@ -2,6 +2,7 @@ import { Router } from 'express'
 import type { Services } from '../services'
 import { getFormattedName, utcTimestampToUtcDateTime } from '../utils/utils'
 import logger from '../../logger'
+import config from '../config'
 
 export default function routes({
   serviceCatalogueService,
@@ -73,12 +74,10 @@ export default function routes({
           rec.currentChannels.prod === '#dps_alerts',
       )
 
-      const slackTeamId = 'T02DYEB3A'
-
-      const displayTeamOverview = {
+      const displayTeam = {
         name: team.name,
         encodedTeamName: encodeURIComponent(team.name),
-        slackTeamId,
+        slackWorkspaceId: config.slack.workspaceId,
         slackChannelId: team.slack_channel_id,
         slackChannelName: team.slack_channel_name,
         alertSummary: teamAlertSummary,
@@ -89,7 +88,7 @@ export default function routes({
         hasLegacyChannels,
       }
 
-      res.render('pages/teamOverview', { team: displayTeamOverview })
+      res.render('pages/teamOverview', { team: displayTeam })
     } catch (err) {
       logger.error(`Error calling getTeamAlertSummary for team '${teamSlug}':`, err)
     }
