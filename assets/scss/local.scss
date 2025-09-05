@@ -141,6 +141,15 @@
   }
 }
 
+.slack-icon {
+  display: inline-block;
+  background: url('/assets/images/slack_favicon_32.png') no-repeat left center;
+  background-size: 24px 24px;
+  padding-left: 32px;
+  line-height: 24px;
+  margin-left: 6px;
+}
+
 #githubTeamsTable {
   width: 100%;
   
