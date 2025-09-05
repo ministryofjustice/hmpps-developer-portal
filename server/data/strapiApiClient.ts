@@ -21,6 +21,45 @@ import type {
 import convertTrivyScan from './converters/trivyScans'
 import { ListResponse, SingleResponse } from './strapiClientTypes'
 
+function createStrapiQuery({ populate }: { populate?: string[] }): string {
+  const populateParams: Record<string, unknown> = {}
+
+  populate?.sort((a, b) => b.split('.').length - a.split('.').length)
+
+  populate?.forEach(path => {
+    const keys = path.split('.')
+    let current = populateParams
+
+    keys.forEach((key, index) => {
+      if (!current[key]) {
+        // Ensure the last key is set to true, and intermediate keys have a `populate` object
+        current[key] = index === keys.length - 1 ? true : { populate: {} as Record<string, unknown> }
+      }
+      current =
+        typeof current[key] === 'object' && current[key] !== null
+          ? (current[key] as { populate?: Record<string, unknown> }).populate ||
+            (current[key] as Record<string, unknown>)
+          : current
+    })
+  })
+
+  const queryString = new URLSearchParams()
+
+  function buildQuery(obj: Record<string, unknown>, prefix = 'populate') {
+    Object.entries(obj).forEach(([key, value]) => {
+      const fullKey = `${prefix}[${key}]`
+      if (typeof value === 'object' && value !== null) {
+        buildQuery(value as Record<string, unknown>, fullKey)
+      } else if (value === true) {
+        queryString.append(fullKey, 'true')
+      }
+    })
+  }
+
+  buildQuery(populateParams)
+  return queryString.toString()
+}
+
 export default class StrapiApiClient {
   private restClient: RestClient
 
@@ -52,18 +91,18 @@ export default class StrapiApiClient {
     return this.restClient
       .get<ListResponse<Strapi.Product>>({
         path: '/v1/products',
-        query: `${new URLSearchParams({ populate: populate.join(',') }).toString()}`,
+        query: `${createStrapiQuery({ populate })}`,
       })
       .then(unwrapListResponse)
   }
 
   async getProduct({
     productSlug = '',
-    productId = 0,
+    productDocumentId = '',
     withEnvironments = false,
   }: {
     productSlug?: string
-    productId?: number
+    productDocumentId?: string
     withEnvironments?: boolean
   }): Promise<Product> {
     const populateList = ['product_set', 'team', 'components', 'service_area']
@@ -72,9 +111,9 @@ export default class StrapiApiClient {
       populateList.push('components.envs')
     }
 
-    const populate = new URLSearchParams({ populate: populateList }).toString()
+    const populate = createStrapiQuery({ populate: populateList })
     const query = productSlug ? `filters[slug][$eq]=${productSlug}&${populate}` : populate
-    const path = productSlug ? '/v1/products' : `/v1/products/${productId}`
+    const path = productSlug ? '/v1/products' : `/v1/products/${productDocumentId}`
 
     return this.restClient.get<SingleResponse<Strapi.Product>>({ path, query }).then(unwrapSingleResponse)
   }
@@ -84,9 +123,9 @@ export default class StrapiApiClient {
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
   ): Promise<Component[]> {
-    const populate = new URLSearchParams({
-      populate: `product${includeTeams ? '.team' : ''},envs${includeLatestCommit ? ',latest_commit' : ''}`,
-    }).toString()
+    const populate = createStrapiQuery({
+      populate: [`product${includeTeams ? '.team' : ''}`, 'envs', ...(includeLatestCommit ? ['latest_commit'] : [])],
+    })
     const filters = exemptionFilters.map((filterValue, index) => {
       return `filters[veracode_exempt][$in][${index}]=${filterValue}`
     })
@@ -100,7 +139,7 @@ export default class StrapiApiClient {
   }
 
   async getComponent({ componentName }: { componentName: string }): Promise<Component> {
-    const populate = new URLSearchParams({ populate: 'product.team,envs.trivy_scan' }).toString()
+    const populate = createStrapiQuery({ populate: ['product.team', 'envs.trivy_scan'] })
 
     return this.restClient
       .get<SingleResponse<Strapi.Component>>({
@@ -116,7 +155,8 @@ export default class StrapiApiClient {
       populateList.push('products.components')
     }
     const path = '/v1/teams'
-    const query = new URLSearchParams({ populate: populateList }).toString()
+    const populate = createStrapiQuery({ populate: populateList })
+    const query = populate
     return this.restClient
       .get<ListResponse<Strapi.Team>>({
         path,
@@ -126,11 +166,11 @@ export default class StrapiApiClient {
   }
 
   async getTeam({
-    teamId = 0,
+    teamDocumentId = '',
     teamSlug = '',
     withEnvironments = false,
   }: {
-    teamId?: number
+    teamDocumentId?: string
     teamSlug?: string
     withEnvironments?: boolean
   }): Promise<Team> {
@@ -140,9 +180,9 @@ export default class StrapiApiClient {
       populateList.push('products.components.envs')
     }
 
-    const populate = new URLSearchParams({ populate: populateList }).toString()
+    const populate = createStrapiQuery({ populate: populateList })
     const query = teamSlug ? `filters[slug][$eq]=${teamSlug}&${populate}` : populate
-    const path = teamSlug ? '/v1/teams' : `/v1/teams/${teamId}`
+    const path = teamSlug ? '/v1/teams' : `/v1/teams/${teamDocumentId}`
 
     return this.restClient.get<SingleResponse<Strapi.Team>>({ path, query }).then(unwrapSingleResponse)
   }
@@ -151,23 +191,23 @@ export default class StrapiApiClient {
     return this.restClient
       .get<ListResponse<Strapi.Namespace>>({
         path: '/v1/namespaces',
-        query: 'populate=rds_instance,elasticache_cluster,pingdom_check,hmpps_template',
+        query: 'populate=*',
       })
       .then(unwrapListResponse)
   }
 
   async getNamespace({
-    namespaceId = 0,
+    namespaceDocumentId = '',
     namespaceSlug = '',
   }: {
-    namespaceId?: number
+    namespaceDocumentId?: string
     namespaceSlug?: string
   }): Promise<Namespace> {
     const populateList = ['rds_instance', 'elasticache_cluster', 'pingdom_check', 'hmpps_template']
 
-    const populate = new URLSearchParams({ populate: populateList }).toString()
+    const populate = createStrapiQuery({ populate: populateList })
     const query = namespaceSlug ? `filters[name][$eq]=${namespaceSlug}&${populate}` : populate
-    const path = namespaceSlug ? '/v1/namespaces' : `/v1/namespaces/${namespaceId}`
+    const path = namespaceSlug ? '/v1/namespaces' : `/v1/namespaces/${namespaceDocumentId}`
 
     return this.restClient.get<SingleResponse<Strapi.Namespace>>({ path, query }).then(unwrapSingleResponse)
   }
@@ -176,16 +216,16 @@ export default class StrapiApiClient {
     return this.restClient
       .get<ListResponse<Strapi.ProductSet>>({
         path: '/v1/product-sets',
-        query: 'populate=products',
+        query: 'populate[products]=true',
       })
       .then(unwrapListResponse)
   }
 
-  async getProductSet({ productSetId = 0 }: { productSetId: number }): Promise<ProductSet> {
+  async getProductSet({ productSetDocumentId = '' }: { productSetDocumentId: string }): Promise<ProductSet> {
     return this.restClient
       .get<SingleResponse<Strapi.ProductSet>>({
-        path: `/v1/product-sets/${productSetId}`,
-        query: new URLSearchParams({ populate: 'products' }).toString(),
+        path: `/v1/product-sets/${productSetDocumentId}`,
+        query: createStrapiQuery({ populate: ['products'] }),
       })
       .then(unwrapSingleResponse)
   }
@@ -194,17 +234,17 @@ export default class StrapiApiClient {
     return this.restClient
       .get<ListResponse<Strapi.ServiceArea>>({
         path: '/v1/service-areas',
-        query: 'populate=products',
+        query: 'populate[products]=true',
       })
       .then(unwrapListResponse)
   }
 
   async getServiceArea({
-    serviceAreaId = 0,
+    serviceAreaDocumentId = '',
     serviceAreaSlug = '',
     withProducts = false,
   }: {
-    serviceAreaId?: number
+    serviceAreaDocumentId?: string
     serviceAreaSlug?: string
     withProducts?: boolean
   }): Promise<ServiceArea> {
@@ -213,11 +253,9 @@ export default class StrapiApiClient {
     if (withProducts) {
       populateList.push('products.components.envs')
     }
-
-    const populate = new URLSearchParams({ populate: populateList }).toString()
+    const populate = createStrapiQuery({ populate: populateList })
     const query = serviceAreaSlug ? `filters[slug][$eq]=${serviceAreaSlug}&${populate}` : populate
-    const path = serviceAreaSlug ? '/v1/service-areas' : `/v1/service-areas/${serviceAreaId}`
-
+    const path = serviceAreaSlug ? '/v1/service-areas' : `/v1/service-areas/${serviceAreaDocumentId}`
     return this.restClient.get<SingleResponse<Strapi.ServiceArea>>({ path, query }).then(unwrapSingleResponse)
   }
 
@@ -235,18 +273,16 @@ export default class StrapiApiClient {
     return this.restClient
       .get<ListResponse<Strapi.CustomComponentView>>({
         path: '/v1/custom-component-views',
-        query: new URLSearchParams({
-          populate: populate.join(','),
-        }).toString(),
+        query: createStrapiQuery({ populate }),
       })
       .then(unwrapListResponse)
   }
 
   async getCustomComponentView({
-    customComponentId = 0,
+    customComponentDocumentId = '',
     withEnvironments = false,
   }: {
-    customComponentId: number
+    customComponentDocumentId: string
     withEnvironments?: boolean
   }): Promise<CustomComponentView> {
     const populate = ['components', 'components.product']
@@ -257,10 +293,8 @@ export default class StrapiApiClient {
 
     return this.restClient
       .get<SingleResponse<CustomComponentView>>({
-        path: `/v1/custom-component-views/${customComponentId}`,
-        query: new URLSearchParams({
-          populate: populate.join(','),
-        }).toString(),
+        path: `/v1/custom-component-views/${customComponentDocumentId}`,
+        query: createStrapiQuery({ populate }),
       })
       .then(unwrapSingleResponse)
   }
@@ -269,7 +303,6 @@ export default class StrapiApiClient {
     return this.restClient
       .get<ListResponse<Strapi.GithubRepoRequest>>({
         path: '/v1/github-repo-requests',
-        query: 'populate=github_repo',
       })
       .then(unwrapListResponse)
   }
@@ -352,7 +385,7 @@ export default class StrapiApiClient {
   async getEnvironments(): Promise<ListResponse<Strapi.Environment>> {
     return this.restClient.get<ListResponse<Strapi.Environment>>({
       path: '/v1/environments',
-      query: 'populate=component',
+      query: 'populate[component]=true',
     })
   }
 }

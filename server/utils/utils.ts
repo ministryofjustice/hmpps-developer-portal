@@ -12,7 +12,7 @@ import type { Team } from '../data/modelTypes'
 
 dayjs.extend(relativeTime.default)
 
-type HasName = { attributes?: { name: string } }
+type HasName = { name: string }
 type HasRepoName = { github_repo?: string }
 type HasTeamName = { team_name?: string }
 
@@ -73,7 +73,7 @@ export const formatMonitorName = (name: string): string => {
 }
 
 export const sortData = (dataItem: HasName, compareDataItem: HasName) => {
-  return dataItem.attributes.name.localeCompare(compareDataItem.attributes.name)
+  return dataItem.name.localeCompare(compareDataItem.name)
 }
 
 export const sortByName = (dataItem: { name?: string }, compareDataItem: { name?: string }) => {
@@ -100,6 +100,10 @@ export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasT
 export const getFormattedName = (req: Request, param: string): string => {
   const paramName = req.params[param]
   return paramName.replace(/[^-a-zA-Z0-9_.]/g, '')
+}
+
+export const getDocumentID = (req: Request, param: string): string => {
+  return req.params[param]
 }
 
 export const getComponentName = (req: Request): string => {
@@ -302,3 +306,15 @@ export const utcTimestampToUtcDate = (str: string) => (str ? formatDate(new Date
 
 export const utcTimestampToUtcDateTime = (str: string) =>
   str ? formatDate(new Date(str), 'dd-MMM-yyyy HH:mm:ss').toUpperCase() : undefined
+
+export const createStrapiQuery = (fields: string[]): string => {
+  if (!fields || fields?.length === 0) {
+    return ''
+  }
+
+  return fields
+    .reduce((querystring, fieldName) => {
+      return `${querystring}&${encodeURIComponent(`populate[${fieldName.replaceAll('.', '][populate][')}]`)}=true`
+    }, '')
+    .slice(1)
+}

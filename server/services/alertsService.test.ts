@@ -1,7 +1,6 @@
 import { Request } from 'express'
 import AlertsApiClient from '../data/alertsApiClient'
 import { Alert } from '../@types'
-import { DataItem } from '../data/strapiClientTypes'
 import { Environment } from '../data/strapiApiTypes'
 import type { Team } from '../data/modelTypes'
 import type { ServiceCatalogueService } from '.'
@@ -73,8 +72,8 @@ describe('Alerts service', () => {
       it('should return updated alerts conatining slack channel and team properties', async () => {
         const revisedAlerts = [{ labels: { alert_slack_channel: '#exampleApp', application: 'exampleApp' } }] as Alert[]
         const environments = [
-          { attributes: { alert_severity_label: 'exampleApp', alerts_slack_channel: '#exampleApp' } },
-        ] as DataItem<Environment>[]
+          { alert_severity_label: 'exampleApp', alerts_slack_channel: '#exampleApp' },
+        ] as Environment[]
         const teams = [{ name: 'Maintenance Team' }] as Team[]
         ;(utils.findTeamMatch as jest.Mock).mockReturnValue({ name: 'Maintenance Team' })
 
@@ -88,7 +87,7 @@ describe('Alerts service', () => {
 
       it('leaves alert unchanged if no matches', async () => {
         const revisedAlerts = [{ labels: { alert_slack_channel: '#exampleApp', application: 'exampleApp' } }] as Alert[]
-        const environments = [] as DataItem<Environment>[]
+        const environments = [] as Environment[]
         const teams = [] as Team[]
         ;(utils.findTeamMatch as jest.Mock).mockReturnValue({ undefined })
         const result = await alertsService.addNewPropertiesToAlert(revisedAlerts, environments, teams)
@@ -123,7 +122,7 @@ describe('Alerts service', () => {
     describe('reviseAlerts', () => {
       it('should map environment keys to the alert environment and add alert_slack_channel and team properties to alert', async () => {
         const alerts = [{ labels: { application: 'exampleApp', environment: 'development' } }] as Alert[]
-        const environments = [{ attributes: { name: 'preprod' } }] as DataItem<Environment>[]
+        const environments = [{ name: 'preprod' }] as Environment[]
         const teams = [{ name: 'Maintenance Team' }] as Team[]
         const revisedEnvAlerts = [{ labels: { application: 'exampleApp', environment: 'dev' } }] as Alert[]
         const revisedAlerts = [
@@ -151,7 +150,7 @@ describe('Alerts service', () => {
 
       it('should map environment to "none" and not add further properties', async () => {
         const alerts = [{ labels: { application: 'exampleApp', environment: '' } }] as Alert[]
-        const environments = [{ attributes: { name: '' } }] as DataItem<Environment>[]
+        const environments = [{ name: '' }] as Environment[]
         const teams = [{ name: '' }] as Team[]
         const revisedEnvAlerts = [{ labels: { application: 'exampleApp', environment: 'none' } }] as Alert[]
         const revisedAlerts = [{ labels: { application: 'exampleApp', environment: 'none' } }] as Alert[]
@@ -174,7 +173,7 @@ describe('Alerts service', () => {
         { labels: { application: 'exampleApp', environment: 'development' } },
         { labels: { application: 'exampleApp2', environment: 'production' } },
       ] as Alert[]
-      const environments = [{ attributes: { name: 'preprod' } }] as DataItem<Environment>[]
+      const environments = [{ name: 'preprod' }] as Environment[]
       const teams = [
         { name: 'Maintenance Team', slack_channel_name: 'maintenance-team' },
         { name: 'Maintenance Team', slack_channel_name: 'maintenance-team' },
