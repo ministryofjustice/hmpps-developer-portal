@@ -70,18 +70,18 @@ jobs:
       environment: 'dev'
       app_version: '${{ needs.build.outputs.app_version }}'
       helm_timeout: '5m'
-  # deploy_prod:
-  #   name: Deploy to the prod environment
-  #   needs:
-  #     - build
-  #     - helm_lint
-  #     - deploy_dev
-  #   uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
-  #   secrets: inherit
-  #   with:
-  #     environment: 'prod'
-  #     app_version: '${{ needs.build.outputs.app_version }}'
-  #     helm_timeout: '5m'
+  deploy_prod:
+    name: Deploy to the prod environment
+    needs:
+      - build
+      - helm_lint
+      - deploy_dev
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: 'prod'
+      app_version: '${{ needs.build.outputs.app_version }}'
+      helm_timeout: '5m'
   deploy_stage:
     name: Deploy to the stage environment
     # if: github.ref == 'refs/heads/main'
