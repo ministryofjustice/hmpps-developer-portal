@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { getNumericId, getMonitorName, getMonitorType, relativeTimeFromNow, formatMonitorName } from '../utils/utils'
+import { getMonitorName, getMonitorType, relativeTimeFromNow, formatMonitorName } from '../utils/utils'
 import { Component } from '../data/modelTypes'
 
 type MonitorEnvironment = {
@@ -25,7 +25,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     logger.info(`Request for /monitor/${monitorType}/${monitorName}`)
 
     // If we have a product name, look up its ID
-    let monitorId = 0
+    let monitorId = ''
     if (monitorType === 'product' && monitorName) {
       try {
         const products = await serviceCatalogueService.getProducts({})
@@ -34,8 +34,8 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         // Try to match by name, slug, or formatted name
         const matchingProduct = products.find(p => p.name === monitorName || formatMonitorName(p.name) === monitorName)
 
-        if (matchingProduct?.id) {
-          monitorId = matchingProduct.id
+        if (matchingProduct?.documentId) {
+          monitorId = matchingProduct.documentId
           logger.info(`Found product ID: ${monitorId} for name: ${monitorName}`)
         } else {
           logger.warn(`No product found matching name: ${monitorName}`)
@@ -55,7 +55,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     })
 
     // Update the selected item in the product list
-    if (monitorType === 'product' && monitorId > 0) {
+    if (monitorType === 'product' && monitorId !== '') {
       // Mark the matching product as selected without reassigning the array
       productList.forEach((product, index) => {
         if (product.value === monitorId.toString()) {
@@ -74,19 +74,19 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       customComponentsList,
       monitorName,
       monitorType,
-      monitorId: monitorId.toString(),
+      monitorId,
     })
   })
 
   router.get('/components/:monitorType{/:monitorId}', async (req, res) => {
     try {
       const monitorType = getMonitorType(req)
-      let monitorId = getNumericId(req, 'monitorId')
+      let { monitorId } = req.params
       logger.info(`Request for /monitor/components/${monitorType}/${monitorId}, query: ${JSON.stringify(req.query)}`)
       let environments: MonitorEnvironment[] = []
 
       // If we have no ID but have a product name in query, look it up
-      if (monitorType === 'product' && monitorId === 0 && req.query.name) {
+      if (monitorType === 'product' && monitorId === '' && req.query.name) {
         try {
           const products = await serviceCatalogueService.getProducts({})
           const productName = req.query.name as string
@@ -97,7 +97,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           )
 
           if (matchingProduct?.id) {
-            monitorId = matchingProduct.id
+            monitorId = matchingProduct.documentId
             logger.info(`Found product ID: ${monitorId} for name: ${productName}`)
           } else {
             logger.warn(`No product found with name: ${productName}`)
@@ -112,7 +112,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
       if (monitorType === 'customComponentView') {
         const customComponentView = await serviceCatalogueService.getCustomComponentView({
-          customComponentId: monitorId,
+          customComponentDocumentId: monitorId,
           withEnvironments: true,
         })
         customComponentView.components.forEach(component => {
@@ -120,7 +120,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         })
       } else if (monitorType === 'product') {
         const product = await serviceCatalogueService.getProduct({
-          productId: monitorId,
+          productDocumentId: monitorId,
           withEnvironments: true,
         })
 
@@ -128,7 +128,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
         })
       } else if (monitorType === 'team') {
-        const team = await serviceCatalogueService.getTeam({ teamId: monitorId, withEnvironments: true })
+        const team = await serviceCatalogueService.getTeam({ teamDocumentId: monitorId, withEnvironments: true })
         team.products.forEach(product => {
           product.components.forEach(component => {
             environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
@@ -136,7 +136,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         })
       } else if (monitorType === 'serviceArea') {
         const serviceArea = await serviceCatalogueService.getServiceArea({
-          serviceAreaId: monitorId,
+          serviceAreaDocumentId: monitorId,
           withProducts: true,
         })
         serviceArea.products.forEach(product => {

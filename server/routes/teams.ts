@@ -65,6 +65,14 @@ export default function routes({
       const channelRecommendations = monitoringChannelService.generateChannelRecommendations(team)
       const channelTree = monitoringChannelService.generateChannelTree(channelRecommendations)
 
+      // Check for legacy channels
+      const hasLegacyChannels = channelRecommendations.recommendations.some(
+        rec =>
+          rec.currentChannels.dev === '#dps_alerts_non_prod' ||
+          rec.currentChannels.preprod === '#dps_alerts_non_prod' ||
+          rec.currentChannels.prod === '#dps_alerts',
+      )
+
       res.render('pages/teamOverview', {
         teamName: team.name,
         formatTeamNameURL: encodeURIComponent(team.name),
@@ -74,6 +82,7 @@ export default function routes({
         veryHighAndHighVeracode,
         channelRecommendations,
         channelTree,
+        hasLegacyChannels,
       })
     } catch (err) {
       logger.error(`Error calling getTeamAlertSummary for team '${teamSlug}':`, err)
