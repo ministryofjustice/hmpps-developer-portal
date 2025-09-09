@@ -19,7 +19,8 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
       const alerts = await alertsService.getAndSortAlerts(serviceCatalogueService)
       res.json(alerts)
     } catch (error) {
-      logger.warn(`Failed to get alerts`, error)
+      logger.error(`Failed to get alerts`, error)
+      res.status(500).send('Internal Server Error')
     }
   })
 

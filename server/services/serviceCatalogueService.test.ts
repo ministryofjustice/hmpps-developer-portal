@@ -429,6 +429,42 @@ describe('Strapi service', () => {
         expect(results).toEqual(testGithubTeam)
       })
     })
+    describe('getGithubSubTeams', () => {
+      const testGithubTeamResponse = [
+        { team_name: 'Github Sub Team 1' },
+        { team_name: 'Github Sub Team 2' },
+      ] as GithubTeam[]
+      const testGithubSubTeams = [
+        { team_name: 'Github Sub Team 1' },
+        { team_name: 'Github Sub Team 2' },
+      ] as GithubTeam[]
+
+      it('should return the selected github sub teams', async () => {
+        strapiApiClient.getGithubSubTeams.mockResolvedValue(testGithubTeamResponse)
+
+        const results = await serviceCatalogueService.getGithubSubTeams({ parentTeamName: 'Github Team 1' })
+
+        expect(strapiApiClient.getGithubSubTeams).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testGithubSubTeams)
+      })
+    })
+  })
+
+  describe('ScheduledJobs', () => {
+    describe('getScheduledJobs', () => {
+      const testScheduledJobsResponse = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Namespace[]
+      const testScheduledJobs = [{ name: 'Namespace 1' }, { name: 'Namespace 2' }] as Namespace[]
+
+      it('should return an ordered array of scheduled jobs', async () => {
+        strapiApiClient.getScheduledJobs.mockResolvedValue(testScheduledJobsResponse)
+
+        const results = await serviceCatalogueService.getScheduledJobs()
+
+        expect(strapiApiClient.getScheduledJobs).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testScheduledJobs)
+      })
+    })
+    describe('getScheduledJob', () => {})
   })
 
   describe('getCustomComponentView', () => {
