@@ -13,27 +13,27 @@
   <tbody>
     <tr>
       <th>tf_label</th>
-      <td>{{ rdsInstance.tf_label }}</td>
+      <td data-test="tf_label">{{ rdsInstance.tf_label }}</td>
     </tr>
     <tr>
       <th>namespace</th>
-      <td>{{ rdsInstance.namespace }}</td>
+      <td data-test="namespace">{{ rdsInstance.namespace }}</td>
     </tr>
     <tr>
       <th>db_instance_class</th>
-      <td>{{ rdsInstance.db_instance_class }}</td>
+      <td data-test="db_instance_class">{{ rdsInstance.db_instance_class }}</td>
     </tr>
     <tr>
       <th>db_engine_version</th>
-      <td>{{ rdsInstance.db_engine_version }}</td>
+      <td data-test="db_engine_version">{{ rdsInstance.db_engine_version }}</td>
     </tr>
     <tr>
       <th>rds_family</th>
-      <td>{{ rdsInstance.rds_family }}</td>
+      <td data-test="rds_family">{{ rdsInstance.rds_family }}</td>
     </tr>
     <tr>
       <th>db_max_allocated_storage</th>
-      <td>{{ rdsInstance.db_max_allocated_storage }}</td>
+      <td data-test="db_max_allocated_storage">{{ rdsInstance.db_max_allocated_storage }}</td>
     </tr>
     <tr>
       <th>allow_major_version_upgrade</th>
@@ -70,5 +70,5 @@
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
 {% endblock %}
