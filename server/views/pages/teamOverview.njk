@@ -13,7 +13,7 @@
 
 <h3>The information on this page relates to products & components in the production environment only</h3>
 
-<h1>{% if team.name %}{{ team.name }}{% else %}Team Overview{% endif %}</h1>
+<h1>{{ team.name }}</h1>
 
 {% if team.slackChannelId and team.slackChannelName %}
   <h3>
