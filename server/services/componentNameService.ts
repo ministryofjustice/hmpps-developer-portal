@@ -22,7 +22,7 @@ export default class ComponentNameService {
     if (!teamSummary) throw Error(`No team called: ${teamName}`)
 
     const teamDetails = await this.strapiApiClientFactory('').getTeam({
-      teamId: teamSummary.id,
+      teamDocumentId: teamSummary.documentId,
       withEnvironments: true,
     })
 
@@ -45,7 +45,7 @@ export default class ComponentNameService {
     if (!serviceAreaSummary) throw Error(`No serviceArea called: ${serviceAreaName}`)
 
     const serviceAreaDetails = await this.strapiApiClientFactory('').getServiceArea({
-      serviceAreaId: serviceAreaSummary.id,
+      serviceAreaDocumentId: serviceAreaSummary.documentId,
       withProducts: true,
     })
 

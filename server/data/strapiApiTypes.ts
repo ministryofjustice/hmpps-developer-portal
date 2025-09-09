@@ -6,19 +6,18 @@
 import { components } from '../@types/strapi-api'
 
 import { TrivyScanType, VeracodeResultsSummary } from './modelTypes'
-import { ListResponse, SingleResponse } from './strapiClientTypes'
 
-type HasComponent = { component: SingleResponse<Component> }
-type HasComponents = { components: ListResponse<Component> }
+type HasComponent = { component: Component }
+type HasComponents = { components: Component[] }
 
-type HasProduct = { product: SingleResponse<Product> }
-type HasProducts = { products: ListResponse<Product> }
-type HasProductSet = { product_set: SingleResponse<ProductSet> }
-type HasTeam = { team: SingleResponse<Team> }
-type HasServiceArea = { service_area: SingleResponse<ServiceArea> }
-type HasNamespace = { ns: SingleResponse<Namespace> }
-type HasEnvironments = { envs: ListResponse<Environment> }
-type HasTrivyScan = { trivy_scan?: SingleResponse<TrivyScanType> }
+type HasProduct = { product: Product }
+type HasProducts = { products: Product[] }
+type HasProductSet = { product_set: ProductSet }
+type HasTeam = { team: Team }
+type HasServiceArea = { service_area: ServiceArea }
+type HasNamespace = { ns: Namespace }
+type HasEnvironments = { envs: Environment[] }
+type HasTrivyScan = { trivy_scan?: TrivyScanType }
 type HasVeracodeSummary = { veracode_results_summary: VeracodeResultsSummary }
 type Version = { ref: string; version: string; path: string }
 type HasVersions = { versions: Record<string, Record<string, Version | string | Record<string, string>>> }
@@ -45,13 +44,13 @@ type ServiceArea = Omit<components['schemas']['ServiceArea'], 'products'> & HasP
 
 type CustomComponentView = Omit<components['schemas']['CustomComponentView'], 'components'> & HasComponents
 
-type Environment = components['schemas']['Component']['envs']['data'][0]['attributes'] &
+type Environment = components['schemas']['Component']['envs'][0] &
   HasNamespace &
   HasTrivyScan &
   HasComponent &
   HasIpAllowlist
 
-type EnvironmentForMapping = SingleResponse<Environment>
+type EnvironmentForMapping = Environment
 
 type Namespace = components['schemas']['Namespace']
 

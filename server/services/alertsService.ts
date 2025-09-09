@@ -2,7 +2,6 @@ import { type Request } from 'express'
 import type { AlertsApiClient, RestClientBuilder } from '../data'
 import { Alert } from '../@types'
 import { Environment } from '../data/strapiApiTypes'
-import { DataItem } from '../data/strapiClientTypes'
 import logger from '../../logger'
 import { mapToCanonicalEnv, findTeamMatch } from '../utils/utils'
 import type { ServiceCatalogueService } from '.'
@@ -34,14 +33,14 @@ export default class AlertsService {
   }
 
   // Match alert data to corresponding environments and components to get slack channel and team properties
-  async addNewPropertiesToAlert(revisedAlerts: Alert[], environments: DataItem<Environment>[], teams: Team[]) {
+  async addNewPropertiesToAlert(revisedAlerts: Alert[], environments: Environment[], teams: Team[]) {
     return revisedAlerts.map(alert => {
-      const envMatch = environments.find(env => env.attributes.alert_severity_label === alert.labels.severity)
+      const envMatch = environments.find(env => env.alert_severity_label === alert.labels.severity)
       const teamMatch = findTeamMatch(teams, alert.labels.application)
 
       const updatedAlert = { ...alert }
 
-      if (envMatch) updatedAlert.labels.alert_slack_channel = envMatch.attributes.alerts_slack_channel
+      if (envMatch) updatedAlert.labels.alert_slack_channel = envMatch.alerts_slack_channel
       if (teamMatch) updatedAlert.labels.team = teamMatch.name
 
       return updatedAlert
@@ -61,7 +60,7 @@ export default class AlertsService {
     })
   }
 
-  async reviseAlerts(alerts: Alert[], environments: DataItem<Environment>[], teams: Team[]) {
+  async reviseAlerts(alerts: Alert[], environments: Environment[], teams: Team[]) {
     const revisedEnvAlerts = await this.mapAlertEnvironments(alerts)
     const revisedAlerts = await this.addNewPropertiesToAlert(revisedEnvAlerts, environments, teams)
 
