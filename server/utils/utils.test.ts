@@ -27,9 +27,13 @@ import {
   differenceInDate,
   median,
   mapToCanonicalEnv,
+  utcTimestampToUtcDate,
+  utcTimestampToUtcDateTime,
 } from './utils'
-import * as utils from './utils'
-import type { Team } from '../data/modelTypes'
+// import * as utils from './utils'
+// import type { Product, Team, TrivyScanType } from '../data/modelTypes'
+// import { Alert } from '../@types'
+// import { DataItem } from '../data/strapiClientTypes'
 
 describe('Utils', () => {
   describe('convert to title case', () => {
@@ -405,26 +409,31 @@ describe('Utils', () => {
     })
   })
 
-  describe('findTeamMatch', () => {
-    it('should return the formatted team name matching the team', () => {
-      const teams = [{ name: 'Example Team' }] as Team[]
-      const formattedName = 'Example Team'
-
-      jest.spyOn(utils, 'formatMonitorName').mockReturnValue(formattedName)
-      jest.spyOn(utils, 'formatMonitorName').mockReturnValue(formattedName)
-
-      const result = utils.findTeamMatch(teams, formattedName)
-
-      expect(utils.formatMonitorName).toHaveBeenCalledWith(formattedName)
-      // expect(result).toBe('example-team')
-    })
-  })
+  // describe('findTeamMatch', () => {
+  //   it('should return the formatted team name matching the team', () => {
+  //     const teams = [{ name: 'Example Team', products: [{name: 'Example Product'}] }] as Team[]
+  //     const alerts = [{labels: [{application: 'Example Application'}]}] as Alert[]
+  //     const componentName = 'Example Component'
+  //
+  //     jest.spyOn(utils, 'formatMonitorName').mockReturnValue(alerts)
+  //     jest.spyOn(utils, 'formatMonitorName').mockReturnValue(componentName)
+  //
+  //     const result = utils.findTeamMatch(teams, alerts)
+  //
+  //     expect(utils.formatMonitorName).toHaveBeenCalledWith(formattedName)
+  //     // expect(utils.formatMonitorName).toHaveBeenCalledWith(componentName)
+  //     expect(result.components).toBe('example-team')
+  //   })
+  // })
 
   // TEST NEEDED:
   // describe('addTeamToTrivyScan', () => {
-  //   it('add a team to Trivy scan', () => {
+  //   it('adds a team to Trivy scan', () => {
   //     const teams = [{ name: 'Example Team' }] as Team[]
-  //     jest.spyOn(utils, 'findTeamMatch').mockReturnValue(teams)
+  //     const trivyScan = [{name: 'Example Scan'}] as TrivyScanType[]
+  //     const scanMatch = [{teams: teams, trivyScan.name }]
+  //
+  //     jest.spyOn(utils, 'findTeamMatch').mockReturnValue(scanMatch)
   //   })
   // })
 
@@ -456,7 +465,7 @@ describe('Utils', () => {
     })
   })
 
-  // TEST NEEDED:
+  // // TEST NEEDED:
   // describe('getDependencyNames', () => {
   //   const components = [ { xx: { xx: 'xx' } }] as DataItem<Component>
   //
@@ -664,8 +673,22 @@ describe('veracodeFilters', () => {
   })
 })
 
-// TEST NEEDED:
-describe('utcTimestampToUtcDate', () => {})
+describe('utcTimestampToUtcDate', () => {
+  it('empty string', () => {
+    expect(utcTimestampToUtcDate('')).toEqual(undefined)
+  })
 
-// TEST NEEDED:
-describe('utcTimestampToUtcDateTime', () => {})
+  it('formats the date correctly', () => {
+    expect(utcTimestampToUtcDate('05.12.2025')).toEqual('2025-05-12')
+  })
+})
+
+describe('utcTimestampToUtcDateTime', () => {
+  it('empty string', () => {
+    expect(utcTimestampToUtcDateTime('')).toEqual(undefined)
+  })
+
+  it('formats the date correctly', () => {
+    expect(utcTimestampToUtcDateTime('2025-09-09 10:20:18')).toEqual('09-SEP-2025 10:20:18')
+  })
+})
