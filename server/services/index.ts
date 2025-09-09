@@ -9,6 +9,7 @@ import ComponentNameService from './componentNameService'
 import DataFilterService from './dataFilterService'
 import TeamHealthService from './teamHealthService'
 import AlertsService from './alertsService'
+import MonitoringChannelService from './monitoringChannelService'
 
 export const services = () => {
   const { strapiApiClientBuilder, applicationInfo, alertsApiClient } = dataAccess()
@@ -27,6 +28,7 @@ export const services = () => {
     serviceCatalogueService,
     strapiApiClientBuilder,
   )
+  const monitoringChannelService = new MonitoringChannelService()
 
   return {
     applicationInfo,
@@ -38,6 +40,7 @@ export const services = () => {
     teamHealthService,
     alertsService,
     teamsSummaryCountService,
+    monitoringChannelService,
   }
 }
 

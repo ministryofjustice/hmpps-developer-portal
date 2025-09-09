@@ -3,7 +3,11 @@ import type { Services } from '../services'
 import { getFormattedName, utcTimestampToUtcDateTime } from '../utils/utils'
 import logger from '../../logger'
 
-export default function routes({ serviceCatalogueService, teamsSummaryCountService }: Services): Router {
+export default function routes({
+  serviceCatalogueService,
+  teamsSummaryCountService,
+  monitoringChannelService,
+}: Services): Router {
   const router = Router()
 
   router.get('/', async (req, res) => {
@@ -38,7 +42,7 @@ export default function routes({ serviceCatalogueService, teamsSummaryCountServi
 
   router.get('/team-overview/:teamSlug', async (req, res) => {
     const teamSlug = getFormattedName(req, 'teamSlug')
-    const team = await serviceCatalogueService.getTeam({ teamSlug })
+    const team = await serviceCatalogueService.getTeam({ teamSlug, withEnvironments: true })
     const products = team.products.map(product => product)
 
     try {
@@ -57,6 +61,18 @@ export default function routes({ serviceCatalogueService, teamsSummaryCountServi
       )
       const veryHighAndHighVeracode = teamVeracodeScanSummary.veryHigh + teamVeracodeScanSummary.high
 
+      // Generate monitoring channel recommendations
+      const channelRecommendations = monitoringChannelService.generateChannelRecommendations(team)
+      const channelTree = monitoringChannelService.generateChannelTree(channelRecommendations)
+
+      // Check for legacy channels
+      const hasLegacyChannels = channelRecommendations.recommendations.some(
+        rec =>
+          rec.currentChannels.dev === '#dps_alerts_non_prod' ||
+          rec.currentChannels.preprod === '#dps_alerts_non_prod' ||
+          rec.currentChannels.prod === '#dps_alerts',
+      )
+
       res.render('pages/teamOverview', {
         teamName: team.name,
         formatTeamNameURL: encodeURIComponent(team.name),
@@ -64,6 +80,9 @@ export default function routes({ serviceCatalogueService, teamsSummaryCountServi
         teamAlertSummary,
         criticalAndHighTrivy,
         veryHighAndHighVeracode,
+        channelRecommendations,
+        channelTree,
+        hasLegacyChannels,
       })
     } catch (err) {
       logger.error(`Error calling getTeamAlertSummary for team '${teamSlug}':`, err)
