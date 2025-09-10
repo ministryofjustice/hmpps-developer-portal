@@ -4,25 +4,32 @@
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - " + teamName %}
+{% set pageTitle = applicationName + " - " + team.name %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
-{{ breadCrumb(teamName, [{title: "Teams", href: "/teams"}]) }}
+{{ breadCrumb(team.name, [{title: "Teams", href: "/teams"}]) }}
 
 <h3>The information on this page relates to products & components in the production environment only</h3>
 
-<h1>{% if teamName %}{{ teamName }}{% else %}Team Overview{% endif %}</h1>
+<h1>{{ team.name }}</h1>
+
+{% if team.slackChannelId and team.slackChannelName %}
+  <h3>
+    Slack Channel: 
+    <a href="slack://channel?team={{ team.slackWorkspaceId }}&id={{ team.slackChannelId }}" class="slack-icon">#{{ team.slackChannelName }}</a>
+  </h3>
+{% endif %}
 
 
-{% if teamAlertSummary.total > 0 %}
+{% if team.alertSummary.total > 0 %}
   {{ mojAlert({
     variant: "warning",
     title: "Active Alerts",
     showTitleAsHeading: true,
     dismissible: false,
-    html: 'There are actively triggering alerts on one or more components. <a href="/alerts?environment=prod&team=' + formatTeamNameURL + '">Please see active alerts for more</a>.'
+    html: 'There are actively triggering alerts on one or more components. <a href="/alerts?environment=prod&team=' + team.encodedTeamName + '">Please see active alerts for more</a>.'
   }) }}
 {% else %}
   {{ mojAlert({
@@ -46,12 +53,12 @@
           </dt>
         <div class="govuk-summary-list__row">
           <dt class="govuk-summary-list__key govuk-body govuk-!-font-size-48">
-           {{ teamAlertSummary.total }}
+           {{ team.alertSummary.total }}
           </dt>
         </div>
           <div class="govuk-summary-list__row">
             <dd class="govuk-summary-list__value">
-              <a class="govuk-link" href="/alerts?environment=prod&team={{ formatTeamNameURL }}">See active alerts</a>
+              <a class="govuk-link" href="/alerts?environment=prod&team={{ team.encodedTeamName }}">See active alerts</a>
             </dd>
           </div>
         </dl>
@@ -67,12 +74,12 @@
             </dt>
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key govuk-body govuk-!-font-size-48">
-              {{ criticalAndHighTrivy }}
+              {{ team.criticalAndHighTrivy }}
             </dt>
           </div>
           <div class="govuk-summary-list__row">
             <dd class="govuk-summary-list__value">
-              <a class="govuk-link" href="/trivy-scans?team={{ formatTeamNameURL }}">See Trivy scan results</a>
+              <a class="govuk-link" href="/trivy-scans?team={{ team.encodedTeamName }}">See Trivy scan results</a>
             </dd>
           </div>
         </dl>
@@ -88,12 +95,12 @@
             </dt>
           <div class="govuk-summary-list__row">
             <dt class="govuk-summary-list__key govuk-body govuk-!-font-size-48">
-              {{ veryHighAndHighVeracode }}
+              {{ team.veryHighAndHighVeracode }}
             </dt>
           </div>
           <div class="govuk-summary-list__row">
             <dd class="govuk-summary-list__value">
-              <a class="govuk-link" href="/veracode?team={{ formatTeamNameURL }}">See veracode scan results</a>
+              <a class="govuk-link" href="/veracode?team={{ team.encodedTeamName }}">See veracode scan results</a>
             </dd>
           </div>
         </dl>
@@ -102,7 +109,7 @@
   </div>
 </div>
 
-{% if channelRecommendations %}
+{% if team.channelRecommendations %}
 <h3 class="govuk-heading-m">Monitoring Channel Recommendations</h3>
 
 <div class="govuk-grid-row">
@@ -157,19 +164,19 @@
           <div class="govuk-grid-column-one-half">
             <h4 class="govuk-heading-s">Recommended Channels</h4>
             <ul class="govuk-list govuk-list--bullet">
-              <li><strong>{{ channelRecommendations.suggestedChannels.nonProd }}</strong> - For dev and preprod alerts</li>
-              <li><strong>{{ channelRecommendations.suggestedChannels.prod }}</strong> - For production alerts</li>
-              <li class="govuk-hint govuk-body-s">Alternative: <strong>{{ channelRecommendations.suggestedChannels.prodAlt }}</strong> - Shorter prod channel name</li>
+              <li><strong>{{ team.channelRecommendations.suggestedChannels.nonProd }}</strong> - For dev and preprod alerts</li>
+              <li><strong>{{ team.channelRecommendations.suggestedChannels.prod }}</strong> - For production alerts</li>
+              <li class="govuk-hint govuk-body-s">Alternative: <strong>{{ team.channelRecommendations.suggestedChannels.prodAlt }}</strong> - Shorter prod channel name</li>
             </ul>
           </div>
           <div class="govuk-grid-column-one-half">
             <h4 class="govuk-heading-s">Channel Structure</h4>
-            <pre class="govuk-body-s" style="background-color: #f3f2f1; padding: 15px; border-radius: 4px; font-family: monospace;">{% for line in channelTree %}{{ line }}
+            <pre class="govuk-body-s" style="background-color: #f3f2f1; padding: 15px; border-radius: 4px; font-family: monospace;">{% for line in team.channelTree %}{{ line }}
 {% endfor %}</pre>
           </div>
         </div>
 
-        {% if channelRecommendations.recommendations.length > 0 %}
+        {% if team.channelRecommendations.recommendations.length > 0 %}
         <details class="govuk-details" data-module="govuk-details">
           <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
@@ -187,7 +194,7 @@
                 </tr>
               </thead>
               <tbody class="govuk-table__body">
-                {% for rec in channelRecommendations.recommendations %}
+                {% for rec in team.channelRecommendations.recommendations %}
                   <tr class="govuk-table__row">
                     <td class="govuk-table__cell" rowspan="3">{{ rec.componentName }}</td>
                     <td class="govuk-table__cell">Dev</td>
@@ -241,7 +248,6 @@
             <li><strong>Migrates away from shared channels like #dps_alerts</strong> to team-specific channels</li>
           </ul>
         </div>
-
 
         {% if hasLegacyChannels %}
           <div class="govuk-warning-text">
