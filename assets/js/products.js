@@ -8,6 +8,12 @@ jQuery(function () {
     },
     { data: 'name', render: cleanColumnOutput },
     {
+      data: 'phase',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.phase}`)
+      },
+    },
+    {
       data: 'product_set.ps_id',
       createdCell: function (td, _cellData, rowData) {
         const link = rowData.product_set
@@ -28,7 +34,7 @@ jQuery(function () {
   createTable({
     id: 'productsTable',
     ajaxUrl: '/products/data',
-    orderColumn: 1,
+    orderColumn: 0,
     orderType: 'asc',
     columns,
   })

@@ -71,4 +71,7 @@ export default {
     },
   },
   domain: get('INGRESS_URL', 'http://localhost:3000', requiredInProduction),
+  slack: {
+    workspaceId: get('SLACK_WORKSPACE_ID', 'T02DYEB3A', requiredInProduction),
+  },
 }
