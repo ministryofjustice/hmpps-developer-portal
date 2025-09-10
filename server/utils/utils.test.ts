@@ -424,8 +424,8 @@ describe('veracodeFilters', () => {
       ],
       [
         'Nested entries with hierarchical structure',
-        { populate: ['products', 'products.components'] },
-        'populate%5Bproducts%5D%5Bpopulate%5D%5Bcomponents%5D=true',
+        { populate: ['products.components.envs', 'products', 'products.components'] },
+        'populate%5Bproducts%5D%5Bpopulate%5D%5Bcomponents%5D%5Bpopulate%5D%5Benvs%5D=true',
       ],
     ])('%s createStrapiQuery(%s)', (_: string, input: { populate?: string[] }, expected: string) => {
       expect(createStrapiQuery(input)).toEqual(expected)

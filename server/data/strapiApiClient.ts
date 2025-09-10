@@ -1,4 +1,3 @@
-import { URLSearchParams } from 'url'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import * as Strapi from './strapiApiTypes'
