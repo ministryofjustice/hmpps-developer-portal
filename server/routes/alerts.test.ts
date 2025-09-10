@@ -104,7 +104,7 @@ describe('/alerts', () => {
     })
 
     it('should render alerts page with environment options', async () => {
-      const res = await request(app).get('/alerts/environment/test-alert').expect(200)
+      return request(app).get('/alerts/environment/test-alert').expect(200)
       expect(alertsService.getAlertType).toHaveBeenCalledWith(
         expect.objectContaining({
           params: { alertType: 'environment', alertName: 'test-alert' },
