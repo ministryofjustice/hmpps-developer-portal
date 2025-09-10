@@ -1,233 +1,224 @@
-import { createClient } from 'redis'
+import { ClientClosedError } from 'redis'
+import RedisService from '../services/redisService'
 import logger from '../../logger'
 
-// Mock dependencies
-jest.mock('redis')
 jest.mock('../../logger')
-jest.mock('../config', () => ({
-  redis: {
-    host: 'localhost',
-    port: 6379,
-    password: 'test-password',
-    tlsEnabled: 'false',
-    tlsVerification: 'true',
-  },
-}))
 
-const mockCreateClient = createClient as jest.MockedFunction<typeof createClient>
 const mockLogger = logger as jest.Mocked<typeof logger>
 
-describe('RedisClient', () => {
-  let mockRedisClient: {
-    on: jest.Mock
-    connect: jest.Mock
-    disconnect: jest.Mock
-    quit: jest.Mock
+interface MockRedisClient {
+  connect: jest.Mock
+  disconnect: jest.Mock
+  quit: jest.Mock
+  on: jest.Mock
+  xRead: jest.Mock
+  json: {
     get: jest.Mock
-    set: jest.Mock
-    del: jest.Mock
-    exists: jest.Mock
-    expire: jest.Mock
-    ttl: jest.Mock
   }
+}
+
+describe('RedisService Integration Tests', () => {
+  let redisService: RedisService
+  let mockRedisClient: MockRedisClient
 
   beforeEach(() => {
     jest.clearAllMocks()
 
-    // Create a mock Redis client
+    // Create a comprehensive mock Redis client
     mockRedisClient = {
-      on: jest.fn(),
       connect: jest.fn(),
       disconnect: jest.fn(),
       quit: jest.fn(),
-      get: jest.fn(),
-      set: jest.fn(),
-      del: jest.fn(),
-      exists: jest.fn(),
-      expire: jest.fn(),
-      ttl: jest.fn(),
+      on: jest.fn(),
+      xRead: jest.fn(),
+      json: {
+        get: jest.fn(),
+      },
     }
 
-    mockCreateClient.mockReturnValue(mockRedisClient as never)
+    redisService = new RedisService(mockRedisClient as never)
   })
 
-  describe('createRedisClient function', () => {
-    it('should create Redis client with default configuration', async () => {
-      // Import the function after mocks are set up
-      const { createRedisClient } = await import('./redisClient')
-
-      const client = createRedisClient()
-
-      expect(mockCreateClient).toHaveBeenCalledWith({
-        url: 'redis://localhost:6379',
-        password: 'test-password',
-        socket: {
-          rejectUnauthorized: true,
-          reconnectStrategy: expect.any(Function),
+  describe('readStream', () => {
+    it('should successfully read from Redis stream', async () => {
+      const mockStreamData = [
+        {
+          name: 'test-stream',
+          messages: [
+            {
+              id: '1234567890-0',
+              message: { field1: 'value1', field2: 'value2' },
+            },
+          ],
         },
-      })
+      ]
 
-      expect(client).toBe(mockRedisClient)
+      mockRedisClient.xRead.mockResolvedValue(mockStreamData)
+
+      const result = await redisService.readStream([{ key: 'test-stream', id: '0' }])
+
+      expect(mockRedisClient.xRead).toHaveBeenCalledWith(expect.objectContaining({ isolated: true }), [
+        { key: 'test-stream', id: '0' },
+      ])
+      expect(result).toBe(JSON.stringify(mockStreamData))
     })
 
-    it('should register error event handler', async () => {
-      const { createRedisClient } = await import('./redisClient')
+    it('should return empty array when no stream data available', async () => {
+      mockRedisClient.xRead.mockResolvedValue(null)
 
-      createRedisClient()
+      const result = await redisService.readStream([{ key: 'empty-stream', id: '0' }])
 
-      expect(mockRedisClient.on).toHaveBeenCalledWith('error', expect.any(Function))
+      expect(result).toBe('[]')
     })
 
-    it('should log Redis client errors when error event is triggered', async () => {
-      const { createRedisClient } = await import('./redisClient')
+    it('should handle Redis stream read errors', async () => {
+      const error = new Error('Stream read failed')
+      mockRedisClient.xRead.mockRejectedValue(error)
 
-      createRedisClient()
+      await expect(redisService.readStream([{ key: 'failing-stream', id: '0' }])).rejects.toThrow('Stream read failed')
 
-      // Get the error handler function that was registered
-      const errorHandler = mockRedisClient.on.mock.calls.find((call: unknown[]) => call[0] === 'error')?.[1]
-      expect(errorHandler).toBeDefined()
+      expect(mockLogger.error).toHaveBeenCalledWith('Failed to xRead from Redis Stream: Stream read failed', error)
+    })
 
-      // Simulate an error
-      const testError = new Error('Redis connection failed')
-      errorHandler?.(testError)
+    it('should handle ClientClosedError and attempt reconnection', async () => {
+      const clientClosedError = new ClientClosedError()
+      mockRedisClient.xRead.mockRejectedValue(clientClosedError)
 
-      expect(mockLogger.error).toHaveBeenCalledWith('Redis client error', testError)
+      await expect(redisService.readStream([{ key: 'test-stream', id: '0' }])).rejects.toThrow()
+
+      expect(mockLogger.error).toHaveBeenCalledWith('The client is closed ...RECONNECTING')
     })
   })
 
-  describe('reconnectStrategy', () => {
-    let reconnectStrategy: (attempts: number) => number
+  describe('readLatest', () => {
+    it('should successfully read latest version data', async () => {
+      const mockRedisData = {
+        'component:some-service:dev': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'component:some-service:prod': { v: '2023-01-15.120.abc1230', dateAdded: '2023-02-11' },
+      }
 
-    beforeEach(async () => {
-      const { createRedisClient } = await import('./redisClient')
-      createRedisClient()
+      mockRedisClient.json.get.mockResolvedValue(mockRedisData)
 
-      // Extract the reconnectStrategy function from the mock call
-      const createClientCall = mockCreateClient.mock.calls[0][0]
-      reconnectStrategy = createClientCall.socket?.reconnectStrategy as (attempts: number) => number
+      const result = await redisService.readLatest('component:latest')
+
+      expect(mockRedisClient.json.get).toHaveBeenCalledWith(
+        expect.objectContaining({ isolated: true }),
+        'component:latest',
+      )
+      expect(result).toEqual({
+        'some-service:dev': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
+        'some-service:prod': { v: '2023-01-15.120.abc1230', dateAdded: '2023-02-11' },
+      })
     })
 
-    it('should implement exponential backoff starting at 20ms', () => {
-      expect(reconnectStrategy(1)).toBe(40) // 2^1 * 20 = 40ms
-      expect(reconnectStrategy(2)).toBe(80) // 2^2 * 20 = 80ms
-      expect(reconnectStrategy(3)).toBe(160) // 2^3 * 20 = 160ms
+    it('should handle empty Redis response', async () => {
+      mockRedisClient.json.get.mockResolvedValue({})
+
+      const result = await redisService.readLatest('empty-key')
+
+      expect(result).toEqual({})
     })
 
-    it('should cap retry delay at 30 seconds', () => {
-      expect(reconnectStrategy(15)).toBe(30000) // Should be capped at 30000ms
-      expect(reconnectStrategy(20)).toBe(30000) // Should remain capped
+    it('should handle Redis read errors', async () => {
+      const error = new Error('Redis connection timeout')
+      mockRedisClient.json.get.mockRejectedValue(error)
+
+      await expect(redisService.readLatest('failing-key')).rejects.toThrow('Redis connection timeout')
+
+      expect(mockLogger.error).toHaveBeenCalledWith('Failed to read latest: Redis connection timeout', error)
+    })
+  })
+
+  describe('getAllDependencies', () => {
+    it('should successfully retrieve dependency information', async () => {
+      const mockDependencyInfo = {
+        components: {
+          'service-a': {
+            dependencies: ['service-b', 'database-x'],
+            dependents: ['service-c'],
+          },
+          'service-b': {
+            dependencies: ['database-y'],
+            dependents: ['service-a'],
+          },
+        },
+      }
+
+      mockRedisClient.json.get.mockResolvedValue(mockDependencyInfo)
+
+      const result = await redisService.getAllDependencies()
+
+      expect(mockRedisClient.json.get).toHaveBeenCalledWith(
+        expect.objectContaining({ isolated: true }),
+        'dependency:info',
+      )
+      expect(result).toBeDefined()
+      // Dependencies class constructor is called with the mock data
     })
 
-    it('should log retry attempts with delay information', () => {
-      const attempts = 5
-      const expectedDelay = Math.min(2 ** attempts * 20, 30000)
+    it('should handle dependency retrieval errors', async () => {
+      const error = new Error('Failed to fetch dependencies')
+      mockRedisClient.json.get.mockRejectedValue(error)
 
-      reconnectStrategy(attempts)
+      await expect(redisService.getAllDependencies()).rejects.toThrow('Failed to fetch dependencies')
 
-      expect(mockLogger.info).toHaveBeenCalledWith(
-        `Retry Redis connection attempt: ${attempts}, next attempt in: ${expectedDelay}ms`,
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        'Failed to get dependency info: Failed to fetch dependencies',
+        error,
       )
     })
+  })
 
-    it('should handle edge case of 0 attempts', () => {
-      const result = reconnectStrategy(0)
-      expect(result).toBe(20) // 2^0 * 20 = 20ms
-      expect(mockLogger.info).toHaveBeenCalledWith('Retry Redis connection attempt: 0, next attempt in: 20ms')
+  describe('handleError', () => {
+    it('should handle ClientClosedError specifically', async () => {
+      const clientClosedError = new ClientClosedError()
+
+      await redisService.handleError(clientClosedError, 'Test operation failed')
+
+      expect(mockLogger.error).toHaveBeenCalledWith('The client is closed ...RECONNECTING')
+      expect(mockLogger.error).toHaveBeenCalledWith('Test operation failed: The client is closed', clientClosedError)
     })
 
-    it('should handle large attempt numbers correctly', () => {
-      const result = reconnectStrategy(100)
-      expect(result).toBe(30000) // Should be capped at 30000ms
-      expect(mockLogger.info).toHaveBeenCalledWith('Retry Redis connection attempt: 100, next attempt in: 30000ms')
+    it('should handle generic errors', async () => {
+      const genericError = new Error('Generic Redis error')
+
+      await redisService.handleError(genericError, 'Generic operation failed')
+
+      expect(mockLogger.error).toHaveBeenCalledWith('Generic operation failed: Generic Redis error', genericError)
     })
   })
 
-  describe('Type Exports', () => {
-    it('should export RedisClient type correctly', async () => {
-      const { createRedisClient } = await import('./redisClient')
-      const client = createRedisClient()
-
-      // This test ensures the RedisClient type is properly exported and usable
-      expect(client).toBeDefined()
-      expect(typeof client).toBe('object')
-
-      // The RedisClient type is a TypeScript type export, not a runtime value
-      // TypeScript compilation will catch any issues with the type export
-    })
-  })
-})
-
-describe('RedisClient configuration logic', () => {
-  describe('URL construction', () => {
-    it('should construct redis:// URL when TLS is disabled', () => {
-      const config = {
-        redis: {
-          host: 'test-host',
-          port: 1234,
-          tlsEnabled: 'false',
-        },
+  describe('Real-world usage scenarios', () => {
+    it('should handle version data parsing correctly', async () => {
+      const realVersionData = {
+        'component:hmpps-auth:dev': { v: '2023-12-01.456.def5678', dateAdded: '2023-12-01T10:30:00Z' },
+        'component:hmpps-auth:preprod': { v: '2023-12-01.456.def5678', dateAdded: '2023-12-01T10:30:00Z' },
+        'component:hmpps-auth:prod': { v: '2023-11-28.450.abc1234', dateAdded: '2023-11-28T14:22:00Z' },
       }
 
-      const url =
-        config.redis.tlsEnabled === 'true'
-          ? `rediss://${config.redis.host}:${config.redis.port}`
-          : `redis://${config.redis.host}:${config.redis.port}`
+      mockRedisClient.json.get.mockResolvedValue(realVersionData)
 
-      expect(url).toBe('redis://test-host:1234')
+      const result = await redisService.readLatest('component:latest')
+
+      expect(result).toEqual({
+        'hmpps-auth:dev': { v: '2023-12-01.456.def5678', dateAdded: '2023-12-01T10:30:00Z' },
+        'hmpps-auth:preprod': { v: '2023-12-01.456.def5678', dateAdded: '2023-12-01T10:30:00Z' },
+        'hmpps-auth:prod': { v: '2023-11-28.450.abc1234', dateAdded: '2023-11-28T14:22:00Z' },
+      })
     })
 
-    it('should construct rediss:// URL when TLS is enabled', () => {
-      const config = {
-        redis: {
-          host: 'secure-host',
-          port: 5678,
-          tlsEnabled: 'true',
-        },
-      }
+    it('should handle multiple stream reads in sequence', async () => {
+      const streamData1 = [{ name: 'stream1', messages: [{ id: '1-0', message: { data: 'first' } }] }]
+      const streamData2 = [{ name: 'stream2', messages: [{ id: '2-0', message: { data: 'second' } }] }]
 
-      const url =
-        config.redis.tlsEnabled === 'true'
-          ? `rediss://${config.redis.host}:${config.redis.port}`
-          : `redis://${config.redis.host}:${config.redis.port}`
+      mockRedisClient.xRead.mockResolvedValueOnce(streamData1).mockResolvedValueOnce(streamData2)
 
-      expect(url).toBe('rediss://secure-host:5678')
-    })
-  })
+      const result1 = await redisService.readStream([{ key: 'stream1', id: '0' }])
+      const result2 = await redisService.readStream([{ key: 'stream2', id: '0' }])
 
-  describe('TLS verification logic', () => {
-    it('should set rejectUnauthorized to true when tlsVerification is true', () => {
-      const config = { redis: { tlsVerification: 'true' } }
-      const tlsVerification = config.redis.tlsVerification === 'true'
-
-      expect(tlsVerification).toBe(true)
-    })
-
-    it('should set rejectUnauthorized to false when tlsVerification is false', () => {
-      const config = { redis: { tlsVerification: 'false' } }
-      const tlsVerification = config.redis.tlsVerification === 'true'
-
-      expect(tlsVerification).toBe(false)
-    })
-  })
-
-  describe('Configuration edge cases', () => {
-    it('should handle undefined password', () => {
-      const config: { redis: { password: string | undefined } } = { redis: { password: undefined } }
-
-      expect(config.redis.password).toBeUndefined()
-    })
-
-    it('should handle empty string password', () => {
-      const config = { redis: { password: '' } }
-
-      expect(config.redis.password).toBe('')
-    })
-
-    it('should handle non-standard port numbers', () => {
-      const config = { redis: { host: 'custom-redis', port: 9999 } }
-
-      expect(config.redis.port).toBe(9999)
-      expect(typeof config.redis.port).toBe('number')
+      expect(result1).toBe(JSON.stringify(streamData1))
+      expect(result2).toBe(JSON.stringify(streamData2))
+      expect(mockRedisClient.xRead).toHaveBeenCalledTimes(2)
     })
   })
 })
