@@ -27,34 +27,19 @@ jQuery(function () {
           alerts_slack_channel:
             env.alerts_slack_channel === null || env.alerts_slack_channel === '' ? 'N/A' : env.alerts_slack_channel,
           product_id:
-            !productData ||
-            productData.p_id === null ||
-            productData.p_id === '' ||
-            typeof productData.p_id === 'undefined'
+            !productData || productData.p_id === null || typeof productData.p_id === 'undefined'
               ? ''
               : productData.p_id,
           product_name:
-            !productData ||
-            productData.name === null ||
-            productData.name === '' ||
-            typeof productData.name === 'undefined'
+            !productData || productData.name === null || typeof productData.name === 'undefined'
               ? ''
               : productData.name,
           product_slug:
-            !productData ||
-            productData.slug === null ||
-            productData.slug === '' ||
-            typeof productData.slug === 'undefined'
+            !productData || productData.slug === null || typeof productData.slug === 'undefined'
               ? ''
               : productData.slug,
-          team_name:
-            !teamData || teamData.name === null || teamData.name === '' || typeof teamData.name === 'undefined'
-              ? ''
-              : teamData.name,
-          team_slug:
-            !teamData || teamData.slug === null || teamData.slug === '' || typeof teamData.slug === 'undefined'
-              ? ''
-              : teamData.slug,
+          team_name: !teamData || teamData.name === null || typeof teamData.name === 'undefined' ? '' : teamData.name,
+          team_slug: !teamData || teamData.slug === null || typeof teamData.slug === 'undefined' ? '' : teamData.slug,
         })
       })
     })
