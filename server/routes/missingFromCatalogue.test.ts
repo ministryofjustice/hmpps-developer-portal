@@ -127,7 +127,6 @@ describe('/missingFromCatalogue', () => {
           expect(rows.length).toBe(2)
 
           const row = componentsMissingTeamsTable.find('tbody .govuk-table__row').eq(0)
-          // const row = $('#missing-components .govuk-table tbody .govuk-table__row').eq(0)
           // Select the first cell's link
           const componentLink = row.find('td').eq(0).find('.govuk-table__cell a')
           expect(componentLink.text().trim()).toBe('hmpps-mock-programmes-api')
@@ -153,12 +152,11 @@ describe('/missingFromCatalogue', () => {
           expect(rows.length).toBe(2)
 
           const row = componentsMissingTeamsTable.find('tbody .govuk-table__row').eq(0)
-          // const row = $('#missing-components .govuk-table tbody .govuk-table__row').eq(0)
           // Select the first cell's link
           const componentLink = row.find('td').eq(0).find('.govuk-table__cell a')
           expect(componentLink.text().trim()).toBe('mock-component-1')
           expect(componentLink.attr('href')).toBe('/components/mock-component-1')
-          // Select the second cell's link
+          // Select the second cell's text
           const reason = row.find('td').eq(1)
           expect(reason.text().trim()).toBe('Missing version info in redis')
         })
