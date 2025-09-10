@@ -31,29 +31,29 @@ jQuery(function () {
             productData.p_id === null ||
             productData.p_id === '' ||
             typeof productData.p_id === 'undefined'
-              ? 'N/A'
+              ? ''
               : productData.p_id,
           product_name:
             !productData ||
             productData.name === null ||
             productData.name === '' ||
             typeof productData.name === 'undefined'
-              ? 'N/A'
+              ? ''
               : productData.name,
           product_slug:
             !productData ||
             productData.slug === null ||
             productData.slug === '' ||
             typeof productData.slug === 'undefined'
-              ? 'N/A'
+              ? ''
               : productData.slug,
           team_name:
             !teamData || teamData.name === null || teamData.name === '' || typeof teamData.name === 'undefined'
-              ? 'N/A'
+              ? ''
               : teamData.name,
           team_slug:
             !teamData || teamData.slug === null || teamData.slug === '' || typeof teamData.slug === 'undefined'
-              ? 'N/A'
+              ? ''
               : teamData.slug,
         })
       })
