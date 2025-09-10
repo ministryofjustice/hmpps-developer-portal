@@ -1,4 +1,3 @@
-import { Readable } from 'stream'
 import nock from 'nock'
 import RestClient from './restClient'
 import { AgentConfig } from '../config'
