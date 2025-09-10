@@ -171,7 +171,7 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "email": "foo.bar@strapi.io"
+           *       'email': 'foo.bar@strapi.io'
            *     } */
           'application/json': {
             email?: string
@@ -231,8 +231,8 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "identifier": "foobar",
-           *       "password": "Test1234"
+           *       'identifier': 'foobar',
+           *       'password': 'Test1234'
            *     } */
           'application/json': {
             identifier?: string
@@ -290,9 +290,9 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "username": "foobar",
-           *       "email": "foo.bar@strapi.io",
-           *       "password": "Test1234"
+           *       'username': 'foobar',
+           *       'email': 'foo.bar@strapi.io',
+           *       'password': 'Test1234'
            *     } */
           'application/json': {
             email?: string
@@ -348,9 +348,9 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "password": "Test1234",
-           *       "passwordConfirmation": "Test1234",
-           *       "code": "zertyoaizndoianzodianzdonaizdoinaozdnia"
+           *       'password': 'Test1234',
+           *       'passwordConfirmation': 'Test1234',
+           *       'code': 'zertyoaizndoianzodianzdonaizdoinaozdnia'
            *     } */
           'application/json': {
             code?: string
@@ -1127,14 +1127,14 @@ export interface paths {
           content: {
             /** @example [
              *       {
-             *         "id": 9,
-             *         "username": "foao@strapi.io",
-             *         "email": "foao@strapi.io",
-             *         "provider": "local",
-             *         "confirmed": false,
-             *         "blocked": false,
-             *         "createdAt": "2022-06-01T18:32:35.211Z",
-             *         "updatedAt": "2022-06-01T18:32:35.217Z"
+             *         'id': 9,
+             *         'username': 'foao@strapi.io',
+             *         'email': 'foao@strapi.io',
+             *         'provider': 'local',
+             *         'confirmed': false,
+             *         'blocked': false,
+             *         'createdAt': '2022-06-01T18:32:35.211Z',
+             *         'updatedAt': '2022-06-01T18:32:35.217Z'
              *       }
              *     ] */
             'application/json': components['schemas']['Users-Permissions-User'][]
@@ -1163,9 +1163,9 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "username": "foo",
-           *       "email": "foo@strapi.io",
-           *       "password": "foo-password"
+           *       'username': 'foo',
+           *       'email': 'foo@strapi.io',
+           *       'password': 'foo-password'
            *     } */
           'application/json': {
             email: string
@@ -1182,21 +1182,21 @@ export interface paths {
           }
           content: {
             /** @example {
-             *       "id": 1,
-             *       "username": "foo",
-             *       "email": "foo@strapi.io",
-             *       "provider": "local",
-             *       "confirmed": false,
-             *       "blocked": false,
-             *       "createdAt": "2022-05-19T17:35:35.096Z",
-             *       "updatedAt": "2022-05-19T17:35:35.096Z",
-             *       "role": {
-             *         "id": 1,
-             *         "name": "X",
-             *         "description": "Default role given to authenticated user.",
-             *         "type": "authenticated",
-             *         "createdAt": "2022-05-19T17:35:35.096Z",
-             *         "updatedAt": "2022-06-04T07:11:59.551Z"
+             *       'id': 1,
+             *       'username': 'foo',
+             *       'email': 'foo@strapi.io',
+             *       'provider': 'local',
+             *       'confirmed': false,
+             *       'blocked': false,
+             *       'createdAt': '2022-05-19T17:35:35.096Z',
+             *       'updatedAt': '2022-05-19T17:35:35.096Z',
+             *       'role': {
+             *         'id': 1,
+             *         'name': 'X',
+             *         'description': 'Default role given to authenticated user.',
+             *         'type': 'authenticated',
+             *         'createdAt': '2022-05-19T17:35:35.096Z',
+             *         'updatedAt': '2022-06-04T07:11:59.551Z'
              *       }
              *     } */
             'application/json': components['schemas']['Users-Permissions-User'] & {
@@ -1245,35 +1245,35 @@ export interface paths {
           }
           content: {
             /** @example {
-             *       "permissions": {
-             *         "api::content-type.content-type": {
-             *           "controllers": {
-             *             "controllerA": {
-             *               "find": {
-             *                 "enabled": false,
-             *                 "policy": ""
+             *       'permissions': {
+             *         'api::content-type.content-type': {
+             *           'controllers': {
+             *             'controllerA': {
+             *               'find': {
+             *                 'enabled': false,
+             *                 'policy': ''
              *               },
-             *               "findOne": {
-             *                 "enabled": false,
-             *                 "policy": ""
+             *               'findOne': {
+             *                 'enabled': false,
+             *                 'policy': ''
              *               },
-             *               "create": {
-             *                 "enabled": false,
-             *                 "policy": ""
+             *               'create': {
+             *                 'enabled': false,
+             *                 'policy': ''
              *               }
              *             },
-             *             "controllerB": {
-             *               "find": {
-             *                 "enabled": false,
-             *                 "policy": ""
+             *             'controllerB': {
+             *               'find': {
+             *                 'enabled': false,
+             *                 'policy': ''
              *               },
-             *               "findOne": {
-             *                 "enabled": false,
-             *                 "policy": ""
+             *               'findOne': {
+             *                 'enabled': false,
+             *                 'policy': ''
              *               },
-             *               "create": {
-             *                 "enabled": false,
-             *                 "policy": ""
+             *               'create': {
+             *                 'enabled': false,
+             *                 'policy': ''
              *               }
              *             }
              *           }
@@ -1328,15 +1328,15 @@ export interface paths {
           }
           content: {
             /** @example {
-             *       "roles": [
+             *       'roles': [
              *         {
-             *           "id": 1,
-             *           "name": "Public",
-             *           "description": "Default role given to unauthenticated user.",
-             *           "type": "public",
-             *           "createdAt": "2022-05-19T17:35:35.097Z",
-             *           "updatedAt": "2022-05-31T16:05:36.603Z",
-             *           "nb_users": 0
+             *           'id': 1,
+             *           'name': 'Public',
+             *           'description': 'Default role given to unauthenticated user.',
+             *           'type': 'public',
+             *           'createdAt': '2022-05-19T17:35:35.097Z',
+             *           'updatedAt': '2022-05-31T16:05:36.603Z',
+             *           'nb_users': 0
              *         }
              *       ]
              *     } */
@@ -1425,19 +1425,19 @@ export interface paths {
           }
           content: {
             /** @example {
-             *       "role": {
-             *         "id": 1,
-             *         "name": "Public",
-             *         "description": "Default role given to unauthenticated user.",
-             *         "type": "public",
-             *         "createdAt": "2022-05-19T17:35:35.097Z",
-             *         "updatedAt": "2022-05-31T16:05:36.603Z",
-             *         "permissions": {
-             *           "api::content-type.content-type": {
-             *             "controllers": {
-             *               "controllerA": {
-             *                 "find": {
-             *                   "enabled": true
+             *       'role': {
+             *         'id': 1,
+             *         'name': 'Public',
+             *         'description': 'Default role given to unauthenticated user.',
+             *         'type': 'public',
+             *         'createdAt': '2022-05-19T17:35:35.097Z',
+             *         'updatedAt': '2022-05-31T16:05:36.603Z',
+             *         'permissions': {
+             *           'api::content-type.content-type': {
+             *             'controllers': {
+             *               'controllerA': {
+             *                 'find': {
+             *                   'enabled': true
              *                 }
              *               }
              *             }
@@ -1582,14 +1582,14 @@ export interface paths {
           }
           content: {
             /** @example {
-             *       "id": 1,
-             *       "username": "foo",
-             *       "email": "foo@strapi.io",
-             *       "provider": "local",
-             *       "confirmed": false,
-             *       "blocked": false,
-             *       "createdAt": "2022-05-19T17:35:35.096Z",
-             *       "updatedAt": "2022-05-19T17:35:35.096Z"
+             *       'id': 1,
+             *       'username': 'foo',
+             *       'email': 'foo@strapi.io',
+             *       'provider': 'local',
+             *       'confirmed': false,
+             *       'blocked': false,
+             *       'createdAt': '2022-05-19T17:35:35.096Z',
+             *       'updatedAt': '2022-05-19T17:35:35.096Z'
              *     } */
             'application/json': components['schemas']['Users-Permissions-User']
           }
@@ -1619,9 +1619,9 @@ export interface paths {
       requestBody: {
         content: {
           /** @example {
-           *       "username": "foo",
-           *       "email": "foo@strapi.io",
-           *       "password": "foo-password"
+           *       'username': 'foo',
+           *       'email': 'foo@strapi.io',
+           *       'password': 'foo-password'
            *     } */
           'application/json': {
             email: string
@@ -1638,21 +1638,21 @@ export interface paths {
           }
           content: {
             /** @example {
-             *       "id": 1,
-             *       "username": "foo",
-             *       "email": "foo@strapi.io",
-             *       "provider": "local",
-             *       "confirmed": false,
-             *       "blocked": false,
-             *       "createdAt": "2022-05-19T17:35:35.096Z",
-             *       "updatedAt": "2022-05-19T17:35:35.096Z",
-             *       "role": {
-             *         "id": 1,
-             *         "name": "X",
-             *         "description": "Default role given to authenticated user.",
-             *         "type": "authenticated",
-             *         "createdAt": "2022-05-19T17:35:35.096Z",
-             *         "updatedAt": "2022-06-04T07:11:59.551Z"
+             *       'id': 1,
+             *       'username': 'foo',
+             *       'email': 'foo@strapi.io',
+             *       'provider': 'local',
+             *       'confirmed': false,
+             *       'blocked': false,
+             *       'createdAt': '2022-05-19T17:35:35.096Z',
+             *       'updatedAt': '2022-05-19T17:35:35.096Z',
+             *       'role': {
+             *         'id': 1,
+             *         'name': 'X',
+             *         'description': 'Default role given to authenticated user.',
+             *         'type': 'authenticated',
+             *         'createdAt': '2022-05-19T17:35:35.096Z',
+             *         'updatedAt': '2022-06-04T07:11:59.551Z'
              *       }
              *     } */
             'application/json': components['schemas']['Users-Permissions-User'] & {
@@ -1692,14 +1692,14 @@ export interface paths {
           }
           content: {
             /** @example {
-             *       "id": 1,
-             *       "username": "foo",
-             *       "email": "foo@strapi.io",
-             *       "provider": "local",
-             *       "confirmed": false,
-             *       "blocked": false,
-             *       "createdAt": "2022-05-19T17:35:35.096Z",
-             *       "updatedAt": "2022-05-19T17:35:35.096Z"
+             *       'id': 1,
+             *       'username': 'foo',
+             *       'email': 'foo@strapi.io',
+             *       'provider': 'local',
+             *       'confirmed': false,
+             *       'blocked': false,
+             *       'createdAt': '2022-05-19T17:35:35.096Z',
+             *       'updatedAt': '2022-05-19T17:35:35.096Z'
              *     } */
             'application/json': components['schemas']['Users-Permissions-User']
           }
@@ -1790,14 +1790,14 @@ export interface paths {
           }
           content: {
             /** @example {
-             *       "id": 1,
-             *       "username": "foo",
-             *       "email": "foo@strapi.io",
-             *       "provider": "local",
-             *       "confirmed": false,
-             *       "blocked": false,
-             *       "createdAt": "2022-05-19T17:35:35.096Z",
-             *       "updatedAt": "2022-05-19T17:35:35.096Z"
+             *       'id': 1,
+             *       'username': 'foo',
+             *       'email': 'foo@strapi.io',
+             *       'provider': 'local',
+             *       'confirmed': false,
+             *       'blocked': false,
+             *       'createdAt': '2022-05-19T17:35:35.096Z',
+             *       'updatedAt': '2022-05-19T17:35:35.096Z'
              *     } */
             'application/json': components['schemas']['Users-Permissions-User']
           }
@@ -2196,6 +2196,8 @@ export interface components {
             id?: number
           }
         }
+        pingdom_paused?: boolean
+        pingdom_sre_managed?: boolean
         /** Format: date-time */
         publishedAt?: string
         swagger_docs?: string
@@ -2713,6 +2715,8 @@ export interface components {
               id?: number
             }
           }
+          pingdom_paused?: boolean
+          pingdom_sre_managed?: boolean
           /** Format: date-time */
           publishedAt?: string
           swagger_docs?: string
@@ -3193,6 +3197,8 @@ export interface components {
               id?: number
             }
           }
+          pingdom_paused?: boolean
+          pingdom_sre_managed?: boolean
           /** Format: date-time */
           publishedAt?: string
           swagger_docs?: string
@@ -3455,6 +3461,8 @@ export interface components {
         documentId?: string
         id?: number
       }
+      pingdom_paused?: boolean
+      pingdom_sre_managed?: boolean
       /** Format: date-time */
       publishedAt?: string
       swagger_docs?: string
@@ -3508,6 +3516,8 @@ export interface components {
         namespace?: string
         /** @example string or id */
         ns?: number | string
+        pingdom_paused?: boolean
+        pingdom_sre_managed?: boolean
         swagger_docs?: string
         /** @example string or id */
         trivy_scan?: number | string
@@ -3673,6 +3683,8 @@ export interface components {
         repo_description?: string
         request_github_pr_number?: number
         request_github_pr_status?: string
+        /** @enum {string} */
+        request_type?: 'Add' | 'Update' | 'Archive'
         requester_email?: string
         requester_name?: string
         requester_team?: string
@@ -3695,6 +3707,8 @@ export interface components {
       repo_description?: string
       request_github_pr_number?: number
       request_github_pr_status?: string
+      /** @enum {string} */
+      request_type: 'Add' | 'Update' | 'Archive'
       requester_email?: string
       requester_name?: string
       requester_team?: string
@@ -3740,6 +3754,8 @@ export interface components {
         repo_description?: string
         request_github_pr_number?: number
         request_github_pr_status?: string
+        /** @enum {string} */
+        request_type: 'Add' | 'Update' | 'Archive'
         requester_email?: string
         requester_name?: string
         requester_team?: string
@@ -4205,6 +4221,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_paused?: boolean
+            pingdom_sre_managed?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -4694,6 +4712,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_paused?: boolean
+            pingdom_sre_managed?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -5338,6 +5358,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_paused?: boolean
+            pingdom_sre_managed?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -5791,6 +5813,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_paused?: boolean
+            pingdom_sre_managed?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -6488,7 +6512,6 @@ export interface components {
       username?: string
     }
     'Users-Permissions-UserRegistration': {
-      /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c */
       jwt?: string
       user?: components['schemas']['Users-Permissions-User']
     }
@@ -6499,14 +6522,14 @@ export interface components {
     'Users-Permissions-RoleRequest': {
       content: {
         /** @example {
-         *       "name": "foo",
-         *       "description": "role foo",
-         *       "permissions": {
-         *         "api::content-type.content-type": {
-         *           "controllers": {
-         *             "controllerA": {
-         *               "find": {
-         *                 "enabled": true
+         *       'name': 'foo',
+         *       'description': 'role foo',
+         *       'permissions': {
+         *         'api::content-type.content-type': {
+         *           'controllers': {
+         *             'controllerA': {
+         *               'find': {
+         *                 'enabled': true
          *               }
          *             }
          *           }

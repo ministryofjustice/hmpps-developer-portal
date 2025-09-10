@@ -253,6 +253,7 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       requester_email: sanitiseString(formData.requester_email?.toString()),
       requester_team: formData.requester_team?.toString(),
       request_github_pr_status: 'Pending',
+      request_type: 'Add',
     },
   }
 }
