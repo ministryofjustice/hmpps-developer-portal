@@ -307,14 +307,44 @@ export const utcTimestampToUtcDate = (str: string) => (str ? formatDate(new Date
 export const utcTimestampToUtcDateTime = (str: string) =>
   str ? formatDate(new Date(str), 'dd-MMM-yyyy HH:mm:ss').toUpperCase() : undefined
 
-export const createStrapiQuery = (fields: string[]): string => {
-  if (!fields || fields?.length === 0) {
-    return ''
+export function createStrapiQuery({ populate }: { populate?: string[] }): string {
+  const populateParams: Record<string, unknown> = {}
+
+  populate?.sort((a, b) => b.split('.').length - a.split('.').length)
+
+  populate?.forEach(path => {
+    const keys = path.split('.')
+    let current = populateParams
+
+    keys.forEach((key, index) => {
+      if (!current[key]) {
+        // Ensure the last key is set to true, and intermediate keys have a `populate` object
+        current[key] = index === keys.length - 1 ? true : { populate: {} as Record<string, unknown> }
+      }
+      current =
+        typeof current[key] === 'object' && current[key] !== null
+          ? (current[key] as { populate?: Record<string, unknown> }).populate ||
+            (current[key] as Record<string, unknown>)
+          : current
+    })
+  })
+
+  function buildQuery(
+    obj: Record<string, unknown>,
+    queryString: URLSearchParams = new URLSearchParams(),
+    prefix = 'populate',
+  ): URLSearchParams {
+    Object.entries(obj).forEach(([key, value]) => {
+      const fullKey = `${prefix}[${key}]`
+      if (typeof value === 'object' && value !== null) {
+        buildQuery(value as Record<string, unknown>, queryString, fullKey)
+      } else if (value === true) {
+        queryString.append(fullKey, 'true')
+      }
+    })
+    return queryString
   }
 
-  return fields
-    .reduce((querystring, fieldName) => {
-      return `${querystring}&${encodeURIComponent(`populate[${fieldName.replaceAll('.', '][populate][')}]`)}=true`
-    }, '')
-    .slice(1)
+  const queryString = buildQuery(populateParams)
+  return queryString.toString()
 }

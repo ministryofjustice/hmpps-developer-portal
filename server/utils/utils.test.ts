@@ -396,31 +396,39 @@ describe('veracodeFilters', () => {
       expect(median([1, 2, 3, 4])).toStrictEqual(2.5)
     })
   })
-
   describe('createStrapiQuery', () => {
     it.each([
-      [null, null, ''],
-      ['empty array', [], ''],
-      ['Single item', ['product_set'], 'populate%5Bproduct_set%5D=true'],
-      ['Multiple items', ['product_set', 'team'], 'populate%5Bproduct_set%5D=true&populate%5Bteam%5D=true'],
-      ['Single dotted entry', ['product.team'], 'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true'],
+      [null, { populate: null }, ''],
+      ['empty array', { populate: [] }, ''],
+      ['Single item', { populate: ['product_set'] }, 'populate%5Bproduct_set%5D=true'],
+      [
+        'Multiple items',
+        { populate: ['product_set', 'team'] },
+        'populate%5Bproduct_set%5D=true&populate%5Bteam%5D=true',
+      ],
+      ['Single dotted entry', { populate: ['product.team'] }, 'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true'],
       [
         'Multiple dotted entries',
-        ['product.team', 'envs.trivy_scan'],
+        { populate: ['product.team', 'envs.trivy_scan'] },
         'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D=true',
       ],
       [
         'Single deep dotted entry',
-        ['product.team.extra'],
+        { populate: ['product.team.extra'] },
         'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true',
       ],
       [
         'Multiple deep dotted entries',
-        ['product.team.extra', 'envs.trivy_scan.extra'],
+        { populate: ['product.team.extra', 'envs.trivy_scan.extra'] },
         'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D%5Bpopulate%5D%5Bextra%5D=true',
       ],
-    ])('%s createStrapiQuery(%s)', (_: string, a: string[], expected: string) => {
-      expect(createStrapiQuery(a)).toEqual(expected)
+      [
+        'Nested entries with hierarchical structure',
+        { populate: ['products', 'products.components'] },
+        'populate%5Bproducts%5D%5Bpopulate%5D%5Bcomponents%5D=true',
+      ],
+    ])('%s createStrapiQuery(%s)', (_: string, input: { populate?: string[] }, expected: string) => {
+      expect(createStrapiQuery(input)).toEqual(expected)
     })
   })
 })
