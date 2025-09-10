@@ -11,6 +11,7 @@ import serviceAreaRoutes from '../serviceAreas'
 import monitorRoutes from '../monitor'
 import dependencyRoutes from '../dependencies'
 import productDependenciesRoutes from '../productDependencies'
+import missingFromCatalogueRoutes from '../missingFromCatalogue'
 import componentRequestRoutes from '../componentRequests'
 import scheduledJobsRoutes from '../scheduledJobs'
 import alertsRoutes from '../alerts'
@@ -54,6 +55,7 @@ function appSetup(services: Services, production: boolean): Express {
   app.use('/monitor', monitorRoutes(services))
   app.use('/dependencies', dependencyRoutes(services))
   app.use('/product-dependencies', productDependenciesRoutes(services))
+  app.use('/missing-from-catalogue', missingFromCatalogueRoutes(services))
   app.use('/component-requests', componentRequestRoutes(services))
   app.use('/scheduled-jobs', scheduledJobsRoutes(services))
   app.use('/alerts', alertsRoutes(services))
