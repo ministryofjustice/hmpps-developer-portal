@@ -289,7 +289,7 @@ describe('strapiApiClient', () => {
   describe('postGithubRepoRequest', () => {
     it('should insert a single form request', async () => {
       const response = {
-        data: { documentId: 'documentid1', name: 'GIthub repo request form' },
+        data: { documentId: 'documentid1', name: 'GIthub repo request form', request_type: 'Add' },
       } as Strapi.GithubRepoRequestRequest
       fakeStrapiApi.post('/github-repo-requests').reply(200, response)
 
@@ -308,6 +308,7 @@ describe('strapiApiClient', () => {
           slack_channel_security_scans_notify: 'hmpps-sre-nonprod-slack-channel',
           prod_alerts_severity_label: 'hmpps-sre-prod-slack-channel',
           nonprod_alerts_severity_label: 'hmpps-sre-nonprod-slack-channel',
+          request_type: 'Add',
         },
       })
     })
