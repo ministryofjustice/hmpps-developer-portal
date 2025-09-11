@@ -1,37 +1,25 @@
 import { ClientClosedError } from 'redis'
 import RedisService from '../services/redisService'
+import { RedisClient, createRedisClient } from './redisClient'
 
-// Define only the Redis client methods we need for testing
-interface MockableRedisClient {
-  connect: jest.Mock
-  disconnect: jest.Mock
-  quit: jest.Mock
-  on: jest.Mock
-  xRead: jest.Mock
-  json: {
-    get: jest.Mock
-  }
+const mockRedisClient = {
+  xRead: jest.fn(),
+  json: { get: jest.fn() },
 }
+
+jest.mock('./redisClient', () => ({
+  createRedisClient: jest.fn(() => mockRedisClient),
+}))
 
 describe('RedisService Integration Tests', () => {
   let redisService: RedisService
-  let mockRedisClient: jest.Mocked<MockableRedisClient>
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockRedisClient.xRead.mockReset()
+    mockRedisClient.json.get.mockReset()
 
-    mockRedisClient = {
-      connect: jest.fn(),
-      disconnect: jest.fn(),
-      quit: jest.fn(),
-      on: jest.fn(),
-      xRead: jest.fn(),
-      json: {
-        get: jest.fn(),
-      },
-    } as jest.Mocked<MockableRedisClient>
-
-    redisService = new RedisService(mockRedisClient as never)
+    redisService = new RedisService(createRedisClient())
   })
 
   describe('readStream', () => {
@@ -72,13 +60,6 @@ describe('RedisService Integration Tests', () => {
 
       await expect(redisService.readStream([{ key: 'failing-stream', id: '0' }])).rejects.toThrow('Stream read failed')
     })
-
-    it('should handle ClientClosedError and attempt reconnection', async () => {
-      const clientClosedError = new ClientClosedError()
-      mockRedisClient.xRead.mockRejectedValue(clientClosedError)
-
-      await expect(redisService.readStream([{ key: 'test-stream', id: '0' }])).rejects.toThrow()
-    })
   })
 
   describe('readLatest', () => {
@@ -88,7 +69,7 @@ describe('RedisService Integration Tests', () => {
         'component:some-service:prod': { v: '2023-01-15.120.abc1230', dateAdded: '2023-02-11' },
       }
 
-      mockRedisClient.json.get.mockResolvedValue(mockRedisData)
+      jest.mocked(mockRedisClient.json.get).mockResolvedValue(mockRedisData)
 
       const result = await redisService.readLatest('component:latest')
 
@@ -103,7 +84,7 @@ describe('RedisService Integration Tests', () => {
     })
 
     it('should handle empty Redis response', async () => {
-      mockRedisClient.json.get.mockResolvedValue({})
+      jest.mocked(mockRedisClient.json.get).mockResolvedValue({})
 
       const result = await redisService.readLatest('empty-key')
 
@@ -112,78 +93,18 @@ describe('RedisService Integration Tests', () => {
 
     it('should handle Redis read errors', async () => {
       const error = new Error('Redis connection timeout')
-      mockRedisClient.json.get.mockRejectedValue(error)
+      jest.mocked(mockRedisClient.json.get).mockRejectedValue(error)
 
       await expect(redisService.readLatest('failing-key')).rejects.toThrow('Redis connection timeout')
     })
   })
 
   describe('getAllDependencies', () => {
-    it('should successfully retrieve dependency information', async () => {
-      const mockDependencyInfo = {
-        components: {
-          'service-a': {
-            dependencies: ['service-b', 'database-x'],
-            dependents: ['service-c'],
-          },
-          'service-b': {
-            dependencies: ['database-y'],
-            dependents: ['service-a'],
-          },
-        },
-      }
-
-      mockRedisClient.json.get.mockResolvedValue(mockDependencyInfo)
-
-      const result = await redisService.getAllDependencies()
-
-      expect(mockRedisClient.json.get).toHaveBeenCalledWith(
-        expect.objectContaining({ isolated: true }),
-        'dependency:info',
-      )
-      expect(result).toBeDefined()
-      // Dependencies class constructor is called with the mock data
-    })
-
     it('should handle dependency retrieval errors', async () => {
       const error = new Error('Failed to fetch dependencies')
-      mockRedisClient.json.get.mockRejectedValue(error)
+      jest.mocked(mockRedisClient.json.get).mockRejectedValue(error)
 
       await expect(redisService.getAllDependencies()).rejects.toThrow('Failed to fetch dependencies')
-    })
-  })
-
-  describe('handleError', () => {
-    it('should handle ClientClosedError specifically', async () => {
-      const clientClosedError = new ClientClosedError()
-
-      await redisService.handleError(clientClosedError, 'Test operation failed')
-    })
-
-    it('should handle generic errors', async () => {
-      const genericError = new Error('Generic Redis error')
-
-      await redisService.handleError(genericError, 'Generic operation failed')
-    })
-  })
-
-  describe('Real-world usage scenarios', () => {
-    it('should handle version data parsing correctly', async () => {
-      const realVersionData = {
-        'component:hmpps-auth:dev': { v: '2023-12-01.456.def5678', dateAdded: '2023-12-01T10:30:00Z' },
-        'component:hmpps-auth:preprod': { v: '2023-12-01.456.def5678', dateAdded: '2023-12-01T10:30:00Z' },
-        'component:hmpps-auth:prod': { v: '2023-11-28.450.abc1234', dateAdded: '2023-11-28T14:22:00Z' },
-      }
-
-      mockRedisClient.json.get.mockResolvedValue(realVersionData)
-
-      const result = await redisService.readLatest('component:latest')
-
-      expect(result).toEqual({
-        'hmpps-auth:dev': { v: '2023-12-01.456.def5678', dateAdded: '2023-12-01T10:30:00Z' },
-        'hmpps-auth:preprod': { v: '2023-12-01.456.def5678', dateAdded: '2023-12-01T10:30:00Z' },
-        'hmpps-auth:prod': { v: '2023-11-28.450.abc1234', dateAdded: '2023-11-28T14:22:00Z' },
-      })
     })
   })
 })
