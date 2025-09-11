@@ -1,5 +1,5 @@
 import RedisService from '../services/redisService'
-import { RedisClient, createRedisClient } from './redisClient'
+import { createRedisClient } from './redisClient'
 
 const mockRedisClient = {
   xRead: jest.fn(),
