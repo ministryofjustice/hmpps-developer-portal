@@ -1,4 +1,3 @@
-import { ClientClosedError } from 'redis'
 import RedisService from '../services/redisService'
 import { RedisClient, createRedisClient } from './redisClient'
 
