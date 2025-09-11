@@ -35,6 +35,7 @@ import {
 import { TrivyScanType } from '../data/converters/modelTypes'
 import * as utils from './utils'
 import { Component, Team } from '../data/modelTypes'
+import { ServiceCatalogueService } from '../services'
 
 describe('Utils', () => {
   describe('convert to title case', () => {
@@ -402,40 +403,31 @@ describe('Utils', () => {
     })
   })
 
-  // describe('findTeamMatch', () => {
-  //   it('should return the formatted team name matching the team', () => {
-  //     const teams = [{ name: 'Example Team', products: [{ components: [{ name: 'example name' }] }] }] as Team[]
-  //     const name = 'Example Name'
-  //     const componentName = { products: [{ components: [{ name: 'example-name'}] }] } as Team
-  //
-  //     jest.spyOn(utils, 'formatMonitorName').mockReturnValue(name)
-  //     jest.spyOn(utils, 'formatMonitorName').mockReturnValue(componentName.name)
-  //     console.log(componentName.name)
-  //
-  //     const result = utils.findTeamMatch(teams, name)
-  //
-  //     expect(utils.formatMonitorName).toHaveBeenCalledWith(name)
-  //     expect(utils.formatMonitorName).toHaveBeenCalledWith(componentName.name)
-  //     expect(result.name).toBe('Example Team')
-  //     expect(result).toStrictEqual({ name: 'Example Team', products: [{ components: [{ name: 'example name' }] }] })
-  //   })
-  // })
+  describe('findTeamMatch', () => {
+    it('should return the formatted team name matching the team', () => {
+      const teams = [{ name: 'Example Team', products: [{ components: [{ name: 'example name' }] }] }] as Team[]
+      const name = 'Example Name'
 
-  // describe('addTeamToTrivyScan', () => {
-  //   it('adds a team to Trivy scan', async () => {
-  //     const teams = [ { products: [{ components: [{ name: 'example name'}] }] } ] as Team[]
-  //     const trivyScan = [{name: 'example name', team: 'team name'}] as TrivyScanType[]
-  //     const scanMatch = { products: [{ components: [{ name: 'example-name'}] }] } as Team
-  //
-  //     jest.spyOn(utils,'findTeamMatch').mockReturnValue(scanMatch)
-  //
-  //     const results = await utils.addTeamToTrivyScan(teams, trivyScan )
-  //     console.log(results)
-  //
-  //     // expect(utils.findTeamMatch).toHaveBeenCalled()
-  //     expect(results[0].team).toBe('example name')
-  //   })
-  // })
+      const spy = jest.spyOn(utils, 'formatMonitorName')
+
+      const result = utils.findTeamMatch(teams, name)
+
+      expect(spy).toHaveBeenCalledWith(name)
+      expect(spy).toHaveBeenCalledWith('example name')
+      expect(result.name).toBe('Example Team')
+    })
+  })
+
+  describe('addTeamToTrivyScan', () => {
+    it('adds a team to Trivy scan', async () => {
+      const teams = [{ name: 'team name', products: [{ components: [{ name: 'example name' }] }] }] as Team[]
+      const trivyScan = [{ name: 'example name', team: 'team name' }] as TrivyScanType[]
+
+      const results = await utils.addTeamToTrivyScan(teams, trivyScan)
+
+      expect(results[0].team).toBe('team name')
+    })
+  })
 
   describe('getDependencyName', () => {
     it.each([
@@ -466,11 +458,18 @@ describe('Utils', () => {
   })
 
   // describe('getDependencyNames', () => {
-  //   const components = [ { xx: { xx: 'xx' } }] as DataItem<Component>
-  //
+  //   it ('returns an array of pairs of value and text', async () => {
+  //   const components = [{versions: {actions: 'example action'}}] as Component[]
   //   const mockServiceCatalogueService: Partial<jest.Mocked<ServiceCatalogueService>> = {
-  //     getComponents: jest.fn().mockResolvedValue(components),
+  //     getComponents: jest.fn().mockResolvedValue(components)
+  //     }
+  //   const dependencyType: string = 'example action'
   //
+  //   const results = await utils.getDependencyNames(mockServiceCatalogueService as unknown as ServiceCatalogueService, dependencyType)
+  //
+  //     expect(mockServiceCatalogueService.getComponents).toHaveBeenCalled()
+  //     expect(results).toBe([{value: 'example action', text: 'example action'}])
+  // })
   // })
 
   describe('isValidDropDown', () => {
