@@ -6,11 +6,18 @@ import {
   getNumericId,
   getMonitorType,
   getMonitorName,
+  formatMonitorName,
+  sortData,
+  sortByName,
+  sortBySeverity,
+  sortRdsInstances,
+  sortComponentRequestData,
+  sortGithubTeamsData,
+  getFormattedName,
   getComponentName,
   getEnvironmentName,
   getDependencyType,
   getDependencyName,
-  formatMonitorName,
   isValidDropDown,
   formatActiveAgencies,
   relativeTimeFromNow,
@@ -21,7 +28,13 @@ import {
   median,
   mapToCanonicalEnv,
   createStrapiQuery,
+  utcTimestampToUtcDate,
+  utcTimestampToUtcDateTime,
+  addTeamToTrivyScan,
 } from './utils'
+import { TrivyScanType } from '../data/converters/modelTypes'
+import * as utils from './utils'
+import { Component, Team } from '../data/modelTypes'
 
 describe('Utils', () => {
   describe('convert to title case', () => {
@@ -95,6 +108,237 @@ describe('Utils', () => {
     })
   })
 
+  describe('formatMonitorName', () => {
+    it.each([
+      ['No replacements', 'monitorname', 'monitorname'],
+      ['Some uppercase', 'monitORname', 'monitorname'],
+      ['With spaces', 'monitor name', 'monitor-name'],
+      ['Multiple dashes', 'monitor--name', 'monitor-name'],
+      ['Invalid characters', '?%+', ''],
+      ['Empty name', '', ''],
+    ])('%s formatMonitorName("%s") should return "%s"', (_: string, a: string, expected: string) => {
+      expect(formatMonitorName(a)).toBe(expected)
+    })
+  })
+
+  describe('sortData', () => {
+    it('should sort items alphabetically', () => {
+      const items = [{ name: 'Martha' }, { name: 'Anita' }, { name: 'Frank' }]
+      const resultItems = [{ name: 'Anita' }, { name: 'Frank' }, { name: 'Martha' }]
+      const sortedItems = items.sort(sortData)
+      expect(sortedItems).toEqual(resultItems)
+    })
+
+    it('should return 0 when items are equal', () => {
+      const itemA = { name: 'Anita' }
+      const itemB = { name: 'Anita' }
+      expect(sortData(itemA, itemB)).toEqual(0)
+    })
+
+    it('should return -1 when items not equal and ordered alphabetically', () => {
+      const itemA = { name: 'Anita' }
+      const itemB = { name: 'Frank' }
+      expect(sortData(itemA, itemB)).toEqual(-1)
+    })
+
+    it('should return 1 when items are not equal and not ordered alphabetically', () => {
+      const itemA = { name: 'Frank' }
+      const itemB = { name: 'Anita' }
+      expect(sortData(itemA, itemB)).toEqual(1)
+    })
+  })
+
+  describe('sortByName', () => {
+    it('should sort names alphabetically', () => {
+      const items = [{ name: 'Martha' }, { name: 'Anita' }, { name: 'Frank' }]
+      const resultItems = [{ name: 'Anita' }, { name: 'Frank' }, { name: 'Martha' }]
+      const sortedItems = items.sort(sortByName)
+      expect(sortedItems).toEqual(resultItems)
+    })
+
+    it('should return 0 when items are equal', () => {
+      const itemA = { name: 'Anita' }
+      const itemB = { name: 'Anita' }
+      expect(sortByName(itemA, itemB)).toEqual(0)
+    })
+
+    it('should return -1 when items not equal and ordered alphabetically', () => {
+      const itemA = { name: 'Anita' }
+      const itemB = { name: 'Frank' }
+      expect(sortByName(itemA, itemB)).toEqual(-1)
+    })
+
+    it('should return 1 when items are not equal and not ordered alphabetically', () => {
+      const itemA = { name: 'Frank' }
+      const itemB = { name: 'Anita' }
+      expect(sortByName(itemA, itemB)).toEqual(1)
+    })
+  })
+
+  describe('sortBySeverity', () => {
+    it('should return the string in the order as defined by the severityOrder', () => {
+      const items = [{ severity: 'HIGH' }, { severity: 'MEDIUM' }, { severity: 'CRITICAL' }]
+
+      const resultItems = [{ severity: 'CRITICAL' }, { severity: 'HIGH' }, { severity: 'MEDIUM' }]
+      const sortedItems = items.sort(sortBySeverity)
+      expect(sortedItems).toEqual(resultItems)
+    })
+
+    it('should return 0 when items are equal', () => {
+      const itemA = { severity: 'HIGH' }
+      const itemB = { severity: 'HIGH' }
+      expect(sortBySeverity(itemA, itemB)).toEqual(0)
+    })
+
+    it('should return a number less than 0 when items are ordered correctly', () => {
+      const itemA = { severity: 'CRITICAL' }
+      const itemB = { severity: 'HIGH' }
+      expect(sortBySeverity(itemA, itemB)).toBeLessThan(0)
+    })
+
+    it('should return a number more than 0 when items are not ordered correctly', () => {
+      const itemA = { severity: 'HIGH' }
+      const itemB = { severity: 'CRITICAL' }
+      expect(sortBySeverity(itemA, itemB)).toBeGreaterThan(0)
+    })
+  })
+
+  describe('sortRdsInstances', () => {
+    it('should sort items alphabetically', () => {
+      const items = [{ tf_label: 'Bbb' }, { tf_label: 'Ccc' }, { tf_label: 'Aaa' }]
+      const resultItems = [{ tf_label: 'Aaa' }, { tf_label: 'Bbb' }, { tf_label: 'Ccc' }]
+      const sortedItems = items.sort(sortRdsInstances)
+      expect(sortedItems).toEqual(resultItems)
+    })
+    it('should return 0 when items are equal', () => {
+      const itemA = {
+        tf_label: 'Aaa',
+        db_instance_class: '1',
+        db_engine_version: '1.0',
+        rds_family: 'Aaa',
+        db_max_allocated_storage: '1',
+        namespace: 'Aaa',
+      }
+      const itemB = {
+        tf_label: 'Aaa',
+        db_instance_class: '1',
+        db_engine_version: '1.0',
+        rds_family: 'Aaa',
+        db_max_allocated_storage: '1',
+        namespace: 'Aaa',
+      }
+      expect(sortRdsInstances(itemA, itemB)).toEqual(0)
+    })
+
+    it('should return -1 when items not equal and ordered alphabetically', () => {
+      const itemA = {
+        tf_label: 'Aaa',
+        db_instance_class: '1',
+        db_engine_version: '1.0',
+        rds_family: 'Aaa',
+        db_max_allocated_storage: '1',
+        namespace: 'Aaa',
+      }
+      const itemB = {
+        tf_label: 'Bbb',
+        db_instance_class: '2',
+        db_engine_version: '2.0',
+        rds_family: 'Bbb',
+        db_max_allocated_storage: '2',
+        namespace: 'Bbb',
+      }
+      expect(sortRdsInstances(itemA, itemB)).toEqual(-1)
+    })
+
+    it('should return 1 when items are not equal and not ordered alphabetically', () => {
+      const itemA = {
+        tf_label: 'Bbb',
+        db_instance_class: '2',
+        db_engine_version: '2.0',
+        rds_family: 'Bbb',
+        db_max_allocated_storage: '2',
+        namespace: 'Bbb',
+      }
+      const itemB = {
+        tf_label: 'Aaa',
+        db_instance_class: '1',
+        db_engine_version: '1.0',
+        rds_family: 'Aaa',
+        db_max_allocated_storage: '1',
+        namespace: 'Aaa',
+      }
+      expect(sortRdsInstances(itemA, itemB)).toEqual(1)
+    })
+  })
+
+  describe('sortComponentRequestData', () => {
+    it('should sort items alphabetically', () => {
+      const items = [{ github_repo: 'Bbb' }, { github_repo: 'Ccc' }, { github_repo: 'Aaa' }]
+      const resultItems = [{ github_repo: 'Aaa' }, { github_repo: 'Bbb' }, { github_repo: 'Ccc' }]
+      const sortedItems = items.sort(sortComponentRequestData)
+      expect(sortedItems).toEqual(resultItems)
+    })
+    it('should return 0 when items are equal', () => {
+      const itemB = { github_repo: 'Aaa' }
+      const itemA = { github_repo: 'Aaa' }
+      expect(sortComponentRequestData(itemA, itemB)).toEqual(0)
+    })
+
+    it('should return -1 when items not equal and ordered alphabetically', () => {
+      const itemA = { github_repo: 'Aaa' }
+      const itemB = { github_repo: 'Bbb' }
+      expect(sortComponentRequestData(itemA, itemB)).toEqual(-1)
+    })
+
+    it('should return 1 when items are not equal and not ordered alphabetically', () => {
+      const itemA = { github_repo: 'Bbb' }
+      const itemB = { github_repo: 'Aaa' }
+      expect(sortComponentRequestData(itemA, itemB)).toEqual(1)
+    })
+  })
+
+  describe('sortGitHubTeamData', () => {
+    it('should sort items alphabetically', () => {
+      const items = [{ team_name: 'Bbb' }, { team_name: 'Ccc' }, { team_name: 'Aaa' }]
+      const resultItems = [{ team_name: 'Aaa' }, { team_name: 'Bbb' }, { team_name: 'Ccc' }]
+      const sortedItems = items.sort(sortGithubTeamsData)
+      expect(sortedItems).toEqual(resultItems)
+    })
+    it('should return 0 when items are equal', () => {
+      const itemB = { team_name: 'Aaa' }
+      const itemA = { team_name: 'Aaa' }
+      expect(sortGithubTeamsData(itemA, itemB)).toEqual(0)
+    })
+
+    it('should return -1 when items not equal and ordered alphabetically', () => {
+      const itemA = { team_name: 'Aaa' }
+      const itemB = { team_name: 'Bbb' }
+      expect(sortGithubTeamsData(itemA, itemB)).toEqual(-1)
+    })
+
+    it('should return 1 when items are not equal and not ordered alphabetically', () => {
+      const itemA = { team_name: 'Bbb' }
+      const itemB = { team_name: 'Aaa' }
+      expect(sortGithubTeamsData(itemA, itemB)).toEqual(1)
+    })
+  })
+
+  describe('getFormattedName', () => {
+    it.each([
+      ['Formatted name', 'productName099', 'productName099'],
+      ['Valid character -', 'product-099', 'product-099'],
+      ['Valid character .', 'product.099', 'product.099'],
+      ['Valid character _', 'product_099', 'product_099'],
+      ['Invalid character %$*=', 'product%$£*=', 'product'],
+      ['Invalid character £', '£', ''],
+      ['Empty string', '', ''],
+    ])('%s getFormattedName() with "%s" should return "%s"', (_: string, a: string, expected: string) => {
+      const mockRequest = { params: { paramName: a } } as unknown as Request
+
+      expect(getFormattedName(mockRequest, 'paramName')).toBe(expected)
+    })
+  })
+
   describe('getComponentName', () => {
     it.each([
       ['Already clean', 'product', 'product'],
@@ -158,19 +402,40 @@ describe('Utils', () => {
     })
   })
 
-  describe('getDependencyType', () => {
-    it.each([
-      ['Valid type helm', 'helm', 'helm'],
-      ['Valid type circleci', 'circleci', 'circleci'],
-      ['Valid type dockerfile', 'dockerfile', 'dockerfile'],
-      ['Invalid type &^%', '&^%', ''],
-      ['Empty type', '', ''],
-    ])('%s getDependencyType() with "%s" should return "%s"', (_: string, a: string, expected: string) => {
-      const mockRequest = { params: { dependencyType: a } } as unknown as Request
+  // describe('findTeamMatch', () => {
+  //   it('should return the formatted team name matching the team', () => {
+  //     const teams = [{ name: 'Example Team', products: [{ components: [{ name: 'example name' }] }] }] as Team[]
+  //     const name = 'Example Name'
+  //     const componentName = { products: [{ components: [{ name: 'example-name'}] }] } as Team
+  //
+  //     jest.spyOn(utils, 'formatMonitorName').mockReturnValue(name)
+  //     jest.spyOn(utils, 'formatMonitorName').mockReturnValue(componentName.name)
+  //     console.log(componentName.name)
+  //
+  //     const result = utils.findTeamMatch(teams, name)
+  //
+  //     expect(utils.formatMonitorName).toHaveBeenCalledWith(name)
+  //     expect(utils.formatMonitorName).toHaveBeenCalledWith(componentName.name)
+  //     expect(result.name).toBe('Example Team')
+  //     expect(result).toStrictEqual({ name: 'Example Team', products: [{ components: [{ name: 'example name' }] }] })
+  //   })
+  // })
 
-      expect(getDependencyType(mockRequest)).toBe(expected)
-    })
-  })
+  // describe('addTeamToTrivyScan', () => {
+  //   it('adds a team to Trivy scan', async () => {
+  //     const teams = [ { products: [{ components: [{ name: 'example name'}] }] } ] as Team[]
+  //     const trivyScan = [{name: 'example name', team: 'team name'}] as TrivyScanType[]
+  //     const scanMatch = { products: [{ components: [{ name: 'example-name'}] }] } as Team
+  //
+  //     jest.spyOn(utils,'findTeamMatch').mockReturnValue(scanMatch)
+  //
+  //     const results = await utils.addTeamToTrivyScan(teams, trivyScan )
+  //     console.log(results)
+  //
+  //     // expect(utils.findTeamMatch).toHaveBeenCalled()
+  //     expect(results[0].team).toBe('example name')
+  //   })
+  // })
 
   describe('getDependencyName', () => {
     it.each([
@@ -186,18 +451,27 @@ describe('Utils', () => {
     })
   })
 
-  describe('formatMonitorName', () => {
+  describe('getDependencyType', () => {
     it.each([
-      ['No replacements', 'monitorname', 'monitorname'],
-      ['Some uppercase', 'monitORname', 'monitorname'],
-      ['With spaces', 'monitor name', 'monitor-name'],
-      ['Multiple dashes', 'monitor--name', 'monitor-name'],
-      ['Invalid characters', '?%+', ''],
-      ['Empty name', '', ''],
-    ])('%s formatMonitorName("%s") should return "%s"', (_: string, a: string, expected: string) => {
-      expect(formatMonitorName(a)).toBe(expected)
+      ['Valid type helm', 'helm', 'helm'],
+      ['Valid type circleci', 'circleci', 'circleci'],
+      ['Valid type dockerfile', 'dockerfile', 'dockerfile'],
+      ['Invalid type &^%', '&^%', ''],
+      ['Empty type', '', ''],
+    ])('%s getDependencyType() with "%s" should return "%s"', (_: string, a: string, expected: string) => {
+      const mockRequest = { params: { dependencyType: a } } as unknown as Request
+
+      expect(getDependencyType(mockRequest)).toBe(expected)
     })
   })
+
+  // describe('getDependencyNames', () => {
+  //   const components = [ { xx: { xx: 'xx' } }] as DataItem<Component>
+  //
+  //   const mockServiceCatalogueService: Partial<jest.Mocked<ServiceCatalogueService>> = {
+  //     getComponents: jest.fn().mockResolvedValue(components),
+  //
+  // })
 
   describe('isValidDropDown', () => {
     it.each([
@@ -212,6 +486,34 @@ describe('Utils', () => {
 
       expect(isValidDropDown(mockRequest, 'paramName')).toBe(expected)
     })
+  })
+})
+
+describe('groupBy', () => {
+  it('empty', () => {
+    const names: string[] = []
+    expect(groupBy(names, name => `${name.length}`)).toStrictEqual({})
+  })
+
+  it('example', () => {
+    const names: string[] = ['one', 'two', 'three', 'four']
+    expect(groupBy(names, name => `${name.length}`)).toStrictEqual({
+      '3': ['one', 'two'],
+      '4': ['four'],
+      '5': ['three'],
+    })
+  })
+})
+
+describe('associateBy', () => {
+  it('empty', () => {
+    const names: string[] = []
+    expect(associateBy(names, name => `${name.length}`)).toStrictEqual({})
+  })
+
+  it('example', () => {
+    const names: string[] = ['one', 'two', 'three', 'four']
+    expect(associateBy(names, name => `${name.length}`)).toStrictEqual({ '3': 'two', '4': 'four', '5': 'three' })
   })
 })
 
@@ -242,6 +544,80 @@ describe('relativeTimeFromNow', () => {
       expect(relativeTimeFromNow(input)).toBe(expected)
     },
   )
+})
+
+describe('differenceInDate', () => {
+  it('missing both', () => {
+    expect(differenceInDate(undefined, undefined)).toStrictEqual({
+      days: 0,
+      description: 'not available',
+      hours: 0,
+      millis: 0,
+      present: false,
+      sortValue: Number.MIN_SAFE_INTEGER,
+    })
+  })
+
+  it('missing from', () => {
+    expect(differenceInDate(undefined, new Date())).toStrictEqual({
+      days: 0,
+      description: 'not available',
+      hours: 0,
+      millis: 0,
+      present: false,
+      sortValue: Number.MIN_SAFE_INTEGER,
+    })
+  })
+
+  it('missing to', () => {
+    expect(differenceInDate(new Date(), undefined)).toStrictEqual({
+      days: 0,
+      description: 'not available',
+      hours: 0,
+      millis: 0,
+      present: false,
+      sortValue: Number.MIN_SAFE_INTEGER,
+    })
+  })
+
+  it('same date', () => {
+    const date = new Date()
+    expect(differenceInDate(date, date)).toStrictEqual({
+      days: 0,
+      description: 'no difference',
+      hours: 0,
+      millis: 0,
+      present: true,
+      sortValue: 0,
+    })
+  })
+
+  it('small difference in dates', () => {
+    const from = new Date()
+    const to = new Date(from.getTime() + 1000)
+    expect(differenceInDate(from, to)).toStrictEqual({
+      days: 0,
+      description: 'a few seconds',
+      hours: 0,
+      millis: -1000,
+      present: true,
+      sortValue: 0,
+    })
+  })
+
+  it('different dates', () => {
+    const from = new Date()
+    // 28 hours in the future
+    const to = new Date(from.getTime() + 1000 * 60 * 60 * 28)
+    expect(differenceInDate(from, to)).toStrictEqual({
+      days: -1,
+      description: 'a day',
+      hours: -28,
+      millis: -100800000,
+      present: true,
+      sortValue: -1,
+    })
+  })
 })
 
 describe('veracodeFilters', () => {
@@ -276,108 +652,6 @@ describe('veracodeFilters', () => {
       expect(veracodeFilters(passed, failed, unknown, status)).toBe(expected)
     },
   )
-
-  describe('associateBy', () => {
-    it('empty', () => {
-      const names: string[] = []
-      expect(associateBy(names, name => `${name.length}`)).toStrictEqual({})
-    })
-
-    it('example', () => {
-      const names: string[] = ['one', 'two', 'three', 'four']
-      expect(associateBy(names, name => `${name.length}`)).toStrictEqual({ '3': 'two', '4': 'four', '5': 'three' })
-    })
-  })
-
-  describe('groupBy', () => {
-    it('empty', () => {
-      const names: string[] = []
-      expect(groupBy(names, name => `${name.length}`)).toStrictEqual({})
-    })
-
-    it('example', () => {
-      const names: string[] = ['one', 'two', 'three', 'four']
-      expect(groupBy(names, name => `${name.length}`)).toStrictEqual({
-        '3': ['one', 'two'],
-        '4': ['four'],
-        '5': ['three'],
-      })
-    })
-  })
-
-  describe('differenceInDate', () => {
-    it('missing both', () => {
-      expect(differenceInDate(undefined, undefined)).toStrictEqual({
-        days: 0,
-        description: 'not available',
-        hours: 0,
-        millis: 0,
-        present: false,
-        sortValue: Number.MIN_SAFE_INTEGER,
-      })
-    })
-
-    it('missing from', () => {
-      expect(differenceInDate(undefined, new Date())).toStrictEqual({
-        days: 0,
-        description: 'not available',
-        hours: 0,
-        millis: 0,
-        present: false,
-        sortValue: Number.MIN_SAFE_INTEGER,
-      })
-    })
-
-    it('missing to', () => {
-      expect(differenceInDate(new Date(), undefined)).toStrictEqual({
-        days: 0,
-        description: 'not available',
-        hours: 0,
-        millis: 0,
-        present: false,
-        sortValue: Number.MIN_SAFE_INTEGER,
-      })
-    })
-
-    it('same date', () => {
-      const date = new Date()
-      expect(differenceInDate(date, date)).toStrictEqual({
-        days: 0,
-        description: 'no difference',
-        hours: 0,
-        millis: 0,
-        present: true,
-        sortValue: 0,
-      })
-    })
-
-    it('small difference in dates', () => {
-      const from = new Date()
-      const to = new Date(from.getTime() + 1000)
-      expect(differenceInDate(from, to)).toStrictEqual({
-        days: 0,
-        description: 'a few seconds',
-        hours: 0,
-        millis: -1000,
-        present: true,
-        sortValue: 0,
-      })
-    })
-
-    it('different dates', () => {
-      const from = new Date()
-      // 28 hours in the future
-      const to = new Date(from.getTime() + 1000 * 60 * 60 * 28)
-      expect(differenceInDate(from, to)).toStrictEqual({
-        days: -1,
-        description: 'a day',
-        hours: -28,
-        millis: -100800000,
-        present: true,
-        sortValue: -1,
-      })
-    })
-  })
 
   describe('median', () => {
     it('empty', () => {
@@ -422,5 +696,25 @@ describe('veracodeFilters', () => {
     ])('%s createStrapiQuery(%s)', (_: string, a: string[], expected: string) => {
       expect(createStrapiQuery(a)).toEqual(expected)
     })
+  })
+})
+
+describe('utcTimestampToUtcDate', () => {
+  it('empty string', () => {
+    expect(utcTimestampToUtcDate('')).toEqual(undefined)
+  })
+
+  it('formats the date correctly', () => {
+    expect(utcTimestampToUtcDate('05.12.2025')).toEqual('2025-05-12')
+  })
+})
+
+describe('utcTimestampToUtcDateTime', () => {
+  it('empty string', () => {
+    expect(utcTimestampToUtcDateTime('')).toEqual(undefined)
+  })
+
+  it('formats the date correctly', () => {
+    expect(utcTimestampToUtcDateTime('2025-09-09 10:20:18')).toEqual('09-SEP-2025 10:20:18')
   })
 })
