@@ -6,9 +6,6 @@ import { appWithAllRoutes } from './testutils/appSetup'
 
 import ProductDependenciesService from '../services/productDependenciesService'
 import TeamHealthService from '../services/teamHealthService'
-import type { StrapiApiClient, RestClientBuilder } from '../data'
-import RedisService from '../services/redisService'
-import ServiceCatalogueService from '../services/serviceCatalogueService'
 
 jest.mock('../services/productDependenciesService')
 jest.mock('../services/teamHealthService')
@@ -20,13 +17,10 @@ jest.mock('../../logger', () => ({
 
 describe('/missingFromCatalogue', () => {
   const productDependenciesService = new ProductDependenciesService(
-    null as unknown as RestClientBuilder<StrapiApiClient>,
-    null as unknown as RedisService,
+    null,
+    null,
   ) as jest.Mocked<ProductDependenciesService>
-  const teamHealthService = new TeamHealthService(
-    null as unknown as RedisService,
-    null as unknown as ServiceCatalogueService,
-  ) as jest.Mocked<TeamHealthService>
+  const teamHealthService = new TeamHealthService(null, null) as jest.Mocked<TeamHealthService>
 
   let app: Express
   const renderSpy = jest.fn()
@@ -62,12 +56,16 @@ describe('/missingFromCatalogue', () => {
   beforeEach(() => {
     renderSpy.mockReset()
 
-    productDependenciesService.getComponentsWithUnknownProducts.mockResolvedValue(mockComponentsWithoutProducts)
-    productDependenciesService.getHostNamesMissingComponents.mockResolvedValue(mockHostNamesWithoutComponents)
-    teamHealthService.getComponentsMissingTeams.mockResolvedValue(mockComponentsMissingTeams)
-    teamHealthService.getComponentsWeCannotCalculateHealthFor.mockResolvedValue(
-      mockComponentsWeCannotCalculateTeamHealthFor,
-    )
+    productDependenciesService.getComponentsWithUnknownProducts = jest
+      .fn()
+      .mockResolvedValue(mockComponentsWithoutProducts)
+    productDependenciesService.getHostNamesMissingComponents = jest
+      .fn()
+      .mockResolvedValue(mockHostNamesWithoutComponents)
+    teamHealthService.getComponentsMissingTeams = jest.fn().mockResolvedValue(mockComponentsMissingTeams)
+    teamHealthService.getComponentsWeCannotCalculateHealthFor = jest
+      .fn()
+      .mockResolvedValue(mockComponentsWeCannotCalculateTeamHealthFor)
 
     app = appWithAllRoutes({ services: { productDependenciesService, teamHealthService } })
   })
