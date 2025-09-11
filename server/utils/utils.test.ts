@@ -30,11 +30,11 @@ import {
   createStrapiQuery,
   utcTimestampToUtcDate,
   utcTimestampToUtcDateTime,
+  addTeamToTrivyScan,
 } from './utils'
-// import * as utils from './utils'
-// import type { Product, Team, TrivyScanType } from '../data/modelTypes'
-// import { Alert } from '../@types'
-// import { DataItem } from '../data/strapiClientTypes'
+import { TrivyScanType } from '../data/converters/modelTypes'
+import * as utils from './utils'
+import { Component, Team } from '../data/modelTypes'
 
 describe('Utils', () => {
   describe('convert to title case', () => {
@@ -404,29 +404,36 @@ describe('Utils', () => {
 
   // describe('findTeamMatch', () => {
   //   it('should return the formatted team name matching the team', () => {
-  //     const teams = [{ name: 'Example Team', products: [{name: 'Example Product'}] }] as Team[]
-  //     const alerts = [{labels: [{application: 'Example Application'}]}] as Alert[]
-  //     const componentName = 'Example Component'
+  //     const teams = [{ name: 'Example Team', products: [{ components: [{ name: 'example name' }] }] }] as Team[]
+  //     const name = 'Example Name'
+  //     const componentName = { products: [{ components: [{ name: 'example-name'}] }] } as Team
   //
-  //     jest.spyOn(utils, 'formatMonitorName').mockReturnValue(alerts)
-  //     jest.spyOn(utils, 'formatMonitorName').mockReturnValue(componentName)
+  //     jest.spyOn(utils, 'formatMonitorName').mockReturnValue(name)
+  //     jest.spyOn(utils, 'formatMonitorName').mockReturnValue(componentName.name)
+  //     console.log(componentName.name)
   //
-  //     const result = utils.findTeamMatch(teams, alerts)
+  //     const result = utils.findTeamMatch(teams, name)
   //
-  //     expect(utils.formatMonitorName).toHaveBeenCalledWith(formattedName)
-  //     // expect(utils.formatMonitorName).toHaveBeenCalledWith(componentName)
-  //     expect(result.components).toBe('example-team')
+  //     expect(utils.formatMonitorName).toHaveBeenCalledWith(name)
+  //     expect(utils.formatMonitorName).toHaveBeenCalledWith(componentName.name)
+  //     expect(result.name).toBe('Example Team')
+  //     expect(result).toStrictEqual({ name: 'Example Team', products: [{ components: [{ name: 'example name' }] }] })
   //   })
   // })
 
-  // TEST NEEDED:
   // describe('addTeamToTrivyScan', () => {
-  //   it('adds a team to Trivy scan', () => {
-  //     const teams = [{ name: 'Example Team' }] as Team[]
-  //     const trivyScan = [{name: 'Example Scan'}] as TrivyScanType[]
-  //     const scanMatch = [{teams: teams, trivyScan.name }]
+  //   it('adds a team to Trivy scan', async () => {
+  //     const teams = [ { products: [{ components: [{ name: 'example name'}] }] } ] as Team[]
+  //     const trivyScan = [{name: 'example name', team: 'team name'}] as TrivyScanType[]
+  //     const scanMatch = { products: [{ components: [{ name: 'example-name'}] }] } as Team
   //
-  //     jest.spyOn(utils, 'findTeamMatch').mockReturnValue(scanMatch)
+  //     jest.spyOn(utils,'findTeamMatch').mockReturnValue(scanMatch)
+  //
+  //     const results = await utils.addTeamToTrivyScan(teams, trivyScan )
+  //     console.log(results)
+  //
+  //     // expect(utils.findTeamMatch).toHaveBeenCalled()
+  //     expect(results[0].team).toBe('example name')
   //   })
   // })
 
@@ -458,7 +465,6 @@ describe('Utils', () => {
     })
   })
 
-  // // TEST NEEDED:
   // describe('getDependencyNames', () => {
   //   const components = [ { xx: { xx: 'xx' } }] as DataItem<Component>
   //
