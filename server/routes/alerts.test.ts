@@ -1,7 +1,6 @@
 import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
-import logger from '../../logger'
 import { appWithAllRoutes } from './testutils/appSetup'
 import { Alert } from '../@types'
 import AlertsService from '../services/alertsService'
@@ -10,19 +9,9 @@ import ServiceCatalogueService from '../services/serviceCatalogueService'
 jest.mock('../services/serviceCatalogueService')
 jest.mock('../services/alertsService')
 
-jest.mock('../../logger', () => ({
-  info: jest.fn(),
-  error: jest.fn(),
-}))
-
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 
-const alertsService = {
-  getAndSortAlerts: jest.fn(),
-  getAlertEnvironments: jest.fn(),
-  getAlertType: jest.fn(),
-  getAlertName: jest.fn(),
-} as unknown as jest.Mocked<AlertsService>
+const alertsService = new AlertsService(null) as jest.Mocked<AlertsService>
 
 let app: Express
 
@@ -68,10 +57,10 @@ const mockEnvironments = [
 ]
 
 beforeEach(() => {
-  alertsService.getAlertType.mockReturnValue('all')
-  alertsService.getAlertName.mockReturnValue('')
-  alertsService.getAlertEnvironments.mockResolvedValue(mockEnvironments)
-  alertsService.getAndSortAlerts.mockResolvedValue(mockAlerts)
+  alertsService.getAlertType = jest.fn().mockReturnValue('all')
+  alertsService.getAlertName = jest.fn().mockReturnValue('')
+  alertsService.getAlertEnvironments = jest.fn().mockResolvedValue(mockEnvironments)
+  alertsService.getAndSortAlerts = jest.fn().mockResolvedValue(mockAlerts)
 
   app = appWithAllRoutes({ services: { serviceCatalogueService, alertsService } })
 })
@@ -104,12 +93,16 @@ describe('/alerts', () => {
     })
 
     it('should render alerts page with environment options', async () => {
-      return request(app).get('/alerts/environment/test-alert').expect(200)
-      expect(alertsService.getAlertType).toHaveBeenCalledWith(
-        expect.objectContaining({
-          params: { alertType: 'environment', alertName: 'test-alert' },
-        }),
-      )
+      return request(app)
+        .get('/alerts/environment/test-alert')
+        .expect(200)
+        .expect(res => {
+          expect(alertsService.getAlertType).toHaveBeenCalledWith(
+            expect.objectContaining({
+              params: { alertType: 'environment', alertName: 'test-alert' },
+            }),
+          )
+        })
     })
   })
 
@@ -121,14 +114,6 @@ describe('/alerts', () => {
         .expect(res => {
           expect(res.text).toStrictEqual(JSON.stringify(mockAlerts))
         })
-    })
-
-    it('should log a warning if getAndSortAlerts throws', async () => {
-      alertsService.getAndSortAlerts.mockRejectedValue(new Error('Sort failed'))
-
-      const res = await request(app).get('/alerts/all')
-      expect(res.status).toBe(500)
-      expect(logger.error).toHaveBeenCalledWith('Failed to get alerts', expect.any(Error))
     })
   })
 })

@@ -15,13 +15,8 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
   })
 
   router.get('/all', async (req, res) => {
-    try {
-      const alerts = await alertsService.getAndSortAlerts(serviceCatalogueService)
-      res.json(alerts)
-    } catch (error) {
-      logger.error(`Failed to get alerts`, error)
-      res.status(500).send('Internal Server Error')
-    }
+    const alerts = await alertsService.getAndSortAlerts(serviceCatalogueService)
+    res.json(alerts)
   })
 
   return router
