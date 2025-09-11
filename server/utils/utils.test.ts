@@ -30,7 +30,6 @@ import {
   createStrapiQuery,
   utcTimestampToUtcDate,
   utcTimestampToUtcDateTime,
-  addTeamToTrivyScan,
 } from './utils'
 import { TrivyScanType } from '../data/converters/modelTypes'
 import * as utils from './utils'
@@ -457,20 +456,23 @@ describe('Utils', () => {
     })
   })
 
-  // describe('getDependencyNames', () => {
-  //   it ('returns an array of pairs of value and text', async () => {
-  //   const components = [{versions: {actions: 'example action'}}] as Component[]
-  //   const mockServiceCatalogueService: Partial<jest.Mocked<ServiceCatalogueService>> = {
-  //     getComponents: jest.fn().mockResolvedValue(components)
-  //     }
-  //   const dependencyType: string = 'example action'
-  //
-  //   const results = await utils.getDependencyNames(mockServiceCatalogueService as unknown as ServiceCatalogueService, dependencyType)
-  //
-  //     expect(mockServiceCatalogueService.getComponents).toHaveBeenCalled()
-  //     expect(results).toBe([{value: 'example action', text: 'example action'}])
-  // })
-  // })
+  describe('getDependencyNames', () => {
+    it('returns an array of pairs of value and text', async () => {
+      const components = [{ versions: { actions: { 'example action': {} } } }] as unknown as Component[]
+      const mockServiceCatalogueService: Partial<jest.Mocked<ServiceCatalogueService>> = {
+        getComponents: jest.fn().mockResolvedValue(components),
+      }
+      const dependencyType: string = 'actions'
+
+      const results = await utils.getDependencyNames(
+        mockServiceCatalogueService as unknown as ServiceCatalogueService,
+        dependencyType,
+      )
+
+      expect(mockServiceCatalogueService.getComponents).toHaveBeenCalled()
+      expect(results).toEqual([{ value: 'example action', text: 'example action' }])
+    })
+  })
 
   describe('isValidDropDown', () => {
     it.each([
@@ -486,234 +488,234 @@ describe('Utils', () => {
       expect(isValidDropDown(mockRequest, 'paramName')).toBe(expected)
     })
   })
-})
 
-describe('groupBy', () => {
-  it('empty', () => {
-    const names: string[] = []
-    expect(groupBy(names, name => `${name.length}`)).toStrictEqual({})
-  })
-
-  it('example', () => {
-    const names: string[] = ['one', 'two', 'three', 'four']
-    expect(groupBy(names, name => `${name.length}`)).toStrictEqual({
-      '3': ['one', 'two'],
-      '4': ['four'],
-      '5': ['three'],
-    })
-  })
-})
-
-describe('associateBy', () => {
-  it('empty', () => {
-    const names: string[] = []
-    expect(associateBy(names, name => `${name.length}`)).toStrictEqual({})
-  })
-
-  it('example', () => {
-    const names: string[] = ['one', 'two', 'three', 'four']
-    expect(associateBy(names, name => `${name.length}`)).toStrictEqual({ '3': 'two', '4': 'four', '5': 'three' })
-  })
-})
-
-describe('formatActiveAgencies', () => {
-  it.each([
-    ['undefined', undefined, 'Not set'],
-    ['all agencies token', ['***'], 'All agencies'],
-    ['a list of agencies', ['ABC', 'DEF', 'GHI'], 'ABC, DEF, GHI'],
-  ])(
-    '%s is passed to formatActiveAgencies(), value "%s" should return "%s"',
-    (_: string, input: string[], expected: string) => {
-      expect(formatActiveAgencies(input)).toBe(expected)
-    },
-  )
-})
-
-describe('relativeTimeFromNow', () => {
-  it.each([
-    ['in 1 hour', new Date(new Date().getTime() + 1000 * 60 * 60), 'in an hour'],
-    ['in a few seconds', new Date(new Date().getTime() + 4000), 'in a few seconds'],
-    ['a few seconds ago', new Date(new Date().getTime() - 4000), 'a few seconds ago'],
-    ['3 minutes ago', new Date(new Date().getTime() - 1 * 60 * 1000 * 3), '3 minutes ago'],
-    ['4 hours ago', new Date(new Date().getTime() - 1 * 60 * 1000 * 4 * 60), '4 hours ago'],
-    ['5 days ago', new Date(new Date().getTime() - 1 * 60 * 1000 * 5 * 60 * 24), '5 days ago'],
-  ])(
-    '%s is passed to relativeTimeFromNow(), value "%s" should return "%s"',
-    (_: string, input: Date, expected: string) => {
-      expect(relativeTimeFromNow(input)).toBe(expected)
-    },
-  )
-})
-
-describe('differenceInDate', () => {
-  it('missing both', () => {
-    expect(differenceInDate(undefined, undefined)).toStrictEqual({
-      days: 0,
-      description: 'not available',
-      hours: 0,
-      millis: 0,
-      present: false,
-      sortValue: Number.MIN_SAFE_INTEGER,
-    })
-  })
-
-  it('missing from', () => {
-    expect(differenceInDate(undefined, new Date())).toStrictEqual({
-      days: 0,
-      description: 'not available',
-      hours: 0,
-      millis: 0,
-      present: false,
-      sortValue: Number.MIN_SAFE_INTEGER,
-    })
-  })
-
-  it('missing to', () => {
-    expect(differenceInDate(new Date(), undefined)).toStrictEqual({
-      days: 0,
-      description: 'not available',
-      hours: 0,
-      millis: 0,
-      present: false,
-      sortValue: Number.MIN_SAFE_INTEGER,
-    })
-  })
-
-  it('same date', () => {
-    const date = new Date()
-    expect(differenceInDate(date, date)).toStrictEqual({
-      days: 0,
-      description: 'no difference',
-      hours: 0,
-      millis: 0,
-      present: true,
-      sortValue: 0,
-    })
-  })
-
-  it('small difference in dates', () => {
-    const from = new Date()
-    const to = new Date(from.getTime() + 1000)
-    expect(differenceInDate(from, to)).toStrictEqual({
-      days: 0,
-      description: 'a few seconds',
-      hours: 0,
-      millis: -1000,
-      present: true,
-      sortValue: 0,
-    })
-  })
-
-  it('different dates', () => {
-    const from = new Date()
-    // 28 hours in the future
-    const to = new Date(from.getTime() + 1000 * 60 * 60 * 28)
-    expect(differenceInDate(from, to)).toStrictEqual({
-      days: -1,
-      description: 'a day',
-      hours: -28,
-      millis: -100800000,
-      present: true,
-      sortValue: -1,
-    })
-  })
-})
-
-describe('veracodeFilters', () => {
-  it.each([
-    [true, true, true, null, true],
-    [true, true, true, 'Pass', true],
-    [true, true, true, 'Did Not Pass', true],
-    [false, false, false, null, true],
-    [false, false, false, 'Pass', true],
-    [false, false, false, 'Did Not Pass', true],
-    [true, false, false, 'Pass', true],
-    [true, false, false, 'Did Not Pass', false],
-    [true, false, false, null, false],
-    [true, true, false, 'Pass', true],
-    [true, true, false, 'Did Not Pass', true],
-    [true, true, false, null, false],
-    [true, false, true, 'Pass', true],
-    [true, false, true, null, true],
-    [true, false, true, 'Did Not Pass', false],
-    [false, true, false, 'Did Not Pass', true],
-    [false, true, false, 'Pass', false],
-    [false, true, false, null, false],
-    [false, false, true, null, true],
-    [false, false, true, 'Pass', false],
-    [false, false, true, 'Did Not Pass', false],
-    [false, true, true, 'Did Not Pass', true],
-    [false, true, true, 'Pass', false],
-    [false, true, true, null, true],
-  ])(
-    'Passed is %s, failed is %s, unknown is %s and status is "%s" it should return %s',
-    (passed: boolean, failed: boolean, unknown: boolean, status: 'string', expected: boolean) => {
-      expect(veracodeFilters(passed, failed, unknown, status)).toBe(expected)
-    },
-  )
-
-  describe('median', () => {
+  describe('groupBy', () => {
     it('empty', () => {
-      expect(median([])).toStrictEqual(undefined)
+      const names: string[] = []
+      expect(groupBy(names, name => `${name.length}`)).toStrictEqual({})
     })
 
-    it('single value', () => {
-      expect(median([1])).toStrictEqual(1)
+    it('example', () => {
+      const names: string[] = ['one', 'two', 'three', 'four']
+      expect(groupBy(names, name => `${name.length}`)).toStrictEqual({
+        '3': ['one', 'two'],
+        '4': ['four'],
+        '5': ['three'],
+      })
     })
 
-    it('odd number of elements', () => {
-      expect(median([1, 2, 3, 4, 5])).toStrictEqual(3)
+    describe('associateBy', () => {
+      it('empty', () => {
+        const names: string[] = []
+        expect(associateBy(names, name => `${name.length}`)).toStrictEqual({})
+      })
+
+      it('example', () => {
+        const names: string[] = ['one', 'two', 'three', 'four']
+        expect(associateBy(names, name => `${name.length}`)).toStrictEqual({ '3': 'two', '4': 'four', '5': 'three' })
+      })
     })
 
-    it('even number of elements', () => {
-      expect(median([1, 2, 3, 4])).toStrictEqual(2.5)
+    describe('formatActiveAgencies', () => {
+      it.each([
+        ['undefined', undefined, 'Not set'],
+        ['all agencies token', ['***'], 'All agencies'],
+        ['a list of agencies', ['ABC', 'DEF', 'GHI'], 'ABC, DEF, GHI'],
+      ])(
+        '%s is passed to formatActiveAgencies(), value "%s" should return "%s"',
+        (_: string, input: string[], expected: string) => {
+          expect(formatActiveAgencies(input)).toBe(expected)
+        },
+      )
     })
-  })
 
-  describe('createStrapiQuery', () => {
-    it.each([
-      [null, null, ''],
-      ['empty array', [], ''],
-      ['Single item', ['product_set'], 'populate%5Bproduct_set%5D=true'],
-      ['Multiple items', ['product_set', 'team'], 'populate%5Bproduct_set%5D=true&populate%5Bteam%5D=true'],
-      ['Single dotted entry', ['product.team'], 'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true'],
-      [
-        'Multiple dotted entries',
-        ['product.team', 'envs.trivy_scan'],
-        'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D=true',
-      ],
-      [
-        'Single deep dotted entry',
-        ['product.team.extra'],
-        'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true',
-      ],
-      [
-        'Multiple deep dotted entries',
-        ['product.team.extra', 'envs.trivy_scan.extra'],
-        'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D%5Bpopulate%5D%5Bextra%5D=true',
-      ],
-    ])('%s createStrapiQuery(%s)', (_: string, a: string[], expected: string) => {
-      expect(createStrapiQuery(a)).toEqual(expected)
+    describe('relativeTimeFromNow', () => {
+      it.each([
+        ['in 1 hour', new Date(new Date().getTime() + 1000 * 60 * 60), 'in an hour'],
+        ['in a few seconds', new Date(new Date().getTime() + 4000), 'in a few seconds'],
+        ['a few seconds ago', new Date(new Date().getTime() - 4000), 'a few seconds ago'],
+        ['3 minutes ago', new Date(new Date().getTime() - 1 * 60 * 1000 * 3), '3 minutes ago'],
+        ['4 hours ago', new Date(new Date().getTime() - 1 * 60 * 1000 * 4 * 60), '4 hours ago'],
+        ['5 days ago', new Date(new Date().getTime() - 1 * 60 * 1000 * 5 * 60 * 24), '5 days ago'],
+      ])(
+        '%s is passed to relativeTimeFromNow(), value "%s" should return "%s"',
+        (_: string, input: Date, expected: string) => {
+          expect(relativeTimeFromNow(input)).toBe(expected)
+        },
+      )
     })
-  })
-})
 
-describe('utcTimestampToUtcDate', () => {
-  it('empty string', () => {
-    expect(utcTimestampToUtcDate('')).toEqual(undefined)
-  })
+    describe('differenceInDate', () => {
+      it('missing both', () => {
+        expect(differenceInDate(undefined, undefined)).toStrictEqual({
+          days: 0,
+          description: 'not available',
+          hours: 0,
+          millis: 0,
+          present: false,
+          sortValue: Number.MIN_SAFE_INTEGER,
+        })
+      })
 
-  it('formats the date correctly', () => {
-    expect(utcTimestampToUtcDate('05.12.2025')).toEqual('2025-05-12')
-  })
-})
+      it('missing from', () => {
+        expect(differenceInDate(undefined, new Date())).toStrictEqual({
+          days: 0,
+          description: 'not available',
+          hours: 0,
+          millis: 0,
+          present: false,
+          sortValue: Number.MIN_SAFE_INTEGER,
+        })
+      })
 
-describe('utcTimestampToUtcDateTime', () => {
-  it('empty string', () => {
-    expect(utcTimestampToUtcDateTime('')).toEqual(undefined)
-  })
+      it('missing to', () => {
+        expect(differenceInDate(new Date(), undefined)).toStrictEqual({
+          days: 0,
+          description: 'not available',
+          hours: 0,
+          millis: 0,
+          present: false,
+          sortValue: Number.MIN_SAFE_INTEGER,
+        })
+      })
 
-  it('formats the date correctly', () => {
-    expect(utcTimestampToUtcDateTime('2025-09-09 10:20:18')).toEqual('09-SEP-2025 10:20:18')
+      it('same date', () => {
+        const date = new Date()
+        expect(differenceInDate(date, date)).toStrictEqual({
+          days: 0,
+          description: 'no difference',
+          hours: 0,
+          millis: 0,
+          present: true,
+          sortValue: 0,
+        })
+      })
+
+      it('small difference in dates', () => {
+        const from = new Date()
+        const to = new Date(from.getTime() + 1000)
+        expect(differenceInDate(from, to)).toStrictEqual({
+          days: 0,
+          description: 'a few seconds',
+          hours: 0,
+          millis: -1000,
+          present: true,
+          sortValue: 0,
+        })
+      })
+
+      it('different dates', () => {
+        const from = new Date()
+        // 28 hours in the future
+        const to = new Date(from.getTime() + 1000 * 60 * 60 * 28)
+        expect(differenceInDate(from, to)).toStrictEqual({
+          days: -1,
+          description: 'a day',
+          hours: -28,
+          millis: -100800000,
+          present: true,
+          sortValue: -1,
+        })
+      })
+
+      describe('veracodeFilters', () => {
+        it.each([
+          [true, true, true, null, true],
+          [true, true, true, 'Pass', true],
+          [true, true, true, 'Did Not Pass', true],
+          [false, false, false, null, true],
+          [false, false, false, 'Pass', true],
+          [false, false, false, 'Did Not Pass', true],
+          [true, false, false, 'Pass', true],
+          [true, false, false, 'Did Not Pass', false],
+          [true, false, false, null, false],
+          [true, true, false, 'Pass', true],
+          [true, true, false, 'Did Not Pass', true],
+          [true, true, false, null, false],
+          [true, false, true, 'Pass', true],
+          [true, false, true, null, true],
+          [true, false, true, 'Did Not Pass', false],
+          [false, true, false, 'Did Not Pass', true],
+          [false, true, false, 'Pass', false],
+          [false, true, false, null, false],
+          [false, false, true, null, true],
+          [false, false, true, 'Pass', false],
+          [false, false, true, 'Did Not Pass', false],
+          [false, true, true, 'Did Not Pass', true],
+          [false, true, true, 'Pass', false],
+          [false, true, true, null, true],
+        ])(
+          'Passed is %s, failed is %s, unknown is %s and status is "%s" it should return %s',
+          (passed: boolean, failed: boolean, unknown: boolean, status: 'string', expected: boolean) => {
+            expect(veracodeFilters(passed, failed, unknown, status)).toBe(expected)
+          },
+        )
+
+        describe('median', () => {
+          it('empty', () => {
+            expect(median([])).toStrictEqual(undefined)
+          })
+
+          it('single value', () => {
+            expect(median([1])).toStrictEqual(1)
+          })
+
+          it('odd number of elements', () => {
+            expect(median([1, 2, 3, 4, 5])).toStrictEqual(3)
+          })
+
+          it('even number of elements', () => {
+            expect(median([1, 2, 3, 4])).toStrictEqual(2.5)
+          })
+        })
+
+        describe('createStrapiQuery', () => {
+          it.each([
+            [null, null, ''],
+            ['empty array', [], ''],
+            ['Single item', ['product_set'], 'populate%5Bproduct_set%5D=true'],
+            ['Multiple items', ['product_set', 'team'], 'populate%5Bproduct_set%5D=true&populate%5Bteam%5D=true'],
+            ['Single dotted entry', ['product.team'], 'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true'],
+            [
+              'Multiple dotted entries',
+              ['product.team', 'envs.trivy_scan'],
+              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D=true',
+            ],
+            [
+              'Single deep dotted entry',
+              ['product.team.extra'],
+              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true',
+            ],
+            [
+              'Multiple deep dotted entries',
+              ['product.team.extra', 'envs.trivy_scan.extra'],
+              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D%5Bpopulate%5D%5Bextra%5D=true',
+            ],
+          ])('%s createStrapiQuery(%s)', (_: string, a: string[], expected: string) => {
+            expect(createStrapiQuery(a)).toEqual(expected)
+          })
+        })
+
+        describe('utcTimestampToUtcDate', () => {
+          it('empty string', () => {
+            expect(utcTimestampToUtcDate('')).toEqual(undefined)
+          })
+
+          it('formats the date correctly', () => {
+            expect(utcTimestampToUtcDate('05.12.2025')).toEqual('2025-05-12')
+          })
+        })
+
+        describe('utcTimestampToUtcDateTime', () => {
+          it('empty string', () => {
+            expect(utcTimestampToUtcDateTime('')).toEqual(undefined)
+          })
+
+          it('formats the date correctly', () => {
+            expect(utcTimestampToUtcDateTime('2025-09-09 10:20:18')).toEqual('09-SEP-2025 10:20:18')
+          })
+        })
+      })
+    })
   })
 })
