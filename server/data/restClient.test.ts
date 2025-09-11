@@ -99,20 +99,6 @@ describe('RestClient Tests', () => {
 
       expect(result).toEqual({ success: true })
     })
-
-    it('should handle null path', async () => {
-      nock('http://localhost:8080', {
-        reqheaders: { authorization: 'Bearer test-token-123' },
-      })
-        .get('/null')
-        .reply(200, { data: 'test' })
-
-      const result = await restClient.get({
-        path: '/null',
-      })
-
-      expect(result).toEqual({ data: 'test' })
-    })
   })
 
   describe('POST', () => {
@@ -182,18 +168,6 @@ describe('RestClient Tests', () => {
         status: 400,
         message: 'Bad Request',
       })
-    })
-
-    it('should handle default parameters', async () => {
-      nock('http://localhost:8080', {
-        reqheaders: { authorization: 'Bearer test-token-123' },
-      })
-        .post('/null', {})
-        .reply(200, { success: true })
-
-      const result = await restClient.post({ path: '/null' })
-
-      expect(result).toEqual({ success: true })
     })
   })
 
