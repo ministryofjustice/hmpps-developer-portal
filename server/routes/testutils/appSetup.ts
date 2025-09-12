@@ -16,6 +16,7 @@ import componentRequestRoutes from '../componentRequests'
 import scheduledJobsRoutes from '../scheduledJobs'
 import alertsRoutes from '../alerts'
 import namespacesRoutes from '../namespaces'
+import teamHealthRoutes from '../teamHealth'
 
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -61,6 +62,7 @@ function appSetup(services: Services, production: boolean): Express {
   app.use('/scheduled-jobs', scheduledJobsRoutes(services))
   app.use('/alerts', alertsRoutes(services))
   app.use('/namespaces', namespacesRoutes(services))
+  app.use('/team-health', teamHealthRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(production))
