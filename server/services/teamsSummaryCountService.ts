@@ -169,8 +169,8 @@ export default class TeamsSummaryCountService {
       const productIds = new Set(products.map(p => p.id))
       const validComponents = allComponents
         .filter(component => {
-          const pid = component?.product?.id
-          return pid && productIds.has(pid)
+          const productId = component?.product?.id
+          return productId && productIds.has(productId)
         })
         .map(component => formatMonitorName(component.name))
 
