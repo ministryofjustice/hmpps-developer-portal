@@ -13,21 +13,25 @@ jQuery(function () {
         const cveIDs = []
 
         // Extract CVE VulnerabilityID from os-pkgs and lang-pkgs
-        scanResult['os-pkgs']?.forEach(pkg => {
-          if (pkg.VulnerabilityID && pkg.PrimaryURL) {
-            cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
-          } else if (pkg.VulnerabilityID) {
-            cveIDs.push(pkg.VulnerabilityID)
-          }
-        })
+        scanResult['os-pkgs']
+          ?.filter(pkg => pkg.VulnerabilityID)
+          .forEach(pkg => {
+            if (pkg.PrimaryURL) {
+              cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
+            } else {
+              cveIDs.push(pkg.VulnerabilityID)
+            }
+          })
 
-        scanResult['lang-pkgs']?.forEach(pkg => {
-          if (pkg.VulnerabilityID && pkg.PrimaryURL) {
-            cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
-          } else if (pkg.VulnerabilityID) {
-            cveIDs.push(pkg.VulnerabilityID)
-          }
-        })
+        scanResult['lang-pkgs']
+          ?.filter(pkg => pkg.VulnerabilityID)
+          .forEach(pkg => {
+            if (pkg.PrimaryURL) {
+              cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
+            } else {
+              cveIDs.push(pkg.VulnerabilityID)
+            }
+          })
 
         item.environments.forEach(env => {
           transformed.push({
@@ -60,7 +64,7 @@ jQuery(function () {
               (summary?.['secret']?.LOW ?? 0),
             result_link: `
                 <a href="/trivy-scans/${item.name}/environments/${env}">
-                  <img src="/assets/images/trivy.png" alt="Trivy Logo" style="width: 32px; height: 32px; margin-right: 5px;" />
+                  <img src="/assets/images/trivy.png" alt="Trivy Logo" class="trivy-icon" />
                 </a>`,
             cve_ids: cveIDs.join(', '),
           })
