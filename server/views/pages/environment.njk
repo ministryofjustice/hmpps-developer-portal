@@ -154,12 +154,12 @@
     <tr>
       <th>Trivy Scan Results</th>
       <td>
-        {% if component.environment.trivy_scan %}
+        {% if component.environment.trivy_scan.scan_status == "Succeeded" %}
           <a class="govuk-link--no-visited-state" href="/trivy-scans/{{component.name}}/environments/{{ component.environment.name }}">
             <img src="/assets/images/trivy.png" alt="Trivy Logo" class="trivy-icon"/>
           </a>
         {% else %}
-          <p>No Trivy image scan data available at the moment.</p>
+          <p><b>No Trivy image scan data available at the moment.</b></p>
         {% endif %}
 
       </td>
