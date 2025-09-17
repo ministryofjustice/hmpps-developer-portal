@@ -179,17 +179,18 @@ const fetchMessages = async () => {
 }
 
 async function populateComponentTable(monitorType, monitorTypeId, monitorName) {
-  let url = `/monitor/components/${monitorType}/${monitorTypeId}`
+  let url = `/monitor/components/${monitorType}/${monitorTypeId}?name=${encodeURIComponent(monitorName)}`
 
-  // If we have a product name in the URL but no ID, add it as a query parameter
-  if (monitorType === 'product' && monitorTypeId === 0) {
-    if (monitorName) {
-      url = `${url}?name=${encodeURIComponent(monitorName)}`
-    }
-  }
+  // // If we have a product name in the URL but no ID, add it as a query parameter
+  // if (monitorType === 'product' && monitorTypeId === 0) {
+  //   if (monitorName) {
+  //     url = `${url}?name=${encodeURIComponent(monitorName)}`
+  //   }
+  // }
 
   const response = await fetch(url)
 
+  console.log('response: ', response)
   if (!response.ok) {
     console.error(`Error fetching component data: ${response.status} ${response.statusText}`)
     throw new Error('There was a problem fetching the component data')
@@ -209,6 +210,7 @@ async function populateComponentTable(monitorType, monitorTypeId, monitorName) {
     $('#statusRows').empty()
 
     const environments = await response.json()
+    console.log('environments: ', environments)
 
     environments.sort(sortEnvironments).forEach(environment => {
       const healthLink = environment.environmentHealth

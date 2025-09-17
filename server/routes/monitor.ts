@@ -66,7 +66,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         }
       })
     }
-
     return res.render('pages/monitor', {
       serviceAreaList,
       teamList,
@@ -111,32 +110,42 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       logger.info(`Using monitorId: ${monitorId} for type: ${monitorType}`)
 
       if (monitorType === 'customComponentView') {
+        const customComponentName = formatMonitorName(req.query.name as string)
         const customComponentView = await serviceCatalogueService.getCustomComponentView({
           customComponentDocumentId: monitorId,
+          customComponentSlug: customComponentName,
           withEnvironments: true,
         })
         customComponentView.components.forEach(component => {
           environments = environments.concat(getUnwrappedEnvironmentData(component))
         })
       } else if (monitorType === 'product') {
+        const productName = formatMonitorName(req.query.name as string)
         const product = await serviceCatalogueService.getProduct({
+          productSlug: productName,
           productDocumentId: monitorId,
           withEnvironments: true,
         })
-
         product.components.forEach(component => {
           environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
         })
       } else if (monitorType === 'team') {
-        const team = await serviceCatalogueService.getTeam({ teamDocumentId: monitorId, withEnvironments: true })
+        const teamName = formatMonitorName(req.query.name as string)
+        const team = await serviceCatalogueService.getTeam({
+          teamDocumentId: monitorId,
+          teamSlug: teamName,
+          withEnvironments: true,
+        })
         team.products.forEach(product => {
           product.components.forEach(component => {
             environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
           })
         })
       } else if (monitorType === 'serviceArea') {
+        const serviceName = formatMonitorName(req.query.name as string)
         const serviceArea = await serviceCatalogueService.getServiceArea({
           serviceAreaDocumentId: monitorId,
+          serviceAreaSlug: serviceName,
           withProducts: true,
         })
         serviceArea.products.forEach(product => {

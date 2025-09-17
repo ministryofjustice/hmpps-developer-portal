@@ -175,7 +175,6 @@ export default class StrapiApiClient {
     withEnvironments?: boolean
   }): Promise<Team> {
     const populateList = ['products']
-
     if (withEnvironments) {
       populateList.push('products.components.envs')
     }
@@ -249,7 +248,6 @@ export default class StrapiApiClient {
     withProducts?: boolean
   }): Promise<ServiceArea> {
     const populateList = ['products']
-
     if (withProducts) {
       populateList.push('products.components.envs')
     }
@@ -280,23 +278,24 @@ export default class StrapiApiClient {
 
   async getCustomComponentView({
     customComponentDocumentId = '',
+    customComponentSlug = '',
     withEnvironments = false,
   }: {
     customComponentDocumentId: string
+    customComponentSlug?: string
     withEnvironments?: boolean
   }): Promise<CustomComponentView> {
-    const populate = ['components', 'components.product']
+    const populateList = ['components', 'components.product']
 
     if (withEnvironments) {
-      populate.push('components.envs')
+      populateList.push('components.envs')
     }
-
-    return this.restClient
-      .get<SingleResponse<CustomComponentView>>({
-        path: `/v1/custom-component-views/${customComponentDocumentId}`,
-        query: createStrapiQuery({ populate }),
-      })
-      .then(unwrapSingleResponse)
+    const populate = createStrapiQuery({ populate: populateList })
+    const query = customComponentSlug ? `filters[slug][$eq]=${customComponentSlug}&${populate}` : populate
+    const path = customComponentSlug
+      ? '/v1/custom-component-views'
+      : `/v1/custom-component-views/${customComponentDocumentId}`
+    return this.restClient.get<SingleResponse<CustomComponentView>>({ path, query }).then(unwrapSingleResponse)
   }
 
   async getGithubRepoRequests(): Promise<GithubRepoRequest[]> {

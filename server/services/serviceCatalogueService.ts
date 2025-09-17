@@ -39,7 +39,6 @@ export default class ServiceCatalogueService {
   }): Promise<Product> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const productData = await strapiApiClient.getProduct({ productSlug, productDocumentId, withEnvironments })
-
     return productData
   }
 
@@ -63,7 +62,6 @@ export default class ServiceCatalogueService {
   }): Promise<Team> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const teamData = await strapiApiClient.getTeam({ teamDocumentId, teamSlug, withEnvironments })
-
     return teamData
   }
 
@@ -245,17 +243,20 @@ export default class ServiceCatalogueService {
 
   async getCustomComponentView({
     customComponentDocumentId = '',
+    customComponentSlug = '',
     withEnvironments = false,
   }: {
     customComponentDocumentId: string
+    customComponentSlug?: string
     withEnvironments?: boolean
   }): Promise<CustomComponentView> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const customComponentData = await strapiApiClient.getCustomComponentView({
       customComponentDocumentId,
+      customComponentSlug,
       withEnvironments,
     })
-
+    console.log('customComponentData: ', customComponentData)
     return customComponentData
   }
 
