@@ -166,11 +166,11 @@ export default class TeamsSummaryCountService {
       const trivyScans = await this.filterTrivyByEnv('prod')
       const allComponents = await this.serviceCatalogueService.getComponents()
 
-      const productId = new Set((products || []).map(p => String(p.id)))
+      const productIds = new Set(products.map(p => p.id))
       const validComponents = allComponents
         .filter(component => {
-          const idStr = productId !== undefined && productId !== null ? String(productId) : ''
-          return idStr && productId.has(idStr)
+          const pid = component?.product?.id
+          return pid && productIds.has(pid)
         })
         .map(component => formatMonitorName(component.name))
 
@@ -219,7 +219,8 @@ export default class TeamsSummaryCountService {
   async filterTrivyByEnv(env: string): Promise<TrivyScanType[]> {
     const allTrivyScans = await this.serviceCatalogueService.getTrivyScans()
 
-    return allTrivyScans.filter(trivy => trivy.environments.includes(env))
+    // Guard against scans that may not include an environments array
+    return allTrivyScans.filter(trivy => (trivy.environments ?? []).includes(env))
   }
 
   /**
