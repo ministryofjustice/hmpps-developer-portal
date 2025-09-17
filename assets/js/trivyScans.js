@@ -5,8 +5,9 @@ jQuery(function () {
 
   function transformData(data) {
     const transformed = []
-    data.forEach(item => {
-      if (item.scan_status === 'Succeeded') {
+    data
+      .filter(item => item.scan_status === 'Succeeded')
+      .forEach(item => {
         const summary = item.scan_summary?.summary || {}
         const scanResult = item.scan_summary?.scan_result || {}
         const cveIDs = []
@@ -64,8 +65,7 @@ jQuery(function () {
             cve_ids: cveIDs.join(', '),
           })
         })
-      }
-    })
+      })
     return transformed
   }
 
@@ -463,4 +463,3 @@ function formatDateToDDMONYYYYHH24MMSS(dateString) {
     .replace(',', '')
     .toUpperCase()
 }
-
