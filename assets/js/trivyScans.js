@@ -82,8 +82,8 @@ jQuery(function () {
       createdCell: function (td, _cellData, rowData) {
         const envlink =
           rowData.environment !== 'unknown'
-            ? `<a class="govuk-link--no-visited-state" 
-               href="/components/${rowData.name}/environment/${rowData.environment}" 
+            ? `<a class="govuk-link--no-visited-state"
+               href="/components/${rowData.name}/environment/${rowData.environment}"
                data-test="environment">
                ${rowData.environment}
             </a>&nbsp;`
@@ -251,6 +251,8 @@ jQuery(function () {
         orderType: 'asc',
         columns,
       })
+      filterForProdTeamOverview()
+      updateEnvironmentList()
     },
   })
 
@@ -424,6 +426,19 @@ jQuery(function () {
     table.clear()
     table.rows.add(filtered)
     table.draw()
+  }
+  //function to select prod only for Trivy Scans on Team Overview page
+
+  function filterForProdTeamOverview() {
+    const params = new URLSearchParams(window.location.search)
+    const prodCheckBoxId = params.get('checkbox')
+
+    const allEnvCheckboxes = document.querySelectorAll('input[type="checkbox"][name="environment"]')
+    if (prodCheckBoxId) {
+      allEnvCheckboxes.forEach(checkbox => {
+        if (checkbox.id !== prodCheckBoxId) checkbox.checked = false
+      })
+    }
   }
 })
 
