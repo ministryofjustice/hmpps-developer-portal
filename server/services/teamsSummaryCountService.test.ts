@@ -211,7 +211,7 @@ describe('TeamsSummaryCountService', () => {
     it('should handle component names not present in any alert', async () => {
       const componentNames = ['unknown-component-1', 'unknown-component-2']
       const mockAlertsWithMissingComponent = [
-        { status: { state: 'active' }, labels: { component: 'some-other-component' } },
+        { status: { state: 'active' }, labels: { component: 'some-other-component', environment: 'prod' } },
       ]
       alertSerice.getAlerts.mockResolvedValue(mockAlertsWithMissingComponent)
       const result = await service.getFiringAlertCountsForComponents(componentNames)
@@ -225,11 +225,11 @@ describe('TeamsSummaryCountService', () => {
     it('should handle alerts with missing labels or status', async () => {
       const componentNames = ['component-1', 'component-2']
       const mockAlertsWithMissingLabelsOrStatus = [
-        { status: { state: 'active' }, labels: { component: 'component-1' } },
-        { status: {}, labels: { component: 'component-1' } },
-        { status: { state: 'active' } },
-        { labels: { component: 'component-2' } },
-        {},
+        { status: { state: 'active' }, labels: { component: 'component-1', environment: 'prod' } },
+        { status: {}, labels: { component: 'component-1', environment: 'prod' } },
+        { status: { state: 'active' }, labels: { environment: 'prod' } },
+        { labels: { component: 'component-2', environment: 'prod' } },
+        { labels: { environment: 'prod' } },
       ]
       alertSerice.getAlerts.mockResolvedValue(mockAlertsWithMissingLabelsOrStatus)
       const result = await service.getFiringAlertCountsForComponents(componentNames)
