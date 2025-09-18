@@ -39,7 +39,6 @@ export default class ServiceCatalogueService {
   }): Promise<Product> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const productData = await strapiApiClient.getProduct({ productSlug, productDocumentId, withEnvironments })
-
     return productData
   }
 
@@ -63,7 +62,6 @@ export default class ServiceCatalogueService {
   }): Promise<Team> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const teamData = await strapiApiClient.getTeam({ teamDocumentId, teamSlug, withEnvironments })
-
     return teamData
   }
 
@@ -255,7 +253,7 @@ export default class ServiceCatalogueService {
       customComponentDocumentId,
       withEnvironments,
     })
-
+    console.log('customComponentData: ', customComponentData)
     return customComponentData
   }
 

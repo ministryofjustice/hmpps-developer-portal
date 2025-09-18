@@ -47,10 +47,11 @@ export default class DataFilterService {
       return {
         value: useFormattedName ? formattedName : serviceArea.id.toString(),
         text: serviceArea.name,
+        slug: serviceArea.slug,
         selected: useFormattedName ? formattedName === serviceAreaName : serviceArea.name === serviceAreaName,
       }
     })
-    serviceAreaList.unshift({ value: '', text: '', selected: false })
+    serviceAreaList.unshift({ value: '', text: '', slug: '', selected: false })
 
     return serviceAreaList
   }
@@ -71,10 +72,11 @@ export default class DataFilterService {
       return {
         value: useFormattedName ? formattedName : team.id.toString(),
         text: team.name,
+        slug: team.slug,
         selected: useFormattedName ? formattedName === teamName : team.name === teamName,
       }
     })
-    teamsList.unshift({ value: '', text: '', selected: false })
+    teamsList.unshift({ value: '', text: '', slug: '', selected: false })
 
     return teamsList
   }
@@ -95,10 +97,11 @@ export default class DataFilterService {
       return {
         value: useFormattedName ? formattedName : product.id.toString(),
         text: product.name,
+        slug: product.slug,
         selected: useFormattedName ? formattedName === productName : product.name === productName,
       }
     })
-    productsList.unshift({ value: '', text: '', selected: false })
+    productsList.unshift({ value: '', text: '', slug: '', selected: false })
 
     return productsList
   }

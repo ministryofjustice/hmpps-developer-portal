@@ -66,7 +66,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         }
       })
     }
-
     return res.render('pages/monitor', {
       serviceAreaList,
       teamList,
@@ -119,24 +118,32 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           environments = environments.concat(getUnwrappedEnvironmentData(component))
         })
       } else if (monitorType === 'product') {
+        const productSlug = formatMonitorName(req.query.slug as string)
         const product = await serviceCatalogueService.getProduct({
+          productSlug,
           productDocumentId: monitorId,
           withEnvironments: true,
         })
-
         product.components.forEach(component => {
           environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
         })
       } else if (monitorType === 'team') {
-        const team = await serviceCatalogueService.getTeam({ teamDocumentId: monitorId, withEnvironments: true })
+        const teamSlug = formatMonitorName(req.query.slug as string)
+        const team = await serviceCatalogueService.getTeam({
+          teamDocumentId: monitorId,
+          teamSlug,
+          withEnvironments: true,
+        })
         team.products.forEach(product => {
           product.components.forEach(component => {
             environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
           })
         })
       } else if (monitorType === 'serviceArea') {
+        const serviceSlug = formatMonitorName(req.query.slug as string)
         const serviceArea = await serviceCatalogueService.getServiceArea({
           serviceAreaDocumentId: monitorId,
+          serviceAreaSlug: serviceSlug,
           withProducts: true,
         })
         serviceArea.products.forEach(product => {
