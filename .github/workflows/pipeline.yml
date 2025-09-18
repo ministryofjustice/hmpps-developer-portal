@@ -39,7 +39,7 @@ jobs:
   helm_lint:
     strategy:
       matrix:
-        environments: ['dev', 'stage', 'prod']
+        environments: ['dev', 'prod']
     name: helm lint
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
@@ -82,16 +82,3 @@ jobs:
       environment: 'prod'
       app_version: '${{ needs.build.outputs.app_version }}'
       helm_timeout: '5m'
-  deploy_stage:
-    name: Deploy to the stage environment
-    # if: github.ref == 'refs/heads/main'
-    needs:
-      - build
-      - helm_lint
-    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
-    secrets: inherit
-    with:
-      environment: 'stage'
-      app_version: '${{ needs.build.outputs.app_version }}'
-      helm_timeout: '5m'
-      k8s_deployment_name: 'hmpps-developer-portal-strapi5'
