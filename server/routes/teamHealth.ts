@@ -21,14 +21,21 @@ export default function routes({ teamHealthService, componentNameService }: Serv
     const components = await componentNameService.getAllDeployedComponents()
     // console.log('components: ', components)
     const teamHealth = await teamHealthService.getTeamHealth()
-    //     console.log('teamHealth: ', teamHealth)
+    // console.log('teamHealth: ', teamHealth)
 
-    // for (const key in teamHealth.drift) {
-    //   if (teamHealth.drift.hasOwnProperty(key)) {
-    //     const team = teamHealth.drift[key];
-    //     console.log(`  teamSlug: ${team.teamSlug}`);
-    //     console.log(`  stats:`, team.stats);
-    //   }
+    //     for (const key in teamHealth.drift) {
+    //       if (teamHealth.drift.hasOwnProperty(key)) {
+    //         const team = teamHealth.drift[key]
+    //         console.log(`  teamSlug: ${team.teamSlug}`)
+    //         console.log(`  stats:`, team.stats)
+    //       }
+    //     }
+
+    // for (const [team, teamInfo] of Object.entries(teamHealth.drift)) {
+    //   const drift = teamInfo.stats;
+    //   console.log(`Team: ${team}`)
+    //   console.log(`Avg Drift: ${drift.avg}`)
+    //   console.log(`Max Drift: ${drift.max}`)
     // }
 
     return res.render('pages/teamHealth', {
