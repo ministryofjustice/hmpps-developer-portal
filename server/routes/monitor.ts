@@ -110,19 +110,17 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       logger.info(`Using monitorId: ${monitorId} for type: ${monitorType}`)
 
       if (monitorType === 'customComponentView') {
-        const customComponentName = formatMonitorName(req.query.name as string)
         const customComponentView = await serviceCatalogueService.getCustomComponentView({
           customComponentDocumentId: monitorId,
-          customComponentSlug: customComponentName,
           withEnvironments: true,
         })
         customComponentView.components.forEach(component => {
           environments = environments.concat(getUnwrappedEnvironmentData(component))
         })
       } else if (monitorType === 'product') {
-        const productName = formatMonitorName(req.query.name as string)
+        const productSlug = formatMonitorName(req.query.slug as string)
         const product = await serviceCatalogueService.getProduct({
-          productSlug: productName,
+          productSlug,
           productDocumentId: monitorId,
           withEnvironments: true,
         })
@@ -130,10 +128,10 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
         })
       } else if (monitorType === 'team') {
-        const teamName = formatMonitorName(req.query.name as string)
+        const teamSlug = formatMonitorName(req.query.slug as string)
         const team = await serviceCatalogueService.getTeam({
           teamDocumentId: monitorId,
-          teamSlug: teamName,
+          teamSlug,
           withEnvironments: true,
         })
         team.products.forEach(product => {
@@ -142,10 +140,10 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           })
         })
       } else if (monitorType === 'serviceArea') {
-        const serviceName = formatMonitorName(req.query.name as string)
+        const serviceSlug = formatMonitorName(req.query.slug as string)
         const serviceArea = await serviceCatalogueService.getServiceArea({
           serviceAreaDocumentId: monitorId,
-          serviceAreaSlug: serviceName,
+          serviceAreaSlug: serviceSlug,
           withProducts: true,
         })
         serviceArea.products.forEach(product => {

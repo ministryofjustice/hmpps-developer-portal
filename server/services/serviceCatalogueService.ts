@@ -243,17 +243,14 @@ export default class ServiceCatalogueService {
 
   async getCustomComponentView({
     customComponentDocumentId = '',
-    customComponentSlug = '',
     withEnvironments = false,
   }: {
     customComponentDocumentId: string
-    customComponentSlug?: string
     withEnvironments?: boolean
   }): Promise<CustomComponentView> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const customComponentData = await strapiApiClient.getCustomComponentView({
       customComponentDocumentId,
-      customComponentSlug,
       withEnvironments,
     })
     console.log('customComponentData: ', customComponentData)

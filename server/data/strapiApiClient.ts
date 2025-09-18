@@ -278,11 +278,9 @@ export default class StrapiApiClient {
 
   async getCustomComponentView({
     customComponentDocumentId = '',
-    customComponentSlug = '',
     withEnvironments = false,
   }: {
     customComponentDocumentId: string
-    customComponentSlug?: string
     withEnvironments?: boolean
   }): Promise<CustomComponentView> {
     const populateList = ['components', 'components.product']
@@ -291,10 +289,8 @@ export default class StrapiApiClient {
       populateList.push('components.envs')
     }
     const populate = createStrapiQuery({ populate: populateList })
-    const query = customComponentSlug ? `filters[slug][$eq]=${customComponentSlug}&${populate}` : populate
-    const path = customComponentSlug
-      ? '/v1/custom-component-views'
-      : `/v1/custom-component-views/${customComponentDocumentId}`
+    const query = customComponentDocumentId ? `filters[id][$eq]=${customComponentDocumentId}&${populate}` : populate
+    const path = '/v1/custom-component-views'
     return this.restClient.get<SingleResponse<CustomComponentView>>({ path, query }).then(unwrapSingleResponse)
   }
 
