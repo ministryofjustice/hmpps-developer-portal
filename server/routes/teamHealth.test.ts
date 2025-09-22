@@ -51,31 +51,43 @@ const mockTeamHealth = {
       teamSlug: 'mock-team-2',
       serviceAreaSlug: 'mock-service-area-2',
       numberOfComponents: 8,
+      stats: {},
+    },
+  },
+  staleness: {
+    All: {
+      teamSlug: 'all',
+      numberOfComponents: 263,
       stats: {
-        avg: 0,
+        avg: 0.627,
         median: 0,
-        max: 0,
+        max: 6,
         maxComponent: {
           staleness: {
-            millis: 0,
-            days: 0,
-            hours: 0,
-            description: 'not available',
-            present: false,
-            sortValue: -9007199254740991,
+            millis: 518400000,
+            days: 6,
+            hours: 144,
+            description: '6 days',
+            present: true,
+            sortValue: 6,
           },
           drift: {
             millis: 0,
             days: 0,
             hours: 0,
-            description: 'not available',
-            present: false,
-            sortValue: -9007199254740991,
+            description: 'no difference',
+            present: true,
+            sortValue: 0,
           },
-          name: 'hmpps-book-a-video-link-api',
+          name: 'mock-component-1',
         },
-        days: [0, 0, 0],
+        days: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       },
+    },
+    'Mock Team 2': {
+      teamSlug: 'mock-team-2',
+      numberOfComponents: 15,
+      stats: {},
     },
   },
 }
@@ -107,44 +119,46 @@ describe('/teamHealth', () => {
         })
     })
 
-    // it('should render the staleness table', async () => {
-    //   return request(app)
-    //     .get('/team-health#staleness')
-    //     .expect('Content-Type', /html/)
-    //     .expect(200)
-    //     .expect(res => {
-    //       const $ = cheerio.load(res.text)
-    //       const stalenessTable = $('#staleness .govuk-table')
-    //       const cells = stalenessTable.find('tbody tr:first-child td')
-    //       expect(cells.eq(0).text().trim()).toBe('All');
-    //       expect(cells.eq(1).text().trim()).toBe('262');
-    //       expect(cells.eq(2).text().trim()).toBe('0.64');
-    //       expect(cells.eq(3).text().trim()).toBe('0');
-    //       expect(cells.eq(4).text().trim()).toBe('6');
-    //       expect(cells.eq(5).text()).toContain('mock-component-1');
-    //       expect(cells.eq(5).text()).toContain('(5 days)');
-    //       expect(cells.eq(5).attr('href')).toBe('/components/mock-component-1')
-    //     })
-    // })
+    it('should render the staleness table', async () => {
+      return request(app)
+        .get('/team-health#staleness')
+        .expect('Content-Type', /html/)
+        .expect(200)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          const stalenessTable = $('#staleness .govuk-table')
+          const cells = stalenessTable.find('tbody tr:first-child td')
+          expect(cells.eq(0).text().trim()).toBe('All')
+          expect(cells.eq(1).text().trim()).toBe('263')
+          expect(cells.eq(2).text().trim()).toBe('0.63')
+          expect(cells.eq(3).text().trim()).toBe('0')
+          expect(cells.eq(4).text().trim()).toBe('6')
+          expect(cells.eq(5).text().trim()).toBe('mock-component-1 (6 days)')
+          const componentLink = cells.eq(5).find('a')
+          expect(componentLink.text().trim()).toBe('mock-component-1')
+          expect(componentLink.attr('href')).toBe('/components/mock-component-1')
+        })
+    })
 
-    // it('should render the drift table', async () => {
-    //   return request(app)
-    //     .get('/team-health#drift')
-    //     .expect('Content-Type', /html/)
-    //     .expect(200)
-    //     .expect(res => {
-    //       const $ = cheerio.load(res.text)
-    //       const driftTable = $('#drift .govuk-table')
-    //       const cells = driftTable.find('tbody tr:first-child td')
-    //       expect(cells.eq(0).text().trim()).toBe('All');
-    //       expect(cells.eq(1).text().trim()).toBe('262');
-    //       expect(cells.eq(2).text().trim()).toBe('2.70');
-    //       expect(cells.eq(3).text().trim()).toBe('0');
-    //       expect(cells.eq(4).text().trim()).toBe('102');
-    //       // expect(cells.eq(5).text()).toContain('mock-component-1');
-    //       expect(cells.eq(5).text()).toContain('mock-component-1 (102 days)');
-    //       expect(cells.eq(5).attr('href')).toBe('/components/mock-component-1')
-    //     })
-    // })
+    it('should render the drift table', async () => {
+      return request(app)
+        .get('/team-health#drift')
+        .expect('Content-Type', /html/)
+        .expect(200)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          const driftTable = $('#drift .govuk-table')
+          const cells = driftTable.find('tbody tr:first-child td')
+          expect(cells.eq(0).text().trim()).toBe('All')
+          expect(cells.eq(1).text().trim()).toBe('262')
+          expect(cells.eq(2).text().trim()).toBe('2.70')
+          expect(cells.eq(3).text().trim()).toBe('0')
+          expect(cells.eq(4).text().trim()).toBe('102')
+          expect(cells.eq(5).text().trim()).toBe('mock-component-1 (102 days)')
+          const componentLink = cells.eq(5).find('a')
+          expect(componentLink.text().trim()).toBe('mock-component-1')
+          expect(componentLink.attr('href')).toBe('/components/mock-component-1')
+        })
+    })
   })
 })
