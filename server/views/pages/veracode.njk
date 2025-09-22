@@ -10,7 +10,7 @@
 {{ breadCrumb("Veracode", []) }}
 
   <h1>Veracode Scan Results</h1>
-  <form method="GET" action="/veracode" id="veracodeForm">
+  <form method="GET" action="/veracode">
     <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
     <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
@@ -50,7 +50,7 @@
 							id: "veracodefailed",
 							value: "failed",
 							text: "Failed",
-							checked: false
+							checked: true
 						},
 						{
 							id: "veracodeunknown",

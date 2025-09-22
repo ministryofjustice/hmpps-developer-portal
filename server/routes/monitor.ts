@@ -66,6 +66,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         }
       })
     }
+
     return res.render('pages/monitor', {
       serviceAreaList,
       teamList,
@@ -124,6 +125,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           productDocumentId: monitorId,
           withEnvironments: true,
         })
+
         product.components.forEach(component => {
           environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
         })

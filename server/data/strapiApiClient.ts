@@ -175,6 +175,7 @@ export default class StrapiApiClient {
     withEnvironments?: boolean
   }): Promise<Team> {
     const populateList = ['products']
+
     if (withEnvironments) {
       populateList.push('products.components.envs')
     }
@@ -248,6 +249,7 @@ export default class StrapiApiClient {
     withProducts?: boolean
   }): Promise<ServiceArea> {
     const populateList = ['products']
+
     if (withProducts) {
       populateList.push('products.components.envs')
     }
@@ -288,6 +290,7 @@ export default class StrapiApiClient {
     if (withEnvironments) {
       populateList.push('components.envs')
     }
+
     const populate = createStrapiQuery({ populate: populateList })
     const query = customComponentDocumentId ? `filters[id][$eq]=${customComponentDocumentId}&${populate}` : populate
     const path = '/v1/custom-component-views'
