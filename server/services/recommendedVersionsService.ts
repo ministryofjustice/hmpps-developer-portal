@@ -129,12 +129,16 @@ export default class RecommendedVersionsService {
       const values = (component as unknown as { values?: Record<string, unknown> }).values || {}
 
       // Preferred keys from versions
-      let helmGenericPrometheusAlerts = this.parseVersionValue(
-        (versions.helm_dependencies as Record<string, unknown>)?.generic_prometheus_alerts,
-      )
-      let helmGenericService = this.parseVersionValue(
-        (versions.helm_dependencies as Record<string, unknown>)?.generic_service,
-      )
+      const helmDeps = (versions.helm_dependencies as Record<string, unknown>) || {}
+      let helmGenericPrometheusAlerts = this.parseVersionValue(helmDeps?.generic_prometheus_alerts)
+      let helmGenericService = this.parseVersionValue(helmDeps?.generic_service)
+      // Fallback to hyphenated keys directly under helm_dependencies
+      if (!helmGenericPrometheusAlerts) {
+        helmGenericPrometheusAlerts = this.parseVersionValue(helmDeps['generic-prometheus-alerts'])
+      }
+      if (!helmGenericService) {
+        helmGenericService = this.parseVersionValue(helmDeps['generic-service'])
+      }
       let gradleHmppsGradleSpringBoot = this.parseVersionValue(
         (versions.gradle as Record<string, unknown>)?.hmpps_gradle_spring_boot,
       )
@@ -155,6 +159,13 @@ export default class RecommendedVersionsService {
         helmGenericPrometheusAlerts =
           helmGenericPrometheusAlerts || this.parseVersionValue(vHelmDeps.generic_prometheus_alerts)
         helmGenericService = helmGenericService || this.parseVersionValue(vHelmDeps.generic_service)
+        // Fallback to hyphenated keys under values.helm_dependencies
+        if (!helmGenericPrometheusAlerts) {
+          helmGenericPrometheusAlerts = this.parseVersionValue(vHelmDeps['generic-prometheus-alerts'])
+        }
+        if (!helmGenericService) {
+          helmGenericService = this.parseVersionValue(vHelmDeps['generic-service'])
+        }
         gradleHmppsGradleSpringBoot =
           gradleHmppsGradleSpringBoot || this.parseVersionValue(vGradle.hmpps_gradle_spring_boot)
       }

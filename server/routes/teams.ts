@@ -8,6 +8,7 @@ export default function routes({
   serviceCatalogueService,
   teamsSummaryCountService,
   monitoringChannelService,
+  recommendedVersionsService,
 }: Services): Router {
   const router = Router()
 
@@ -87,6 +88,119 @@ export default function routes({
         channelTree,
         hasLegacyChannels,
       }
+
+      // Example of fetching recommended dependency versions from Strapi template component and log comparisons
+      try {
+        const recommended = await recommendedVersionsService.getRecommendedVersions()
+
+        // Helper parsers for current values from component.versions
+        const parseValue = (raw: unknown): string | undefined => {
+          if (raw === null || raw === undefined) return undefined
+          if (typeof raw === 'string' || typeof raw === 'number') return String(raw)
+          if (typeof raw === 'object') {
+            const obj = raw as Record<string, unknown>
+            return (obj.ref as string) || (obj.version as string) || undefined
+          }
+          return undefined
+        }
+
+        type Item = {
+          componentName: string
+          name: 'generic_prometheus_alerts' | 'generic_service' | 'hmpps_gradle_spring_boot'
+          current?: string
+          recommended?: string
+          status: 'missing' | 'aligned' | 'needs-upgrade' | 'above-baseline'
+        }
+
+        const items: Item[] = []
+        const components = products.flatMap(p => p.components || [])
+        // Simple dotted numeric comparator (e.g. 1.2.3). Non-numeric parts are ignored.
+        const compareVersions = (a: string, b: string): number => {
+          const toParts = (v: string): number[] =>
+            v
+              .replace(/^v/i, '')
+              .split('.')
+              .map(s => {
+                const m = s.match(/\d+/)
+                return m ? parseInt(m[0], 10) : 0
+              })
+          const pa = toParts(a)
+          const pb = toParts(b)
+          const len = Math.max(pa.length, pb.length)
+          for (let i = 0; i < len; i += 1) {
+            const da = pa[i] ?? 0
+            const db = pb[i] ?? 0
+            if (da > db) return 1
+            if (da < db) return -1
+          }
+          return 0
+        }
+
+        const classify = (current?: string, recommendedVal?: string): Item['status'] => {
+          if (!current || !recommendedVal) return 'missing'
+          const cmp = compareVersions(current, recommendedVal)
+          if (cmp < 0) return 'needs-upgrade'
+          if (cmp === 0) return 'aligned'
+          return 'above-baseline'
+        }
+
+        components.forEach(component => {
+          const versions = (component as unknown as { versions?: Record<string, unknown> }).versions || {}
+          const helmDeps = (versions as Record<string, unknown>).helm_dependencies as Record<string, unknown>
+          const helmLegacy = (versions as Record<string, unknown>).helm as Record<string, unknown>
+          const gradle = (versions as Record<string, unknown>).gradle as Record<string, unknown>
+
+          const currentGpa =
+            parseValue(helmDeps?.generic_prometheus_alerts) ||
+            parseValue(helmDeps?.['generic-prometheus-alerts'] as unknown) ||
+            parseValue((helmLegacy?.dependencies as Record<string, unknown>)?.['generic-prometheus-alerts'])
+          const currentGs =
+            parseValue(helmDeps?.generic_service) ||
+            parseValue(helmDeps?.['generic-service'] as unknown) ||
+            parseValue((helmLegacy?.dependencies as Record<string, unknown>)?.['generic-service'])
+          const currentHgsb =
+            parseValue(gradle?.hmpps_gradle_spring_boot) || parseValue(gradle?.['hmpps-gradle-spring-boot'] as unknown)
+
+          const pushItem = (name: Item['name'], current: string | undefined, recommendedVal: string | undefined) => {
+            items.push({
+              componentName: component.name,
+              name,
+              current,
+              recommended: recommendedVal,
+              status: classify(current, recommendedVal),
+            })
+          }
+
+          pushItem('generic_prometheus_alerts', currentGpa, recommended.helm_dependencies.generic_prometheus_alerts)
+          pushItem('generic_service', currentGs, recommended.helm_dependencies.generic_service)
+          pushItem('hmpps_gradle_spring_boot', currentHgsb, recommended.gradle.hmpps_gradle_spring_boot)
+        })
+
+        const needsUpgradeOnly = items.filter(i => i.status === 'needs-upgrade')
+        const compact = items
+          .slice(0, 10)
+          .map(
+            i =>
+              `${i.componentName}:${i.name}=(current: ${i.current || 'missing'}, recommended: ${
+                i.recommended || 'missing'
+              }) [${i.status}]`,
+          )
+          .join('; ')
+        logger.info(
+          `[DependencyRecs] Team=${team.name}, source=${recommended.metadata.source}, components=${
+            new Set(items.map(i => i.componentName)).size
+          }, items=${items.length}, needsUpgrade=${needsUpgradeOnly.length}; ${compact}`,
+        )
+
+        if (recommended.metadata.source === 'none') {
+          logger.warn(
+            `[DependencyRecs] Incomplete recommended versions for team=${team.name}. Source=${recommended.metadata.source}`,
+          )
+        }
+      } catch (e) {
+        logger.warn(`[DependencyRecs] Failed to compute dependency comparisons for team=${team.name}: ${String(e)}`)
+      }
+      // example ends here - this will be removed after confirmation.
 
       res.render('pages/teamOverview', { team: displayTeam })
     } catch (err) {
