@@ -1,5 +1,5 @@
-import superagent from 'superagent'
 import logger from '../../logger'
+import ServiceCatalogueService from './serviceCatalogueService'
 
 export type RecommendedVersions = {
   helm_dependencies: {
@@ -10,7 +10,7 @@ export type RecommendedVersions = {
     hmpps_gradle_spring_boot?: string
   }
   metadata: {
-    source: 'single-file' | 'fallback' | 'partial' | 'none'
+    source: 'strapi' | 'partial' | 'none'
     fetchedAt: string
   }
 }
@@ -29,11 +29,17 @@ export type RecommendedVersions = {
 export default class RecommendedVersionsService {
   private static cache: { value: RecommendedVersions; expiresAt: number } | null = null
 
+  private serviceCatalogueService?: ServiceCatalogueService
+
   constructor(
     private readonly repo: string = process.env.HMPPS_TEMPLATE_REPO || 'ministryofjustice/hmpps-template-kotlin',
     private readonly branch: string = process.env.HMPPS_TEMPLATE_BRANCH || 'main',
     private readonly ttlMillis: number = Number(process.env.RECOMMENDED_VERSIONS_TTL_MS) || 6 * 60 * 60 * 1000, // 6h
   ) {}
+
+  setServiceCatalogueService(service: ServiceCatalogueService): void {
+    this.serviceCatalogueService = service
+  }
 
   async getRecommendedVersions(): Promise<RecommendedVersions> {
     const now = Date.now()
@@ -47,24 +53,13 @@ export default class RecommendedVersionsService {
       metadata: { source: 'none', fetchedAt: new Date(now).toISOString() },
     }
 
-    // 1) Try single versions file (YAML)
-    const singleFile = await this.tryFetchSingleVersionsFile()
-    if (singleFile) {
-      result.helm_dependencies.generic_prometheus_alerts = singleFile.helm_generic_prometheus_alerts
-      result.helm_dependencies.generic_service = singleFile.helm_generic_service
-      result.gradle.hmpps_gradle_spring_boot = singleFile.gradle_hmpps_gradle_spring_boot
-      result.metadata.source = 'single-file'
-    } else {
-      // 2) Fallbacks
-      const [helm, gradle] = await Promise.all([this.tryFetchHelmValuesYaml(), this.tryFetchGradleToml()])
-      if (helm) {
-        result.helm_dependencies.generic_prometheus_alerts = helm.generic_prometheus_alerts
-        result.helm_dependencies.generic_service = helm.generic_service
-      }
-      if (gradle) {
-        result.gradle.hmpps_gradle_spring_boot = gradle.hmpps_gradle_spring_boot
-      }
-      result.metadata.source = helm || gradle ? 'fallback' : 'none'
+    // Only Strapi: hmpps-template-kotlin component
+    const fromStrapi = await this.tryFetchFromStrapi()
+    if (fromStrapi) {
+      result.helm_dependencies.generic_prometheus_alerts = fromStrapi.helm_generic_prometheus_alerts
+      result.helm_dependencies.generic_service = fromStrapi.helm_generic_service
+      result.gradle.hmpps_gradle_spring_boot = fromStrapi.gradle_hmpps_gradle_spring_boot
+      result.metadata.source = 'strapi'
     }
 
     // Mark partial if any key is missing
@@ -92,97 +87,113 @@ export default class RecommendedVersionsService {
     return result
   }
 
-  private async tryFetchSingleVersionsFile(): Promise<{
+  private parseVersionValue(raw: unknown): string | undefined {
+    if (raw === null || raw === undefined) return undefined
+    if (typeof raw === 'string' || typeof raw === 'number') return String(raw)
+    if (typeof raw === 'object') {
+      const obj = raw as Record<string, unknown>
+      return (obj.ref as string) || (obj.version as string) || undefined
+    }
+    return undefined
+  }
+
+  private async tryFetchFromStrapi(): Promise<{
     helm_generic_prometheus_alerts?: string
     helm_generic_service?: string
     gradle_hmpps_gradle_spring_boot?: string
   } | null> {
-    const candidates = ['versions.yaml', 'versions.yml']
+    try {
+      if (!this.serviceCatalogueService) return null
+      const provided = process.env.HMPPS_TEMPLATE_COMPONENT_NAME || 'hmpps-template-kotlin'
+      const candidates = Array.from(new Set([provided, provided.replace(/_/g, '-'), provided.replace(/-/g, '_')]))
 
-    // Fetch all candidates concurrently, then select the first usable result in order
-    const attempts = await Promise.allSettled(
-      candidates.map(async filename => {
-        const url = this.rawUrl(filename)
+      const tryCandidate = async (idx: number): Promise<unknown | null> => {
+        if (idx >= candidates.length) return null
+        const name = candidates[idx]
         try {
-          const text = await this.fetchText(url)
-          if (!text) return null
-          // Attempt to extract from a YAML that contains a top-level `versions` mapping
-          // with nested keys, falling back to whole file if not found
-          const within = this.extractYamlSection(text, 'versions') || text
-          const helmGenericPrometheusAlerts = this.findYamlScalar(within, 'generic_prometheus_alerts')
-          const helmGenericService = this.findYamlScalar(within, 'generic_service')
-          const gradleHmppsGradleSpringBoot = this.findYamlScalar(within, 'hmpps_gradle_spring_boot')
-
-          if (helmGenericPrometheusAlerts || helmGenericService || gradleHmppsGradleSpringBoot) {
-            return {
-              helm_generic_prometheus_alerts: helmGenericPrometheusAlerts,
-              helm_generic_service: helmGenericService,
-              gradle_hmpps_gradle_spring_boot: gradleHmppsGradleSpringBoot,
-            }
-          }
-          return null
+          const comp = await this.serviceCatalogueService!.getComponent({ componentName: name })
+          logger.info(`[RecommendedVersions] Strapi component match: name=${name}`)
+          return comp
         } catch (e) {
-          logger.warn(`[RecommendedVersions] Failed single file candidate ${filename}: ${String(e)}`)
-          return null
+          logger.warn(`[RecommendedVersions] Strapi lookup failed for name=${name}: ${String(e)}`)
+          return tryCandidate(idx + 1)
         }
-      }),
-    )
-
-    for (let i = 0; i < candidates.length; i += 1) {
-      const settled = attempts[i]
-      if (settled.status === 'fulfilled' && settled.value) {
-        return settled.value
       }
-    }
-    return null
-  }
 
-  private async tryFetchHelmValuesYaml(): Promise<{
-    generic_prometheus_alerts?: string
-    generic_service?: string
-  } | null> {
-    const url = this.rawUrl('helm_deploy/values.yaml')
-    try {
-      const text = await this.fetchText(url)
-      if (!text) return null
-      const genericPrometheusAlerts = this.findYamlScalar(text, 'generic_prometheus_alerts')
-      const genericService = this.findYamlScalar(text, 'generic_service')
-      if (genericPrometheusAlerts || genericService)
-        return { generic_prometheus_alerts: genericPrometheusAlerts, generic_service: genericService }
+      const component = await tryCandidate(0)
+      if (!component) {
+        logger.warn('[RecommendedVersions] Strapi component not found in candidate list')
+        return null
+      }
+
+      const versions = (component as unknown as { versions?: Record<string, unknown> }).versions || {}
+      const values = (component as unknown as { values?: Record<string, unknown> }).values || {}
+
+      // Preferred keys from versions
+      let helmGenericPrometheusAlerts = this.parseVersionValue(
+        (versions.helm_dependencies as Record<string, unknown>)?.generic_prometheus_alerts,
+      )
+      let helmGenericService = this.parseVersionValue(
+        (versions.helm_dependencies as Record<string, unknown>)?.generic_service,
+      )
+      let gradleHmppsGradleSpringBoot = this.parseVersionValue(
+        (versions.gradle as Record<string, unknown>)?.hmpps_gradle_spring_boot,
+      )
+
+      // Legacy helm shape in versions
+      if (!helmGenericPrometheusAlerts || !helmGenericService) {
+        const helm = versions.helm as Record<string, unknown>
+        const deps = (helm?.dependencies as Record<string, unknown>) || {}
+        helmGenericPrometheusAlerts =
+          helmGenericPrometheusAlerts || this.parseVersionValue(deps['generic-prometheus-alerts'])
+        helmGenericService = helmGenericService || this.parseVersionValue(deps['generic-service'])
+      }
+
+      // Fallback to values container
+      if (!helmGenericPrometheusAlerts || !helmGenericService || !gradleHmppsGradleSpringBoot) {
+        const vHelmDeps = (values.helm_dependencies as Record<string, unknown>) || {}
+        const vGradle = (values.gradle as Record<string, unknown>) || {}
+        helmGenericPrometheusAlerts =
+          helmGenericPrometheusAlerts || this.parseVersionValue(vHelmDeps.generic_prometheus_alerts)
+        helmGenericService = helmGenericService || this.parseVersionValue(vHelmDeps.generic_service)
+        gradleHmppsGradleSpringBoot =
+          gradleHmppsGradleSpringBoot || this.parseVersionValue(vGradle.hmpps_gradle_spring_boot)
+      }
+
+      // Legacy helm shape in values
+      if (!helmGenericPrometheusAlerts || !helmGenericService) {
+        const vHelm = (values.helm as Record<string, unknown>) || {}
+        const vDeps = (vHelm.dependencies as Record<string, unknown>) || {}
+        helmGenericPrometheusAlerts =
+          helmGenericPrometheusAlerts || this.parseVersionValue(vDeps['generic-prometheus-alerts'])
+        helmGenericService = helmGenericService || this.parseVersionValue(vDeps['generic-service'])
+      }
+
+      const versionsKeys = Object.keys(versions || {})
+      const valuesKeys = Object.keys(values || {})
+      logger.info(
+        `[RecommendedVersions] Strapi containers: versions keys=${JSON.stringify(versionsKeys)}, values keys=${JSON.stringify(
+          valuesKeys,
+        )}`,
+      )
+      logger.info(
+        `[RecommendedVersions] Strapi extracted helm(gpa=${helmGenericPrometheusAlerts || 'missing'}, gs=${
+          helmGenericService || 'missing'
+        }), gradle(hgsb=${gradleHmppsGradleSpringBoot || 'missing'})`,
+      )
+
+      if (helmGenericPrometheusAlerts || helmGenericService || gradleHmppsGradleSpringBoot) {
+        return {
+          helm_generic_prometheus_alerts: helmGenericPrometheusAlerts,
+          helm_generic_service: helmGenericService,
+          gradle_hmpps_gradle_spring_boot: gradleHmppsGradleSpringBoot,
+        }
+      }
       return null
     } catch (e) {
-      logger.warn(`[RecommendedVersions] Failed fetching helm values: ${String(e)}`)
+      logger.warn(`[RecommendedVersions] Failed fetching from Strapi: ${String(e)}`)
       return null
     }
-  }
-
-  private async tryFetchGradleToml(): Promise<{ hmpps_gradle_spring_boot?: string } | null> {
-    const url = this.rawUrl('gradle/libs.versions.toml')
-    try {
-      const text = await this.fetchText(url)
-      if (!text) return null
-      const value = this.findTomlVersion(text, 'hmpps_gradle_spring_boot')
-      if (value) return { hmpps_gradle_spring_boot: value }
-      // sometimes hyphens are used
-      const alt = this.findTomlVersion(text, 'hmpps-gradle-spring-boot')
-      if (alt) return { hmpps_gradle_spring_boot: alt }
-      return null
-    } catch (e) {
-      logger.warn(`[RecommendedVersions] Failed fetching gradle toml: ${String(e)}`)
-      return null
-    }
-  }
-
-  private rawUrl(path: string): string {
-    return `https://raw.githubusercontent.com/${this.repo}/${this.branch}/${path}`
-  }
-
-  private async fetchText(url: string): Promise<string> {
-    const token = process.env.GITHUB_TOKEN
-    const req = superagent.get(url).retry(2)
-    if (token) req.set('Authorization', `Bearer ${token}`)
-    const res = await req
-    return res.text
   }
 
   // --- Simple parsers (YAML/TOML subset) ---
