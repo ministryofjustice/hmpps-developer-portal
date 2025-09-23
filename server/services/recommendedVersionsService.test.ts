@@ -7,7 +7,7 @@ describe('RecommendedVersionsService (Strapi only)', () => {
   })
 
   function makeSvcWithComponent(component: unknown, ttlMs = -1) {
-    const svc = new RecommendedVersionsService(undefined as unknown as string, undefined as unknown as string, ttlMs)
+    const svc = new RecommendedVersionsService(ttlMs)
     const getComponentMock = jest.fn().mockResolvedValue(component)
     const mockCatalogue = {
       getComponent: getComponentMock,

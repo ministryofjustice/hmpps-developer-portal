@@ -32,8 +32,6 @@ export default class RecommendedVersionsService {
   private serviceCatalogueService?: ServiceCatalogueService
 
   constructor(
-    private readonly repo: string = process.env.HMPPS_TEMPLATE_REPO || 'ministryofjustice/hmpps-template-kotlin',
-    private readonly branch: string = process.env.HMPPS_TEMPLATE_BRANCH || 'main',
     private readonly ttlMillis: number = Number(process.env.RECOMMENDED_VERSIONS_TTL_MS) || 6 * 60 * 60 * 1000, // 6h
   ) {}
 
@@ -55,6 +53,7 @@ export default class RecommendedVersionsService {
 
     // Only Strapi: hmpps-template-kotlin component
     const fromStrapi = await this.tryFetchFromStrapi()
+    logger.info(`[RecommendedVersions] Strapi result: ${JSON.stringify(fromStrapi)}`)
     if (fromStrapi) {
       result.helm_dependencies.generic_prometheus_alerts = fromStrapi.helm_generic_prometheus_alerts
       result.helm_dependencies.generic_service = fromStrapi.helm_generic_service
@@ -194,73 +193,5 @@ export default class RecommendedVersionsService {
       logger.warn(`[RecommendedVersions] Failed fetching from Strapi: ${String(e)}`)
       return null
     }
-  }
-
-  // --- Simple parsers (YAML/TOML subset) ---
-
-  /** Extracts the block under a top-level key (e.g., 'versions') preserving indentation */
-  private extractYamlSection(text: string, topKey: string): string | null {
-    const lines = text.split(/\r?\n/)
-    let start = -1
-    let baseIndent = 0
-    for (let i = 0; i < lines.length; i += 1) {
-      const re = new RegExp(`^(\\s*)${this.escapeRegex(topKey)}\\s*:\\s*$`)
-      const m = lines[i].match(re)
-      if (m) {
-        start = i + 1
-        baseIndent = m[1].length
-        break
-      }
-    }
-    if (start === -1) return null
-    const buf: string[] = []
-    for (let i = start; i < lines.length; i += 1) {
-      const line = lines[i]
-      const indent = line.match(/^(\s*)/)[1].length
-      const trimmed = line.trim()
-      if (trimmed === '' || trimmed.startsWith('#')) {
-        buf.push(line)
-      } else if (indent <= baseIndent) {
-        break
-      } else {
-        buf.push(line)
-      }
-    }
-    return buf.join('\n')
-  }
-
-  /**
-   * Find a scalar value for a given YAML key anywhere in the text.
-   * Matches patterns like: key: 1.2.3 or key: "1.2.3"
-   */
-  private findYamlScalar(text: string, key: string): string | undefined {
-    const re = new RegExp(`(^|\\n)\\s*${this.escapeRegex(key)}\\s*:\\s*['"]?([^'"#\\s]+)`, 'm')
-    const m = text.match(re)
-    return m ? m[2] : undefined
-  }
-
-  /**
-   * Find a version in a TOML [versions] section: key = "1.2.3"
-   */
-  private findTomlVersion(text: string, key: string): string | undefined {
-    const section = this.extractTomlSection(text, 'versions') || text
-    const re = new RegExp(`(^|\\n)\\s*${this.escapeRegex(key)}\\s*=\\s*['"]([^'"]+)['"]`, 'm')
-    const m = section.match(re)
-    return m ? m[2] : undefined
-  }
-
-  private extractTomlSection(text: string, section: string): string | null {
-    const reStart = new RegExp(`(^|\\n)\\s*\\[${this.escapeRegex(section)}\\]\\s*(\\n|$)`, 'm')
-    const m = text.match(reStart)
-    if (!m) return null
-    const startIdx = (m.index || 0) + m[0].length
-    const rest = text.slice(startIdx)
-    const endMatch = rest.match(/(^|\n)\s*\[[^\]]+\]\s*(\n|$)/m)
-    const endIdx = endMatch && endMatch.index !== undefined ? endMatch.index : rest.length
-    return rest.slice(0, endIdx)
-  }
-
-  private escapeRegex(s: string): string {
-    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   }
 }
