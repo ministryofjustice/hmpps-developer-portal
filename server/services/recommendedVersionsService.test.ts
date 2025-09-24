@@ -4,7 +4,7 @@ import ServiceCatalogueService from './serviceCatalogueService'
 jest.mock('./serviceCatalogueService')
 
 // Minimal shape used by RecommendedVersionsService when reading from Strapi
-type StrapiComponentMock = {
+type strapiComponentMock = {
   versions?: {
     helm_dependencies?: Record<string, unknown>
     helm?: { dependencies?: Record<string, unknown> }
@@ -22,7 +22,7 @@ describe('RecommendedVersionsService (Strapi only)', () => {
     jest.resetAllMocks()
   })
 
-  const makeSvcWithComponent = (component: StrapiComponentMock) => {
+  const makeSvcWithComponent = (component: strapiComponentMock) => {
     const getComponentMock = jest.fn().mockResolvedValue(component)
     ;(ServiceCatalogueService as unknown as jest.Mock).mockImplementation(() => ({
       getComponent: getComponentMock,
@@ -46,9 +46,9 @@ describe('RecommendedVersionsService (Strapi only)', () => {
     }
     const { svc } = makeSvcWithComponent(component)
     const result = await svc.getRecommendedVersions()
-    expect(result.helm_dependencies.generic_prometheus_alerts).toBe('1.2.3')
-    expect(result.helm_dependencies.generic_service).toBe('4.5.6')
-    expect(result.gradle.hmpps_gradle_spring_boot).toBe('7.8.9')
+    expect(result.helmDependencies.genericPrometheusAlerts).toBe('1.2.3')
+    expect(result.helmDependencies.genericService).toBe('4.5.6')
+    expect(result.gradle.hmppsGradleSpringBoot).toBe('7.8.9')
     expect(result.metadata.source).toBe('strapi')
   })
 
@@ -68,9 +68,9 @@ describe('RecommendedVersionsService (Strapi only)', () => {
     }
     const { svc } = makeSvcWithComponent(component)
     const result = await svc.getRecommendedVersions()
-    expect(result.helm_dependencies.generic_prometheus_alerts).toBe('2.3.4')
-    expect(result.helm_dependencies.generic_service).toBe('5.6.7')
-    expect(result.gradle.hmpps_gradle_spring_boot).toBe('8.9.10')
+    expect(result.helmDependencies.genericPrometheusAlerts).toBe('2.3.4')
+    expect(result.helmDependencies.genericService).toBe('5.6.7')
+    expect(result.gradle.hmppsGradleSpringBoot).toBe('8.9.10')
     expect(['strapi', 'partial']).toContain(result.metadata.source)
   })
 
@@ -78,9 +78,9 @@ describe('RecommendedVersionsService (Strapi only)', () => {
     const component = { versions: {} }
     const { svc } = makeSvcWithComponent(component)
     const result = await svc.getRecommendedVersions()
-    expect(result.helm_dependencies.generic_prometheus_alerts).toBeUndefined()
-    expect(result.helm_dependencies.generic_service).toBeUndefined()
-    expect(result.gradle.hmpps_gradle_spring_boot).toBeUndefined()
+    expect(result.helmDependencies.genericPrometheusAlerts).toBeUndefined()
+    expect(result.helmDependencies.genericService).toBeUndefined()
+    expect(result.gradle.hmppsGradleSpringBoot).toBeUndefined()
     expect(result.metadata.source).toBe('none')
   })
 
@@ -98,7 +98,7 @@ describe('RecommendedVersionsService (Strapi only)', () => {
     }
     const { svc, getComponentMock } = makeSvcWithComponent(component)
     const first = await svc.getRecommendedVersions()
-    expect(first.gradle.hmpps_gradle_spring_boot).toBe('9.9.7')
+    expect(first.gradle.hmppsGradleSpringBoot).toBe('9.9.7')
 
     const second = await svc.getRecommendedVersions()
     expect(second).toEqual(first)

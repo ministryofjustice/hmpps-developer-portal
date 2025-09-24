@@ -3,12 +3,12 @@ import config from '../config'
 import ServiceCatalogueService from './serviceCatalogueService'
 
 export type recommendedVersions = {
-  helm_dependencies: {
-    generic_prometheus_alerts?: string
-    generic_service?: string
+  helmDependencies: {
+    genericPrometheusAlerts?: string
+    genericService?: string
   }
   gradle: {
-    hmpps_gradle_spring_boot?: string
+    hmppsGradleSpringBoot?: string
   }
   metadata: {
     source: 'strapi' | 'partial' | 'none'
@@ -32,10 +32,9 @@ export default class RecommendedVersionsService {
 
   private serviceCatalogueService: ServiceCatalogueService
 
-  private readonly ttlMillis: number
+  private readonly ttlMillis: number = config.recommendedVersions.ttlMs
 
   constructor(serviceCatalogueService: ServiceCatalogueService) {
-    this.ttlMillis = config.recommendedVersions.ttlMs
     this.serviceCatalogueService = serviceCatalogueService
   }
 
@@ -46,7 +45,7 @@ export default class RecommendedVersionsService {
     }
 
     const result: recommendedVersions = {
-      helm_dependencies: {},
+      helmDependencies: {},
       gradle: {},
       metadata: { source: 'none', fetchedAt: new Date(now).toISOString() },
     }
@@ -55,17 +54,17 @@ export default class RecommendedVersionsService {
     const fromStrapi = await this.fetchRecommendedVersionsFromStrapi()
     logger.info(`[RecommendedVersions] Strapi result: ${JSON.stringify(fromStrapi)}`)
     if (fromStrapi) {
-      result.helm_dependencies.generic_prometheus_alerts = fromStrapi.helm_generic_prometheus_alerts
-      result.helm_dependencies.generic_service = fromStrapi.helm_generic_service
-      result.gradle.hmpps_gradle_spring_boot = fromStrapi.gradle_hmpps_gradle_spring_boot
+      result.helmDependencies.genericPrometheusAlerts = fromStrapi.helmGenericPrometheusAlerts
+      result.helmDependencies.genericService = fromStrapi.helmGenericService
+      result.gradle.hmppsGradleSpringBoot = fromStrapi.hmppsGradleSpringBoot
       result.metadata.source = 'strapi'
     }
 
     // Mark partial if any key is missing
     if (
-      !result.helm_dependencies.generic_prometheus_alerts ||
-      !result.helm_dependencies.generic_service ||
-      !result.gradle.hmpps_gradle_spring_boot
+      !result.helmDependencies.genericPrometheusAlerts ||
+      !result.helmDependencies.genericService ||
+      !result.gradle.hmppsGradleSpringBoot
     ) {
       result.metadata.source = result.metadata.source === 'none' ? 'none' : 'partial'
     }
@@ -77,9 +76,9 @@ export default class RecommendedVersionsService {
 
     logger.debug(
       `[RecommendedVersions] Source=${result.metadata.source}, helm(gpa=${
-        result.helm_dependencies.generic_prometheus_alerts || 'missing'
-      }, gs=${result.helm_dependencies.generic_service || 'missing'}), gradle(hgsb=${
-        result.gradle.hmpps_gradle_spring_boot || 'missing'
+        result.helmDependencies.genericPrometheusAlerts || 'missing'
+      }, gs=${result.helmDependencies.genericService || 'missing'}), gradle(hgsb=${
+        result.gradle.hmppsGradleSpringBoot || 'missing'
       })`,
     )
 
@@ -97,9 +96,9 @@ export default class RecommendedVersionsService {
   }
 
   private async fetchRecommendedVersionsFromStrapi(): Promise<{
-    helm_generic_prometheus_alerts?: string
-    helm_generic_service?: string
-    gradle_hmpps_gradle_spring_boot?: string
+    helmGenericPrometheusAlerts?: string
+    helmGenericService?: string
+    hmppsGradleSpringBoot?: string
   } | null> {
     try {
       const templateComponentName = config.recommendedVersions.componentName
@@ -206,9 +205,9 @@ export default class RecommendedVersionsService {
 
       if (helmGenericPrometheusAlerts || helmGenericService || gradleHmppsGradleSpringBoot) {
         return {
-          helm_generic_prometheus_alerts: helmGenericPrometheusAlerts,
-          helm_generic_service: helmGenericService,
-          gradle_hmpps_gradle_spring_boot: gradleHmppsGradleSpringBoot,
+          helmGenericPrometheusAlerts,
+          helmGenericService,
+          hmppsGradleSpringBoot: gradleHmppsGradleSpringBoot,
         }
       }
     } catch (e) {

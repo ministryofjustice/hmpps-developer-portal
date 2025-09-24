@@ -8,6 +8,7 @@ export default function routes({
   serviceCatalogueService,
   teamsSummaryCountService,
   monitoringChannelService,
+  recommendedVersionsService,
 }: Services): Router {
   const router = Router()
 
@@ -87,6 +88,15 @@ export default function routes({
         channelTree,
         hasLegacyChannels,
       }
+
+      // Example of fetching recommended dependency versions from Strapi template component and log comparisons
+      try {
+        const recommended = await recommendedVersionsService.getRecommendedVersions()
+        logger.info(`getRecommendedVersions for team '${teamSlug}': ${JSON.stringify(recommended, null, 2)}`)
+      } catch (e) {
+        logger.error(`Error calling getRecommendedVersions for team '${teamSlug}':`, e)
+      }
+      // example ends here - this will be removed after confirmation.
 
       res.render('pages/teamOverview', { team: displayTeam })
     } catch (err) {
