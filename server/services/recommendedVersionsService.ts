@@ -1,6 +1,7 @@
 import logger from '../../logger'
 import config from '../config'
 import ServiceCatalogueService from './serviceCatalogueService'
+import type { Component } from '../data/modelTypes'
 
 export type recommendedVersions = {
   helmDependencies: {
@@ -95,7 +96,7 @@ export default class RecommendedVersionsService {
     return undefined
   }
 
-  private async getComponentByAnyName(variantNames: string[]): Promise<unknown | null> {
+  private async getComponentByAnyName(variantNames: string[]): Promise<Component | null> {
     const [primaryVariant, ...fallbackVariants] = variantNames
 
     // Try primary first (single request)
@@ -165,8 +166,9 @@ export default class RecommendedVersionsService {
         return null
       }
 
-      const versions = (component as unknown as { versions?: Record<string, unknown> }).versions || {}
-      const values = (component as unknown as { values?: Record<string, unknown> }).values || {}
+      type ComponentWithValues = Component & { values?: Record<string, unknown> }
+      const versions = (component.versions || {}) as Record<string, unknown>
+      const values = ((component as ComponentWithValues).values || {}) as Record<string, unknown>
 
       // Preferred keys from versions
       const helmDeps = (versions.helm_dependencies as Record<string, unknown>) || {}
