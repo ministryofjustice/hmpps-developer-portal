@@ -8,7 +8,6 @@ export default function routes({
   serviceCatalogueService,
   teamsSummaryCountService,
   monitoringChannelService,
-  recommendedVersionsService,
 }: Services): Router {
   const router = Router()
 
