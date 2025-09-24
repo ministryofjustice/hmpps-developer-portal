@@ -30,9 +30,7 @@ export const services = () => {
     strapiApiClientBuilder,
   )
   const monitoringChannelService = new MonitoringChannelService()
-  const recommendedVersionsService = new RecommendedVersionsService()
-  // Inject ServiceCatalogueService so RecommendedVersionsService can fetch hmpps-template-kotlin from Strapi
-  recommendedVersionsService.setServiceCatalogueService(serviceCatalogueService)
+  const recommendedVersionsService = new RecommendedVersionsService(serviceCatalogueService)
 
   return {
     applicationInfo,

@@ -1,4 +1,5 @@
 import logger from '../../logger'
+import config from '../config'
 import ServiceCatalogueService from './serviceCatalogueService'
 
 export type RecommendedVersions = {
@@ -27,22 +28,21 @@ export type RecommendedVersions = {
  * Results are cached in-memory with TTL to avoid excessive network calls.
  */
 export default class RecommendedVersionsService {
-  private static cache: { value: RecommendedVersions; expiresAt: number } | null = null
+  private cache: { versions: RecommendedVersions; expiresAt: number } | null = null
 
-  private serviceCatalogueService?: ServiceCatalogueService
+  private serviceCatalogueService: ServiceCatalogueService
 
-  constructor(
-    private readonly ttlMillis: number = Number(process.env.RECOMMENDED_VERSIONS_TTL_MS) || 6 * 60 * 60 * 1000, // 6h
-  ) {}
+  private readonly ttlMillis: number
 
-  setServiceCatalogueService(service: ServiceCatalogueService): void {
-    this.serviceCatalogueService = service
+  constructor(serviceCatalogueService: ServiceCatalogueService) {
+    this.ttlMillis = config.recommendedVersions.ttlMs
+    this.serviceCatalogueService = serviceCatalogueService
   }
 
   async getRecommendedVersions(): Promise<RecommendedVersions> {
     const now = Date.now()
-    if (RecommendedVersionsService.cache && RecommendedVersionsService.cache.expiresAt > now) {
-      return RecommendedVersionsService.cache.value
+    if (this.cache && this.cache.expiresAt > now) {
+      return this.cache.versions
     }
 
     const result: RecommendedVersions = {
@@ -52,7 +52,7 @@ export default class RecommendedVersionsService {
     }
 
     // Only Strapi: hmpps-template-kotlin component
-    const fromStrapi = await this.tryFetchFromStrapi()
+    const fromStrapi = await this.fetchRecommendedVersionsFromStrapi()
     logger.info(`[RecommendedVersions] Strapi result: ${JSON.stringify(fromStrapi)}`)
     if (fromStrapi) {
       result.helm_dependencies.generic_prometheus_alerts = fromStrapi.helm_generic_prometheus_alerts
@@ -70,12 +70,12 @@ export default class RecommendedVersionsService {
       result.metadata.source = result.metadata.source === 'none' ? 'none' : 'partial'
     }
 
-    RecommendedVersionsService.cache = {
-      value: result,
+    this.cache = {
+      versions: result,
       expiresAt: now + this.ttlMillis,
     }
 
-    logger.info(
+    logger.debug(
       `[RecommendedVersions] Source=${result.metadata.source}, helm(gpa=${
         result.helm_dependencies.generic_prometheus_alerts || 'missing'
       }, gs=${result.helm_dependencies.generic_service || 'missing'}), gradle(hgsb=${
@@ -96,32 +96,44 @@ export default class RecommendedVersionsService {
     return undefined
   }
 
-  private async tryFetchFromStrapi(): Promise<{
+  private async fetchRecommendedVersionsFromStrapi(): Promise<{
     helm_generic_prometheus_alerts?: string
     helm_generic_service?: string
     gradle_hmpps_gradle_spring_boot?: string
   } | null> {
     try {
-      if (!this.serviceCatalogueService) return null
-      const provided = process.env.HMPPS_TEMPLATE_COMPONENT_NAME || 'hmpps-template-kotlin'
-      const candidates = Array.from(new Set([provided, provided.replace(/_/g, '-'), provided.replace(/-/g, '_')]))
+      const templateComponentName = config.recommendedVersions.componentName
+      if (!templateComponentName) {
+        logger.warn('[RecommendedVersions] Missing template component name in config.recommendedVersions.componentName')
+        return null
+      }
 
-      const tryCandidate = async (idx: number): Promise<unknown | null> => {
-        if (idx >= candidates.length) return null
-        const name = candidates[idx]
+      const componentNameVariants = Array.from(
+        new Set(
+          [
+            templateComponentName,
+            templateComponentName.replace(/_/g, '-'),
+            templateComponentName.replace(/-/g, '_'),
+          ].filter(Boolean),
+        ),
+      )
+
+      let component: unknown | null = null
+      for (const variantName of componentNameVariants) {
         try {
-          const comp = await this.serviceCatalogueService!.getComponent({ componentName: name })
-          logger.info(`[RecommendedVersions] Strapi component match: name=${name}`)
-          return comp
+          // eslint-disable-next-line no-await-in-loop -- sequential attempts are intentional to avoid unnecessary parallel requests
+          component = await this.serviceCatalogueService.getComponent({ componentName: variantName })
+          logger.info(`[RecommendedVersions] Strapi component match: name=${variantName}`)
+          break
         } catch (e) {
-          logger.warn(`[RecommendedVersions] Strapi lookup failed for name=${name}: ${String(e)}`)
-          return tryCandidate(idx + 1)
+          logger.warn(`[RecommendedVersions] Strapi lookup failed for name=${variantName}: ${String(e)}`)
         }
       }
 
-      const component = await tryCandidate(0)
       if (!component) {
-        logger.warn('[RecommendedVersions] Strapi component not found in candidate list')
+        logger.warn(
+          `[RecommendedVersions] Strapi component not found. Tried variants=${JSON.stringify(componentNameVariants)}`,
+        )
         return null
       }
 
@@ -181,7 +193,7 @@ export default class RecommendedVersionsService {
 
       const versionsKeys = Object.keys(versions || {})
       const valuesKeys = Object.keys(values || {})
-      logger.info(
+      logger.debug(
         `[RecommendedVersions] Strapi containers: versions keys=${JSON.stringify(versionsKeys)}, values keys=${JSON.stringify(
           valuesKeys,
         )}`,
@@ -199,10 +211,9 @@ export default class RecommendedVersionsService {
           gradle_hmpps_gradle_spring_boot: gradleHmppsGradleSpringBoot,
         }
       }
-      return null
     } catch (e) {
       logger.warn(`[RecommendedVersions] Failed fetching from Strapi: ${String(e)}`)
-      return null
     }
+    return null
   }
 }

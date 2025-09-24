@@ -1,18 +1,27 @@
 import RecommendedVersionsService from './recommendedVersionsService'
 import type ServiceCatalogueService from './serviceCatalogueService'
 
-describe('RecommendedVersionsService (Strapi only)', () => {
-  beforeEach(() => {
-    ;(RecommendedVersionsService as unknown as { cache: unknown | null }).cache = null
-  })
+// Minimal shape used by RecommendedVersionsService when reading from Strapi
+type StrapiComponentMock = {
+  versions?: {
+    helm_dependencies?: Record<string, unknown>
+    helm?: { dependencies?: Record<string, unknown> }
+    gradle?: { hmpps_gradle_spring_boot?: unknown }
+  }
+  values?: {
+    helm_dependencies?: Record<string, unknown>
+    helm?: { dependencies?: Record<string, unknown> }
+    gradle?: { hmpps_gradle_spring_boot?: unknown }
+  }
+}
 
-  function makeSvcWithComponent(component: unknown, ttlMs = -1) {
-    const svc = new RecommendedVersionsService(ttlMs)
+describe('RecommendedVersionsService (Strapi only)', () => {
+  const makeSvcWithComponent = (component: StrapiComponentMock) => {
     const getComponentMock = jest.fn().mockResolvedValue(component)
     const mockCatalogue = {
       getComponent: getComponentMock,
     } as unknown as ServiceCatalogueService
-    svc.setServiceCatalogueService(mockCatalogue)
+    const svc = new RecommendedVersionsService(mockCatalogue)
     return { svc, mockCatalogue, getComponentMock }
   }
 
@@ -80,7 +89,7 @@ describe('RecommendedVersionsService (Strapi only)', () => {
         },
       },
     }
-    const { svc, getComponentMock } = makeSvcWithComponent(component, 60_000)
+    const { svc, getComponentMock } = makeSvcWithComponent(component)
     const first = await svc.getRecommendedVersions()
     expect(first.gradle.hmpps_gradle_spring_boot).toBe('9.9.7')
 
