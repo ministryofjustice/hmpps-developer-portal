@@ -1,11 +1,99 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import { validateRequest } from '../middleware/setUpValidationMiddleware'
+import { validateRequest, ValidationError } from '../middleware/setUpValidationMiddleware'
 import { FieldValidationError } from '../@types/FieldValidationError'
 import { GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
 
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
+
+  router.get('/choice', async (req, res) => {
+    return res.render('pages/componentRequestFormOption', {
+      title: 'Github Repository Requst Form Options',
+    })
+  })
+
+  router.post('/choice', async (req, res): Promise<void> => {
+    const formData = req.body
+    const repoExists = formData.github_repo
+      ? await componentNameService.checkComponentExists(formData.github_repo)
+      : false
+    const repoRequestExists = formData.github_repo
+      ? await componentNameService.checkComponentRequestExists(formData.github_repo)
+      : false
+    validateRequest(req, body => {
+      const validationErrors: FieldValidationError[] = []
+      if (!body.github_repo) {
+        validationErrors.push({
+          field: 'github_repo',
+          message: 'Please enter a repository name',
+          href: '#github_repo',
+        })
+      } else {
+        const repoName = body.github_repo?.toString()
+        if (repoExists && formData.option === 'Add') {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'This repository name already exists in components collection - please choose a different name',
+            href: '#github_repo',
+          })
+        }
+        if (repoRequestExists && formData.option === 'Add') {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'A request for this component already exists in queue, please choose a different name',
+            href: '#github_repo',
+          })
+        }
+        if (!repoName.startsWith('hmpps') && formData.option === 'Add') {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'The repository name must start with "hmpps"',
+            href: '#github_repo',
+          })
+        }
+        if (repoName.length >= 100 && formData.option === 'Add') {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'The repository name must be less than 100 characters',
+            href: '#github_repo',
+          })
+        }
+        if (!/^[a-zA-Z0-9-]+$/.test(repoName) && formData.option === 'Add') {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'The repository name must only contain alphanumeric characters and hyphens',
+            href: '#github_repo',
+          })
+        }
+      }
+      return validationErrors
+    })
+    try {
+      const [, productList] = await dataFilterService.getFormsDropdownLists({
+        teamName: '',
+        productId: '',
+        useFormattedName: true,
+      })
+      return res.render('pages/componentRequestForm', {
+        title: 'Github Repository Request Form',
+        submittedForm: { github_repo: formData.github_repo },
+        productList,
+        ValidationErrors: [],
+      })
+    } catch {
+      const validationErrors: FieldValidationError[] = []
+      validationErrors.push({
+        field: 'form',
+        message: 'There was an error submitting your request. Please try again later.',
+        href: '',
+      })
+      return res.render('pages/componentRequestFormOption', {
+        validationErrors,
+        formData,
+      })
+    }
+  })
 
   router.get('/new', async (req, res) => {
     const [, productList] = await dataFilterService.getFormsDropdownLists({
