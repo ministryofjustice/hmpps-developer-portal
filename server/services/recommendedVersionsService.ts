@@ -2,7 +2,7 @@ import logger from '../../logger'
 import config from '../config'
 import ServiceCatalogueService from './serviceCatalogueService'
 
-export type RecommendedVersions = {
+export type recommendedVersions = {
   helm_dependencies: {
     generic_prometheus_alerts?: string
     generic_service?: string
@@ -28,7 +28,7 @@ export type RecommendedVersions = {
  * Results are cached in-memory with TTL to avoid excessive network calls.
  */
 export default class RecommendedVersionsService {
-  private cache: { versions: RecommendedVersions; expiresAt: number } | null = null
+  private cache: { versions: recommendedVersions; expiresAt: number } | null = null
 
   private serviceCatalogueService: ServiceCatalogueService
 
@@ -39,13 +39,13 @@ export default class RecommendedVersionsService {
     this.serviceCatalogueService = serviceCatalogueService
   }
 
-  async getRecommendedVersions(): Promise<RecommendedVersions> {
+  async getRecommendedVersions(): Promise<recommendedVersions> {
     const now = Date.now()
     if (this.cache && this.cache.expiresAt > now) {
       return this.cache.versions
     }
 
-    const result: RecommendedVersions = {
+    const result: recommendedVersions = {
       helm_dependencies: {},
       gradle: {},
       metadata: { source: 'none', fetchedAt: new Date(now).toISOString() },

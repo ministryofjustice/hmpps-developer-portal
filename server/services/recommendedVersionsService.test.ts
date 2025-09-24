@@ -1,5 +1,7 @@
 import RecommendedVersionsService from './recommendedVersionsService'
-import type ServiceCatalogueService from './serviceCatalogueService'
+import ServiceCatalogueService from './serviceCatalogueService'
+
+jest.mock('./serviceCatalogueService')
 
 // Minimal shape used by RecommendedVersionsService when reading from Strapi
 type StrapiComponentMock = {
@@ -16,12 +18,17 @@ type StrapiComponentMock = {
 }
 
 describe('RecommendedVersionsService (Strapi only)', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
   const makeSvcWithComponent = (component: StrapiComponentMock) => {
     const getComponentMock = jest.fn().mockResolvedValue(component)
-    const mockCatalogue = {
+    ;(ServiceCatalogueService as unknown as jest.Mock).mockImplementation(() => ({
       getComponent: getComponentMock,
-    } as unknown as ServiceCatalogueService
-    const svc = new RecommendedVersionsService(mockCatalogue)
+    }))
+    const mockCatalogue = new (ServiceCatalogueService as unknown as jest.Mock)()
+    const svc = new RecommendedVersionsService(mockCatalogue as unknown as ServiceCatalogueService)
     return { svc, mockCatalogue, getComponentMock }
   }
 
