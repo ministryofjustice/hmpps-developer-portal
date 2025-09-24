@@ -89,15 +89,6 @@ export default function routes({
         hasLegacyChannels,
       }
 
-      // Example of fetching recommended dependency versions from Strapi template component and log comparisons
-      try {
-        const recommended = await recommendedVersionsService.getRecommendedVersions()
-        logger.info(`getRecommendedVersions for team '${teamSlug}': ${JSON.stringify(recommended, null, 2)}`)
-      } catch (e) {
-        logger.error(`Error calling getRecommendedVersions for team '${teamSlug}':`, e)
-      }
-      // example ends here - this will be removed after confirmation.
-
       res.render('pages/teamOverview', { team: displayTeam })
     } catch (err) {
       logger.error(`Error calling getTeamAlertSummary for team '${teamSlug}':`, err)
