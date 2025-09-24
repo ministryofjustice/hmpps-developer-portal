@@ -129,7 +129,7 @@ export default class RecommendedVersionsService {
       const firstSuccessfulLookup = await Promise.any(variantLookupPromises)
       logger.info(`[RecommendedVersions] Strapi component match: name=${firstSuccessfulLookup.variantName}`)
       return firstSuccessfulLookup.component
-    } catch (err) {
+    } catch {
       logger.warn(`[RecommendedVersions] Strapi component not found. Tried variants=${JSON.stringify(variantNames)}`)
       return null
     }
