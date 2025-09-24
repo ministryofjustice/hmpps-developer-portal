@@ -95,6 +95,46 @@ export default class RecommendedVersionsService {
     return undefined
   }
 
+  private async getComponentByAnyName(variantNames: string[]): Promise<unknown | null> {
+    const [primaryVariant, ...fallbackVariants] = variantNames
+
+    // Try primary first (single request)
+    try {
+      const component = await this.serviceCatalogueService.getComponent({ componentName: primaryVariant })
+      logger.info(`[RecommendedVersions] Strapi component match: name=${primaryVariant}`)
+      return component
+    } catch (initialErr) {
+      logger.warn(
+        `[RecommendedVersions] Strapi lookup failed for primary name=${primaryVariant}: ${String(initialErr)}`,
+      )
+    }
+
+    if (fallbackVariants.length === 0) {
+      logger.warn(`[RecommendedVersions] Strapi component not found. Tried variants=${JSON.stringify(variantNames)}`)
+      return null
+    }
+
+    // Parallel fallback attempts
+    const variantLookupPromises = fallbackVariants.map(variantName =>
+      this.serviceCatalogueService
+        .getComponent({ componentName: variantName })
+        .then(component => ({ variantName, component }))
+        .catch(e => {
+          logger.warn(`[RecommendedVersions] Strapi lookup failed for name=${variantName}: ${String(e)}`)
+          throw e
+        }),
+    )
+
+    try {
+      const firstSuccessfulLookup = await Promise.any(variantLookupPromises)
+      logger.info(`[RecommendedVersions] Strapi component match: name=${firstSuccessfulLookup.variantName}`)
+      return firstSuccessfulLookup.component
+    } catch (err) {
+      logger.warn(`[RecommendedVersions] Strapi component not found. Tried variants=${JSON.stringify(variantNames)}`)
+      return null
+    }
+  }
+
   private async fetchRecommendedVersionsFromStrapi(): Promise<{
     helmGenericPrometheusAlerts?: string
     helmGenericService?: string
@@ -117,18 +157,7 @@ export default class RecommendedVersionsService {
         ),
       )
 
-      let component: unknown | null = null
-      for (const variantName of componentNameVariants) {
-        try {
-          // eslint-disable-next-line no-await-in-loop -- sequential attempts are intentional to avoid unnecessary parallel requests
-          component = await this.serviceCatalogueService.getComponent({ componentName: variantName })
-          logger.info(`[RecommendedVersions] Strapi component match: name=${variantName}`)
-          break
-        } catch (e) {
-          logger.warn(`[RecommendedVersions] Strapi lookup failed for name=${variantName}: ${String(e)}`)
-        }
-      }
-
+      const component = await this.getComponentByAnyName(componentNameVariants)
       if (!component) {
         logger.warn(
           `[RecommendedVersions] Strapi component not found. Tried variants=${JSON.stringify(componentNameVariants)}`,
