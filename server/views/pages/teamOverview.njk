@@ -11,13 +11,15 @@
 
 {{ breadCrumb(team.name, [{title: "Teams", href: "/teams"}]) }}
 
-<h3>The information on this page relates to products & components in the production environment only</h3>
+  {% call govukInsetText({ classes: "govuk-!-margin-0 guidance-panel" }) %}
+    <p>The information on this page relates to products and components in the production environment only</p>
+  {% endcall %}
 
 <h1>{{ team.name }}</h1>
 
 {% if team.slackChannelId and team.slackChannelName %}
   <h3>
-    Slack Channel: 
+    Slack Channel:
     <a href="slack://channel?team={{ team.slackWorkspaceId }}&id={{ team.slackChannelId }}" class="slack-icon">#{{ team.slackChannelName }}</a>
   </h3>
 {% endif %}
