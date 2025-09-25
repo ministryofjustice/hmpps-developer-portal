@@ -19,6 +19,7 @@ import type {
 } from './modelTypes'
 import convertTrivyScan from './converters/trivyScans'
 import { ListResponse, SingleResponse } from './strapiClientTypes'
+import { createStrapiQuery } from '../utils/utils'
 
 type Payload = Record<string, unknown>
 
