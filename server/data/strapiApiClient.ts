@@ -2,7 +2,7 @@ import { URLSearchParams } from 'url'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import * as Strapi from './strapiApiTypes'
-import { unwrapListResponse, unwrapSingleResponse } from '../utils/strapi4Utils'
+import { unwrapListResponse, unwrapSingleResponse } from '../utils/utils'
 import type {
   Component,
   CustomComponentView,
