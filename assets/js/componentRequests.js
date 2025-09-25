@@ -7,6 +7,13 @@ jQuery(function () {
       },
     },
     {
+      data: 'request_type',
+      createdCell: function (td, _cellData, rowData) {
+        const requestType = rowData.request_type || 'Add'
+        $(td).html(requestType)
+      },
+    },
+    {
       data: 'requester_name',
     },
     {

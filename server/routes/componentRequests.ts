@@ -379,6 +379,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         requester_email: formData.requester_email,
         requester_team: formData.requester_team,
         request_type: 'Archive',
+        request_github_pr_status: 'Pending',
       }
       await serviceCatalogueService.postGithubRepoRequest({ data: archiveData })
       return res.render('pages/componentRequestConfirmation', {
