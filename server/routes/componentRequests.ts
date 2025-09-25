@@ -21,6 +21,10 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     const repoRequestExists = formData.github_repo
       ? await componentNameService.checkComponentRequestExists(formData.github_repo)
       : false
+    const archiveRequestExists = formData.github_repo
+      ? await componentNameService.checkComponentArchiveRequestExists(formData.github_repo)
+      : false
+
     validateRequest(req, body => {
       const validationErrors: FieldValidationError[] = []
       if (!body.option) {
@@ -38,12 +42,19 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         })
       } else {
         const repoName = body.github_repo?.toString()
-        if (formData.option === 'Update' || formData.option === 'Archive') {
-          if (!(repoExists || repoRequestExists)) {
+        if (formData.option === 'Archive') {
+          if (!repoExists) {
             validationErrors.push({
               field: 'github_repo',
               message:
-                'This repository name does not exist in components or component requests, please enter existing repository name',
+                'This repository name does not exist in components table in Service Catalogue, please enter existing repository name',
+              href: '#github_repo',
+            })
+          }
+          if (archiveRequestExists) {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'An archive request for this component already exists in queue, please choose a different name',
               href: '#github_repo',
             })
           }
@@ -93,21 +104,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         productId: '',
         useFormattedName: true,
       })
-      let filledData
-      if (formData.option === 'Add') {
-        filledData = { github_repo: formData.github_repo }
-      } else if (formData.option === 'Update') {
-        filledData = await buildSubmittedformat(
-          formData.github_repo,
-          repoExists,
-          repoRequestExists,
-          serviceCatalogueService,
-        )
-      } else if (formData.option === 'Archive') {
-        filledData = { github_repo: formData.github_repo }
-      } else {
-        filledData = {}
-      }
+      const filledData = { github_repo: formData.github_repo }
       if (formData.option === 'Archive') {
         return res.render('pages/componentArchiveRequestForm', {
           title: 'Github Repository Archive Request Form',
@@ -452,71 +449,6 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       request_type: formData.request_type?.toString(),
     },
   }
-}
-
-const buildSubmittedformat = async (
-  repoName: string,
-  repoExists: boolean,
-  repoRequestExists: boolean,
-  serviceCatalogueService: Services['serviceCatalogueService'],
-) => {
-  if (repoExists) {
-    const componentData = (await serviceCatalogueService.getComponent({ componentName: repoName })) as Component
-    const submittedform = {
-      github_repo: componentData.name,
-      repo_description: componentData.description,
-      base_template: componentData.github_template_repo || 'none',
-      jira_project_keys: componentData.jira_project_keys,
-      github_project_visibility: componentData.github_project_visibility,
-      product: componentData.product?.p_id,
-      slack_channel_prod_release_notify: componentData.slack_channel_prod_release_notify,
-      slack_channel_nonprod_release_notify: componentData.slack_channel_nonprod_release_notify,
-      slack_channel_security_scans_notify: componentData.slack_channel_security_scans_notify,
-      prod_alerts_severity_label: '',
-      nonprod_alerts_severity_label: '',
-      github_project_teams_write: Array.isArray(componentData.github_project_teams_write)
-        ? componentData.github_project_teams_write.join(', ')
-        : '',
-      github_projects_teams_admin: Array.isArray(componentData.github_project_teams_admin)
-        ? componentData.github_project_teams_admin.join(', ')
-        : '',
-      github_project_branch_protection_restricted_teams: Array.isArray(
-        componentData.github_project_branch_protection_restricted_teams,
-      )
-        ? componentData.github_project_branch_protection_restricted_teams.join(', ')
-        : '',
-    }
-    return submittedform
-  }
-  if (repoRequestExists) {
-    const componenRequestData = await serviceCatalogueService.getGithubRepoRequest({ repoName })
-    const submittedform = {
-      github_repo: componenRequestData.github_repo,
-      repo_description: componenRequestData.repo_description,
-      base_template: componenRequestData.base_template || 'none',
-      jira_project_keys: componenRequestData.jira_project_keys,
-      github_project_visibility: componenRequestData.github_project_visibility,
-      product: componenRequestData.product,
-      slack_channel_prod_release_notify: componenRequestData.slack_channel_prod_release_notify,
-      slack_channel_nonprod_release_notify: componenRequestData.slack_channel_nonprod_release_notify,
-      slack_channel_security_scans_notify: componenRequestData.slack_channel_security_scans_notify,
-      prod_alerts_severity_label: componenRequestData.prod_alerts_severity_label,
-      nonprod_alerts_severity_label: componenRequestData.nonprod_alerts_severity_label,
-      github_project_teams_write: Array.isArray(componenRequestData.github_project_teams_write)
-        ? componenRequestData.github_project_teams_write.join(', ')
-        : '',
-      github_projects_teams_admin: Array.isArray(componenRequestData.github_projects_teams_admin)
-        ? componenRequestData.github_projects_teams_admin.join(', ')
-        : '',
-      github_project_branch_protection_restricted_teams: Array.isArray(
-        componenRequestData.github_project_branch_protection_restricted_teams,
-      )
-        ? componenRequestData.github_project_branch_protection_restricted_teams.join(', ')
-        : '',
-    }
-    return submittedform
-  }
-  return {}
 }
 
 function convertTeamsStringToArray(teams: string): string[] {

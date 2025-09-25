@@ -103,4 +103,13 @@ export default class ComponentNameService {
     const components = componentData.find(repoName => formatMonitorName(repoName.github_repo) === repositoryName)
     return !!components
   }
+
+  async checkComponentArchiveRequestExists(repositoryName: string): Promise<boolean> {
+    const componentData = await this.strapiApiClientFactory('').getGithubRepoRequests()
+    const components = componentData.find(
+      repoName => formatMonitorName(repoName.github_repo) === repositoryName && repoName.request_type === 'Archive',
+    )
+    console.log(components)
+    return !!components
+  }
 }
