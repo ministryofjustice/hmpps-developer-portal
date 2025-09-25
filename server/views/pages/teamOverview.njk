@@ -22,7 +22,6 @@
     </h3>
   {% endif %}
 
-
   {% if team.alertSummary.total > 0 %}
     {{ mojAlert({
     variant: "warning",
@@ -30,7 +29,7 @@
     showTitleAsHeading: true,
     dismissible: false,
     html: 'There are actively triggering alerts on one or more components. <a href="/alerts?environment=prod&team=' + team.encodedTeamName + '">Please see active alerts for more</a>.'
-  }) }}
+    }) }}
   {% else %}
     {{ mojAlert({
     variant: "information",
@@ -38,7 +37,7 @@
     showTitleAsHeading: true,
     dismissible: false,
     html: 'There are currently no actively triggering alerts.'
-  }) }}
+    }) }}
   {% endif %}
 
   <h3 class="govuk-heading-m">Alerts and scans requiring investigation</h3>
