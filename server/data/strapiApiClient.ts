@@ -1,7 +1,7 @@
+import { URLSearchParams } from 'url'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import * as Strapi from './strapiApiTypes'
-import { unwrapListResponse, unwrapSingleResponse } from '../utils/strapi4Utils'
 import type {
   Component,
   CustomComponentView,
@@ -19,7 +19,16 @@ import type {
 } from './modelTypes'
 import convertTrivyScan from './converters/trivyScans'
 import { ListResponse, SingleResponse } from './strapiClientTypes'
-import { createStrapiQuery } from '../utils/utils'
+
+type Payload = Record<string, unknown>
+
+function unwrapSingleResponse<T extends Payload>(response: SingleResponse<T>): T {
+  return Array.isArray(response.data) && response.data.length > 0 ? (response.data[0] as T) : response.data
+}
+
+function unwrapListResponse<T extends Payload>(response: ListResponse<T>): T[] {
+  return response.data
+}
 
 export default class StrapiApiClient {
   private restClient: RestClient
