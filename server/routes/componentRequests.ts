@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import { Component, GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
+import { GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
 import { FieldValidationError } from '../@types/FieldValidationError'
 

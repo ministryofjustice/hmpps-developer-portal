@@ -109,7 +109,6 @@ export default class ComponentNameService {
     const components = componentData.find(
       repoName => formatMonitorName(repoName.github_repo) === repositoryName && repoName.request_type === 'Archive',
     )
-    console.log(components)
     return !!components
   }
 }
