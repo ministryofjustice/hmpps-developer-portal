@@ -419,15 +419,15 @@
   margin-right: 5px;
 }
 
-.user-research-banner {
-  & p {
-    width: 1170px;
-    margin: 0 auto;
-  }
-  & .govuk-tag {
-    font-weight: bold;
-  }
-}
+// .user-research-banner {
+//   & p {
+//     width: 1170px;
+//     margin: 0 auto;
+//   }
+//   & .govuk-tag {
+//     font-weight: bold;
+//   }
+// }
 
 // For update buttons on filterDropDowns partial when page is bigger than 640px
 @media(width > 640px) {
