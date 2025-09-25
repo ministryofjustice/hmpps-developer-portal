@@ -34,6 +34,9 @@
         hint: {
           html: "This must start with 'hmpps-' and contain only alphanumeric characters and hyphens (-). Ensure that new components meet the " + '<a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/service-standard/service-naming/">guidance around service naming</a>.'
         },
+        attributes: {
+          readonly: "readonly"
+        },
         errorMessage: validationErrors | findError('github_repo')
       }) }}
       {{ govukTextarea({
