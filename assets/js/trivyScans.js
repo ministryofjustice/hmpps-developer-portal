@@ -428,15 +428,14 @@ jQuery(function () {
     table.draw()
   }
   //function to select prod only for Trivy Scans on Team Overview page
-
   function filterForProdTeamOverview() {
     const params = new URLSearchParams(window.location.search)
     const prodCheckBoxId = params.get('checkbox')
 
-    const allEnvCheckboxes = document.querySelectorAll('input[type="checkbox"][name="environment"]')
     if (prodCheckBoxId) {
+      const allEnvCheckboxes = document.querySelectorAll('input[type="checkbox"][name="environment"]')
       allEnvCheckboxes.forEach(checkbox => {
-        if (checkbox.id !== prodCheckBoxId) checkbox.checked = false
+        checkbox.checked = checkbox.id === prodCheckBoxId
       })
     }
   }
