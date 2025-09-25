@@ -23,6 +23,13 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       : false
     validateRequest(req, body => {
       const validationErrors: FieldValidationError[] = []
+      if (!body.option) {
+        validationErrors.push({
+          field: 'option',
+          message: 'Please select an option',
+          href: '#option',
+        })
+      }
       if (!body.github_repo) {
         validationErrors.push({
           field: 'github_repo',
@@ -31,7 +38,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         })
       } else {
         const repoName = body.github_repo?.toString()
-        if (formData.option === 'Update') {
+        if (formData.option === 'Update' || formData.option === 'Archive') {
           if (!(repoExists || repoRequestExists)) {
             validationErrors.push({
               field: 'github_repo',
@@ -81,46 +88,36 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       return validationErrors
     })
     try {
-      // if (formData.option === 'Add') {
-      //   const [, productList] = await dataFilterService.getFormsDropdownLists({
-      //     teamName: '',
-      //     productId: '',
-      //     useFormattedName: true,
-      //   })
-      //   return res.render('pages/componentRequestForm', {
-      //     title: 'Github Repository Request Form',
-      //     submittedForm: { github_repo: formData.github_repo },
-      //     productList,
-      //     ValidationErrors: [],
-      //   })
-      // }
-      // if (formData.option === 'Update') {
-      //   const [, productList] = await dataFilterService.getFormsDropdownLists({
-      //     teamName: '',
-      //     productId: '',
-      //     useFormattedName: true,
-      //   })
-      //   const { submittedform } = await buildSubmittedformat(
-      //     formData.github_repo,
-      //     repoExists,
-      //     repoRequestExists,
-      //     serviceCatalogueService,
-      //   )
-      //   return res.render('pages/componentRequestForm', {
-      //     title: 'Github Repository Request Form',
-      //     submittedForm: submittedform,
-      //     productList,
-      //     ValidationErrors: [],
-      //   })
-      // }
       const [, productList] = await dataFilterService.getFormsDropdownLists({
         teamName: '',
         productId: '',
         useFormattedName: true,
       })
+      let filledData
+      if (formData.option === 'Add') {
+        filledData = { github_repo: formData.github_repo }
+      } else if (formData.option === 'Update') {
+        filledData = await buildSubmittedformat(
+          formData.github_repo,
+          repoExists,
+          repoRequestExists,
+          serviceCatalogueService,
+        )
+      } else if (formData.option === 'Archive') {
+        filledData = { github_repo: formData.github_repo }
+      } else {
+        filledData = {}
+      }
+      if (formData.option === 'Archive') {
+        return res.render('pages/componentArchiveRequestForm', {
+          title: 'Github Repository Archive Request Form',
+          submittedForm: filledData,
+          ValidationErrors: [],
+        })
+      }
       return res.render('pages/componentRequestForm', {
         title: 'Github Repository Request Form',
-        submittedForm: { github_repo: formData.github_repo },
+        submittedForm: filledData,
         productList,
         ValidationErrors: [],
       })
@@ -147,6 +144,12 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     return res.render('pages/componentRequestForm', {
       title: 'Github Repository Requst Form',
       productList,
+    })
+  })
+
+  router.get('/archive', async (req, res) => {
+    return res.render('pages/componentArchiveRequestForm', {
+      title: 'Github Repository Archive Requst Form',
     })
   })
 
@@ -336,6 +339,68 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     }
   })
 
+  router.post('/archive', async (req, res): Promise<void> => {
+    const formData = req.body
+    validateRequest(req, body => {
+      const validationErrors: FieldValidationError[] = []
+      if (!body.requester_name) {
+        validationErrors.push({
+          field: 'requester_name',
+          message: 'Enter Requester Name',
+          href: '#requester_name',
+        })
+      }
+      if (!body.requester_email) {
+        validationErrors.push({
+          field: 'requester_email',
+          message: 'Enter Requesters Email Address',
+          href: '#requester_email',
+        })
+      } else {
+        const requesterEmail = body.requester_email?.toString()
+        if (!requesterEmail.endsWith('@justice.gov.uk')) {
+          validationErrors.push({
+            field: 'requesterEmail',
+            message: 'Valid email address is only with @justice.gov.uk',
+            href: '#requester_email',
+          })
+        }
+      }
+      if (!body.requester_team) {
+        validationErrors.push({
+          field: 'requester_team',
+          message: 'Select Requesting Team',
+          href: '#requester_team',
+        })
+      }
+      return validationErrors
+    })
+    try {
+      const archiveData = {
+        github_repo: formData.github_repo,
+        requester_name: formData.requester_name,
+        requester_email: formData.requester_email,
+        requester_team: formData.requester_team,
+        request_type: 'Archive',
+      }
+      await serviceCatalogueService.postGithubRepoRequest({ data: archiveData })
+      return res.render('pages/componentRequestConfirmation', {
+        title: 'Github Repository Request Confirmation',
+        repoName: formData.github_repo,
+      })
+    } catch {
+      const validationErrors: FieldValidationError[] = []
+      validationErrors.push({
+        field: 'form',
+        message: 'There was an error submitting your request. Please try again later.',
+        href: '',
+      })
+      return res.render('pages/componentArchiveRequestForm', {
+        validationErrors,
+        formData,
+      })
+    }
+  })
   return router
 }
 
@@ -384,6 +449,7 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       requester_email: sanitiseString(formData.requester_email?.toString()),
       requester_team: formData.requester_team?.toString(),
       request_github_pr_status: 'Pending',
+      request_type: formData.request_type?.toString(),
     },
   }
 }
@@ -399,10 +465,10 @@ const buildSubmittedformat = async (
     const submittedform = {
       github_repo: componentData.name,
       repo_description: componentData.description,
-      base_template: componentData.github_template_repo,
+      base_template: componentData.github_template_repo || 'none',
       jira_project_keys: componentData.jira_project_keys,
       github_project_visibility: componentData.github_project_visibility,
-      product: componentData.product,
+      product: componentData.product?.p_id,
       slack_channel_prod_release_notify: componentData.slack_channel_prod_release_notify,
       slack_channel_nonprod_release_notify: componentData.slack_channel_nonprod_release_notify,
       slack_channel_security_scans_notify: componentData.slack_channel_security_scans_notify,
@@ -420,14 +486,14 @@ const buildSubmittedformat = async (
         ? componentData.github_project_branch_protection_restricted_teams.join(', ')
         : '',
     }
-    return { submittedform }
+    return submittedform
   }
   if (repoRequestExists) {
     const componenRequestData = await serviceCatalogueService.getGithubRepoRequest({ repoName })
     const submittedform = {
       github_repo: componenRequestData.github_repo,
       repo_description: componenRequestData.repo_description,
-      base_template: componenRequestData.base_template,
+      base_template: componenRequestData.base_template || 'none',
       jira_project_keys: componenRequestData.jira_project_keys,
       github_project_visibility: componenRequestData.github_project_visibility,
       product: componenRequestData.product,
@@ -448,9 +514,9 @@ const buildSubmittedformat = async (
         ? componenRequestData.github_project_branch_protection_restricted_teams.join(', ')
         : '',
     }
-    return { submittedform }
+    return submittedform
   }
-  return { submittedform: {} }
+  return {}
 }
 
 function convertTeamsStringToArray(teams: string): string[] {
