@@ -1,11 +1,136 @@
 import { Router } from 'express'
 import type { Services } from '../services'
+import { GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
 import { FieldValidationError } from '../@types/FieldValidationError'
-import { GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
 
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
+
+  router.get('/choice', async (req, res) => {
+    return res.render('pages/componentRequestFormOption', {
+      title: 'Github Repository Requst Form Options',
+    })
+  })
+
+  router.post('/choice', async (req, res): Promise<void> => {
+    const formData = req.body
+    const repoExists = formData.github_repo
+      ? await componentNameService.checkComponentExists(formData.github_repo)
+      : false
+    const repoRequestExists = formData.github_repo
+      ? await componentNameService.checkComponentRequestExists(formData.github_repo)
+      : false
+    const archiveRequestExists = formData.github_repo
+      ? await componentNameService.checkComponentArchiveRequestExists(formData.github_repo)
+      : false
+
+    validateRequest(req, body => {
+      const validationErrors: FieldValidationError[] = []
+      if (!body.option) {
+        validationErrors.push({
+          field: 'option',
+          message: 'Please select an option',
+          href: '#option',
+        })
+      }
+      if (!body.github_repo) {
+        validationErrors.push({
+          field: 'github_repo',
+          message: 'Please enter a repository name',
+          href: '#github_repo',
+        })
+      } else {
+        const repoName = body.github_repo?.toString()
+        if (formData.option === 'Archive') {
+          if (!repoExists) {
+            validationErrors.push({
+              field: 'github_repo',
+              message:
+                'This repository name does not exist in components table in Service Catalogue, please enter existing repository name',
+              href: '#github_repo',
+            })
+          }
+          if (archiveRequestExists) {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'An archive request for this component already exists in queue, please choose a different name',
+              href: '#github_repo',
+            })
+          }
+        } else {
+          if (repoExists && formData.option === 'Add') {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'This repository name already exists in components collection - please choose a different name',
+              href: '#github_repo',
+            })
+          }
+          if (repoRequestExists && formData.option === 'Add') {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'A request for this component already exists in queue, please choose a different name',
+              href: '#github_repo',
+            })
+          }
+          if (!repoName.startsWith('hmpps') && formData.option === 'Add') {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'The repository name must start with "hmpps"',
+              href: '#github_repo',
+            })
+          }
+          if (repoName.length >= 100 && formData.option === 'Add') {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'The repository name must be less than 100 characters',
+              href: '#github_repo',
+            })
+          }
+          if (!/^[a-zA-Z0-9-]+$/.test(repoName) && formData.option === 'Add') {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'The repository name must only contain alphanumeric characters and hyphens',
+              href: '#github_repo',
+            })
+          }
+        }
+      }
+      return validationErrors
+    })
+    try {
+      const [, productList] = await dataFilterService.getFormsDropdownLists({
+        teamName: '',
+        productId: '',
+        useFormattedName: true,
+      })
+      const filledData = { github_repo: formData.github_repo }
+      if (formData.option === 'Archive') {
+        return res.render('pages/componentArchiveRequestForm', {
+          title: 'Github Repository Archive Request Form',
+          submittedForm: filledData,
+          ValidationErrors: [],
+        })
+      }
+      return res.render('pages/componentRequestForm', {
+        title: 'Github Repository Request Form',
+        submittedForm: filledData,
+        productList,
+        ValidationErrors: [],
+      })
+    } catch {
+      const validationErrors: FieldValidationError[] = []
+      validationErrors.push({
+        field: 'form',
+        message: 'There was an error submitting your request. Please try again later.',
+        href: '',
+      })
+      return res.render('pages/componentRequestFormOption', {
+        validationErrors,
+        formData,
+      })
+    }
+  })
 
   router.get('/new', async (req, res) => {
     const [, productList] = await dataFilterService.getFormsDropdownLists({
@@ -16,6 +141,12 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     return res.render('pages/componentRequestForm', {
       title: 'Github Repository Requst Form',
       productList,
+    })
+  })
+
+  router.get('/archive', async (req, res) => {
+    return res.render('pages/componentArchiveRequestForm', {
+      title: 'Github Repository Archive Requst Form',
     })
   })
 
@@ -205,6 +336,69 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     }
   })
 
+  router.post('/archive', async (req, res): Promise<void> => {
+    const formData = req.body
+    validateRequest(req, body => {
+      const validationErrors: FieldValidationError[] = []
+      if (!body.requester_name) {
+        validationErrors.push({
+          field: 'requester_name',
+          message: 'Enter Requester Name',
+          href: '#requester_name',
+        })
+      }
+      if (!body.requester_email) {
+        validationErrors.push({
+          field: 'requester_email',
+          message: 'Enter Requesters Email Address',
+          href: '#requester_email',
+        })
+      } else {
+        const requesterEmail = body.requester_email?.toString()
+        if (!requesterEmail.endsWith('@justice.gov.uk')) {
+          validationErrors.push({
+            field: 'requesterEmail',
+            message: 'Valid email address is only with @justice.gov.uk',
+            href: '#requester_email',
+          })
+        }
+      }
+      if (!body.requester_team) {
+        validationErrors.push({
+          field: 'requester_team',
+          message: 'Select Requesting Team',
+          href: '#requester_team',
+        })
+      }
+      return validationErrors
+    })
+    try {
+      const archiveData = {
+        github_repo: formData.github_repo,
+        requester_name: formData.requester_name,
+        requester_email: formData.requester_email,
+        requester_team: formData.requester_team,
+        request_type: 'Archive',
+        request_github_pr_status: 'Pending',
+      }
+      await serviceCatalogueService.postGithubRepoRequest({ data: archiveData })
+      return res.render('pages/componentRequestConfirmation', {
+        title: 'Github Repository Request Confirmation',
+        repoName: formData.github_repo,
+      })
+    } catch {
+      const validationErrors: FieldValidationError[] = []
+      validationErrors.push({
+        field: 'form',
+        message: 'There was an error submitting your request. Please try again later.',
+        href: '',
+      })
+      return res.render('pages/componentArchiveRequestForm', {
+        validationErrors,
+        formData,
+      })
+    }
+  })
   return router
 }
 
@@ -253,6 +447,7 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       requester_email: sanitiseString(formData.requester_email?.toString()),
       requester_team: formData.requester_team?.toString(),
       request_github_pr_status: 'Pending',
+      request_type: formData.request_type?.toString(),
     },
   }
 }
