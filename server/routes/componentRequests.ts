@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import { validateRequest, ValidationError } from '../middleware/setUpValidationMiddleware'
+import { Component, GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
+import { validateRequest } from '../middleware/setUpValidationMiddleware'
 import { FieldValidationError } from '../@types/FieldValidationError'
-import { GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
 
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
@@ -31,45 +31,88 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         })
       } else {
         const repoName = body.github_repo?.toString()
-        if (repoExists && formData.option === 'Add') {
-          validationErrors.push({
-            field: 'github_repo',
-            message: 'This repository name already exists in components collection - please choose a different name',
-            href: '#github_repo',
-          })
-        }
-        if (repoRequestExists && formData.option === 'Add') {
-          validationErrors.push({
-            field: 'github_repo',
-            message: 'A request for this component already exists in queue, please choose a different name',
-            href: '#github_repo',
-          })
-        }
-        if (!repoName.startsWith('hmpps') && formData.option === 'Add') {
-          validationErrors.push({
-            field: 'github_repo',
-            message: 'The repository name must start with "hmpps"',
-            href: '#github_repo',
-          })
-        }
-        if (repoName.length >= 100 && formData.option === 'Add') {
-          validationErrors.push({
-            field: 'github_repo',
-            message: 'The repository name must be less than 100 characters',
-            href: '#github_repo',
-          })
-        }
-        if (!/^[a-zA-Z0-9-]+$/.test(repoName) && formData.option === 'Add') {
-          validationErrors.push({
-            field: 'github_repo',
-            message: 'The repository name must only contain alphanumeric characters and hyphens',
-            href: '#github_repo',
-          })
+        if (formData.option === 'Update') {
+          if (!(repoExists || repoRequestExists)) {
+            validationErrors.push({
+              field: 'github_repo',
+              message:
+                'This repository name does not exist in components or component requests, please enter existing repository name',
+              href: '#github_repo',
+            })
+          }
+        } else {
+          if (repoExists && formData.option === 'Add') {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'This repository name already exists in components collection - please choose a different name',
+              href: '#github_repo',
+            })
+          }
+          if (repoRequestExists && formData.option === 'Add') {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'A request for this component already exists in queue, please choose a different name',
+              href: '#github_repo',
+            })
+          }
+          if (!repoName.startsWith('hmpps') && formData.option === 'Add') {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'The repository name must start with "hmpps"',
+              href: '#github_repo',
+            })
+          }
+          if (repoName.length >= 100 && formData.option === 'Add') {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'The repository name must be less than 100 characters',
+              href: '#github_repo',
+            })
+          }
+          if (!/^[a-zA-Z0-9-]+$/.test(repoName) && formData.option === 'Add') {
+            validationErrors.push({
+              field: 'github_repo',
+              message: 'The repository name must only contain alphanumeric characters and hyphens',
+              href: '#github_repo',
+            })
+          }
         }
       }
       return validationErrors
     })
     try {
+      // if (formData.option === 'Add') {
+      //   const [, productList] = await dataFilterService.getFormsDropdownLists({
+      //     teamName: '',
+      //     productId: '',
+      //     useFormattedName: true,
+      //   })
+      //   return res.render('pages/componentRequestForm', {
+      //     title: 'Github Repository Request Form',
+      //     submittedForm: { github_repo: formData.github_repo },
+      //     productList,
+      //     ValidationErrors: [],
+      //   })
+      // }
+      // if (formData.option === 'Update') {
+      //   const [, productList] = await dataFilterService.getFormsDropdownLists({
+      //     teamName: '',
+      //     productId: '',
+      //     useFormattedName: true,
+      //   })
+      //   const { submittedform } = await buildSubmittedformat(
+      //     formData.github_repo,
+      //     repoExists,
+      //     repoRequestExists,
+      //     serviceCatalogueService,
+      //   )
+      //   return res.render('pages/componentRequestForm', {
+      //     title: 'Github Repository Request Form',
+      //     submittedForm: submittedform,
+      //     productList,
+      //     ValidationErrors: [],
+      //   })
+      // }
       const [, productList] = await dataFilterService.getFormsDropdownLists({
         teamName: '',
         productId: '',
@@ -343,6 +386,71 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       request_github_pr_status: 'Pending',
     },
   }
+}
+
+const buildSubmittedformat = async (
+  repoName: string,
+  repoExists: boolean,
+  repoRequestExists: boolean,
+  serviceCatalogueService: Services['serviceCatalogueService'],
+) => {
+  if (repoExists) {
+    const componentData = (await serviceCatalogueService.getComponent({ componentName: repoName })) as Component
+    const submittedform = {
+      github_repo: componentData.name,
+      repo_description: componentData.description,
+      base_template: componentData.github_template_repo,
+      jira_project_keys: componentData.jira_project_keys,
+      github_project_visibility: componentData.github_project_visibility,
+      product: componentData.product,
+      slack_channel_prod_release_notify: componentData.slack_channel_prod_release_notify,
+      slack_channel_nonprod_release_notify: componentData.slack_channel_nonprod_release_notify,
+      slack_channel_security_scans_notify: componentData.slack_channel_security_scans_notify,
+      prod_alerts_severity_label: '',
+      nonprod_alerts_severity_label: '',
+      github_project_teams_write: Array.isArray(componentData.github_project_teams_write)
+        ? componentData.github_project_teams_write.join(', ')
+        : '',
+      github_projects_teams_admin: Array.isArray(componentData.github_project_teams_admin)
+        ? componentData.github_project_teams_admin.join(', ')
+        : '',
+      github_project_branch_protection_restricted_teams: Array.isArray(
+        componentData.github_project_branch_protection_restricted_teams,
+      )
+        ? componentData.github_project_branch_protection_restricted_teams.join(', ')
+        : '',
+    }
+    return { submittedform }
+  }
+  if (repoRequestExists) {
+    const componenRequestData = await serviceCatalogueService.getGithubRepoRequest({ repoName })
+    const submittedform = {
+      github_repo: componenRequestData.github_repo,
+      repo_description: componenRequestData.repo_description,
+      base_template: componenRequestData.base_template,
+      jira_project_keys: componenRequestData.jira_project_keys,
+      github_project_visibility: componenRequestData.github_project_visibility,
+      product: componenRequestData.product,
+      slack_channel_prod_release_notify: componenRequestData.slack_channel_prod_release_notify,
+      slack_channel_nonprod_release_notify: componenRequestData.slack_channel_nonprod_release_notify,
+      slack_channel_security_scans_notify: componenRequestData.slack_channel_security_scans_notify,
+      prod_alerts_severity_label: componenRequestData.prod_alerts_severity_label,
+      nonprod_alerts_severity_label: componenRequestData.nonprod_alerts_severity_label,
+      github_project_teams_write: Array.isArray(componenRequestData.github_project_teams_write)
+        ? componenRequestData.github_project_teams_write.join(', ')
+        : '',
+      github_projects_teams_admin: Array.isArray(componenRequestData.github_projects_teams_admin)
+        ? componenRequestData.github_projects_teams_admin.join(', ')
+        : '',
+      github_project_branch_protection_restricted_teams: Array.isArray(
+        componenRequestData.github_project_branch_protection_restricted_teams,
+      )
+        ? componenRequestData.github_project_branch_protection_restricted_teams.join(', ')
+        : '',
+    }
+    return { submittedform }
+  }
+  return { submittedform: {} }
 }
 
 function convertTeamsStringToArray(teams: string): string[] {
