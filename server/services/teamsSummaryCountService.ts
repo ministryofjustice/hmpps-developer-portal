@@ -163,7 +163,7 @@ export default class TeamsSummaryCountService {
     }
 
     try {
-      const trivyScans = await this.filterTrivyByEnv(['prod', 'production'])
+      const trivyScans = await this.filterTrivyByEnvironments(['prod', 'production'])
       const allComponents = await this.serviceCatalogueService.getComponents()
 
       const productIds = new Set(products.map(p => p.id))
@@ -216,9 +216,9 @@ export default class TeamsSummaryCountService {
   /**
    * Helper: Function to filter by specified env, or default to prod if none provided
    */
-  async filterTrivyByEnv(env: string[]): Promise<TrivyScanType[]> {
+  async filterTrivyByEnvironments(env: string[]): Promise<TrivyScanType[]> {
     return (await this.serviceCatalogueService.getTrivyScans()).filter(trivy =>
-      (trivy.environments ?? []).some(e => env.includes(e)),
+      (trivy.environments ?? []).some(environment => env.includes(environment)),
     )
   }
 
