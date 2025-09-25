@@ -2517,6 +2517,7 @@ export interface components {
         requester_email?: string
         requester_name?: string
         requester_team?: string
+        request_type?: string
         secret_name?: string
         source_code?: string
         /** @enum {string} */
@@ -2536,6 +2537,7 @@ export interface components {
       requester_email?: string
       requester_name?: string
       requester_team?: string
+      request_type?: string
       secret_name?: string
       source_code?: string
       /** @enum {string} */
@@ -2571,6 +2573,7 @@ export interface components {
         requester_email?: string
         requester_name?: string
         requester_team?: string
+        request_type?: string
         secret_name?: string
         source_code?: string
         /** @enum {string} */
@@ -3723,6 +3726,7 @@ export interface components {
         requester_email?: string
         requester_name?: string
         requester_team?: string
+        request_type?: string
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
@@ -3745,6 +3749,7 @@ export interface components {
       requester_email?: string
       requester_name?: string
       requester_team?: string
+      request_type?: string
       slack_channel_nonprod_release_notify?: string
       slack_channel_prod_release_notify?: string
       slack_channel_security_scans_notify?: string
@@ -3790,6 +3795,7 @@ export interface components {
         requester_email?: string
         requester_name?: string
         requester_team?: string
+        request_type?: string
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
