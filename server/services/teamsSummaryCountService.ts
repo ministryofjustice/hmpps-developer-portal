@@ -166,11 +166,11 @@ export default class TeamsSummaryCountService {
       const trivyScans = await this.filterTrivyByEnv('prod')
       const allComponents = await this.serviceCatalogueService.getComponents()
 
-      const productId = new Set((products || []).map(p => String(p.id)))
+      const productIds = new Set(products.map(p => p.id))
       const validComponents = allComponents
         .filter(component => {
-          const idStr = productId !== undefined && productId !== null ? String(productId) : ''
-          return idStr && productId.has(idStr)
+          const productId = component?.product?.id
+          return productId && productIds.has(productId)
         })
         .map(component => formatMonitorName(component.name))
 
