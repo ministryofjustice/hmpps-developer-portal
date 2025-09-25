@@ -11,6 +11,8 @@ generic-service:
     INGRESS_URL: "https://developer-portal-dev.hmpps.service.justice.gov.uk"
     SERVICE_CATALOGUE_URL: "https://service-catalogue-dev.hmpps.service.justice.gov.uk"
     NODE_ENV: "development"
+    RECOMMENDED_VERSIONS_TTL_MS: "21600000"
+    HMPPS_TEMPLATE_COMPONENT_NAME: "hmpps-template-kotlin"
 
   namespace_secrets:
     elasticache-redis:

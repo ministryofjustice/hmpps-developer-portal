@@ -3,7 +3,7 @@ import type { StrapiApiClient, RestClientBuilder } from '../data'
 import AlertsService from './alertsService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { formatMonitorName } from '../utils/utils'
-import { Component, Product } from '../data/modelTypes'
+import { Component, Product, TrivyScanType } from '../data/modelTypes'
 import { Alert } from '../@types'
 
 // Valid Veracode severity levels
@@ -163,7 +163,7 @@ export default class TeamsSummaryCountService {
     }
 
     try {
-      const trivyScans = await this.serviceCatalogueService.getTrivyScans()
+      const trivyScans = await this.filterTrivyByEnvironments(['prod', 'production'])
       const allComponents = await this.serviceCatalogueService.getComponents()
 
       const productIds = new Set(products.map(p => p.id))
@@ -211,6 +211,15 @@ export default class TeamsSummaryCountService {
       logger.error('Error in getTeamTrivyVulnerabilityCounts:', err)
       return { critical: 0, high: 0 }
     }
+  }
+
+  /**
+   * Helper: Function to filter by specified env, or default to prod if none provided
+   */
+  async filterTrivyByEnvironments(environmentList: string[]): Promise<TrivyScanType[]> {
+    return (await this.serviceCatalogueService.getTrivyScans()).filter(trivy =>
+      (trivy.environments ?? []).some(environment => environmentList.includes(environment)),
+    )
   }
 
   /**

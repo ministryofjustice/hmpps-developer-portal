@@ -1,0 +1,9 @@
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+
+{{ govukPhaseBanner({
+  tag: {
+    text: "Shape the Future of the Developer Portal"
+  },
+  html: "Your experience matters! Take our quick survey to help the SRE team understand what's working and what could be better.<br>Your feedback is anonymous and will help us focus on what matters most to you. <a href=\"https://www.smartsurvey.co.uk/s/DeveloperPortalSurvey/\" target=\"_blank\" rel=\"noopener\" class=\"govuk-link govuk-!-font-weight-bold\">Share your thoughts now!</a>",
+  classes: "user-research-banner"
+}) }}
