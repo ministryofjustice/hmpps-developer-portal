@@ -216,9 +216,9 @@ export default class TeamsSummaryCountService {
   /**
    * Helper: Function to filter by specified env, or default to prod if none provided
    */
-  async filterTrivyByEnvironments(env: string[]): Promise<TrivyScanType[]> {
+  async filterTrivyByEnvironments(environment: string[]): Promise<TrivyScanType[]> {
     return (await this.serviceCatalogueService.getTrivyScans()).filter(trivy =>
-      (trivy.environments ?? []).some(environment => env.includes(environment)),
+      (trivy.environments ?? []).some(environments => environment.includes(environments)),
     )
   }
 
