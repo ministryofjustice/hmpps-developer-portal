@@ -7,7 +7,6 @@ import { formatDate } from 'date-fns'
 import { RdsEntry } from '../@types'
 import { TrivyScanType } from '../data/converters/modelTypes'
 
-import type { SingleResponse, ListResponse } from '../data/strapiClientTypes'
 import type { ServiceCatalogueService } from '../services'
 import type { Team } from '../data/modelTypes'
 
@@ -16,7 +15,6 @@ dayjs.extend(relativeTime.default)
 type HasName = { name: string }
 type HasRepoName = { github_repo?: string }
 type HasTeamName = { team_name?: string }
-type Payload = Record<string, unknown>
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -319,12 +317,4 @@ export const createStrapiQuery = (fields: string[]): string => {
       return `${querystring}&${encodeURIComponent(`populate[${fieldName.replaceAll('.', '][populate][')}]`)}=true`
     }, '')
     .slice(1)
-}
-
-export function unwrapSingleResponse<T extends Payload>(response: SingleResponse<T>): T {
-  return Array.isArray(response.data) && response.data.length > 0 ? (response.data[0] as T) : response.data
-}
-
-export function unwrapListResponse<T extends Payload>(response: ListResponse<T>): T[] {
-  return response.data
 }
