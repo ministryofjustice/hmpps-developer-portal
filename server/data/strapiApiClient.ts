@@ -255,18 +255,16 @@ export default class StrapiApiClient {
     customComponentDocumentId: string
     withEnvironments?: boolean
   }): Promise<CustomComponentView> {
-    const populate = ['components', 'components.product']
+    const populateList = ['components', 'components.product']
 
     if (withEnvironments) {
-      populate.push('components.envs')
+      populateList.push('components.envs')
     }
 
-    return this.restClient
-      .get<SingleResponse<CustomComponentView>>({
-        path: `/v1/custom-component-views/${customComponentDocumentId}`,
-        query: createStrapiQuery({ populate }),
-      })
-      .then(unwrapSingleResponse)
+    const populate = createStrapiQuery({ populate: populateList })
+    const query = customComponentDocumentId ? `filters[id][$eq]=${customComponentDocumentId}&${populate}` : populate
+    const path = '/v1/custom-component-views'
+    return this.restClient.get<SingleResponse<CustomComponentView>>({ path, query }).then(unwrapSingleResponse)
   }
 
   async getGithubRepoRequests(): Promise<GithubRepoRequest[]> {

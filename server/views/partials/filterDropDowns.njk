@@ -9,21 +9,30 @@
   {%- set serviceAreas = (serviceAreas.push({
     value: serviceArea.value,
     text: serviceArea.text,
-    selected: serviceArea.selected
+    selected: serviceArea.selected,
+    attributes: {
+          'data-slug': serviceArea.slug
+        }
   }), serviceAreas) -%}
 {%- endfor -%}
 {%- for team in teamList -%}
   {%- set teams = (teams.push({
     value: team.value,
     text: team.text,
-    selected: team.selected
+    selected: team.selected,
+    attributes: {
+          'data-slug': team.slug
+        }
   }), teams) -%}
 {%- endfor -%}
 {%- for product in productList -%}
   {%- set products = (products.push({
     value: product.value,
     text: product.text,
-    selected: product.selected
+    selected: product.selected,
+    attributes: {
+      'data-slug': product.slug
+    }
   }), products) -%}
 {%- endfor -%}
 {%- for customComponentView in customComponentsList -%}

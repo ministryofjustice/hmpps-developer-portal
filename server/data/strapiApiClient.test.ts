@@ -397,7 +397,9 @@ describe('strapiApiClient', () => {
           data: { documentId: 'documentid1', name: 'Custom Component' },
         } as SingleResponse<Strapi.CustomComponentView>
         const customComponentResponse = { documentId: 'documentid1', name: 'Custom Component' } as CustomComponentView
-        fakeStrapiApi.get('/custom-component-views/documentid1').query(true).reply(200, customComponent)
+        fakeStrapiApi
+          .get('/custom-component-views?filters[id][$eq]=documentid1&populate[components][populate][product]=true')
+          .reply(200, customComponent)
         const output = await strapiApiClient.getCustomComponentView({ customComponentDocumentId: 'documentid1' })
         expect(output).toEqual(customComponentResponse)
       })
@@ -407,7 +409,11 @@ describe('strapiApiClient', () => {
           data: { documentId: 'documentid1', name: 'Custom Component' },
         } as SingleResponse<Strapi.CustomComponentView>
         const customComponentResponse = { documentId: 'documentid1', name: 'Custom Component' } as CustomComponentView
-        fakeStrapiApi.get('/custom-component-views/documentid1').query(true).reply(200, customComponent)
+        fakeStrapiApi
+          .get(
+            '/custom-component-views?filters[id][$eq]=documentid1&populate[components][populate][product]=true&populate[components][populate][envs]=true',
+          )
+          .reply(200, customComponent)
         const output = await strapiApiClient.getCustomComponentView({
           customComponentDocumentId: 'documentid1',
           withEnvironments: true,
