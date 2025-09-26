@@ -145,7 +145,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         const serviceAreaSlug = formatMonitorName(req.query.slug as string)
         const serviceArea = await serviceCatalogueService.getServiceArea({
           serviceAreaDocumentId: monitorId,
-          serviceAreaSlug: serviceAreaSlug,
+          serviceAreaSlug,
           withProducts: true,
         })
         serviceArea.products.forEach(product => {
