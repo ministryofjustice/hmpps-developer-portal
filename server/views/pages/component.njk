@@ -81,12 +81,16 @@
       </div>
     {% endif %}
 
-      {% if
-      ((component.prometheus.ref) is defined and component.generic_service.ref != "5.0") or
-      ((component.generic_service.ref) is defined and component.prometheus.ref != "5.0") or
-      ((component.gradle is defined) and component.gradle!= "5.0") %}
-        <div class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts" style="border-left: 5px solid #d4351c; background-color: #fef1f0;">
-          <h2 class="govuk-heading-m">Outdated Component Dependencies Found</h2>
+  {% set filteredItems = [] %}
+    {%  for item in component.dependencyComparison.items %}
+      {% if (component.language == 'Kotlin') and item.current != item.recommended and item.current != '-' and item.current and item.current < item.recommended %}
+        {%  set filteredItems = filteredItems.concat([item]) %}
+      {%  endif %}
+    {%  endfor %}
+
+    {%  if filteredItems.length > 0 %}
+      <div class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts" style="border-left: 5px solid #d4351c; background-color: #fef1f0;">
+          <h2 class="govuk-heading-m">Incorrect Component Dependencies Found</h2>
           <table class="govuk-table" style="table-layout: fixed; width: 100%;">
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
@@ -96,34 +100,20 @@
             </tr>
             </thead>
             <tbody class="govuk-table__body">
-            {% if (component.prometheus.ref) is defined and component.prometheus.ref != "0.5" %}
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ "generic-prometheus-alerts" }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ component.prometheus.ref }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ "5.0" }}</td>
-              </td>
-            </tr>
-            {% endif %}
-            {% if (component.generic_service.ref) is defined and component.generic_service.ref != "5.0" %}
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ "generic-service" }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ component.generic_service.ref }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ "5.0" }}</td>
-              </td>
-            </tr>
-            {% endif %}
-            {% if (component.gradle) is defined and component.gradle != "5.0" %}
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ "hmpps-gradle-spring-boot" }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ component.gradle }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ "5.0" }}</td>
-              </td>
-            </tr>
-            {% endif %}
+            {% for item in component.dependencyComparison.items %}
+              {%  if item.current != item.recommended and item.current != '-' and item.current and item.current < item.recommended %}
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.key }}</td>
+                <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.current }}</td>
+                <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.recommended }}</td>
+              </tr>
+              {% endif %}
+            {% endfor %}
             </tbody>
           </table>
         </div>
-      {% endif %}
+  {%  endif %}
+
     <table class="componentData">
       <tbody>
         <tr>
