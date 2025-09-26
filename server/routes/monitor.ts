@@ -142,10 +142,10 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           })
         })
       } else if (monitorType === 'serviceArea') {
-        const serviceSlug = formatMonitorName(req.query.slug as string)
+        const serviceAreaSlug = formatMonitorName(req.query.slug as string)
         const serviceArea = await serviceCatalogueService.getServiceArea({
           serviceAreaDocumentId: monitorId,
-          serviceAreaSlug: serviceSlug,
+          serviceAreaSlug: serviceAreaSlug,
           withProducts: true,
         })
         serviceArea.products.forEach(product => {
