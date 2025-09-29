@@ -1,0 +1,90 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - Component Request Archive Form" %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+
+{% block content %}
+
+{{ breadCrumb("Component Request Archive Form", []) }}
+
+<div class="govuk-grid-row govuk-body">
+  <div class="govuk-grid-column-one-half">
+    {% include 'partials/errorSummary.njk' %}
+    <h1 class="govuk-heading-xl">Component Request Archive Form</h1>
+    <form action="/component-requests/archive" method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      {{ govukInput({
+        id: "github_repo",
+        name: "github_repo",
+        value: submittedForm.github_repo,
+        classes: "govuk-!-width-one-half",
+        label: {
+          text: "GitHub repository name",
+          classes: "govuk-fieldset__legend--s"
+        },
+        hint: {
+          html: "This must start with 'hmpps-' and contain only alphanumeric characters and hyphens (-). Ensure that new components meet the " + '<a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/service-standard/service-naming/">guidance around service naming</a>.'
+        },
+        attributes: { 
+          readonly: "readonly"
+        },
+        errorMessage: validationErrors | findError('github_repo')
+      }) }}
+      <h2>Contact details</h2>
+      <p>Please enter your contact details to send notifications to after processing your request.</p>
+      {{ govukInput({
+        id: "requester_name",
+        name: "requester_name",
+        value: submittedForm.requester_name,
+        errorMessage: validationErrors | findError('requester_name'),
+        classes: "govuk-!-width-one-half govuk-fieldset__legend--s",
+        label: {
+          text: "Requester name",
+          classes: "govuk-fieldset__legend--s"
+        }
+      }) }}
+      {{ govukInput({
+        id: "requester_email",
+        name: "requester_email",
+        value: submittedForm.requester_email,
+        errorMessage: validationErrors | findError('requester_email'),
+        classes: "govuk-!-width-two-third govuk-fieldset__legend--s",
+        label: {
+          text: "Requester Email address",
+          classes: "govuk-fieldset__legend--s"
+        },
+        hint: {
+          text: "Must be an @digital.justice.gov.uk or @justice.gov.uk email account"
+        }
+      }) }}
+      {{ govukInput({
+        id: "requester_team",
+        name: "requester_team",
+        value: submittedForm.requester_team,
+        classes: "govuk-!-width-two-third govuk-fieldset__legend--s",
+        label: {
+          text: "Requester team",
+          classes: "govuk-fieldset__legend--s"
+        },
+        errorMessage: validationErrors | findError('requester_team'),
+        hint: {
+          text: "The name of the requesting team"
+        }
+      }) }}
+      {{ govukButton({
+        id: "submitdata",
+        name: "submitdata",
+        text: "Submit",
+        element: "button",
+        preventDoubleClick: true,
+        attributes: { "data-test": "submit" }
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}
+
