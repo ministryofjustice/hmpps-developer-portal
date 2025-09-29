@@ -18,26 +18,26 @@ jQuery(function () {
     {
       data: 'labels.alertname',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.labels.alertname}`)
+        $(td).html(rowData.labels.alertname ? `${rowData.labels.alertname}` : 'N/A')
       },
     },
     {
       data: 'startsAt',
       createdCell: function (td, _cellData, rowData) {
-        const startsAt = formatTimeStamp(rowData.startsAt)
+        const startsAt = rowData.startsAt ? formatTimeStamp(rowData.startsAt) : 'N/A'
         $(td).html(`${startsAt}`)
       },
     },
     {
       data: 'annotations.message',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.annotations.message}`)
+        $(td).html(rowData.annotations.message ? `${rowData.annotations.message}` : 'N/A')
       },
     },
     {
       data: 'labels.application',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.labels.application}`)
+        $(td).html(rowData.labels.application ? `${rowData.labels.application}` : 'N/A')
       },
     },
     {
@@ -59,15 +59,18 @@ jQuery(function () {
     {
       data: 'annotations',
       createdCell: function (td, _cellData, rowData) {
-        const dashboardLink = rowData.annotations.dashboard_url
-          ? `<a href="${rowData.annotations.dashboard_url}" class="statusTileHealth" target="_blank">Dashboard</a>`
-          : ''
-        const runbookLink = rowData.annotations.runbook_url
-          ? `<a href="${rowData.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook</a>`
-          : ''
-        const generatorLink = rowData.generatorURL
-          ? `<a href="${rowData.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
-          : ''
+        const dashboardLink =
+          rowData.annotations.dashboard_url || 'N/A'
+            ? `<a href="${rowData.annotations.dashboard_url}" class="statusTileHealth" target="_blank">Dashboard</a>`
+            : ''
+        const runbookLink =
+          rowData.annotations.runbook_url || 'N/A'
+            ? `<a href="${rowData.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook</a>`
+            : ''
+        const generatorLink =
+          rowData.generatorURL || 'N/A'
+            ? `<a href="${rowData.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
+            : ''
 
         $(td).html(`<ul><li>${dashboardLink}</li><li>${runbookLink}</li><li>${generatorLink}</li></ul>`)
       },
