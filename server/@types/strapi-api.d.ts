@@ -778,6 +778,38 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/recommended-versions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/recommended-versions']
+    put?: never
+    post: operations['post/recommended-versions']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/recommended-versions/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/recommended-versions/{id}']
+    put: operations['put/recommended-versions/{id}']
+    post?: never
+    delete: operations['delete/recommended-versions/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/scheduled-jobs': {
     parameters: {
       query?: never
@@ -1828,6 +1860,7 @@ export interface components {
     Component: {
       api?: boolean
       app_insights_cloud_role_name?: string
+      archived?: boolean
       codescanning_summary?: unknown
       container_image?: string
       /** Format: date-time */
@@ -1848,6 +1881,7 @@ export interface components {
         component?: {
           api?: boolean
           app_insights_cloud_role_name?: string
+          archived?: boolean
           codescanning_summary?: unknown
           container_image?: string
           /** Format: date-time */
@@ -2196,6 +2230,8 @@ export interface components {
             id?: number
           }
         }
+        pingdom_paused?: boolean
+        pingdom_sre_managed?: boolean
         /** Format: date-time */
         publishedAt?: string
         swagger_docs?: string
@@ -2305,6 +2341,7 @@ export interface components {
       data: {
         api?: boolean
         app_insights_cloud_role_name?: string
+        archived?: boolean
         codescanning_summary?: unknown
         container_image?: string
         description?: string
@@ -2548,6 +2585,7 @@ export interface components {
       components?: {
         api?: boolean
         app_insights_cloud_role_name?: string
+        archived?: boolean
         codescanning_summary?: unknown
         container_image?: string
         /** Format: date-time */
@@ -2713,6 +2751,8 @@ export interface components {
               id?: number
             }
           }
+          pingdom_paused?: boolean
+          pingdom_sre_managed?: boolean
           /** Format: date-time */
           publishedAt?: string
           swagger_docs?: string
@@ -3028,6 +3068,7 @@ export interface components {
       component?: {
         api?: boolean
         app_insights_cloud_role_name?: string
+        archived?: boolean
         codescanning_summary?: unknown
         container_image?: string
         /** Format: date-time */
@@ -3193,6 +3234,8 @@ export interface components {
               id?: number
             }
           }
+          pingdom_paused?: boolean
+          pingdom_sre_managed?: boolean
           /** Format: date-time */
           publishedAt?: string
           swagger_docs?: string
@@ -3455,6 +3498,8 @@ export interface components {
         documentId?: string
         id?: number
       }
+      pingdom_paused?: boolean
+      pingdom_sre_managed?: boolean
       /** Format: date-time */
       publishedAt?: string
       swagger_docs?: string
@@ -3508,6 +3553,8 @@ export interface components {
         namespace?: string
         /** @example string or id */
         ns?: number | string
+        pingdom_paused?: boolean
+        pingdom_sre_managed?: boolean
         swagger_docs?: string
         /** @example string or id */
         trivy_scan?: number | string
@@ -4131,6 +4178,7 @@ export interface components {
         components?: {
           api?: boolean
           app_insights_cloud_role_name?: string
+          archived?: boolean
           codescanning_summary?: unknown
           container_image?: string
           /** Format: date-time */
@@ -4205,6 +4253,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_paused?: boolean
+            pingdom_sre_managed?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -4620,6 +4670,7 @@ export interface components {
         components?: {
           api?: boolean
           app_insights_cloud_role_name?: string
+          archived?: boolean
           codescanning_summary?: unknown
           container_image?: string
           /** Format: date-time */
@@ -4694,6 +4745,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_paused?: boolean
+            pingdom_sre_managed?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -5056,6 +5109,169 @@ export interface components {
       id?: number
       sha?: string
     }
+    RecommendedVersion: {
+      /** Format: date-time */
+      createdAt?: string
+      createdBy?: {
+        blocked?: boolean
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        /** Format: email */
+        email?: string
+        firstname?: string
+        id?: number
+        isActive?: boolean
+        lastname?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        preferedLanguage?: string
+        /** Format: date-time */
+        publishedAt?: string
+        registrationToken?: string
+        resetPasswordToken?: string
+        roles?: {
+          code?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: number
+          }
+          description?: string
+          documentId?: string
+          id?: number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: number
+          }[]
+          name?: string
+          permissions?: {
+            action?: string
+            actionParameters?: unknown
+            conditions?: unknown
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: number
+            }
+            documentId?: string
+            id?: number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: number
+            }[]
+            properties?: unknown
+            /** Format: date-time */
+            publishedAt?: string
+            role?: {
+              documentId?: string
+              id?: number
+            }
+            subject?: string
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: number
+            }
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: number
+          }
+          users?: {
+            documentId?: string
+            id?: number
+          }[]
+        }[]
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+        username?: string
+      }
+      documentId?: string
+      id?: number
+      locale?: string
+      localizations?: {
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: number
+        }
+        documentId?: string
+        id?: number
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: number
+        }[]
+        name?: string
+        /** Format: date-time */
+        publishedAt?: string
+        type?: string
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: number
+        }
+        version?: string
+      }[]
+      name?: string
+      /** Format: date-time */
+      publishedAt?: string
+      type?: string
+      /** Format: date-time */
+      updatedAt?: string
+      updatedBy?: {
+        documentId?: string
+        id?: number
+      }
+      version?: string
+    }
+    RecommendedVersionListResponse: {
+      data?: components['schemas']['RecommendedVersion'][]
+      meta?: {
+        pagination?: {
+          page?: number
+          pageCount?: number
+          pageSize?: number
+          total?: number
+        }
+      }
+    }
+    RecommendedVersionRequest: {
+      data: {
+        locale?: string
+        localizations?: (number | string)[]
+        name?: string
+        type?: string
+        version?: string
+      }
+    }
+    RecommendedVersionResponse: {
+      data?: components['schemas']['RecommendedVersion']
+      meta?: Record<string, never>
+    }
     ScheduledJob: {
       /** Format: date-time */
       createdAt?: string
@@ -5264,6 +5480,7 @@ export interface components {
         components?: {
           api?: boolean
           app_insights_cloud_role_name?: string
+          archived?: boolean
           codescanning_summary?: unknown
           container_image?: string
           /** Format: date-time */
@@ -5338,6 +5555,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_paused?: boolean
+            pingdom_sre_managed?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -5717,6 +5936,7 @@ export interface components {
         components?: {
           api?: boolean
           app_insights_cloud_role_name?: string
+          archived?: boolean
           codescanning_summary?: unknown
           container_image?: string
           /** Format: date-time */
@@ -5791,6 +6011,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_paused?: boolean
+            pingdom_sre_managed?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -9719,6 +9941,368 @@ export interface operations {
     }
   }
   'delete/products/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': number
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/recommended-versions': {
+    parameters: {
+      query?: {
+        /** @description Fields to return (ex: title,author) */
+        fields?: string
+        /** @description Filters to apply */
+        filters?: {
+          [key: string]: unknown
+        }
+        /** @description Locale to apply */
+        locale?: string
+        /** @description Number of entities to return (default: 25) */
+        'pagination[limit]'?: number
+        /** @description Page number (default: 0) */
+        'pagination[page]'?: number
+        /** @description Page size (default: 25) */
+        'pagination[pageSize]'?: number
+        /** @description Offset value (default: 0) */
+        'pagination[start]'?: number
+        /** @description Return page/pageSize (default: true) */
+        'pagination[withCount]'?: boolean
+        /** @description Relations to return */
+        populate?: string
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
+        sort?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['RecommendedVersionListResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'post/recommended-versions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RecommendedVersionRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['RecommendedVersionResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/recommended-versions/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['RecommendedVersionResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'put/recommended-versions/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RecommendedVersionRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['RecommendedVersionResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'delete/recommended-versions/{id}': {
     parameters: {
       query?: never
       header?: never

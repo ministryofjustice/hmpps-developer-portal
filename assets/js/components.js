@@ -149,6 +149,13 @@ jQuery(function () {
         }
       },
     },
+    {
+      data: 'archived',
+      visible: false,
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.archived}`)
+      },
+    },
   ]
 
   createTable({
