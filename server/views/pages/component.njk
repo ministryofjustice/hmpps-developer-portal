@@ -81,38 +81,39 @@
       </div>
     {% endif %}
 
-  {% set filteredItems = [] %}
+    {% set upgradeNeeded = false %}
     {%  for item in component.dependencyComparison.items %}
-      {% if (component.language == 'Kotlin') and item.current != item.recommended and item.current != '-' and item.current and item.current < item.recommended %}
-        {%  set filteredItems = filteredItems.concat([item]) %}
+      {% if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-upgrade' %}
+        {%  set upgradeNeeded = true %}
       {%  endif %}
     {%  endfor %}
 
-    {%  if filteredItems.length > 0 %}
-      <div class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts" style="border-left: 5px solid #d4351c; background-color: #fef1f0;">
-          <h2 class="govuk-heading-m">Incorrect Component Dependencies Found</h2>
-          <table class="govuk-table" style="table-layout: fixed; width: 100%;">
-            <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-              <th class="govuk-table__header">Dependency</th>
-              <th class="govuk-table__header">Current Version</th>
-              <th class="govuk-table__header">Recommended Version</th>
-            </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-            {% for item in component.dependencyComparison.items %}
-              {%  if item.current != item.recommended and item.current != '-' and item.current and item.current < item.recommended %}
+    {%  if upgradeNeeded %}
+      <div id = "dependency-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+        <h2 class="govuk-heading-m">Recommended Dependency Updates</h2>
+        <table class="govuk-table">
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header">Dependency</th>
+            <th class="govuk-table__header">Current Version</th>
+            <th class="govuk-table__header">Recommended Version</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+          {% for item in component.dependencyComparison.items %}
+            {%  if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-upgrade' %}
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.key }}</td>
                 <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.current }}</td>
                 <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.recommended }}</td>
               </tr>
-              {% endif %}
-            {% endfor %}
-            </tbody>
-          </table>
-        </div>
-  {%  endif %}
+            {% endif %}
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {%  endif %}
+
 
     <table class="componentData">
       <tbody>

@@ -8,11 +8,14 @@ export type dependencyComparisonItem = {
   key: dependencyKey
   current?: string
   recommended?: string
-  status: 'missing' | 'aligned' | 'needs-upgrade' | 'above-baseline'
+  status: 'missing' | 'aligned' | 'needs-upgrade' | 'above-baseline' | 'needs-attention'
 }
 
 export type dependencyComparisonResult = {
   items: dependencyComparisonItem[]
+  key?: string
+  current?: string
+  recommended?: string
   summary: {
     totalItems: number
     aligned: number
@@ -48,6 +51,35 @@ const compareDottedVersions = (leftVersion: string, rightVersion: string): numbe
   const leftParts = parseVersionParts(leftVersion)
   const rightParts = parseVersionParts(rightVersion)
   const maxLength = Math.max(leftParts.length, rightParts.length)
+
+  // const currentParts = {
+  //   currentMajor: leftParts[0],
+  //   currentMinor: leftParts[1],
+  //   currentPatch: leftParts[2]
+  // }
+  //
+  // const recommendedParts = {
+  //   recommendedMajor: rightParts[0],
+  //   recommendedMinor: rightParts[1],
+  //   recommendedPatch: rightParts[2]
+  // }
+
+  // const compareVersions = (
+  //   currentParts: { currentMajor: number, currentMinor: number, currentPatch: number },
+  //   recommendedParts: { recommendedMajor: number, recommendedMinor: number, recommendedPatch: number }
+  // ): number => {
+  //   if (currentParts.currentMajor < recommendedParts.recommendedMajor) return -1
+  //   if (currentParts.currentMajor > recommendedParts.recommendedMajor) return 1
+  //
+  //   if (currentParts.currentMinor < recommendedParts.recommendedMinor) return -1
+  //   if (currentParts.currentMinor > recommendedParts.recommendedMinor) return 1
+  //
+  //   if (currentParts.currentPatch < recommendedParts.recommendedPatch) return -1
+  //   if (currentParts.currentPatch > recommendedParts.recommendedPatch) return 1
+  //
+  //   return 0
+  //
+  // }
   for (let index = 0; index < maxLength; index += 1) {
     const leftPart = leftParts[index] ?? 0
     const rightPart = rightParts[index] ?? 0
@@ -56,12 +88,13 @@ const compareDottedVersions = (leftVersion: string, rightVersion: string): numbe
   }
   return 0
 }
-
 const classifyVersionStatus = (current?: string, recommended?: string): dependencyComparisonItem['status'] => {
   if (!current || !recommended) return 'missing'
   const versionComparison = compareDottedVersions(current, recommended)
   if (versionComparison < 0) return 'needs-upgrade'
   if (versionComparison === 0) return 'aligned'
+  // const compareVersionsResult = compareVersions(currentParts, recommendedParts)
+  // if (compareVersionsResult == -1) return 'needs-attention'
   return 'above-baseline'
 }
 
