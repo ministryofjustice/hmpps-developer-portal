@@ -39,17 +39,6 @@ const parseVersionToString = (raw: unknown): string | undefined => {
   return undefined
 }
 
-// // Basic dotted numeric comparison (e.g. 1.2.3). Non-numeric parts ignored. "v" prefix ignored.
-// const compareDottedVersions = (leftVersion: string, rightVersion: string): number => {
-//   const leftParts = extractMajorMinorPatch(leftVersion)
-//   const rightParts = extractMajorMinorPatch(rightVersion)
-//   const cmp = compareVersionTriples(leftParts, rightParts)
-//   logger.debug(
-//     `[VersionCompare.dotted] left=${leftVersion} (${leftParts.join('.')}) right=${rightVersion} (${rightParts.join('.')}) result=${cmp}`,
-//   )
-//   return cmp
-// }
-
 // Extract numeric version components as a triple [major, minor, patch].
 // - Strips a leading "v"
 // - Coerces each segment to its numeric part

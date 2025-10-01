@@ -444,6 +444,25 @@
   }
 
   // styling for component page
+  #component-alert-popup {
+    border-left: 5px solid #d4351c;
+    background-color: #fef1f0
+  }
+
+  #component-alert-popup {
+    .govuk-table {
+      table-layout: fixed;
+      width: 100%;
+    }
+  }
+
+  #component-alert-popup {
+    .govuk-table__cell {
+      white-space: normal;
+      word-break: break-word;
+    }
+  }
+
   #dependency-alert-popup {
     border-left: 5px solid #ffA500;
     background-color: #ffcd9B
@@ -453,6 +472,12 @@
     .govuk-table {
       table-layout: fixed;
       width: 100%;
+    }
+  }
+  #dependency-alert-popup {
+    .govuk-table__cell {
+      white-space: normal;
+      word-break: break-word;
     }
   }
 }

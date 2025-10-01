@@ -24,9 +24,9 @@
   <div class="govuk-grid-column-two-thirds">
     <h1 data-test="detail-page-title">{{ component.name }}</h1>
     {% if component.alerts | length %}
-      <div class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts" style="border-left: 5px solid #d4351c; background-color: #fef1f0;">
+      <div id = "component-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
         <h2 class="govuk-heading-m">Active alerts</h2>
-        <table class="govuk-table" style="table-layout: fixed; width: 100%;">
+        <table class="govuk-table">
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
               <th class="govuk-table__header">Alert Name</th>
@@ -38,10 +38,10 @@
           <tbody class="govuk-table__body">
             {% set firstAlert = component.alerts[0] %}
             <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ firstAlert.alertname }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ firstAlert.environment }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ firstAlert.summary }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">
+              <td class="govuk-table__cell">{{ firstAlert.alertname }}</td>
+              <td class="govuk-table__cell">{{ firstAlert.environment }}</td>
+              <td class="govuk-table__cell">{{ firstAlert.summary }}</td>
+              <td class="govuk-table__cell">
                 <details class="govuk-details" data-module="govuk-details">
                   <summary class="govuk-details__summary"><span class="govuk-details__summary-text">Show message</span></summary>
                   <div class="govuk-details__text">{{ firstAlert.message }}</div>
@@ -53,15 +53,15 @@
               <td colspan="4" class="govuk-table__cell govuk-!-padding-0">
                 <details class="govuk-details" data-module="govuk-details">
                   <summary class="govuk-details__summary"><span class="govuk-details__summary-text">Show all {{ component.alerts.length }} alerts</span></summary>
-                  <table class="govuk-table" style="table-layout: fixed; width: 100%;">
+                  <table class="govuk-table">
                     <tbody class="govuk-table__body">
                       {% for alert in component.alerts %}
                         {% if not loop.first %}
                         <tr class="govuk-table__row">
-                          <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ alert.alertname }}</td>
-                          <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ alert.environment }}</td>
-                          <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ alert.summary }}</td>
-                          <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">
+                          <td class="govuk-table__cell">{{ alert.alertname }}</td>
+                          <td class="govuk-table__cell">{{ alert.environment }}</td>
+                          <td class="govuk-table__cell">{{ alert.summary }}</td>
+                          <td class="govuk-table__cell">
                             <details class="govuk-details" data-module="govuk-details">
                               <summary class="govuk-details__summary"><span class="govuk-details__summary-text">Show message</span></summary>
                               <div class="govuk-details__text">{{ alert.message }}</div>
@@ -103,9 +103,9 @@
           {% for item in component.dependencyComparison.items %}
             {%  if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
               <tr class="govuk-table__row">
-                <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.key }}</td>
-                <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.current }}</td>
-                <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.recommended }}</td>
+                <td class="govuk-table__cell">{{ item.key }}</td>
+                <td class="govuk-table__cell">{{ item.current }}</td>
+                <td class="govuk-table__cell">{{ item.recommended }}</td>
               </tr>
             {% endif %}
           {% endfor %}
@@ -113,16 +113,6 @@
         </table>
       </div>
     {%  endif %}
-
-    {# Floating range matches: show items with status 'needs-attention' #}
-    {% set attentionNeeded = false %}
-    {% if component.dependencyComparison and component.dependencyComparison.items %}
-      {% for item in component.dependencyComparison.items %}
-        {% if item.status == 'needs-attention' %}
-          {% set attentionNeeded = true %}
-        {% endif %}
-      {% endfor %}
-    {% endif %}
 
     {% if attentionNeeded %}
       <div class="govuk-inset-text govuk-!-margin-bottom-4" data-test="dependency-attention">
