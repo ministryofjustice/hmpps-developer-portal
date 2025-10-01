@@ -2,7 +2,7 @@
   &-warning {
     background-color: #fef7f7;
     padding: 20px;
-    border-left: 5px solid #d4351c;
+    border-left: 5px solid $govuk-error-colour;
     margin-bottom: 30px;
     border-radius: 4px;
     display: flex;
@@ -11,7 +11,7 @@
   }
 
   &-count {
-    background: linear-gradient(135deg, #d4351c 0%, #b91c1c 100%);
+    background: linear-gradient(135deg, $govuk-error-colour 0%, #b91c1c 100%);
     color: #fff;
     border-radius: 50%;
     width: 50px;
@@ -19,8 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
-    font-weight: bold;
+    @include govuk-font($size: 24, $weight: bold);
     box-shadow: 0 2px 8px rgba(212, 53, 28, 0.3);
     flex-shrink: 0;
   }
@@ -37,20 +36,18 @@
   }
 
   &-icon {
-    font-size: 20px;
-    color: #d4351c;
+    @include govuk-font-size(19);
+    color: $govuk-error-colour;
   }
 
   &-title {
-    font-size: 16px;
-    color: #d4351c;
-    font-weight: bold;
+    @include govuk-font($size: 19, $weight: bold);
+    color: $govuk-error-colour;
   }
 
   &-text {
     margin: 0;
-    font-size: 16px;
-    line-height: 1.4;
+    @include govuk-font-size(19);
   }
 }
 

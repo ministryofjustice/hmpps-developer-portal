@@ -74,8 +74,6 @@ export default function routes({
           rec.currentChannels.prod === '#dps_alerts',
       ).length
 
-      const hasLegacyChannels = legacyChannelCount > 0
-
       const displayTeam = {
         name: team.name,
         encodedTeamName: encodeURIComponent(team.name),
@@ -87,7 +85,7 @@ export default function routes({
         veryHighAndHighVeracode,
         channelRecommendations,
         channelTree,
-        hasLegacyChannels,
+        hasLegacyChannels: legacyChannelCount > 0,
         legacyChannelCount,
       }
 
