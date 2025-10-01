@@ -249,14 +249,13 @@
             </div>
 
             {% if hasLegacyChannels %}
-              <div class="govuk-warning-text">
-                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                <strong class="govuk-warning-text__text">
-                  <span class="govuk-warning-text__assistive">Warning</span>
-                  Your team is currently using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod).
-                  We recommend migrating to dedicated team channels for better alert management and reduced noise.
-                </strong>
-              </div>
+            {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+            {{ govukWarningText({
+            text: "Your team is currently using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod).
+                   We recommend migrating to dedicated team channels for better alert management and reduced noise.",
+            iconFallbackText: "Warning"
+            }) }}
             {% endif %}
           </div>
         </div>
