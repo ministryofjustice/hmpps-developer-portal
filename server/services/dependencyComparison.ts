@@ -1,3 +1,4 @@
+import logger from '../../logger'
 import type { Component } from '../data/modelTypes'
 import type { recommendedVersions } from './recommendedVersionsService'
 
@@ -22,6 +23,7 @@ export type dependencyComparisonResult = {
     needsUpgrade: number
     aboveBaseline: number
     missing: number
+    needsAttention: number
   }
   recommendedSource: recommendedVersions['metadata']['source']
 }
@@ -38,64 +40,77 @@ const parseVersionToString = (raw: unknown): string | undefined => {
 }
 
 // Basic dotted numeric comparison (e.g. 1.2.3). Non-numeric parts ignored. "v" prefix ignored.
-const compareDottedVersions = (leftVersion: string, rightVersion: string): number => {
-  const parseVersionParts = (versionString: string): number[] =>
-    versionString
-      .replace(/^v/i, '')
-      .split('.')
-      .map(segment => {
-        const matchResult = segment.match(/\d+/)
-        return matchResult ? parseInt(matchResult[0], 10) : 0
-      })
+// const compareDottedVersions = (leftVersion: string, rightVersion: string): number => {
+//   const leftParts = extractMajorMinorPatch(leftVersion)
+//   const rightParts = extractMajorMinorPatch(rightVersion)
+//   const cmp = compareVersionTriples(leftParts, rightParts)
+//   logger.debug(
+//     `[VersionCompare.dotted] left=${leftVersion} (${leftParts.join('.')}) right=${rightVersion} (${rightParts.join('.')}) result=${cmp}`,
+//   )
+//   return cmp
+// }
 
-  const leftParts = parseVersionParts(leftVersion)
-  const rightParts = parseVersionParts(rightVersion)
-  const maxLength = Math.max(leftParts.length, rightParts.length)
+// Extract numeric version components as a triple [major, minor, patch].
+// - Strips a leading "v"
+// - Coerces each segment to its numeric part
+// - Missing segments default to 0 (e.g., "1" -> [1,0,0], "1.12" -> [1,12,0])
+const extractMajorMinorPatch = (versionString: string): [number, number, number] => {
+  const normalizedVersion = versionString.replace(/^v/i, '')
+  const versionSegments = normalizedVersion.split('.')
+  const numericSegments = versionSegments.map(segment => {
+    const matchResult = segment.match(/\d+/)
+    return matchResult ? parseInt(matchResult[0], 10) : 0
+  })
+  return [numericSegments[0] ?? 0, numericSegments[1] ?? 0, numericSegments[2] ?? 0]
+}
 
-  // const currentParts = {
-  //   currentMajor: leftParts[0],
-  //   currentMinor: leftParts[1],
-  //   currentPatch: leftParts[2]
-  // }
-  //
-  // const recommendedParts = {
-  //   recommendedMajor: rightParts[0],
-  //   recommendedMinor: rightParts[1],
-  //   recommendedPatch: rightParts[2]
-  // }
+// Count how many explicit segments are present in the version string (1, 2, or 3+)
+const countVersionSegments = (versionString: string): number => versionString.replace(/^v/i, '').split('.').length
 
-  // const compareVersions = (
-  //   currentParts: { currentMajor: number, currentMinor: number, currentPatch: number },
-  //   recommendedParts: { recommendedMajor: number, recommendedMinor: number, recommendedPatch: number }
-  // ): number => {
-  //   if (currentParts.currentMajor < recommendedParts.recommendedMajor) return -1
-  //   if (currentParts.currentMajor > recommendedParts.recommendedMajor) return 1
-  //
-  //   if (currentParts.currentMinor < recommendedParts.recommendedMinor) return -1
-  //   if (currentParts.currentMinor > recommendedParts.recommendedMinor) return 1
-  //
-  //   if (currentParts.currentPatch < recommendedParts.recommendedPatch) return -1
-  //   if (currentParts.currentPatch > recommendedParts.recommendedPatch) return 1
-  //
-  //   return 0
-  //
-  // }
-  for (let index = 0; index < maxLength; index += 1) {
-    const leftPart = leftParts[index] ?? 0
-    const rightPart = rightParts[index] ?? 0
-    if (leftPart > rightPart) return 1
-    if (leftPart < rightPart) return -1
-  }
+// Compare two version triples [major, minor, patch].
+// Returns 1 if left > right, -1 if left < right, 0 if equal.
+const compareVersionTriples = (
+  leftVersionTriple: [number, number, number],
+  rightVersionTriple: [number, number, number],
+): number => {
+  if (leftVersionTriple[0] !== rightVersionTriple[0]) return leftVersionTriple[0] > rightVersionTriple[0] ? 1 : -1
+  if (leftVersionTriple[1] !== rightVersionTriple[1]) return leftVersionTriple[1] > rightVersionTriple[1] ? 1 : -1
+  if (leftVersionTriple[2] !== rightVersionTriple[2]) return leftVersionTriple[2] > rightVersionTriple[2] ? 1 : -1
   return 0
 }
 const classifyVersionStatus = (current?: string, recommended?: string): dependencyComparisonItem['status'] => {
   if (!current || !recommended) return 'missing'
-  const versionComparison = compareDottedVersions(current, recommended)
-  if (versionComparison < 0) return 'needs-upgrade'
-  if (versionComparison === 0) return 'aligned'
-  // const compareVersionsResult = compareVersions(currentParts, recommendedParts)
-  // if (compareVersionsResult == -1) return 'needs-attention'
-  return 'above-baseline'
+  // Handle floating recommendations: "1" => any 1.x.x, "1.12" => any 1.12.x
+  const recSegments = countVersionSegments(recommended)
+  const currentParts = extractMajorMinorPatch(current)
+  const recommendedParts = extractMajorMinorPatch(recommended)
+
+  let status: dependencyComparisonItem['status']
+  if (recSegments >= 3) {
+    // Exact version recommendation
+    const cmp = compareVersionTriples(currentParts, recommendedParts)
+    if (cmp < 0) {
+      status = 'needs-upgrade'
+    } else if (cmp === 0) {
+      status = 'aligned'
+    } else {
+      status = 'above-baseline'
+    }
+  } else {
+    // Build range [lower, upper) depending on floating specificity
+    const lower: [number, number, number] = [recommendedParts[0], recSegments === 1 ? 0 : recommendedParts[1], 0]
+    const upper: [number, number, number] =
+      recSegments === 1 ? [recommendedParts[0] + 1, 0, 0] : [recommendedParts[0], recommendedParts[1] + 1, 0]
+
+    if (compareVersionTriples(currentParts, lower) < 0) status = 'needs-upgrade'
+    else if (compareVersionTriples(currentParts, upper) >= 0) status = 'above-baseline'
+    else status = 'needs-attention' // within floating range
+  }
+
+  logger.debug(
+    `[VersionClassify] current=${current} recommended=${recommended} recSegments=${recSegments} status=${status}`,
+  )
+  return status
 }
 
 // Extract current values from a component's versions structure, handling legacy shapes
@@ -179,8 +194,9 @@ export const compareComponentsDependencies = (
       needsUpgrade: currentTotals.needsUpgrade + (comparisonItem.status === 'needs-upgrade' ? 1 : 0),
       aboveBaseline: currentTotals.aboveBaseline + (comparisonItem.status === 'above-baseline' ? 1 : 0),
       missing: currentTotals.missing + (comparisonItem.status === 'missing' ? 1 : 0),
+      needsAttention: currentTotals.needsAttention + (comparisonItem.status === 'needs-attention' ? 1 : 0),
     }),
-    { totalItems: 0, aligned: 0, needsUpgrade: 0, aboveBaseline: 0, missing: 0 },
+    { totalItems: 0, aligned: 0, needsUpgrade: 0, aboveBaseline: 0, missing: 0, needsAttention: 0 },
   )
 
   return {

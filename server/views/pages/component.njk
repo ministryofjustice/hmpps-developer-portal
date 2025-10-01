@@ -114,6 +114,43 @@
       </div>
     {%  endif %}
 
+    {# Floating range matches: show items with status 'needs-attention' #}
+    {% set attentionNeeded = false %}
+    {% if component.dependencyComparison and component.dependencyComparison.items %}
+      {% for item in component.dependencyComparison.items %}
+        {% if item.status == 'needs-attention' %}
+          {% set attentionNeeded = true %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if attentionNeeded %}
+      <div class="govuk-inset-text govuk-!-margin-bottom-4" data-test="dependency-attention">
+        <h2 class="govuk-heading-m">Dependencies within recommended range</h2>
+        <p class="govuk-hint">These are aligned to a floating recommendation (e.g., major-only like <code>1.x</code> or minor-only like <code>1.12.x</code>).</p>
+        <table class="govuk-table">
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header">Dependency</th>
+            <th class="govuk-table__header">Current Version</th>
+            <th class="govuk-table__header">Recommended</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+          {% for item in component.dependencyComparison.items %}
+            {% if item.status == 'needs-attention' %}
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.key }}</td>
+                <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.current or '—' }}</td>
+                <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.recommended or '—' }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+
 
     <table class="componentData">
       <tbody>
