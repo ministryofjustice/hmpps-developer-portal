@@ -60,16 +60,16 @@ jQuery(function () {
       data: 'annotations',
       createdCell: function (td, _cellData, rowData) {
         const dashboardLink =
-          rowData.annotations.dashboard_url || 'N/A'
-            ? `<a href="${rowData.annotations.dashboard_url}" class="statusTileHealth" target="_blank">Dashboard</a>`
+          rowData.annotations.dashboard_url || 
+          ? `<a href="${rowData.annotations.dashboard_url}" class="statusTileHealth" target="_blank">Dashboard</a>`
             : ''
         const runbookLink =
-          rowData.annotations.runbook_url || 'N/A'
-            ? `<a href="${rowData.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook</a>`
+          rowData.annotations.runbook_url ||
+          ? `<a href="${rowData.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook</a>`
             : ''
         const generatorLink =
-          rowData.generatorURL || 'N/A'
-            ? `<a href="${rowData.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
+          rowData.generatorURL || 
+          ? `<a href="${rowData.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
             : ''
 
         $(td).html(`<ul><li>${dashboardLink}</li><li>${runbookLink}</li><li>${generatorLink}</li></ul>`)
