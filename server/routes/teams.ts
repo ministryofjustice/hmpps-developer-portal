@@ -67,12 +67,14 @@ export default function routes({
       const channelTree = monitoringChannelService.generateChannelTree(channelRecommendations)
 
       // Check for legacy channels
-      const hasLegacyChannels = channelRecommendations.recommendations.some(
+      const legacyChannelCount = channelRecommendations.recommendations.filter(
         rec =>
           rec.currentChannels.dev === '#dps_alerts_non_prod' ||
           rec.currentChannels.preprod === '#dps_alerts_non_prod' ||
           rec.currentChannels.prod === '#dps_alerts',
-      )
+      ).length
+
+      const hasLegacyChannels = legacyChannelCount > 0
 
       const displayTeam = {
         name: team.name,
@@ -86,6 +88,7 @@ export default function routes({
         channelRecommendations,
         channelTree,
         hasLegacyChannels,
+        legacyChannelCount,
       }
 
       res.render('pages/teamOverview', { team: displayTeam })
