@@ -39,7 +39,7 @@ const parseVersionToString = (raw: unknown): string | undefined => {
   return undefined
 }
 
-// Basic dotted numeric comparison (e.g. 1.2.3). Non-numeric parts ignored. "v" prefix ignored.
+// // Basic dotted numeric comparison (e.g. 1.2.3). Non-numeric parts ignored. "v" prefix ignored.
 // const compareDottedVersions = (leftVersion: string, rightVersion: string): number => {
 //   const leftParts = extractMajorMinorPatch(leftVersion)
 //   const rightParts = extractMajorMinorPatch(rightVersion)
@@ -97,14 +97,25 @@ const classifyVersionStatus = (current?: string, recommended?: string): dependen
       status = 'above-baseline'
     }
   } else {
-    // Build range [lower, upper) depending on floating specificity
-    const lower: [number, number, number] = [recommendedParts[0], recSegments === 1 ? 0 : recommendedParts[1], 0]
-    const upper: [number, number, number] =
-      recSegments === 1 ? [recommendedParts[0] + 1, 0, 0] : [recommendedParts[0], recommendedParts[1] + 1, 0]
+    // // Build range [lower, upper) depending on floating specificity
+    // const lower: [number, number, number] = [recommendedParts[0], recSegments === 1 ? 0 : recommendedParts[1], 0]
+    // const upper: [number, number, number] =
+    //   recSegments === 1 ? [recommendedParts[0] + 1, 0, 0] : [recommendedParts[0], recommendedParts[1] + 1, 0]
+    //
+    // if (compareVersionTriples(currentParts, lower) < 0) status = 'needs-upgrade'
+    // else if (compareVersionTriples(currentParts, upper) >= 0) status = 'above-baseline'
+    // else status = 'needs-attention' // within floating range
+    //
+    for (let i = 0; i < recSegments; i += 1) {
+      const currentVal = currentParts[i] ?? 0
+      const recommendedVal = recommendedParts[i] ?? 0
 
-    if (compareVersionTriples(currentParts, lower) < 0) status = 'needs-upgrade'
-    else if (compareVersionTriples(currentParts, upper) >= 0) status = 'above-baseline'
-    else status = 'needs-attention' // within floating range
+      // if (currentVal === undefined) continue;
+
+      if (currentVal < recommendedVal) status = 'needs-attention'
+      if (currentVal > recommendedVal) status = 'above-baseline'
+    }
+    return 'aligned'
   }
 
   logger.debug(

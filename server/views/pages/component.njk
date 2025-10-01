@@ -83,7 +83,7 @@
 
     {% set upgradeNeeded = false %}
     {%  for item in component.dependencyComparison.items %}
-      {% if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-upgrade' %}
+      {% if (component.language == 'Kotlin') and (item.current != '-' and item.current) and  item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
         {%  set upgradeNeeded = true %}
       {%  endif %}
     {%  endfor %}
@@ -101,7 +101,7 @@
           </thead>
           <tbody class="govuk-table__body">
           {% for item in component.dependencyComparison.items %}
-            {%  if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-upgrade' %}
+            {%  if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
               <tr class="govuk-table__row">
                 <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.key }}</td>
                 <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ item.current }}</td>
