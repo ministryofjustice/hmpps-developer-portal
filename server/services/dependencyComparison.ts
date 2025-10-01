@@ -97,25 +97,36 @@ const classifyVersionStatus = (current?: string, recommended?: string): dependen
       status = 'above-baseline'
     }
   } else {
-    // // Build range [lower, upper) depending on floating specificity
-    // const lower: [number, number, number] = [recommendedParts[0], recSegments === 1 ? 0 : recommendedParts[1], 0]
-    // const upper: [number, number, number] =
-    //   recSegments === 1 ? [recommendedParts[0] + 1, 0, 0] : [recommendedParts[0], recommendedParts[1] + 1, 0]
-    //
-    // if (compareVersionTriples(currentParts, lower) < 0) status = 'needs-upgrade'
-    // else if (compareVersionTriples(currentParts, upper) >= 0) status = 'above-baseline'
-    // else status = 'needs-attention' // within floating range
-    //
-    for (let i = 0; i < recSegments; i += 1) {
-      const currentVal = currentParts[i] ?? 0
-      const recommendedVal = recommendedParts[i] ?? 0
+    // Floating recommendation logic
+    const currentSegs = countVersionSegments(current)
 
-      // if (currentVal === undefined) continue;
+    if (recSegments === 2) {
+      // Major.minor recommended: compare majors first, then minors
+      const [cMaj, cMin] = [currentParts[0], currentParts[1]]
+      const [rMaj, rMin] = [recommendedParts[0], recommendedParts[1]]
 
-      if (currentVal < recommendedVal) status = 'needs-attention'
-      if (currentVal > recommendedVal) status = 'above-baseline'
+      if (cMaj < rMaj) {
+        status = 'needs-upgrade'
+      } else if (cMaj > rMaj) {
+        status = 'above-baseline'
+      } else if (currentSegs === 1) {
+        // Same major but current only specifies major (e.g., current=1, rec=1.4) → treat as aligned
+        status = 'aligned'
+      } else if ((cMin ?? 0) !== (rMin ?? 0)) {
+        // Same major and minor mismatch → needs-attention
+        status = 'needs-attention'
+      } else {
+        // Same major and same minor
+        status = 'aligned'
+      }
+    } else {
+      // recSegments === 1: major-only recommendation
+      const [cMaj] = [currentParts[0]]
+      const [rMaj] = [recommendedParts[0]]
+      if (cMaj < rMaj) status = 'needs-upgrade'
+      else if (cMaj > rMaj) status = 'above-baseline'
+      else status = 'aligned'
     }
-    return 'aligned'
   }
 
   logger.debug(
