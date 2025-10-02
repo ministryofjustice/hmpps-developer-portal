@@ -54,7 +54,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       name: namespace.name,
       pingdom: namespace.pingdom_check,
     }
-    console.log(displayNamespace)
     return res.render('pages/pingdom', { namespace: displayNamespace })
   })
   return router
