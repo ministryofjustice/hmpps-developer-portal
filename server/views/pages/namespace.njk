@@ -29,7 +29,9 @@
       <th>Pingdom monitoring</th>
       <td>
         {% if namespace.pingdom_check | length %}
-          <a href="/namespaces/${rowdata.name}/pingdom" style="text-decoration: none;"><span style="color: green">&#10004</span></a> // Green checkmark with hyperlink
+            <a href="/namespaces/{{ namespace.name }}/pingdom" style="text-decoration: none;">
+              <span style="color: green">&#10004;</span>
+            </a> 
         {% else %}
           <span style="color: red">&#10008;</span> <!-- Red X mark -->
         {% endif %}
