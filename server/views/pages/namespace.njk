@@ -25,6 +25,30 @@
         {% endif %}
       </td>
     </tr>
+    <tr>
+      <th>Pingdom monitoring</th>
+      <td>
+        {% if namespace.pingdom_check | length %}
+          <a href="/namespaces/${rowdata.name}/pingdom" style="text-decoration: none;"><span style="color: green">&#10004</span></a> // Green checkmark with hyperlink
+        {% else %}
+          <span style="color: red">&#10008;</span> <!-- Red X mark -->
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>Application </th>
+      <td>
+        {% if namespace.hmpps_template | length %}
+        <ul>
+          {% for hmppsTemplate in namespace.hmpps_template %}
+            <li><a href="/namespaces/{{ namespace.name }}/templates/{{ hmppsTemplate.tf_label }}">{{ hmppsTemplate.tf_label }}</a></li>
+          {% endfor %}
+        </ul>
+        {% else %}
+          <p data-test="no-rds-instances">None</p>
+        {% endif %}
+      </td>
+    </tr>
   </tbody>
 </table>
 

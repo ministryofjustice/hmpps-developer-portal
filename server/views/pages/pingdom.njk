@@ -1,0 +1,73 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + namepsace.pingdom.tf_label %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{% set breadCrumbList = [
+    {title: "Namespaces", href: "/namespaces"},
+    {title: namespace.name, href: "/namespaces/" + namespace.name}
+  ]
+%}
+
+{{ breadCrumb(namespace.name, [{title: "Namespaces", href: "/namespaces"}]) }}
+
+{% for pingdomItem in namespace.pingdom %}
+  <h2>{{ pingdomItem.tf_label }}</h2>
+  <table class="componentData">
+    <tbody>
+      <tr>
+        <th>tf_label</th>
+        <td>{{ pingdomItem.tf_label }}</td>
+      </tr>
+      <tr>
+        <th>name</th>
+        <td>{{ pingdomItem.name }}</td>
+      </tr>
+      <tr>
+        <th>host</th>
+        <td>{{ pingdomItem.host }}</td>
+      </tr>
+      <tr>
+        <th>url</th>
+        <td>
+          <a href="{{ pingdomItem.url | replace('/https/', 'https://') }}">
+            {{ pingdomItem.url | replace('/https/', 'https://') }}
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>probefilters</th>
+        <td>{{ pingdomItem.probefilters }}</td>
+      </tr>
+      <tr>
+        <th>encryption</th>
+        <td>{{ pingdomItem.encryption }}</td>
+      </tr>
+      <tr>
+        <th>notifywhenbackup</th>
+        <td>{{ pingdomItem.notifywhenbackup }}</td>
+      </tr>
+      <tr>
+        <th>sendnotificationwhendown</th>
+        <td>{{ pingdomItem.sendnotificationwhendown }}</td>
+      </tr>
+      <tr>
+        <th>notifyagainevery</th>
+        <td>{{ pingdomItem.notifyagainevery }}</td>
+      </tr>
+      <tr>
+        <th>port</th>
+        <td>{{ pingdomItem.port }}</td>
+      </tr>
+    </tbody>
+  </table>
+{% endfor %}
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+  
+{% endblock %}
