@@ -1,0 +1,76 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + namepsace.pingdom.tf_label %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{% set breadCrumbList = [
+    {title: "Namespaces", href: "/namespaces"},
+    {title: namespace.name, href: "/namespaces/" + namespace.name}
+  ]
+%}
+
+{{ breadCrumb(namespace.name, [{title: "Namespaces", href: "/namespaces"}]) }}
+
+  <h1> pingdom_check </h1>
+  <h2> {{ namespace.pingdomCheck.name }} </h2>
+  <table class="componentData">
+    <tbody>
+      <tr>
+        <th>tf_label</th>
+        <td>{{ namespace.pingdomCheck.tf_label }}</td>
+      </tr>
+      <tr>
+        <th>name</th>
+        <td>{{ namespace.pingdomCheck.name }}</td>
+      </tr>
+      <tr>
+        <th>host</th>
+        <td>{{ namespace.pingdomCheck.host }}</td>
+      </tr>
+      <tr>
+        <th>url</th>
+        <td>
+          <a href="{{ namespace.pingdomCheck.url | replace('/https/', 'https://') }}">
+            {{ namespace.pingdomCheck.url | replace('/https/', 'https://') }}
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>probefilters</th>
+        <td>{{ namespace.pingdomCheck.probefilters }}</td>
+      </tr>
+      <tr>
+        <th>encryption</th>
+        <td>{{ namespace.pingdomCheck.encryption }}</td>
+      </tr>
+      <tr>
+        <th>notifywhenbackup</th>
+        <td>{{ namespace.pingdomCheck.notifywhenbackup }}</td>
+      </tr>
+      <tr>
+        <th>sendnotificationwhendown</th>
+        <td>{{ namespace.pingdomCheck.sendnotificationwhendown }}</td>
+      </tr>
+      <tr>
+        <th>notifyagainevery</th>
+        <td>{{ namespace.pingdomCheck.notifyagainevery }}</td>
+      </tr>
+      <tr>
+        <th>port</th>
+        <td>{{ namespace.pingdomCheck.port }}</td>
+      </tr>
+      <tr>
+        <th>source code</th>
+        <td><a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ namespace.pingdomCheck.tf_filename }}">{{ namespace.pingdomCheck.tf_filename }}</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+  
+{% endblock %}
