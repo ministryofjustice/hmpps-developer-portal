@@ -34,10 +34,10 @@
     <tr>
       <th>Elasticache cluster</th>
       <td>
-        {% if namespace.elasticache_cluster | length %}
+        {% if namespace.elasticacheCluster | length %}
         <ul>
-          {% for elastiCache in namespace.elasticache_cluster %}
-              <li><a href="#{{ elastiCache.tf_label | replace(' ', '-') | lower }}">{{ elastiCache.tf_label }}</a></li>
+          {% for elasticacheCluster in namespace.elasticacheCluster %}
+              <li><a href="#{{ elasticacheCluster.tf_label | replace(' ', '-') | lower }}">{{ elasticacheCluster.tf_label }}</a></li>
           {% endfor %}
         </ul>
         {% else %}
@@ -48,9 +48,9 @@
     <tr>
       <th>Pingdom check</th>
       <td>
-        {% if namespace.pingdom_check | length %}
+        {% if namespace.pingdomCheck | length %}
           <ul>
-          {% for pingdomCheck in namespace.pingdom_check %}
+          {% for pingdomCheck in namespace.pingdomCheck %}
             <li><a href="#{{ pingdomCheck.tf_label | replace(' ', '-') | lower }}">{{ pingdomCheck.name }}</a></li>
           {% endfor %}
           </ul>
@@ -62,9 +62,9 @@
     <tr>
       <th>HMPPS template</th>
       <td>
-        {% if namespace.hmpps_template | length %}
+        {% if namespace.hmppsTemplate | length %}
         <ul>
-          {% for hmppsTemplate in namespace.hmpps_template %}
+          {% for hmppsTemplate in namespace.hmppsTemplate %}
             <li><a href="#{{ hmppsTemplate.tf_label | replace(' ', '-') | lower }}">{{ hmppsTemplate.tf_label }}</a></li>
           {% endfor %}
         </ul>
@@ -139,73 +139,73 @@
   {% endfor %}
 {% endif %}
 
-{% if namespace.elasticache_cluster | length %}
+{% if namespace.elasticacheCluster | length %}
   <h1>Elasticache Cluster</h1>
-  {% for elasticache_cluster in namespace.elasticache_cluster %}
-    <h2 data-test="detail-page-title">{{ elasticache_cluster.tf_label }}</h2>
-    <table class="componentData" id="{{ elasticache_cluster.tf_label | replace(' ', '-') | lower }}">
+  {% for elasticacheCluster in namespace.elasticacheCluster %}
+    <h2 data-test="detail-page-title">{{ elasticacheCluster.tf_label }}</h2>
+    <table class="componentData" id="{{ elasticacheCluster.tf_label | replace(' ', '-') | lower }}">
       <tbody>
         <tr>
           <th>tf_label</th>
-          <td>{{ elasticache_cluster.tf_label }}</td>
+          <td>{{ elasticacheCluster.tf_label }}</td>
         </tr>
         <tr>
           <th>tf_mod_version</th>
-          <td>{{ elasticache_cluster.team_name }}</td>
+          <td>{{ elasticacheCluster.team_name }}</td>
         </tr>
         <tr>
           <th>namespace</th>
-          <td>{{ elasticache_cluster.namespace }}</td>
+          <td>{{ elasticacheCluster.namespace }}</td>
         </tr>
         <tr>
           <th>application</th>
-          <td>{{ elasticache_cluster.application }}</td>
+          <td>{{ elasticacheCluster.application }}</td>
         </tr>
         <tr>
           <th>business_unit</th>
-          <td>{{ elasticache_cluster.business_unit }}</td>
+          <td>{{ elasticacheCluster.business_unit }}</td>
         </tr>
         <tr>
           <th>engine_version</th>
-          <td>{{ elasticache_cluster.engine_version }}</td>
+          <td>{{ elasticacheCluster.engine_version }}</td>
         </tr>
         <tr>
           <th>infrastructure_support</th>
-          <td>{{ elasticache_cluster.infrastructure_support }}</td>
+          <td>{{ elasticacheCluster.infrastructure_support }}</td>
         </tr>
         <tr>
           <th>is_production</th>
-          <td>{{ elasticache_cluster.is_production }}</td>
+          <td>{{ elasticacheCluster.is_production }}</td>
         </tr>
         <tr>
           <th>node_type</th>
-          <td>{{ elasticache_cluster.node_type }}</td>
+          <td>{{ elasticacheCluster.node_type }}</td>
         </tr>
         <tr>
           <th>number_cache_clusters</th>
-          <td>{{ elasticache_cluster.number_cache_clusters }}</td>
+          <td>{{ elasticacheCluster.number_cache_clusters }}</td>
         </tr>
         <tr>
           <th>parameter_group_name</th>
-          <td>{{ elasticache_cluster.parameter_group_name }}</td>
+          <td>{{ elasticacheCluster.parameter_group_name }}</td>
         </tr>
         <tr>
           <th>team_name</th>
-          <td>{{ elasticache_cluster.team_name }}</td>
+          <td>{{ elasticacheCluster.team_name }}</td>
         </tr>
         <tr>
           <th>is_production</th>
-          <td>{{ elasticache_cluster.is_production }}</td>
+          <td>{{ elasticacheCluster.is_production }}</td>
         </tr>
         <tr>
           <th>environment_name</th>
-          <td>{{ elasticache_cluster.environment_name }}</td>
+          <td>{{ elasticacheCluster.environment_name }}</td>
         </tr>
         <tr>
           <th>source code</th>
           <td>
-            <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ elasticache_cluster.tf_filename }}">
-              {{ elasticache_cluster.tf_filename }}
+            <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ elasticacheCluster.tf_filename }}">
+              {{ elasticacheCluster.tf_filename }}
             </a>
           </td>
         </tr>
@@ -214,61 +214,61 @@
   {% endfor %}
 {% endif %}
 
-{% if namespace.pingdom_check | length %}
+{% if namespace.pingdomCheck | length %}
   <h1>Pingdom Check</h1>
-  {% for pingdom in namespace.pingdom_check %}
-    <h2 data-test="detail-page-title">{{ pingdom.tf_label }}</h2>
-    <table class="componentData" id="{{ pingdom.tf_label | replace(' ', '-') | lower }}">
+  {% for pingdomCheck in namespace.pingdomCheck %}
+    <h2 data-test="detail-page-title">{{ pingdomCheck.tf_label }}</h2>
+    <table class="componentData" id="{{ pingdomCheck.tf_label | replace(' ', '-') | lower }}">
       <tbody>
         <tr>
           <th>tf_label</th>
-          <td>{{ pingdom.tf_label }}</td>
+          <td>{{ pingdomCheck.tf_label }}</td>
         </tr>
         <tr>
           <th>name</th>
-          <td>{{ pingdom.name }}</td>
+          <td>{{ pingdomCheck.name }}</td>
         </tr>
         <tr>
           <th>host</th>
-          <td>{{ pingdom.host }}</td>
+          <td>{{ pingdomCheck.host }}</td>
         </tr>
         <tr>
           <th>url</th>
           <td>
-            <a href="{{ pingdom.url | replace('/https/', 'https://') }}">
-              {{ pingdom.url | replace('/https/', 'https://') }}
+            <a href="{{ pingdomCheck.url | replace('/https/', 'https://') }}">
+              {{ pingdomCheck.url | replace('/https/', 'https://') }}
             </a>
           </td>
         </tr>
         <tr>
           <th>probefilters</th>
-          <td>{{ pingdom.probefilters }}</td>
+          <td>{{ pingdomCheck.probefilters }}</td>
         </tr>
         <tr>
           <th>encryption</th>
-          <td>{{ pingdom.encryption }}</td>
+          <td>{{ pingdomCheck.encryption }}</td>
         </tr>
         <tr>
           <th>notifywhenbackup</th>
-          <td>{{ pingdom.notifywhenbackup }}</td>
+          <td>{{ pingdomCheck.notifywhenbackup }}</td>
         </tr>
         <tr>
           <th>sendnotificationwhendown</th>
-          <td>{{ pingdom.sendnotificationwhendown }}</td>
+          <td>{{ pingdomCheck.sendnotificationwhendown }}</td>
         </tr>
         <tr>
           <th>notifyagainevery</th>
-          <td>{{ pingdom.notifyagainevery }}</td>
+          <td>{{ pingdomCheck.notifyagainevery }}</td>
         </tr>
         <tr>
           <th>port</th>
-          <td>{{ pingdom.port }}</td>
+          <td>{{ pingdomCheck.port }}</td>
         </tr>
         <tr>
           <th>source code</th>
           <td>
-            <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ pingdom.tf_filename }}">
-              {{ pingdom.tf_filename }}
+            <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ pingdomCheck.tf_filename }}">
+              {{ pingdomCheck.tf_filename }}
             </a>
           </td>
         </tr>
@@ -277,9 +277,9 @@
   {% endfor %}
 {% endif %}
 
-{% if namespace.hmpps_template | length %}
+{% if namespace.hmppsTemplate | length %}
   <h1>HMPPS Templates</h1>
-  {% for hmppsTemplate in namespace.hmpps_template %}
+  {% for hmppsTemplate in namespace.hmppsTemplate %}
     <h2>{{ hmppsTemplate.tf_label }}</h2>
     <table class="componentData" id="{{ hmppsTemplate.tf_label | replace(' ', '-') | lower }}">
       <tbody>

@@ -25,10 +25,10 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const displayNamespace = {
       name: namespace.name,
-      pingdom_check: namespace.pingdom_check,
-      hmpps_template: namespace.hmpps_template,
+      pingdomCheck: namespace.pingdom_check,
+      hmppsTemplate: namespace.hmpps_template,
       rdsInstances: namespace.rds_instance,
-      elasticache_cluster: namespace.elasticache_cluster,
+      elasticacheCluster: namespace.elasticache_cluster,
     }
 
     return res.render('pages/namespace', { namespace: displayNamespace })
@@ -42,7 +42,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const displayNamespace = {
       name: namespace.name,
-      rds_instance: filteredRdsInstance || null,
+      rdsInstance: filteredRdsInstance || null,
     }
 
     return res.render('pages/rdsInstance', { namespace: displayNamespace })
@@ -58,10 +58,10 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const displayNamespace = {
       name: namespace.name,
-      elasticache_cluster: filteredElasticacheCluster || null,
+      elasticacheCluster: filteredElasticacheCluster || null,
     }
 
-    return res.render('pages/elastiCacheCluster', { namespace: displayNamespace })
+    return res.render('pages/elasticacheCluster', { namespace: displayNamespace })
   })
 
   router.get('/:namespaceSlug/hmpps-template/:tf_template', async (req, res) => {
@@ -72,7 +72,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const displayNamespace = {
       name: namespace.name,
-      hmpps_template: filteredTemplate,
+      hmppsTemplate: filteredTemplate,
     }
     return res.render('pages/hmppsTemplate', { namespace: displayNamespace })
   })
@@ -86,7 +86,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const displayNamespace = {
       name: namespace.name,
-      pingdom: matchingPingdom || null,
+      pingdomCheck: matchingPingdom || null,
     }
 
     return res.render('pages/pingdom', { namespace: displayNamespace })

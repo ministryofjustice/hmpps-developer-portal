@@ -1,6 +1,6 @@
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - " + namespace.rds_instance.tf_label %}
+{% set pageTitle = applicationName + " - " + namespace.rdsInstance.tf_label %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -11,15 +11,15 @@
   ]
 %}
 
-{{ breadCrumb(namespace.rds_instance.tf_label, breadCrumbList) }}
+{{ breadCrumb(namespace.rdsInstance.tf_label, breadCrumbList) }}
 
-<h1 data-test="detail-page-title">{{ namespace.rds_instance.tf_label }}</h1>
+<h1 data-test="detail-page-title">{{ namespace.rdsInstance.tf_label }}</h1>
 
 <table class="componentData">
   <tbody>
     <tr>
       <th>tf_label</th>
-      <td>{{ namespace.rds_instance.tf_label }}</td>
+      <td>{{ namespace.rdsInstance.tf_label }}</td>
     </tr>
     <tr>
       <th>tf_mod_version</th>
@@ -27,55 +27,55 @@
     </tr>
     <tr>
       <th>namespace</th>
-      <td>{{ namespace.rds_instance.namespace }}</td>
+      <td>{{ namespace.rdsInstance.namespace }}</td>
     </tr>
     <tr>
       <th>db_instance_class</th>
-      <td>{{ namespace.rds_instance.db_instance_class }}</td>
+      <td>{{ namespace.rdsInstance.db_instance_class }}</td>
     </tr>
     <tr>
       <th>db_engine_version</th>
-      <td>{{ namespace.rds_instance.db_engine_version }}</td>
+      <td>{{ namespace.rdsInstance.db_engine_version }}</td>
     </tr>
     <tr>
       <th>rds_family</th>
-      <td>{{ namespace.rds_instance.rds_family }}</td>
+      <td>{{ namespace.rdsInstance.rds_family }}</td>
     </tr>
     <tr>
       <th>db_max_allocated_storage</th>
-      <td>{{ namespace.rds_instance.db_max_allocated_storage }}</td>
+      <td>{{ namespace.rdsInstance.db_max_allocated_storage }}</td>
     </tr>
     <tr>
       <th>allow_major_version_upgrade</th>
-      <td>{{ namespace.rds_instance.allow_major_version_upgrade }}</td>
+      <td>{{ namespace.rdsInstance.allow_major_version_upgrade }}</td>
     </tr>
     <tr>
       <th>allow_minor_version_upgrade</th>
-      <td>{{ namespace.rds_instance.allow_minor_version_upgrade }}</td>
+      <td>{{ namespace.rdsInstance.allow_minor_version_upgrade }}</td>
     </tr>
     <tr>
       <th>deletion_protection</th>
-      <td>{{ namespace.rds_instance.deletion_protection }}</td>
+      <td>{{ namespace.rdsInstance.deletion_protection }}</td>
     </tr>
     <tr>
       <th>maintenance_window</th>
-      <td>{{ namespace.rds_instance.maintenance_window }}</td>
+      <td>{{ namespace.rdsInstance.maintenance_window }}</td>
     </tr>
     <tr>
       <th>performance_insights_enabled</th>
-      <td>{{ namespace.rds_instance.performance_insights_enabled }}</td>
+      <td>{{ namespace.rdsInstance.performance_insights_enabled }}</td>
     </tr>
     <tr>
       <th>is_production</th>
-      <td>{{ namespace.rds_instance.is_production }}</td>
+      <td>{{ namespace.rdsInstance.is_production }}</td>
     </tr>
     <tr>
       <th>environment_name</th>
-      <td>{{ namespace.rds_instance.environment_name }}</td>
+      <td>{{ namespace.rdsInstance.environment_name }}</td>
     </tr>
     <tr>
       <th>source code</th>
-      <td><a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ namespace.rds_instance.tf_filename }}">{{ namespace.rds_instance.tf_filename }}</a></td>
+      <td><a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ namespace.rdsInstance.tf_filename }}">{{ namespace.rdsInstance.tf_filename }}</a></td>
     </tr>
   </tbody>
 </table>

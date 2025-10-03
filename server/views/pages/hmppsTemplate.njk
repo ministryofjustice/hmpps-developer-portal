@@ -1,6 +1,6 @@
 {% extends "../partials/layout.njk" %}
 
-{% set pageTitle = applicationName + " - " + namepsace.hmpps_template.tf_label %}
+{% set pageTitle = applicationName + " - " + namespace.hmppsTemplate.tf_label %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
@@ -11,40 +11,40 @@
   ]
 %}
 
-{{ breadCrumb(namespace.hmpps_template.tf_label, breadCrumbList) }}
+{{ breadCrumb(namespace.hmppsTemplate.tf_label, breadCrumbList) }}
 
-<h1 data-test="detail-page-title">{{ namespace.hmpps_template.tf_label }}</h1>
+<h1 data-test="detail-page-title">{{ namespace.hmppsTemplate.tf_label }}</h1>
 
 <table class="componentData">
   <tbody>
     <tr>
       <th>tf_label</th>
-      <td>{{ namespace.hmpps_template.tf_label }}</td>
+      <td>{{ namespace.hmppsTemplate.tf_label }}</td>
     </tr>
     <tr>
       <th>namespace</th>
-      <td>{{ namespace.hmpps_template.namespace }}</td>
+      <td>{{ namespace.hmppsTemplate.namespace }}</td>
     </tr>
     <tr>
       <th>Application</th>
-      <td>{{ namespace.hmpps_template.application }}</td>
+      <td>{{ namespace.hmppsTemplate.application }}</td>
     </tr>
     <tr>
       <th>Github Repo</th>
-      <td><a href=https://github.com/ministryofjustice/{{ namespace.hmpps_template.github_repo }}>{{ namespace.hmpps_template.github_repo }}</a></td>
+      <td><a href=https://github.com/ministryofjustice/{{ namespace.hmppsTemplate.github_repo }}>{{ namespace.hmppsTemplate.github_repo }}</a></td>
     </tr>
     <tr>
       <th>source_template_repo</th>
-      <td>{{ namespace.hmpps_template.source_template_repo }}</td>
+      <td>{{ namespace.hmppsTemplate.source_template_repo }}</td>
     </tr>
     <tr>
       <th>prevent_self_review</th>
-      <td>{{ namespace.hmpps_template.prevent_self_review }}</td>
+      <td>{{ namespace.hmppsTemplate.prevent_self_review }}</td>
     </tr>
     <tr>
       <th>reviewer_teams</th>
       <td>
-        {% for team in namespace.hmpps_template.reviewer_teams %}
+        {% for team in namespace.hmppsTemplate.reviewer_teams %}
           {{ team }}<br>
         {% endfor %}
       </td>
@@ -52,18 +52,18 @@
     <tr>
       <th>selected_branch_patterns</th>
       <td>
-        {% for pattern in namespace.hmpps_template.selected_branch_patterns %}
+        {% for pattern in namespace.hmppsTemplate.selected_branch_patterns %}
           {{ pattern }}<br>
         {% endfor %}
       </td>
     </tr>
     <tr>
       <th>protected_branches_only</th>
-      <td>{{ namespace.hmpps_template.protected_branches_only }}</td>
+      <td>{{ namespace.hmppsTemplate.protected_branches_only }}</td>
     </tr>
     <tr>
       <th>source code</th>
-      <td><a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ namespace.hmpps_template.tf_filename }}">{{ namespace.hmpps_template.tf_filename }}</a></td>
+      <td><a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ namespace.hmppsTemplate.tf_filename }}">{{ namespace.hmppsTemplate.tf_filename }}</a></td>
     </tr>
   </tbody>
 </table>
