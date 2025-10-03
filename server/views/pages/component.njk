@@ -86,29 +86,29 @@
 
   {%  if upgradeNeeded %}
     <div id = "dependency-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
-    {%  set filteredRows = [] %}
+      {%  set filteredRows = [] %}
       {% for item in component.dependencyComparison.items %}
         {%  if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
           {%  set _ = filteredRows.push([
-            { text: item.key },
-            { text: item.current },
-            { text: item.recommended }
-            ]) %}
+          { text: item.key },
+          { text: item.current },
+          { text: item.recommended }
+          ]) %}
         {%  endif %}
       {%  endfor %}
 
-        {{ govukTable({
-  caption: "Recommended Dependency Updates",
-  captionClasses: "govuk-table__caption--m",
-  firstCellIsHeader: true,
-  head: [
-    { text: "Dependency" },
-    { text: "Current Version" },
-    { text: "Recommended Version" }
-  ],
-  rows: filteredRows,
-  format: "numeric"
-}) }}
+      {{ govukTable({
+      caption: "Recommended Dependency Updates",
+      captionClasses: "govuk-table__caption--m",
+      firstCellIsHeader: true,
+      head: [
+      { text: "Dependency" },
+      { text: "Current Version" },
+      { text: "Recommended Version" }
+      ],
+      rows: filteredRows,
+      format: "numeric"
+      }) }}
     </div>
   {%  endif %}
 
