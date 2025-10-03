@@ -4,7 +4,7 @@ jQuery(function () {
       data: 'tf_label',
       createdCell: function (td, _cellData, rowData) {
         const display = `${rowData.tf_label}`.trim()
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${display}</a>`)
+        $(td).html(`<a href="/namespaces/${rowData.namespace}/rds_instance/${display}">${display}</a>`)
       },
     },
     {
@@ -20,51 +20,47 @@ jQuery(function () {
       data: 'db_instance_class',
       createdCell: function (td, _cellData, rowData) {
         const display = `${rowData.db_instance_class}`.trim()
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${display}</a>`)
+        $(td).html(display)
       },
     },
     {
       data: 'rds_family',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${rowData.rds_family}</a>`)
+        $(td).html(rowData.rds_family)
       },
     },
     {
       data: 'db_engine_version',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${rowData.db_engine_version}</a>`)
+        $(td).html(rowData.db_engine_version)
       },
     },
     {
       data: 'environment_name',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${rowData.environment_name}</a>`)
+        $(td).html(rowData.environment_name)
       },
     },
     {
       data: 'maintenance_window',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${rowData.maintenance_window}</a>`)
+        $(td).html(rowData.maintenance_window)
       },
     },
     {
       data: 'allow_minor_version_upgrade',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(
-          `<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${rowData.allow_minor_version_upgrade}</a>`,
-        )
+        $(td).html(rowData.allow_minor_version_upgrade)
       },
     },
     {
       data: 'allow_major_version_upgrade',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(
-          `<a href="/reports/rds/${rowData.tf_label}-${rowData.namespace}">${rowData.allow_major_version_upgrade}</a>`,
-        )
+        $(td).html(rowData.allow_major_version_upgrade)
       },
     },
   ]
