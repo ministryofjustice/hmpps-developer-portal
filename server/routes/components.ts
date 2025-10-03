@@ -93,36 +93,40 @@ export default function routes({
     }
     displayComponent.alerts = alerts
 
+    let upgradeNeeded = false
     // Dependency comparison for this component
     try {
       const recommended = await recommendedVersionsService.getRecommendedVersions()
       const comparison = compareComponentsDependencies([component], recommended)
-
       ;(displayComponent as Record<string, unknown>).dependencyComparison = comparison
 
       const { totalItems, aligned, needsUpgrade, aboveBaseline, missing } = comparison.summary
       logger.info(
         `[DependencyComparison] component=${component.name} source=${comparison.recommendedSource} items=${totalItems} aligned=${aligned} needsUpgrade=${needsUpgrade} aboveBaseline=${aboveBaseline} missing=${missing}`,
       )
-      const nonAligned = comparison.items.filter(i => i.status !== 'aligned')
+      const nonAligned = comparison.items.filter(items => items.status !== 'aligned')
       const previewCount = Math.min(10, nonAligned.length)
       if (previewCount > 0) {
         const preview = nonAligned
           .slice(0, previewCount)
           .map(
-            i =>
-              `${i.componentName}:${i.key} current=${i.current ?? 'missing'} → recommended=${i.recommended ?? 'missing'} [${i.status}]`,
+            item =>
+              `${item.componentName}:${item.key} current=${item.current ?? 'missing'} → recommended=${item.recommended ?? 'missing'} [${item.status}]`,
           )
           .join('; ')
         logger.debug(
           `[DependencyComparison] component details (first ${previewCount} of ${nonAligned.length} non-aligned): ${preview}`,
         )
+
+        if ((component.language === 'Kotlin' && comparison.summary.needsAttention) || comparison.summary.needsUpgrade) {
+          upgradeNeeded = true
+        }
       }
     } catch (e) {
       logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(e)}`)
     }
 
-    return res.render('pages/component', { component: displayComponent })
+    return res.render('pages/component', { component: displayComponent, upgradeNeeded })
   })
 
   router.get('/:componentName/environment/:environmentName', async (req, res) => {
