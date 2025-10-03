@@ -18,26 +18,26 @@ jQuery(function () {
     {
       data: 'labels.alertname',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.labels.alertname}`)
+        $(td).html(rowData.labels.alertname ? `${rowData.labels.alertname}` : 'N/A')
       },
     },
     {
       data: 'startsAt',
       createdCell: function (td, _cellData, rowData) {
-        const startsAt = formatTimeStamp(rowData.startsAt)
+        const startsAt = rowData.startsAt ? formatTimeStamp(rowData.startsAt) : 'N/A'
         $(td).html(`${startsAt}`)
       },
     },
     {
       data: 'annotations.message',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.annotations.message}`)
+        $(td).html(rowData.annotations.message ? `${rowData.annotations.message}` : 'N/A')
       },
     },
     {
       data: 'labels.application',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.labels.application}`)
+        $(td).html(rowData.labels.application ? `${rowData.labels.application}` : 'N/A')
       },
     },
     {
