@@ -12,7 +12,7 @@ jQuery(function () {
         const rdsInstances = rowData.rds_instance
           .map(
             rdsInstance =>
-              `<a href="/namespaces/${rowData.name}/rds_instance/${rdsInstance.tf_label}">${rdsInstance.tf_label}</a>`,
+              `<a href="/namespaces/${rowData.name}/rds-instance/${rdsInstance.tf_label}">${rdsInstance.tf_label}</a>`,
           )
           .join('<br>')
         $(td).html(rdsInstances || 'N/A')
@@ -23,7 +23,7 @@ jQuery(function () {
             ? data
                 .map(
                   rdsInstance =>
-                    `<a href="/namespaces/${rowData.name}/rds_instance/${rdsInstance.tf_label}">${rdsInstance.tf_label}</a>`,
+                    `<a href="/namespaces/${rowData.name}/rds-instance/${rdsInstance.tf_label}">${rdsInstance.tf_label}</a>`,
                 )
                 .join('</br>')
             : 'N/A'
@@ -42,7 +42,7 @@ jQuery(function () {
         const elasticache = rowData.elasticache_cluster
           .map(
             cache =>
-              `<a href="/namespaces/${rowData.name}/elasticache_cluster/${cache.tf_label}">${cache.tf_label}</a>`,
+              `<a href="/namespaces/${rowData.name}/elasticache-cluster/${cache.tf_label}">${cache.tf_label}</a>`,
           )
           .join('<br>')
         $(td).html(elasticache || 'N/A')
@@ -65,7 +65,7 @@ jQuery(function () {
         const pingdom = rowData.pingdom_check
           .map(pingdom => {
             const encodedName = encodeURIComponent(pingdom.name) // Encode the name for URL safety
-            return `<a href="/namespaces/${rowData.name}/pingdom_check/${encodedName}" target="_blank">${pingdom.name}</a>`
+            return `<a href="/namespaces/${rowData.name}/pingdom-check/${encodedName}" target="_blank">${pingdom.name}</a>`
           })
           .join('<br>')
         const content = pingdom || 'N/A'
@@ -91,15 +91,12 @@ jQuery(function () {
         const hmppsTemplates = rowData.hmpps_template
           .map(
             template =>
-              `<a href="/namespaces/${rowData.name}/hmpps_template/${template.tf_label}">${template.tf_label}</a>`,
+              `<a href="/namespaces/${rowData.name}/hmpps-template/${template.tf_label}">${template.tf_label}</a>`,
           )
           .join('<br>')
 
-        if (hmppsTemplates) {
-          $(td).html(hmppsTemplates)
-        } else {
-          $(td).text('N/A')
-        }
+        const content = hmppsTemplates || 'N/A'
+        $(td).html(content)
       },
       render: function (data, type, rowData) {
         if (type === 'display') {
@@ -107,7 +104,7 @@ jQuery(function () {
             ? data
                 .map(
                   template =>
-                    `<a href="/namespaces/${rowData.name}/hmpps_templates/${template.tf_label}">${template.tf_label}</a>`,
+                    `<a href="/namespaces/${rowData.name}/hmpps-template/${template.tf_label}">${template.tf_label}</a>`,
                 )
                 .join('<br>')
             : 'N/A'

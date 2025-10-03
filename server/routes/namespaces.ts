@@ -34,7 +34,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.render('pages/namespace', { namespace: displayNamespace })
   })
 
-  router.get('/:namespaceSlug/rds_instance/:rdsInstance', async (req, res) => {
+  router.get('/:namespaceSlug/rds-instance/:rdsInstance', async (req, res) => {
     const namespaceSlug = getFormattedName(req, 'namespaceSlug')
     const namespace = await serviceCatalogueService.getNamespace({ namespaceSlug })
     const { rdsInstance } = req.params
@@ -48,7 +48,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.render('pages/rdsInstance', { namespace: displayNamespace })
   })
 
-  router.get('/:namespaceSlug/elasticache_cluster/:elastiCache', async (req, res) => {
+  router.get('/:namespaceSlug/elasticache-cluster/:elastiCache', async (req, res) => {
     const namespaceSlug = getFormattedName(req, 'namespaceSlug')
     const namespace = await serviceCatalogueService.getNamespace({ namespaceSlug })
     const elasticacheCluster = req.params.elastiCache
@@ -64,7 +64,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.render('pages/elastiCacheCluster', { namespace: displayNamespace })
   })
 
-  router.get('/:namespaceSlug/hmpps_template/:tf_template', async (req, res) => {
+  router.get('/:namespaceSlug/hmpps-template/:tf_template', async (req, res) => {
     const namespaceSlug = getFormattedName(req, 'namespaceSlug')
     const namespace = await serviceCatalogueService.getNamespace({ namespaceSlug })
     const templateLabel = req.params.tf_template
@@ -77,7 +77,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     return res.render('pages/hmppsTemplate', { namespace: displayNamespace })
   })
 
-  router.get('/:namespaceSlug/pingdom_check/:encodedPingdomName', async (req, res) => {
+  router.get('/:namespaceSlug/pingdom-check/:encodedPingdomName', async (req, res) => {
     const namespaceSlug = getFormattedName(req, 'namespaceSlug')
     const namespace = await serviceCatalogueService.getNamespace({ namespaceSlug })
     const { encodedPingdomName } = req.params

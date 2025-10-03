@@ -12,7 +12,7 @@
 <table class="componentData">
   <tbody>
     <tr>
-      <th> Github Code </th>
+      <th>Github Code</th>
       <td> 
         <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}" target="_blank"> {{ namespace.name }} </a>
       </td>
@@ -51,9 +51,7 @@
         {% if namespace.pingdom_check | length %}
           <ul>
           {% for pingdomCheck in namespace.pingdom_check %}
-            <a href="/namespaces/{{ namespace.name }}/pingdom">
-              <li><a href="#{{ pingdomCheck.tf_label | replace(' ', '-') | lower }}">{{ pingdomCheck.name }}</a></li>
-            </a> 
+            <li><a href="#{{ pingdomCheck.tf_label | replace(' ', '-') | lower }}">{{ pingdomCheck.name }}</a></li>
           {% endfor %}
           </ul>
         {% else %}
@@ -79,7 +77,7 @@
 </table>
 
 {% if namespace.rdsInstances | length %}
-  <h1><u> RDS Instances </u></h1>
+  <h1>RDS Instances</h1>
   {% for rdsInstance in namespace.rdsInstances %}
     <h2 data-test="detail-page-title">{{ rdsInstance.tf_label }}</h2>
     <table class="componentData" id="{{ rdsInstance.tf_label | replace(' ', '-') | lower }}">
@@ -142,7 +140,7 @@
 {% endif %}
 
 {% if namespace.elasticache_cluster | length %}
-  <h1><u> Elasticache Cluster </u></h1>
+  <h1>Elasticache Cluster</h1>
   {% for elasticache_cluster in namespace.elasticache_cluster %}
     <h2 data-test="detail-page-title">{{ elasticache_cluster.tf_label }}</h2>
     <table class="componentData" id="{{ elasticache_cluster.tf_label | replace(' ', '-') | lower }}">
@@ -217,7 +215,7 @@
 {% endif %}
 
 {% if namespace.pingdom_check | length %}
-  <h1><u> Pingdom Check </u></h1>
+  <h1>Pingdom Check</h1>
   {% for pingdom in namespace.pingdom_check %}
     <h2 data-test="detail-page-title">{{ pingdom.tf_label }}</h2>
     <table class="componentData" id="{{ pingdom.tf_label | replace(' ', '-') | lower }}">
@@ -280,7 +278,7 @@
 {% endif %}
 
 {% if namespace.hmpps_template | length %}
-  <h1><u> HMPPS Templates </u></h1>
+  <h1>HMPPS Templates</h1>
   {% for hmppsTemplate in namespace.hmpps_template %}
     <h2>{{ hmppsTemplate.tf_label }}</h2>
     <table class="componentData" id="{{ hmppsTemplate.tf_label | replace(' ', '-') | lower }}">
