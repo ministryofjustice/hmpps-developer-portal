@@ -58,12 +58,12 @@
           { text: alertMessage(alert) }
           ] %}
           {% if loop.first %}
-            {%  set _ = firstAlertRow.push(tableRowContent) %}
+            {%  set firstAlertRowData = firstAlertRow.push(tableRowContent) %}
           {%  else %}
-            {%  set _ = additionalAlertsRow.push(tableRowContent) %}
+            {%  set additionalAlertRowData = additionalAlertsRow.push(tableRowContent) %}
           {% endif %}
         {%  endfor %}
-        {% set _ = firstAlertRow.push([
+        {% set additionalRows = firstAlertRow.push([
         { colspan: 4,
         text: additionalAlerts(additionalAlertsRow)}
         ]) %}

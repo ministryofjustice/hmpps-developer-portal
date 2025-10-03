@@ -74,55 +74,55 @@ const classifyVersionStatus = (current?: string, recommended?: string): dependen
   const currentParts = extractMajorMinorPatch(current)
   const recommendedParts = extractMajorMinorPatch(recommended)
 
-  let status: dependencyComparisonItem['status']
+  // let status: dependencyComparisonItem['status']
   if (recSegments >= 3) {
     // Exact version recommendation
     const cmp = compareVersionTriples(currentParts, recommendedParts)
     if (cmp < 0) {
-      status = 'needs-upgrade'
-    } else if (cmp === 0) {
-      status = 'aligned'
-    } else {
-      status = 'above-baseline'
+      return 'needs-upgrade'
     }
-  } else {
-    // Floating recommendation logic
-    const currentSegs = countVersionSegments(current)
-
-    if (recSegments === 2) {
-      // Major.minor recommended: compare majors first, then minors
-      const [cMaj, cMin] = [currentParts[0], currentParts[1]]
-      const [rMaj, rMin] = [recommendedParts[0], recommendedParts[1]]
-
-      if (cMaj < rMaj) {
-        status = 'needs-upgrade'
-      } else if (cMaj > rMaj) {
-        status = 'above-baseline'
-      } else if (currentSegs === 1) {
-        // Same major but current only specifies major (e.g., current=1, rec=1.4) → treat as aligned
-        status = 'aligned'
-      } else if ((cMin ?? 0) !== (rMin ?? 0)) {
-        // Same major and minor mismatch → needs-attention
-        status = 'needs-attention'
-      } else {
-        // Same major and same minor
-        status = 'aligned'
-      }
-    } else {
-      // recSegments === 1: major-only recommendation
-      const [cMaj] = [currentParts[0]]
-      const [rMaj] = [recommendedParts[0]]
-      if (cMaj < rMaj) status = 'needs-upgrade'
-      else if (cMaj > rMaj) status = 'above-baseline'
-      else status = 'aligned'
+    if (cmp === 0) {
+      return 'aligned'
     }
+    return 'above-baseline'
   }
 
-  logger.debug(
-    `[VersionClassify] current=${current} recommended=${recommended} recSegments=${recSegments} status=${status}`,
-  )
-  return status
+  // Floating recommendation logic
+  const currentSegs = countVersionSegments(current)
+
+  if (recSegments === 2) {
+    // Major.minor recommended: compare majors first, then minors
+    const [cMaj, cMin] = [currentParts[0], currentParts[1]]
+    const [rMaj, rMin] = [recommendedParts[0], recommendedParts[1]]
+
+    if (cMaj < rMaj) {
+      return 'needs-upgrade'
+    }
+    if (cMaj > rMaj) {
+      return 'above-baseline'
+    }
+    if (currentSegs === 1) {
+      // Same major but current only specifies major (e.g., current=1, rec=1.4) → treat as aligned
+      return 'aligned'
+    }
+    if ((cMin ?? 0) !== (rMin ?? 0)) {
+      // Same major and minor mismatch → needs-attention
+      return 'needs-attention'
+    }
+    // Same major and same minor
+    return 'aligned'
+  }
+  // recSegments === 1: major-only recommendation
+  const [cMaj] = [currentParts[0]]
+  const [rMaj] = [recommendedParts[0]]
+  if (cMaj < rMaj) return 'needs-upgrade'
+  if (cMaj > rMaj) return 'above-baseline'
+  return 'aligned'
 }
+
+// logger.debug(
+//   `[VersionClassify] current=${current} recommended=${recommended} recSegments=${recSegments} status=${status}`,
+// )
 
 // Extract current values from a component's versions structure, handling legacy shapes
 const getCurrentDependencyVersionsFromComponent = (component: Component) => {
