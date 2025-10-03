@@ -1,19 +1,18 @@
-import logger from '../../logger'
 import type { Component } from '../data/modelTypes'
 import type { recommendedVersions } from './recommendedVersionsService'
 
-export type dependencyKey = 'genericPrometheusAlerts' | 'genericService' | 'hmppsGradleSpringBoot'
+export type DependencyKey = 'genericPrometheusAlerts' | 'genericService' | 'hmppsGradleSpringBoot'
 
-export type dependencyComparisonItem = {
+export type DependencyComparisonItem = {
   componentName: string
-  key: dependencyKey
+  key: DependencyKey
   current?: string
   recommended?: string
   status: 'missing' | 'aligned' | 'needs-upgrade' | 'above-baseline' | 'needs-attention'
 }
 
-export type dependencyComparisonResult = {
-  items: dependencyComparisonItem[]
+export type DependencyComparisonResult = {
+  items: DependencyComparisonItem[]
   key?: string
   current?: string
   recommended?: string
@@ -67,7 +66,7 @@ const compareVersionTriples = (
   if (leftVersionTriple[2] !== rightVersionTriple[2]) return leftVersionTriple[2] > rightVersionTriple[2] ? 1 : -1
   return 0
 }
-const classifyVersionStatus = (current?: string, recommended?: string): dependencyComparisonItem['status'] => {
+const classifyVersionStatus = (current?: string, recommended?: string): DependencyComparisonItem['status'] => {
   if (!current || !recommended) return 'missing'
   // Handle floating recommendations: "1" => any 1.x.x, "1.12" => any 1.12.x
   const recSegments = countVersionSegments(recommended)
@@ -153,7 +152,7 @@ const getCurrentDependencyVersionsFromComponent = (component: Component) => {
 export const compareComponentDependencies = (
   component: Component,
   recommended: recommendedVersions,
-): dependencyComparisonItem[] => {
+): DependencyComparisonItem[] => {
   const currentVersions = getCurrentDependencyVersionsFromComponent(component)
   const recommendedVersionsMap = {
     genericPrometheusAlerts: recommended.helmDependencies.genericPrometheusAlerts,
@@ -161,8 +160,8 @@ export const compareComponentDependencies = (
     hmppsGradleSpringBoot: recommended.gradle.hmppsGradleSpringBoot,
   }
 
-  const comparisonItems: dependencyComparisonItem[] = []
-  const addComparisonItem = (key: dependencyKey, current?: string, recommendedVal?: string) => {
+  const comparisonItems: DependencyComparisonItem[] = []
+  const addComparisonItem = (key: DependencyKey, current?: string, recommendedVal?: string) => {
     comparisonItems.push({
       componentName: component.name,
       key,
@@ -190,8 +189,8 @@ export const compareComponentDependencies = (
 export const compareComponentsDependencies = (
   components: Component[],
   recommended: recommendedVersions,
-): dependencyComparisonResult => {
-  const allComparisonItems: dependencyComparisonItem[] = components.flatMap(c =>
+): DependencyComparisonResult => {
+  const allComparisonItems: DependencyComparisonItem[] = components.flatMap(c =>
     compareComponentDependencies(c, recommended),
   )
   const summary = allComparisonItems.reduce(
