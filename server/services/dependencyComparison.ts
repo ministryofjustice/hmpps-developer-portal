@@ -120,10 +120,6 @@ const classifyVersionStatus = (current?: string, recommended?: string): dependen
   return 'aligned'
 }
 
-// logger.debug(
-//   `[VersionClassify] current=${current} recommended=${recommended} recSegments=${recSegments} status=${status}`,
-// )
-
 // Extract current values from a component's versions structure, handling legacy shapes
 const getCurrentDependencyVersionsFromComponent = (component: Component) => {
   const versions = (component.versions || {}) as Record<string, unknown>
