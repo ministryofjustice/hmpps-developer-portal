@@ -86,9 +86,6 @@ const classifyVersionStatus = (current?: string, recommended?: string): Dependen
     return 'above-baseline'
   }
 
-  // Floating recommendation logic
-  const currentSegs = countVersionSegments(current)
-
   if (recSegments === 2) {
     // Major.minor recommended: compare majors first, then minors
     const [cMaj, cMin] = [currentParts[0], currentParts[1]]
@@ -100,7 +97,7 @@ const classifyVersionStatus = (current?: string, recommended?: string): Dependen
     if (cMaj > rMaj) {
       return 'above-baseline'
     }
-    if (currentSegs === 1) {
+    if (countVersionSegments(current) === 1) {
       // Same major but current only specifies major (e.g., current=1, rec=1.4) → treat as aligned
       return 'aligned'
     }
