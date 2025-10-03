@@ -17,7 +17,7 @@
         {% if namespace.rdsInstances | length %}
         <ul>
           {% for rdsInstance in namespace.rdsInstances %}
-            <li><a href="/reports/rds/{{ rdsInstance.tf_label }}-{{ rdsInstance.namespace }}">{{ rdsInstance.tf_label }}</a></li>
+            <li><a href="#{{ rdsInstance.tf_label | replace(' ', '-') | lower }}">{{ rdsInstance.tf_label }}</a></li>
           {% endfor %}
         </ul>
         {% else %}
@@ -26,24 +26,42 @@
       </td>
     </tr>
     <tr>
-      <th>Pingdom monitoring</th>
+      <th>Elasticache cluster</th>
       <td>
-        {% if namespace.pingdom_check | length %}
-            <a href="/namespaces/{{ namespace.name }}/pingdom" style="text-decoration: none;">
-              <span style="color: green">&#10004;</span>
-            </a> 
+        {% if namespace.elasticache_cluster | length %}
+        <ul>
+          {% for elastiCache in namespace.elasticache_cluster %}
+              <li><a href="#{{ elastiCache.tf_label | replace(' ', '-') | lower }}">{{ elastiCache.tf_label }}</a></li>
+          {% endfor %}
+        </ul>
         {% else %}
-          <span style="color: red">&#10008;</span> <!-- Red X mark -->
+          <p data-test="no-rds-instances">None</p>
         {% endif %}
       </td>
     </tr>
     <tr>
-      <th>Application </th>
+      <th>Pingdom check</th>
+      <td>
+        {% if namespace.pingdom_check | length %}
+          <ul>
+          {% for pingdomCheck in namespace.pingdom_check %}
+            <a href="/namespaces/{{ namespace.name }}/pingdom">
+              <li><a href="#{{ pingdomCheck.tf_label | replace(' ', '-') | lower }}">{{ pingdomCheck.name }}</a></li>
+            </a> 
+          {% endfor %}
+          </ul>
+        {% else %}
+          <p data-test="no-rds-instances">None</p>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>HMPPS template</th>
       <td>
         {% if namespace.hmpps_template | length %}
         <ul>
           {% for hmppsTemplate in namespace.hmpps_template %}
-            <li><a href="/namespaces/{{ namespace.name }}/templates/{{ hmppsTemplate.tf_label }}">{{ hmppsTemplate.tf_label }}</a></li>
+            <li><a href="#{{ hmppsTemplate.tf_label | replace(' ', '-') | lower }}">{{ hmppsTemplate.tf_label }}</a></li>
           {% endfor %}
         </ul>
         {% else %}
@@ -53,6 +71,266 @@
     </tr>
   </tbody>
 </table>
+
+{% if namespace.rdsInstances | length %}
+  <h1><u> RDS Instances </u></h1>
+  {% for rdsInstance in namespace.rdsInstances %}
+    <h2 data-test="detail-page-title">{{ rdsInstance.tf_label }}</h2>
+    <table class="componentData" id="{{ rdsInstance.tf_label | replace(' ', '-') | lower }}">
+      <tbody>
+        <tr>
+          <th>tf_label</th>
+          <td>{{ rdsInstance.tf_label }}</td>
+        </tr>
+        <tr>
+          <th>namespace</th>
+          <td>{{ rdsInstance.namespace }}</td>
+        </tr>
+        <tr>
+          <th>db_instance_class</th>
+          <td>{{ rdsInstance.db_instance_class }}</td>
+        </tr>
+        <tr>
+          <th>db_engine_version</th>
+          <td>{{ rdsInstance.db_engine_version }}</td>
+        </tr>
+        <tr>
+          <th>rds_family</th>
+          <td>{{ rdsInstance.rds_family }}</td>
+        </tr>
+        <tr>
+          <th>db_max_allocated_storage</th>
+          <td>{{ rdsInstance.db_max_allocated_storage }}</td>
+        </tr>
+        <tr>
+          <th>allow_major_version_upgrade</th>
+          <td>{{ rdsInstance.allow_major_version_upgrade }}</td>
+        </tr>
+        <tr>
+          <th>allow_minor_version_upgrade</th>
+          <td>{{ rdsInstance.allow_minor_version_upgrade }}</td>
+        </tr>
+        <tr>
+          <th>deletion_protection</th>
+          <td>{{ rdsInstance.deletion_protection }}</td>
+        </tr>
+        <tr>
+          <th>maintenance_window</th>
+          <td>{{ rdsInstance.maintenance_window }}</td>
+        </tr>
+        <tr>
+          <th>performance_insights_enabled</th>
+          <td>{{ rdsInstance.performance_insights_enabled }}</td>
+        </tr>
+        <tr>
+          <th>is_production</th>
+          <td>{{ rdsInstance.is_production }}</td>
+        </tr>
+        <tr>
+          <th>environment_name</th>
+          <td>{{ rdsInstance.environment_name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  {% endfor %}
+{% endif %}
+
+{% if namespace.elasticache_cluster | length %}
+  <h1><u> Elasticache Cluster </u></h1>
+  {% for elasticache_cluster in namespace.elasticache_cluster %}
+    <h2 data-test="detail-page-title">{{ elasticache_cluster.tf_label }}</h2>
+    <table class="componentData" id="{{ elasticache_cluster.tf_label | replace(' ', '-') | lower }}">
+      <tbody>
+        <tr>
+          <th>tf_label</th>
+          <td>{{ elasticache_cluster.tf_label }}</td>
+        </tr>
+        <tr>
+          <th>tf_mod_version</th>
+          <td>{{ elasticache_cluster.team_name }}</td>
+        </tr>
+        <tr>
+          <th>namespace</th>
+          <td>{{ elasticache_cluster.namespace }}</td>
+        </tr>
+        <tr>
+          <th>application</th>
+          <td>{{ elasticache_cluster.application }}</td>
+        </tr>
+        <tr>
+          <th>business_unit</th>
+          <td>{{ elasticache_cluster.business_unit }}</td>
+        </tr>
+        <tr>
+          <th>engine_version</th>
+          <td>{{ elasticache_cluster.engine_version }}</td>
+        </tr>
+        <tr>
+          <th>infrastructure_support</th>
+          <td>{{ elasticache_cluster.infrastructure_support }}</td>
+        </tr>
+        <tr>
+          <th>is_production</th>
+          <td>{{ elasticache_cluster.is_production }}</td>
+        </tr>
+        <tr>
+          <th>node_type</th>
+          <td>{{ elasticache_cluster.node_type }}</td>
+        </tr>
+        <tr>
+          <th>number_cache_clusters</th>
+          <td>{{ elasticache_cluster.number_cache_clusters }}</td>
+        </tr>
+        <tr>
+          <th>parameter_group_name</th>
+          <td>{{ elasticache_cluster.parameter_group_name }}</td>
+        </tr>
+        <tr>
+          <th>team_name</th>
+          <td>{{ elasticache_cluster.team_name }}</td>
+        </tr>
+        <tr>
+          <th>is_production</th>
+          <td>{{ elasticache_cluster.is_production }}</td>
+        </tr>
+        <tr>
+          <th>environment_name</th>
+          <td>{{ elasticache_cluster.environment_name }}</td>
+        </tr>
+        <tr>
+          <th>source code</th>
+          <td>
+            <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ elasticache_cluster.tf_filename }}">
+              {{ elasticache_cluster.tf_filename }}
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  {% endfor %}
+{% endif %}
+
+{% if namespace.pingdom_check | length %}
+  <h1><u> Pingdom Check </u></h1>
+  {% for pingdom in namespace.pingdom_check %}
+    <h2 data-test="detail-page-title">{{ pingdom.tf_label }}</h2>
+    <table class="componentData" id="{{ pingdom.tf_label | replace(' ', '-') | lower }}">
+      <tbody>
+        <tr>
+          <th>tf_label</th>
+          <td>{{ pingdom.tf_label }}</td>
+        </tr>
+        <tr>
+          <th>name</th>
+          <td>{{ pingdom.name }}</td>
+        </tr>
+        <tr>
+          <th>host</th>
+          <td>{{ pingdom.host }}</td>
+        </tr>
+        <tr>
+          <th>url</th>
+          <td>
+            <a href="{{ pingdom.url | replace('/https/', 'https://') }}">
+              {{ pingdom.url | replace('/https/', 'https://') }}
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <th>probefilters</th>
+          <td>{{ pingdom.probefilters }}</td>
+        </tr>
+        <tr>
+          <th>encryption</th>
+          <td>{{ pingdom.encryption }}</td>
+        </tr>
+        <tr>
+          <th>notifywhenbackup</th>
+          <td>{{ pingdom.notifywhenbackup }}</td>
+        </tr>
+        <tr>
+          <th>sendnotificationwhendown</th>
+          <td>{{ pingdom.sendnotificationwhendown }}</td>
+        </tr>
+        <tr>
+          <th>notifyagainevery</th>
+          <td>{{ pingdom.notifyagainevery }}</td>
+        </tr>
+        <tr>
+          <th>port</th>
+          <td>{{ pingdom.port }}</td>
+        </tr>
+        <tr>
+          <th>source code</th>
+          <td>
+            <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ pingdom.tf_filename }}">
+              {{ pingdom.tf_filename }}
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  {% endfor %}
+{% endif %}
+
+{% if namespace.hmpps_template | length %}
+  <h1><u> HMPPS Templates </u></h1>
+  {% for hmppsTemplate in namespace.hmpps_template %}
+    <h2>{{ hmppsTemplate.tf_label }}</h2>
+    <table class="componentData" id="{{ hmppsTemplate.tf_label | replace(' ', '-') | lower }}">
+      <tbody>
+        <tr>
+          <th>tf_label</th>
+          <td>{{ hmppsTemplate.tf_label }}</td>
+        </tr>
+        <tr>
+          <th>namespace</th>
+          <td>{{ hmppsTemplate.namespace }}</td>
+        </tr>
+        <tr>
+          <th>Application</th>
+          <td>{{ hmppsTemplate.application }}</td>
+        </tr>
+        <tr>
+          <th>Github Repo</th>
+          <td>
+            <a href="https://github.com/ministryofjustice/{{ hmppsTemplate.github_repo }}">
+              {{ hmppsTemplate.github_repo }}
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <th>source_template_repo</th>
+          <td>{{ hmppsTemplate.source_template_repo }}</td>
+        </tr>
+        <tr>
+          <th>prevent_self_review</th>
+          <td>{{ hmppsTemplate.prevent_self_review }}</td>
+        </tr>
+        <tr>
+          <th>reviewer_teams</th>
+          <td>
+            {% for team in hmppsTemplate.reviewer_teams %}
+              {{ team }}<br>
+            {% endfor %}
+          </td>
+        </tr>
+        <tr>
+          <th>selected_branch_patterns</th>
+          <td>
+            {% for pattern in hmppsTemplate.selected_branch_patterns %}
+              {{ pattern }}<br>
+            {% endfor %}
+          </td>
+        </tr>
+        <tr>
+          <th>protected_branches_only</th>
+          <td>{{ hmppsTemplate.protected_branches_only }}</td>
+        </tr>
+      </tbody>
+    </table>
+  {% endfor %}
+{% endif %}
 
 {% endblock %}
 

@@ -13,57 +13,60 @@
 
 {{ breadCrumb(namespace.name, [{title: "Namespaces", href: "/namespaces"}]) }}
 
-{% for pingdomItem in namespace.pingdom %}
-  <h2>{{ pingdomItem.tf_label }}</h2>
+  <h1> pingdom_check </h1>
+  <h2> {{ namespace.pingdom.name }} </h2>
   <table class="componentData">
     <tbody>
       <tr>
         <th>tf_label</th>
-        <td>{{ pingdomItem.tf_label }}</td>
+        <td>{{ namespace.pingdom.tf_label }}</td>
       </tr>
       <tr>
         <th>name</th>
-        <td>{{ pingdomItem.name }}</td>
+        <td>{{ namespace.pingdom.name }}</td>
       </tr>
       <tr>
         <th>host</th>
-        <td>{{ pingdomItem.host }}</td>
+        <td>{{ namespace.pingdom.host }}</td>
       </tr>
       <tr>
         <th>url</th>
         <td>
-          <a href="{{ pingdomItem.url | replace('/https/', 'https://') }}">
-            {{ pingdomItem.url | replace('/https/', 'https://') }}
+          <a href="{{ namespace.pingdom.url | replace('/https/', 'https://') }}">
+            {{ namespace.pingdom.url | replace('/https/', 'https://') }}
           </a>
         </td>
       </tr>
       <tr>
         <th>probefilters</th>
-        <td>{{ pingdomItem.probefilters }}</td>
+        <td>{{ namespace.pingdom.probefilters }}</td>
       </tr>
       <tr>
         <th>encryption</th>
-        <td>{{ pingdomItem.encryption }}</td>
+        <td>{{ namespace.pingdom.encryption }}</td>
       </tr>
       <tr>
         <th>notifywhenbackup</th>
-        <td>{{ pingdomItem.notifywhenbackup }}</td>
+        <td>{{ namespace.pingdom.notifywhenbackup }}</td>
       </tr>
       <tr>
         <th>sendnotificationwhendown</th>
-        <td>{{ pingdomItem.sendnotificationwhendown }}</td>
+        <td>{{ namespace.pingdom.sendnotificationwhendown }}</td>
       </tr>
       <tr>
         <th>notifyagainevery</th>
-        <td>{{ pingdomItem.notifyagainevery }}</td>
+        <td>{{ namespace.pingdom.notifyagainevery }}</td>
       </tr>
       <tr>
         <th>port</th>
-        <td>{{ pingdomItem.port }}</td>
+        <td>{{ namespace.pingdom.port }}</td>
+      </tr>
+      <tr>
+        <th>source code</th>
+        <td><a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ namespace.pingdom.tf_filename }}">{{ namespace.pingdom.tf_filename }}</a></td>
       </tr>
     </tbody>
   </table>
-{% endfor %}
 
 {% endblock %}
 

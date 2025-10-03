@@ -60,7 +60,7 @@ const mockNamespaces = [
 
 const mockNamespace = {
   id: 123,
-  name: 'hmpps-mock-namespace',
+  name: 'hmpps-mock-namespace-api-dev',
   createdAt: '2024-08-22T16:47:39.016Z',
   updatedAt: '2025-09-08T06:06:30.097Z',
   publishedAt: '2024-08-22T16:47:39.007Z',
@@ -157,7 +157,7 @@ describe('/namespaces', () => {
   describe('GET /:namespaceSlug', () => {
     it('should fetch namespace data and display RDS instances', async () => {
       return request(app)
-        .get('/namespaces/hmpps-mock-namespace')
+        .get('/namespaces/hmpps-mock-namespace-api-dev')
         .expect('Content-Type', /html/)
         .expect(200)
         .expect(res => {
@@ -166,9 +166,6 @@ describe('/namespaces', () => {
           const namespaceRDSLink = table.find('td ul li a')
           expect(serviceCatalogueService.getNamespace).toHaveBeenCalled()
           expect(namespaceRDSLink.text().trim()).toBe('hmpps_mock_namespace_api_rds')
-          expect(namespaceRDSLink.attr('href')).toBe(
-            '/reports/rds/hmpps_mock_namespace_api_rds-hmpps-mock-namespace-api-dev',
-          )
         })
     })
   })
