@@ -11,7 +11,9 @@
 
   {{ breadCrumb(team.name, [{title: "Teams", href: "/teams"}]) }}
 
-  <h3>The information on this page relates to products & components in the production environment only</h3>
+  {% call govukInsetText({ classes: "govuk-!-margin-0 guidance-panel" }) %}
+    <p>The information on this page relates to products and components in the production environment only</p>
+  {% endcall %}
 
   <h1>{{ team.name }}</h1>
 

@@ -1,12 +1,14 @@
 {% extends "../partials/layout.njk" %}
 {% from "../partials/driftRadiatorTable.njk" import driftRadiatorTable %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set pageTitle = applicationName + " - " + component.name %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
-{% macro githubTeams(teams) %}
+  {% macro githubTeams(teams) %}
   {% for team in teams %}
    <a href="/github-teams/{{team}}" target="_blank" class="govuk-link--no-visited-state">{{team}}</a>{%if not loop.last%}, {% endif %}
   {% endfor %}
@@ -20,66 +22,97 @@
 
 {{ breadCrumb(component.name, breadCrumbList) }}
 
-<div class="govuk-grid-row">
+  <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <h1 data-test="detail-page-title">{{ component.name }} {% if component.archived == true %} (Archived){% endif %}</h1>
+
+    {% macro alertMessage(alert) %}
+      {{ govukDetails({
+      summaryText: "Show message",
+      text: alert.message
+      }) }}
+    {% endmacro %}
+
+    {% macro additionalAlerts(alerts) %}
+      {{ govukDetails({
+      summaryText: "Show all " + component.alerts.length + " alerts",
+      text: nestedTable(alerts)
+      }) }}
+    {% endmacro %}
+
+    {% macro nestedTable(alerts) %}
+      {{ govukTable({
+      rows: alerts
+      }) }}
+    {% endmacro %}
+    
     {% if component.alerts | length %}
-      <div class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts" style="border-left: 5px solid #d4351c; background-color: #fef1f0;">
-        <h2 class="govuk-heading-m">Active alerts</h2>
-        <table class="govuk-table" style="table-layout: fixed; width: 100%;">
-          <thead class="govuk-table__head">
-            <tr class="govuk-table__row">
-              <th class="govuk-table__header">Alert Name</th>
-              <th class="govuk-table__header">Environment</th>
-              <th class="govuk-table__header">Summary</th>
-              <th class="govuk-table__header">Message</th>
-            </tr>
-          </thead>
-          <tbody class="govuk-table__body">
-            {% set firstAlert = component.alerts[0] %}
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ firstAlert.alertname }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ firstAlert.environment }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ firstAlert.summary }}</td>
-              <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">
-                <details class="govuk-details" data-module="govuk-details">
-                  <summary class="govuk-details__summary"><span class="govuk-details__summary-text">Show message</span></summary>
-                  <div class="govuk-details__text">{{ firstAlert.message }}</div>
-                </details>
-              </td>
-            </tr>
-            {% if component.alerts.length > 1 %}
-            <tr>
-              <td colspan="4" class="govuk-table__cell govuk-!-padding-0">
-                <details class="govuk-details" data-module="govuk-details">
-                  <summary class="govuk-details__summary"><span class="govuk-details__summary-text">Show all {{ component.alerts.length }} alerts</span></summary>
-                  <table class="govuk-table" style="table-layout: fixed; width: 100%;">
-                    <tbody class="govuk-table__body">
-                      {% for alert in component.alerts %}
-                        {% if not loop.first %}
-                        <tr class="govuk-table__row">
-                          <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ alert.alertname }}</td>
-                          <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ alert.environment }}</td>
-                          <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">{{ alert.summary }}</td>
-                          <td class="govuk-table__cell" style="white-space: normal; word-break: break-word;">
-                            <details class="govuk-details" data-module="govuk-details">
-                              <summary class="govuk-details__summary"><span class="govuk-details__summary-text">Show message</span></summary>
-                              <div class="govuk-details__text">{{ alert.message }}</div>
-                            </details>
-                          </td>
-                        </tr>
-                        {% endif %}
-                      {% endfor %}
-                    </tbody>
-                  </table>
-                </details>
-              </td>
-            </tr>
-            {% endif %}
-          </tbody>
-        </table>
+      <div id ="component-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+        {%  set firstAlertRow = [] %}
+        {%  set additionalAlertsRow = [] %}
+        {%  for alert in component.alerts %}
+          {%  set tableRowContent =  [
+          { text: alert.alertname },
+          { text: alert.environment },
+          { text: alert.summary },
+          { text: alertMessage(alert) }
+          ] %}
+          {% if loop.first %}
+            {%  set firstAlertRowData = firstAlertRow.push(tableRowContent) %}
+          {%  else %}
+            {%  set additionalAlertRowData = additionalAlertsRow.push(tableRowContent) %}
+          {% endif %}
+        {%  endfor %}
+        {% set additionalRows = firstAlertRow.push([
+        { colspan: 4,
+        text: additionalAlerts(additionalAlertsRow)}
+        ]) %}
+
+        {{ govukTable({
+        caption: "Active Alerts",
+        captionClasses: "govuk-table__caption--m",
+        firstCellIsHeader: true,
+        head: [
+        { text: "Alert Name" },
+        { text: "Environment" },
+        { text: "Summary" },
+        { text: "Message" }
+        ],
+        rows: firstAlertRow
+        }) }}
       </div>
-    {% endif %}
+    {%  endif %}
+
+
+  {%  if upgradeNeeded %}
+    <div id = "dependency-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+      {%  set filteredRows = [] %}
+      {% for item in component.dependencyComparison.items %}
+        {%  if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
+          {%  set _ = filteredRows.push([
+          { text: item.key },
+          { text: item.current },
+          { text: item.recommended }
+          ]) %}
+        {%  endif %}
+      {%  endfor %}
+
+      {{ govukTable({
+      caption: "Recommended Dependency Updates",
+      captionClasses: "govuk-table__caption--m",
+      firstCellIsHeader: true,
+      head: [
+      { text: "Dependency" },
+      { text: "Current Version" },
+      { text: "Recommended Version" }
+      ],
+      rows: filteredRows,
+      format: "numeric"
+      }) }}
+    </div>
+  {%  endif %}
+
+
     <table class="componentData">
       <tbody>
         <tr>
