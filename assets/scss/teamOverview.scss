@@ -1,0 +1,58 @@
+.monitoring-channel {
+  &-warning {
+    background-color: #fef7f7;
+    padding: 20px;
+    border-left: 5px solid $govuk-error-colour;
+    margin-bottom: 30px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  &-count {
+    background-color: $govuk-error-colour;
+    color: govuk-colour("white");
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @include govuk-font($size: 24, $weight: bold);
+    flex-shrink: 0;
+  }
+
+  &-details {
+    flex: 1;
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+
+  &-icon {
+    @include govuk-font-size(19);
+    color: $govuk-error-colour;
+  }
+
+  &-title {
+    @include govuk-font($size: 19, $weight: bold);
+    color: $govuk-error-colour;
+  }
+
+  &-text {
+    margin: 0;
+    @include govuk-font-size(19);
+  }
+}
+
+.monitoring-channel-structure {
+  background-color: govuk-colour("light-grey");
+  padding: 15px;
+  border-radius: 4px;
+  font-family: monospace;
+}

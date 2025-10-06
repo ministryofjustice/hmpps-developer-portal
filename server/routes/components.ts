@@ -52,6 +52,7 @@ export default function routes({
     const displayComponent = {
       name: component.name,
       description: component.description,
+      archived: component.archived,
       title: component.title,
       jiraProjectKeys: component.jira_project_keys,
       githubWrite: component.github_project_teams_write,

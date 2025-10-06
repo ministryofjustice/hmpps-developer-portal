@@ -24,7 +24,7 @@
 
   <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h1 data-test="detail-page-title">{{ component.name }}</h1>
+    <h1 data-test="detail-page-title">{{ component.name }} {% if component.archived == true %} (Archived){% endif %}</h1>
 
     {% macro alertMessage(alert) %}
       {{ govukDetails({
@@ -45,7 +45,7 @@
       rows: alerts
       }) }}
     {% endmacro %}
-
+    
     {% if component.alerts | length %}
       <div id ="component-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
         {%  set firstAlertRow = [] %}
@@ -118,6 +118,10 @@
         <tr>
           <th>Description</th>
           <td data-test="description">{{ component.description }}</td>
+        </tr>
+        <tr>
+          <th>Archived</th>
+          <td>{{ component.archived }}</td>
         </tr>
         <tr>
           <th>Title</th>
