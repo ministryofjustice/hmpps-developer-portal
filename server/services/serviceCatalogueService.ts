@@ -265,7 +265,7 @@ export default class ServiceCatalogueService {
     return componentRequestsData.sort(sortComponentRequestData)
   }
 
-  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
     return strapiApiClient.getGithubRepoRequest({ repoName })
   }

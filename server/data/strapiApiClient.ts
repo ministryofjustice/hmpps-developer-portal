@@ -275,13 +275,13 @@ export default class StrapiApiClient {
       .then(unwrapListResponse)
   }
 
-  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest[]> {
     return this.restClient
-      .get<SingleResponse<Strapi.GithubRepoRequest>>({
+      .get<ListResponse<Strapi.GithubRepoRequest>>({
         path: '/v1/github-repo-requests',
         query: `filters[github_repo][$eq]=${repoName}`,
       })
-      .then(unwrapSingleResponse)
+      .then(unwrapListResponse)
   }
 
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<void> {

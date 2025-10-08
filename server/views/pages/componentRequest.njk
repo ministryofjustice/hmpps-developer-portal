@@ -19,6 +19,16 @@
     <table class="componentData">
       <tbody>
         <tr>
+          <th>Request Type</th>
+          <td>
+            {% if componentRequest.request_type %}
+              {{ componentRequest.request_type }}
+            {% else %}
+              Add
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
           <th>Description</th>
           <td>{{ componentRequest.repo_description }}</td>
         </tr>
@@ -29,15 +39,17 @@
         <tr>
           <th>Jira Project Keys</th>
           <td data-test="jira-project-keys">
-            {% if componentRequest.jira_project_keys | length %}
-              {% for jira in componentRequest.jira_project_keys %}
-              <a class="govuk-link--no-visited-state" target="_blank" href="https://dsdmoj.atlassian.net/browse/{{ jira }}?searchContentType=project">
-              <image src="/assets/images/jira_favicon.ico" width="32" height="32"></image>
-              {{ jira }} (opens Jira)
-              </a>
-              {% endfor %}
-            {% else %}
-              No Jira &#129301; - please provide one.
+            {% if componentRequest.request_type != 'Archive' %}
+              {% if componentRequest.jira_project_keys | length %}
+                {% for jira in componentRequest.jira_project_keys %}
+                <a class="govuk-link--no-visited-state" target="_blank" href="https://dsdmoj.atlassian.net/browse/{{ jira }}?searchContentType=project">
+                <image src="/assets/images/jira_favicon.ico" width="32" height="32"></image>
+                {{ jira }} (opens Jira)
+                </a>
+                {% endfor %}
+              {% else %}
+                No Jira &#129301; - please provide one.
+              {% endif %}
             {% endif %}
           </td>
         </tr>
@@ -59,7 +71,11 @@
         </tr>
         <tr>
           <th>GitHub Visibility</th>
-          <td>{{ componentRequest.github_project_visibility }}</td>
+          <td>
+            {% if componentRequest.request_type != 'Archive' %}
+              {{ componentRequest.github_project_visibility }}
+            {% endif %}
+          </td>
         </tr>
         <tr>
           <th>Slack channel for security notification</th>
@@ -108,4 +124,3 @@
 </div>
 
 {% endblock %}
-
