@@ -441,9 +441,13 @@ describe('strapiApiClient', () => {
     describe('getGithubRepoRequest', () => {
       it('should return a single github repo request', async () => {
         const githubRepoRequest = {
-          data: { documentId: 'documentid1', github_repo: 'test-repo' },
+          data: { documentId: 'documentid1', github_repo: 'test-repo', request_type: 'Add' },
         } as SingleResponse<Strapi.GithubRepoRequest>
-        const githubRepoRequestResponse = { documentId: 'documentid1', github_repo: 'test-repo' } as GithubRepoRequest
+        const githubRepoRequestResponse = {
+          documentId: 'documentid1',
+          github_repo: 'test-repo',
+          request_type: 'Add',
+        } as GithubRepoRequest
         fakeStrapiApi.get('/github-repo-requests?filters[github_repo][$eq]=test-repo').reply(200, githubRepoRequest)
         const output = await strapiApiClient.getGithubRepoRequest({ repoName: 'test-repo' })
         expect(output).toEqual(githubRepoRequestResponse)
