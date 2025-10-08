@@ -57,42 +57,48 @@ export default function routes({ componentNameService, serviceCatalogueService, 
             href: '#github_repo',
           })
         }
-      } else {
-        if (repoExists && formData.option === 'Add') {
+      } else if (formData.option === 'Add') {
+        if (repoExists) {
           validationErrors.push({
             field: 'github_repo',
             message: 'This repository name already exists in components collection - please choose a different name',
             href: '#github_repo',
           })
         }
-        if (repoRequestExists && formData.option === 'Add') {
+        if (repoRequestExists) {
           validationErrors.push({
             field: 'github_repo',
             message: 'A request for this component already exists in queue, please choose a different name',
             href: '#github_repo',
           })
         }
-        if (!repoName.startsWith('hmpps') && formData.option === 'Add') {
+        if (!repoName.startsWith('hmpps')) {
           validationErrors.push({
             field: 'github_repo',
             message: 'The repository name must start with "hmpps"',
             href: '#github_repo',
           })
         }
-        if (repoName.length >= 100 && formData.option === 'Add') {
+        if (repoName.length >= 100) {
           validationErrors.push({
             field: 'github_repo',
             message: 'The repository name must be less than 100 characters',
             href: '#github_repo',
           })
         }
-        if (!/^[a-zA-Z0-9-]+$/.test(repoName) && formData.option === 'Add') {
+        if (!/^[a-zA-Z0-9-]+$/.test(repoName)) {
           validationErrors.push({
             field: 'github_repo',
             message: 'The repository name must only contain alphanumeric characters and hyphens',
             href: '#github_repo',
           })
         }
+      } else {
+        validationErrors.push({
+          field: 'option',
+          message: 'Please select a valid option',
+          href: '#option',
+        })
       }
       return validationErrors
     })
@@ -152,18 +158,19 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     res.send(componentRequests)
   })
 
-  router.get('/:repo_name/:request_type', async (req, res) => {
-    const repoName = req.params.repo_name
-    const requestType = req.params.request_type
+  router.get('/:repoName/:requestType', async (req, res) => {
+    const { repoName } = req.params
+    const requestType = req.params.requestType || 'Add'
     const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName }).then(data => {
-      const mappedData = data.map(item => {
-        if (item.request_type === requestType) {
-          return item // Return the matching item
-        }
-        return null // Return null for non-matching items
-      })
-
-      return mappedData.filter(item => item !== null)[0]
+      // Check if multiple records exist
+      if (data.length > 1) {
+        // Find the record that matches requestType
+        const matchingRecord = data.find(item => item.request_type === requestType)
+        // If no matching record, fallback to the record with request_type as null
+        return matchingRecord || data.find(item => item.request_type === null)
+      }
+      // If only one record exists, return it
+      return data[0]
     })
     return res.render('pages/componentRequest', { componentRequest })
   })

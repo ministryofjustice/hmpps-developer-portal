@@ -4,7 +4,7 @@ jQuery(function () {
       data: 'github_repo',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(
-          `<a href="/component-requests/${rowData.github_repo}/${rowData.request_type}">${rowData.github_repo}</a>`,
+          `<a href="/component-requests/${rowData.github_repo}/${rowData.request_type || 'Add'}">${rowData.github_repo}</a>`,
         )
       },
     },
