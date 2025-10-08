@@ -155,9 +155,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   router.get('/:repo_name/:request_type', async (req, res) => {
     const repoName = req.params.repo_name
     const requestType = req.params.request_type
-    // const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName })
     const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName }).then(data => {
-      // Use map to create a new array with matching items
       const mappedData = data.map(item => {
         if (item.request_type === requestType) {
           return item // Return the matching item
@@ -165,7 +163,6 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         return null // Return null for non-matching items
       })
 
-      // Filter out null values and return the first matching item
       return mappedData.filter(item => item !== null)[0]
     })
     return res.render('pages/componentRequest', { componentRequest })
