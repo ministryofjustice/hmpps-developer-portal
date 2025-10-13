@@ -44,6 +44,96 @@
 
   <h3 class="govuk-heading-m">Alerts and scans requiring investigation</h3>
 
+  {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+
+
+  <div class="govuk-grid-row hmpps-miniSummaryWrapper govuk-!-margin-bottom-6">
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-summary-card">
+        <div class= activeAlertsNumber>
+          <div class="govuk-summary-card__content">
+
+            {{ govukSummaryList({
+            rows: [
+            {
+            key: { text: "Active Alerts" },
+            value: { classes: "alertsTotal", text: team.alertSummary.total },
+            actions:
+            { items: [
+            {
+            href: "/alerts?environment=prod&team=" + team.encodedTeamName,
+            text: "See Active Alerts",
+            visuallyHiddenText: "See Active Alerts"
+            }
+            ]}
+            }],
+            classes: "activeAlertsBox"
+            }) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__content">
+          <div class= activeAlertsNumber>
+
+            {{ govukSummaryList({
+            rows: [
+            {
+            key: { text: "Trivy (critical & high)" },
+            value: { classes: "hidden" }
+            },
+            { key: { text: team.criticalAndHighTrivy } },
+            {
+            actions:
+            { items: [
+            {
+            href: "/trivy-scans?checkbox=environment-prod&team=" + team.encodedTeamName,
+            text: "See Trivy scan results",
+            visuallyHiddenText: "address"
+            }
+            ]}
+            }]
+            }) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__content">
+          <div class="govuk-summary-list">
+          <div class= activeAlertsNumber>
+
+            {{ govukSummaryList({
+            rows: [
+            {
+            key: { text: "Veracode (very high & high)" },
+            id:  "totalAlertsNumber"
+            },
+            { key: { text: team.veryHighAndHighVeracode } },
+            {
+            actions:
+            { items: [
+            {
+            href: "/veracode?team=" + team.encodedTeamName,
+            text: "See Veracode scan results",
+            visuallyHiddenText: "address"
+            }
+            ]}
+            }]
+            }) }}
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="govuk-grid-row hmpps-miniSummaryWrapper govuk-!-margin-bottom-6">
     <div class="govuk-grid-column-one-third">
       <div class="govuk-summary-card">

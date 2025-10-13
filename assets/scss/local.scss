@@ -20,7 +20,7 @@
       background-color: #999900;
     }
   }
-  
+
   th, td {
     color: white;
     padding: govuk-spacing(1);
@@ -155,7 +155,7 @@
 
 #githubTeamsTable {
   width: 100%;
-  
+
   th, td {
     padding: govuk-spacing(1);
     vertical-align: middle;
@@ -186,7 +186,7 @@
 .banner {
   background-color: #f4f4f4;
   text-align: left;
-  font-family: Arial, sans-serif; 
+  font-family: Arial, sans-serif;
   font-size: 40px;
   font-weight: bold;
   border-bottom: 2px solid #ccc;
@@ -311,15 +311,15 @@
 }
 
 
-.app-\!-width-one-fifth{ 
+.app-\!-width-one-fifth{
   width: 20% !important
 }
 
-.app-\!-width-one-sixth{ 
+.app-\!-width-one-sixth{
     width: 16.66% !important
 }
 
-.app-\!-width-one-seventh{ 
+.app-\!-width-one-seventh{
   width: 14.29% !important
 }
 
@@ -429,6 +429,29 @@
   }
 }
 
+.activeAlertsNumber {
+  .govuk-summary-card__content {
+     .alertsTotal {
+      font-size: xxx-large;
+      color: red;
+       font-weight: bold;
+    }
+  }
+}
+  .activeAlertsBox {
+    display: flex;
+    //justify-content: center;
+    flex-direction: column !important;
+  }
+
+.activeAlertsNumber {
+  .govuk-summary-card__content {
+    .hidden {
+      display: none;
+    }
+  }
+}
+
 // For update buttons on filterDropDowns partial when page is bigger than 640px
 @media(width > 640px) {
   .monitor-selectors {
@@ -442,4 +465,5 @@
       margin-bottom: 2px;
     }
   }
+
 }
