@@ -13,6 +13,7 @@ generic-service:
     NODE_ENV: "development"
     RECOMMENDED_VERSIONS_TTL_MS: "21600000"
     HMPPS_TEMPLATE_COMPONENT_NAME: "hmpps-template-kotlin"
+    RECOMMENDED_VERSIONS_KOTLIN_ONLY: "true"
 
   namespace_secrets:
     elasticache-redis:
