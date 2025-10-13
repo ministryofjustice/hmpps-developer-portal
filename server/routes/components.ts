@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import config from '../config'
 import type { Services } from '../services'
 import logger from '../../logger'
 import {
@@ -95,36 +96,42 @@ export default function routes({
     displayComponent.alerts = alerts
 
     let upgradeNeeded = false
+
+    const isKotlin = (component.language || '') === 'Kotlin'
+    const { kotlinOnly } = config.recommendedVersions
+
     // Dependency comparison for this component
-    try {
-      const recommended = await recommendedVersionsService.getRecommendedVersions()
-      const comparison = compareComponentsDependencies([component], recommended)
-      ;(displayComponent as Record<string, unknown>).dependencyComparison = comparison
+    if (!kotlinOnly || isKotlin) {
+      try {
+        const recommended = await recommendedVersionsService.getRecommendedVersions()
+        const comparison = compareComponentsDependencies([component], recommended)
+        ;(displayComponent as Record<string, unknown>).dependencyComparison = comparison
 
-      const { totalItems, aligned, needsUpgrade, aboveBaseline, missing } = comparison.summary
-      logger.info(
-        `[DependencyComparison] component=${component.name} source=${comparison.recommendedSource} items=${totalItems} aligned=${aligned} needsUpgrade=${needsUpgrade} aboveBaseline=${aboveBaseline} missing=${missing}`,
-      )
-      const nonAligned = comparison.items.filter(items => items.status !== 'aligned')
-      const previewCount = Math.min(10, nonAligned.length)
-      if (previewCount > 0) {
-        const preview = nonAligned
-          .slice(0, previewCount)
-          .map(
-            item =>
-              `${item.componentName}:${item.key} current=${item.current ?? 'missing'} → recommended=${item.recommended ?? 'missing'} [${item.status}]`,
-          )
-          .join('; ')
+        const { totalItems, aligned, needsUpgrade, aboveBaseline, missing } = comparison.summary
         logger.debug(
-          `[DependencyComparison] component details (first ${previewCount} of ${nonAligned.length} non-aligned): ${preview}`,
+          `[DependencyComparison] component=${component.name} source=${comparison.recommendedSource} items=${totalItems} aligned=${aligned} needsUpgrade=${needsUpgrade} aboveBaseline=${aboveBaseline} missing=${missing}`,
         )
+        const nonAligned = comparison.items.filter(items => items.status !== 'aligned')
+        const previewCount = Math.min(10, nonAligned.length)
+        if (previewCount > 0) {
+          const preview = nonAligned
+            .slice(0, previewCount)
+            .map(
+              item =>
+                `${item.componentName}:${item.key} current=${item.current ?? 'missing'} → recommended=${item.recommended ?? 'missing'} [${item.status}]`,
+            )
+            .join('; ')
+          logger.debug(
+            `[DependencyComparison] component details (first ${previewCount} of ${nonAligned.length} non-aligned): ${preview}`,
+          )
 
-        if ((component.language === 'Kotlin' && comparison.summary.needsAttention) || comparison.summary.needsUpgrade) {
-          upgradeNeeded = true
+          upgradeNeeded =
+            (component.language === 'Kotlin' && comparison.summary.needsAttention > 0) ||
+            comparison.summary.needsUpgrade > 0
         }
+      } catch (e) {
+        logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(e)}`)
       }
-    } catch (e) {
-      logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(e)}`)
     }
 
     return res.render('pages/component', { component: displayComponent, upgradeNeeded })
