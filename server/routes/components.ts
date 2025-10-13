@@ -97,7 +97,7 @@ export default function routes({
 
     let upgradeNeeded = false
 
-    const isKotlin = (component.language || '').toLowerCase() === 'kotlin'
+    const isKotlin = (component.language || '') === 'Kotlin'
     const { kotlinOnly } = config.recommendedVersions
 
     // Dependency comparison for this component
@@ -108,7 +108,7 @@ export default function routes({
         ;(displayComponent as Record<string, unknown>).dependencyComparison = comparison
 
         const { totalItems, aligned, needsUpgrade, aboveBaseline, missing } = comparison.summary
-        logger.info(
+        logger.debug(
           `[DependencyComparison] component=${component.name} source=${comparison.recommendedSource} items=${totalItems} aligned=${aligned} needsUpgrade=${needsUpgrade} aboveBaseline=${aboveBaseline} missing=${missing}`,
         )
         const nonAligned = comparison.items.filter(items => items.status !== 'aligned')
