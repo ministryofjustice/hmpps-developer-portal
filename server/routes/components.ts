@@ -125,12 +125,9 @@ export default function routes({
             `[DependencyComparison] component details (first ${previewCount} of ${nonAligned.length} non-aligned): ${preview}`,
           )
 
-          if (
-            (component.language === 'Kotlin' && comparison.summary.needsAttention) ||
-            comparison.summary.needsUpgrade
-          ) {
-            upgradeNeeded = true
-          }
+          upgradeNeeded =
+            (component.language === 'Kotlin' && comparison.summary.needsAttention > 0) ||
+            comparison.summary.needsUpgrade > 0
         }
       } catch (e) {
         logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(e)}`)
