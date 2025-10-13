@@ -1,6 +1,5 @@
 import { Router } from 'express'
-import { config } from 'process'
-import configs from '../config'
+import config from '../config'
 import type { Services } from '../services'
 import logger from '../../logger'
 import {
@@ -99,14 +98,7 @@ export default function routes({
     let upgradeNeeded = false
 
     const isKotlin = (component.language || '').toLowerCase() === 'kotlin'
-    const { kotlinOnly } = configs.recommendedVersions
-
-    // Always ensure the template has this shape
-    ;(displayComponent as Record<string, unknown>).dependencyComparison = {
-      items: [],
-      summary: { totalItems: 0, aligned: 0, needsUpgrade: 0, aboveBaseline: 0, missing: 0, needsAttention: 0 },
-      recommendedSource: 'none',
-    }
+    const { kotlinOnly } = config.recommendedVersions
 
     // Dependency comparison for this component
     if (!kotlinOnly || isKotlin) {
