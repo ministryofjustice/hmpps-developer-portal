@@ -4,6 +4,8 @@
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% extends "../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - " + team.name %}
@@ -43,10 +45,6 @@
   {% endif %}
 
   <h3 class="govuk-heading-m">Alerts and scans requiring investigation</h3>
-
-  {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-
-
 
   <div class="govuk-grid-row hmpps-miniSummaryWrapper govuk-!-margin-bottom-6">
     <div class="govuk-grid-column-one-third">
@@ -115,7 +113,6 @@
       </div>
     </div>
   </div>
-
 
   {% if team.channelRecommendations %}
     <h3 class="govuk-heading-m">Monitoring Channel Recommendations</h3>
@@ -260,8 +257,6 @@
             </div>
 
             {% if hasLegacyChannels %}
-            {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
-
             {{ govukWarningText({
             text: "Your team is currently using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod).
                    We recommend migrating to dedicated team channels for better alert management and reduced noise.",
