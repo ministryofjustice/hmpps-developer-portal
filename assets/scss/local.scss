@@ -429,25 +429,19 @@
   }
 }
 
-.activeAlertsNumber {
+.alertsAndScansCard {
   .govuk-summary-card__content {
-     .alertsTotal {
-      font-size: xxx-large;
-      color: red;
-       font-weight: bold;
+    .totalNumber {
+      @include govuk-font($size: 48);
+      font-weight: bold;
+      margin-bottom: 0;
+      padding: 0;
     }
-  }
-}
-  .activeAlertsBox {
-    display: flex;
-    //justify-content: center;
-    flex-direction: column !important;
-  }
-
-.activeAlertsNumber {
-  .govuk-summary-card__content {
-    .hidden {
-      display: none;
+    .alertsAndScansBox {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 }

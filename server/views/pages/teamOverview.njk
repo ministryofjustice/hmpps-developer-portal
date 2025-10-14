@@ -50,155 +50,72 @@
 
   <div class="govuk-grid-row hmpps-miniSummaryWrapper govuk-!-margin-bottom-6">
     <div class="govuk-grid-column-one-third">
-      <div class="govuk-summary-card">
-        <div class= activeAlertsNumber>
-          <div class="govuk-summary-card__content">
-
-            {{ govukSummaryList({
-            rows: [
-            {
-            key: { text: "Active Alerts" },
-            value: { classes: "alertsTotal", text: team.alertSummary.total },
-            actions:
-            { items: [
-            {
-            href: "/alerts?environment=prod&team=" + team.encodedTeamName,
-            text: "See Active Alerts",
-            visuallyHiddenText: "See Active Alerts"
-            }
-            ]}
-            }],
-            classes: "activeAlertsBox"
-            }) }}
-          </div>
-        </div>
+      <div class= alertsAndScansCard>
+        {{ govukSummaryList({
+        card: {
+        title: {
+        text: "Active Alerts"
+        }
+        },
+        rows: [
+        {
+        key: {
+        text: team.alertSummary.total, classes: "totalNumber"
+        },
+        value: {
+        html: '<a href="/alerts?environment=prod&team=' + team.encodedTeamName + '" class="govuk-link">See active alerts</a>'
+        },
+        classes: "alertsAndScansBox"
+        }]
+        }) }}
       </div>
     </div>
 
     <div class="govuk-grid-column-one-third">
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__content">
-          <div class= activeAlertsNumber>
-
-            {{ govukSummaryList({
-            rows: [
-            {
-            key: { text: "Trivy (critical & high)" },
-            value: { classes: "hidden" }
-            },
-            { key: { text: team.criticalAndHighTrivy } },
-            {
-            actions:
-            { items: [
-            {
-            href: "/trivy-scans?checkbox=environment-prod&team=" + team.encodedTeamName,
-            text: "See Trivy scan results",
-            visuallyHiddenText: "address"
-            }
-            ]}
-            }]
-            }) }}
-          </div>
-        </div>
+      <div class= alertsAndScansCard>
+        {{ govukSummaryList({
+        card: {
+        title: {
+        text: "Trivy (critical & high)"
+        }
+        },
+        rows: [
+        {
+        key: {
+        text: team.criticalAndHighTrivy, classes: "totalNumber"
+        },
+        value: {
+        html: '<a href="/trivy-scans?checkbox=environment-prod&team=' + team.encodedTeamName + '" class="govuk-link">See Trivy scan results</a>'
+        },
+        classes: "alertsAndScansBox"
+        }]
+        }) }}
       </div>
     </div>
 
     <div class="govuk-grid-column-one-third">
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__content">
-          <div class="govuk-summary-list">
-          <div class= activeAlertsNumber>
-
-            {{ govukSummaryList({
-            rows: [
-            {
-            key: { text: "Veracode (very high & high)" },
-            id:  "totalAlertsNumber"
-            },
-            { key: { text: team.veryHighAndHighVeracode } },
-            {
-            actions:
-            { items: [
-            {
-            href: "/veracode?team=" + team.encodedTeamName,
-            text: "See Veracode scan results",
-            visuallyHiddenText: "address"
-            }
-            ]}
-            }]
-            }) }}
-          </div>
-          </div>
-        </div>
+      <div class= alertsAndScansCard>
+        {{ govukSummaryList({
+        card: {
+        title: {
+        text: "Veracode (very high & high)"
+        }
+        },
+        rows: [
+        {
+        key: {
+        text: team.veryHighAndHighVeracode, classes: "totalNumber"
+        },
+        value: {
+        html: '<a href="/veracode?team=' + team.encodedTeamName + '" class="govuk-link">See Veracode scan results</a>'
+        },
+        classes: "alertsAndScansBox"
+        }]
+        }) }}
       </div>
     </div>
   </div>
 
-  <div class="govuk-grid-row hmpps-miniSummaryWrapper govuk-!-margin-bottom-6">
-    <div class="govuk-grid-column-one-third">
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__content">
-          <dl class="govuk-summary-list">
-            <dt class="govuk-summary-list__key">
-              Active Alerts
-            </dt>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key govuk-body govuk-!-font-size-48">
-                {{ team.alertSummary.total }}
-              </dt>
-            </div>
-            <div class="govuk-summary-list__row">
-              <dd class="govuk-summary-list__value">
-                <a class="govuk-link" href="/alerts?environment=prod&team={{ team.encodedTeamName }}">See active alerts</a>
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-    </div>
-    <div class="govuk-grid-column-one-third">
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__content">
-          <dl class="govuk-summary-list">
-            <dt class="govuk-summary-list__key">
-              Trivy (critical & high)
-            </dt>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key govuk-body govuk-!-font-size-48">
-                {{ team.criticalAndHighTrivy }}
-              </dt>
-            </div>
-            <div class="govuk-summary-list__row">
-              <dd class="govuk-summary-list__value">
-                <a class="govuk-link" href="/trivy-scans?checkbox=environment-prod&team={{ team.encodedTeamName }}">See Trivy scan results</a>
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-    </div>
-    <div class="govuk-grid-column-one-third">
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__content">
-          <dl class="govuk-summary-list">
-            <dt class="govuk-summary-list__key">
-              Veracode (very high & high)
-            </dt>
-            <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key govuk-body govuk-!-font-size-48">
-                {{ team.veryHighAndHighVeracode }}
-              </dt>
-            </div>
-            <div class="govuk-summary-list__row">
-              <dd class="govuk-summary-list__value">
-                <a class="govuk-link" href="/veracode?team={{ team.encodedTeamName }}">See veracode scan results</a>
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </div>
-    </div>
-  </div>
 
   {% if team.channelRecommendations %}
     <h3 class="govuk-heading-m">Monitoring Channel Recommendations</h3>
