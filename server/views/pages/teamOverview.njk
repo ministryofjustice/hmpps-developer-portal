@@ -28,19 +28,19 @@
 
   {% if team.alertSummary.total > 0 %}
     {{ mojAlert({
-    variant: "warning",
-    title: "Active Alerts",
-    showTitleAsHeading: true,
-    dismissible: false,
-    html: 'There are actively triggering alerts on one or more components. <a href="/alerts?environment=prod&team=' + team.encodedTeamName + '">Please see active alerts for more</a>.'
+      variant: "warning",
+      title: "Active Alerts",
+      showTitleAsHeading: true,
+      dismissible: false,
+      html: 'There are actively triggering alerts on one or more components. <a href="/alerts?environment=prod&team=' + team.encodedTeamName + '">Please see active alerts for more</a>.'
     }) }}
   {% else %}
     {{ mojAlert({
-    variant: "information",
-    title: "No Active Alerts",
-    showTitleAsHeading: true,
-    dismissible: false,
-    html: 'There are currently no actively triggering alerts.'
+      variant: "information",
+      title: "No Active Alerts",
+      showTitleAsHeading: true,
+      dismissible: false,
+      html: 'There are currently no actively triggering alerts.'
     }) }}
   {% endif %}
 
@@ -50,21 +50,22 @@
     <div class="govuk-grid-column-one-third">
       <div class= alertsAndScansCard>
         {{ govukSummaryList({
-        card: {
-        title: {
-        text: "Active Alerts"
-        }
-        },
-        rows: [
-        {
-        key: {
-        text: team.alertSummary.total, classes: "totalNumber"
-        },
-        value: {
-        html: '<a href="/alerts?environment=prod&team=' + team.encodedTeamName + '" class="govuk-link">See active alerts</a>'
-        },
-        classes: "alertsAndScansBox"
-        }]
+          card: {
+            title: {
+              text: "Active Alerts"
+            }
+          },
+          rows: [
+            {
+              key: {
+                text: team.alertSummary.total, classes: "totalNumber"
+              },
+              value: {
+                html: '<a href="/alerts?environment=prod&team=' + team.encodedTeamName + '" class="govuk-link">See active alerts</a>'
+              },
+              classes: "alertsAndScansBox"
+            }
+          ]
         }) }}
       </div>
     </div>
@@ -72,21 +73,22 @@
     <div class="govuk-grid-column-one-third">
       <div class= alertsAndScansCard>
         {{ govukSummaryList({
-        card: {
-        title: {
-        text: "Trivy (critical & high)"
-        }
-        },
-        rows: [
-        {
-        key: {
-        text: team.criticalAndHighTrivy, classes: "totalNumber"
-        },
-        value: {
-        html: '<a href="/trivy-scans?checkbox=environment-prod&team=' + team.encodedTeamName + '" class="govuk-link">See Trivy scan results</a>'
-        },
-        classes: "alertsAndScansBox"
-        }]
+          card: {
+            title: {
+              text: "Trivy (critical & high)"
+            }
+          },
+          rows: [
+            {
+              key: {
+                text: team.criticalAndHighTrivy, classes: "totalNumber"
+              },
+              value: {
+                html: '<a href="/trivy-scans?checkbox=environment-prod&team=' + team.encodedTeamName + '" class="govuk-link">See Trivy scan results</a>'
+              },
+              classes: "alertsAndScansBox"
+            }
+          ]
         }) }}
       </div>
     </div>
@@ -94,21 +96,22 @@
     <div class="govuk-grid-column-one-third">
       <div class= alertsAndScansCard>
         {{ govukSummaryList({
-        card: {
-        title: {
-        text: "Veracode (very high & high)"
-        }
-        },
-        rows: [
-        {
-        key: {
-        text: team.veryHighAndHighVeracode, classes: "totalNumber"
-        },
-        value: {
-        html: '<a href="/veracode?team=' + team.encodedTeamName + '" class="govuk-link">See Veracode scan results</a>'
-        },
-        classes: "alertsAndScansBox"
-        }]
+          card: {
+            title: {
+              text: "Veracode (very high & high)"
+            }
+          },
+          rows: [
+            {
+              key: {
+                text: team.veryHighAndHighVeracode, classes: "totalNumber"
+              },
+              value: {
+                html: '<a href="/veracode?team=' + team.encodedTeamName + '" class="govuk-link">See Veracode scan results</a>'
+              },
+              classes: "alertsAndScansBox"
+            }
+          ]
         }) }}
       </div>
     </div>
@@ -230,14 +233,14 @@
                   {% endfor %}
 
                   {{ govukTable({
-                  firstCellIsHeader: false,
-                  head: [
-                  { text: "Component" },
-                  { text: "Environment" },
-                  { text: "Recommended Channel" },
-                  { text: "Current Channel" }
-                  ],
-                  rows: componentRow
+                    firstCellIsHeader: false,
+                    head: [
+                      { text: "Component" },
+                      { text: "Environment" },
+                      { text: "Recommended Channel" },
+                      { text: "Current Channel" }
+                    ],
+                    rows: componentRow
                   }) }}
                 </div>
               </details>
@@ -258,9 +261,9 @@
 
             {% if hasLegacyChannels %}
             {{ govukWarningText({
-            text: "Your team is currently using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod).
+              text: "Your team is currently using shared DPS alert channels (#dps_alerts, #dps_alerts_non_prod).
                    We recommend migrating to dedicated team channels for better alert management and reduced noise.",
-            iconFallbackText: "Warning"
+              iconFallbackText: "Warning"
             }) }}
             {% endif %}
           </div>
