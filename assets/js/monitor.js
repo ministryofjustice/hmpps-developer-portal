@@ -1,12 +1,13 @@
 jQuery(async function () {
   const monitorType = $('#monitorType').val()
   const monitorId = $('#monitorId').val()
+  const monitorName = $('#monitorName').val()
 
   if (monitorType !== '') {
     const dropDownTypeId = monitorId && monitorId !== '0' ? parseInt(monitorId, 10) : 0
 
     try {
-      await populateComponentTable(monitorType, dropDownTypeId, '')
+      await populateComponentTable(monitorType, dropDownTypeId, monitorName)
       updateEnvironmentList()
     } catch (error) {
       console.error('Error populating component table:', error)

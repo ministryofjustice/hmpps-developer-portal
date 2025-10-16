@@ -30,7 +30,7 @@
               <ul>
               {% for component in product.components %}
                 <li><a class="govuk-link--no-visited-state" href="/components/{{component.name}}" data-test="product-{{ product.id }}-component-{{ component.id }}">{{component.name}}</a></li>
-              {% endfor %} 
+              {% endfor %}
               </ul>
             </li>
           {% endfor %}
@@ -44,10 +44,10 @@
       <th>Links</th>
       <td>
        <ul>
-         <li><a class="govuk-link--no-visited-state" href="/service-areas/{{  serviceArea.slug }}/diagram">
+         <li><a class="govuk-link--no-visited-state" href="/service-areas/{{ serviceArea.slug }}/diagram">
              View product diagram
           </a></li>
-          <li><a class="govuk-link--no-visited-state" href="/monitor/serviceArea/{{  serviceArea.name | toMonitorName }}">
+          <li><a class="govuk-link--no-visited-state" href="/monitor/serviceArea/{{ serviceArea.slug | toMonitorName }}">
              Health Monitor
           </a></li>
           <li><a class="govuk-link--no-visited-state" href="/drift-radiator/service-areas/{{ serviceArea.name | toMonitorName }}">
@@ -63,5 +63,5 @@
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
 {% endblock %}

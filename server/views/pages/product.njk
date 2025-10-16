@@ -113,7 +113,7 @@
       <th>Links</th>
       <td>
        <ul>
-          <li><a class="govuk-link--no-visited-state" href="/monitor/product/{{  product.name | toMonitorName }}">
+          <li><a class="govuk-link--no-visited-state" href="/monitor/product/{{ product.slug | toMonitorName }}">
              Health monitor
           </a></li>
           <li><a class="govuk-link--no-visited-state" href="/drift-radiator/products/{{ product.name | toMonitorName }}">
@@ -130,5 +130,5 @@
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
 {% endblock %}
