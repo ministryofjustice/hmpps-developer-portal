@@ -3,6 +3,7 @@ import type { Services } from '../services'
 import logger from '../../logger'
 import { getMonitorName, getMonitorType, relativeTimeFromNow, formatMonitorName } from '../utils/utils'
 import { Component } from '../data/modelTypes'
+import { MoJSelectDataItem } from '../@types'
 
 type MonitorEnvironment = {
   componentName: string
@@ -25,25 +26,63 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     logger.info(`Request for /monitor/${monitorType}/${monitorName}`)
 
     // If we have a product name, look up its ID
-    let monitorId = ''
+    let monitorId: number = 0
     if (monitorType === 'product' && monitorName) {
       try {
         const products = await serviceCatalogueService.getProducts({})
         logger.info(`Looking for product with name that matches: ${monitorName}`)
-
         // Try to match by name, slug, or formatted name
-        const matchingProduct = products.find(p => p.name === monitorName || formatMonitorName(p.name) === monitorName)
-
-        if (matchingProduct?.documentId) {
-          monitorId = matchingProduct.documentId
+        const matchingProduct = products.find(
+          product => product.slug === monitorName || formatMonitorName(product.slug) === monitorName,
+        )
+        if (matchingProduct?.id) {
+          monitorId = matchingProduct.id
           logger.info(`Found product ID: ${monitorId} for name: ${monitorName}`)
         } else {
           logger.warn(`No product found matching name: ${monitorName}`)
           // List all available products for debugging
-          logger.info(`Available products: ${products.map(p => p.name).join(', ')}`)
+          logger.info(`Available products: ${products.map(product => product.name).join(', ')}`)
         }
       } catch (error) {
         logger.warn(`Failed to find product by name ${monitorName}`, error)
+      }
+    }
+
+    if (monitorType === 'team' && monitorName) {
+      try {
+        const teams = await serviceCatalogueService.getTeams({})
+        const matchingTeam = teams.find(
+          team => team.slug === monitorName || formatMonitorName(team.slug) === monitorName,
+        )
+        if (matchingTeam?.id) {
+          monitorId = matchingTeam.id
+          logger.info(`Found team ID: ${monitorId} for name: ${monitorName}`)
+        } else {
+          logger.warn(`No team found matching name: ${monitorName}`)
+          // List all available teams for debugging
+          // logger.info(`Available teams: ${teams.map(team => team.name).join(', ')}`)
+        }
+      } catch (error) {
+        logger.warn(`Failed to find team by name ${monitorName}`, error)
+      }
+    }
+
+    if (monitorType === 'serviceArea' && monitorName) {
+      try {
+        const serviceAreas = await serviceCatalogueService.getServiceAreas()
+        const matchingServiceArea = serviceAreas.find(
+          serviceArea => serviceArea.slug === monitorName || formatMonitorName(serviceArea.slug) === monitorName,
+        )
+        if (matchingServiceArea?.id) {
+          monitorId = matchingServiceArea.id
+          logger.info(`Found service area ID: ${monitorId} for name: ${monitorName}`)
+        } else {
+          logger.warn(`No service area found matching name: ${monitorName}`)
+          // List all available products for debugging
+          logger.info(`Available service area: ${serviceAreas.map(serviceArea => serviceArea.name).join(', ')}`)
+        }
+      } catch (error) {
+        logger.warn(`Failed to find service area by name ${monitorName}`, error)
       }
     }
 
@@ -55,12 +94,38 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     })
 
     // Update the selected item in the product list
-    if (monitorType === 'product' && monitorId !== '') {
+    if (monitorType === 'product' && monitorId !== 0) {
       // Mark the matching product as selected without reassigning the array
-      productList.forEach((product, index) => {
-        if (product.value === monitorId.toString()) {
+      productList.forEach((item, index) => {
+        if (item.value === monitorId.toString()) {
           productList[index] = {
-            ...product,
+            ...item,
+            selected: true,
+          }
+        }
+      })
+    }
+
+    // Update the selected item in the teams list
+    if (monitorType === 'team' && monitorId !== 0) {
+      // Mark the matching team as selected without reassigning the array
+      teamList.forEach((item, index) => {
+        if (item.value === monitorId.toString()) {
+          teamList[index] = {
+            ...item,
+            selected: true,
+          }
+        }
+      })
+    }
+
+    // Update the selected item in the service area list
+    if (monitorType === 'serviceArea' && monitorId !== 0) {
+      // Mark the matching service area as selected without reassigning the array
+      serviceAreaList.forEach((item, index) => {
+        if (item.value === monitorId.toString()) {
+          serviceAreaList[index] = {
+            ...item,
             selected: true,
           }
         }
@@ -112,7 +177,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
       if (monitorType === 'customComponentView') {
         const customComponentView = await serviceCatalogueService.getCustomComponentView({
-          customComponentDocumentId: monitorId,
+          customComponentDocumentId: monitorId.toString(),
           withEnvironments: true,
         })
         customComponentView.components.forEach(component => {
@@ -122,7 +187,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         const productSlug = formatMonitorName(req.query.slug as string)
         const product = await serviceCatalogueService.getProduct({
           productSlug,
-          productDocumentId: monitorId,
+          productDocumentId: monitorId.toString(),
           withEnvironments: true,
         })
 
@@ -132,7 +197,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       } else if (monitorType === 'team') {
         const teamSlug = formatMonitorName(req.query.slug as string)
         const team = await serviceCatalogueService.getTeam({
-          teamDocumentId: monitorId,
+          teamDocumentId: monitorId.toString(),
           teamSlug,
           withEnvironments: true,
         })

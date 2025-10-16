@@ -57,6 +57,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       productSet,
       team,
       components,
+      slug: productSlug,
     }
 
     return res.render('pages/product', { product: displayProduct })
