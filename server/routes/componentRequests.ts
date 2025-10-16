@@ -159,10 +159,15 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   })
 
   router.get('/:repoName/:requestType', async (req, res) => {
+    console.log('TRIGGER')
     const { repoName } = req.params
     const requestType = req.params.requestType || 'Add'
+    console.log('repoName: ', repoName)
+    console.log('requestType: ', requestType)
+
     const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName }).then(data => {
       // Check if multiple records exist
+      console.log('data: ', data)
       if (data.length > 1) {
         // Find the record that matches requestType
         const matchingRecord = data.find(item => item.request_type === requestType)
@@ -172,6 +177,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       // If only one record exists, return it
       return data[0]
     })
+    console.log('componentRequest: ', componentRequest)
     return res.render('pages/componentRequest', { componentRequest })
   })
 
@@ -417,7 +423,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   return router
 }
 
-const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
+export const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
   const sanitiseString = (str: string | undefined) => str?.replace(/[\s\r\n]+/g, ' ').trim()
 
   return {
@@ -467,7 +473,7 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
   }
 }
 
-function convertTeamsStringToArray(teams: string): string[] {
+export function convertTeamsStringToArray(teams: string): string[] {
   return teams
     .split(',')
     .map(team => team.trim())
