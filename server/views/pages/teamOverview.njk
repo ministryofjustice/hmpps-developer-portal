@@ -194,19 +194,19 @@
                   {% for rec in team.channelRecommendations.recommendations %}
                     {% set componentSubRowContent = [
                     [
-                    { text: 'Dev' },
-                    { text: rec.environments.dev },
-                    { text: rec.currentChannels.dev or 'Not configured' }
+                      { text: 'Dev' },
+                      { text: rec.environments.dev },
+                      { text: rec.currentChannels.dev or 'Not configured' }
                     ],
                     [
-                    { text: 'PreProd' },
-                    { text: rec.environments.preprod },
-                    { text: rec.currentChannels.preprod or 'Not configured' }
+                      { text: 'PreProd' },
+                      { text: rec.environments.preprod },
+                      { text: rec.currentChannels.preprod or 'Not configured' }
                     ],
                     [
-                    { text: 'Prod' },
-                    { text: rec.environments.prod },
-                    { text: rec.currentChannels.prod or 'Not configured' }
+                      { text: 'Prod' },
+                      { text: rec.environments.prod },
+                      { text: rec.currentChannels.prod or 'Not configured' }
                     ]
                     ] %}
                     {% set rowData = [] %}
