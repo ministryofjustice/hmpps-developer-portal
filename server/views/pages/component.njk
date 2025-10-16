@@ -111,6 +111,21 @@
     </div>
   {%  endif %}
 
+  {# Vulnerability banners #}
+  {% if component.trivyVulnerabilityCount > 0 %}
+    <div class="govuk-inset-text govuk-!-margin-bottom-4 vulnerability-alert-banner">
+      <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities found in Production environment</p>
+      <p><strong>{{ component.trivyVulnerabilityCount }}</strong> vulnerabilities have been identified in the latest Trivy scan. <a class="govuk-link--no-visited-state" href="{{ component.trivyResultsLink }}">See results.</a></p>
+    </div>
+  {% endif %}
+
+  {% if component.veracodeVulnerabilityCount > 0 %}
+    <div class="govuk-inset-text govuk-!-margin-bottom-4 vulnerability-alert-banner">
+      <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities found in Production environment</p>
+      <p><strong>{{ component.veracodeVulnerabilityCount }}</strong> vulnerabilities have been identified in the latest Veracode scan. <a class="govuk-link--no-visited-state" href="{{ component.veracodeResultsLink }}">See results.</a></p>
+    </div>
+  {% endif %}
+
 
     <table class="componentData">
       <tbody>

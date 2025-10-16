@@ -10,6 +10,11 @@ import {
   mapToCanonicalEnv,
 } from '../utils/utils'
 import { Environment } from '../data/strapiApiTypes'
+import {
+  getProductionEnvironment,
+  countTrivyHighAndCritical,
+  countVeracodeHighAndVeryHigh,
+} from '../utils/vulnerabilitySummary'
 import { compareComponentsDependencies } from '../services/dependencyComparison'
 
 interface DisplayAlert {
@@ -48,8 +53,11 @@ export default function routes({
     const component = await serviceCatalogueService.getComponent({ componentName })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { envs } = component
-    const prodEnvData = component.envs?.filter(environment => environment.name === 'prod')
-    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].alerts_slack_channel
+    const productionEnvironment = getProductionEnvironment(envs)
+    const alertsSlackChannel = productionEnvironment?.alerts_slack_channel ?? ''
+
+    const trivyVulnerabilityCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
+    const veracodeVulnerabilityCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
     const displayComponent = {
       name: component.name,
       description: component.description,
@@ -76,6 +84,10 @@ export default function routes({
       github_enforce_admins_enabled: component.github_enforce_admins_enabled,
       standardsCompliance: component.standards_compliance,
       alerts: [] as DisplayAlert[],
+      trivyVulnerabilityCount,
+      veracodeVulnerabilityCount,
+      trivyResultsLink: `/trivy-scans/${component.name}/environments/prod`,
+      veracodeResultsLink: component.veracode_results_url || '/veracode',
     }
 
     let alerts: DisplayAlert[] = []
