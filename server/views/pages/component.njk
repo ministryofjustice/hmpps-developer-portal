@@ -187,6 +187,10 @@
           <td><a class="govuk-link--no-visited-state" href="/products/{{ component.product.slug }}" data-test="product">{{ component.product.name }}</a></td>
         </tr>
         <tr>
+          <th>Product Phase</th>
+          <td data-test="product-phase">{{ component.product.phase }}</td>
+        </tr>
+        <tr>
         <th>Product Slack</th>
           <td>
           {% if component.product.slack_channel_id | length %}
