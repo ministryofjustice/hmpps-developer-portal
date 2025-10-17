@@ -101,7 +101,7 @@ const classifyVersionStatus = (current?: string, recommended?: string): Dependen
       // Same major but current only specifies major (e.g., current=1, rec=1.4) → treat as aligned
       return 'aligned'
     }
-    if ((cMin ?? 0) !== (rMin ?? 0)) {
+    if ((cMin ?? 0) !== (rMin ?? 0) && (cMin ?? 0) < (rMin ?? 0)) {
       // Same major and minor mismatch → needs-attention
       return 'needs-attention'
     }
