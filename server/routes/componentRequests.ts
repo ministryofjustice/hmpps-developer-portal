@@ -417,7 +417,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
   return router
 }
 
-const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
+export const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
   const sanitiseString = (str: string | undefined) => str?.replace(/[\s\r\n]+/g, ' ').trim()
 
   return {
@@ -467,7 +467,7 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
   }
 }
 
-function convertTeamsStringToArray(teams: string): string[] {
+export function convertTeamsStringToArray(teams: string): string[] {
   return teams
     .split(',')
     .map(team => team.trim())
