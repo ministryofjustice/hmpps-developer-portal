@@ -41,17 +41,15 @@
     {% endmacro %}
 
     {% macro nestedTable(alerts) %}
-      {{ govukTable({
-        rows: alerts
-      }) }}
+      {{ govukTable({ rows: alerts }) }}
     {% endmacro %}
 
     {% if component.alerts | length %}
       <div id ="component-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
-        {%  set firstAlertRow = [] %}
-        {%  set additionalAlertsRow = [] %}
-        {%  for alert in component.alerts %}
-          {%  set tableRowContent =  [
+        {% set firstAlertRow = [] %}
+        {% set additionalAlertsRow = [] %}
+        {% for alert in component.alerts %}
+          {% set tableRowContent =  [
             { text: alert.alertname },
             { text: alert.startsAt },
             { text: alert.environment },
@@ -60,14 +58,11 @@
           ] %}
           {% if loop.first %}
             {%  set firstAlertRowData = firstAlertRow.push(tableRowContent) %}
-          {%  else %}
-            {%  set additionalAlertRowData = additionalAlertsRow.push(tableRowContent) %}
+          {% else %}
+            {% set additionalAlertRowData = additionalAlertsRow.push(tableRowContent) %}
           {% endif %}
-        {%  endfor %}
-        {% set additionalRows = firstAlertRow.push([
-          { colspan: 4,
-          text: additionalAlerts(additionalAlertsRow)}
-        ]) %}
+        {% endfor %}
+        {% set additionalRows = firstAlertRow.push([ { colspan: 4, text: additionalAlerts(additionalAlertsRow)} ]) %}
 
         {{ govukTable({
         caption: "Active Alerts",
@@ -82,21 +77,21 @@
         rows: firstAlertRow
         }) }}
       </div>
-    {%  endif %}
+    {% endif %}
 
 
-  {%  if upgradeNeeded %}
+  {% if upgradeNeeded %}
     <div id = "dependency-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
-      {%  set filteredRows = [] %}
+      {% set filteredRows = [] %}
       {% for item in component.dependencyComparison.items %}
-        {%  if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
-          {%  set _ = filteredRows.push([
+        {% if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
+          {% set upgradeDependencyRows = filteredRows.push([
             { text: item.key },
             { text: item.current },
             { text: item.recommended }
           ]) %}
-        {%  endif %}
-      {%  endfor %}
+        {% endif %}
+      {% endfor %}
 
       {{ govukTable({
         caption: "Recommended Dependency Updates",
@@ -111,7 +106,7 @@
         format: "numeric"
       }) }}
     </div>
-  {%  endif %}
+  {% endif %}
 
   {# Vulnerability banners #}
   {% if component.trivyVulnerabilityCount > 0 %}

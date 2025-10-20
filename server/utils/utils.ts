@@ -348,3 +348,25 @@ export function createStrapiQuery({ populate }: { populate?: string[] }): string
   const queryString = buildQuery(populateParams)
   return queryString.toString()
 }
+
+export function formatTimeStamp(dateString: string) {
+  if (!dateString) return 'N/A'
+  try {
+    const date = new Date(dateString)
+    if (Number.isNaN(date.getTime())) throw new Error('Invalid date')
+    return date
+      .toLocaleString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+      .replace(',', '')
+      .toUpperCase()
+  } catch (error) {
+    return 'Invalid date'
+  }
+}

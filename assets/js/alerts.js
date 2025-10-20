@@ -1,4 +1,4 @@
-import { formatTimeStamp } from '../../server/services/alertsService'
+import { formatTimeStamp } from '../../server/utils/utils'
 
 const applicationFilter = document.getElementById('application')
 const environmentFilter = document.getElementById('environment')

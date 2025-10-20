@@ -8,6 +8,7 @@ import {
   getEnvironmentName,
   utcTimestampToUtcDateTime,
   mapToCanonicalEnv,
+  formatTimeStamp,
 } from '../utils/utils'
 import { Environment } from '../data/strapiApiTypes'
 import {
@@ -16,7 +17,6 @@ import {
   countVeracodeHighAndVeryHigh,
 } from '../utils/vulnerabilitySummary'
 import { compareComponentsDependencies } from '../services/dependencyComparison'
-import { formatTimeStamp } from '../services/alertsService'
 
 interface DisplayAlert {
   alertname: string
