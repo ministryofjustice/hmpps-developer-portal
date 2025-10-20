@@ -429,6 +429,23 @@
   }
 }
 
+.alertsAndScansCard {
+  .govuk-summary-card__content {
+    .totalNumber {
+      @include govuk-font($size: 48);
+      font-weight: bold;
+      margin-bottom: 0;
+      padding: 0;
+    }
+    .alertsAndScansBox {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
 // For update buttons on filterDropDowns partial when page is bigger than 640px
 @media(width > 640px) {
   .monitor-selectors {
