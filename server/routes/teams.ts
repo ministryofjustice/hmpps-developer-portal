@@ -33,6 +33,7 @@ export default function routes({
     const displayTeam = {
       id: team.t_id,
       name: team.name,
+      slug: teamSlug,
       slackChannelId: team.slack_channel_id,
       slackChannelName: team.slack_channel_name,
       products,
