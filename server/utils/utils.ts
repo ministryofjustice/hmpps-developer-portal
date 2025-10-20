@@ -9,6 +9,7 @@ import { TrivyScanType } from '../data/converters/modelTypes'
 
 import type { ServiceCatalogueService } from '../services'
 import type { Team } from '../data/modelTypes'
+import logger from '../../logger'
 
 dayjs.extend(relativeTime.default)
 
@@ -367,6 +368,8 @@ export function formatTimeStamp(dateString: string) {
       .replace(',', '')
       .toUpperCase()
   } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error)
+    logger.error(`Invalid date: ${msg}`)
     return 'Invalid date'
   }
 }
