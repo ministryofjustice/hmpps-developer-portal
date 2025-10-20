@@ -1,3 +1,5 @@
+import { formatTimeStamp } from '../../server/services/alertsService'
+
 const applicationFilter = document.getElementById('application')
 const environmentFilter = document.getElementById('environment')
 const namespaceFilter = document.getElementById('namespace')
@@ -208,28 +210,6 @@ jQuery(function () {
     alertsUpdateFrequencyMessage(isDropDownOpen || isPaginationActive)
   })
 })
-
-function formatTimeStamp(dateString) {
-  if (!dateString) return 'N/A'
-  try {
-    const date = new Date(dateString)
-    if (isNaN(date.getTime())) throw new Error('Invalid date')
-    return date
-      .toLocaleString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-      })
-      .replace(',', '')
-      .toUpperCase()
-  } catch (error) {
-    return 'Invalid date'
-  }
-}
 
 function alertsUpdateFrequencyMessage(isSlowMode) {
   const frequency = isSlowMode ? 30 : 5

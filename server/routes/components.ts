@@ -16,6 +16,7 @@ import {
   countVeracodeHighAndVeryHigh,
 } from '../utils/vulnerabilitySummary'
 import { compareComponentsDependencies } from '../services/dependencyComparison'
+import { formatTimeStamp } from '../services/alertsService'
 
 interface DisplayAlert {
   alertname: string
@@ -97,6 +98,7 @@ export default function routes({
         .filter(alert => alert.status?.state === 'active')
         .map(alert => ({
           alertname: alert.labels?.alertname ?? '',
+          startsAt: formatTimeStamp(alert.startsAt) ?? '',
           environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
           summary: alert.annotations?.summary ?? '',
           message: alert.annotations?.message ?? '',
