@@ -3720,6 +3720,8 @@ export interface components {
         repo_description?: string
         request_github_pr_number?: number
         request_github_pr_status?: string
+        /** @enum {string} */
+        request_type?: string
         requester_email?: string
         requester_name?: string
         requester_team?: string
@@ -3742,6 +3744,8 @@ export interface components {
       repo_description?: string
       request_github_pr_number?: number
       request_github_pr_status?: string
+      /** @enum {string} */
+      request_type?: string
       requester_email?: string
       requester_name?: string
       requester_team?: string
@@ -3787,6 +3791,8 @@ export interface components {
         repo_description?: string
         request_github_pr_number?: number
         request_github_pr_status?: string
+        /** @enum {string} */
+        request_type?: string
         requester_email?: string
         requester_name?: string
         requester_team?: string
@@ -6710,7 +6716,6 @@ export interface components {
       username?: string
     }
     'Users-Permissions-UserRegistration': {
-      /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c */
       jwt?: string
       user?: components['schemas']['Users-Permissions-User']
     }

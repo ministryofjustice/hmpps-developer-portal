@@ -460,4 +460,42 @@
     }
   }
 
+  // styling for component page
+  #component-alert-popup, .vulnerability-alert-banner {
+    border-left: 5px solid #d4351c;
+    background-color: #fef1f0
+  }
+
+  #component-alert-popup {
+    .govuk-table {
+      table-layout: fixed;
+      width: 100%;
+    }
+  }
+
+  #component-alert-popup {
+    .govuk-table__cell {
+      white-space: normal;
+      word-break: break-word;
+    }
+  }
+
+  #dependency-alert-popup {
+    border-left: 5px solid #f15406;
+    background-color: rgba(255, 205, 155, 0.62)
+  }
+
+  #dependency-alert-popup {
+    .govuk-table {
+      table-layout: fixed;
+      width: 100%;
+    }
+  }
+  #dependency-alert-popup {
+    .govuk-table__cell {
+      white-space: normal;
+      word-break: break-word;
+    }
+  }
 }
+

@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import config from '../config'
 import type { Services } from '../services'
 import logger from '../../logger'
 import {
@@ -9,6 +10,12 @@ import {
   mapToCanonicalEnv,
 } from '../utils/utils'
 import { Environment } from '../data/strapiApiTypes'
+import {
+  getProductionEnvironment,
+  countTrivyHighAndCritical,
+  countVeracodeHighAndVeryHigh,
+} from '../utils/vulnerabilitySummary'
+import { compareComponentsDependencies } from '../services/dependencyComparison'
 
 interface DisplayAlert {
   alertname: string
@@ -17,7 +24,12 @@ interface DisplayAlert {
   message: string
 }
 
-export default function routes({ serviceCatalogueService, redisService, alertsService }: Services): Router {
+export default function routes({
+  serviceCatalogueService,
+  redisService,
+  alertsService,
+  recommendedVersionsService,
+}: Services): Router {
   const router = Router()
 
   router.get('/', async (req, res) => {
@@ -41,8 +53,11 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const component = await serviceCatalogueService.getComponent({ componentName })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { envs } = component
-    const prodEnvData = component.envs?.filter(environment => environment.name === 'prod')
-    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].alerts_slack_channel
+    const productionEnvironment = getProductionEnvironment(envs)
+    const alertsSlackChannel = productionEnvironment?.alerts_slack_channel ?? ''
+
+    const trivyVulnerabilityCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
+    const veracodeVulnerabilityCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
     const displayComponent = {
       name: component.name,
       description: component.description,
@@ -69,6 +84,10 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       github_enforce_admins_enabled: component.github_enforce_admins_enabled,
       standardsCompliance: component.standards_compliance,
       alerts: [] as DisplayAlert[],
+      trivyVulnerabilityCount,
+      veracodeVulnerabilityCount,
+      trivyResultsLink: `/trivy-scans/${component.name}/environments/prod`,
+      veracodeResultsLink: component.veracode_results_url || '/veracode',
     }
 
     let alerts: DisplayAlert[] = []
@@ -87,7 +106,47 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       logger.error(`Error fetching alerts for ${componentName}: ${msg}`)
     }
     displayComponent.alerts = alerts
-    return res.render('pages/component', { component: displayComponent })
+
+    let upgradeNeeded = false
+
+    const isKotlin = (component.language || '') === 'Kotlin'
+    const { kotlinOnly } = config.recommendedVersions
+
+    // Dependency comparison for this component
+    if (!kotlinOnly || isKotlin) {
+      try {
+        const recommended = await recommendedVersionsService.getRecommendedVersions()
+        const comparison = compareComponentsDependencies([component], recommended)
+        ;(displayComponent as Record<string, unknown>).dependencyComparison = comparison
+
+        const { totalItems, aligned, needsUpgrade, aboveBaseline, missing } = comparison.summary
+        logger.debug(
+          `[DependencyComparison] component=${component.name} source=${comparison.recommendedSource} items=${totalItems} aligned=${aligned} needsUpgrade=${needsUpgrade} aboveBaseline=${aboveBaseline} missing=${missing}`,
+        )
+        const nonAligned = comparison.items.filter(items => items.status !== 'aligned')
+        const previewCount = Math.min(10, nonAligned.length)
+        if (previewCount > 0) {
+          const preview = nonAligned
+            .slice(0, previewCount)
+            .map(
+              item =>
+                `${item.componentName}:${item.key} current=${item.current ?? 'missing'} → recommended=${item.recommended ?? 'missing'} [${item.status}]`,
+            )
+            .join('; ')
+          logger.debug(
+            `[DependencyComparison] component details (first ${previewCount} of ${nonAligned.length} non-aligned): ${preview}`,
+          )
+
+          upgradeNeeded =
+            (component.language === 'Kotlin' && comparison.summary.needsAttention > 0) ||
+            comparison.summary.needsUpgrade > 0
+        }
+      } catch (e) {
+        logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(e)}`)
+      }
+    }
+
+    return res.render('pages/component', { component: displayComponent, upgradeNeeded })
   })
 
   router.get('/:componentName/environment/:environmentName', async (req, res) => {

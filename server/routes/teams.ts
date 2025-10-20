@@ -33,6 +33,7 @@ export default function routes({
     const displayTeam = {
       id: team.t_id,
       name: team.name,
+      slug: teamSlug,
       slackChannelId: team.slack_channel_id,
       slackChannelName: team.slack_channel_name,
       products,
@@ -67,12 +68,12 @@ export default function routes({
       const channelTree = monitoringChannelService.generateChannelTree(channelRecommendations)
 
       // Check for legacy channels
-      const hasLegacyChannels = channelRecommendations.recommendations.some(
+      const legacyChannelCount = channelRecommendations.recommendations.filter(
         rec =>
           rec.currentChannels.dev === '#dps_alerts_non_prod' ||
           rec.currentChannels.preprod === '#dps_alerts_non_prod' ||
           rec.currentChannels.prod === '#dps_alerts',
-      )
+      ).length
 
       const displayTeam = {
         name: team.name,
@@ -85,7 +86,8 @@ export default function routes({
         veryHighAndHighVeracode,
         channelRecommendations,
         channelTree,
-        hasLegacyChannels,
+        hasLegacyChannels: legacyChannelCount > 0,
+        legacyChannelCount,
       }
 
       res.render('pages/teamOverview', { team: displayTeam })

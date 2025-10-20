@@ -77,5 +77,6 @@ export default {
   recommendedVersions: {
     ttlMs: Number(get('RECOMMENDED_VERSIONS_TTL_MS', 21600000)),
     componentName: get('HMPPS_TEMPLATE_COMPONENT_NAME', 'hmpps-template-kotlin'),
+    kotlinOnly: get('RECOMMENDED_VERSIONS_KOTLIN_ONLY', 'true'),
   },
 }
