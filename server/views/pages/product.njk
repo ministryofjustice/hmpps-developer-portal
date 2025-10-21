@@ -1,4 +1,6 @@
 {% extends "../partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% set pageTitle = applicationName + " - " + product.name %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -6,6 +8,66 @@
 {% block content %}
 {{ breadCrumb(product.name, [{title: "Products", href: "/products"}]) }}
 <h1 id="detailPageTitle">{{ product.name }}</h1>
+
+{% macro alertMessage(alert) %}
+  {{ govukDetails({
+  summaryText: "Show message",
+  text: alert.message
+  }) }}
+{% endmacro %}
+
+{% macro additionalAlerts(alerts) %}
+  {{ govukDetails({
+  summaryText: "Show all " + product.alerts.length + " alerts",
+  text: nestedTable(alerts)
+  }) }}
+{% endmacro %}
+
+{% macro nestedTable(alerts) %}
+  {{ govukTable({
+  rows: alerts
+  }) }}
+{% endmacro %}
+
+{% if product.alerts | length %}
+  <div id ="product-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+    {%  set firstAlertRow = [] %}
+    {%  set additionalAlertsRow = [] %}
+    {%  for alert in product.alerts %}
+      {%  set tableRowContent =  [
+      { text: alert.alertname },
+      { html: '<a href="/components/' ~ alert.componentslug ~ '" target="_blank">'~ alert.componentname ~'</a>' },
+      { text: alert.environment },
+      { text: alert.summary },
+      { text: alert.startsat },
+      { text: alertMessage(alert) }
+      ] %}
+      {% if loop.first %}
+        {%  set firstAlertRowData = firstAlertRow.push(tableRowContent) %}
+      {%  else %}
+        {%  set additionalAlertRowData = additionalAlertsRow.push(tableRowContent) %}
+      {% endif %}
+    {%  endfor %}
+    {% set additionalRows = firstAlertRow.push([
+    { colspan: 6,
+    text: additionalAlerts(additionalAlertsRow)}
+    ]) %}
+
+    {{ govukTable({
+    caption: "Active Alerts",
+    captionClasses: "govuk-table__caption--m",
+    head: [
+    { text: "Alert Name" },
+    { text: "Component" },
+    { text: "Environment" },
+    { text: "Summary" },
+    { text: "Started At" },
+    { text: "Message" }
+    ],
+    rows: firstAlertRow
+    }) }}
+  </div>
+{%  endif %}
 
 <table class="componentData">
   <tbody>
