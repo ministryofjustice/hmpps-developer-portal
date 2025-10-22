@@ -86,7 +86,7 @@
     "@types/express-session": "^1.18.2",
     "@types/http-errors": "^2.0.5",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22.18.5",
+    "@types/node": "^22.18.11",
     "@types/nunjucks": "^3.2.6",
     "@types/pako": "^2.0.4",
     "@types/superagent": "^8.1.9",
@@ -109,7 +109,7 @@
     "prettier-plugin-jinja-template": "^2.1.0",
     "sass": "^1.93.2",
     "supertest": "^7.1.4",
-    "ts-jest": "^29.4.4",
+    "ts-jest": "^29.4.5",
     "typescript": "^5.9.3"
   }
 }
