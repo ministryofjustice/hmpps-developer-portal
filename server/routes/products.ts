@@ -54,6 +54,7 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
         .map(link => link.trim()),
       gDriveLink: product.gdrive_link,
       id: product.p_id,
+      isPrisonProduct: product.p_id.startsWith('DPS'),
       productManager: product.product_manager,
       leadDeveloper: product.lead_developer,
       deliveryManager: product.delivery_manager,
