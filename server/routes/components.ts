@@ -8,6 +8,7 @@ import {
   getEnvironmentName,
   utcTimestampToUtcDateTime,
   mapToCanonicalEnv,
+  formatTimeStamp,
 } from '../utils/utils'
 import { Environment } from '../data/strapiApiTypes'
 import {
@@ -97,6 +98,7 @@ export default function routes({
         .filter(alert => alert.status?.state === 'active')
         .map(alert => ({
           alertname: alert.labels?.alertname ?? '',
+          startsAt: formatTimeStamp(alert.startsAt) ?? '',
           environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
           summary: alert.annotations?.summary ?? '',
           message: alert.annotations?.message ?? '',

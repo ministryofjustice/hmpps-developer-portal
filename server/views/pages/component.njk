@@ -52,47 +52,49 @@
         {% for alert in component.alerts %}
           {% set tableRowContent =  [
             { text: alert.alertname },
+            { text: alert.startsAt },
             { text: alert.environment },
             { text: alert.summary },
             { text: alertMessage(alert) }
           ] %}
           {% if loop.first %}
-            {% set firstAlertRowData = firstAlertRow.push(tableRowContent) %}
+            {%  set firstAlertRowData = firstAlertRow.push(tableRowContent) %}
           {% else %}
             {% set additionalAlertRowData = additionalAlertsRow.push(tableRowContent) %}
           {% endif %}
         {% endfor %}
-      {% if component.alerts | length > 1 %}
+     {% if component.alerts | length > 1 %}
         {% set additionalRows = firstAlertRow.push([ { colspan: 4, text: additionalAlerts(additionalAlertsRow)} ]) %}
-      {% endif %}
+     {% endif %}
 
         {{ govukTable({
-          caption: "Active Alerts",
-          captionClasses: "govuk-table__caption--m",
-          head: [
-            { text: "Alert Name" },
-            { text: "Environment" },
-            { text: "Summary" },
-            { text: "Message" }
-          ],
-          rows: firstAlertRow
+        caption: "Active Alerts",
+        captionClasses: "govuk-table__caption--m",
+        head: [
+          { text: "Alert Name" },
+          { text: "Started At" },
+          { text: "Environment" },
+          { text: "Summary" },
+          { text: "Message" }
+        ],
+        rows: firstAlertRow
         }) }}
       </div>
     {% endif %}
 
 
-  {%  if upgradeNeeded %}
+  {% if upgradeNeeded %}
     <div id = "dependency-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
-      {%  set filteredRows = [] %}
+      {% set filteredRows = [] %}
       {% for item in component.dependencyComparison.items %}
-        {%  if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
-          {%  set _ = filteredRows.push([
-          { text: item.key },
-          { text: item.current },
-          { text: item.recommended }
+        {% if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
+          {% set upgradeDependencyRows = filteredRows.push([
+            { text: item.key },
+            { text: item.current },
+            { text: item.recommended }
           ]) %}
-        {%  endif %}
-      {%  endfor %}
+        {% endif %}
+      {% endfor %}
 
       {{ govukTable({
         caption: "Recommended Dependency Updates",
@@ -107,7 +109,7 @@
         format: "numeric"
       }) }}
     </div>
-  {%  endif %}
+  {% endif %}
 
   {# Vulnerability banners #}
   {% if component.trivyVulnerabilityCount > 0 %}

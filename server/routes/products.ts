@@ -1,8 +1,16 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import { getFormattedName, utcTimestampToUtcDateTime } from '../utils/utils'
+import logger from '../../logger'
+import { getFormattedName, utcTimestampToUtcDateTime, mapToCanonicalEnv } from '../utils/utils'
 
-export default function routes({ serviceCatalogueService }: Services): Router {
+interface DisplayAlert {
+  alertname: string
+  environment: string
+  summary: string
+  message: string
+}
+
+export default function routes({ serviceCatalogueService, alertsService }: Services): Router {
   const router = Router()
 
   router.get('/', async (req, res) => {
@@ -46,6 +54,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         .map(link => link.trim()),
       gDriveLink: product.gdrive_link,
       id: product.p_id,
+      isPrisonProduct: product.p_id.startsWith('DPS'),
       productManager: product.product_manager,
       leadDeveloper: product.lead_developer,
       deliveryManager: product.delivery_manager,
@@ -58,7 +67,33 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       team,
       components,
       slug: productSlug,
+      alerts: [] as DisplayAlert[],
     }
+
+    let alerts: DisplayAlert[] = []
+
+    await Promise.all(
+      displayProduct.components?.map(async component => {
+        try {
+          const allAlerts = await alertsService.getAlertsForComponent(component.name)
+          alerts = allAlerts
+            .filter(alert => alert.status?.state === 'active')
+            .map(alert => ({
+              componentname: component.description,
+              componentslug: component.name,
+              alertname: alert.labels?.alertname ?? '',
+              startsat: utcTimestampToUtcDateTime(alert.startsAt),
+              environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
+              summary: alert.annotations?.summary ?? '',
+              message: alert.annotations?.message ?? '',
+            }))
+          alerts.forEach(alert => displayProduct.alerts.push(alert))
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err)
+          logger.error(`Error fetching alerts for ${component.name}: ${msg}`)
+        }
+      }),
+    )
 
     return res.render('pages/product', { product: displayProduct })
   })

@@ -37,65 +37,9 @@
     "node": "^22",
     "npm": "^10"
   },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": [
-        "ts-jest"
-      ]
-    },
-    "collectCoverageFrom": [
-      "server/**/*.{ts,js,jsx,mjs}"
-    ],
-    "testMatch": [
-      "<rootDir>/(server|job)/**/?(*.)(cy|test).{ts,js,jsx,mjs}"
-    ],
-    "testEnvironment": "node",
-    "reporters": [
-      "default",
-      [
-        "jest-junit",
-        {
-          "outputDirectory": "test_results/jest/"
-        }
-      ],
-      [
-        "./node_modules/jest-html-reporter",
-        {
-          "outputPath": "test_results/unit-test-reports.html"
-        }
-      ]
-    ],
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "json",
-      "node",
-      "ts"
-    ]
-  },
-  "nodemonConfig": {
-    "ignore": [
-      ".circleci/*",
-      "migrations/*",
-      "node_modules/*",
-      "test/*",
-      "integration_tests/*"
-    ],
-    "delay": 2500,
-    "ext": "js,json,html,njk"
-  },
-  "lint-staged": {
-    "*.{ts,js,css}": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "*.json": [
-      "prettier --write"
-    ]
-  },
   "dependencies": {
-    "@ministryofjustice/frontend": "^5.1.5",
-    "@ministryofjustice/hmpps-monitoring": "^0.0.1",
+    "@ministryofjustice/frontend": "^6.0.0",
+    "@ministryofjustice/hmpps-monitoring": "^0.0.2",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
     "body-parser": "^2.2.0",
@@ -110,18 +54,18 @@
     "datatables.net-buttons-dt": "^3.2.5",
     "datatables.net-dt": "^2.3.4",
     "datatables.net-searchpanes": "^2.3.5",
-    "datatables.net-select": "^3.1.0",
+    "datatables.net-select": "^3.1.3",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.18",
     "express": "^5.1.0",
     "express-session": "^1.18.2",
-    "govuk-frontend": "^5.11.2",
+    "govuk-frontend": "^5.13.0",
     "helmet": "^8.1.0",
     "http-errors": "^2.0.0",
     "jquery": "^3.7.1",
     "js-base64": "^3.7.8",
     "jszip": "3.10.1",
-    "mermaid": "^11.11.0",
+    "mermaid": "^11.12.0",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
     "pako": "^2.1.0",
@@ -131,8 +75,8 @@
     "url-value-parser": "^2.2.0"
   },
   "devDependencies": {
-    "@ministryofjustice/eslint-config-hmpps": "^0.0.4",
-    "@ministryofjustice/hmpps-precommit-hooks": "^0.0.3",
+    "@ministryofjustice/eslint-config-hmpps": "^0.0.5",
+    "@ministryofjustice/hmpps-precommit-hooks": "^0.0.4",
     "@tsconfig/node22": "^22.0.2",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
@@ -142,7 +86,7 @@
     "@types/express-session": "^1.18.2",
     "@types/http-errors": "^2.0.5",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22.18.5",
+    "@types/node": "^22.18.11",
     "@types/nunjucks": "^3.2.6",
     "@types/pako": "^2.0.4",
     "@types/superagent": "^8.1.9",
@@ -151,21 +95,21 @@
     "cheerio": "^1.1.2",
     "concurrently": "^9.2.1",
     "cookie-session": "^2.1.1",
-    "cypress": "^15.2.0",
+    "cypress": "^15.5.0",
     "cypress-multi-reporters": "^2.0.5",
-    "dotenv": "^17.2.2",
-    "jest": "^30.1.3",
+    "dotenv": "^17.2.3",
+    "jest": "^30.2.0",
     "jest-html-reporter": "^4.3.0",
     "jest-junit": "^16.0.0",
-    "lint-staged": "^16.1.6",
+    "lint-staged": "^16.2.5",
     "mocha-junit-reporter": "^2.2.1",
     "nock": "^14.0.10",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",
     "prettier-plugin-jinja-template": "^2.1.0",
-    "sass": "^1.92.1",
+    "sass": "^1.93.2",
     "supertest": "^7.1.4",
-    "ts-jest": "^29.4.2",
-    "typescript": "^5.9.2"
+    "ts-jest": "^29.4.5",
+    "typescript": "^5.9.3"
   }
 }

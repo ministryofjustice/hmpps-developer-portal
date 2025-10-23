@@ -21,6 +21,7 @@ import {
   median,
   mapToCanonicalEnv,
   createStrapiQuery,
+  formatTimeStamp,
 } from './utils'
 
 describe('Utils', () => {
@@ -430,5 +431,23 @@ describe('veracodeFilters', () => {
     ])('%s createStrapiQuery(%s)', (_: string, input: { populate?: string[] }, expected: string) => {
       expect(createStrapiQuery(input)).toEqual(expected)
     })
+  })
+})
+
+describe('formatTimeStamp', () => {
+  it('returns N/A when given an empty string', () => {
+    expect(formatTimeStamp('')).toEqual('N/A')
+  })
+
+  it('returns invalid date when give a string instead of number', () => {
+    expect(formatTimeStamp('string')).toEqual('Invalid date')
+  })
+
+  it('formats the date correctly', () => {
+    expect(formatTimeStamp('05.12.2025')).toEqual('12 MAY 2025 00:00:00')
+  })
+
+  it('formats the date and time correctly', () => {
+    expect(formatTimeStamp('05.12.2025 10:12:12')).toEqual('12 MAY 2025 10:12:12')
   })
 })

@@ -209,28 +209,6 @@ jQuery(function () {
   })
 })
 
-function formatTimeStamp(dateString) {
-  if (!dateString) return 'N/A'
-  try {
-    const date = new Date(dateString)
-    if (isNaN(date.getTime())) throw new Error('Invalid date')
-    return date
-      .toLocaleString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-      })
-      .replace(',', '')
-      .toUpperCase()
-  } catch (error) {
-    return 'Invalid date'
-  }
-}
-
 function alertsUpdateFrequencyMessage(isSlowMode) {
   const frequency = isSlowMode ? 30 : 5
   $('#alertsFetchStatus').empty()
@@ -328,5 +306,27 @@ function populateAlertsDropdowns(data, key, currentFilters) {
   // Set value from URL param on load
   if (currentFilters[`${key}`]) {
     $dropdownSelect.val(currentFilters[`${key}`])
+  }
+}
+
+function formatTimeStamp(dateString) {
+  if (!dateString) return 'N/A'
+  try {
+    const date = new Date(dateString)
+    if (Number.isNaN(date.getTime())) throw new Error('Invalid date')
+    return date
+      .toLocaleString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+      .replace(',', '')
+      .toUpperCase()
+  } catch (error) {
+    return 'Invalid date'
   }
 }
