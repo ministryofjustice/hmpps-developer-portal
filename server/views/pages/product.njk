@@ -1,6 +1,7 @@
 {% extends "../partials/layout.njk" %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
 {% set pageTitle = applicationName + " - " + product.name %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -67,7 +68,13 @@
     rows: firstAlertRow
     }) }}
   </div>
-{%  endif %}
+{% endif %}
+
+{% if product.isPrisonProduct %}
+  {{ govukInsetText({
+    html: 'To update the information contained on this page please contact <a href="https://moj.enterprise.slack.com/archives/C0572SYFU3D" class="govuk-link govuk-link--no-visited-state" target="_blank">#ask-dps-delivery-ops</a> with the appropriate changes.'
+  }) }}
+{% endif %}
 
 <table class="componentData">
   <tbody>
