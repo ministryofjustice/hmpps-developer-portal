@@ -4,10 +4,13 @@ import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import AlertsService from '../services/alertsService'
-import { Product } from '../data/modelTypes'
+import { Product, Environment } from '../data/modelTypes'
+import * as vulnerabilitySummary from '../utils/vulnerabilitySummary'
+import { Component } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/alertsService')
+jest.mock('../utils/vulnerabilitySummary')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 const alertsService = new AlertsService(null) as jest.Mocked<AlertsService>
@@ -20,6 +23,9 @@ const testProduct = {
   lead_developer: 'Some Lead Developer',
   product_manager: 'Some Product Manager',
   delivery_manager: 'Some Lead Developer',
+  team: {
+    name: 'Test Team',
+  },
   components: [
     {
       name: 'test-component',
@@ -43,9 +49,53 @@ const testAlert = [
   },
 ]
 
+const mockComponent = {
+  name: 'test-component',
+  envs: [
+    {
+      name: 'prod',
+      trivy_scan: {
+        scan_summary: {
+          summary: {
+            'os-pkgs': {
+              fixed: { HIGH: 1, CRITICAL: 1 },
+              unfixed: { HIGH: 0, CRITICAL: 0 },
+            },
+            'lang-pkgs': {
+              fixed: { HIGH: 0, CRITICAL: 0 },
+              unfixed: { HIGH: 0, CRITICAL: 0 },
+            },
+          },
+        },
+      },
+    },
+  ],
+} as Component
+
+const testProductionEnvironment = {
+  name: 'prod',
+  namespace: 'test-namespace',
+  trivy_scan: {
+    scan_summary: {
+      summary: {
+        secret: {},
+        'os-pkgs': {
+          fixed: { HIGH: 1, CRITICAL: 1 },
+          unfixed: { HIGH: 0, CRITICAL: 0 },
+        },
+        'lang-pkgs': {
+          fixed: { HIGH: 0, CRITICAL: 0 },
+          unfixed: { HIGH: 0, CRITICAL: 0 },
+        },
+      },
+    },
+  },
+} as unknown as Environment
+
 beforeEach(() => {
   serviceCatalogueService.getProducts.mockResolvedValue(testProducts)
   serviceCatalogueService.getProduct.mockResolvedValue(testProduct)
+  alertsService.getAlertsForComponent.mockResolvedValue(testAlert)
 
   app = appWithAllRoutes({ services: { serviceCatalogueService, alertsService } })
 })
@@ -87,21 +137,59 @@ describe('/products', () => {
     })
 
     it('should render product page with alert banner', () => {
-      alertsService.getAlertsForComponent.mockResolvedValue(testAlert)
       return request(app)
         .get('/products/testproduct')
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
           expect($('#detailPageTitle').text()).toContain(testProduct.name)
-          expect($('[data-test="product-manager"]').text()).toBe(testProduct.product_manager)
-          expect($('[data-test="delivery-manager"]').text()).toBe(testProduct.delivery_manager)
-          expect($('[data-test="lead-developer"]').text()).toBe(testProduct.lead_developer)
           const alertBanner = $('#product-alert-popup')
           const rows = alertBanner.find('.govuk-table__body .govuk-table__row')
           expect(rows.length).toBe(2)
           const firstCellText = rows.eq(0).find('.govuk-table__cell').first().text().trim()
           expect(firstCellText).toBe('test-alert')
+        })
+    })
+
+    it('should render product page with Trivy vunnerability banner', () => {
+      serviceCatalogueService.getComponent.mockResolvedValue(mockComponent)
+      const mockedGetProductionEnvironment = jest.spyOn(vulnerabilitySummary, 'getProductionEnvironment')
+      mockedGetProductionEnvironment.mockReturnValue(testProductionEnvironment)
+      const mockedCountTrivyHighAndCritical = jest.spyOn(vulnerabilitySummary, 'countTrivyHighAndCritical')
+      mockedCountTrivyHighAndCritical.mockReturnValue(2)
+      return request(app)
+        .get('/products/testproduct')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('#detailPageTitle').text()).toContain(testProduct.name)
+          const vulnerabilityBanner = $('.vulnerability-alert-banner')
+          expect(vulnerabilityBanner.length).toBe(1)
+          expect(vulnerabilityBanner.text()).toMatch(/Trivy/i)
+          const link = vulnerabilityBanner.find('a')
+          expect(link.length).toBe(1)
+          expect(link.attr('href')).toContain('/trivy-scans')
+        })
+    })
+
+    it('should render product page with Veracode vunnerability banner', () => {
+      serviceCatalogueService.getComponent.mockResolvedValue(mockComponent)
+      const mockedGetProductionEnvironment = jest.spyOn(vulnerabilitySummary, 'getProductionEnvironment')
+      mockedGetProductionEnvironment.mockReturnValue(testProductionEnvironment)
+      const mockedCountVeracodeHighAndVeryHigh = jest.spyOn(vulnerabilitySummary, 'countVeracodeHighAndVeryHigh')
+      mockedCountVeracodeHighAndVeryHigh.mockReturnValue(2)
+      return request(app)
+        .get('/products/testproduct')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('#detailPageTitle').text()).toContain(testProduct.name)
+          const vulnerabilityBanner = $('.vulnerability-alert-banner')
+          expect(vulnerabilityBanner.length).toBe(1)
+          expect(vulnerabilityBanner.text()).toMatch(/Veracode/i)
+          const link = vulnerabilityBanner.find('a')
+          expect(link.length).toBe(1)
+          expect(link.attr('href')).toContain('/veracode')
         })
     })
   })

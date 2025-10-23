@@ -2,12 +2,23 @@ import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { getFormattedName, utcTimestampToUtcDateTime, mapToCanonicalEnv } from '../utils/utils'
+import {
+  getProductionEnvironment,
+  countTrivyHighAndCritical,
+  countVeracodeHighAndVeryHigh,
+} from '../utils/vulnerabilitySummary'
 
 interface DisplayAlert {
   alertname: string
   environment: string
   summary: string
   message: string
+}
+
+interface DisplayVulnerability {
+  componentname: string
+  veracodelink: string
+  trivylink: string
 }
 
 export default function routes({ serviceCatalogueService, alertsService }: Services): Router {
@@ -33,6 +44,7 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
 
     const productSet = product.product_set
     const { team } = product
+    const teamName = encodeURIComponent(team.name).replace(/%20/g, '+')
     const components = product.components
       ?.map(component => component)
       .sort((a, b) => {
@@ -64,9 +76,12 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
       slackChannelName: product.slack_channel_name,
       productSet,
       team,
+      teamName,
       components,
       slug: productSlug,
       alerts: [] as DisplayAlert[],
+      trivyVulnerabilityCount: 0,
+      veracodeVulnerabilityCount: 0,
     }
 
     let alerts: DisplayAlert[] = []
@@ -87,6 +102,16 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
               message: alert.annotations?.message ?? '',
             }))
           alerts.forEach(alert => displayProduct.alerts.push(alert))
+          const componentName = component.name
+          const thisComponent = await serviceCatalogueService.getComponent({ componentName })
+          const { envs } = thisComponent
+          const productionEnvironment = getProductionEnvironment(envs)
+          const componentTrivyVulnerabilityCount = countTrivyHighAndCritical(
+            productionEnvironment?.trivy_scan?.scan_summary?.summary,
+          )
+          const componentVeracodeVulnerabilityCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
+          displayProduct.trivyVulnerabilityCount += componentTrivyVulnerabilityCount
+          displayProduct.veracodeVulnerabilityCount += componentVeracodeVulnerabilityCount
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err)
           logger.error(`Error fetching alerts for ${component.name}: ${msg}`)
