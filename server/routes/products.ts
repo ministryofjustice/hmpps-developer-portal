@@ -84,40 +84,39 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
       veracodeVulnerabilityCount: 0,
     }
 
-    let alerts: DisplayAlert[] = []
+    const bannerPromises = displayProduct.components?.map(async component => {
+      try {
+        const allAlerts = await alertsService.getAlertsForComponent(component.name)
+        const activeAlerts = allAlerts
+          .filter(alert => alert.status?.state === 'active')
+          .map(alert => ({
+            componentname: component.description,
+            componentslug: component.name,
+            alertname: alert.labels?.alertname ?? '',
+            startsat: utcTimestampToUtcDateTime(alert.startsAt),
+            environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
+            summary: alert.annotations?.summary ?? '',
+            message: alert.annotations?.message ?? '',
+          }))
 
-    await Promise.all(
-      displayProduct.components?.map(async component => {
-        try {
-          const allAlerts = await alertsService.getAlertsForComponent(component.name)
-          alerts = allAlerts
-            .filter(alert => alert.status?.state === 'active')
-            .map(alert => ({
-              componentname: component.description,
-              componentslug: component.name,
-              alertname: alert.labels?.alertname ?? '',
-              startsat: utcTimestampToUtcDateTime(alert.startsAt),
-              environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
-              summary: alert.annotations?.summary ?? '',
-              message: alert.annotations?.message ?? '',
-            }))
-          alerts.forEach(alert => displayProduct.alerts.push(alert))
-          const componentName = component.name
-          const thisComponent = await serviceCatalogueService.getComponent({ componentName })
-          const { envs } = thisComponent
-          const productionEnvironment = getProductionEnvironment(envs)
-          const componentTrivyVulnerabilityCount = countTrivyHighAndCritical(
-            productionEnvironment?.trivy_scan?.scan_summary?.summary,
-          )
-          const componentVeracodeVulnerabilityCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
-          displayProduct.trivyVulnerabilityCount += componentTrivyVulnerabilityCount
-          displayProduct.veracodeVulnerabilityCount += componentVeracodeVulnerabilityCount
-        } catch (err) {
-          const msg = err instanceof Error ? err.message : String(err)
-          logger.error(`Error fetching alerts for ${component.name}: ${msg}`)
-        }
-      }),
-    )
+        const thisComponent = await serviceCatalogueService.getComponent({ componentName: component.name })
+        const productionEnvironment = getProductionEnvironment(thisComponent.envs)
+
+        const trivyCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
+        const veracodeCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
+
+        displayProduct.trivyVulnerabilityCount += trivyCount
+        displayProduct.veracodeVulnerabilityCount += veracodeCount
+
+        return activeAlerts
+      } catch (err) {
+        logger.error(`Error fetching alerts for ${component.name}: ${err instanceof Error ? err.message : String(err)}`)
+        return []
+      }
+    })
+
+    const alertResults = await Promise.all(bannerPromises)
+    displayProduct.alerts = alertResults.flat()
 
     return res.render('pages/product', { product: displayProduct })
   })

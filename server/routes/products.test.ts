@@ -97,6 +97,9 @@ beforeEach(() => {
   serviceCatalogueService.getProduct.mockResolvedValue(testProduct)
   alertsService.getAlertsForComponent.mockResolvedValue(testAlert)
 
+  serviceCatalogueService.getComponent.mockResolvedValue(mockComponent)
+  const mockedGetProductionEnvironment = jest.spyOn(vulnerabilitySummary, 'getProductionEnvironment')
+  mockedGetProductionEnvironment.mockReturnValue(testProductionEnvironment)
   app = appWithAllRoutes({ services: { serviceCatalogueService, alertsService } })
 })
 
@@ -152,9 +155,6 @@ describe('/products', () => {
     })
 
     it('should render product page with Trivy vunnerability banner', () => {
-      serviceCatalogueService.getComponent.mockResolvedValue(mockComponent)
-      const mockedGetProductionEnvironment = jest.spyOn(vulnerabilitySummary, 'getProductionEnvironment')
-      mockedGetProductionEnvironment.mockReturnValue(testProductionEnvironment)
       const mockedCountTrivyHighAndCritical = jest.spyOn(vulnerabilitySummary, 'countTrivyHighAndCritical')
       mockedCountTrivyHighAndCritical.mockReturnValue(2)
       return request(app)
@@ -173,9 +173,6 @@ describe('/products', () => {
     })
 
     it('should render product page with Veracode vunnerability banner', () => {
-      serviceCatalogueService.getComponent.mockResolvedValue(mockComponent)
-      const mockedGetProductionEnvironment = jest.spyOn(vulnerabilitySummary, 'getProductionEnvironment')
-      mockedGetProductionEnvironment.mockReturnValue(testProductionEnvironment)
       const mockedCountVeracodeHighAndVeryHigh = jest.spyOn(vulnerabilitySummary, 'countVeracodeHighAndVeryHigh')
       mockedCountVeracodeHighAndVeryHigh.mockReturnValue(2)
       return request(app)
