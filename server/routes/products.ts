@@ -15,12 +15,6 @@ interface DisplayAlert {
   message: string
 }
 
-interface DisplayVulnerability {
-  componentname: string
-  veracodelink: string
-  trivylink: string
-}
-
 export default function routes({ serviceCatalogueService, alertsService }: Services): Router {
   const router = Router()
 
