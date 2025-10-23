@@ -2,6 +2,11 @@ import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { getFormattedName, utcTimestampToUtcDateTime, mapToCanonicalEnv } from '../utils/utils'
+import {
+  getProductionEnvironment,
+  countTrivyHighAndCritical,
+  countVeracodeHighAndVeryHigh,
+} from '../utils/vulnerabilitySummary'
 
 interface DisplayAlert {
   alertname: string
@@ -33,6 +38,7 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
 
     const productSet = product.product_set
     const { team } = product
+    const teamName = encodeURIComponent(team.name).replace(/%20/g, '+')
     const components = product.components
       ?.map(component => component)
       .sort((a, b) => {
@@ -65,35 +71,47 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
       slackChannelName: product.slack_channel_name,
       productSet,
       team,
+      teamName,
       components,
       slug: productSlug,
       alerts: [] as DisplayAlert[],
+      trivyVulnerabilityCount: 0,
+      veracodeVulnerabilityCount: 0,
     }
 
-    let alerts: DisplayAlert[] = []
+    const bannerPromises = displayProduct.components?.map(async component => {
+      try {
+        const allAlerts = await alertsService.getAlertsForComponent(component.name)
+        const activeAlerts = allAlerts
+          .filter(alert => alert.status?.state === 'active')
+          .map(alert => ({
+            componentname: component.description,
+            componentslug: component.name,
+            alertname: alert.labels?.alertname ?? '',
+            startsat: utcTimestampToUtcDateTime(alert.startsAt),
+            environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
+            summary: alert.annotations?.summary ?? '',
+            message: alert.annotations?.message ?? '',
+          }))
 
-    await Promise.all(
-      displayProduct.components?.map(async component => {
-        try {
-          const allAlerts = await alertsService.getAlertsForComponent(component.name)
-          alerts = allAlerts
-            .filter(alert => alert.status?.state === 'active')
-            .map(alert => ({
-              componentname: component.description,
-              componentslug: component.name,
-              alertname: alert.labels?.alertname ?? '',
-              startsat: utcTimestampToUtcDateTime(alert.startsAt),
-              environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
-              summary: alert.annotations?.summary ?? '',
-              message: alert.annotations?.message ?? '',
-            }))
-          alerts.forEach(alert => displayProduct.alerts.push(alert))
-        } catch (err) {
-          const msg = err instanceof Error ? err.message : String(err)
-          logger.error(`Error fetching alerts for ${component.name}: ${msg}`)
-        }
-      }),
-    )
+        const thisComponent = await serviceCatalogueService.getComponent({ componentName: component.name })
+        const productionEnvironment = getProductionEnvironment(thisComponent.envs)
+
+        const trivyCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
+        const veracodeCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
+
+        displayProduct.trivyVulnerabilityCount += trivyCount
+        displayProduct.veracodeVulnerabilityCount += veracodeCount
+
+        return activeAlerts
+      } catch (err) {
+        logger.error(`Error fetching alerts for ${component.name}: ${err instanceof Error ? err.message : String(err)}`)
+        return []
+      }
+    })
+
+    const alertResults = await Promise.all(bannerPromises)
+    displayProduct.alerts = alertResults.flat()
 
     return res.render('pages/product', { product: displayProduct })
   })
