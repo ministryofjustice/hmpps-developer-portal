@@ -72,7 +72,7 @@ describe('Utils', () => {
     it.each([
       ['Valid type product', 'product', 'product'],
       ['Valid type team', 'team', 'team'],
-      ['Valid type service area', 'serviceArea', 'serviceArea'],
+      ['Valid type service area', 'service-area', 'service-area'],
       ['Invalid type test23', 'test23', 'all'],
       ['Empty type', '', 'all'],
     ])('%s getMonitorType() with "%s" should return "%s"', (_: string, a: string, expected: string) => {

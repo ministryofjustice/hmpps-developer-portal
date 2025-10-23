@@ -66,7 +66,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         }
       }
 
-      if (monitorType === 'serviceArea') {
+      if (monitorType === 'service-area') {
         try {
           const serviceAreas = await serviceCatalogueService.getServiceAreas()
           const matchingServiceArea = serviceAreas.find(
@@ -120,7 +120,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       }
 
       // Update the selected item in the service area list
-      if (monitorType === 'serviceArea') {
+      if (monitorType === 'service-area') {
         // Mark the matching service area as selected without reassigning the array
         serviceAreaList.forEach((item, index) => {
           if (item.value === monitorId.toString()) {
@@ -207,7 +207,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
             environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
           })
         })
-      } else if (monitorType === 'serviceArea') {
+      } else if (monitorType === 'service-area') {
         const serviceAreaSlug = formatMonitorName(req.query.slug as string)
         const serviceArea = await serviceCatalogueService.getServiceArea({
           serviceAreaDocumentId: monitorId,

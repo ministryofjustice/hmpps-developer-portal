@@ -27,7 +27,7 @@ jQuery(async function () {
         dropDownType = 'team'
         break
       case 'updateServiceArea':
-        dropDownType = 'serviceArea'
+        dropDownType = 'service-area'
         break
       case 'updateCustomComponentView':
         dropDownType = 'customComponentView'
