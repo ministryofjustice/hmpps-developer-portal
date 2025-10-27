@@ -76,6 +76,21 @@
   }) }}
 {% endif %}
 
+{# Vulnerability banners #}
+{% if product.trivyVulnerabilityCount > 0 %}
+  <div class="govuk-inset-text govuk-!-margin-bottom-4 vulnerability-alert-banner">
+    <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities found in Production environment</p>
+    <p><strong>{{ product.trivyVulnerabilityCount }}</strong> critical and/or high vulnerabilities have been identified in the latest Trivy scan. <a class="govuk-link--no-visited-state" href="/trivy-scans?team={{ product.teamName }}">See results.</a></p>
+  </div>
+{% endif %}
+
+{% if product.veracodeVulnerabilityCount > 0 %}
+  <div class="govuk-inset-text govuk-!-margin-bottom-4 vulnerability-alert-banner">
+    <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities found in Production environment</p>
+    <p><strong>{{ product.veracodeVulnerabilityCount }}</strong> very high and/or high vulnerabilities have been identified in the latest Veracode scan. <a class="govuk-link--no-visited-state" href="/veracode?team={{ product.teamName }}&results=failed">See results.</a></p>
+  </div>
+{% endif %}
+
 <table class="componentData">
   <tbody>
     <tr>
