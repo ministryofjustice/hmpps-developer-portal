@@ -123,17 +123,15 @@ export default function routes({
               `[DependencyComparison] component=${component.name} source=${comparison.recommendedSource} items=${totalItems} aligned=${aligned} needsUpgrade=${needsUpgrade} aboveBaseline=${aboveBaseline} missing=${missing}`,
             )
 
-            if (component.language === 'Kotlin') {
-              const relevantItems = comparison.items.filter(
-                item =>
-                  item.current !== '-' &&
-                  !!item.current &&
-                  (item.status === 'needs-attention' || item.status === 'needs-upgrade'),
-              )
+            const relevantItems = comparison.items.filter(
+              item =>
+                item.current !== '-' &&
+                !!item.current &&
+                (item.status === 'needs-attention' || item.status === 'needs-upgrade'),
+            )
 
-              if (relevantItems.length > 0) {
-                componentsNeedingUpdates.push(component.name)
-              }
+            if (relevantItems.length > 0) {
+              componentsNeedingUpdates.push(component.name)
             }
           } catch (e) {
             logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(e)}`)
