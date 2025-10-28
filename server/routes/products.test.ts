@@ -4,16 +4,21 @@ import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import AlertsService from '../services/alertsService'
+import RecommendedVersionsService from '../services/recommendedVersionsService'
 import { Product, Environment } from '../data/modelTypes'
 import * as vulnerabilitySummary from '../utils/vulnerabilitySummary'
+import { compareComponentsDependencies } from '../services/dependencyComparison'
 import { Component } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/alertsService')
+jest.mock('../services/recommendedVersionsService')
 jest.mock('../utils/vulnerabilitySummary')
+jest.mock('../services/dependencyComparison')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 const alertsService = new AlertsService(null) as jest.Mocked<AlertsService>
+const recommendedVersionsService = new RecommendedVersionsService(null) as jest.Mocked<RecommendedVersionsService>
 
 let app: Express
 const testProducts = [{ id: 1, name: 'testProduct', p_id: '1', slug: 'testproduct' }] as Product[]
@@ -30,6 +35,7 @@ const testProduct = {
     {
       name: 'test-component',
       description: 'Test Component Description',
+      language: 'Kotlin',
     },
   ],
 } as Product
@@ -70,6 +76,7 @@ const mockComponent = {
       },
     },
   ],
+  language: 'Kotlin',
 } as Component
 
 const testProductionEnvironment = {
@@ -92,6 +99,41 @@ const testProductionEnvironment = {
   },
 } as unknown as Environment
 
+const mockComparison = {
+  items: [
+    {
+      componentName: 'test-component',
+      key: 'genericPrometheusAlerts',
+      current: '1.13.0',
+      recommended: '1.14',
+      status: 'needs-attention',
+    },
+    {
+      componentName: 'test-component',
+      key: 'genericService',
+      current: '3.11',
+      recommended: '3.12',
+      status: 'needs-attention',
+    },
+    {
+      componentName: 'test-component',
+      key: 'hmppsGradleSpringBoot',
+      current: '9.1.1',
+      recommended: '9.1.1',
+      status: 'aligned',
+    },
+  ],
+  summary: {
+    totalItems: 3,
+    aligned: 1,
+    needsUpgrade: 0,
+    aboveBaseline: 0,
+    missing: 0,
+    needsAttention: 2,
+  },
+  recommendedSource: 'strapi',
+}
+
 beforeEach(() => {
   serviceCatalogueService.getProducts.mockResolvedValue(testProducts)
   serviceCatalogueService.getProduct.mockResolvedValue(testProduct)
@@ -100,7 +142,9 @@ beforeEach(() => {
   serviceCatalogueService.getComponent.mockResolvedValue(mockComponent)
   const mockedGetProductionEnvironment = jest.spyOn(vulnerabilitySummary, 'getProductionEnvironment')
   mockedGetProductionEnvironment.mockReturnValue(testProductionEnvironment)
-  app = appWithAllRoutes({ services: { serviceCatalogueService, alertsService } })
+  ;(compareComponentsDependencies as jest.Mock).mockResolvedValue(mockComparison)
+
+  app = appWithAllRoutes({ services: { serviceCatalogueService, alertsService, recommendedVersionsService } })
 })
 
 afterEach(() => {
@@ -187,6 +231,24 @@ describe('/products', () => {
           const link = vulnerabilityBanner.find('a')
           expect(link.length).toBe(1)
           expect(link.attr('href')).toContain('/veracode')
+        })
+    })
+
+    it('should render product page with a dependency banner', () => {
+      return request(app)
+        .get('/products/testproduct')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          const dependencyBanner = $('#dependency-alert-popup')
+          expect(dependencyBanner.length).toBe(1)
+          expect(dependencyBanner.text()).toMatch(/Components Needing Dependency Updates/)
+          const listItems = dependencyBanner.find('ul.govuk-list--bullet li')
+          expect(listItems.length).toBeGreaterThan(0)
+          const firstLink = listItems.first().find('a')
+          expect(firstLink.length).toBe(1)
+          expect(firstLink.attr('href')).toBe('/components/test-component')
+          expect(firstLink.text()).toBe('test-component')
         })
     })
   })

@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import config from '../config'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { getFormattedName, utcTimestampToUtcDateTime, mapToCanonicalEnv } from '../utils/utils'
@@ -7,6 +8,7 @@ import {
   countTrivyHighAndCritical,
   countVeracodeHighAndVeryHigh,
 } from '../utils/vulnerabilitySummary'
+import { compareComponentsDependencies } from '../services/dependencyComparison'
 
 interface DisplayAlert {
   alertname: string
@@ -15,7 +17,11 @@ interface DisplayAlert {
   message: string
 }
 
-export default function routes({ serviceCatalogueService, alertsService }: Services): Router {
+export default function routes({
+  serviceCatalogueService,
+  alertsService,
+  recommendedVersionsService,
+}: Services): Router {
   const router = Router()
 
   router.get('/', async (req, res) => {
@@ -78,17 +84,17 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
       trivyVulnerabilityCount: 0,
       veracodeVulnerabilityCount: 0,
     }
-
+    const componentsNeedingUpdates: string[] = []
     const bannerPromises = displayProduct.components?.map(async component => {
       try {
         const allAlerts = await alertsService.getAlertsForComponent(component.name)
         const activeAlerts = allAlerts
           .filter(alert => alert.status?.state === 'active')
           .map(alert => ({
-            componentname: component.description,
-            componentslug: component.name,
+            componentName: component.description,
+            componentSlug: component.name,
             alertname: alert.labels?.alertname ?? '',
-            startsat: utcTimestampToUtcDateTime(alert.startsAt),
+            startsAt: utcTimestampToUtcDateTime(alert.startsAt),
             environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
             summary: alert.annotations?.summary ?? '',
             message: alert.annotations?.message ?? '',
@@ -103,17 +109,55 @@ export default function routes({ serviceCatalogueService, alertsService }: Servi
         displayProduct.trivyVulnerabilityCount += trivyCount
         displayProduct.veracodeVulnerabilityCount += veracodeCount
 
-        return activeAlerts
+        const isKotlin = (component.language || '') === 'Kotlin'
+        const { kotlinOnly } = config.recommendedVersions
+
+        // Dependency comparison for this component
+        if (!kotlinOnly || isKotlin) {
+          try {
+            const recommended = await recommendedVersionsService.getRecommendedVersions()
+            const comparison = await compareComponentsDependencies([component], recommended)
+
+            const { totalItems, aligned, needsUpgrade, aboveBaseline, missing } = comparison.summary
+            logger.debug(
+              `[DependencyComparison] component=${component.name} source=${comparison.recommendedSource} items=${totalItems} aligned=${aligned} needsUpgrade=${needsUpgrade} aboveBaseline=${aboveBaseline} missing=${missing}`,
+            )
+
+            const relevantItems = comparison.items.filter(
+              item =>
+                item.current !== '-' &&
+                !!item.current &&
+                (item.status === 'needs-attention' || item.status === 'needs-upgrade'),
+            )
+
+            if (relevantItems.length > 0) {
+              componentsNeedingUpdates.push(component.name)
+            }
+          } catch (e) {
+            logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(e)}`)
+          }
+        }
+        return { activeAlerts, componentsNeedingUpdates }
       } catch (err) {
         logger.error(`Error fetching alerts for ${component.name}: ${err instanceof Error ? err.message : String(err)}`)
-        return []
+        return { activeAlerts: [], componentsNeedingUpdates: [] }
       }
     })
 
-    const alertResults = await Promise.all(bannerPromises)
-    displayProduct.alerts = alertResults.flat()
+    const productResults = await Promise.all(bannerPromises)
+    displayProduct.alerts = productResults
+      .filter(result => result && Array.isArray(result.activeAlerts))
+      .flatMap(result => result.activeAlerts)
 
-    return res.render('pages/product', { product: displayProduct })
+    const upgradeNeeded = Array.from(
+      new Set(
+        productResults
+          .filter(result => result && Array.isArray(result.componentsNeedingUpdates))
+          .flatMap(result => result.componentsNeedingUpdates),
+      ),
+    )
+
+    return res.render('pages/product', { product: displayProduct, upgradeNeeded })
   })
 
   return router
