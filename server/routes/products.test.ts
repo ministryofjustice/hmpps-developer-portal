@@ -35,6 +35,7 @@ const testProduct = {
     {
       name: 'test-component',
       description: 'Test Component Description',
+      language: 'Kotlin',
     },
   ],
 } as Product
@@ -101,21 +102,21 @@ const testProductionEnvironment = {
 const mockComparison = {
   items: [
     {
-      componentName: 'hmpps-adjudications-insights-api',
+      componentName: 'test-component',
       key: 'genericPrometheusAlerts',
       current: '1.13.0',
       recommended: '1.14',
       status: 'needs-attention',
     },
     {
-      componentName: 'hmpps-adjudications-insights-api',
+      componentName: 'test-component',
       key: 'genericService',
       current: '3.11',
       recommended: '3.12',
       status: 'needs-attention',
     },
     {
-      componentName: 'hmpps-adjudications-insights-api',
+      componentName: 'test-component',
       key: 'hmppsGradleSpringBoot',
       current: '9.1.1',
       recommended: '9.1.1',
@@ -230,6 +231,24 @@ describe('/products', () => {
           const link = vulnerabilityBanner.find('a')
           expect(link.length).toBe(1)
           expect(link.attr('href')).toContain('/veracode')
+        })
+    })
+
+    it('should render product page with a dependency banner', () => {
+      return request(app)
+        .get('/products/testproduct')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          const dependencyBanner = $('#dependency-alert-popup')
+          expect(dependencyBanner.length).toBe(1)
+          expect(dependencyBanner.text()).toMatch(/Components Needing Dependency Updates/)
+          const listItems = dependencyBanner.find('ul.govuk-list--bullet li')
+          expect(listItems.length).toBeGreaterThan(0)
+          const firstLink = listItems.first().find('a')
+          expect(firstLink.length).toBe(1)
+          expect(firstLink.attr('href')).toBe('/components/test-component')
+          expect(firstLink.text()).toBe('test-component')
         })
     })
   })

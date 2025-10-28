@@ -116,7 +116,7 @@ export default function routes({
         if (!kotlinOnly || isKotlin) {
           try {
             const recommended = await recommendedVersionsService.getRecommendedVersions()
-            const comparison = compareComponentsDependencies([component], recommended)
+            const comparison = await compareComponentsDependencies([component], recommended)
 
             const { totalItems, aligned, needsUpgrade, aboveBaseline, missing } = comparison.summary
             logger.debug(
