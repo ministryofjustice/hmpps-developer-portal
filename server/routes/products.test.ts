@@ -4,16 +4,21 @@ import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import AlertsService from '../services/alertsService'
+import RecommendedVersionsService from '../services/recommendedVersionsService'
 import { Product, Environment } from '../data/modelTypes'
 import * as vulnerabilitySummary from '../utils/vulnerabilitySummary'
+import { compareComponentsDependencies } from '../services/dependencyComparison'
 import { Component } from '../data/strapiApiTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/alertsService')
+jest.mock('../services/recommendedVersionsService')
 jest.mock('../utils/vulnerabilitySummary')
+jest.mock('../services/dependencyComparison')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 const alertsService = new AlertsService(null) as jest.Mocked<AlertsService>
+const recommendedVersionsService = new RecommendedVersionsService(null) as jest.Mocked<RecommendedVersionsService>
 
 let app: Express
 const testProducts = [{ id: 1, name: 'testProduct', p_id: '1', slug: 'testproduct' }] as Product[]
@@ -70,6 +75,7 @@ const mockComponent = {
       },
     },
   ],
+  language: 'Kotlin',
 } as Component
 
 const testProductionEnvironment = {
@@ -92,6 +98,41 @@ const testProductionEnvironment = {
   },
 } as unknown as Environment
 
+const mockComparison = {
+  items: [
+    {
+      componentName: 'hmpps-adjudications-insights-api',
+      key: 'genericPrometheusAlerts',
+      current: '1.13.0',
+      recommended: '1.14',
+      status: 'needs-attention',
+    },
+    {
+      componentName: 'hmpps-adjudications-insights-api',
+      key: 'genericService',
+      current: '3.11',
+      recommended: '3.12',
+      status: 'needs-attention',
+    },
+    {
+      componentName: 'hmpps-adjudications-insights-api',
+      key: 'hmppsGradleSpringBoot',
+      current: '9.1.1',
+      recommended: '9.1.1',
+      status: 'aligned',
+    },
+  ],
+  summary: {
+    totalItems: 3,
+    aligned: 1,
+    needsUpgrade: 0,
+    aboveBaseline: 0,
+    missing: 0,
+    needsAttention: 2,
+  },
+  recommendedSource: 'strapi',
+}
+
 beforeEach(() => {
   serviceCatalogueService.getProducts.mockResolvedValue(testProducts)
   serviceCatalogueService.getProduct.mockResolvedValue(testProduct)
@@ -100,7 +141,9 @@ beforeEach(() => {
   serviceCatalogueService.getComponent.mockResolvedValue(mockComponent)
   const mockedGetProductionEnvironment = jest.spyOn(vulnerabilitySummary, 'getProductionEnvironment')
   mockedGetProductionEnvironment.mockReturnValue(testProductionEnvironment)
-  app = appWithAllRoutes({ services: { serviceCatalogueService, alertsService } })
+  ;(compareComponentsDependencies as jest.Mock).mockResolvedValue(mockComparison)
+
+  app = appWithAllRoutes({ services: { serviceCatalogueService, alertsService, recommendedVersionsService } })
 })
 
 afterEach(() => {

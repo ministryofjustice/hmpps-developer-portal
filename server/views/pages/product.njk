@@ -37,10 +37,10 @@
     {% for alert in product.alerts %}
       {% set tableRowContent =  [
         { text: alert.alertname },
-        { html: '<a href="/components/' ~ alert.componentslug ~ '" target="_blank">'~ alert.componentname ~'</a>' },
+        { html: '<a href="/components/' ~ alert.componentSlug ~ '" target="_blank">'~ alert.componentName ~'</a>' },
         { text: alert.environment },
         { text: alert.summary },
-        { text: alert.startsat },
+        { text: alert.startsAt },
         { text: alertMessage(alert) }
       ] %}
       {% if loop.first %}
@@ -70,10 +70,16 @@
   </div>
 {% endif %}
 
-{% if product.isPrisonProduct %}
-  {{ govukInsetText({
-    html: 'To update the information contained on this page please contact <a href="https://moj.enterprise.slack.com/archives/C0572SYFU3D" class="govuk-link govuk-link--no-visited-state" target="_blank">#ask-dps-delivery-ops</a> with the appropriate changes.'
-  }) }}
+{% if upgradeNeeded.length %}
+  <div id="dependency-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+    <h2 class="govuk-heading-m">Components Needing Dependency Updates</h2>
+    <ul class="govuk-list govuk-list--bullet">
+      {% for componentName in upgradeNeeded %}
+        <li>
+          <a class="govuk-link" href="/components/{{ componentName }}">{{ componentName }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
 {% endif %}
 
 {# Vulnerability banners #}
@@ -89,6 +95,12 @@
     <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities found in Production environment</p>
     <p><strong>{{ product.veracodeVulnerabilityCount }}</strong> very high and/or high vulnerabilities have been identified in the latest Veracode scan. <a class="govuk-link--no-visited-state" href="/veracode?team={{ product.teamName }}&results=failed">See results.</a></p>
   </div>
+{% endif %}
+
+{% if product.isPrisonProduct %}
+  {{ govukInsetText({
+    html: 'To update the information contained on this page please contact <a href="https://moj.enterprise.slack.com/archives/C0572SYFU3D" class="govuk-link govuk-link--no-visited-state" target="_blank">#ask-dps-delivery-ops</a> with the appropriate changes.'
+  }) }}
 {% endif %}
 
 <table class="componentData">
