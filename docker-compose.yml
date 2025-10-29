@@ -2,7 +2,7 @@ version: '3.1'
 services:
 
   redis-dev-portal:
-    image: 'redis:7.4'
+    image: 'redis:8.2'
     networks:
       - hmpps
     container_name: redis-dev-portal
