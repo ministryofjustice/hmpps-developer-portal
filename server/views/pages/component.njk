@@ -43,8 +43,9 @@
       {{ govukTable({ rows: alerts }) }}
     {% endmacro %}
 
-    {% if component.alerts | length %}
-      <div id ="component-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+    {% if hasAlerts %}
+    <div id ="component-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+
         {% set firstAlertRow = [] %}
         {% set additionalAlertsRow = [] %}
         {% for alert in component.alerts %}
@@ -61,7 +62,9 @@
             {% set additionalAlertRowData = additionalAlertsRow.push(tableRowContent) %}
           {% endif %}
         {% endfor %}
+     {% if component.alerts | length > 1 %}
         {% set additionalRows = firstAlertRow.push([ { colspan: 4, text: additionalAlerts(additionalAlertsRow)} ]) %}
+     {% endif %}
 
         {{ govukTable({
           caption: "Active Alerts",

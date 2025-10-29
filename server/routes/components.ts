@@ -109,6 +109,8 @@ export default function routes({
     }
     displayComponent.alerts = alerts
 
+    const hasAlerts = alerts && alerts.length > 0
+
     let upgradeNeeded = false
 
     const isKotlin = (component.language || '') === 'Kotlin'
@@ -148,7 +150,7 @@ export default function routes({
       }
     }
 
-    return res.render('pages/component', { component: displayComponent, upgradeNeeded })
+    return res.render('pages/component', { component: displayComponent, upgradeNeeded, hasAlerts })
   })
 
   router.get('/:componentName/environment/:environmentName', async (req, res) => {
