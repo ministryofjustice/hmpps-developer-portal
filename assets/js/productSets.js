@@ -14,18 +14,18 @@ jQuery(function () {
     },
     {
       data: 'products',
-      createdCell: function (td, _cellData, rowData) {
+      render: function (td, _cellData, rowData) {
         const header = `<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Product List</span></summary>`
         const products = rowData.products
-          .map(
-            product =>
-              `<li><a href="/products/${product.slug}" data-test="product-${product.id}">${product.name}</a></li>`,
-          )
-          .join('')
-        if (products) {
-          $(td).html(`${products}`)
+        if (Array.isArray(products) && products.length > 0) {
+          return products
+            .map(
+              product =>
+                `<li><a href="/products/${product.slug}" data-test="product-${product.id}">${product.name}</a></li>`,
+            )
+            .join('\n')
         } else {
-          $(td).html(`No Products`)
+          return '<span class="no-products">No Products</span>'
         }
       },
     },
