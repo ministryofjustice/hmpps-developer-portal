@@ -69,7 +69,7 @@
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
     "pako": "^2.1.0",
-    "redis": "^4.7.1",
+    "redis": "^5.9.0",
     "superagent": "^10.2.3",
     "svg-pan-zoom": "^3.6.2",
     "url-value-parser": "^2.2.0"
