@@ -34,12 +34,12 @@
     "precommit:verify": "npm run typecheck && npm test"
   },
   "engines": {
-    "node": "^22",
-    "npm": "^10"
+    "node": "^24",
+    "npm": "^11"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^6.0.0",
-    "@ministryofjustice/hmpps-monitoring": "^0.0.2",
+    "@ministryofjustice/frontend": "^7.1.0",
+    "@ministryofjustice/hmpps-monitoring": "^1.0.0",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
     "body-parser": "^2.2.0",
@@ -65,7 +65,7 @@
     "jquery": "^3.7.1",
     "js-base64": "^3.7.8",
     "jszip": "3.10.1",
-    "mermaid": "^11.12.0",
+    "mermaid": "^11.12.1",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
     "pako": "^2.1.0",
@@ -75,9 +75,9 @@
     "url-value-parser": "^2.2.0"
   },
   "devDependencies": {
-    "@ministryofjustice/eslint-config-hmpps": "^0.0.5",
-    "@ministryofjustice/hmpps-precommit-hooks": "^0.0.4",
-    "@tsconfig/node22": "^22.0.2",
+    "@ministryofjustice/eslint-config-hmpps": "^1.0.0",
+    "@ministryofjustice/hmpps-precommit-hooks": "^1.0.2",
+    "@tsconfig/node24": "^24.0.1",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/compression": "^1.8.1",
@@ -86,7 +86,7 @@
     "@types/express-session": "^1.18.2",
     "@types/http-errors": "^2.0.5",
     "@types/jest": "^30.0.0",
-    "@types/node": "^22.18.12",
+    "@types/node": "^24.9.2",
     "@types/nunjucks": "^3.2.6",
     "@types/pako": "^2.0.4",
     "@types/superagent": "^8.1.9",
