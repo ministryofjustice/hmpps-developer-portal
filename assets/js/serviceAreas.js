@@ -14,19 +14,19 @@ jQuery(function () {
     },
     {
       data: 'products',
-      createdCell: function (td, _cellData, rowData) {
+      render: function (td, _cellData, rowData) {
         const header = `<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Product List</span></summary>`
         const products = rowData.products
+        const productItems = products
           .map(
             product =>
               `<li><a href="/products/${product.slug}" data-test="product-${product.id}">${product.name}</a></li>`,
           )
-          .join('')
-        if (products) {
-          $(td).html(`${products}`)
-        } else {
-          $(td).html(`No Products`)
+          .join('\n')
+        if (Array.isArray(products) && products.length > 0) {
+          return `<ul>${productItems}</ul>`
         }
+        return `<ul class="no-products">No Products</ul>`
       },
     },
   ]
