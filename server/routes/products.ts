@@ -43,8 +43,8 @@ export default function routes({
     const product = await serviceCatalogueService.getProduct({ productSlug })
 
     const productSet = product.product_set
-    const { team } = product
-    const teamName = encodeURIComponent(team.name).replace(/%20/g, '+')
+    const team = product.team || null
+    const teamName = team?.name ? encodeURIComponent(team.name).replace(/%20/g, '+') : ''
     const components = product.components
       ?.map(component => component)
       .sort((a, b) => {
