@@ -24,9 +24,8 @@ jQuery(function () {
                 `<li><a href="/products/${product.slug}" data-test="product-${product.id}">${product.name}</a></li>`,
             )
             .join('\n')
-        } else {
-          return '<span class="no-products">No Products</span>'
         }
+        return '<span class="no-products">No Products</span>'
       },
     },
   ]
