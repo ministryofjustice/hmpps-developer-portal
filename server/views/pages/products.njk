@@ -2,6 +2,7 @@
 
 {% set pageTitle = applicationName + " - Products" %}
 {% set mainClasses = "app-container govuk-body" %}
+{% set containerClasses = "wide-screen" %}
 
 {% block content %}
 {{ breadCrumb("Products", []) }}
@@ -16,6 +17,9 @@
         <th>Phase</th>
 				<th>Product Set ID</th>
 				<th>Product Set Name</th>
+				<th>Team</th>
+				<th>Service Area</th>
+				<th>Lead Developer</th>
 			</tr>
 		</thead>
 		<tfoot>
@@ -25,6 +29,9 @@
         <th>Phase</th>
 				<th>Product Set ID</th>
 				<th>Product Set Name</th>
+				<th>Team</th>
+				<th>Service Area</th>
+				<th>Lead Developer</th>
 			</tr>
 		</tfoot>
   </table>

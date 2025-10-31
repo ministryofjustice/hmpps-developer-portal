@@ -80,7 +80,9 @@ describe('strapiApiClient', () => {
           data: [{ documentId: 'documentid1', name: 'Product', p_id: '1' }],
         } as ListResponse<Strapi.Product>
         const productsResponse = [{ documentId: 'documentid1', name: 'Product', p_id: '1' }] as Product[]
-        fakeStrapiApi.get('/products?populate[product_set]=true').reply(200, allProducts)
+        fakeStrapiApi
+          .get('/products?populate[product_set]=true&populate[service_area]=true&populate[team]=true')
+          .reply(200, allProducts)
         const output = await strapiApiClient.getProducts({})
         expect(output).toEqual(productsResponse)
       })
@@ -91,7 +93,9 @@ describe('strapiApiClient', () => {
         } as ListResponse<Strapi.Product>
         const productsResponse = [{ documentId: 'documentid1', name: 'Product', p_id: '1' }] as Product[]
         fakeStrapiApi
-          .get('/products?populate[product_set]=true&populate[components][populate][envs]=true')
+          .get(
+            '/products?populate[product_set]=true&populate[service_area]=true&populate[team]=true&populate[components][populate][envs]=true',
+          )
           .reply(200, allProducts)
         const output = await strapiApiClient.getProducts({ withEnvironments: true })
         expect(output).toEqual(productsResponse)
