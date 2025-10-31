@@ -46,6 +46,12 @@ jQuery(function () {
           : 'Unknown'
       },
     },
+    {
+      data: 'lead_developer',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.lead_developer}`)
+      },
+    },
   ]
 
   createTable({
