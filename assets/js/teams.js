@@ -20,21 +20,7 @@ jQuery(function () {
     },
     {
       data: 'products',
-      createdCell: function (td, _cellData, rowData) {
-        const products = rowData.products
-          ? rowData.products
-              .map(
-                product =>
-                  `<li><a href="/products/${product.slug}" data-test="product-${product.id}">${product.name}</a></li>`,
-              )
-              .join('')
-          : null
-        if (products) {
-          $(td).html(`${products}`)
-        } else {
-          $(td).html(`No Products`)
-        }
-      },
+      render: createSearchableProductList,
     },
     {
       data: 'slug',
