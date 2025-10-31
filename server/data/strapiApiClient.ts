@@ -48,7 +48,7 @@ export default class StrapiApiClient {
     withEnvironments?: boolean
     withComponents?: boolean
   }): Promise<Product[]> {
-    const populate = ['product_set']
+    const populate = ['product_set', 'service_area', 'team']
 
     if (withComponents) {
       populate.push('components')
