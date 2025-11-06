@@ -164,6 +164,14 @@ jQuery(function () {
         $(td).html(`${value}`)
       },
     },
+    {
+      data: 'app_insights_alerts_enabled',
+      visible: false,
+      createdCell: function (td, _cellData, rowData) {
+        const value = rowData.app_insights_cloud_role_name ? (rowData.app_insights_alerts_enabled ?? true) : 'N/A'
+        $(td).html(`${value}`)
+      },
+    },
   ]
 
   createTable({

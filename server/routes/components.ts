@@ -71,6 +71,9 @@ export default function routes({
       githubRepo: component.github_repo,
       githubVisibility: component.github_project_visibility,
       appInsightsName: component.app_insights_cloud_role_name,
+      appInsightsAlertsEnabled: component.app_insights_cloud_role_name
+        ? (component.app_insights_alerts_enabled ?? true)
+        : 'N/A',
       api: component.api,
       frontEnd: component.frontend,
       partOfMonorepo: component.part_of_monorepo,
