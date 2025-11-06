@@ -170,9 +170,11 @@ export interface paths {
       }
       requestBody: {
         content: {
-          /** @example {
+          /**
+           * @example {
            *       "email": "foo.bar@strapi.io"
-           *     } */
+           *     }
+           */
           'application/json': {
             email?: string
           }
@@ -230,10 +232,12 @@ export interface paths {
       }
       requestBody: {
         content: {
-          /** @example {
+          /**
+           * @example {
            *       "identifier": "foobar",
            *       "password": "Test1234"
-           *     } */
+           *     }
+           */
           'application/json': {
             identifier?: string
             password?: string
@@ -289,11 +293,13 @@ export interface paths {
       }
       requestBody: {
         content: {
-          /** @example {
+          /**
+           * @example {
            *       "username": "foobar",
            *       "email": "foo.bar@strapi.io",
            *       "password": "Test1234"
-           *     } */
+           *     }
+           */
           'application/json': {
             email?: string
             password?: string
@@ -347,11 +353,13 @@ export interface paths {
       }
       requestBody: {
         content: {
-          /** @example {
+          /**
+           * @example {
            *       "password": "Test1234",
            *       "passwordConfirmation": "Test1234",
            *       "code": "zertyoaizndoianzodianzdonaizdoinaozdnia"
-           *     } */
+           *     }
+           */
           'application/json': {
             code?: string
             password?: string
@@ -1157,7 +1165,8 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
-            /** @example [
+            /**
+             * @example [
              *       {
              *         "id": 9,
              *         "username": "foao@strapi.io",
@@ -1168,7 +1177,8 @@ export interface paths {
              *         "createdAt": "2022-06-01T18:32:35.211Z",
              *         "updatedAt": "2022-06-01T18:32:35.217Z"
              *       }
-             *     ] */
+             *     ]
+             */
             'application/json': components['schemas']['Users-Permissions-User'][]
           }
         }
@@ -1194,11 +1204,13 @@ export interface paths {
       }
       requestBody: {
         content: {
-          /** @example {
+          /**
+           * @example {
            *       "username": "foo",
            *       "email": "foo@strapi.io",
            *       "password": "foo-password"
-           *     } */
+           *     }
+           */
           'application/json': {
             email: string
             password: string
@@ -1213,7 +1225,8 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
-            /** @example {
+            /**
+             * @example {
              *       "id": 1,
              *       "username": "foo",
              *       "email": "foo@strapi.io",
@@ -1230,7 +1243,8 @@ export interface paths {
              *         "createdAt": "2022-05-19T17:35:35.096Z",
              *         "updatedAt": "2022-06-04T07:11:59.551Z"
              *       }
-             *     } */
+             *     }
+             */
             'application/json': components['schemas']['Users-Permissions-User'] & {
               role?: components['schemas']['Users-Permissions-Role']
             }
@@ -1276,7 +1290,8 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
-            /** @example {
+            /**
+             * @example {
              *       "permissions": {
              *         "api::content-type.content-type": {
              *           "controllers": {
@@ -1311,7 +1326,8 @@ export interface paths {
              *           }
              *         }
              *       }
-             *     } */
+             *     }
+             */
             'application/json': {
               permissions?: components['schemas']['Users-Permissions-PermissionsTree']
             }
@@ -1359,7 +1375,8 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
-            /** @example {
+            /**
+             * @example {
              *       "roles": [
              *         {
              *           "id": 1,
@@ -1371,7 +1388,8 @@ export interface paths {
              *           "nb_users": 0
              *         }
              *       ]
-             *     } */
+             *     }
+             */
             'application/json': {
               roles?: (components['schemas']['Users-Permissions-Role'] & {
                 nb_users?: number
@@ -1456,7 +1474,8 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
-            /** @example {
+            /**
+             * @example {
              *       "role": {
              *         "id": 1,
              *         "name": "Public",
@@ -1476,7 +1495,8 @@ export interface paths {
              *           }
              *         }
              *       }
-             *     } */
+             *     }
+             */
             'application/json': {
               role?: components['schemas']['Users-Permissions-Role']
             }
@@ -1613,7 +1633,8 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
-            /** @example {
+            /**
+             * @example {
              *       "id": 1,
              *       "username": "foo",
              *       "email": "foo@strapi.io",
@@ -1622,7 +1643,8 @@ export interface paths {
              *       "blocked": false,
              *       "createdAt": "2022-05-19T17:35:35.096Z",
              *       "updatedAt": "2022-05-19T17:35:35.096Z"
-             *     } */
+             *     }
+             */
             'application/json': components['schemas']['Users-Permissions-User']
           }
         }
@@ -1650,11 +1672,13 @@ export interface paths {
       }
       requestBody: {
         content: {
-          /** @example {
+          /**
+           * @example {
            *       "username": "foo",
            *       "email": "foo@strapi.io",
            *       "password": "foo-password"
-           *     } */
+           *     }
+           */
           'application/json': {
             email: string
             password: string
@@ -1669,7 +1693,8 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
-            /** @example {
+            /**
+             * @example {
              *       "id": 1,
              *       "username": "foo",
              *       "email": "foo@strapi.io",
@@ -1686,7 +1711,8 @@ export interface paths {
              *         "createdAt": "2022-05-19T17:35:35.096Z",
              *         "updatedAt": "2022-06-04T07:11:59.551Z"
              *       }
-             *     } */
+             *     }
+             */
             'application/json': components['schemas']['Users-Permissions-User'] & {
               role?: components['schemas']['Users-Permissions-Role']
             }
@@ -1723,7 +1749,8 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
-            /** @example {
+            /**
+             * @example {
              *       "id": 1,
              *       "username": "foo",
              *       "email": "foo@strapi.io",
@@ -1732,7 +1759,8 @@ export interface paths {
              *       "blocked": false,
              *       "createdAt": "2022-05-19T17:35:35.096Z",
              *       "updatedAt": "2022-05-19T17:35:35.096Z"
-             *     } */
+             *     }
+             */
             'application/json': components['schemas']['Users-Permissions-User']
           }
         }
@@ -1821,7 +1849,8 @@ export interface paths {
             [name: string]: unknown
           }
           content: {
-            /** @example {
+            /**
+             * @example {
              *       "id": 1,
              *       "username": "foo",
              *       "email": "foo@strapi.io",
@@ -1830,7 +1859,8 @@ export interface paths {
              *       "blocked": false,
              *       "createdAt": "2022-05-19T17:35:35.096Z",
              *       "updatedAt": "2022-05-19T17:35:35.096Z"
-             *     } */
+             *     }
+             */
             'application/json': components['schemas']['Users-Permissions-User']
           }
         }
@@ -1859,6 +1889,7 @@ export interface components {
   schemas: {
     Component: {
       api?: boolean
+      app_insights_alerts_enabled?: boolean
       app_insights_cloud_role_name?: string
       archived?: boolean
       codescanning_summary?: unknown
@@ -1880,6 +1911,7 @@ export interface components {
         cluster?: string
         component?: {
           api?: boolean
+          app_insights_alerts_enabled?: boolean
           app_insights_cloud_role_name?: string
           archived?: boolean
           codescanning_summary?: unknown
@@ -2340,6 +2372,7 @@ export interface components {
     ComponentRequest: {
       data: {
         api?: boolean
+        app_insights_alerts_enabled?: boolean
         app_insights_cloud_role_name?: string
         archived?: boolean
         codescanning_summary?: unknown
@@ -2584,6 +2617,7 @@ export interface components {
     CustomComponentView: {
       components?: {
         api?: boolean
+        app_insights_alerts_enabled?: boolean
         app_insights_cloud_role_name?: string
         archived?: boolean
         codescanning_summary?: unknown
@@ -3067,6 +3101,7 @@ export interface components {
       cluster?: string
       component?: {
         api?: boolean
+        app_insights_alerts_enabled?: boolean
         app_insights_cloud_role_name?: string
         archived?: boolean
         codescanning_summary?: unknown
@@ -4183,6 +4218,7 @@ export interface components {
         }[]
         components?: {
           api?: boolean
+          app_insights_alerts_enabled?: boolean
           app_insights_cloud_role_name?: string
           archived?: boolean
           codescanning_summary?: unknown
@@ -4675,6 +4711,7 @@ export interface components {
         }[]
         components?: {
           api?: boolean
+          app_insights_alerts_enabled?: boolean
           app_insights_cloud_role_name?: string
           archived?: boolean
           codescanning_summary?: unknown
@@ -5485,6 +5522,7 @@ export interface components {
         }[]
         components?: {
           api?: boolean
+          app_insights_alerts_enabled?: boolean
           app_insights_cloud_role_name?: string
           archived?: boolean
           codescanning_summary?: unknown
@@ -5941,6 +5979,7 @@ export interface components {
         }[]
         components?: {
           api?: boolean
+          app_insights_alerts_enabled?: boolean
           app_insights_cloud_role_name?: string
           archived?: boolean
           codescanning_summary?: unknown
@@ -6725,7 +6764,8 @@ export interface components {
   requestBodies: {
     'Users-Permissions-RoleRequest': {
       content: {
-        /** @example {
+        /**
+         * @example {
          *       "name": "foo",
          *       "description": "role foo",
          *       "permissions": {
@@ -6739,7 +6779,8 @@ export interface components {
          *           }
          *         }
          *       }
-         *     } */
+         *     }
+         */
         'application/json': {
           description?: string
           name?: string

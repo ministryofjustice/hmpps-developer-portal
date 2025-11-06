@@ -31,6 +31,7 @@ const testComponent: Component = {
   publishedAt: '2023-06-07T11:07:00.444Z',
   title: 'testTitle',
   app_insights_cloud_role_name: 'test-cloud-role-name',
+  app_insights_alerts_enabled: true,
   api: true,
   frontend: false,
   part_of_monorepo: false,
@@ -216,6 +217,9 @@ describe('/components', () => {
           expect($('[data-test="github-repo"]').text()).toBe(testComponent.github_repo)
           expect($('[data-test="github-visibility"]').text()).toBe(testComponent.github_project_visibility)
           expect($('[data-test="appinsights-name"]').text()).toBe(testComponent.app_insights_cloud_role_name)
+          expect($('[data-test="appinsights-alert-enabled"]').text()).toBe(
+            testComponent.app_insights_alerts_enabled.toString(),
+          )
           expect($('[data-test="api"]').text()).toBe(testComponent.api ? 'Yes' : 'No')
           expect($('[data-test="frontend"]').text()).toBe(testComponent.frontend ? 'Yes' : 'No')
           expect($('[data-test="part-of-monorepo"]').text()).toBe(testComponent.part_of_monorepo ? 'Yes' : 'No')
