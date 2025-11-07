@@ -264,13 +264,10 @@
     </div>
   {% endif %}
 
-  <h3 class="govuk-heading-m">Component Drift Radiator</h3>
-
-{% if team.component.length > 0 %}
-  {{ driftRadiatorTable() }}
-{% else %}
-  {{ "This team has no products to display" }}
-{% endif %}
+  {% if team.componentList.length > 0 %}
+    <h3 class="govuk-heading-m">Component Drift Radiator</h3>
+    {{ driftRadiatorTable() }}
+  {% endif %}
 
 {% endblock %}
 
@@ -281,10 +278,9 @@
   <script src="/assets/js/driftRadiator.js"></script>
   <script nonce="{{ cspNonce }}">
     jQuery(function () {
-      const components = {{team.component | toJson(2) | safe }}
+      const components = {{team.componentList | toJson(2) | safe }}
       const csrfToken = "{{ csrfToken }}"
       const renderer = new DeploymentRenderer(csrfToken, 'list')
-      console.log('JQ:', components)
       renderer.start(components)
     })
   </script>

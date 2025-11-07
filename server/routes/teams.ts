@@ -47,10 +47,8 @@ export default function routes({
     const team = await serviceCatalogueService.getTeam({ teamSlug, withEnvironments: true })
     const products = team.products.map(product => product)
     const components = getComponentsForTeam(team)
-    let componentList: string[] = []
-    if (components && components.length > 0) {
-      componentList = components.map(component => component.componentName)
-    }
+    const componentList: string[] =
+      components && components.length > 0 ? components.map(component => component.componentName) : []
 
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
@@ -82,7 +80,7 @@ export default function routes({
 
       const displayTeam = {
         name: team.name,
-        component: componentList,
+        componentList,
         encodedTeamName: encodeURIComponent(team.name),
         slackWorkspaceId: config.slack.workspaceId,
         slackChannelId: team.slack_channel_id,

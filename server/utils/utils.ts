@@ -151,17 +151,13 @@ export function findTeamMatch(teams: Team[], name: string) {
 
 export function getComponentsForTeam(team: Team) {
   const components: { componentName: string }[] = []
-  if (team.products && team.products.length > 0) {
-    team.products.forEach((product: Product) => {
-      if (product.components && product.components.length > 0) {
-        product.components.forEach((component: Component) => {
-          components.push({
-            componentName: component.name,
-          })
-        })
-      }
+  team.products.forEach((product: Product) => {
+    product.components.forEach((component: Component) => {
+      components.push({
+        componentName: component.name,
+      })
     })
-  }
+  })
   return components
 }
 
