@@ -6,6 +6,7 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "../partials/driftRadiatorTable.njk" import driftRadiatorTable %}
 {% extends "../partials/layout.njk" %}
 
 {% set pageTitle = applicationName + " - " + team.name %}
@@ -263,6 +264,30 @@
     </div>
   {% endif %}
 
+  <h3 class="govuk-heading-m">Component Drift Radiator</h3>
+
+{% if team.component.length > 0 %}
+  {{ driftRadiatorTable() }}
+{% else %}
+  {{ "This team has no products to display" }}
+{% endif %}
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="/assets/js/dayjs/dayjs.min.js"></script>
+  <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
+  <script src="/assets/js/driftRadiator.js"></script>
+  <script nonce="{{ cspNonce }}">
+    jQuery(function () {
+      const components = {{team.component | toJson(2) | safe }}
+      const csrfToken = "{{ csrfToken }}"
+      const renderer = new DeploymentRenderer(csrfToken, 'list')
+      console.log('JQ:', components)
+      renderer.start(components)
+    })
+  </script>
 {% endblock %}
 
 {% block pageScripts %}

@@ -8,7 +8,7 @@ import { RdsEntry } from '../@types'
 import { TrivyScanType } from '../data/converters/modelTypes'
 
 import type { ServiceCatalogueService } from '../services'
-import type { Team } from '../data/modelTypes'
+import type { Component, Product, Team } from '../data/modelTypes'
 import logger from '../../logger'
 
 dayjs.extend(relativeTime.default)
@@ -147,6 +147,22 @@ export function findTeamMatch(teams: Team[], name: string) {
       product?.components?.some(component => formatMonitorName(component.name) === formattedName),
     ),
   )
+}
+
+export function getComponentsForTeam(team: Team) {
+  const components: { componentName: string }[] = []
+  if (team.products && team.products.length > 0) {
+    team.products.forEach((product: Product) => {
+      if (product.components && product.components.length > 0) {
+        product.components.forEach((component: Component) => {
+          components.push({
+            componentName: component.name,
+          })
+        })
+      }
+    })
+  }
+  return components
 }
 
 export async function addTeamToTrivyScan(teams: Team[], trivyScan: TrivyScanType[]) {
