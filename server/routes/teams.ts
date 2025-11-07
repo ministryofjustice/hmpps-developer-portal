@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import { getFormattedName, utcTimestampToUtcDateTime } from '../utils/utils'
+import { getComponentsForTeam, getFormattedName, utcTimestampToUtcDateTime } from '../utils/utils'
 import logger from '../../logger'
 import config from '../config'
 
@@ -46,6 +46,9 @@ export default function routes({
     const teamSlug = getFormattedName(req, 'teamSlug')
     const team = await serviceCatalogueService.getTeam({ teamSlug, withEnvironments: true })
     const products = team.products.map(product => product)
+    const components = getComponentsForTeam(team)
+    const componentList: string[] =
+      components && components.length > 0 ? components.map(component => component.componentName) : []
 
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
@@ -77,6 +80,7 @@ export default function routes({
 
       const displayTeam = {
         name: team.name,
+        componentList,
         encodedTeamName: encodeURIComponent(team.name),
         slackWorkspaceId: config.slack.workspaceId,
         slackChannelId: team.slack_channel_id,
