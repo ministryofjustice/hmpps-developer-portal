@@ -39,9 +39,7 @@ describe('RedisService Integration Tests', () => {
 
       const result = await redisService.readStream([{ key: 'test-stream', id: '0' }])
 
-      expect(mockRedisClient.xRead).toHaveBeenCalledWith(expect.objectContaining({ isolated: true }), [
-        { key: 'test-stream', id: '0' },
-      ])
+      expect(mockRedisClient.xRead).toHaveBeenCalledWith([{ key: 'test-stream', id: '0' }])
       expect(result).toBe(JSON.stringify(mockStreamData))
     })
 
@@ -72,10 +70,7 @@ describe('RedisService Integration Tests', () => {
 
       const result = await redisService.readLatest('component:latest')
 
-      expect(mockRedisClient.json.get).toHaveBeenCalledWith(
-        expect.objectContaining({ isolated: true }),
-        'component:latest',
-      )
+      expect(mockRedisClient.json.get).toHaveBeenCalledWith('component:latest')
       expect(result).toEqual({
         'some-service:dev': { v: '2023-02-02.123.abc1234', dateAdded: '2023-02-11' },
         'some-service:prod': { v: '2023-01-15.120.abc1230', dateAdded: '2023-02-11' },
