@@ -46,7 +46,7 @@
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
-          html: "Add a description to provide details about the service. " + '<a href="https://tech-docs.hmpps.service.justice.gov.uk/service-standard/repository-settings/#repository-description">Read more about repository descriptions.</a>'
+          html: "Add a description to provide details about the service. " + '<a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/service-standard/repository-settings/#repository-description">Read more about repository descriptions.</a>'
         },
         errorMessage: validationErrors | findError('repo_description')
       }) }}
@@ -99,7 +99,7 @@
           }
         ],
         errorMessage: validationErrors | findError('github_project_visibility'),
-        hint: { html : "Most projects should be public, unless there is a specific reason not to be." + '<a href="https://tech-docs.hmpps.service.justice.gov.uk/service-standard/repository-settings/#visibility-public"> Read more about project visibility </a>' }
+        hint: { html : "Most projects should be public, unless there is a specific reason not to be." + '<a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/service-standard/repository-settings/#visibility-public"> Read more about project visibility </a>' }
       }) }}
 
       {{ govukSelect({
@@ -206,7 +206,7 @@
         hint: { text: "Please enter a Slack channel ID (preferred) or Slack channel name (without '#')"}
       }) }}
       <h2>Alert severity</h2>
-      <p>For configuring alert severity labels, please first see <a href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts/">this document.</a></p>
+      <p>For configuring alert severity labels, please first see <a class="govuk-link--no-visited-state" href="https://user-guide.cloud-platform.service.justice.gov.uk/documentation/monitoring-an-app/how-to-create-alarms.html#creating-your-own-custom-alerts/">this document.</a></p>
       {{ govukInput({
         id: "nonprod_alerts_severity_label",
         name: "nonprod_alerts_severity_label",
