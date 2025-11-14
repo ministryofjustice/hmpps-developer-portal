@@ -91,52 +91,6 @@ afterEach(() => {
 })
 
 describe('/component-requests', () => {
-  describe('GET /choice', () => {
-    it('should render the component request form selection page', async () => {
-      await request(app)
-        .get('/component-requests/choice')
-        .expect('Content-Type', /html/)
-        .expect(200)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          // Radio buttons
-          const radioLabels = $('.govuk-radios__label')
-            .map((i, el) => $(el).text().trim())
-            .get()
-          expect(radioLabels).toContain('Add')
-          expect(radioLabels).toContain('Archive')
-          // GitHub repo input
-          expect($('#github_repo').attr('name')).toBe('github_repo')
-          expect($('#github_repo').attr('type')).toBe('text')
-          // Submit button
-          expect($('#next').text().trim()).toBe('Next')
-        })
-    })
-  })
-
-  describe('POST /choice', () => {
-    it('should render the component request form when "Add" is selected and repo name is valid', async () => {
-      // dataFilterService.getFormsDropdownLists.mockResolvedValue([[], ['HMPPS123']])
-      await request(app)
-        .post('/component-requests/choice')
-        .send({
-          option: 'Add',
-          github_repo: 'hmpps-new-component',
-        })
-        .expect('Content-Type', /html/)
-        .expect(200)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          // Page title
-          expect($('h1').text().trim()).toContain('Component Request Form')
-          // Repo name field should be pre-filled
-          expect($('#github_repo').val()).toBe('hmpps-new-component')
-          // No validation errors
-          expect($('.govuk-error-summary').length).toBe(0)
-        })
-    })
-  })
-
   describe('GET /new', () => {
     it('should render component requests form', () => {
       return request(app)

@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { request } from 'http'
 import type { Services } from '../services'
 import { GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
@@ -6,147 +7,6 @@ import { FieldValidationError } from '../@types/FieldValidationError'
 
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
-
-  router.get('/choice', async (req, res) => {
-    return res.render('pages/componentRequestFormOption', {
-      title: 'Github Repository Request Form Options',
-    })
-  })
-
-  router.post('/choice', async (req, res): Promise<void> => {
-    const formData = req.body
-    const repoExists = formData.github_repo
-      ? await componentNameService.checkComponentExists(formData.github_repo)
-      : false
-    const repoRequestExists = formData.github_repo
-      ? await componentNameService.checkComponentRequestExists(formData.github_repo)
-      : false
-    const archiveRequestExists = formData.github_repo
-      ? await componentNameService.checkComponentArchiveRequestExists(formData.github_repo)
-      : false
-
-    validateRequest(req, body => {
-      const validationErrors: FieldValidationError[] = []
-      const repoName = body.github_repo?.toString()
-      if (!body.option) {
-        validationErrors.push({
-          field: 'option',
-          message: 'Please select an option',
-          href: '#option',
-        })
-      }
-      if (!repoName) {
-        validationErrors.push({
-          field: 'github_repo',
-          message: 'Please enter a repository name',
-          href: '#github_repo',
-        })
-      } else if (formData.option === 'Archive') {
-        if (!repoExists) {
-          validationErrors.push({
-            field: 'github_repo',
-            message:
-              'This repository name does not exist in components table in Service Catalogue, please enter existing repository name',
-            href: '#github_repo',
-          })
-        }
-        if (archiveRequestExists) {
-          validationErrors.push({
-            field: 'github_repo',
-            message: 'An archive request for this component already exists in queue, please choose a different name',
-            href: '#github_repo',
-          })
-        }
-      } else if (formData.option === 'Add') {
-        if (repoExists) {
-          validationErrors.push({
-            field: 'github_repo',
-            message: 'This repository name already exists in components collection - please choose a different name',
-            href: '#github_repo',
-          })
-        }
-        if (repoRequestExists) {
-          validationErrors.push({
-            field: 'github_repo',
-            message: 'A request for this component already exists in queue, please choose a different name',
-            href: '#github_repo',
-          })
-        }
-        if (!repoName.startsWith('hmpps')) {
-          validationErrors.push({
-            field: 'github_repo',
-            message: 'The repository name must start with "hmpps"',
-            href: '#github_repo',
-          })
-        }
-        if (repoName.length >= 100) {
-          validationErrors.push({
-            field: 'github_repo',
-            message: 'The repository name must be less than 100 characters',
-            href: '#github_repo',
-          })
-        }
-        if (!/^[a-zA-Z0-9-]+$/.test(repoName)) {
-          validationErrors.push({
-            field: 'github_repo',
-            message: 'The repository name must only contain alphanumeric characters and hyphens',
-            href: '#github_repo',
-          })
-        }
-      } else {
-        validationErrors.push({
-          field: 'option',
-          message: 'Please select a valid option',
-          href: '#option',
-        })
-      }
-      return validationErrors
-    })
-    try {
-      const [, productList] = await dataFilterService.getFormsDropdownLists({
-        teamName: '',
-        productId: '',
-        useFormattedName: true,
-      })
-      const filledData = { github_repo: formData.github_repo }
-      if (formData.option === 'Archive') {
-        return res.render('pages/componentArchiveRequestForm', {
-          title: 'Github Repository Archive Request Form',
-          submittedForm: filledData,
-          ValidationErrors: [],
-        })
-      }
-      return res.render('pages/componentRequestForm', {
-        title: 'Github Repository Request Form',
-        submittedForm: filledData,
-        productList,
-        ValidationErrors: [],
-      })
-    } catch {
-      const validationErrors: FieldValidationError[] = []
-      validationErrors.push({
-        field: 'form',
-        message: 'There was an error submitting your request. Please try again later.',
-        href: '',
-      })
-      return res.render('pages/componentRequestFormOption', {
-        validationErrors,
-        formData,
-      })
-    }
-  })
-
-  router.get('/new', async (req, res) => {
-    const [, productList] = await dataFilterService.getFormsDropdownLists({
-      teamName: '',
-      productId: '',
-      useFormattedName: true,
-    })
-    return res.render('pages/componentRequestForm', {
-      title: 'Github Repository Request Form',
-      productList,
-    })
-  })
 
   router.get('/', async (req, res) => {
     return res.render('pages/componentRequests')
@@ -175,13 +35,25 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     return res.render('pages/componentRequest', { componentRequest })
   })
 
+  router.get('/new', async (req, res) => {
+    const [, productList] = await dataFilterService.getFormsDropdownLists({
+      teamName: '',
+      productId: '',
+      useFormattedName: true,
+    })
+    return res.render('pages/componentRequestForm', {
+      title: 'Github Repository Request Form',
+      productList,
+    })
+  })
+
   router.post('/new', async (req, res): Promise<void> => {
     const formData = req.body
     const repoExists = formData.github_repo
       ? await componentNameService.checkComponentExists(formData.github_repo)
       : false
     const repoRequestExists = formData.github_repo
-      ? await componentNameService.checkComponentRequestExists(formData.github_repo)
+      ? await componentNameService.checkComponentRequestExists(formData.github_repo, 'Add')
       : false
     validateRequest(req, body => {
       const validationErrors: FieldValidationError[] = []
@@ -214,7 +86,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
             href: '#github_repo',
           })
         }
-        if (repoName.length >= 100) {
+        if (repoName.length >= 25) {
           validationErrors.push({
             field: 'github_repo',
             message: 'The repository name must be less than 100 characters',
@@ -307,10 +179,10 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         })
       } else {
         const requesterEmail = body.requester_email?.toString()
-        if (!requesterEmail.endsWith('@digital.justice.gov.uk') && !requesterEmail.endsWith('@justice.gov.uk')) {
+        if (!requesterEmail.endsWith('@justice.gov.uk')) {
           validationErrors.push({
             field: 'requesterEmail',
-            message: 'Valid email address is only with @digital.justice.gov.uk or @justice.gov.uk',
+            message: 'Valid email address is only with @justice.gov.uk',
             href: '#requester_email',
           })
         }
@@ -330,6 +202,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       return res.render('pages/componentRequestConfirmation', {
         title: 'Github Repository Request Confirmation',
         repoName: formData.github_repo,
+        requestType: 'add',
       })
     } catch {
       const validationErrors: FieldValidationError[] = []
@@ -353,8 +226,37 @@ export default function routes({ componentNameService, serviceCatalogueService, 
 
   router.post('/archive', async (req, res): Promise<void> => {
     const formData = req.body
+    const repoExists = formData.github_repo
+      ? await componentNameService.checkComponentExists(formData.github_repo)
+      : false
+    const repoRequestExists = formData.github_repo
+      ? await componentNameService.checkComponentRequestExists(formData.github_repo, 'Archive')
+      : false
     validateRequest(req, body => {
       const validationErrors: FieldValidationError[] = []
+      if (!body.github_repo) {
+        validationErrors.push({
+          field: 'github_repo',
+          message: 'Please enter a repository name',
+          href: '#github_repo',
+        })
+      } else {
+        const repoName = body.github_repo?.toString()
+        if (!repoExists) {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'This repository name does not exist in Service Catalogue - please choose a different name',
+            href: '#github_repo',
+          })
+        }
+        if (repoRequestExists) {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'A request for this component already exists in queue. Please check the previous requests list.',
+            href: '#github_repo',
+          })
+        }
+      }
       if (!body.requester_name) {
         validationErrors.push({
           field: 'requester_name',
@@ -400,6 +302,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       return res.render('pages/componentRequestConfirmation', {
         title: 'Github Repository Request Confirmation',
         repoName: formData.github_repo,
+        requestType: 'archive',
       })
     } catch {
       const validationErrors: FieldValidationError[] = []

@@ -34,9 +34,6 @@
         hint: {
           html: "This must start with 'hmpps-' and contain only alphanumeric characters and hyphens (-). Ensure that new components meet the " + '<a class="govuk-link--no-visited-state" href="https://tech-docs.hmpps.service.justice.gov.uk/service-standard/service-naming/">guidance around service naming</a>.'
         },
-        attributes: {
-          readonly: "readonly"
-        },
         errorMessage: validationErrors | findError('github_repo')
       }) }}
       {{ govukTextarea({
@@ -47,6 +44,9 @@
         label: {
           text: "GitHub repository description",
           classes: "govuk-fieldset__legend--s"
+        },
+        hint: {
+          html: "Add a description to provide details about the service. " + '<a href="https://tech-docs.hmpps.service.justice.gov.uk/service-standard/repository-settings/#repository-description">Read more about repository descriptions.</a>'
         },
         errorMessage: validationErrors | findError('repo_description')
       }) }}
@@ -99,7 +99,7 @@
           }
         ],
         errorMessage: validationErrors | findError('github_project_visibility'),
-        hint: { html : "Most projects should be public, unless there is a specific reason not to be." }
+        hint: { html : "Most projects should be public, unless there is a specific reason not to be." + '<a href="https://tech-docs.hmpps.service.justice.gov.uk/service-standard/repository-settings/#visibility-public"> Read more about project visibility </a>' }
       }) }}
 
       {{ govukSelect({
@@ -259,7 +259,7 @@
           classes: "govuk-fieldset__legend--s"
         },
         hint: {
-          text: "Must be an @digital.justice.gov.uk or @justice.gov.uk email account"
+          text: "Must be @justice.gov.uk email account"
         }
       }) }}
       {{ govukInput({
