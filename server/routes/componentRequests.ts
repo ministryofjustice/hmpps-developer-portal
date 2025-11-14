@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import { request } from 'http'
 import type { Services } from '../services'
 import { GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
@@ -241,7 +240,6 @@ export default function routes({ componentNameService, serviceCatalogueService, 
           href: '#github_repo',
         })
       } else {
-        const repoName = body.github_repo?.toString()
         if (!repoExists) {
           validationErrors.push({
             field: 'github_repo',
