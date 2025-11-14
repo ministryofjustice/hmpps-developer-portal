@@ -201,7 +201,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       return res.render('pages/componentRequestConfirmation', {
         title: 'Github Repository Request Confirmation',
         repoName: formData.github_repo,
-        requestType: 'add',
+        requestType: 'Add',
       })
     } catch {
       const validationErrors: FieldValidationError[] = []
@@ -300,7 +300,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       return res.render('pages/componentRequestConfirmation', {
         title: 'Github Repository Request Confirmation',
         repoName: formData.github_repo,
-        requestType: 'archive',
+        requestType: 'Archive',
       })
     } catch {
       const validationErrors: FieldValidationError[] = []
