@@ -45,7 +45,7 @@ const parseVersionToString = (raw: unknown): string | undefined => {
 // - Coerces each segment to its numeric part
 // - Missing segments default to 0 (e.g., "1" -> [1,0,0], "1.12" -> [1,12,0])
 const extractMajorMinorPatch = (versionString: string): [number, number, number] => {
-  const normalizedVersion = versionString.toString().replace(/^v/i, '')
+  const normalizedVersion = versionString.replace(/^v/i, '')
   const versionSegments = normalizedVersion.split('.')
   const numericSegments = versionSegments.map(segment => {
     const matchResult = segment.match(/\d+/)
@@ -55,8 +55,7 @@ const extractMajorMinorPatch = (versionString: string): [number, number, number]
 }
 
 // Count how many explicit segments are present in the version string (1, 2, or 3+)
-const countVersionSegments = (versionString: string): number =>
-  versionString.toString().replace(/^v/i, '').split('.').length
+const countVersionSegments = (versionString: string): number => versionString.replace(/^v/i, '').split('.').length
 
 // Compare two version triples [major, minor, patch].
 // Returns 1 if left > right, -1 if left < right, 0 if equal.
@@ -72,9 +71,9 @@ const compareVersionTriples = (
 const classifyVersionStatus = (current?: string, recommended?: string): DependencyComparisonItem['status'] => {
   if (!current || !recommended) return 'missing'
   // Handle floating recommendations: "1" => any 1.x.x, "1.12" => any 1.12.x
-  const recSegments = countVersionSegments(recommended)
-  const currentParts = extractMajorMinorPatch(current)
-  const recommendedParts = extractMajorMinorPatch(recommended)
+  const recSegments = countVersionSegments(recommended.toString())
+  const currentParts = extractMajorMinorPatch(current.toString())
+  const recommendedParts = extractMajorMinorPatch(recommended.toString())
 
   // let status: dependencyComparisonItem['status']
   if (recSegments >= 3) {
@@ -100,7 +99,7 @@ const classifyVersionStatus = (current?: string, recommended?: string): Dependen
     if (cMaj > rMaj) {
       return 'above-baseline'
     }
-    if (countVersionSegments(current) === 1) {
+    if (countVersionSegments(current.toString()) === 1) {
       // Same major but current only specifies major (e.g., current=1, rec=1.4) → treat as aligned
       return 'aligned'
     }
@@ -215,7 +214,7 @@ export async function getDependencyComparison(
   component: Component,
   recommendedVersionsService: RecommendedVersionsService,
   displayComponent: object,
-) {
+): Promise<DependencyComparisonResult> {
   const isKotlin = (component.language || '') === 'Kotlin'
   const { kotlinOnly } = config.recommendedVersions
 

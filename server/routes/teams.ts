@@ -58,8 +58,8 @@ export default function routes({
     const componentList: string[] =
       componentNames && componentNames.length > 0 ? componentNames.map(component => component.componentName) : []
     const displayComponent = {}
-    let upgradeNeeded = false
     const fullTeamComparison: DependencyComparisonResult[] = []
+    let upgradeNeeded = false
 
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
@@ -99,8 +99,8 @@ export default function routes({
       dependencyComparisonPromise.forEach(({ component, comparison }) => {
         if (!upgradeNeeded) {
           upgradeNeeded =
-            (component.language === 'Kotlin' && comparison.summary.needsAttention > 0) ||
-            (component.language === 'Kotlin' && comparison.summary.needsUpgrade > 0)
+            component.language === 'Kotlin' &&
+            (comparison.summary.needsAttention > 0 || comparison.summary.needsUpgrade > 0)
         }
         fullTeamComparison.push(comparison)
       })
