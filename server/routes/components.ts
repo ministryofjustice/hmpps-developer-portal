@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import config from '../config'
 import type { Services } from '../services'
 import logger from '../../logger'
 import {
@@ -16,7 +15,7 @@ import {
   countTrivyHighAndCritical,
   countVeracodeHighAndVeryHigh,
 } from '../utils/vulnerabilitySummary'
-import { compareComponentsDependencies } from '../services/dependencyComparison'
+import { getDependencyComparison } from '../services/dependencyComparison'
 
 interface DisplayAlert {
   alertname: string
@@ -59,6 +58,7 @@ export default function routes({
 
     const trivyVulnerabilityCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
     const veracodeVulnerabilityCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
+
     const displayComponent = {
       name: component.name,
       description: component.description,
@@ -114,46 +114,13 @@ export default function routes({
 
     const hasAlerts = alerts && alerts.length > 0
 
-    let upgradeNeeded = false
-
-    const isKotlin = (component.language || '') === 'Kotlin'
-    const { kotlinOnly } = config.recommendedVersions
-
     // Dependency comparison for this component
-    if (!kotlinOnly || isKotlin) {
-      try {
-        const recommended = await recommendedVersionsService.getRecommendedVersions()
-        const comparison = compareComponentsDependencies([component], recommended)
-        ;(displayComponent as Record<string, unknown>).dependencyComparison = comparison
+    const comparison = await getDependencyComparison(component, recommendedVersionsService, displayComponent)
+    const upgradeNeeded =
+      (component.language === 'Kotlin' && comparison.summary.needsAttention > 0) ||
+      (component.language === 'Kotlin' && comparison.summary.needsUpgrade > 0)
 
-        const { totalItems, aligned, needsUpgrade, aboveBaseline, missing } = comparison.summary
-        logger.debug(
-          `[DependencyComparison] component=${component.name} source=${comparison.recommendedSource} items=${totalItems} aligned=${aligned} needsUpgrade=${needsUpgrade} aboveBaseline=${aboveBaseline} missing=${missing}`,
-        )
-        const nonAligned = comparison.items.filter(items => items.status !== 'aligned')
-        const previewCount = Math.min(10, nonAligned.length)
-        if (previewCount > 0) {
-          const preview = nonAligned
-            .slice(0, previewCount)
-            .map(
-              item =>
-                `${item.componentName}:${item.key} current=${item.current ?? 'missing'} → recommended=${item.recommended ?? 'missing'} [${item.status}]`,
-            )
-            .join('; ')
-          logger.debug(
-            `[DependencyComparison] component details (first ${previewCount} of ${nonAligned.length} non-aligned): ${preview}`,
-          )
-
-          upgradeNeeded =
-            (component.language === 'Kotlin' && comparison.summary.needsAttention > 0) ||
-            comparison.summary.needsUpgrade > 0
-        }
-      } catch (e) {
-        logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(e)}`)
-      }
-    }
-
-    return res.render('pages/component', { component: displayComponent, upgradeNeeded, hasAlerts })
+    return res.render('pages/component', { component: displayComponent, comparison, upgradeNeeded, hasAlerts })
   })
 
   router.get('/:componentName/environment/:environmentName', async (req, res) => {

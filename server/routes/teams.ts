@@ -1,13 +1,20 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import { getComponentsForTeam, getFormattedName, utcTimestampToUtcDateTime } from '../utils/utils'
+import {
+  getComponentNamesForTeam,
+  getComponentsForTeam,
+  getFormattedName,
+  utcTimestampToUtcDateTime,
+} from '../utils/utils'
 import logger from '../../logger'
 import config from '../config'
+import { DependencyComparisonResult, getDependencyComparison } from '../services/dependencyComparison'
 
 export default function routes({
   serviceCatalogueService,
   teamsSummaryCountService,
   monitoringChannelService,
+  recommendedVersionsService,
 }: Services): Router {
   const router = Router()
 
@@ -47,8 +54,12 @@ export default function routes({
     const team = await serviceCatalogueService.getTeam({ teamSlug, withEnvironments: true })
     const products = team.products.map(product => product)
     const components = getComponentsForTeam(team)
+    const componentNames = getComponentNamesForTeam(team)
     const componentList: string[] =
-      components && components.length > 0 ? components.map(component => component.componentName) : []
+      componentNames && componentNames.length > 0 ? componentNames.map(component => component.componentName) : []
+    const displayComponent = {}
+    let upgradeNeeded = false
+    const fullTeamComparison: DependencyComparisonResult[] = []
 
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
@@ -78,6 +89,22 @@ export default function routes({
           rec.currentChannels.prod === '#dps_alerts',
       ).length
 
+      // Dependency comparison for this team
+      const dependencyComparisonPromise = await Promise.all(
+        components.map(async component => {
+          const comparison = await getDependencyComparison(component, recommendedVersionsService, displayComponent)
+          return { component, comparison }
+        }),
+      )
+      dependencyComparisonPromise.forEach(({ component, comparison }) => {
+        if (!upgradeNeeded) {
+          upgradeNeeded =
+            (component.language === 'Kotlin' && comparison.summary.needsAttention > 0) ||
+            (component.language === 'Kotlin' && comparison.summary.needsUpgrade > 0)
+        }
+        fullTeamComparison.push(comparison)
+      })
+
       const displayTeam = {
         name: team.name,
         componentList,
@@ -92,6 +119,8 @@ export default function routes({
         channelTree,
         hasLegacyChannels: legacyChannelCount > 0,
         legacyChannelCount,
+        upgradeNeeded,
+        fullTeamComparison,
       }
 
       res.render('pages/teamOverview', { team: displayTeam })

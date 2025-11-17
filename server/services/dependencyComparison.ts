@@ -1,5 +1,7 @@
 import type { Component } from '../data/modelTypes'
-import type { recommendedVersions } from './recommendedVersionsService'
+import RecommendedVersionsService, { recommendedVersions } from './recommendedVersionsService'
+import config from '../config'
+import logger from '../../logger'
 
 export type DependencyKey = 'genericPrometheusAlerts' | 'genericService' | 'hmppsGradleSpringBoot'
 
@@ -43,7 +45,7 @@ const parseVersionToString = (raw: unknown): string | undefined => {
 // - Coerces each segment to its numeric part
 // - Missing segments default to 0 (e.g., "1" -> [1,0,0], "1.12" -> [1,12,0])
 const extractMajorMinorPatch = (versionString: string): [number, number, number] => {
-  const normalizedVersion = versionString.replace(/^v/i, '')
+  const normalizedVersion = versionString.toString().replace(/^v/i, '')
   const versionSegments = normalizedVersion.split('.')
   const numericSegments = versionSegments.map(segment => {
     const matchResult = segment.match(/\d+/)
@@ -53,7 +55,8 @@ const extractMajorMinorPatch = (versionString: string): [number, number, number]
 }
 
 // Count how many explicit segments are present in the version string (1, 2, or 3+)
-const countVersionSegments = (versionString: string): number => versionString.replace(/^v/i, '').split('.').length
+const countVersionSegments = (versionString: string): number =>
+  versionString.toString().replace(/^v/i, '').split('.').length
 
 // Compare two version triples [major, minor, patch].
 // Returns 1 if left > right, -1 if left < right, 0 if equal.
@@ -207,4 +210,46 @@ export const compareComponentsDependencies = (
     summary,
     recommendedSource: recommended.metadata.source,
   }
+}
+export async function getDependencyComparison(
+  component: Component,
+  recommendedVersionsService: RecommendedVersionsService,
+  displayComponent: object,
+) {
+  const isKotlin = (component.language || '') === 'Kotlin'
+  const { kotlinOnly } = config.recommendedVersions
+
+  // Dependency comparison for these components
+  if (!kotlinOnly || isKotlin) {
+    try {
+      const recommended: recommendedVersions = await recommendedVersionsService.getRecommendedVersions()
+      const comparison: DependencyComparisonResult = compareComponentsDependencies([component], recommended)
+      const newDisplayComponent = { ...displayComponent }
+      ;(newDisplayComponent as Record<string, unknown>).dependencyComparison = comparison
+
+      const { totalItems, aligned, needsUpgrade, aboveBaseline, missing } = comparison.summary
+      logger.info(
+        `[DependencyComparison] component=${component.name} source=${comparison.recommendedSource} items=${totalItems} aligned=${aligned} needsUpgrade=${needsUpgrade} aboveBaseline=${aboveBaseline} missing=${missing}`,
+      )
+      const nonAligned = comparison.items.filter(items => items.status !== 'aligned')
+      const previewCount = Math.min(10, nonAligned.length)
+      if (previewCount > 0) {
+        const preview = nonAligned
+          .slice(0, previewCount)
+          .map(
+            item =>
+              `${item.componentName}:${item.key} current=${item.current ?? 'missing'} → recommended=${item.recommended ?? 'missing'} [${item.status}]`,
+          )
+          .join('; ')
+        logger.debug(
+          `[DependencyComparison] component details (first ${previewCount} of ${nonAligned.length} non-aligned): ${preview}`,
+        )
+      }
+      return comparison
+    } catch (error) {
+      logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(error)}`)
+      throw error
+    }
+  }
+  return undefined
 }
