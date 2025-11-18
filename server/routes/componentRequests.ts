@@ -85,7 +85,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
             href: '#github_repo',
           })
         }
-        if (repoName.length >= 25) {
+        if (repoName.length >= 100) {
           validationErrors.push({
             field: 'github_repo',
             message: 'The repository name must be less than 100 characters',
