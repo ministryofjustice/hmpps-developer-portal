@@ -84,6 +84,20 @@
       {% endif %}
       </td>
     </tr>
+    <tr>
+      <th>MOD security enabled</th>
+      <td>
+        {% if component.environment.modsecurity_enabled %}
+          &#128274; Enabled
+        {% else %}
+          {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+          {{ govukWarningText({
+            text: "This site is unprotected.",
+            iconFallbackText: "Warning"
+          }) }}
+        {% endif %}
+      </td>
+    </tr>
     {% if component.environment.ip_allow_list_enabled %}
     <tr>
       <th>IP Allowlist Config Files</th>
