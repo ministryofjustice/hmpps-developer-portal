@@ -6,15 +6,18 @@ import ServiceCatalogueService from '../services/serviceCatalogueService'
 import RedisService from '../services/redisService'
 import Dependencies from '../services/Dependencies'
 import AlertsService from '../services/alertsService'
+import RecommendedVersionsService, { recommendedVersions } from '../services/recommendedVersionsService'
 import { Component, Environment, Product } from '../data/modelTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/redisService.ts')
 jest.mock('../services/alertsService')
+jest.mock('../services/recommendedVersionsService')
 
 const alertsService = new AlertsService(null) as jest.Mocked<AlertsService>
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 const redisService = new RedisService(null) as jest.Mocked<RedisService>
+const recommendedVersionsService = new RecommendedVersionsService(null) as jest.Mocked<RecommendedVersionsService>
 
 let app: Express
 const testComponents = [{ name: 'testComponent' }] as Component[]
@@ -162,9 +165,18 @@ beforeEach(() => {
     },
   })
 
-  redisService.getAllDependencies.mockResolvedValue(dependencies)
+  const mockRecommendedVersions: recommendedVersions = {
+    helmDependencies: { genericPrometheusAlerts: '1.14', genericService: '3.12' },
+    gradle: { hmppsGradleSpringBoot: '9.1.4' },
+    metadata: { source: 'strapi', fetchedAt: '2025-11-17T10:51:46.910Z' },
+  }
 
-  app = appWithAllRoutes({ services: { serviceCatalogueService, redisService, alertsService } })
+  redisService.getAllDependencies.mockResolvedValue(dependencies)
+  recommendedVersionsService.getRecommendedVersions.mockResolvedValue(mockRecommendedVersions)
+
+  app = appWithAllRoutes({
+    services: { serviceCatalogueService, redisService, alertsService, recommendedVersionsService },
+  })
 })
 
 afterEach(() => {

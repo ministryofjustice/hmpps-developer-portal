@@ -84,8 +84,8 @@
     {% if upgradeNeeded %}
       <div id = "dependency-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
         {% set filteredRows = [] %}
-        {% for item in component.dependencyComparison.items %}
-          {% if (component.language == 'Kotlin') and (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
+        {% for item in comparison.items %}
+          {% if (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
             {% set upgradeDependencyRows = filteredRows.push([
               { text: item.key },
               { text: item.current },
@@ -281,7 +281,7 @@
       {% else %}
         <li>
           <p>This component relies on no other components.</p>
-        </li>  
+        </li>
       {% endfor %}
       </ul>
       <h3>Relied on by:</h3>

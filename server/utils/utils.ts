@@ -149,13 +149,23 @@ export function findTeamMatch(teams: Team[], name: string) {
   )
 }
 
-export function getComponentsForTeam(team: Team) {
+export function getComponentNamesForTeam(team: Team) {
   const components: { componentName: string }[] = []
   team.products.forEach((product: Product) => {
     product.components.forEach((component: Component) => {
       components.push({
         componentName: component.name,
       })
+    })
+  })
+  return components
+}
+
+export function getComponentsForTeam(team: Team): Component[] {
+  const components: Component[] = []
+  team.products.forEach((product: Product) => {
+    product.components.forEach((component: Component) => {
+      components.push(component)
     })
   })
   return components
