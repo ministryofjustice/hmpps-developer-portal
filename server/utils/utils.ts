@@ -8,7 +8,7 @@ import { RdsEntry } from '../@types'
 import { TrivyScanType } from '../data/converters/modelTypes'
 
 import type { ServiceCatalogueService } from '../services'
-import type { Component, Product, Team } from '../data/modelTypes'
+import { Component, Environment, Product, Team } from '../data/modelTypes'
 import logger from '../../logger'
 
 dayjs.extend(relativeTime.default)
@@ -394,4 +394,10 @@ export function formatTimeStamp(dateString: string) {
     logger.error(`Invalid date: ${msg}`)
     return 'Invalid date'
   }
+}
+
+export function getIpAllowListAndMODSecurityStatus(environments: Environment[]) {
+  const ipAllowListStatus: boolean = environments.every(env => env.ip_allow_list_enabled)
+  const modSecurityStatus: boolean = environments.every(env => env.modsecurity_enabled)
+  return { status: { ipAllowListStatus, modSecurityStatus } }
 }

@@ -4,11 +4,13 @@ import {
   getComponentNamesForTeam,
   getComponentsForTeam,
   getFormattedName,
+  getIpAllowListAndMODSecurityStatus,
   utcTimestampToUtcDateTime,
 } from '../utils/utils'
 import logger from '../../logger'
 import config from '../config'
 import { DependencyComparisonResult, getDependencyComparison } from '../services/dependencyComparison'
+import { ipAllowListAndMODSecurityStatus } from '../data/modelTypes'
 
 export default function routes({
   serviceCatalogueService,
@@ -60,6 +62,7 @@ export default function routes({
     const displayComponent = {}
     const fullTeamComparison: DependencyComparisonResult[] = []
     let upgradeNeeded = false
+    const securityStatus: ipAllowListAndMODSecurityStatus[] = []
 
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
@@ -105,6 +108,22 @@ export default function routes({
         fullTeamComparison.push(comparison)
       })
 
+      // List IP allowlist and MOD security enabled values or PROD only
+      for (const component of components) {
+        const prodOnlyEnv = component.envs.filter(environment => environment.type === 'prod')
+        const secStatus: ipAllowListAndMODSecurityStatus = getIpAllowListAndMODSecurityStatus(prodOnlyEnv)
+        logger.info(
+          `[IP Allowlist and MOD Security Status] component=${component.name} IP Allowlist status=${secStatus.status.ipAllowListStatus} MOD Security Status =${secStatus.status.modSecurityStatus}`,
+        )
+        securityStatus.push({
+          componentName: component.name,
+          status: {
+            ipAllowListStatus: secStatus.status.ipAllowListStatus,
+            modSecurityStatus: secStatus.status.modSecurityStatus,
+          },
+        })
+      }
+
       const displayTeam = {
         name: team.name,
         componentList,
@@ -121,6 +140,7 @@ export default function routes({
         legacyChannelCount,
         upgradeNeeded,
         fullTeamComparison,
+        securityStatus,
       }
 
       res.render('pages/teamOverview', { team: displayTeam })
