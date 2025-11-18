@@ -33,6 +33,12 @@ jQuery(function () {
       },
     },
     {
+      data: 'product.portfolio',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.product.portfolio}`)
+      },
+    },
+    {
       data: 'github_repo',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(

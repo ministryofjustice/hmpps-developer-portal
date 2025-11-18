@@ -4203,6 +4203,7 @@ export interface components {
       gdrive_link?: string
       id?: number
       lead_developer?: string
+      portfolio?: string
       legacy?: boolean
       locale?: string
       localizations?: {
