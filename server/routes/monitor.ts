@@ -193,7 +193,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         })
 
         product.components.forEach(component => {
-          environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
+          environments = environments.concat(getUnwrappedEnvironmentData(component))
         })
       } else if (monitorType === 'team') {
         const teamSlug = formatMonitorName(req.query.slug as string)
@@ -204,7 +204,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         })
         team.products.forEach(product => {
           product.components.forEach(component => {
-            environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
+            environments = environments.concat(getUnwrappedEnvironmentData(component))
           })
         })
       } else if (monitorType === 'service-area') {
@@ -216,7 +216,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         })
         serviceArea.products.forEach(product => {
           product.components.forEach(component => {
-            environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
+            environments = environments.concat(getUnwrappedEnvironmentData(component))
           })
         })
       } else {
@@ -268,17 +268,12 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   return router
 }
 
-const getUnwrappedEnvironmentData = (component: Component, selectedProductId?: string): MonitorEnvironment[] => {
+const getUnwrappedEnvironmentData = (component: Component): MonitorEnvironment[] => {
   const typedEnvironments = component.envs
-  let productId
-  if (selectedProductId) {
-    productId = selectedProductId
-  } else {
-    productId = component.product?.p_id
-  }
+  const portfolio = component.product?.portfolio
 
-  const isPrisons = `${productId}`.startsWith('DPS')
-  const isProbation = `${productId}`.startsWith('HMPPS')
+  const isPrisons = portfolio === 'Prisons'
+  const isProbation = portfolio === 'Probation'
   const environments: MonitorEnvironment[] = []
 
   if (Array.isArray(typedEnvironments) && typedEnvironments.length > 0) {
