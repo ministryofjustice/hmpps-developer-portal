@@ -24,6 +24,25 @@
       "matchPackageNames": ["@types/node"],
       "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "github-actions",
+      "schedule": ["after 2am and before 6am on Wednesday"],
+      "stabilityDays": 0
+    },
+    {
+      "matchManagers": ["helm"],
+      "matchPaths": ["helm_deploy/health-developer-portal/**"],
+      "groupName": "helm hmpps-developer-portal",
+      "schedule": ["after 2am and before 6am on Wednesday"],
+      "stabilityDays": 0
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "groupName": "dockerfile updates",
+      "schedule": ["after 2am and before 6am on Wednesday"],
+      "stabilityDays": 0
     }
   ],
   "vulnerabilityAlerts": {
