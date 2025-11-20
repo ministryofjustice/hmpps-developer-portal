@@ -4,13 +4,13 @@ import {
   getComponentNamesForTeam,
   getComponentsForTeam,
   getFormattedName,
-  getIpAllowListAndMODSecurityStatus,
+  getIpAllowListAndModSecurityStatus,
   utcTimestampToUtcDateTime,
 } from '../utils/utils'
 import logger from '../../logger'
 import config from '../config'
 import { DependencyComparisonResult, getDependencyComparison } from '../services/dependencyComparison'
-import { ipAllowListAndMODSecurityStatus } from '../data/modelTypes'
+import { IpAllowListAndModSecurityStatus } from '../data/modelTypes'
 
 export default function routes({
   serviceCatalogueService,
@@ -62,7 +62,7 @@ export default function routes({
     const displayComponent = {}
     const fullTeamComparison: DependencyComparisonResult[] = []
     let upgradeNeeded = false
-    const securityStatus: ipAllowListAndMODSecurityStatus[] = []
+    const securityStatus: IpAllowListAndModSecurityStatus[] = []
 
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
@@ -111,15 +111,12 @@ export default function routes({
       // List IP allowlist and MOD security enabled values or PROD only
       for (const component of components) {
         const prodOnlyEnv = component.envs.filter(environment => environment.type === 'prod')
-        const secStatus: ipAllowListAndMODSecurityStatus = getIpAllowListAndMODSecurityStatus(prodOnlyEnv)
-        logger.info(
-          `[IP Allowlist and MOD Security Status] component=${component.name} IP Allowlist status=${secStatus.status.ipAllowListStatus} MOD Security Status =${secStatus.status.modSecurityStatus}`,
-        )
+        const secStatus: IpAllowListAndModSecurityStatus = getIpAllowListAndModSecurityStatus(prodOnlyEnv)
         securityStatus.push({
           componentName: component.name,
           status: {
-            ipAllowListStatus: secStatus.status.ipAllowListStatus,
-            modSecurityStatus: secStatus.status.modSecurityStatus,
+            ipAllowListEnabled: secStatus.status.ipAllowListEnabled,
+            modSecurityEnabled: secStatus.status.modSecurityEnabled,
           },
         })
       }

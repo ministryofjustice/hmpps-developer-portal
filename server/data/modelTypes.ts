@@ -100,10 +100,10 @@ export type VeracodeResultsSummary = {
   }[]
 }
 
-export type ipAllowListAndMODSecurityStatus = {
+export type IpAllowListAndModSecurityStatus = {
   componentName?: string
   status: {
-    ipAllowListStatus: boolean
-    modSecurityStatus: boolean
+    ipAllowListEnabled: boolean
+    modSecurityEnabled: boolean
   }
 }

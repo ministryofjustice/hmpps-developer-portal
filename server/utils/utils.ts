@@ -396,8 +396,8 @@ export function formatTimeStamp(dateString: string) {
   }
 }
 
-export function getIpAllowListAndMODSecurityStatus(environments: Environment[]) {
-  const ipAllowListStatus: boolean = environments.every(env => env.ip_allow_list_enabled)
-  const modSecurityStatus: boolean = environments.every(env => env.modsecurity_enabled)
-  return { status: { ipAllowListStatus, modSecurityStatus } }
+export function getIpAllowListAndModSecurityStatus(environments: Environment[]) {
+  const ipAllowListEnabled: boolean = environments.every(env => env.ip_allow_list_enabled)
+  const modSecurityEnabled: boolean = environments.every(env => env.modsecurity_enabled)
+  return { status: { ipAllowListEnabled, modSecurityEnabled } }
 }
