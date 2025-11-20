@@ -4,11 +4,13 @@ import {
   getComponentNamesForTeam,
   getComponentsForTeam,
   getFormattedName,
+  getIpAllowListAndModSecurityStatus,
   utcTimestampToUtcDateTime,
 } from '../utils/utils'
 import logger from '../../logger'
 import config from '../config'
 import { DependencyComparisonResult, getDependencyComparison } from '../services/dependencyComparison'
+import { IpAllowListAndModSecurityStatus } from '../data/modelTypes'
 
 export default function routes({
   serviceCatalogueService,
@@ -60,6 +62,7 @@ export default function routes({
     const displayComponent = {}
     const fullTeamComparison: DependencyComparisonResult[] = []
     let upgradeNeeded = false
+    const securityStatus: IpAllowListAndModSecurityStatus[] = []
 
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
@@ -105,6 +108,19 @@ export default function routes({
         fullTeamComparison.push(comparison)
       })
 
+      // List IP allowlist and MOD security enabled values or PROD only
+      for (const component of components) {
+        const prodOnlyEnv = component.envs.filter(environment => environment.type === 'prod')
+        const secStatus: IpAllowListAndModSecurityStatus = getIpAllowListAndModSecurityStatus(prodOnlyEnv)
+        securityStatus.push({
+          componentName: component.name,
+          status: {
+            ipAllowListEnabled: secStatus.status.ipAllowListEnabled,
+            modSecurityEnabled: secStatus.status.modSecurityEnabled,
+          },
+        })
+      }
+
       const displayTeam = {
         name: team.name,
         componentList,
@@ -121,6 +137,7 @@ export default function routes({
         legacyChannelCount,
         upgradeNeeded,
         fullTeamComparison,
+        securityStatus,
       }
 
       res.render('pages/teamOverview', { team: displayTeam })
