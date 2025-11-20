@@ -300,6 +300,47 @@
       {% endfor %}
       </ul>
 
+      <h3>Protection security configuration</h3>
+        {% from "govuk/components/task-list/macro.njk" import govukTaskList %}
+        {% set securityConfigurationList = [] %}
+
+        {% for env in component.envs %}
+          {% if env.name == "prod" %}
+            {% set ipStatusHtml %}
+              {% if env.ip_allow_list_enabled == true %}
+                &#9989;
+              {% elseif env.ip_allow_list_enabled == false %}
+                &#10060;
+              {% else %}
+                Unknown
+              {% endif %}
+            {% endset %}
+
+            {% set modsecStatusHtml %}
+              {% if env.modsecurity_enabled == true %}
+                &#9989;
+              {% elseif env.modsecurity_enabled == false %}
+                &#10060;
+              {% else %}
+                Unknown
+              {% endif %}
+            {% endset %}
+
+            {% set securityConfigurationList = securityConfigurationList.concat([
+              {
+                title: { text: "IP Allow List" },
+                status: { html: ipStatusHtml }
+              },
+              {
+                title: { text: "ModSecurity" },
+                status: { html: modsecStatusHtml }
+              }
+            ]) %}
+          {% endif %}
+        {% endfor %}
+
+        {{ govukTaskList({ idPrefix: "security-configuration", items: securityConfigurationList }) }}
+
       <h3>GitHub Compliance:</h3>
       {% if component.standardsCompliance %}
         {% from "govuk/components/task-list/macro.njk" import govukTaskList %}
