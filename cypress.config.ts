@@ -22,8 +22,23 @@ export default defineConfig({
         reset: resetStubs,
         ...serviceCatalogue,
         ...alertManager,
+
+        // Log message to console
+        log: (message: string) => {
+          // eslint-disable-next-line no-console
+          console.log(message)
+          return null
+        },
+
+        // Log table to console
+        table: (violationData: Record<string, string>[]) => {
+          // eslint-disable-next-line no-console
+          console.table(violationData)
+          return null
+        },
       })
     },
+
     baseUrl: 'http://localhost:3007',
     excludeSpecPattern: '**/!(*.cy).ts',
     specPattern: 'integration_tests/e2e/**/*.cy.{js,jsx,ts,tsx}',
