@@ -270,10 +270,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
 const getUnwrappedEnvironmentData = (component: Component): MonitorEnvironment[] => {
   const typedEnvironments = component.envs
-  const portfolio = component.product?.portfolio
-
-  const isPrisons = portfolio === 'Prisons'
-  const isProbation = portfolio === 'Probation'
   const environments: MonitorEnvironment[] = []
 
   if (Array.isArray(typedEnvironments) && typedEnvironments.length > 0) {
@@ -285,8 +281,8 @@ const getUnwrappedEnvironmentData = (component: Component): MonitorEnvironment[]
           environmentUrl: environment.url as string,
           environmentHealth: environment.health_path as string,
           environmentType: environment.type as string,
-          isPrisons,
-          isProbation,
+          isPrisons: component.product?.portfolio === 'Prisons',
+          isProbation: component.product?.portfolio === 'Probation',
         })
       }
     })

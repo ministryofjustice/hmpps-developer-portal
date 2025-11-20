@@ -26,9 +26,8 @@ type HasIpAllowlist = { ip_allow_list: Record<string, Record<string, string | Re
 type Product = Omit<
   components['schemas']['Product'],
   'components' | 'team' | 'service_area' | 'product_set' | 'veracode_results_summary'
-> & {
-  portfolio?: string
-} & HasComponents &
+> &
+  HasComponents &
   HasTeam &
   HasServiceArea &
   HasProductSet
