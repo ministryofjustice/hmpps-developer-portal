@@ -1,5 +1,5 @@
 import { type Request } from 'express'
-import type { StrapiApiClient, AlertsApiClient, RestClientBuilder } from '../data'
+import type { AlertsApiClient, RestClientBuilder } from '../data'
 import { Alert } from '../@types'
 import { Environment } from '../data/strapiApiTypes'
 import logger from '../../logger'
