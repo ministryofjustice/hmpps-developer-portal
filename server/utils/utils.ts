@@ -149,6 +149,13 @@ export function findTeamMatch(teams: Team[], name: string) {
   )
 }
 
+export function findProductMatch(products: Product[], name: string) {
+  const formattedName = formatMonitorName(name)
+  return products.find(product =>
+    product?.components?.some(component => formatMonitorName(component.name) === formattedName),
+  )
+}
+
 export function getComponentNamesForTeam(team: Team) {
   const components: { componentName: string }[] = []
   team.products.forEach((product: Product) => {

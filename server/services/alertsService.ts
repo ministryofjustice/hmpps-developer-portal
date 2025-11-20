@@ -1,11 +1,11 @@
 import { type Request } from 'express'
-import type { AlertsApiClient, RestClientBuilder } from '../data'
+import type { StrapiApiClient, AlertsApiClient, RestClientBuilder } from '../data'
 import { Alert } from '../@types'
 import { Environment } from '../data/strapiApiTypes'
 import logger from '../../logger'
-import { mapToCanonicalEnv, findTeamMatch } from '../utils/utils'
+import { mapToCanonicalEnv, findTeamMatch, findProductMatch } from '../utils/utils'
 import type { ServiceCatalogueService } from '.'
-import type { Team } from '../data/modelTypes'
+import type { Team, Product } from '../data/modelTypes'
 
 export default class AlertsService {
   constructor(private readonly alertsApiClientFactory: RestClientBuilder<AlertsApiClient>) {}
@@ -33,15 +33,21 @@ export default class AlertsService {
   }
 
   // Match alert data to corresponding environments and components to get slack channel and team properties
-  async addNewPropertiesToAlert(revisedAlerts: Alert[], environments: Environment[], teams: Team[]) {
+  async addNewPropertiesToAlert(
+    revisedAlerts: Alert[],
+    environments: Environment[],
+    teams: Team[],
+    products: Product[],
+  ) {
     return revisedAlerts.map(alert => {
       const envMatch = environments.find(env => env.alert_severity_label === alert.labels.severity)
       const teamMatch = findTeamMatch(teams, alert.labels.application)
-
+      const productMatch = findProductMatch(products, alert.labels.application)
       const updatedAlert = { ...alert }
 
       if (envMatch) updatedAlert.labels.alert_slack_channel = envMatch.alerts_slack_channel
       if (teamMatch) updatedAlert.labels.team = teamMatch.name
+      if (productMatch?.portfolio) updatedAlert.labels.portfolio = productMatch.portfolio
 
       return updatedAlert
     })
@@ -60,10 +66,9 @@ export default class AlertsService {
     })
   }
 
-  async reviseAlerts(alerts: Alert[], environments: Environment[], teams: Team[]) {
+  async reviseAlerts(alerts: Alert[], environments: Environment[], teams: Team[], products: Product[]) {
     const revisedEnvAlerts = await this.mapAlertEnvironments(alerts)
-    const revisedAlerts = await this.addNewPropertiesToAlert(revisedEnvAlerts, environments, teams)
-
+    const revisedAlerts = await this.addNewPropertiesToAlert(revisedEnvAlerts, environments, teams, products)
     return revisedAlerts
   }
 
@@ -71,7 +76,8 @@ export default class AlertsService {
     const alerts = await this.getAlerts()
     const environments = await serviceCatalogueService.getEnvironments()
     const teams = await serviceCatalogueService.getTeams({ withComponents: true })
-    const revisedAlerts = this.reviseAlerts(alerts, environments, teams)
+    const products = await serviceCatalogueService.getProducts({ withComponents: true })
+    const revisedAlerts = this.reviseAlerts(alerts, environments, teams, products)
     return revisedAlerts
   }
 
