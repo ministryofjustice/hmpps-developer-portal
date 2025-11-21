@@ -4200,6 +4200,7 @@ export interface components {
       delivery_manager?: string
       description?: string
       documentId?: string
+      portfolio?: string
       gdrive_link?: string
       id?: number
       lead_developer?: string
