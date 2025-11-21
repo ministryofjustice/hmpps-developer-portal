@@ -1990,6 +1990,7 @@ export interface components {
               id?: number
             }
             phase?: string
+            portfolio?: string
             product_manager?: string
             product_set?: {
               /** Format: date-time */
@@ -2262,6 +2263,8 @@ export interface components {
             id?: number
           }
         }
+        pingdom_check_id?: number
+        pingdom_cloud_platform_tf_managed?: boolean
         pingdom_paused?: boolean
         pingdom_sre_managed?: boolean
         /** Format: date-time */
@@ -2785,6 +2788,8 @@ export interface components {
               id?: number
             }
           }
+          pingdom_check_id?: number
+          pingdom_cloud_platform_tf_managed?: boolean
           pingdom_paused?: boolean
           pingdom_sre_managed?: boolean
           /** Format: date-time */
@@ -2892,6 +2897,7 @@ export interface components {
             id?: number
           }
           phase?: string
+          portfolio?: string
           product_manager?: string
           product_set?: {
             /** Format: date-time */
@@ -3269,6 +3275,8 @@ export interface components {
               id?: number
             }
           }
+          pingdom_check_id?: number
+          pingdom_cloud_platform_tf_managed?: boolean
           pingdom_paused?: boolean
           pingdom_sre_managed?: boolean
           /** Format: date-time */
@@ -3376,6 +3384,7 @@ export interface components {
             id?: number
           }
           phase?: string
+          portfolio?: string
           product_manager?: string
           product_set?: {
             /** Format: date-time */
@@ -3533,6 +3542,8 @@ export interface components {
         documentId?: string
         id?: number
       }
+      pingdom_check_id?: number
+      pingdom_cloud_platform_tf_managed?: boolean
       pingdom_paused?: boolean
       pingdom_sre_managed?: boolean
       /** Format: date-time */
@@ -3588,6 +3599,8 @@ export interface components {
         namespace?: string
         /** @example string or id */
         ns?: number | string
+        pingdom_check_id?: number
+        pingdom_cloud_platform_tf_managed?: boolean
         pingdom_paused?: boolean
         pingdom_sre_managed?: boolean
         swagger_docs?: string
@@ -4296,6 +4309,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_check_id?: number
+            pingdom_cloud_platform_tf_managed?: boolean
             pingdom_paused?: boolean
             pingdom_sre_managed?: boolean
             /** Format: date-time */
@@ -4418,6 +4433,7 @@ export interface components {
           id?: number
         }
         phase?: string
+        portfolio?: string
         product_manager?: string
         product_set?: {
           /** Format: date-time */
@@ -4618,6 +4634,7 @@ export interface components {
         }
       }
       phase?: string
+      portfolio?: string
       product_manager?: string
       product_set?: {
         documentId?: string
@@ -4672,6 +4689,7 @@ export interface components {
         /** @example string or id */
         parent?: number | string
         phase?: string
+        portfolio?: string
         product_manager?: string
         /** @example string or id */
         product_set?: number | string
@@ -4789,6 +4807,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_check_id?: number
+            pingdom_cloud_platform_tf_managed?: boolean
             pingdom_paused?: boolean
             pingdom_sre_managed?: boolean
             /** Format: date-time */
@@ -4911,6 +4931,7 @@ export interface components {
           id?: number
         }
         phase?: string
+        portfolio?: string
         product_manager?: string
         product_set?: {
           /** Format: date-time */
@@ -5600,6 +5621,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_check_id?: number
+            pingdom_cloud_platform_tf_managed?: boolean
             pingdom_paused?: boolean
             pingdom_sre_managed?: boolean
             /** Format: date-time */
@@ -5722,6 +5745,7 @@ export interface components {
           id?: number
         }
         phase?: string
+        portfolio?: string
         product_manager?: string
         product_set?: {
           /** Format: date-time */
@@ -6057,6 +6081,8 @@ export interface components {
                 id?: number
               }
             }
+            pingdom_check_id?: number
+            pingdom_cloud_platform_tf_managed?: boolean
             pingdom_paused?: boolean
             pingdom_sre_managed?: boolean
             /** Format: date-time */
@@ -6179,6 +6205,7 @@ export interface components {
           id?: number
         }
         phase?: string
+        portfolio?: string
         product_manager?: string
         product_set?: {
           /** Format: date-time */
