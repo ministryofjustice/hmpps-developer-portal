@@ -8,7 +8,8 @@ import { RdsEntry } from '../@types'
 import { TrivyScanType } from '../data/converters/modelTypes'
 
 import type { ServiceCatalogueService } from '../services'
-import type { Team } from '../data/modelTypes'
+import { Component, Environment, Product, Team } from '../data/modelTypes'
+import logger from '../../logger'
 
 dayjs.extend(relativeTime.default)
 
@@ -53,7 +54,7 @@ export const getNumericId = (req: Request, paramName: string): number => {
 export const getMonitorType = (req: Request): string => {
   const { monitorType } = req.params
 
-  return ['product', 'team', 'serviceArea', 'customComponentView'].includes(monitorType) ? monitorType : 'all'
+  return ['product', 'team', 'service-area', 'customComponentView'].includes(monitorType) ? monitorType : 'all'
 }
 
 export const getMonitorName = (req: Request): string => {
@@ -146,6 +147,35 @@ export function findTeamMatch(teams: Team[], name: string) {
       product?.components?.some(component => formatMonitorName(component.name) === formattedName),
     ),
   )
+}
+
+export function findProductMatch(products: Product[], name: string) {
+  const formattedName = formatMonitorName(name)
+  return products.find(product =>
+    product?.components?.some(component => formatMonitorName(component.name) === formattedName),
+  )
+}
+
+export function getComponentNamesForTeam(team: Team) {
+  const components: { componentName: string }[] = []
+  team.products.forEach((product: Product) => {
+    product.components.forEach((component: Component) => {
+      components.push({
+        componentName: component.name,
+      })
+    })
+  })
+  return components
+}
+
+export function getComponentsForTeam(team: Team): Component[] {
+  const components: Component[] = []
+  team.products.forEach((product: Product) => {
+    product.components.forEach((component: Component) => {
+      components.push(component)
+    })
+  })
+  return components
 }
 
 export async function addTeamToTrivyScan(teams: Team[], trivyScan: TrivyScanType[]) {
@@ -307,14 +337,74 @@ export const utcTimestampToUtcDate = (str: string) => (str ? formatDate(new Date
 export const utcTimestampToUtcDateTime = (str: string) =>
   str ? formatDate(new Date(str), 'dd-MMM-yyyy HH:mm:ss').toUpperCase() : undefined
 
-export const createStrapiQuery = (fields: string[]): string => {
-  if (!fields || fields?.length === 0) {
-    return ''
-  }
+export function buildQuery(
+  obj: Record<string, unknown>,
+  queryString: URLSearchParams = new URLSearchParams(),
+  prefix = 'populate',
+): URLSearchParams {
+  Object.entries(obj).forEach(([key, value]) => {
+    const fullKey = `${prefix}[${key}]`
+    if (typeof value === 'object' && value !== null) {
+      buildQuery(value as Record<string, unknown>, queryString, fullKey)
+    } else if (value === true) {
+      queryString.append(fullKey, 'true')
+    }
+  })
+  return queryString
+}
 
-  return fields
-    .reduce((querystring, fieldName) => {
-      return `${querystring}&${encodeURIComponent(`populate[${fieldName.replaceAll('.', '][populate][')}]`)}=true`
-    }, '')
-    .slice(1)
+export function createStrapiQuery({ populate }: { populate?: string[] }): string {
+  const populateParams: Record<string, unknown> = {}
+
+  populate?.sort((a, b) => b.split('.').length - a.split('.').length)
+
+  populate?.forEach(path => {
+    const keys = path.split('.')
+    let current = populateParams
+
+    keys.forEach((key, index) => {
+      if (!current[key]) {
+        // Ensure the last key is set to true, and intermediate keys have a `populate` object
+        current[key] = index === keys.length - 1 ? true : { populate: {} as Record<string, unknown> }
+      }
+      current =
+        typeof current[key] === 'object' && current[key] !== null
+          ? (current[key] as { populate?: Record<string, unknown> }).populate ||
+            (current[key] as Record<string, unknown>)
+          : current
+    })
+  })
+
+  const queryString = buildQuery(populateParams)
+  return queryString.toString()
+}
+
+export function formatTimeStamp(dateString: string) {
+  if (!dateString) return 'N/A'
+  try {
+    const date = new Date(dateString)
+    if (Number.isNaN(date.getTime())) throw new Error('Invalid date')
+    return date
+      .toLocaleString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+      .replace(',', '')
+      .toUpperCase()
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error)
+    logger.error(`Invalid date: ${msg}`)
+    return 'Invalid date'
+  }
+}
+
+export function getIpAllowListAndModSecurityStatus(environments: Environment[]) {
+  const ipAllowListEnabled: boolean = environments.every(env => env.ip_allow_list_enabled)
+  const modSecurityEnabled: boolean = environments.every(env => env.modsecurity_enabled)
+  return { status: { ipAllowListEnabled, modSecurityEnabled } }
 }

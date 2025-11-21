@@ -1,4 +1,7 @@
 {% extends "../partials/layout.njk" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
 {% set pageTitle = applicationName + " - " + product.name %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -6,6 +9,99 @@
 {% block content %}
 {{ breadCrumb(product.name, [{title: "Products", href: "/products"}]) }}
 <h1 id="detailPageTitle">{{ product.name }}</h1>
+
+{% macro alertMessage(alert) %}
+  {{ govukDetails({
+    summaryText: "Show message",
+    text: alert.message
+  }) }}
+{% endmacro %}
+
+{% macro additionalAlerts(alerts) %}
+  {{ govukDetails({
+    summaryText: "Show all " + product.alerts.length + " alerts",
+    text: nestedTable(alerts)
+  }) }}
+{% endmacro %}
+
+{% macro nestedTable(alerts) %}
+  {{ govukTable({
+    rows: alerts
+  }) }}
+{% endmacro %}
+
+{% if product.alerts | length %}
+  <div id ="product-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+    {% set firstAlertRow = [] %}
+    {% set additionalAlertsRow = [] %}
+    {% for alert in product.alerts %}
+      {% set tableRowContent =  [
+        { text: alert.alertname },
+        { html: '<a href="/components/' ~ alert.componentSlug ~ '" target="_blank">'~ alert.componentName ~'</a>' },
+        { text: alert.environment },
+        { text: alert.summary },
+        { text: alert.startsAt },
+        { text: alertMessage(alert) }
+      ] %}
+      {% if loop.first %}
+        {% set firstAlertRowData = firstAlertRow.push(tableRowContent) %}
+      {% else %}
+        {% set additionalAlertRowData = additionalAlertsRow.push(tableRowContent) %}
+      {% endif %}
+    {% endfor %}
+    {% set additionalRows = firstAlertRow.push([
+      { colspan: 6,
+      text: additionalAlerts(additionalAlertsRow)}
+    ]) %}
+
+    {{ govukTable({
+    caption: "Active Alerts",
+    captionClasses: "govuk-table__caption--m",
+    head: [
+      { text: "Alert Name" },
+      { text: "Component" },
+      { text: "Environment" },
+      { text: "Summary" },
+      { text: "Started At" },
+      { text: "Message" }
+    ],
+    rows: firstAlertRow
+    }) }}
+  </div>
+{% endif %}
+
+{% if upgradeNeeded.length %}
+  <div id="dependency-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+    <h2 class="govuk-heading-m">Components Needing Dependency Updates</h2>
+    <ul class="govuk-list govuk-list--bullet">
+      {% for componentName in upgradeNeeded %}
+        <li>
+          <a class="govuk-link" href="/components/{{ componentName }}">{{ componentName }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
+{# Vulnerability banners #}
+{% if product.trivyVulnerabilityCount > 0 %}
+  <div class="govuk-inset-text govuk-!-margin-bottom-4 vulnerability-alert-banner">
+    <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities found in Production environment</p>
+    <p><strong>{{ product.trivyVulnerabilityCount }}</strong> critical and/or high vulnerabilities have been identified in the latest Trivy scan. <a class="govuk-link--no-visited-state" href="/trivy-scans?team={{ product.teamName }}">See results.</a></p>
+  </div>
+{% endif %}
+
+{% if product.veracodeVulnerabilityCount > 0 %}
+  <div class="govuk-inset-text govuk-!-margin-bottom-4 vulnerability-alert-banner">
+    <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities found in Production environment</p>
+    <p><strong>{{ product.veracodeVulnerabilityCount }}</strong> very high and/or high vulnerabilities have been identified in the latest Veracode scan. <a class="govuk-link--no-visited-state" href="/veracode?team={{ product.teamName }}&results=failed">See results.</a></p>
+  </div>
+{% endif %}
+
+{% if product.isPrisonProduct %}
+  {{ govukInsetText({
+    html: 'To update the information contained on this page please contact <a href="https://moj.enterprise.slack.com/archives/C0572SYFU3D" class="govuk-link govuk-link--no-visited-state" target="_blank">#ask-dps-delivery-ops</a> with the appropriate changes.'
+  }) }}
+{% endif %}
 
 <table class="componentData">
   <tbody>
@@ -113,7 +209,7 @@
       <th>Links</th>
       <td>
        <ul>
-          <li><a class="govuk-link--no-visited-state" href="/monitor/product/{{  product.name | toMonitorName }}">
+          <li><a class="govuk-link--no-visited-state" href="/monitor/product/{{ product.slug | toMonitorName }}">
              Health monitor
           </a></li>
           <li><a class="govuk-link--no-visited-state" href="/drift-radiator/products/{{ product.name | toMonitorName }}">
@@ -130,5 +226,5 @@
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
 {% endblock %}

@@ -1,12 +1,9 @@
-import { ClientClosedError, commandOptions } from 'redis'
+import { ClientClosedError } from 'redis'
 
 import logger from '../../logger'
 import { RedisClient } from '../data/redisClient'
 import { DependencyInfo } from '../data/dependencyInfoTypes'
 import Dependencies from './Dependencies'
-
-export type RedisStreamMessage = Awaited<ReturnType<RedisClient['xRead']>>[number]['messages'][number]
-export type AsyncRedisStreamGenerator = AsyncGenerator<RedisStreamMessage, void, unknown>
 
 export type VersionDetails = {
   component: string
@@ -24,7 +21,7 @@ export default class RedisService {
   async handleError(error: Error, message: string): Promise<void> {
     if (error instanceof ClientClosedError) {
       logger.error(`${error.message} ...RECONNECTING`)
-      await this.redisClient.connect
+      await this.redisClient.connect()
     }
     logger.error(`${message}: ${error.message}`, error)
   }
@@ -36,10 +33,7 @@ export default class RedisService {
     }[],
   ): Promise<string> {
     try {
-      const response = await this.redisClient.xRead(
-        commandOptions({ isolated: true }), // uses new connection from pool not to block other redis calls
-        streamDetails,
-      )
+      const response = await this.redisClient.xRead(streamDetails)
 
       return response ? JSON.stringify(response) : '[]'
     } catch (error) {
@@ -50,8 +44,9 @@ export default class RedisService {
 
   async readLatest(redisKey: string): Promise<Record<string, Record<string, string>>> {
     try {
-      const result = await this.redisClient.json.get(commandOptions({ isolated: true }), redisKey)
-      const entries = Object.entries(result).map(
+      const result = await this.redisClient.json.get(redisKey)
+      const data = (result ?? {}) as Record<string, Record<string, string>>
+      const entries = Object.entries(data).map(
         ([key, value]) => [key.substring(key.indexOf(':') + 1), value] as [string, Record<string, string>],
       )
       return Object.fromEntries(entries)
@@ -63,10 +58,7 @@ export default class RedisService {
 
   async getAllDependencies(): Promise<Dependencies> {
     try {
-      const result = (await this.redisClient.json.get(
-        commandOptions({ isolated: true }),
-        'dependency:info',
-      )) as DependencyInfo
+      const result = (await this.redisClient.json.get('dependency:info')) as DependencyInfo
       return new Dependencies(result)
     } catch (error) {
       await this.handleError(error, 'Failed to get dependency info')

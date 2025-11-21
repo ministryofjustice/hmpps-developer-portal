@@ -179,8 +179,8 @@ export const mockActiveAndInactiveAlerts = [
 ]
 
 export const mockComponents = [
-  { name: 'ComponentA', product: { id: 1 } },
-  { name: 'ComponentB', product: { id: 2 } },
+  { name: 'ComponentA', product: { id: 1 }, envs: [{ name: 'prod' }] },
+  { name: 'ComponentB', product: { id: 2 }, envs: [{ name: 'prod' }] },
 ] as Component[]
 
 // Veracode mock components for getTeamVeracodeVulnerabilityCounts tests
@@ -249,6 +249,7 @@ export const mockVeracodeComponents = [
 export const mockTrivyScans = [
   {
     name: 'ComponentA',
+    environments: ['prod'],
     scan_summary: {
       scan_result: {
         'os-pkgs': [{ Severity: 'CRITICAL' }, { Severity: 'HIGH' }, { Severity: 'LOW' }],
@@ -258,6 +259,7 @@ export const mockTrivyScans = [
   },
   {
     name: 'ComponentB',
+    environments: ['prod'],
     scan_summary: {
       scan_result: {
         'os-pkgs': [{ Severity: 'HIGH' }, { Severity: 'HIGH' }],

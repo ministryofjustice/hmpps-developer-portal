@@ -2,6 +2,7 @@
 
 {% set pageTitle = applicationName + " - Products" %}
 {% set mainClasses = "app-container govuk-body" %}
+{% set containerClasses = "wide-screen" %}
 
 {% block content %}
 {{ breadCrumb("Products", []) }}
@@ -13,16 +14,24 @@
 			<tr>
 				<th>ID</th>
 				<th>Name</th>
+        <th>Phase</th>
 				<th>Product Set ID</th>
 				<th>Product Set Name</th>
+				<th>Team</th>
+				<th>Service Area</th>
+				<th>Lead Developer</th>
 			</tr>
 		</thead>
 		<tfoot>
 			<tr>
 				<th>ID</th>
 				<th>Name</th>
+        <th>Phase</th>
 				<th>Product Set ID</th>
 				<th>Product Set Name</th>
+				<th>Team</th>
+				<th>Service Area</th>
+				<th>Lead Developer</th>
 			</tr>
 		</tfoot>
   </table>
@@ -33,7 +42,7 @@
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
   <script src="/assets/js/common.js"></script>
   <script src="/assets/js/products.js"></script>
 {% endblock %}

@@ -193,15 +193,15 @@ describe('Component name service', () => {
 
   describe('checkComponentRequestExists()', () => {
     const testComponentsResponse = [
-      { github_repo: 'comp-3' },
-      { github_repo: 'comp-1' },
-      { github_repo: 'comp-2' },
+      { github_repo: 'comp-3', request_type: 'Add' },
+      { github_repo: 'comp-1', request_type: 'Archive' },
+      { github_repo: 'comp-2', request_type: 'Add' },
     ] as GithubRepoRequest[]
 
     it('should return true if component exists', async () => {
       strapiApiClient.getGithubRepoRequests.mockResolvedValue(testComponentsResponse)
 
-      const results = await componentNameService.checkComponentRequestExists('comp-3')
+      const results = await componentNameService.checkComponentRequestExists('comp-3', 'Add')
 
       expect(strapiApiClient.getGithubRepoRequests).toHaveBeenCalledTimes(1)
       expect(results).toBe(true)
@@ -210,7 +210,7 @@ describe('Component name service', () => {
     it('should return false if component does not exist', async () => {
       strapiApiClient.getGithubRepoRequests.mockResolvedValue(testComponentsResponse)
 
-      const results = await componentNameService.checkComponentRequestExists('comp-4')
+      const results = await componentNameService.checkComponentRequestExists('comp-4', 'Add')
 
       expect(strapiApiClient.getGithubRepoRequests).toHaveBeenCalledTimes(1)
       expect(results).toBe(false)

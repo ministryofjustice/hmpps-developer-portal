@@ -20,7 +20,7 @@
       background-color: #999900;
     }
   }
-  
+
   th, td {
     color: white;
     padding: govuk-spacing(1);
@@ -141,9 +141,21 @@
   }
 }
 
+.slack-icon, .slack-header {
+  background: url('/assets/images/slack_favicon_32.png') no-repeat left center;
+  background-size: 24px 24px;
+  padding-left: 32px;
+  line-height: 24px;
+}
+
+.slack-icon {
+  display: inline-block;
+  margin-left: 6px;
+}
+
 #githubTeamsTable {
   width: 100%;
-  
+
   th, td {
     padding: govuk-spacing(1);
     vertical-align: middle;
@@ -174,7 +186,7 @@
 .banner {
   background-color: #f4f4f4;
   text-align: left;
-  font-family: Arial, sans-serif; 
+  font-family: Arial, sans-serif;
   font-size: 40px;
   font-weight: bold;
   border-bottom: 2px solid #ccc;
@@ -299,15 +311,15 @@
 }
 
 
-.app-\!-width-one-fifth{ 
+.app-\!-width-one-fifth{
   width: 20% !important
 }
 
-.app-\!-width-one-sixth{ 
+.app-\!-width-one-sixth{
     width: 16.66% !important
 }
 
-.app-\!-width-one-seventh{ 
+.app-\!-width-one-seventh{
   width: 14.29% !important
 }
 
@@ -407,6 +419,33 @@
   margin-right: 5px;
 }
 
+.user-research-banner {
+  & p {
+    width: $moj-page-width;
+    margin: 0 auto;
+  }
+  & .govuk-tag {
+    font-weight: bold;
+  }
+}
+
+.alertsAndScansCard {
+  .govuk-summary-card__content {
+    .totalNumber {
+      @include govuk-font($size: 48);
+      font-weight: bold;
+      margin-bottom: 0;
+      padding: 0;
+    }
+    .alertsAndScansBox {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
 // For update buttons on filterDropDowns partial when page is bigger than 640px
 @media(width > 640px) {
   .monitor-selectors {
@@ -420,4 +459,64 @@
       margin-bottom: 2px;
     }
   }
+
+  // styling for product page
+  #product-alert-popup, .vulnerability-alert-banner {
+    border-left: 5px solid #d4351c;
+    background-color: #fef1f0
+  }
+
+  #product-alert-popup {
+    .govuk-table {
+      table-layout: fixed;
+      width: 100%;
+    }
+  }
+
+  #component-alert-popup {
+    .govuk-table__cell {
+      white-space: normal;
+      word-break: break-word;
+      width: 100%;
+    }
+  }
+
+  // styling for component page
+  #component-alert-popup, .vulnerability-alert-banner {
+    border-left: 5px solid #d4351c;
+    background-color: #fef1f0
+  }
+
+  #component-alert-popup {
+    .govuk-table {
+      table-layout: fixed;
+      width: 100%;
+    }
+  }
+
+  #component-alert-popup {
+    .govuk-table__cell {
+      white-space: normal;
+      word-break: break-word;
+    }
+  }
+
+  #dependency-alert-popup {
+    border-left: 5px solid #f15406;
+    background-color: rgba(255, 205, 155, 0.62)
+  }
+
+  #dependency-alert-popup {
+    .govuk-table {
+      table-layout: fixed;
+      width: 100%;
+    }
+  }
+  #dependency-alert-popup {
+    .govuk-table__cell {
+      white-space: normal;
+      word-break: break-word;
+    }
+  }
 }
+

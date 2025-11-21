@@ -136,7 +136,10 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const componentName = getComponentName(req)
     const environmentName = getEnvironmentName(req)
     const component = await serviceCatalogueService.getComponent({ componentName })
-    const filteredEnvironment = component.envs?.find(environment => environment.name === environmentName)
+    const filteredEnvironment =
+      environmentName !== 'unknown'
+        ? component.envs?.find(environment => environment.name === environmentName)
+        : component.envs?.[0]
     const scan = filteredEnvironment.trivy_scan
     const summary = scan.scan_summary?.summary
     const scanResults = scan.scan_summary?.scan_result
