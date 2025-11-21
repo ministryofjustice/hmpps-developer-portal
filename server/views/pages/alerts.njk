@@ -135,6 +135,23 @@
             attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
           }) }}
         </div>
+        <div class="label-and-button">
+          {{ govukSelect({
+            id: "portfolio",
+            name: "portfolio",
+            label: {
+              text: "Portfolio"
+            },
+            items: portfolios
+          }) }}
+          {{ govukButton({
+            id: "updatePortfolio",
+            name: "updatePortfolio",
+            text: "Update",
+            element: "button",
+            attributes: { "data-associated-select-id": "portfolio", "data-type-name": "portfolios"}
+          }) }}
+        </div>
       </div>
       <div class="alert-reset-button">
         {{ govukButton({

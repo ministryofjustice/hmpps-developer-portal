@@ -8,7 +8,7 @@ import { RdsEntry } from '../@types'
 import { TrivyScanType } from '../data/converters/modelTypes'
 
 import type { ServiceCatalogueService } from '../services'
-import type { Component, Product, Team } from '../data/modelTypes'
+import { Component, Environment, Product, Team } from '../data/modelTypes'
 import logger from '../../logger'
 
 dayjs.extend(relativeTime.default)
@@ -146,6 +146,13 @@ export function findTeamMatch(teams: Team[], name: string) {
     team?.products?.some(product =>
       product?.components?.some(component => formatMonitorName(component.name) === formattedName),
     ),
+  )
+}
+
+export function findProductMatch(products: Product[], name: string) {
+  const formattedName = formatMonitorName(name)
+  return products.find(product =>
+    product?.components?.some(component => formatMonitorName(component.name) === formattedName),
   )
 }
 
@@ -394,4 +401,10 @@ export function formatTimeStamp(dateString: string) {
     logger.error(`Invalid date: ${msg}`)
     return 'Invalid date'
   }
+}
+
+export function getIpAllowListAndModSecurityStatus(environments: Environment[]) {
+  const ipAllowListEnabled: boolean = environments.every(env => env.ip_allow_list_enabled)
+  const modSecurityEnabled: boolean = environments.every(env => env.modsecurity_enabled)
+  return { status: { ipAllowListEnabled, modSecurityEnabled } }
 }

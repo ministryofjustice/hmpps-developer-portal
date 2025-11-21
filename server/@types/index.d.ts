@@ -49,6 +49,7 @@ interface Alert {
   updatedAt?: string
   generatorURL?: string
   labels?: {
+    portfolio?: string
     alertname?: string
     application?: string
     businessUnit?: string
