@@ -747,3 +747,4 @@ describe('formatTimeStamp', () => {
   })
  })
 })
+})
