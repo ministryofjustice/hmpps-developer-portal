@@ -745,4 +745,5 @@ describe('formatTimeStamp', () => {
   it('formats the date and time correctly', () => {
     expect(formatTimeStamp('05.12.2025 10:12:12')).toEqual('12 MAY 2025 10:12:12')
   })
+ })
 })
