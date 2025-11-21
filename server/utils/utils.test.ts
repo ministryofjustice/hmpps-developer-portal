@@ -619,132 +619,135 @@ describe('Utils', () => {
         })
       })
 
-    describe('veracodeFilters', () => {
-      it.each([
-        [true, true, true, null, true],
-        [true, true, true, 'Pass', true],
-        [true, true, true, 'Did Not Pass', true],
-        [false, false, false, null, true],
-        [false, false, false, 'Pass', true],
-        [false, false, false, 'Did Not Pass', true],
-        [true, false, false, 'Pass', true],
-        [true, false, false, 'Did Not Pass', false],
-        [true, false, false, null, false],
-        [true, true, false, 'Pass', true],
-        [true, true, false, 'Did Not Pass', true],
-        [true, true, false, null, false],
-        [true, false, true, 'Pass', true],
-        [true, false, true, null, true],
-        [true, false, true, 'Did Not Pass', false],
-        [false, true, false, 'Did Not Pass', true],
-        [false, true, false, 'Pass', false],
-        [false, true, false, null, false],
-        [false, false, true, null, true],
-        [false, false, true, 'Pass', false],
-        [false, false, true, 'Did Not Pass', false],
-        [false, true, true, 'Did Not Pass', true],
-        [false, true, true, 'Pass', false],
-        [false, true, true, null, true],
-       ])(
-        'Passed is %s, failed is %s, unknown is %s and status is "%s" it should return %s',
-        (passed: boolean, failed: boolean, unknown: boolean, status: 'string', expected: boolean) => {
-          expect(veracodeFilters(passed, failed, unknown, status)).toBe(expected)
-        },
-      )
+      describe('veracodeFilters', () => {
+        it.each([
+          [true, true, true, null, true],
+          [true, true, true, 'Pass', true],
+          [true, true, true, 'Did Not Pass', true],
+          [false, false, false, null, true],
+          [false, false, false, 'Pass', true],
+          [false, false, false, 'Did Not Pass', true],
+          [true, false, false, 'Pass', true],
+          [true, false, false, 'Did Not Pass', false],
+          [true, false, false, null, false],
+          [true, true, false, 'Pass', true],
+          [true, true, false, 'Did Not Pass', true],
+          [true, true, false, null, false],
+          [true, false, true, 'Pass', true],
+          [true, false, true, null, true],
+          [true, false, true, 'Did Not Pass', false],
+          [false, true, false, 'Did Not Pass', true],
+          [false, true, false, 'Pass', false],
+          [false, true, false, null, false],
+          [false, false, true, null, true],
+          [false, false, true, 'Pass', false],
+          [false, false, true, 'Did Not Pass', false],
+          [false, true, true, 'Did Not Pass', true],
+          [false, true, true, 'Pass', false],
+          [false, true, true, null, true],
+        ])(
+          'Passed is %s, failed is %s, unknown is %s and status is "%s" it should return %s',
+          (passed: boolean, failed: boolean, unknown: boolean, status: 'string', expected: boolean) => {
+            expect(veracodeFilters(passed, failed, unknown, status)).toBe(expected)
+          },
+        )
 
-    describe('median', () => {
-      it('empty', () => {
-        expect(median([])).toStrictEqual(undefined)
+        describe('median', () => {
+          it('empty', () => {
+            expect(median([])).toStrictEqual(undefined)
+          })
+
+          it('single value', () => {
+            expect(median([1])).toStrictEqual(1)
+          })
+
+          it('odd number of elements', () => {
+            expect(median([1, 2, 3, 4, 5])).toStrictEqual(3)
+          })
+
+          it('even number of elements', () => {
+            expect(median([1, 2, 3, 4])).toStrictEqual(2.5)
+          })
+        })
+
+        describe('createStrapiQuery', () => {
+          it.each([
+            [null, { populate: null }, ''],
+            ['empty array', { populate: [] }, ''],
+            ['Single item', { populate: ['product_set'] }, 'populate%5Bproduct_set%5D=true'],
+            [
+              'Multiple items',
+              { populate: ['product_set', 'team'] },
+              'populate%5Bproduct_set%5D=true&populate%5Bteam%5D=true',
+            ],
+            [
+              'Single dotted entry',
+              { populate: ['product.team'] },
+              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true',
+            ],
+            [
+              'Multiple dotted entries',
+              { populate: ['product.team', 'envs.trivy_scan'] },
+              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D=true',
+            ],
+            [
+              'Single deep dotted entry',
+              { populate: ['product.team.extra'] },
+              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true',
+            ],
+            [
+              'Multiple deep dotted entries',
+              { populate: ['product.team.extra', 'envs.trivy_scan.extra'] },
+              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D%5Bpopulate%5D%5Bextra%5D=true',
+            ],
+            [
+              'Nested entries with hierarchical structure',
+              { populate: ['products.components.envs', 'products', 'products.components'] },
+              'populate%5Bproducts%5D%5Bpopulate%5D%5Bcomponents%5D%5Bpopulate%5D%5Benvs%5D=true',
+            ],
+          ])('%s createStrapiQuery(%s)', (_: string, input: { populate?: string[] }, expected: string) => {
+            expect(createStrapiQuery(input)).toEqual(expected)
+          })
+        })
       })
 
-      it('single value', () => {
-        expect(median([1])).toStrictEqual(1)
+      describe('utcTimestampToUtcDate', () => {
+        it('empty string', () => {
+          expect(utcTimestampToUtcDate('')).toEqual(undefined)
+        })
+
+        it('formats the date correctly', () => {
+          expect(utcTimestampToUtcDate('05.12.2025')).toEqual('2025-05-12')
+        })
       })
 
-      it('odd number of elements', () => {
-        expect(median([1, 2, 3, 4, 5])).toStrictEqual(3)
+      describe('utcTimestampToUtcDateTime', () => {
+        it('empty string', () => {
+          expect(utcTimestampToUtcDateTime('')).toEqual(undefined)
+        })
+
+        it('formats the date correctly', () => {
+          expect(utcTimestampToUtcDateTime('2025-09-09 10:20:18')).toEqual('09-SEP-2025 10:20:18')
+        })
+      })
+    })
+
+    describe('formatTimeStamp', () => {
+      it('returns N/A when given an empty string', () => {
+        expect(formatTimeStamp('')).toEqual('N/A')
       })
 
-      it('even number of elements', () => {
-        expect(median([1, 2, 3, 4])).toStrictEqual(2.5)
+      it('returns invalid date when give a string instead of number', () => {
+        expect(formatTimeStamp('string')).toEqual('Invalid date')
+      })
+
+      it('formats the date correctly', () => {
+        expect(formatTimeStamp('05.12.2025')).toEqual('12 MAY 2025 00:00:00')
+      })
+
+      it('formats the date and time correctly', () => {
+        expect(formatTimeStamp('05.12.2025 10:12:12')).toEqual('12 MAY 2025 10:12:12')
       })
     })
-        
-  describe('createStrapiQuery', () => {
-    it.each([
-      [null, { populate: null }, ''],
-      ['empty array', { populate: [] }, ''],
-      ['Single item', { populate: ['product_set'] }, 'populate%5Bproduct_set%5D=true'],
-      [
-        'Multiple items',
-        { populate: ['product_set', 'team'] },
-        'populate%5Bproduct_set%5D=true&populate%5Bteam%5D=true',
-      ],
-      ['Single dotted entry', { populate: ['product.team'] }, 'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true'],
-      [
-        'Multiple dotted entries',
-        { populate: ['product.team', 'envs.trivy_scan'] },
-        'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D=true',
-      ],
-      [
-        'Single deep dotted entry',
-        { populate: ['product.team.extra'] },
-        'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true',
-      ],
-      [
-        'Multiple deep dotted entries',
-        { populate: ['product.team.extra', 'envs.trivy_scan.extra'] },
-        'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D%5Bpopulate%5D%5Bextra%5D=true',
-      ],
-      [
-        'Nested entries with hierarchical structure',
-        { populate: ['products.components.envs', 'products', 'products.components'] },
-        'populate%5Bproducts%5D%5Bpopulate%5D%5Bcomponents%5D%5Bpopulate%5D%5Benvs%5D=true',
-      ],
-    ])('%s createStrapiQuery(%s)', (_: string, input: { populate?: string[] }, expected: string) => {
-      expect(createStrapiQuery(input)).toEqual(expected)
-
-    })
   })
-})
-  
-  describe('utcTimestampToUtcDate', () => {
-    it('empty string', () => {
-      expect(utcTimestampToUtcDate('')).toEqual(undefined)
-    })
-
-    it('formats the date correctly', () => {
-      expect(utcTimestampToUtcDate('05.12.2025')).toEqual('2025-05-12')
-    })
-})
-
-  describe('utcTimestampToUtcDateTime', () => {
-     it('empty string', () => {
-       expect(utcTimestampToUtcDateTime('')).toEqual(undefined)
-     })
-
-     it('formats the date correctly', () => {
-       expect(utcTimestampToUtcDateTime('2025-09-09 10:20:18')).toEqual('09-SEP-2025 10:20:18')
-     })
-   })
- })
-
-describe('formatTimeStamp', () => {
-  it('returns N/A when given an empty string', () => {
-    expect(formatTimeStamp('')).toEqual('N/A')
-  })
-
-  it('returns invalid date when give a string instead of number', () => {
-    expect(formatTimeStamp('string')).toEqual('Invalid date')
-  })
-
-  it('formats the date correctly', () => {
-    expect(formatTimeStamp('05.12.2025')).toEqual('12 MAY 2025 00:00:00')
-  })
-
-  it('formats the date and time correctly', () => {
-    expect(formatTimeStamp('05.12.2025 10:12:12')).toEqual('12 MAY 2025 10:12:12')
-  })
- })
-})
 })

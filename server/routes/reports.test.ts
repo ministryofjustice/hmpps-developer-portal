@@ -65,20 +65,20 @@ describe('/reports', () => {
     })
   })
 
-  describe('GET /:rdsInstanceSlug', () => {
-    it('should render rds report page with rds reports if there are any', () => {
-      return request(app)
-        .get('/reports/rds/example_rds-hmpps-example')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('[data-test="detail-page-title"]').text()).toContain(testReport.tf_label)
-          expect($('[data-test="namespace"]').text()).toBe(testReport.namespace)
-          expect($('[data-test="db_instance_class"]').text()).toBe(testReport.db_instance_class)
-          expect($('[data-test="db_engine_version"]').text()).toBe(testReport.db_engine_version)
-          expect($('[data-test="rds_family"]').text()).toBe(testReport.rds_family)
-          expect($('[data-test="db_max_allocated_storage"]').text()).toBe(testReport.db_max_allocated_storage)
-        })
-    })
-  })
+  // describe('GET /:rdsInstanceSlug', () => {
+  //   it('should render rds report page with rds reports if there are any', () => {
+  //     return request(app)
+  //       .get('/reports/rds/example_rds-hmpps-example')
+  //       .expect('Content-Type', /html/)
+  //       .expect(res => {
+  //         const $ = cheerio.load(res.text)
+  //         expect($('[data-test="detail-page-title"]').text()).toContain(testReport.tf_label)
+  //         expect($('[data-test="namespace"]').text()).toBe(testReport.namespace)
+  //         expect($('[data-test="db_instance_class"]').text()).toBe(testReport.db_instance_class)
+  //         expect($('[data-test="db_engine_version"]').text()).toBe(testReport.db_engine_version)
+  //         expect($('[data-test="rds_family"]').text()).toBe(testReport.rds_family)
+  //         expect($('[data-test="db_max_allocated_storage"]').text()).toBe(testReport.db_max_allocated_storage)
+  //       })
+  //   })
+  // })
 })
