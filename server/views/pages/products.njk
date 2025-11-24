@@ -2,38 +2,49 @@
 
 {% set pageTitle = applicationName + " - Products" %}
 {% set mainClasses = "app-container govuk-body" %}
+{% set containerClasses = "wide-screen" %}
 
 {% block content %}
 {{ breadCrumb("Products", []) }}
 
-  <h1>Products</h1>
+<h1>Products</h1>
 
-  <table id="productsTable" class="stripe">
-		<thead>
-			<tr>
-				<th>ID</th>
-				<th>Name</th>
-				<th>Product Set ID</th>
-				<th>Product Set Name</th>
-			</tr>
-		</thead>
-		<tfoot>
-			<tr>
-				<th>ID</th>
-				<th>Name</th>
-				<th>Product Set ID</th>
-				<th>Product Set Name</th>
-			</tr>
-		</tfoot>
-  </table>
-  <div class="banner">
-    <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
-  </div>
+<table id="productsTable" class="stripe">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Portfolio</th>
+      <th>Phase</th>
+      <th>Product Set ID</th>
+      <th>Product Set Name</th>
+      <th>Team</th>
+      <th>Service Area</th>
+      <th>Lead Developer</th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Portfolio</th>
+      <th>Phase</th>
+      <th>Product Set ID</th>
+      <th>Product Set Name</th>
+      <th>Team</th>
+      <th>Service Area</th>
+      <th>Lead Developer</th>
+    </tr>
+  </tfoot>
+</table>
+<div class="banner">
+  <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
+</div>
 {% endblock %}
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
   <script src="/assets/js/common.js"></script>
   <script src="/assets/js/products.js"></script>
 {% endblock %}

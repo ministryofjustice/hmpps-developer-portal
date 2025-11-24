@@ -547,10 +547,12 @@ describe('Strapi service', () => {
     })
 
     describe('getGithubRepoRequest', () => {
-      const githubRequestResponse = {
-        id: 57,
-        github_repo: 'github_repo-1',
-      } as GithubRepoRequest & { id: number }
+      const githubRequestResponse = [
+        {
+          id: 57,
+          github_repo: 'github_repo-1',
+        },
+      ] as GithubRepoRequest[]
 
       it('should return the selected repo request', async () => {
         strapiApiClient.getGithubRepoRequest.mockResolvedValue(githubRequestResponse)

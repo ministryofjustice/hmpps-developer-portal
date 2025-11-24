@@ -1,7 +1,7 @@
 jQuery(async function () {
   const monitorType = $('#monitorType').val()
-  const monitorName = $('#monitorName').val()
   const monitorId = $('#monitorId').val()
+  const monitorName = $('#monitorName').val()
 
   if (monitorType !== '') {
     const dropDownTypeId = monitorId && monitorId !== '0' ? parseInt(monitorId, 10) : 0
@@ -27,7 +27,7 @@ jQuery(async function () {
         dropDownType = 'team'
         break
       case 'updateServiceArea':
-        dropDownType = 'serviceArea'
+        dropDownType = 'service-area'
         break
       case 'updateCustomComponentView':
         dropDownType = 'customComponentView'
@@ -37,6 +37,7 @@ jQuery(async function () {
     }
 
     const dropDownText = $(`#${dropDownType} option:selected`).text()
+    const dropDownSlug = $(`#${dropDownType} option:selected`).attr('data-slug')
     const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
     const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
     let pushStateUrl = `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`
@@ -49,7 +50,7 @@ jQuery(async function () {
     history.pushState({ info: 'dropdown change' }, '', pushStateUrl)
 
     try {
-      await populateComponentTable(dropDownType, dropDownTypeId, dropDownText)
+      await populateComponentTable(dropDownType, dropDownTypeId, dropDownSlug)
       updateEnvironmentList()
     } catch (error) {
       console.error('Error updating selection:', error)
@@ -178,15 +179,8 @@ const fetchMessages = async () => {
   }
 }
 
-async function populateComponentTable(monitorType, monitorTypeId, monitorName) {
-  let url = `/monitor/components/${monitorType}/${monitorTypeId}`
-
-  // If we have a product name in the URL but no ID, add it as a query parameter
-  if (monitorType === 'product' && monitorTypeId === 0) {
-    if (monitorName) {
-      url = `${url}?name=${encodeURIComponent(monitorName)}`
-    }
-  }
+async function populateComponentTable(monitorType, monitorTypeId, monitorSlug) {
+  let url = `/monitor/components/${monitorType}/${monitorTypeId}?slug=${encodeURIComponent(monitorSlug)}`
 
   const response = await fetch(url)
 

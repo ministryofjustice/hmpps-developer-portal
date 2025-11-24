@@ -1,13 +1,22 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import { getFormattedName, utcTimestampToUtcDateTime } from '../utils/utils'
+import {
+  getComponentNamesForTeam,
+  getComponentsForTeam,
+  getFormattedName,
+  getIpAllowListAndModSecurityStatus,
+  utcTimestampToUtcDateTime,
+} from '../utils/utils'
 import logger from '../../logger'
 import config from '../config'
+import { DependencyComparisonResult, getDependencyComparison } from '../services/dependencyComparison'
+import { IpAllowListAndModSecurityStatus } from '../data/modelTypes'
 
 export default function routes({
   serviceCatalogueService,
   teamsSummaryCountService,
   monitoringChannelService,
+  recommendedVersionsService,
 }: Services): Router {
   const router = Router()
 
@@ -33,6 +42,7 @@ export default function routes({
     const displayTeam = {
       id: team.t_id,
       name: team.name,
+      slug: teamSlug,
       slackChannelId: team.slack_channel_id,
       slackChannelName: team.slack_channel_name,
       products,
@@ -45,6 +55,14 @@ export default function routes({
     const teamSlug = getFormattedName(req, 'teamSlug')
     const team = await serviceCatalogueService.getTeam({ teamSlug, withEnvironments: true })
     const products = team.products.map(product => product)
+    const components = getComponentsForTeam(team)
+    const componentNames = getComponentNamesForTeam(team)
+    const componentList: string[] =
+      componentNames && componentNames.length > 0 ? componentNames.map(component => component.componentName) : []
+    const displayComponent = {}
+    const fullTeamComparison: DependencyComparisonResult[] = []
+    let upgradeNeeded = false
+    const securityStatus: IpAllowListAndModSecurityStatus[] = []
 
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
@@ -67,15 +85,45 @@ export default function routes({
       const channelTree = monitoringChannelService.generateChannelTree(channelRecommendations)
 
       // Check for legacy channels
-      const hasLegacyChannels = channelRecommendations.recommendations.some(
+      const legacyChannelCount = channelRecommendations.recommendations.filter(
         rec =>
           rec.currentChannels.dev === '#dps_alerts_non_prod' ||
           rec.currentChannels.preprod === '#dps_alerts_non_prod' ||
           rec.currentChannels.prod === '#dps_alerts',
+      ).length
+
+      // Dependency comparison for this team
+      const dependencyComparisonPromise = await Promise.all(
+        components.map(async component => {
+          const comparison = await getDependencyComparison(component, recommendedVersionsService, displayComponent)
+          return { component, comparison }
+        }),
       )
+      dependencyComparisonPromise.forEach(({ component, comparison }) => {
+        if (!upgradeNeeded) {
+          upgradeNeeded =
+            component.language === 'Kotlin' &&
+            (comparison.summary.needsAttention > 0 || comparison.summary.needsUpgrade > 0)
+        }
+        fullTeamComparison.push(comparison)
+      })
+
+      // List IP allowlist and MOD security enabled values or PROD only
+      for (const component of components) {
+        const prodOnlyEnv = component.envs.filter(environment => environment.type === 'prod')
+        const secStatus: IpAllowListAndModSecurityStatus = getIpAllowListAndModSecurityStatus(prodOnlyEnv)
+        securityStatus.push({
+          componentName: component.name,
+          status: {
+            ipAllowListEnabled: secStatus.status.ipAllowListEnabled,
+            modSecurityEnabled: secStatus.status.modSecurityEnabled,
+          },
+        })
+      }
 
       const displayTeam = {
         name: team.name,
+        componentList,
         encodedTeamName: encodeURIComponent(team.name),
         slackWorkspaceId: config.slack.workspaceId,
         slackChannelId: team.slack_channel_id,
@@ -85,7 +133,11 @@ export default function routes({
         veryHighAndHighVeracode,
         channelRecommendations,
         channelTree,
-        hasLegacyChannels,
+        hasLegacyChannels: legacyChannelCount > 0,
+        legacyChannelCount,
+        upgradeNeeded,
+        fullTeamComparison,
+        securityStatus,
       }
 
       res.render('pages/teamOverview', { team: displayTeam })

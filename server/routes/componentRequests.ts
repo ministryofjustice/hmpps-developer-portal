@@ -1,23 +1,11 @@
 import { Router } from 'express'
 import type { Services } from '../services'
+import { GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
 import { validateRequest } from '../middleware/setUpValidationMiddleware'
 import { FieldValidationError } from '../@types/FieldValidationError'
-import { GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
 
 export default function routes({ componentNameService, serviceCatalogueService, dataFilterService }: Services): Router {
   const router = Router()
-
-  router.get('/new', async (req, res) => {
-    const [, productList] = await dataFilterService.getFormsDropdownLists({
-      teamName: '',
-      productId: '',
-      useFormattedName: true,
-    })
-    return res.render('pages/componentRequestForm', {
-      title: 'Github Repository Requst Form',
-      productList,
-    })
-  })
 
   router.get('/', async (req, res) => {
     return res.render('pages/componentRequests')
@@ -29,10 +17,33 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     res.send(componentRequests)
   })
 
-  router.get('/:repo_name', async (req, res) => {
-    const repoName = req.params.repo_name
-    const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName })
+  router.get('/:repoName/:requestType', async (req, res) => {
+    const { repoName } = req.params
+    const requestType = req.params.requestType || 'Add'
+    const componentRequest = await serviceCatalogueService.getGithubRepoRequest({ repoName }).then(data => {
+      // Check if multiple records exist
+      if (data.length > 1) {
+        // Find the record that matches requestType
+        const matchingRecord = data.find(item => item.request_type === requestType)
+        // If no matching record, fallback to the record with request_type as null
+        return matchingRecord || data.find(item => item.request_type === null)
+      }
+      // If only one record exists, return it
+      return data[0]
+    })
     return res.render('pages/componentRequest', { componentRequest })
+  })
+
+  router.get('/new', async (req, res) => {
+    const [, productList] = await dataFilterService.getFormsDropdownLists({
+      teamName: '',
+      productId: '',
+      useFormattedName: true,
+    })
+    return res.render('pages/componentRequestForm', {
+      title: 'Github Repository Request Form',
+      productList,
+    })
   })
 
   router.post('/new', async (req, res): Promise<void> => {
@@ -41,7 +52,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       ? await componentNameService.checkComponentExists(formData.github_repo)
       : false
     const repoRequestExists = formData.github_repo
-      ? await componentNameService.checkComponentRequestExists(formData.github_repo)
+      ? await componentNameService.checkComponentRequestExists(formData.github_repo, 'Add')
       : false
     validateRequest(req, body => {
       const validationErrors: FieldValidationError[] = []
@@ -167,10 +178,10 @@ export default function routes({ componentNameService, serviceCatalogueService, 
         })
       } else {
         const requesterEmail = body.requester_email?.toString()
-        if (!requesterEmail.endsWith('@digital.justice.gov.uk') && !requesterEmail.endsWith('@justice.gov.uk')) {
+        if (!requesterEmail.endsWith('@justice.gov.uk')) {
           validationErrors.push({
             field: 'requesterEmail',
-            message: 'Valid email address is only with @digital.justice.gov.uk or @justice.gov.uk',
+            message: 'Valid email address is only with @justice.gov.uk',
             href: '#requester_email',
           })
         }
@@ -190,6 +201,7 @@ export default function routes({ componentNameService, serviceCatalogueService, 
       return res.render('pages/componentRequestConfirmation', {
         title: 'Github Repository Request Confirmation',
         repoName: formData.github_repo,
+        requestType: 'Add',
       })
     } catch {
       const validationErrors: FieldValidationError[] = []
@@ -205,10 +217,108 @@ export default function routes({ componentNameService, serviceCatalogueService, 
     }
   })
 
+  router.get('/archive', async (req, res) => {
+    return res.render('pages/componentArchiveRequestForm', {
+      title: 'Github Repository Archive Request Form',
+    })
+  })
+
+  router.post('/archive', async (req, res): Promise<void> => {
+    const formData = req.body
+    const repoExists = formData.github_repo
+      ? await componentNameService.checkComponentExists(formData.github_repo)
+      : false
+    const repoRequestExists = formData.github_repo
+      ? await componentNameService.checkComponentRequestExists(formData.github_repo, 'Archive')
+      : false
+    validateRequest(req, body => {
+      const validationErrors: FieldValidationError[] = []
+      if (!body.github_repo) {
+        validationErrors.push({
+          field: 'github_repo',
+          message: 'Please enter a repository name',
+          href: '#github_repo',
+        })
+      } else {
+        if (!repoExists) {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'This repository name does not exist in Service Catalogue - please choose a different name',
+            href: '#github_repo',
+          })
+        }
+        if (repoRequestExists) {
+          validationErrors.push({
+            field: 'github_repo',
+            message: 'A request for this component already exists in queue. Please check the previous requests list.',
+            href: '#github_repo',
+          })
+        }
+      }
+      if (!body.requester_name) {
+        validationErrors.push({
+          field: 'requester_name',
+          message: 'Enter Requester Name',
+          href: '#requester_name',
+        })
+      }
+      if (!body.requester_email) {
+        validationErrors.push({
+          field: 'requester_email',
+          message: 'Enter Requesters Email Address',
+          href: '#requester_email',
+        })
+      } else {
+        const requesterEmail = body.requester_email?.toString()
+        if (!requesterEmail.endsWith('@justice.gov.uk')) {
+          validationErrors.push({
+            field: 'requesterEmail',
+            message: 'Valid email address is only with @justice.gov.uk',
+            href: '#requester_email',
+          })
+        }
+      }
+      if (!body.requester_team) {
+        validationErrors.push({
+          field: 'requester_team',
+          message: 'Select Requesting Team',
+          href: '#requester_team',
+        })
+      }
+      return validationErrors
+    })
+    try {
+      const archiveData = {
+        github_repo: formData.github_repo,
+        requester_name: formData.requester_name,
+        requester_email: formData.requester_email,
+        requester_team: formData.requester_team,
+        request_type: 'Archive',
+        request_github_pr_status: 'Pending',
+      }
+      await serviceCatalogueService.postGithubRepoRequest({ data: archiveData })
+      return res.render('pages/componentRequestConfirmation', {
+        title: 'Github Repository Request Confirmation',
+        repoName: formData.github_repo,
+        requestType: 'Archive',
+      })
+    } catch {
+      const validationErrors: FieldValidationError[] = []
+      validationErrors.push({
+        field: 'form',
+        message: 'There was an error submitting your request. Please try again later.',
+        href: '',
+      })
+      return res.render('pages/componentArchiveRequestForm', {
+        validationErrors,
+        formData,
+      })
+    }
+  })
   return router
 }
 
-const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
+export const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequest => {
   const sanitiseString = (str: string | undefined) => str?.replace(/[\s\r\n]+/g, ' ').trim()
 
   return {
@@ -253,11 +363,12 @@ const buildFormData = (formData: Record<string, unknown>): GithubRepoRequestRequ
       requester_email: sanitiseString(formData.requester_email?.toString()),
       requester_team: formData.requester_team?.toString(),
       request_github_pr_status: 'Pending',
+      request_type: formData.request_type?.toString(),
     },
   }
 }
 
-function convertTeamsStringToArray(teams: string): string[] {
+export function convertTeamsStringToArray(teams: string): string[] {
   return teams
     .split(',')
     .map(team => team.trim())

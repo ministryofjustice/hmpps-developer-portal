@@ -5,63 +5,71 @@ jQuery(function () {
 
   function transformData(data) {
     const transformed = []
-    data.forEach(item => {
-      const summary = item.scan_summary?.summary || {}
-      const scanResult = item.scan_summary?.scan_result || {}
-      const cveIDs = []
+    data
+      .filter(item => item.scan_status === 'Succeeded')
+      .forEach(item => {
+        const summary = item.scan_summary?.summary || {}
+        const scanResult = item.scan_summary?.scan_result || {}
+        const cveIDs = []
 
-      // Extract CVE VulnerabilityID from os-pkgs and lang-pkgs
-      scanResult['os-pkgs']?.forEach(pkg => {
-        if (pkg.VulnerabilityID && pkg.PrimaryURL) {
-          cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
-        } else if (pkg.VulnerabilityID) {
-          cveIDs.push(pkg.VulnerabilityID)
-        }
-      })
+        // Extract CVE VulnerabilityID from os-pkgs and lang-pkgs
+        scanResult['os-pkgs']
+          ?.filter(pkg => pkg.VulnerabilityID)
+          .forEach(pkg => {
+            if (pkg.PrimaryURL) {
+              cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
+            } else {
+              cveIDs.push(pkg.VulnerabilityID)
+            }
+          })
 
-      scanResult['lang-pkgs']?.forEach(pkg => {
-        if (pkg.VulnerabilityID && pkg.PrimaryURL) {
-          cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
-        } else if (pkg.VulnerabilityID) {
-          cveIDs.push(pkg.VulnerabilityID)
-        }
-      })
+        scanResult['lang-pkgs']
+          ?.filter(pkg => pkg.VulnerabilityID)
+          .forEach(pkg => {
+            if (pkg.PrimaryURL) {
+              cveIDs.push(`<a href="${pkg.PrimaryURL}" target="_blank">${pkg.VulnerabilityID}</a>`)
+            } else {
+              cveIDs.push(pkg.VulnerabilityID)
+            }
+          })
 
-      item.environments.forEach(env => {
-        transformed.push({
-          environment: env,
-          name: item.name,
-          build_image_tag: item.build_image_tag,
-          team: item.team ? item.team : undefined,
-          trivy_scan_timestamp: item.trivy_scan_timestamp,
-          total_fixed_critical:
-            (summary?.['os-pkgs']?.fixed?.CRITICAL ?? 0) + (summary?.['lang-pkgs']?.fixed?.CRITICAL ?? 0),
-          total_fixed_high: (summary?.['os-pkgs']?.fixed?.HIGH ?? 0) + (summary?.['lang-pkgs']?.fixed?.HIGH ?? 0),
-          total_fixed_medium: (summary?.['os-pkgs']?.fixed?.MEDIUM ?? 0) + (summary?.['lang-pkgs']?.fixed?.MEDIUM ?? 0),
-          total_fixed_low: (summary?.['os-pkgs']?.fixed?.LOW ?? 0) + (summary?.['lang-pkgs']?.fixed?.LOW ?? 0),
-          total_fixed_unknown:
-            (summary?.['os-pkgs']?.fixed?.UNKNOWN ?? 0) + (summary?.['lang-pkgs']?.fixed?.UNKNOWN ?? 0),
-          total_unfixed_critical:
-            (summary?.['os-pkgs']?.unfixed?.CRITICAL ?? 0) + (summary?.['lang-pkgs']?.unfixed?.CRITICAL ?? 0),
-          total_unfixed_high: (summary?.['os-pkgs']?.unfixed?.HIGH ?? 0) + (summary?.['lang-pkgs']?.unfixed?.HIGH ?? 0),
-          total_unfixed_medium:
-            (summary?.['os-pkgs']?.unfixed?.MEDIUM ?? 0) + (summary?.['lang-pkgs']?.unfixed?.MEDIUM ?? 0),
-          total_unfixed_low: (summary?.['os-pkgs']?.unfixed?.LOW ?? 0) + (summary?.['lang-pkgs']?.unfixed?.LOW ?? 0),
-          total_unfixed_unknown:
-            (summary?.['os-pkgs']?.unfixed?.UNKNOWN ?? 0) + (summary?.['lang-pkgs']?.unfixed?.UNKNOWN ?? 0),
-          total_secret_issues:
-            (summary?.['secret']?.CRITICAL ?? 0) +
-            (summary?.['secret']?.HIGH ?? 0) +
-            (summary?.['secret']?.MEDIUM ?? 0) +
-            (summary?.['secret']?.LOW ?? 0),
-          result_link: `
-              <a href="/trivy-scans/${item.name}/environments/${env}">
-                <img src="/assets/images/trivy.png" alt="Trivy Logo" style="width: 32px; height: 32px; margin-right: 5px;" />
-              </a>`,
-          cve_ids: cveIDs.join(', '),
+        item.environments.forEach(env => {
+          transformed.push({
+            environment: env,
+            name: item.name,
+            build_image_tag: item.build_image_tag,
+            team: item.team ? item.team : undefined,
+            trivy_scan_timestamp: item.trivy_scan_timestamp,
+            total_fixed_critical:
+              (summary?.['os-pkgs']?.fixed?.CRITICAL ?? 0) + (summary?.['lang-pkgs']?.fixed?.CRITICAL ?? 0),
+            total_fixed_high: (summary?.['os-pkgs']?.fixed?.HIGH ?? 0) + (summary?.['lang-pkgs']?.fixed?.HIGH ?? 0),
+            total_fixed_medium:
+              (summary?.['os-pkgs']?.fixed?.MEDIUM ?? 0) + (summary?.['lang-pkgs']?.fixed?.MEDIUM ?? 0),
+            total_fixed_low: (summary?.['os-pkgs']?.fixed?.LOW ?? 0) + (summary?.['lang-pkgs']?.fixed?.LOW ?? 0),
+            total_fixed_unknown:
+              (summary?.['os-pkgs']?.fixed?.UNKNOWN ?? 0) + (summary?.['lang-pkgs']?.fixed?.UNKNOWN ?? 0),
+            total_unfixed_critical:
+              (summary?.['os-pkgs']?.unfixed?.CRITICAL ?? 0) + (summary?.['lang-pkgs']?.unfixed?.CRITICAL ?? 0),
+            total_unfixed_high:
+              (summary?.['os-pkgs']?.unfixed?.HIGH ?? 0) + (summary?.['lang-pkgs']?.unfixed?.HIGH ?? 0),
+            total_unfixed_medium:
+              (summary?.['os-pkgs']?.unfixed?.MEDIUM ?? 0) + (summary?.['lang-pkgs']?.unfixed?.MEDIUM ?? 0),
+            total_unfixed_low: (summary?.['os-pkgs']?.unfixed?.LOW ?? 0) + (summary?.['lang-pkgs']?.unfixed?.LOW ?? 0),
+            total_unfixed_unknown:
+              (summary?.['os-pkgs']?.unfixed?.UNKNOWN ?? 0) + (summary?.['lang-pkgs']?.unfixed?.UNKNOWN ?? 0),
+            total_secret_issues:
+              (summary?.['secret']?.CRITICAL ?? 0) +
+              (summary?.['secret']?.HIGH ?? 0) +
+              (summary?.['secret']?.MEDIUM ?? 0) +
+              (summary?.['secret']?.LOW ?? 0),
+            result_link: `
+                <a href="/trivy-scans/${item.name}/environments/${env}">
+                  <img src="/assets/images/trivy.png" alt="Trivy Logo" class="trivy-icon" />
+                </a>`,
+            cve_ids: cveIDs.join(', '),
+          })
         })
       })
-    })
     return transformed
   }
 
@@ -82,8 +90,8 @@ jQuery(function () {
       createdCell: function (td, _cellData, rowData) {
         const envlink =
           rowData.environment !== 'unknown'
-            ? `<a class="govuk-link--no-visited-state" 
-               href="/components/${rowData.name}/environment/${rowData.environment}" 
+            ? `<a class="govuk-link--no-visited-state"
+               href="/components/${rowData.name}/environment/${rowData.environment}"
                data-test="environment">
                ${rowData.environment}
             </a>&nbsp;`
@@ -251,6 +259,8 @@ jQuery(function () {
         orderType: 'asc',
         columns,
       })
+      filterForProdTeamOverview()
+      updateEnvironmentList()
     },
   })
 
@@ -424,6 +434,18 @@ jQuery(function () {
     table.clear()
     table.rows.add(filtered)
     table.draw()
+  }
+  //function to select prod only for Trivy Scans on Team Overview page
+  function filterForProdTeamOverview() {
+    const params = new URLSearchParams(window.location.search)
+    const prodCheckBoxId = params.get('checkbox')
+
+    if (prodCheckBoxId) {
+      const allEnvCheckboxes = document.querySelectorAll('input[type="checkbox"][name="environment"]')
+      allEnvCheckboxes.forEach(checkbox => {
+        checkbox.checked = checkbox.id === prodCheckBoxId
+      })
+    }
   }
 })
 

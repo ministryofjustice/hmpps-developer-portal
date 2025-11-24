@@ -51,7 +51,7 @@
       <th>Links</th>
       <td>
        <ul>
-          <li><a class="govuk-link--no-visited-state" href="/monitor/team/{{  team.name | toMonitorName }}">
+          <li><a class="govuk-link--no-visited-state" href="/monitor/team/{{  team.slug | toMonitorName }}">
              Health Monitor
           </a></li>
           <li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/{{ team.name | toMonitorName }}">
@@ -67,5 +67,5 @@
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
 {% endblock %}

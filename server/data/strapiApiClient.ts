@@ -1,8 +1,6 @@
-import { URLSearchParams } from 'url'
 import RestClient from './restClient'
 import config, { ApiConfig } from '../config'
 import * as Strapi from './strapiApiTypes'
-import { unwrapListResponse, unwrapSingleResponse } from '../utils/strapi4Utils'
 import type {
   Component,
   CustomComponentView,
@@ -19,44 +17,16 @@ import type {
 } from './modelTypes'
 import convertTrivyScan from './converters/trivyScans'
 import { ListResponse, SingleResponse } from './strapiClientTypes'
+import { createStrapiQuery } from '../utils/utils'
 
-function createStrapiQuery({ populate }: { populate?: string[] }): string {
-  const populateParams: Record<string, unknown> = {}
+type Payload = Record<string, unknown>
 
-  populate?.sort((a, b) => b.split('.').length - a.split('.').length)
+function unwrapSingleResponse<T extends Payload>(response: SingleResponse<T>): T {
+  return Array.isArray(response.data) && response.data.length > 0 ? (response.data[0] as T) : response.data
+}
 
-  populate?.forEach(path => {
-    const keys = path.split('.')
-    let current = populateParams
-
-    keys.forEach((key, index) => {
-      if (!current[key]) {
-        // Ensure the last key is set to true, and intermediate keys have a `populate` object
-        current[key] = index === keys.length - 1 ? true : { populate: {} as Record<string, unknown> }
-      }
-      current =
-        typeof current[key] === 'object' && current[key] !== null
-          ? (current[key] as { populate?: Record<string, unknown> }).populate ||
-            (current[key] as Record<string, unknown>)
-          : current
-    })
-  })
-
-  const queryString = new URLSearchParams()
-
-  function buildQuery(obj: Record<string, unknown>, prefix = 'populate') {
-    Object.entries(obj).forEach(([key, value]) => {
-      const fullKey = `${prefix}[${key}]`
-      if (typeof value === 'object' && value !== null) {
-        buildQuery(value as Record<string, unknown>, fullKey)
-      } else if (value === true) {
-        queryString.append(fullKey, 'true')
-      }
-    })
-  }
-
-  buildQuery(populateParams)
-  return queryString.toString()
+function unwrapListResponse<T extends Payload>(response: ListResponse<T>): T[] {
+  return response.data
 }
 
 export default class StrapiApiClient {
@@ -77,7 +47,7 @@ export default class StrapiApiClient {
     withEnvironments?: boolean
     withComponents?: boolean
   }): Promise<Product[]> {
-    const populate = ['product_set']
+    const populate = ['product_set', 'service_area', 'team']
 
     if (withComponents) {
       populate.push('components')
@@ -284,18 +254,16 @@ export default class StrapiApiClient {
     customComponentDocumentId: string
     withEnvironments?: boolean
   }): Promise<CustomComponentView> {
-    const populate = ['components', 'components.product']
+    const populateList = ['components', 'components.product']
 
     if (withEnvironments) {
-      populate.push('components.envs')
+      populateList.push('components.envs')
     }
 
-    return this.restClient
-      .get<SingleResponse<CustomComponentView>>({
-        path: `/v1/custom-component-views/${customComponentDocumentId}`,
-        query: createStrapiQuery({ populate }),
-      })
-      .then(unwrapSingleResponse)
+    const populate = createStrapiQuery({ populate: populateList })
+    const query = customComponentDocumentId ? `filters[id][$eq]=${customComponentDocumentId}&${populate}` : populate
+    const path = '/v1/custom-component-views'
+    return this.restClient.get<SingleResponse<CustomComponentView>>({ path, query }).then(unwrapSingleResponse)
   }
 
   async getGithubRepoRequests(): Promise<GithubRepoRequest[]> {
@@ -306,13 +274,13 @@ export default class StrapiApiClient {
       .then(unwrapListResponse)
   }
 
-  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest> {
+  async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest[]> {
     return this.restClient
-      .get<SingleResponse<Strapi.GithubRepoRequest>>({
+      .get<ListResponse<Strapi.GithubRepoRequest>>({
         path: '/v1/github-repo-requests',
         query: `filters[github_repo][$eq]=${repoName}`,
       })
-      .then(unwrapSingleResponse)
+      .then(unwrapListResponse)
   }
 
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<void> {

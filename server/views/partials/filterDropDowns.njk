@@ -9,21 +9,30 @@
   {%- set serviceAreas = (serviceAreas.push({
     value: serviceArea.value,
     text: serviceArea.text,
-    selected: serviceArea.selected
+    selected: serviceArea.selected,
+    attributes: {
+          'data-slug': serviceArea.slug
+        }
   }), serviceAreas) -%}
 {%- endfor -%}
 {%- for team in teamList -%}
   {%- set teams = (teams.push({
     value: team.value,
     text: team.text,
-    selected: team.selected
+    selected: team.selected,
+    attributes: {
+          'data-slug': team.slug
+        }
   }), teams) -%}
 {%- endfor -%}
 {%- for product in productList -%}
   {%- set products = (products.push({
     value: product.value,
     text: product.text,
-    selected: product.selected
+    selected: product.selected,
+    attributes: {
+      'data-slug': product.slug
+    }
   }), products) -%}
 {%- endfor -%}
 {%- for customComponentView in customComponentsList -%}
@@ -37,8 +46,8 @@
 <div class="monitor-selectors govuk-button-group">
   <div>
     {{- govukSelect({
-      id: "serviceArea",
-      name: "serviceArea",
+      id: "service-area",
+      name: "service-area",
       label: {
         text: "Service Area"
       },
@@ -49,7 +58,7 @@
       name: "updateServiceArea",
       text: "Update",
       element: "button",
-      attributes: { "data-associated-select-id": "serviceArea", "data-type-name": "service-areas"}
+      attributes: { "data-associated-select-id": "service-area", "data-type-name": "service-areas"}
     }) }}
   </div>
   <div>
