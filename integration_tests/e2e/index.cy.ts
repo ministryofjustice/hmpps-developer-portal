@@ -2,14 +2,14 @@ import Page from '../pages/page'
 import IndexPage from '../pages'
 import logAccessibilityViolations from '../support/logAccessibilityViolations'
 
-context('Index Page', () => {
+context('Team Overview Page', () => {
   // beforeEach(() => {
   //     cy.task('reset')
   //     // cy.visit('http://localhost:3000')
   // })
 
-  it('should scan the index page', () => {
-    cy.visit('http://localhost:3000/teams/team-overview/farsight-activity-management-team')
+  it('should scan the team overview page for the maintenance team', () => {
+    cy.visit('http://localhost:3000/teams/team-overview/maintenance-team')
     cy.injectAxe()
     cy.configureAxe({
       rules: [
