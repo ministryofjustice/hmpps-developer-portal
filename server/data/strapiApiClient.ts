@@ -13,6 +13,7 @@ import type {
   ScheduledJob,
   ServiceArea,
   Team,
+  TrivyScan,
   TrivyScanType,
 } from './modelTypes'
 import convertTrivyScan from './converters/trivyScans'
@@ -338,6 +339,15 @@ export default class StrapiApiClient {
       path: '/v1/trivy-scans',
     })
     return results.data.map(convertTrivyScan)
+  }
+
+  async getTrivyScan({ name }: { name: string }): Promise<TrivyScan> {
+    return this.restClient
+      .get<SingleResponse<Strapi.TrivyScan>>({
+        path: '/v1/trivy-scans',
+        query: `filters[name][$eq]=${name}`,
+      })
+      .then(unwrapSingleResponse)
   }
 
   async getEnvironments(): Promise<ListResponse<Strapi.Environment>> {

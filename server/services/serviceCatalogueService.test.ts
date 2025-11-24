@@ -501,6 +501,19 @@ describe('Strapi service', () => {
         expect(results).toEqual(testTrivyScansResponse)
       })
     })
+
+    describe('getTrivyScan', () => {
+      const testTrivyScanResponse = { id: 1, name: 'Scan 1' } as TrivyScanType
+
+      it('should return the selected trivy scan', async () => {
+        strapiApiClient.getTrivyScan.mockResolvedValue(testTrivyScanResponse)
+
+        const results = await serviceCatalogueService.getTrivyScan({ name: 'Scan 1' })
+
+        expect(strapiApiClient.getTrivyScan).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testTrivyScanResponse)
+      })
+    })
   })
 
   describe('getCustomComponentView', () => {
