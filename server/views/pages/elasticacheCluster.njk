@@ -1,0 +1,88 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + namespace.elasticacheCluster.tf_label %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{% set breadCrumbList = [
+    {title: "Namespaces", href: "/namespaces"},
+    {title: namespace.name, href: "/namespaces/" + namespace.name}
+  ]
+%}
+
+{{ breadCrumb(namespace.elasticacheCluster.tf_label, breadCrumbList) }}
+
+<h1 data-test="detail-page-title">{{ namespace.elasticacheCluster.tf_label }}</h1>
+
+<table class="componentData">
+  <tbody>
+    <tr>
+      <th>tf_label</th>
+      <td>{{ namespace.elasticacheCluster.tf_label }}</td>
+    </tr>
+    <tr>
+      <th>tf_mod_version</th>
+      <td>{{ namespace.elasticacheCluster.team_name }}</td>
+    </tr>
+    <tr>
+      <th>namespace</th>
+      <td>{{ namespace.elasticacheCluster.namespace }}</td>
+    </tr>
+    <tr>
+      <th>application</th>
+      <td>{{ namespace.elasticacheCluster.application }}</td>
+    </tr>
+    <tr>
+      <th>business_unit</th>
+      <td>{{ namespace.elasticacheCluster.business_unit }}</td>
+    </tr>
+    <tr>
+      <th>engine_version</th>
+      <td>{{ namespace.elasticacheCluster.engine_version }}</td>
+    </tr>
+    <tr>
+      <th>infrastructure_support</th>
+      <td>{{ namespace.elasticacheCluster.infrastructure_support }}</td>
+    </tr>
+    <tr>
+      <th>is_production</th>
+      <td>{{ namespace.elasticacheCluster.is_production }}</td>
+    </tr>
+    <tr>
+      <th>node_type</th>
+      <td>{{ namespace.elasticacheCluster.node_type }}</td>
+    </tr>
+    <tr>
+      <th>number_cache_clusters</th>
+      <td>{{ namespace.elasticacheCluster.number_cache_clusters }}</td>
+    </tr>
+    <tr>
+      <th>parameter_group_name</th>
+      <td>{{ namespace.elasticacheCluster.parameter_group_name }}</td>
+    </tr>
+    <tr>
+      <th>team_name</th>
+      <td>{{ namespace.elasticacheCluster.team_name }}</td>
+    </tr>
+    <tr>
+      <th>is_production</th>
+      <td>{{ namespace.elasticacheCluster.is_production }}</td>
+    </tr>
+    <tr>
+      <th>environment_name</th>
+      <td>{{ namespace.elasticacheCluster.environment_name }}</td>
+    </tr>
+    <tr>
+      <th>source code</th>
+      <td><a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ namespace.elasticacheCluster.tf_filename }}">{{ namespace.elasticacheCluster.tf_filename }}</a></td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+  
+{% endblock %}

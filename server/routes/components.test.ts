@@ -6,15 +6,18 @@ import ServiceCatalogueService from '../services/serviceCatalogueService'
 import RedisService from '../services/redisService'
 import Dependencies from '../services/Dependencies'
 import AlertsService from '../services/alertsService'
+import RecommendedVersionsService, { recommendedVersions } from '../services/recommendedVersionsService'
 import { Component, Environment, Product } from '../data/modelTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/redisService.ts')
 jest.mock('../services/alertsService')
+jest.mock('../services/recommendedVersionsService')
 
 const alertsService = new AlertsService(null) as jest.Mocked<AlertsService>
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
 const redisService = new RedisService(null) as jest.Mocked<RedisService>
+const recommendedVersionsService = new RecommendedVersionsService(null) as jest.Mocked<RecommendedVersionsService>
 
 let app: Express
 const testComponents = [{ name: 'testComponent' }] as Component[]
@@ -31,6 +34,7 @@ const testComponent: Component = {
   publishedAt: '2023-06-07T11:07:00.444Z',
   title: 'testTitle',
   app_insights_cloud_role_name: 'test-cloud-role-name',
+  app_insights_alerts_enabled: true,
   api: true,
   frontend: false,
   part_of_monorepo: false,
@@ -161,9 +165,18 @@ beforeEach(() => {
     },
   })
 
-  redisService.getAllDependencies.mockResolvedValue(dependencies)
+  const mockRecommendedVersions: recommendedVersions = {
+    helmDependencies: { genericPrometheusAlerts: '1.14', genericService: '3.12' },
+    gradle: { hmppsGradleSpringBoot: '9.1.4' },
+    metadata: { source: 'strapi', fetchedAt: '2025-11-17T10:51:46.910Z' },
+  }
 
-  app = appWithAllRoutes({ services: { serviceCatalogueService, redisService, alertsService } })
+  redisService.getAllDependencies.mockResolvedValue(dependencies)
+  recommendedVersionsService.getRecommendedVersions.mockResolvedValue(mockRecommendedVersions)
+
+  app = appWithAllRoutes({
+    services: { serviceCatalogueService, redisService, alertsService, recommendedVersionsService },
+  })
 })
 
 afterEach(() => {
@@ -216,6 +229,9 @@ describe('/components', () => {
           expect($('[data-test="github-repo"]').text()).toBe(testComponent.github_repo)
           expect($('[data-test="github-visibility"]').text()).toBe(testComponent.github_project_visibility)
           expect($('[data-test="appinsights-name"]').text()).toBe(testComponent.app_insights_cloud_role_name)
+          expect($('[data-test="appinsights-alert-enabled"]').text()).toBe(
+            testComponent.app_insights_alerts_enabled.toString(),
+          )
           expect($('[data-test="api"]').text()).toBe(testComponent.api ? 'Yes' : 'No')
           expect($('[data-test="frontend"]').text()).toBe(testComponent.frontend ? 'Yes' : 'No')
           expect($('[data-test="part-of-monorepo"]').text()).toBe(testComponent.part_of_monorepo ? 'Yes' : 'No')

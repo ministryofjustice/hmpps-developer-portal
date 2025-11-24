@@ -26,11 +26,11 @@ jQuery(function () {
           alert_severity_label: env.alert_severity_label === null ? 'Not set' : env.alert_severity_label,
           alerts_slack_channel:
             env.alerts_slack_channel === null || env.alerts_slack_channel === '' ? 'N/A' : env.alerts_slack_channel,
-          product_id: productData ? productData.p_id : '',
-          product_name: productData ? productData.name : '',
-          product_slug: productData ? productData.slug : '',
-          team_name: teamData ? teamData.name : '',
-          team_slug: teamData ? teamData.slug : '',
+          product_id: productData?.p_id ?? '',
+          product_name: productData?.name ?? '',
+          product_slug: productData?.slug ?? '',
+          team_name: teamData?.name ?? '',
+          team_slug: teamData?.slug ?? '',
         })
       })
     })

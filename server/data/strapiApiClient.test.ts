@@ -2,7 +2,20 @@ import nock from 'nock'
 import config from '../config'
 import StrapiApiClient from './strapiApiClient'
 import * as Strapi from './strapiApiTypes'
-import { Component, Product, ProductSet, ServiceArea, Team } from './modelTypes'
+import {
+  Component,
+  Product,
+  ProductSet,
+  ServiceArea,
+  Team,
+  Namespace,
+  CustomComponentView,
+  GithubRepoRequest,
+  GithubTeam,
+  ScheduledJob,
+  TrivyScan,
+  TrivyScanType,
+} from './modelTypes'
 import { ListResponse, SingleResponse } from './strapiClientTypes'
 
 const exampleServiceArea = {
@@ -67,7 +80,9 @@ describe('strapiApiClient', () => {
           data: [{ documentId: 'documentid1', name: 'Product', p_id: '1' }],
         } as ListResponse<Strapi.Product>
         const productsResponse = [{ documentId: 'documentid1', name: 'Product', p_id: '1' }] as Product[]
-        fakeStrapiApi.get('/products?populate[product_set]=true').reply(200, allProducts)
+        fakeStrapiApi
+          .get('/products?populate[product_set]=true&populate[service_area]=true&populate[team]=true')
+          .reply(200, allProducts)
         const output = await strapiApiClient.getProducts({})
         expect(output).toEqual(productsResponse)
       })
@@ -78,7 +93,9 @@ describe('strapiApiClient', () => {
         } as ListResponse<Strapi.Product>
         const productsResponse = [{ documentId: 'documentid1', name: 'Product', p_id: '1' }] as Product[]
         fakeStrapiApi
-          .get('/products?populate[product_set]=true&populate[components][populate][envs]=true')
+          .get(
+            '/products?populate[product_set]=true&populate[service_area]=true&populate[team]=true&populate[components][populate][envs]=true',
+          )
           .reply(200, allProducts)
         const output = await strapiApiClient.getProducts({ withEnvironments: true })
         expect(output).toEqual(productsResponse)
@@ -309,6 +326,263 @@ describe('strapiApiClient', () => {
           prod_alerts_severity_label: 'hmpps-sre-prod-slack-channel',
           nonprod_alerts_severity_label: 'hmpps-sre-nonprod-slack-channel',
         },
+      })
+    })
+  })
+
+  describe('Namespaces', () => {
+    describe('getNamespaces', () => {
+      it('should return all namespaces', async () => {
+        const allNamespaces = {
+          data: [{ documentId: 'documentid1', name: 'Namespace' }],
+        } as ListResponse<Strapi.Namespace>
+        const namespacesResponse = [{ documentId: 'documentid1', name: 'Namespace' }] as Namespace[]
+        fakeStrapiApi.get('/namespaces?populate=*').reply(200, allNamespaces)
+        const output = await strapiApiClient.getNamespaces()
+        expect(output).toEqual(namespacesResponse)
+      })
+    })
+
+    describe('getNamespace', () => {
+      it('should return a single namespace by documentId', async () => {
+        const namespace = {
+          data: { documentId: 'documentid1', name: 'Namespace' },
+        } as SingleResponse<Strapi.Namespace>
+        const namespaceResponse = { documentId: 'documentid1', name: 'Namespace' } as Namespace
+        fakeStrapiApi.get('/namespaces/documentid1').query(true).reply(200, namespace)
+        const output = await strapiApiClient.getNamespace({ namespaceDocumentId: 'documentid1' })
+        expect(output).toEqual(namespaceResponse)
+      })
+
+      it('should return a single namespace by slug', async () => {
+        const namespace = {
+          data: { documentId: 'documentid1', name: 'Namespace', slug: 'namespace-slug' },
+        } as SingleResponse<Strapi.Namespace>
+        const namespaceResponse = { documentId: 'documentid1', name: 'Namespace', slug: 'namespace-slug' } as Namespace
+        fakeStrapiApi.get('/namespaces').query(true).reply(200, namespace)
+        const output = await strapiApiClient.getNamespace({ namespaceSlug: 'namespace-slug' })
+        expect(output).toEqual(namespaceResponse)
+      })
+    })
+  })
+
+  describe('Custom Component Views', () => {
+    describe('getCustomComponentViews', () => {
+      it('should return all custom component views', async () => {
+        const allCustomComponents = {
+          data: [{ documentId: 'documentid1', name: 'Custom Component' }],
+        } as ListResponse<Strapi.CustomComponentView>
+        const customComponentsResponse = [
+          { documentId: 'documentid1', name: 'Custom Component' },
+        ] as CustomComponentView[]
+        fakeStrapiApi.get('/custom-component-views?populate[components]=true').reply(200, allCustomComponents)
+        const output = await strapiApiClient.getCustomComponentViews({})
+        expect(output).toEqual(customComponentsResponse)
+      })
+
+      it('should return custom component views with environments if selected', async () => {
+        const allCustomComponents = {
+          data: [{ documentId: 'documentid1', name: 'Custom Component' }],
+        } as ListResponse<Strapi.CustomComponentView>
+        const customComponentsResponse = [
+          { documentId: 'documentid1', name: 'Custom Component' },
+        ] as CustomComponentView[]
+        fakeStrapiApi
+          .get('/custom-component-views?populate[components][populate][envs]=true')
+          .reply(200, allCustomComponents)
+        const output = await strapiApiClient.getCustomComponentViews({ withEnvironments: true })
+        expect(output).toEqual(customComponentsResponse)
+      })
+    })
+
+    describe('getCustomComponentView', () => {
+      it('should return a single custom component view', async () => {
+        const customComponent = {
+          data: { documentId: 'documentid1', name: 'Custom Component' },
+        } as SingleResponse<Strapi.CustomComponentView>
+        const customComponentResponse = { documentId: 'documentid1', name: 'Custom Component' } as CustomComponentView
+        fakeStrapiApi
+          .get('/custom-component-views?filters[id][$eq]=documentid1&populate[components][populate][product]=true')
+          .reply(200, customComponent)
+        const output = await strapiApiClient.getCustomComponentView({ customComponentDocumentId: 'documentid1' })
+        expect(output).toEqual(customComponentResponse)
+      })
+
+      it('should return a single custom component view with environments if selected', async () => {
+        const customComponent = {
+          data: { documentId: 'documentid1', name: 'Custom Component' },
+        } as SingleResponse<Strapi.CustomComponentView>
+        const customComponentResponse = { documentId: 'documentid1', name: 'Custom Component' } as CustomComponentView
+        fakeStrapiApi
+          .get(
+            '/custom-component-views?filters[id][$eq]=documentid1&populate[components][populate][product]=true&populate[components][populate][envs]=true',
+          )
+          .reply(200, customComponent)
+        const output = await strapiApiClient.getCustomComponentView({
+          customComponentDocumentId: 'documentid1',
+          withEnvironments: true,
+        })
+        expect(output).toEqual(customComponentResponse)
+      })
+    })
+  })
+
+  describe('Github Repo Requests', () => {
+    describe('getGithubRepoRequests', () => {
+      it('should return all github repo requests', async () => {
+        const allGithubRepoRequests = {
+          data: [{ documentId: 'documentid1', github_repo: 'test-repo' }],
+        } as ListResponse<Strapi.GithubRepoRequest>
+        const githubRepoRequestsResponse = [
+          { documentId: 'documentid1', github_repo: 'test-repo' },
+        ] as GithubRepoRequest[]
+        fakeStrapiApi.get('/github-repo-requests').reply(200, allGithubRepoRequests)
+        const output = await strapiApiClient.getGithubRepoRequests()
+        expect(output).toEqual(githubRepoRequestsResponse)
+      })
+    })
+
+    describe('getGithubRepoRequest', () => {
+      it('should return a single github repo request', async () => {
+        const githubRepoRequest = {
+          data: { documentId: 'documentid1', github_repo: 'test-repo', request_type: 'Add' },
+        } as SingleResponse<Strapi.GithubRepoRequest>
+        const githubRepoRequestResponse = {
+          documentId: 'documentid1',
+          github_repo: 'test-repo',
+          request_type: 'Add',
+        } as GithubRepoRequest
+        fakeStrapiApi.get('/github-repo-requests?filters[github_repo][$eq]=test-repo').reply(200, githubRepoRequest)
+        const output = await strapiApiClient.getGithubRepoRequest({ repoName: 'test-repo' })
+        expect(output).toEqual(githubRepoRequestResponse)
+      })
+    })
+  })
+
+  describe('Github Teams', () => {
+    describe('getGithubTeams', () => {
+      it('should return all github teams', async () => {
+        const allGithubTeams = {
+          data: [{ documentId: 'documentid1', name: 'test-team' }],
+        } as unknown as ListResponse<Strapi.GithubTeam>
+        const githubTeamsResponse = [{ documentId: 'documentid1', name: 'test-team' }] as unknown as GithubTeam[]
+        fakeStrapiApi.get('/github-teams').reply(200, allGithubTeams)
+        const output = await strapiApiClient.getGithubTeams()
+        expect(output).toEqual(githubTeamsResponse)
+      })
+    })
+
+    describe('getGithubTeam', () => {
+      it('should return a single github team', async () => {
+        const githubTeam = {
+          data: { documentId: 'documentid1', name: 'test-team' },
+        } as unknown as SingleResponse<Strapi.GithubTeam>
+        const githubTeamResponse = { documentId: 'documentid1', name: 'test-team' } as unknown as GithubTeam
+        fakeStrapiApi.get('/github-teams?filters[team_name][$eq]=test-team').reply(200, githubTeam)
+        const output = await strapiApiClient.getGithubTeam({ teamName: 'test-team' })
+        expect(output).toEqual(githubTeamResponse)
+      })
+    })
+
+    describe('getGithubSubTeams', () => {
+      it('should return github sub teams for a parent team', async () => {
+        const githubSubTeams = {
+          data: [{ documentId: 'documentid1', name: 'sub-team', parent_team: 'parent-team' }],
+        } as unknown as ListResponse<Strapi.GithubTeam>
+        const githubSubTeamsResponse = [
+          { documentId: 'documentid1', name: 'sub-team', parent_team: 'parent-team' },
+        ] as unknown as GithubTeam[]
+        fakeStrapiApi.get('/github-teams?filters[parent_team_name][$eq]=parent-team').reply(200, githubSubTeams)
+        const output = await strapiApiClient.getGithubSubTeams({ parentTeamName: 'parent-team' })
+        expect(output).toEqual(githubSubTeamsResponse)
+      })
+    })
+  })
+
+  describe('Scheduled Jobs', () => {
+    describe('getScheduledJobs', () => {
+      it('should return all scheduled jobs', async () => {
+        const allScheduledJobs = {
+          data: [{ documentId: 'documentid1', name: 'test-job' }],
+        } as ListResponse<Strapi.ScheduledJob>
+        const scheduledJobsResponse = [{ documentId: 'documentid1', name: 'test-job' }] as ScheduledJob[]
+        fakeStrapiApi.get('/scheduled-jobs').reply(200, allScheduledJobs)
+        const output = await strapiApiClient.getScheduledJobs()
+        expect(output).toEqual(scheduledJobsResponse)
+      })
+    })
+
+    describe('getScheduledJob', () => {
+      it('should return a single scheduled job', async () => {
+        const scheduledJob = {
+          data: { documentId: 'documentid1', name: 'test-job' },
+        } as SingleResponse<Strapi.ScheduledJob>
+        const scheduledJobResponse = { documentId: 'documentid1', name: 'test-job' } as ScheduledJob
+        fakeStrapiApi.get('/scheduled-jobs?filters[name][$eq]=test-job').reply(200, scheduledJob)
+        const output = await strapiApiClient.getScheduledJob({ name: 'test-job' })
+        expect(output).toEqual(scheduledJobResponse)
+      })
+    })
+  })
+
+  describe('Trivy Scans', () => {
+    describe('getTrivyScans', () => {
+      it('should return all trivy scans', async () => {
+        const allTrivyScans = {
+          data: [
+            {
+              id: 1,
+              name: 'test-scan',
+              trivy_scan_timestamp: '2023-01-01T00:00:00Z',
+              build_image_tag: 'latest',
+              scan_status: 'Succeeded',
+              environments: ['dev'],
+              scan_summary: {},
+            },
+          ],
+        } as unknown as ListResponse<Strapi.TrivyScan>
+        const trivyScansResponse = [
+          {
+            id: 1,
+            name: 'test-scan',
+            trivy_scan_timestamp: '2023-01-01T00:00:00Z',
+            build_image_tag: 'latest',
+            scan_status: 'Succeeded',
+            environments: ['dev'],
+            scan_summary: {},
+          },
+        ] as TrivyScanType[]
+        fakeStrapiApi.get('/trivy-scans').reply(200, allTrivyScans)
+        const output = await strapiApiClient.getTrivyScans()
+        expect(output).toEqual(trivyScansResponse)
+      })
+    })
+
+    describe('getTrivyScan', () => {
+      it('should return a single trivy scan', async () => {
+        const trivyScan = {
+          data: {
+            id: 1,
+            name: 'test-scan',
+            trivy_scan_timestamp: '2023-01-01T00:00:00Z',
+            build_image_tag: 'latest',
+            scan_status: 'Succeeded',
+            environments: ['dev'],
+            scan_summary: {},
+          },
+        } as unknown as SingleResponse<Strapi.TrivyScan>
+        const trivyScanResponse = {
+          id: 1,
+          name: 'test-scan',
+          trivy_scan_timestamp: '2023-01-01T00:00:00Z',
+          build_image_tag: 'latest',
+          scan_status: 'Succeeded',
+          environments: ['dev'],
+          scan_summary: {},
+        } as unknown as TrivyScan
+        fakeStrapiApi.get('/trivy-scans?filters[name][$eq]=test-scan').reply(200, trivyScan)
+        const output = await strapiApiClient.getTrivyScan({ name: 'test-scan' })
+        expect(output).toEqual(trivyScanResponse)
       })
     })
   })

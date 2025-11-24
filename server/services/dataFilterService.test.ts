@@ -129,16 +129,19 @@ describe('Data Filter service', () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
         {
           selected: false,
+          slug: '',
           text: '',
           value: '',
         },
         {
           selected: true,
+          slug: 'a-service-area-name',
           text: 'Service Area 1',
           value: '1',
         },
         {
           selected: false,
+          slug: 'a-service-area-name',
           text: 'Service Area 2',
           value: '2',
         },
@@ -155,16 +158,19 @@ describe('Data Filter service', () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
         {
           selected: false,
+          slug: '',
           text: '',
           value: '',
         },
         {
           selected: true,
+          slug: 'a-service-area-name',
           text: 'Service Area 1',
           value: 'service-area-1',
         },
         {
           selected: false,
+          slug: 'a-service-area-name',
           text: 'Service Area 2',
           value: 'service-area-2',
         },
@@ -186,10 +192,12 @@ describe('Data Filter service', () => {
       {
         id: 1,
         name: 'Team 1',
+        slug: 'a-team-name',
       },
       {
         id: 2,
         name: 'Team 2',
+        slug: 'a-team-name',
       },
     ] as Team[]
 
@@ -197,16 +205,19 @@ describe('Data Filter service', () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
         {
           selected: false,
+          slug: '',
           text: '',
           value: '',
         },
         {
           selected: true,
+          slug: 'a-team-name',
           text: 'Team 1',
           value: '1',
         },
         {
           selected: false,
+          slug: 'a-team-name',
           text: 'Team 2',
           value: '2',
         },
@@ -223,16 +234,19 @@ describe('Data Filter service', () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
         {
           selected: false,
+          slug: '',
           text: '',
           value: '',
         },
         {
           selected: true,
+          slug: 'a-team-name',
           text: 'Team 1',
           value: 'team-1',
         },
         {
           selected: false,
+          slug: 'a-team-name',
           text: 'Team 2',
           value: 'team-2',
         },
@@ -251,11 +265,13 @@ describe('Data Filter service', () => {
       {
         id: 1,
         name: 'Product 1',
+        slug: 'a-product-name',
         p_id: '1',
       },
       {
         id: 2,
         name: 'Product 2',
+        slug: 'a-product-name',
         p_id: '2',
       },
     ] as Product[]
@@ -264,16 +280,19 @@ describe('Data Filter service', () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
         {
           selected: false,
+          slug: '',
           text: '',
           value: '',
         },
         {
           selected: true,
+          slug: 'a-product-name',
           text: 'Product 1',
           value: '1',
         },
         {
           selected: false,
+          slug: 'a-product-name',
           text: 'Product 2',
           value: '2',
         },
@@ -290,16 +309,19 @@ describe('Data Filter service', () => {
       const sortedDropDownList: MoJSelectDataItem[] = [
         {
           selected: false,
+          slug: '',
           text: '',
           value: '',
         },
         {
           selected: true,
+          slug: 'a-product-name',
           text: 'Product 1',
           value: 'product-1',
         },
         {
           selected: false,
+          slug: 'a-product-name',
           text: 'Product 2',
           value: 'product-2',
         },

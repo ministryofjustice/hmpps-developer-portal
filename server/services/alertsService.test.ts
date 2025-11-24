@@ -2,7 +2,7 @@ import { Request } from 'express'
 import AlertsApiClient from '../data/alertsApiClient'
 import { Alert } from '../@types'
 import { Environment } from '../data/strapiApiTypes'
-import type { Team } from '../data/modelTypes'
+import type { Team, Product } from '../data/modelTypes'
 import type { ServiceCatalogueService } from '.'
 import AlertsService from './alertsService'
 import * as utils from '../utils/utils'
@@ -75,9 +75,10 @@ describe('Alerts service', () => {
           { alert_severity_label: 'exampleApp', alerts_slack_channel: '#exampleApp' },
         ] as Environment[]
         const teams = [{ name: 'Maintenance Team' }] as Team[]
+        const products = [{ name: 'Test Product' }] as Product[]
         ;(utils.findTeamMatch as jest.Mock).mockReturnValue({ name: 'Maintenance Team' })
 
-        const result = await alertsService.addNewPropertiesToAlert(revisedAlerts, environments, teams)
+        const result = await alertsService.addNewPropertiesToAlert(revisedAlerts, environments, teams, products)
 
         expect(utils.findTeamMatch).toHaveBeenCalledWith(teams, 'exampleApp')
         expect(result[0].labels.alert_slack_channel).toBe('#exampleApp')
@@ -89,8 +90,9 @@ describe('Alerts service', () => {
         const revisedAlerts = [{ labels: { alert_slack_channel: '#exampleApp', application: 'exampleApp' } }] as Alert[]
         const environments = [] as Environment[]
         const teams = [] as Team[]
+        const products = [] as Product[]
         ;(utils.findTeamMatch as jest.Mock).mockReturnValue({ undefined })
-        const result = await alertsService.addNewPropertiesToAlert(revisedAlerts, environments, teams)
+        const result = await alertsService.addNewPropertiesToAlert(revisedAlerts, environments, teams, products)
 
         expect(utils.findTeamMatch).toHaveBeenCalledWith(teams, 'exampleApp')
         expect(result[0]).toEqual(revisedAlerts[0])
@@ -124,6 +126,7 @@ describe('Alerts service', () => {
         const alerts = [{ labels: { application: 'exampleApp', environment: 'development' } }] as Alert[]
         const environments = [{ name: 'preprod' }] as Environment[]
         const teams = [{ name: 'Maintenance Team' }] as Team[]
+        const products = [{ name: 'Test Product' }] as Product[]
         const revisedEnvAlerts = [{ labels: { application: 'exampleApp', environment: 'dev' } }] as Alert[]
         const revisedAlerts = [
           {
@@ -139,10 +142,15 @@ describe('Alerts service', () => {
         jest.spyOn(alertsService, 'mapAlertEnvironments').mockReturnValue(Promise.resolve(revisedEnvAlerts))
         jest.spyOn(alertsService, 'addNewPropertiesToAlert').mockReturnValue(Promise.resolve(revisedAlerts))
 
-        const result = await alertsService.reviseAlerts(alerts, environments, teams)
+        const result = await alertsService.reviseAlerts(alerts, environments, teams, products)
 
         expect(alertsService.mapAlertEnvironments).toHaveBeenCalledWith(alerts)
-        expect(alertsService.addNewPropertiesToAlert).toHaveBeenCalledWith(revisedEnvAlerts, environments, teams)
+        expect(alertsService.addNewPropertiesToAlert).toHaveBeenCalledWith(
+          revisedEnvAlerts,
+          environments,
+          teams,
+          products,
+        )
         expect(result[0].labels.environment).toBe('dev')
         expect(result[0].labels.alert_slack_channel).toBe('#example-app')
         expect(result[0].labels.team).toBe('Maintenance Team')
@@ -152,16 +160,22 @@ describe('Alerts service', () => {
         const alerts = [{ labels: { application: 'exampleApp', environment: '' } }] as Alert[]
         const environments = [{ name: '' }] as Environment[]
         const teams = [{ name: '' }] as Team[]
+        const products = [{ name: '' }] as Product[]
         const revisedEnvAlerts = [{ labels: { application: 'exampleApp', environment: 'none' } }] as Alert[]
         const revisedAlerts = [{ labels: { application: 'exampleApp', environment: 'none' } }] as Alert[]
 
         jest.spyOn(alertsService, 'mapAlertEnvironments').mockReturnValue(Promise.resolve(revisedEnvAlerts))
         jest.spyOn(alertsService, 'addNewPropertiesToAlert').mockReturnValue(Promise.resolve(revisedAlerts))
 
-        const result = await alertsService.reviseAlerts(alerts, environments, teams)
+        const result = await alertsService.reviseAlerts(alerts, environments, teams, products)
 
         expect(alertsService.mapAlertEnvironments).toHaveBeenCalledWith(alerts)
-        expect(alertsService.addNewPropertiesToAlert).toHaveBeenCalledWith(revisedEnvAlerts, environments, teams)
+        expect(alertsService.addNewPropertiesToAlert).toHaveBeenCalledWith(
+          revisedEnvAlerts,
+          environments,
+          teams,
+          products,
+        )
         expect(result[0].labels.environment).toBe('none')
         expect(result[0].labels.alert_slack_channel).toBe(undefined)
         expect(result[0].labels.team).toBe(undefined)
@@ -178,6 +192,7 @@ describe('Alerts service', () => {
         { name: 'Maintenance Team', slack_channel_name: 'maintenance-team' },
         { name: 'Maintenance Team', slack_channel_name: 'maintenance-team' },
       ] as Team[]
+      const products = [{ name: 'TestProduct1' }, { name: 'TestProduct2' }]
       const revisedAlerts = [
         {
           labels: {
@@ -192,6 +207,7 @@ describe('Alerts service', () => {
       const mockServiceCatalogueService: Partial<jest.Mocked<ServiceCatalogueService>> = {
         getEnvironments: jest.fn().mockResolvedValue(environments),
         getTeams: jest.fn().mockResolvedValue(teams),
+        getProducts: jest.fn().mockResolvedValue(products),
       }
       it('should get alerts, environments and teams then add ', async () => {
         jest.spyOn(alertsService, 'getAlerts').mockReturnValue(Promise.resolve(alerts))
@@ -204,6 +220,7 @@ describe('Alerts service', () => {
         expect(alertsService.getAlerts).toHaveBeenCalled()
         expect(mockServiceCatalogueService.getEnvironments).toHaveBeenCalled()
         expect(mockServiceCatalogueService.getTeams).toHaveBeenCalledWith({ withComponents: true })
+        expect(mockServiceCatalogueService.getProducts).toHaveBeenCalledWith({ withComponents: true })
         expect(alertsService.reviseAlerts).toHaveBeenCalled()
         expect(result[0].labels.environment).toBe('dev')
         expect(result[0].labels.alert_slack_channel).toBe('#example-app')

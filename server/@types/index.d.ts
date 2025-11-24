@@ -6,6 +6,7 @@ export type DependencyList = {
 export type MoJSelectDataItem = {
   value: string
   text: string
+  slug?: string
   selected: boolean
 }
 
@@ -48,6 +49,7 @@ interface Alert {
   updatedAt?: string
   generatorURL?: string
   labels?: {
+    portfolio?: string
     alertname?: string
     application?: string
     businessUnit?: string

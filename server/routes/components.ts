@@ -7,8 +7,15 @@ import {
   getEnvironmentName,
   utcTimestampToUtcDateTime,
   mapToCanonicalEnv,
+  formatTimeStamp,
 } from '../utils/utils'
 import { Environment } from '../data/strapiApiTypes'
+import {
+  getProductionEnvironment,
+  countTrivyHighAndCritical,
+  countVeracodeHighAndVeryHigh,
+} from '../utils/vulnerabilitySummary'
+import { getDependencyComparison } from '../services/dependencyComparison'
 
 interface DisplayAlert {
   alertname: string
@@ -17,7 +24,12 @@ interface DisplayAlert {
   message: string
 }
 
-export default function routes({ serviceCatalogueService, redisService, alertsService }: Services): Router {
+export default function routes({
+  serviceCatalogueService,
+  redisService,
+  alertsService,
+  recommendedVersionsService,
+}: Services): Router {
   const router = Router()
 
   router.get('/', async (req, res) => {
@@ -41,11 +53,16 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
     const component = await serviceCatalogueService.getComponent({ componentName })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { envs } = component
-    const prodEnvData = component.envs?.filter(environment => environment.name === 'prod')
-    const alertsSlackChannel = prodEnvData.length === 0 ? '' : prodEnvData[0].alerts_slack_channel
+    const productionEnvironment = getProductionEnvironment(envs)
+    const alertsSlackChannel = productionEnvironment?.alerts_slack_channel ?? ''
+
+    const trivyVulnerabilityCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
+    const veracodeVulnerabilityCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
+
     const displayComponent = {
       name: component.name,
       description: component.description,
+      archived: component.archived,
       title: component.title,
       jiraProjectKeys: component.jira_project_keys,
       githubWrite: component.github_project_teams_write,
@@ -54,6 +71,9 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       githubRepo: component.github_repo,
       githubVisibility: component.github_project_visibility,
       appInsightsName: component.app_insights_cloud_role_name,
+      appInsightsAlertsEnabled: component.app_insights_cloud_role_name
+        ? (component.app_insights_alerts_enabled ?? true)
+        : 'N/A',
       api: component.api,
       frontEnd: component.frontend,
       partOfMonorepo: component.part_of_monorepo,
@@ -68,6 +88,10 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       github_enforce_admins_enabled: component.github_enforce_admins_enabled,
       standardsCompliance: component.standards_compliance,
       alerts: [] as DisplayAlert[],
+      trivyVulnerabilityCount,
+      veracodeVulnerabilityCount,
+      trivyResultsLink: `/trivy-scans/${component.name}/environments/prod`,
+      veracodeResultsLink: component.veracode_results_url || '/veracode',
     }
 
     let alerts: DisplayAlert[] = []
@@ -77,6 +101,7 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
         .filter(alert => alert.status?.state === 'active')
         .map(alert => ({
           alertname: alert.labels?.alertname ?? '',
+          startsAt: formatTimeStamp(alert.startsAt) ?? '',
           environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
           summary: alert.annotations?.summary ?? '',
           message: alert.annotations?.message ?? '',
@@ -86,7 +111,15 @@ export default function routes({ serviceCatalogueService, redisService, alertsSe
       logger.error(`Error fetching alerts for ${componentName}: ${msg}`)
     }
     displayComponent.alerts = alerts
-    return res.render('pages/component', { component: displayComponent })
+
+    const hasAlerts = alerts && alerts.length > 0
+
+    // Dependency comparison for this component
+    const comparison = await getDependencyComparison(component, recommendedVersionsService, displayComponent)
+    const upgradeNeeded =
+      component.language === 'Kotlin' && (comparison.summary.needsAttention > 0 || comparison.summary.needsUpgrade > 0)
+
+    return res.render('pages/component', { component: displayComponent, comparison, upgradeNeeded, hasAlerts })
   })
 
   router.get('/:componentName/environment/:environmentName', async (req, res) => {
