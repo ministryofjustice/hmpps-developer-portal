@@ -21,14 +21,6 @@ const testReports = [
     db_max_allocated_storage: '1',
   },
 ] as RdsEntry[]
-const testReport = {
-  tf_label: 'example_rds',
-  namespace: 'hmpps-example',
-  db_instance_class: 'db.small',
-  db_engine_version: '1.0',
-  rds_family: 'postgres1',
-  db_max_allocated_storage: '1',
-} as RdsEntry
 
 beforeEach(() => {
   serviceCatalogueService.getRdsInstances.mockResolvedValue(testReports)
