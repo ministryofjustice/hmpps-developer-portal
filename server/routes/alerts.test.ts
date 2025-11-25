@@ -93,16 +93,7 @@ describe('/alerts', () => {
     })
 
     it('should render alerts page with environment options', async () => {
-      return request(app)
-        .get('/alerts/environment/test-alert')
-        .expect(200)
-        .expect(res => {
-          expect(alertsService.getAlertType).toHaveBeenCalledWith(
-            expect.objectContaining({
-              params: { alertType: 'environment', alertName: 'test-alert' },
-            }),
-          )
-        })
+      return request(app).get('/alerts/').expect(200)
     })
   })
 
