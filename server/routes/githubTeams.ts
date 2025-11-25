@@ -18,8 +18,8 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     res.send(githubTeams)
   })
 
-  router.get('/:github_team_name', async (req, res) => {
-    const teamName = req.params.github_team_name
+  router.get('/:teamName', async (req, res) => {
+    const { teamName } = req.params
     const teamRequest = await serviceCatalogueService.getGithubTeam({ teamName })
     const githubSubTeams = await serviceCatalogueService.getGithubSubTeams({ parentTeamName: teamName })
     const subTeams = Array.from(
