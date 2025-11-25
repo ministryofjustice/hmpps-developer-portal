@@ -22,7 +22,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   router.get(['/', '/:monitorType/:monitorName'], async (req, res) => {
     const monitorType = getMonitorType(req)
     const monitorName = getMonitorName(req)
-    logger.info(`Request for /monitor/${monitorType}/${monitorName}`)
 
     // If we have a product name, look up its ID
     let monitorId: number = 0
@@ -38,10 +37,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           )
           if (matchingProduct?.id) {
             monitorId = matchingProduct.id
-            logger.info(`Found product ID: ${monitorId} for name: ${monitorName}`)
-          } else {
-            logger.warn(`No product found matching name: ${monitorName}`)
-            logger.debug(`Available products: ${products.map(product => product.name).join(', ')}`)
           }
         } catch (error) {
           logger.error(`Failed to find product by name ${monitorName}`, error)
@@ -56,10 +51,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           )
           if (matchingTeam?.id) {
             monitorId = matchingTeam.id
-            logger.info(`Found team ID: ${monitorId} for name: ${monitorName}`)
-          } else {
-            logger.warn(`No team found matching name: ${monitorName}`)
-            logger.debug(`Available teams: ${teams.map(team => team.name).join(', ')}`)
           }
         } catch (error) {
           logger.error(`Failed to find team by name ${monitorName}`, error)
@@ -74,10 +65,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           )
           if (matchingServiceArea?.id) {
             monitorId = matchingServiceArea.id
-            logger.info(`Found service area ID: ${monitorId} for name: ${monitorName}`)
-          } else {
-            logger.warn(`No service area found matching name: ${monitorName}`)
-            logger.debug(`Available service area: ${serviceAreas.map(serviceArea => serviceArea.name).join(', ')}`)
           }
         } catch (error) {
           logger.error(`Failed to find service area by name ${monitorName}`, error)
@@ -148,7 +135,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     try {
       const monitorType = getMonitorType(req)
       let { monitorId } = req.params
-      logger.info(`Request for /monitor/components/${monitorType}/${monitorId}, query: ${JSON.stringify(req.query)}`)
       let environments: MonitorEnvironment[] = []
 
       // If we have no ID but have a product name in query, look it up
@@ -156,7 +142,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         try {
           const products = await serviceCatalogueService.getProducts({})
           const productName = req.query.name as string
-          logger.info(`Looking up product by name: ${productName}`)
+
           // Try to match by name, slug, or formatted name
           const matchingProduct = products.find(
             p => p.name === productName || formatMonitorName(p.name) === formatMonitorName(productName),
@@ -164,17 +150,11 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
           if (matchingProduct?.id) {
             monitorId = matchingProduct.documentId
-            logger.info(`Found product ID: ${monitorId} for name: ${productName}`)
-          } else {
-            logger.warn(`No product found with name: ${productName}`)
-            logger.info(`Available products: ${products.map(p => p.name).join(', ')}`)
           }
         } catch (error) {
-          logger.warn(`Failed to find product by name ${req.query.name}`, error)
+          logger.error(`Failed to find product by name ${req.query.name}`, error)
         }
       }
-
-      logger.info(`Using monitorId: ${monitorId} for type: ${monitorType}`)
 
       if (monitorType === 'customComponentView') {
         const customComponentView = await serviceCatalogueService.getCustomComponentView({

@@ -173,8 +173,6 @@ export default function routes({
     const queueInformation = req.params?.queueInformation ?? ''
     const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
 
-    logger.info(`Queue call for ${componentName} with ${queueInformation}`)
-
     const component = await serviceCatalogueService.getComponent({ componentName })
     const streams = [
       {
