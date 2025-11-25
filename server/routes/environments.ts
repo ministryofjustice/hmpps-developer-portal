@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import logger from '../../logger'
 import { formatActiveAgencies, getComponentName, getEnvironmentName, utcTimestampToUtcDateTime } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
