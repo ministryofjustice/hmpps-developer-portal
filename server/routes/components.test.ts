@@ -7,7 +7,7 @@ import RedisService from '../services/redisService'
 import Dependencies from '../services/Dependencies'
 import AlertsService from '../services/alertsService'
 import RecommendedVersionsService, { recommendedVersions } from '../services/recommendedVersionsService'
-import { Component, Environment, Product } from '../data/modelTypes'
+import { Component, Environment, Product, ServiceArea } from '../data/modelTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/redisService.ts')
@@ -133,10 +133,30 @@ const testComponent: Component = {
     },
   ] as Environment[],
 }
+const testServiceAreas = [
+  {
+    id: 1,
+    name: 'testServiceArea',
+    owner: 'The Owner',
+    sa_id: 'SA01',
+    slug: 'a-service-area-name',
+    products: [
+      {
+        id: 456,
+        name: 'A Product name',
+        p_id: 'DPS000',
+        slug: 'a-product-name-1',
+        subproduct: false,
+        components: [testComponent],
+      },
+    ],
+  },
+] as ServiceArea[]
 
 beforeEach(() => {
   serviceCatalogueService.getComponents.mockResolvedValue(testComponents)
   serviceCatalogueService.getComponent.mockResolvedValue(testComponent)
+  serviceCatalogueService.getServiceAreas.mockResolvedValue(testServiceAreas)
 
   const dependencies = new Dependencies({
     PROD: {
