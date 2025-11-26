@@ -57,8 +57,8 @@ export default function routes({
     const productionEnvironment = getProductionEnvironment(envs)
     const alertsSlackChannel = productionEnvironment?.alerts_slack_channel ?? ''
     const serviceAreaDetails = serviceAreas.find(serviceArea =>
-      serviceArea.products.find(product =>
-        product.components.find(productComponent => productComponent.name === componentName),
+      serviceArea.products?.find(product =>
+        product.components?.find(productComponent => productComponent.name === componentName),
       ),
     )
 
