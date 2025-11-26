@@ -16,7 +16,6 @@ import {
   countVeracodeHighAndVeryHigh,
 } from '../utils/vulnerabilitySummary'
 import { getDependencyComparison } from '../services/dependencyComparison'
-import Dependencies from '../services/Dependencies'
 
 interface DisplayAlert {
   alertname: string
