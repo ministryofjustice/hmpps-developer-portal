@@ -57,11 +57,9 @@ export default function routes({
     const productionEnvironment = getProductionEnvironment(envs)
     const alertsSlackChannel = productionEnvironment?.alerts_slack_channel ?? ''
     const serviceAreaDetails = serviceAreas.find(serviceArea =>
-      serviceArea.products?.find(product => {
-        return product.components?.find(productComponent => {
-          return productComponent.name === componentName
-        })
-      }),
+      serviceArea.products?.find(product =>
+        product.components?.find(productComponent => productComponent.name === componentName),
+      ),
     )
 
     const trivyVulnerabilityCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
