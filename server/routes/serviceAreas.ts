@@ -14,7 +14,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   router.get('/data', async (req, res) => {
-    const serviceAreas = await serviceCatalogueService.getServiceAreas()
+    const serviceAreas = await serviceCatalogueService.getServiceAreas({})
     res.send(serviceAreas)
   })
 
@@ -38,7 +38,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   router.get('/:serviceAreaSlug/diagram', async (req, res) => {
     const { serviceAreaSlug } = req.params
-    const serviceAreas = (await serviceCatalogueService.getServiceAreas()).map(({ name, slug }) => ({
+    const serviceAreas = (await serviceCatalogueService.getServiceAreas({})).map(({ name, slug }) => ({
       name,
       slug,
     }))

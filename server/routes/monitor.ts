@@ -59,7 +59,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
       if (monitorType === 'service-area') {
         try {
-          const serviceAreas = await serviceCatalogueService.getServiceAreas()
+          const serviceAreas = await serviceCatalogueService.getServiceAreas({})
           const matchingServiceArea = serviceAreas.find(
             serviceArea => serviceArea.slug === monitorName || formatMonitorName(serviceArea.slug) === monitorName,
           )

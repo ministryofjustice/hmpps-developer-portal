@@ -112,9 +112,9 @@ export default class ServiceCatalogueService {
     return dependencies.sort()
   }
 
-  async getServiceAreas(): Promise<ServiceArea[]> {
+  async getServiceAreas({ withComponents = false }: { withComponents?: boolean }): Promise<ServiceArea[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const serviceAreaData = await strapiApiClient.getServiceAreas()
+    const serviceAreaData = await strapiApiClient.getServiceAreas({ withComponents })
     return serviceAreaData.sort(sortByName)
   }
 

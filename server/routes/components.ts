@@ -16,6 +16,7 @@ import {
   countVeracodeHighAndVeryHigh,
 } from '../utils/vulnerabilitySummary'
 import { getDependencyComparison } from '../services/dependencyComparison'
+import Dependencies from '../services/Dependencies'
 
 interface DisplayAlert {
   alertname: string
@@ -51,15 +52,17 @@ export default function routes({
   router.get('/:componentName', async (req, res) => {
     const componentName = getComponentName(req)
     const component = await serviceCatalogueService.getComponent({ componentName })
-    const serviceAreas: ServiceArea[] = await serviceCatalogueService.getServiceAreas()
+    const serviceAreas: ServiceArea[] = await serviceCatalogueService.getServiceAreas({ withComponents: true })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { envs } = component
     const productionEnvironment = getProductionEnvironment(envs)
     const alertsSlackChannel = productionEnvironment?.alerts_slack_channel ?? ''
     const serviceAreaDetails = serviceAreas.find(serviceArea =>
-      serviceArea.products?.find(product =>
-        product.components?.find(productComponent => productComponent.name === componentName),
-      ),
+      serviceArea.products?.find(product => {
+        return product.components?.find(productComponent => {
+          return productComponent.name === componentName
+        })
+      }),
     )
 
     const trivyVulnerabilityCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)

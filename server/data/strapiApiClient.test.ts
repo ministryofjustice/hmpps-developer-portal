@@ -283,7 +283,7 @@ describe('strapiApiClient', () => {
       it('should return all service areas', async () => {
         const allServiceAreas = { data: [exampleServiceArea] }
         fakeStrapiApi.get('/service-areas?populate[products]=true').reply(200, allServiceAreas)
-        const output = await strapiApiClient.getServiceAreas()
+        const output = await strapiApiClient.getServiceAreas({})
 
         expect(output.map(serviceArea => serviceArea.name)).toContain(exampleServiceArea.name)
       })
