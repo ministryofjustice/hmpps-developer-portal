@@ -38,7 +38,7 @@ export default class ComponentNameService {
   }
 
   async getAllDeployedComponentsForServiceArea(serviceAreaName: string): Promise<string[]> {
-    const serviceAreas = await this.strapiApiClientFactory('').getServiceAreas()
+    const serviceAreas = await this.strapiApiClientFactory('').getServiceAreas({})
 
     const serviceAreaSummary = serviceAreas.find(serviceArea => formatMonitorName(serviceArea.name) === serviceAreaName)
 

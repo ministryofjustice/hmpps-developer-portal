@@ -261,7 +261,7 @@ describe('Strapi service', () => {
       it('should return an ordered array of product sets', async () => {
         strapiApiClient.getServiceAreas.mockResolvedValue(serviceAreas)
 
-        const results = await serviceCatalogueService.getServiceAreas()
+        const results = await serviceCatalogueService.getServiceAreas({})
 
         expect(strapiApiClient.getServiceAreas).toHaveBeenCalledTimes(1)
         expect(results).toEqual(serviceAreas)

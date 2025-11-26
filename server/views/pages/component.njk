@@ -201,6 +201,10 @@
             <td data-test="language">{{ component.language }}</td>
           </tr>
           <tr>
+            <th>Service Area</th>
+            <td><a class="govuk-link--no-visited-state" href="/service-areas/{{ component.serviceArea.slug }}" data-test="service-area">{{ component.serviceArea.name }}</a></td>
+          </tr>
+          <tr>
             <th>Product</th>
             <td><a class="govuk-link--no-visited-state" href="/products/{{ component.product.slug }}" data-test="product">{{ component.product.name }}</a></td>
           </tr>
