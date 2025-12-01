@@ -66,6 +66,7 @@ export default function routes({
       gDriveLink: product.gdrive_link,
       id: product.p_id,
       isPrisonProduct: product.p_id.startsWith('DPS'),
+      serviceOwner: product.service_area?.owner,
       productManager: product.product_manager,
       leadDeveloper: product.lead_developer,
       deliveryManager: product.delivery_manager,
