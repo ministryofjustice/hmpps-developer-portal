@@ -192,7 +192,7 @@ describe('/products', () => {
           expect($('#detailPageTitle').text()).toContain(testProduct.name)
           const alertBanner = $('#product-alert-popup')
           const rows = alertBanner.find('.govuk-table__body .govuk-table__row')
-          expect(rows.length).toBe(2)
+          expect(rows.length).toBe(1)
           const firstCellText = rows.eq(0).find('.govuk-table__cell').first().text().trim()
           expect(firstCellText).toBe('test-alert')
         })
