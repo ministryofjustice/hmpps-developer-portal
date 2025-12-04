@@ -91,7 +91,47 @@ describe('Strapi service', () => {
         const results = await serviceCatalogueService.getProducts({})
 
         expect(strapiApiClient.getProducts).toHaveBeenCalledTimes(1)
+        expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
+          withEnvironments: false,
+          withComponents: false,
+        })
         expect(results).toEqual(testProductsResponse)
+      })
+
+      it('should pass through withComponents=true and withEnvironments=false by default', async () => {
+        strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
+
+        await serviceCatalogueService.getProducts({ withComponents: true })
+
+        expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
+          withEnvironments: false,
+          withComponents: true,
+        })
+      })
+
+      it('should pass through withEnvironments=true and withComponents=false by default', async () => {
+        strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
+
+        await serviceCatalogueService.getProducts({ withEnvironments: true })
+
+        expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
+          withEnvironments: true,
+          withComponents: false,
+        })
+      })
+
+      it('should pass both flags when provided', async () => {
+        strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
+
+        await serviceCatalogueService.getProducts({
+          withEnvironments: true,
+          withComponents: true,
+        })
+
+        expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
+          withEnvironments: true,
+          withComponents: true,
+        })
       })
     })
 
