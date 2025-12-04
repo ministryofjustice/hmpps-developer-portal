@@ -34,7 +34,7 @@ import {
 } from './utils'
 import { TrivyScanType } from '../data/converters/modelTypes'
 import * as utils from './utils'
-import { Component, Team } from '../data/modelTypes'
+import { Component, Product, Team } from '../data/modelTypes'
 import { ServiceCatalogueService } from '../services'
 
 describe('Utils', () => {
@@ -415,6 +415,85 @@ describe('Utils', () => {
       expect(spy).toHaveBeenCalledWith(name)
       expect(spy).toHaveBeenCalledWith('example name')
       expect(result.name).toBe('Example Team')
+    })
+  })
+
+  describe('findProductMatch', () => {
+    it('should return the formatted product name matching the product', () => {
+      const products = [{ name: 'Example Product', components: [{ name: 'example name' }] }] as Product[]
+      const name = 'Example Name'
+
+      const spy = jest.spyOn(utils, 'formatMonitorName')
+
+      const result = utils.findProductMatch(products, name)
+
+      expect(spy).toHaveBeenCalledWith(name)
+      expect(spy).toHaveBeenCalledWith('example name')
+      expect(result.name).toBe('Example Product')
+    })
+  })
+
+  describe('getComponentNamesForTeam', () => {
+    it('should return a flat list of objects with componentName from all products', () => {
+      const team = {
+        name: 'Team Name',
+        products: [
+          { name: 'Example Service 1', components: [{ name: 'componentA' }, { name: 'componentB' }] },
+          { name: 'Example Service 2', components: [{ name: 'componentC' }, { name: 'componentD' }] },
+        ],
+      } as Team
+
+      const result = utils.getComponentNamesForTeam(team)
+
+      expect(result).toEqual([
+        { componentName: 'componentA' },
+        { componentName: 'componentB' },
+        { componentName: 'componentC' },
+        { componentName: 'componentD' },
+      ])
+    })
+  })
+
+  describe('getComponentsForTeam', () => {
+    it('should return a flat list of components from all products in the team', () => {
+      const team = {
+        name: 'Platform',
+        products: [
+          { name: 'Example Service 1', components: [{ name: 'componentA' }, { name: 'componentB' }] },
+          { name: 'Example Service 2', components: [{ name: 'componentC' }, { name: 'componentD' }] },
+        ],
+      } as Team
+
+      const result = utils.getComponentsForTeam(team)
+
+      expect(result).toEqual([
+        { name: 'componentA' },
+        { name: 'componentB' },
+        { name: 'componentC' },
+        { name: 'componentD' },
+      ])
+    })
+
+    it('should return an empty array when team has no products', () => {
+      const team = { name: 'Empty', products: [] } as Team
+
+      const result = utils.getComponentsForTeam(team)
+
+      expect(result).toEqual([])
+    })
+
+    it('should handle products that have no components', () => {
+      const team = {
+        name: 'Mixed',
+        products: [
+          { name: 'product1', components: [] },
+          { name: 'product2', components: [{ name: 'componentA' }] },
+        ],
+      } as Team
+
+      const result = utils.getComponentsForTeam(team)
+
+      expect(result).toEqual([{ name: 'componentA' }])
     })
   })
 
