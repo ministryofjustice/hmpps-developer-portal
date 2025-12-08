@@ -305,12 +305,9 @@ function filterOrResetDropdowns(alertsData, currentFilters, isReset) {
     selectedItems = {}
   }
   const filteredData = getFilteredData(alertsData, currentFilters)
-  populateAlertsDropdowns(filteredData, 'application', currentFilters, firstKeySelected)
-  populateAlertsDropdowns(filteredData, 'environment', currentFilters, firstKeySelected)
-  populateAlertsDropdowns(filteredData, 'namespace', currentFilters, firstKeySelected)
-  populateAlertsDropdowns(filteredData, 'severity', currentFilters, firstKeySelected)
-  populateAlertsDropdowns(filteredData, 'team', currentFilters, firstKeySelected)
-  populateAlertsDropdowns(filteredData, 'portfolio', currentFilters, firstKeySelected)
+
+  const keys = ['application', 'environment', 'namespace', 'severity', 'team', 'portfolio']
+  keys.forEach(key => populateAlertsDropdowns(filteredData, key, currentFilters, firstKeySelected))
 }
 // Populates a dropdown with options from the filtered data, or to the current filter if present
 function populateAlertsDropdowns(data, key, currentFilters, firstKeySelected) {
