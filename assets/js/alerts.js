@@ -143,7 +143,7 @@ jQuery(function () {
     alertsData = Array.isArray(json) ? json : json.data || []
     if (!alertsData || !alertsData.length) return
 
-    filterOrResetDropdowns(alertsData, currentFilters)
+    filterOrResetDropdowns(alertsData, currentFilters, false)
 
     // Registers allFiltersChecker as a Datatable custom filter function. Determines if a row should be displayed in the table
     $.fn.dataTable.ext.search = []
@@ -179,7 +179,7 @@ jQuery(function () {
       $.fn.dataTable.ext.search = []
       $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
       alertsTable.draw(false)
-      filterOrResetDropdowns(alertsData, currentFilters)
+      filterOrResetDropdowns(alertsData, currentFilters, false)
     },
   )
 
@@ -201,7 +201,7 @@ jQuery(function () {
     // Remove all filters and redraw
     $.fn.dataTable.ext.search = []
     alertsTable.draw(false)
-    filterOrResetDropdowns(alertsData, currentFilters)
+    filterOrResetDropdowns(alertsData, currentFilters, true)
   })
 
   // Toggles fetch frequency between 5 and 30 seconds, and changes message when using dropdowns / pages
@@ -289,19 +289,32 @@ function getFilteredData(data, filters) {
 }
 
 // Updates dropdowns with the options related to the current filters or all when reset
-function filterOrResetDropdowns(alertsData, currentFilters) {
+function filterOrResetDropdowns(alertsData, currentFilters, isReset) {
+  let selectedItems = {}
+  let firstKeySelected = ''
+  if (!isReset) {
+    Object.entries(currentFilters).forEach(([key, value]) => {
+      if (value.length > 0) {
+        selectedItems[key] = value
+      }
+      const [firstKey, firstValue] = Object.entries(selectedItems)[0] ?? []
+      const changedFilterKey = firstKey ? { [firstKey]: firstValue } : {}
+      firstKeySelected = Object.keys(changedFilterKey)[0]
+    })
+  } else {
+    selectedItems = {}
+  }
   const filteredData = getFilteredData(alertsData, currentFilters)
-
-  populateAlertsDropdowns(filteredData, 'application', currentFilters)
-  populateAlertsDropdowns(filteredData, 'environment', currentFilters)
-  populateAlertsDropdowns(filteredData, 'namespace', currentFilters)
-  populateAlertsDropdowns(filteredData, 'severity', currentFilters)
-  populateAlertsDropdowns(filteredData, 'team', currentFilters)
-  populateAlertsDropdowns(filteredData, 'portfolio', currentFilters)
+  populateAlertsDropdowns(filteredData, 'application', currentFilters, firstKeySelected)
+  populateAlertsDropdowns(filteredData, 'environment', currentFilters, firstKeySelected)
+  populateAlertsDropdowns(filteredData, 'namespace', currentFilters, firstKeySelected)
+  populateAlertsDropdowns(filteredData, 'severity', currentFilters, firstKeySelected)
+  populateAlertsDropdowns(filteredData, 'team', currentFilters, firstKeySelected)
+  populateAlertsDropdowns(filteredData, 'portfolio', currentFilters, firstKeySelected)
 }
-
 // Populates a dropdown with options from the filtered data, or to the current filter if present
-function populateAlertsDropdowns(data, key, currentFilters) {
+function populateAlertsDropdowns(data, key, currentFilters, firstKeySelected) {
+  if (key === firstKeySelected) return
   const allOptions = [...new Set(data.map(a => a.labels[`${key}`]))].sort()
 
   const $dropdownSelect = $(`#${key}`)
