@@ -13,6 +13,6 @@ context('Visit team overview page for maintenance team', () => {
     teamsPage.allLinks()
     teamsPage.teamOverviewLink()
 
-    const teamOverviewPage = Page.verifyOnPage(TeamOverviewPage)
+    Page.verifyOnPage(TeamOverviewPage)
   })
 })

@@ -1,4 +1,4 @@
-import Page, { PageElement } from './page'
+import Page from './page'
 
 export default class TeamOverviewPage extends Page {
   constructor() {
