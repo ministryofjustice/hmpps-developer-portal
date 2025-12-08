@@ -3,12 +3,15 @@ import {
   Component,
   CustomComponentView,
   GithubRepoRequest,
+  GithubRepoRequestRequest,
   GithubTeam,
   Namespace,
   Product,
   ProductSet,
+  ScheduledJob,
   ServiceArea,
   Team,
+  TrivyScanType,
 } from '../data/modelTypes'
 import StrapiApiClient from '../data/strapiApiClient'
 import { Environment } from '../data/strapiApiTypes'
@@ -88,7 +91,47 @@ describe('Strapi service', () => {
         const results = await serviceCatalogueService.getProducts({})
 
         expect(strapiApiClient.getProducts).toHaveBeenCalledTimes(1)
+        expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
+          withEnvironments: false,
+          withComponents: false,
+        })
         expect(results).toEqual(testProductsResponse)
+      })
+
+      it('should pass through withComponents=true and withEnvironments=false', async () => {
+        strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
+
+        await serviceCatalogueService.getProducts({ withComponents: true })
+
+        expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
+          withEnvironments: false,
+          withComponents: true,
+        })
+      })
+
+      it('should pass through withEnvironments=true and withComponents=false', async () => {
+        strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
+
+        await serviceCatalogueService.getProducts({ withEnvironments: true })
+
+        expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
+          withEnvironments: true,
+          withComponents: false,
+        })
+      })
+
+      it('should pass both flags when provided', async () => {
+        strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
+
+        await serviceCatalogueService.getProducts({
+          withEnvironments: true,
+          withComponents: true,
+        })
+
+        expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
+          withEnvironments: true,
+          withComponents: true,
+        })
       })
     })
 
@@ -258,7 +301,7 @@ describe('Strapi service', () => {
       it('should return an ordered array of product sets', async () => {
         strapiApiClient.getServiceAreas.mockResolvedValue(serviceAreas)
 
-        const results = await serviceCatalogueService.getServiceAreas()
+        const results = await serviceCatalogueService.getServiceAreas({})
 
         expect(strapiApiClient.getServiceAreas).toHaveBeenCalledTimes(1)
         expect(results).toEqual(serviceAreas)
@@ -433,6 +476,84 @@ describe('Strapi service', () => {
         expect(results).toEqual(testGithubTeam)
       })
     })
+
+    describe('getGithubSubTeams', () => {
+      const testGithubSubTeamsResponse = [
+        { team_name: 'Github Team 1' },
+        { team_name: 'Github Team 2' },
+      ] as GithubTeam[]
+
+      it('should return an ordered array of github subteams', async () => {
+        strapiApiClient.getGithubSubTeams.mockResolvedValue(testGithubSubTeamsResponse)
+
+        const results = await serviceCatalogueService.getGithubSubTeams({ parentTeamName: 'parent-team-one' })
+
+        expect(strapiApiClient.getGithubSubTeams).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testGithubSubTeamsResponse)
+      })
+    })
+  })
+
+  describe('Scheduled Jobs', () => {
+    describe('getScheduledJobs', () => {
+      const testScheduledJobsResponse = [
+        { id: 1, name: 'Job 1' },
+        { id: 2, name: 'Job 2' },
+      ] as ScheduledJob[]
+
+      it('should return an ordered array of scheduled jobs', async () => {
+        strapiApiClient.getScheduledJobs.mockResolvedValue(testScheduledJobsResponse)
+
+        const results = await serviceCatalogueService.getScheduledJobs()
+
+        expect(strapiApiClient.getScheduledJobs).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testScheduledJobsResponse)
+      })
+    })
+
+    describe('getScheduledJob', () => {
+      const testScheduledJobResponse = { id: 1, name: 'Job 1' } as ScheduledJob
+
+      it('should return the selected scheduled job', async () => {
+        strapiApiClient.getScheduledJob.mockResolvedValue(testScheduledJobResponse)
+
+        const results = await serviceCatalogueService.getScheduledJob({ name: 'Job 1' })
+
+        expect(strapiApiClient.getScheduledJob).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testScheduledJobResponse)
+      })
+    })
+  })
+
+  describe('Trivy Scans', () => {
+    describe('getTrivyScans', () => {
+      const testTrivyScansResponse = [
+        { id: 1, name: 'Scan 1' },
+        { id: 2, name: 'Scan 2' },
+      ] as TrivyScanType[]
+
+      it('should return an ordered array of trivy scans by name', async () => {
+        strapiApiClient.getTrivyScans.mockResolvedValue(testTrivyScansResponse)
+
+        const results = await serviceCatalogueService.getTrivyScans()
+
+        expect(strapiApiClient.getTrivyScans).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testTrivyScansResponse)
+      })
+    })
+
+    describe('getTrivyScan', () => {
+      const testTrivyScanResponse = { id: 1, name: 'Scan 1' } as TrivyScanType
+
+      it('should return the selected trivy scan', async () => {
+        strapiApiClient.getTrivyScan.mockResolvedValue(testTrivyScanResponse)
+
+        const results = await serviceCatalogueService.getTrivyScan({ name: 'Scan 1' })
+
+        expect(strapiApiClient.getTrivyScan).toHaveBeenCalledTimes(1)
+        expect(results).toEqual(testTrivyScanResponse)
+      })
+    })
   })
 
   describe('getCustomComponentView', () => {
@@ -495,7 +616,21 @@ describe('Strapi service', () => {
         expect(results).toEqual(githubRequestResponse)
       })
     })
+
+    describe('postGithubRepoRequest', () => {
+      const testPostGithubRequest = { data: { github_repo: 'github_repo-1' } } as GithubRepoRequestRequest
+
+      it('should post a github repo request', async () => {
+        strapiApiClient.postGithubRepoRequest.mockResolvedValue(undefined)
+
+        await serviceCatalogueService.postGithubRepoRequest(testPostGithubRequest)
+
+        expect(strapiApiClient.postGithubRepoRequest).toHaveBeenCalledTimes(1)
+        expect(strapiApiClient.postGithubRepoRequest).toHaveBeenCalledWith(testPostGithubRequest)
+      })
+    })
   })
+
   describe('Environments', () => {
     describe('getEnvironments', () => {
       const testEnvironmentsResponse = {

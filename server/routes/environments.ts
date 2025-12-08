@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import logger from '../../logger'
 import { formatActiveAgencies, getComponentName, getEnvironmentName, utcTimestampToUtcDateTime } from '../utils/utils'
 
 export default function routes({ serviceCatalogueService, redisService }: Services): Router {
@@ -109,8 +108,6 @@ export default function routes({ serviceCatalogueService, redisService }: Servic
     const environmentName = getEnvironmentName(req)
     const queueInformation = req.params?.queueInformation ?? ''
     const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
-
-    logger.info(`Queue call for ${componentName} with ${queueInformation}`)
 
     const component = await serviceCatalogueService.getComponent({ componentName })
     const streams = [

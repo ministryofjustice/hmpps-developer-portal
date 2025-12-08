@@ -200,11 +200,18 @@ export default class StrapiApiClient {
       .then(unwrapSingleResponse)
   }
 
-  async getServiceAreas(): Promise<ServiceArea[]> {
+  async getServiceAreas({ withComponents = false }: { withComponents?: boolean }): Promise<ServiceArea[]> {
+    const populateList = ['products']
+
+    if (withComponents) {
+      populateList.push('products.components')
+    }
+    const populate = createStrapiQuery({ populate: populateList })
+
     return this.restClient
       .get<ListResponse<Strapi.ServiceArea>>({
         path: '/v1/service-areas',
-        query: 'populate[products]=true',
+        query: populate,
       })
       .then(unwrapListResponse)
   }

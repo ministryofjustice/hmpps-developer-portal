@@ -8,6 +8,12 @@ jQuery(function () {
     },
     { data: 'name', render: cleanColumnOutput },
     {
+      data: 'portfolio',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(`${rowData.portfolio}`)
+      },
+    },
+    {
       data: 'phase',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(`${rowData.phase}`)

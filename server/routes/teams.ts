@@ -66,18 +66,9 @@ export default function routes({
 
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
-      logger.info(`getTeamAlertSummary for team '${teamSlug}': ${JSON.stringify(teamAlertSummary, null, 2)}`)
-
       const teamTrivyScanSummary = await teamsSummaryCountService.getTeamTrivyVulnerabilityCounts(products)
-      logger.info(
-        `getTeamTrivyScanSummary for team '${teamSlug}' (${team.name}): ${JSON.stringify(teamTrivyScanSummary, null, 2)}`,
-      )
       const criticalAndHighTrivy = teamTrivyScanSummary.critical + teamTrivyScanSummary.high
-
       const teamVeracodeScanSummary = await teamsSummaryCountService.getTeamVeracodeVulnerabilityCounts(products)
-      logger.info(
-        `getTeamVeracodeScanSummary for team '${teamSlug}': ${JSON.stringify(teamVeracodeScanSummary, null, 2)}`,
-      )
       const veryHighAndHighVeracode = teamVeracodeScanSummary.veryHigh + teamVeracodeScanSummary.high
 
       // Generate monitoring channel recommendations

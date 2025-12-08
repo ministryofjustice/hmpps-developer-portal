@@ -3,6 +3,7 @@ const environmentFilter = document.getElementById('environment')
 const namespaceFilter = document.getElementById('namespace')
 const severityFilter = document.getElementById('severity')
 const teamFilter = document.getElementById('team')
+const portfolioFilter = document.getElementById('portfolio')
 
 jQuery(function () {
   // checks URL, to see if any filters are currently applied
@@ -151,7 +152,7 @@ jQuery(function () {
   })
 
   // On click of any 'Update' button to apply filters. Button ids mapped to corresponding filter's key
-  $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel,#updateTeam').on(
+  $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel,#updateTeam,#updatePortfolio').on(
     'click',
     function (e) {
       e.preventDefault()
@@ -162,6 +163,7 @@ jQuery(function () {
         updateNamespace: 'namespace',
         updateSeverityLabel: 'severity',
         updateTeam: 'team',
+        updatePortfolio: 'portfolio',
       }
 
       const key = buttonIdToFilterKey[this.id]
@@ -191,9 +193,10 @@ jQuery(function () {
       namespace: '',
       severity: '',
       team: '',
+      portfolio: '',
     }
     // Reset selects
-    $('#application,#environment,#namespace,#severity,#team').val('')
+    $('#application,#environment,#namespace,#severity,#team,#portfolio').val('')
     updateURLParams(currentFilters)
     // Remove all filters and redraw
     $.fn.dataTable.ext.search = []
@@ -241,6 +244,7 @@ function getFiltersFromURL() {
     namespace: params.get('namespace') || '',
     severity: params.get('severity') || '',
     team: params.get('team') || '',
+    portfolio: params.get('portfolio') || '',
   }
 }
 
@@ -252,6 +256,7 @@ function updateURLParams(filters) {
   if (filters.namespace) params.set('namespace', filters.namespace)
   if (filters.severity) params.set('severity', filters.severity)
   if (filters.team) params.set('team', filters.team)
+  if (filters.portfolio) params.set('portfolio', filters.portfolio)
 
   history.replaceState(null, '', `?${params.toString()}`)
 }
@@ -264,7 +269,8 @@ function allFiltersChecker(filters) {
       (filters.environment && rowData.labels.environment !== filters.environment) ||
       (filters.namespace && rowData.labels.namespace !== filters.namespace) ||
       (filters.severity && rowData.labels.severity !== filters.severity) ||
-      (filters.team && rowData.labels.team !== filters.team)
+      (filters.team && rowData.labels.team !== filters.team) ||
+      (filters.portfolio && rowData.labels.portfolio !== filters.portfolio)
     )
   }
 }
@@ -277,7 +283,8 @@ function getFilteredData(data, filters) {
       (!filters.environment || rowData.labels.environment === filters.environment) &&
       (!filters.namespace || rowData.labels.namespace === filters.namespace) &&
       (!filters.severity || rowData.labels.severity === filters.severity) &&
-      (!filters.team || rowData.labels.team === filters.team),
+      (!filters.team || rowData.labels.team === filters.team) &&
+      (!filters.portfolio || rowData.labels.portfolio === filters.portfolio),
   )
 }
 
@@ -290,6 +297,7 @@ function filterOrResetDropdowns(alertsData, currentFilters) {
   populateAlertsDropdowns(filteredData, 'namespace', currentFilters)
   populateAlertsDropdowns(filteredData, 'severity', currentFilters)
   populateAlertsDropdowns(filteredData, 'team', currentFilters)
+  populateAlertsDropdowns(filteredData, 'portfolio', currentFilters)
 }
 
 // Populates a dropdown with options from the filtered data, or to the current filter if present

@@ -22,7 +22,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   router.get(['/', '/:monitorType/:monitorName'], async (req, res) => {
     const monitorType = getMonitorType(req)
     const monitorName = getMonitorName(req)
-    logger.info(`Request for /monitor/${monitorType}/${monitorName}`)
 
     // If we have a product name, look up its ID
     let monitorId: number = 0
@@ -38,10 +37,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           )
           if (matchingProduct?.id) {
             monitorId = matchingProduct.id
-            logger.info(`Found product ID: ${monitorId} for name: ${monitorName}`)
-          } else {
-            logger.warn(`No product found matching name: ${monitorName}`)
-            logger.debug(`Available products: ${products.map(product => product.name).join(', ')}`)
           }
         } catch (error) {
           logger.error(`Failed to find product by name ${monitorName}`, error)
@@ -56,10 +51,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           )
           if (matchingTeam?.id) {
             monitorId = matchingTeam.id
-            logger.info(`Found team ID: ${monitorId} for name: ${monitorName}`)
-          } else {
-            logger.warn(`No team found matching name: ${monitorName}`)
-            logger.debug(`Available teams: ${teams.map(team => team.name).join(', ')}`)
           }
         } catch (error) {
           logger.error(`Failed to find team by name ${monitorName}`, error)
@@ -68,16 +59,12 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
       if (monitorType === 'service-area') {
         try {
-          const serviceAreas = await serviceCatalogueService.getServiceAreas()
+          const serviceAreas = await serviceCatalogueService.getServiceAreas({})
           const matchingServiceArea = serviceAreas.find(
             serviceArea => serviceArea.slug === monitorName || formatMonitorName(serviceArea.slug) === monitorName,
           )
           if (matchingServiceArea?.id) {
             monitorId = matchingServiceArea.id
-            logger.info(`Found service area ID: ${monitorId} for name: ${monitorName}`)
-          } else {
-            logger.warn(`No service area found matching name: ${monitorName}`)
-            logger.debug(`Available service area: ${serviceAreas.map(serviceArea => serviceArea.name).join(', ')}`)
           }
         } catch (error) {
           logger.error(`Failed to find service area by name ${monitorName}`, error)
@@ -148,7 +135,6 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
     try {
       const monitorType = getMonitorType(req)
       let { monitorId } = req.params
-      logger.info(`Request for /monitor/components/${monitorType}/${monitorId}, query: ${JSON.stringify(req.query)}`)
       let environments: MonitorEnvironment[] = []
 
       // If we have no ID but have a product name in query, look it up
@@ -156,7 +142,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         try {
           const products = await serviceCatalogueService.getProducts({})
           const productName = req.query.name as string
-          logger.info(`Looking up product by name: ${productName}`)
+
           // Try to match by name, slug, or formatted name
           const matchingProduct = products.find(
             p => p.name === productName || formatMonitorName(p.name) === formatMonitorName(productName),
@@ -164,17 +150,11 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
 
           if (matchingProduct?.id) {
             monitorId = matchingProduct.documentId
-            logger.info(`Found product ID: ${monitorId} for name: ${productName}`)
-          } else {
-            logger.warn(`No product found with name: ${productName}`)
-            logger.info(`Available products: ${products.map(p => p.name).join(', ')}`)
           }
         } catch (error) {
-          logger.warn(`Failed to find product by name ${req.query.name}`, error)
+          logger.error(`Failed to find product by name ${req.query.name}`, error)
         }
       }
-
-      logger.info(`Using monitorId: ${monitorId} for type: ${monitorType}`)
 
       if (monitorType === 'customComponentView') {
         const customComponentView = await serviceCatalogueService.getCustomComponentView({
@@ -193,7 +173,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         })
 
         product.components.forEach(component => {
-          environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
+          environments = environments.concat(getUnwrappedEnvironmentData(component))
         })
       } else if (monitorType === 'team') {
         const teamSlug = formatMonitorName(req.query.slug as string)
@@ -204,7 +184,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         })
         team.products.forEach(product => {
           product.components.forEach(component => {
-            environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
+            environments = environments.concat(getUnwrappedEnvironmentData(component))
           })
         })
       } else if (monitorType === 'service-area') {
@@ -216,7 +196,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         })
         serviceArea.products.forEach(product => {
           product.components.forEach(component => {
-            environments = environments.concat(getUnwrappedEnvironmentData(component, product.p_id))
+            environments = environments.concat(getUnwrappedEnvironmentData(component))
           })
         })
       } else {
@@ -268,17 +248,8 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   return router
 }
 
-const getUnwrappedEnvironmentData = (component: Component, selectedProductId?: string): MonitorEnvironment[] => {
+const getUnwrappedEnvironmentData = (component: Component): MonitorEnvironment[] => {
   const typedEnvironments = component.envs
-  let productId
-  if (selectedProductId) {
-    productId = selectedProductId
-  } else {
-    productId = component.product?.p_id
-  }
-
-  const isPrisons = `${productId}`.startsWith('DPS')
-  const isProbation = `${productId}`.startsWith('HMPPS')
   const environments: MonitorEnvironment[] = []
 
   if (Array.isArray(typedEnvironments) && typedEnvironments.length > 0) {
@@ -290,8 +261,8 @@ const getUnwrappedEnvironmentData = (component: Component, selectedProductId?: s
           environmentUrl: environment.url as string,
           environmentHealth: environment.health_path as string,
           environmentType: environment.type as string,
-          isPrisons,
-          isProbation,
+          isPrisons: component.product?.portfolio === 'Prisons',
+          isProbation: component.product?.portfolio === 'Probation',
         })
       }
     })

@@ -20,9 +20,15 @@ import { sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortBy
 export default class ServiceCatalogueService {
   constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
 
-  async getProducts({ withEnvironments = false }: { withEnvironments?: boolean }): Promise<Product[]> {
+  async getProducts({
+    withEnvironments = false,
+    withComponents = false,
+  }: {
+    withEnvironments?: boolean
+    withComponents?: boolean
+  }): Promise<Product[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const productData = await strapiApiClient.getProducts({ withEnvironments })
+    const productData = await strapiApiClient.getProducts({ withEnvironments, withComponents })
 
     const products = productData.sort(sortByName)
     return products
@@ -106,9 +112,9 @@ export default class ServiceCatalogueService {
     return dependencies.sort()
   }
 
-  async getServiceAreas(): Promise<ServiceArea[]> {
+  async getServiceAreas({ withComponents = false }: { withComponents?: boolean }): Promise<ServiceArea[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const serviceAreaData = await strapiApiClient.getServiceAreas()
+    const serviceAreaData = await strapiApiClient.getServiceAreas({ withComponents })
     return serviceAreaData.sort(sortByName)
   }
 

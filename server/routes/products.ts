@@ -41,7 +41,6 @@ export default function routes({
   router.get('/:productSlug', async (req, res) => {
     const productSlug = getFormattedName(req, 'productSlug')
     const product = await serviceCatalogueService.getProduct({ productSlug })
-
     const productSet = product.product_set
     const team = product.team || null
     const teamName = team?.name ? encodeURIComponent(team.name).replace(/%20/g, '+') : ''
@@ -67,12 +66,14 @@ export default function routes({
       gDriveLink: product.gdrive_link,
       id: product.p_id,
       isPrisonProduct: product.p_id.startsWith('DPS'),
+      serviceOwner: product.service_area?.owner,
       productManager: product.product_manager,
       leadDeveloper: product.lead_developer,
       deliveryManager: product.delivery_manager,
       subProduct: product.subproduct,
       legacyProduct: product.legacy,
       phase: product.phase,
+      portfolio: product.portfolio,
       slackChannelId: product.slack_channel_id,
       slackChannelName: product.slack_channel_name,
       productSet,

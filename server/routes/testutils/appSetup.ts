@@ -15,6 +15,7 @@ import missingFromCatalogueRoutes from '../missingFromCatalogue'
 import componentRequestRoutes from '../componentRequests'
 import scheduledJobsRoutes from '../scheduledJobs'
 import alertsRoutes from '../alerts'
+import reportsRoutes from '../reports'
 import namespacesRoutes from '../namespaces'
 import teamHealthRoutes from '../teamHealth'
 import githubTeamsRoutes from '../githubTeams'
@@ -62,6 +63,7 @@ function appSetup(services: Services, production: boolean): Express {
   app.use('/component-requests', componentRequestRoutes(services))
   app.use('/scheduled-jobs', scheduledJobsRoutes(services))
   app.use('/alerts', alertsRoutes(services))
+  app.use('/reports', reportsRoutes(services))
   app.use('/namespaces', namespacesRoutes(services))
   app.use('/team-health', teamHealthRoutes(services))
   app.use('/githubTeams', githubTeamsRoutes(services))

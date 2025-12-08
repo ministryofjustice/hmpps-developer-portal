@@ -49,23 +49,22 @@
         {% set additionalAlertRowData = additionalAlertsRow.push(tableRowContent) %}
       {% endif %}
     {% endfor %}
-    {% set additionalRows = firstAlertRow.push([
-      { colspan: 6,
-      text: additionalAlerts(additionalAlertsRow)}
-    ]) %}
+    {% if product.alerts | length > 1 %}
+      {% set additionalRows = firstAlertRow.push([{ colspan: 6, text: additionalAlerts(additionalAlertsRow) }]) %}
+    {% endif %}
 
     {{ govukTable({
-    caption: "Active Alerts",
-    captionClasses: "govuk-table__caption--m",
-    head: [
-      { text: "Alert Name" },
-      { text: "Component" },
-      { text: "Environment" },
-      { text: "Summary" },
-      { text: "Started At" },
-      { text: "Message" }
-    ],
-    rows: firstAlertRow
+      caption: "Active Alerts",
+      captionClasses: "govuk-table__caption--m",
+      head: [
+        { text: "Alert Name" },
+        { text: "Component" },
+        { text: "Environment" },
+        { text: "Summary" },
+        { text: "Started At" },
+        { text: "Message" }
+      ],
+      rows: firstAlertRow
     }) }}
   </div>
 {% endif %}
@@ -116,6 +115,10 @@
     <tr>
       <th>ID</th>
       <td>{{ product.id }}</td>
+    </tr>
+    <tr>
+      <th>Service Owner</th>
+      <td>{{ product.serviceOwner }}</td>
     </tr>
     <tr>
       <th>Product Manager</th>

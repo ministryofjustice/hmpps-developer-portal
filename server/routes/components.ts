@@ -9,7 +9,7 @@ import {
   mapToCanonicalEnv,
   formatTimeStamp,
 } from '../utils/utils'
-import { Environment } from '../data/strapiApiTypes'
+import { Environment, ServiceArea } from '../data/strapiApiTypes'
 import {
   getProductionEnvironment,
   countTrivyHighAndCritical,
@@ -51,10 +51,16 @@ export default function routes({
   router.get('/:componentName', async (req, res) => {
     const componentName = getComponentName(req)
     const component = await serviceCatalogueService.getComponent({ componentName })
+    const serviceAreas: ServiceArea[] = await serviceCatalogueService.getServiceAreas({ withComponents: true })
     const dependencies = (await redisService.getAllDependencies()).getDependencies(componentName)
     const { envs } = component
     const productionEnvironment = getProductionEnvironment(envs)
     const alertsSlackChannel = productionEnvironment?.alerts_slack_channel ?? ''
+    const serviceAreaDetails = serviceAreas.find(serviceArea =>
+      serviceArea.products?.find(product =>
+        product.components?.find(productComponent => productComponent.name === componentName),
+      ),
+    )
 
     const trivyVulnerabilityCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
     const veracodeVulnerabilityCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
@@ -92,6 +98,7 @@ export default function routes({
       veracodeVulnerabilityCount,
       trivyResultsLink: `/trivy-scans/${component.name}/environments/prod`,
       veracodeResultsLink: component.veracode_results_url || '/veracode',
+      serviceArea: serviceAreaDetails,
     }
 
     let alerts: DisplayAlert[] = []
@@ -172,8 +179,6 @@ export default function routes({
     const environmentName = getEnvironmentName(req)
     const queueInformation = req.params?.queueInformation ?? ''
     const queueParams = Object.fromEntries(new URLSearchParams(queueInformation))
-
-    logger.info(`Queue call for ${componentName} with ${queueInformation}`)
 
     const component = await serviceCatalogueService.getComponent({ componentName })
     const streams = [

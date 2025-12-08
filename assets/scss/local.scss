@@ -419,16 +419,6 @@
   margin-right: 5px;
 }
 
-.user-research-banner {
-  & p {
-    width: $moj-page-width;
-    margin: 0 auto;
-  }
-  & .govuk-tag {
-    font-weight: bold;
-  }
-}
-
 .alertsAndScansCard {
   .govuk-summary-card__content {
     .totalNumber {
@@ -461,6 +451,14 @@
   }
 
   // styling for product page
+  #product-alert-popup {
+    .govuk-table__cell {
+      white-space: normal;
+      word-break: break-word;
+      width: 100%;
+    }
+  }
+
   #product-alert-popup, .vulnerability-alert-banner {
     border-left: 5px solid #d4351c;
     background-color: #fef1f0

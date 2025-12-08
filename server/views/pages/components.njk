@@ -7,52 +7,54 @@
 
 {{ breadCrumb("Components", []) }}
 
-  <h1>Components</h1>
+<h1>Components</h1>
 
-  <table id="componentsTable" class="stripe">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Product ID</th>
-				<th>Product Name</th>
-				<th>GitHub Repository</th>
-				<th>GitHub Admin Enforce branch protection</th>
-				<th>Production Slack Channel</th>
-				<th class="githubTeams">GitHub Teams</th>
-				<th class="githubTeams">GitHub Admin Teams</th>
-				<th class="githubTeams">GitHub Write Teams</th>
-				<th class="githubTeams">GitHub Maintain Teams</th>
-				<th class="archived">Archived</th>
-				<th>App Insights Cloud Role Name</th>
-				<th>App Insights Alerts Enabled</th>
-			</tr>
-		</thead>
-		<tfoot>
-			<tr>
-				<th>Name</th>
-				<th>Product ID</th>
-				<th>Product Name</th>
-				<th>GitHub Repository</th>				
-				<th>GitHub Admin Enforce branch protection</th>
-				<th>Production Slack Channel</th>
-				<th class="githubTeams">GitHub Teams</th>
-				<th class="githubTeams">GitHub Admin Teams</th>
-				<th class="githubTeams">GitHub Write Teams</th>
-				<th class="githubTeams">GitHub Maintain Teams</th>
-				<th class="archived">Archived</th>
-				<th>App Insights Cloud Role Name</th>
-				<th>App Insights Alerts Enabled</th>
-			</tr>
-		</tfoot>
-  </table>
-  <div class="banner">
-    <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
-  </div>
+<table id="componentsTable" class="stripe">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Product ID</th>
+      <th>Product Name</th>
+      <th>Portfolio</th>
+      <th>GitHub Repository</th>
+      <th>GitHub Admin Enforce branch protection</th>
+      <th>Production Slack Channel</th>
+      <th class="githubTeams">GitHub Teams</th>
+      <th class="githubTeams">GitHub Admin Teams</th>
+      <th class="githubTeams">GitHub Write Teams</th>
+      <th class="githubTeams">GitHub Maintain Teams</th>
+      <th class="archived">Archived</th>
+      <th>App Insights Cloud Role Name</th>
+      <th>App Insights Alerts Enabled</th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+      <th>Name</th>
+      <th>Product ID</th>
+      <th>Product Name</th>
+      <th>Portfolio</th>
+      <th>GitHub Repository</th>
+      <th>GitHub Admin Enforce branch protection</th>
+      <th>Production Slack Channel</th>
+      <th class="githubTeams">GitHub Teams</th>
+      <th class="githubTeams">GitHub Admin Teams</th>
+      <th class="githubTeams">GitHub Write Teams</th>
+      <th class="githubTeams">GitHub Maintain Teams</th>
+      <th class="archived">Archived</th>
+      <th>App Insights Cloud Role Name</th>
+      <th>App Insights Alerts Enabled</th>
+    </tr>
+  </tfoot>
+</table>
+<div class="banner">
+  <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
+</div>
 {% endblock %}
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
   <script src="/assets/js/common.js"></script>
   <script src="/assets/js/components.js"></script>
 {% endblock %}

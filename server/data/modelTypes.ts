@@ -79,7 +79,7 @@ export type TrivyScanType = {
   name: string
   trivy_scan_timestamp: string
   build_image_tag: string
-  scan_status: string
+  scan_status: 'Failed' | 'Succeeded'
   environments: string[]
   scan_summary: ScanSummary
 }

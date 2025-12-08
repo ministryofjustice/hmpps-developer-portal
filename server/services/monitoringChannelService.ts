@@ -1,5 +1,6 @@
 import type { Team, Product, Component } from '../data/modelTypes'
 import logger from '../../logger'
+import { mapToCanonicalEnv } from '../utils/utils'
 
 export interface ChannelRecommendation {
   componentName: string
@@ -82,51 +83,50 @@ export default class MonitoringChannelService {
   }
 
   /**
-   * Extract current alert channels from component data
-   * This simulates common channel patterns teams currently use
+   * Extract current alert channels from component environment data in Strapi
    */
   private extractCurrentChannels(component: Component): { dev?: string; preprod?: string; prod?: string } {
     const currentChannels: { dev?: string; preprod?: string; prod?: string } = {}
 
-    // Simulate common current channel patterns that teams use
-    const componentSlug = this.formatChannelName(component.name)
-    const hasEnvironments = component.envs && component.envs.length > 0
-
-    if (hasEnvironments) {
-      // Simulate different channel patterns teams currently use
-      const channelPatterns = [
-        // Pattern 1: Old DPS shared channels (what we want to migrate away from)
-        {
-          dev: '#dps_alerts_non_prod',
-          preprod: '#dps_alerts_non_prod',
-          prod: '#dps_alerts',
-        },
-        // Pattern 2: Component-specific but inconsistent naming
-        {
-          dev: `#${componentSlug}-dev-alerts`,
-          preprod: `#${componentSlug}-staging-alerts`,
-          prod: `#${componentSlug}-alerts`,
-        },
-        // Pattern 3: Mixed patterns (some envs configured, others not)
-        {
-          dev: '#dps_alerts_non_prod',
-          preprod: undefined,
-          prod: `#${componentSlug}-prod`,
-        },
-        // Pattern 4: No current channels configured
-        {
-          dev: undefined,
-          preprod: undefined,
-          prod: undefined,
-        },
-      ]
-
-      // Randomly assign a pattern to simulate variety (in real implementation, this would be actual data)
-      const patternIndex =
-        Math.abs(componentSlug.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % channelPatterns.length
-      return channelPatterns[patternIndex]
+    if (!component.envs || component.envs.length === 0) {
+      logger.debug(`Component ${component.name}: no environments found`)
+      return currentChannels
     }
 
+    logger.debug(
+      `Component ${component.name}: processing ${component.envs.length} environments: ${component.envs.map(e => `${e.name}=${e.alerts_slack_channel || 'N/A'}`).join(', ')}`,
+    )
+
+    component.envs.forEach(env => {
+      const envName = env.name || ''
+      const canonicalEnv = mapToCanonicalEnv(envName)
+      const channel = env.alerts_slack_channel
+
+      logger.debug(`  Env: ${envName} → canonical: ${canonicalEnv}, channel: ${channel || 'N/A'}`)
+
+      if (!channel) {
+        return
+      }
+
+      if (canonicalEnv === 'dev' && !currentChannels.dev) {
+        currentChannels.dev = channel
+        return
+      }
+
+      if (
+        (canonicalEnv === 'preprod' || canonicalEnv === 'stage' || canonicalEnv === 'uat' || canonicalEnv === 'test') &&
+        !currentChannels.preprod
+      ) {
+        currentChannels.preprod = channel
+        return
+      }
+
+      if (canonicalEnv === 'prod' && !currentChannels.prod) {
+        currentChannels.prod = channel
+      }
+    })
+
+    logger.debug(`Component ${component.name}: currentChannels = ${JSON.stringify(currentChannels)}`)
     return currentChannels
   }
 
