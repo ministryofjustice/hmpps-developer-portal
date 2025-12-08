@@ -98,7 +98,7 @@ describe('Strapi service', () => {
         expect(results).toEqual(testProductsResponse)
       })
 
-      it('should pass through withComponents=true and withEnvironments=false by default', async () => {
+      it('should pass through withComponents=true and withEnvironments=false', async () => {
         strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
 
         await serviceCatalogueService.getProducts({ withComponents: true })
@@ -109,7 +109,7 @@ describe('Strapi service', () => {
         })
       })
 
-      it('should pass through withEnvironments=true and withComponents=false by default', async () => {
+      it('should pass through withEnvironments=true and withComponents=false', async () => {
         strapiApiClient.getProducts.mockResolvedValue(testProductsResponse)
 
         await serviceCatalogueService.getProducts({ withEnvironments: true })
