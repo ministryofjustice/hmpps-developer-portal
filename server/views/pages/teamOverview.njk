@@ -20,13 +20,13 @@
     <p>The information on this page relates to products and components in the production environment only</p>
   {% endcall %}
 
-  <h1>{{ team.name }}</h1>
+  <h1>Team Overview for {{ team.name }}</h1>
 
   {% if team.slackChannelId and team.slackChannelName %}
-    <h3>
+    <h2>
       Slack Channel:
       <a href="slack://channel?team={{ team.slackWorkspaceId }}&id={{ team.slackChannelId }}" class="slack-icon">#{{ team.slackChannelName }}</a>
-    </h3>
+    </h2>
   {% endif %}
 
   {% if team.alertSummary.total > 0 %}
@@ -151,7 +151,7 @@
 
         <div class="govuk-summary-card" data-test-id="monitoring-recommendations">
           <div class="govuk-summary-card__title-wrapper">
-            <h2 class="govuk-summary-card__title">Suggested Channel Structure</h2>
+            <h4 class="govuk-summary-card__title">Suggested Channel Structure</h4>
           </div>
           <div class="govuk-summary-card__content">
             {% if team.channelRecommendations.recommendations.length > 0 %}
