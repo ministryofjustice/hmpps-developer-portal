@@ -44,8 +44,4 @@ export default abstract class Page {
       false, // skipFailures
     )
   }
-
-  // acceptAnalytics = (): void => {
-  //   cy.get('[data-test=accept-analytics]').click()
-  // }
 }

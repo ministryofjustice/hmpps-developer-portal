@@ -5,7 +5,7 @@ export default class TeamsPage extends Page {
     super('Teams')
   }
 
-  allLinks = (): PageElement => cy.get('[data-test="all-links"]').click()
+  allLinks = (): PageElement => cy.get('[data-test="all-links"]').first().click()
 
-  teamOverviewLink = (): PageElement => cy.get('[data-test="team-overview-link"]').click()
+  teamOverviewLink = (): PageElement => cy.get('[data-test="team-overview-link"]').first().click()
 }

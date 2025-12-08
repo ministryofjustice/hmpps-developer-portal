@@ -4,24 +4,7 @@ import TeamOverviewPage from '../pages/teamOverview'
 import Page from '../pages/page'
 
 context('Visit team overview page for maintenance team', () => {
-  // it('should load and scan home page', () => {
-  // cy.signIn()
-  //     cy.visit('http://localhost:3000')
-  //     const homePage = Page.verifyOnPage(HomePage)
-  // })
-
-  // it('should load the home page, go to teams and scan the teams page', () => {
-  //     // cy.signIn()
-  //     cy.visit('http://localhost:3000')
-  //     const homePage = Page.verifyOnPage(HomePage)
-  //     homePage.teamsLink()
-
-  //     const teamsPage = Page.verifyOnPage(TeamsPage)
-  // })
-
-  it('should load home page, go to teams, click links, and go to team overview page for the activities team', () => {
-    // cy.visit('http://localhost:3000/teams/team-overview/maintenance')
-    // Page.verifyOnPage(TeamOverviewPage)
+  it('should load the home page, go to teams page, expand links for the first team (row), and click on the link to the team overview page', () => {
     cy.visit('http://localhost:3000')
     const homePage = Page.verifyOnPage(HomePage)
     homePage.teamsLink()
