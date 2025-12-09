@@ -246,8 +246,8 @@ describe('/component-requests', () => {
         .expect(200)
         .expect(res => {
           const $ = cheerio.load(res.text)
-          expect($('h1').text()).toContain('Request submitted.')
-          expect($('.govuk-panel__title').text()).toContain('Request submitted.')
+          expect($('h1').text()).toContain('Request submitted')
+          expect($('.govuk-panel__title').text()).toContain('Request submitted')
           expect($('.govuk-panel__body').text()).toContain('hmpps-example-repo')
         })
     })
