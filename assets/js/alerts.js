@@ -143,7 +143,7 @@ jQuery(function () {
     alertsData = Array.isArray(json) ? json : json.data || []
     if (!alertsData || !alertsData.length) return
 
-    filterOrResetDropdowns(alertsData, currentFilters, false)
+    filterOrResetDropdowns(alertsData, currentFilters, { isReset: false })
 
     // Registers allFiltersChecker as a Datatable custom filter function. Determines if a row should be displayed in the table
     $.fn.dataTable.ext.search = []
@@ -179,7 +179,7 @@ jQuery(function () {
       $.fn.dataTable.ext.search = []
       $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
       alertsTable.draw(false)
-      filterOrResetDropdowns(alertsData, currentFilters, false)
+      filterOrResetDropdowns(alertsData, currentFilters, { isReset: false })
     },
   )
 
@@ -201,7 +201,7 @@ jQuery(function () {
     // Remove all filters and redraw
     $.fn.dataTable.ext.search = []
     alertsTable.draw(false)
-    filterOrResetDropdowns(alertsData, currentFilters, true)
+    filterOrResetDropdowns(alertsData, currentFilters, { isReset: true })
   })
 
   // Toggles fetch frequency between 5 and 30 seconds, and changes message when using dropdowns / pages
@@ -289,7 +289,7 @@ function getFilteredData(data, filters) {
 }
 
 // Updates dropdowns with the options related to the current filters or all when reset
-function filterOrResetDropdowns(alertsData, currentFilters, isReset) {
+function filterOrResetDropdowns(alertsData, currentFilters, { isReset = true }) {
   let selectedItems = {}
   let firstKeySelected = ''
   if (!isReset) {
