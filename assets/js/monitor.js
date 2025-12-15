@@ -30,7 +30,7 @@ jQuery(async function () {
         dropDownType = 'service-area'
         break
       case 'updateCustomComponentView':
-        dropDownType = 'customComponentView'
+        dropDownType = 'custom-component-view'
         break
       default:
         return false
