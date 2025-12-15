@@ -54,7 +54,7 @@ export const getNumericId = (req: Request, paramName: string): number => {
 export const getMonitorType = (req: Request): string => {
   const { monitorType } = req.params
 
-  return ['product', 'team', 'service-area', 'customComponentView'].includes(monitorType) ? monitorType : 'all'
+  return ['product', 'team', 'service-area', 'custom-component-view'].includes(monitorType) ? monitorType : 'all'
 }
 
 export const getMonitorName = (req: Request): string => {

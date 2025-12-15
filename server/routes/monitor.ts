@@ -2,7 +2,7 @@ import { Router } from 'express'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { getMonitorName, getMonitorType, relativeTimeFromNow, formatMonitorName } from '../utils/utils'
-import { Component } from '../data/modelTypes'
+import { Component, Product } from '../data/modelTypes'
 
 type MonitorEnvironment = {
   componentName: string
@@ -156,7 +156,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         }
       }
 
-      if (monitorType === 'customComponentView') {
+      if (monitorType === 'custom-component-view') {
         const customComponentView = await serviceCatalogueService.getCustomComponentView({
           customComponentDocumentId: monitorId.toString(),
           withEnvironments: true,
@@ -173,7 +173,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         })
 
         product.components.forEach(component => {
-          environments = environments.concat(getUnwrappedEnvironmentData(component))
+          environments = environments.concat(getUnwrappedEnvironmentData(component, product))
         })
       } else if (monitorType === 'team') {
         const teamSlug = formatMonitorName(req.query.slug as string)
@@ -184,7 +184,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         })
         team.products.forEach(product => {
           product.components.forEach(component => {
-            environments = environments.concat(getUnwrappedEnvironmentData(component))
+            environments = environments.concat(getUnwrappedEnvironmentData(component, product))
           })
         })
       } else if (monitorType === 'service-area') {
@@ -196,7 +196,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
         })
         serviceArea.products.forEach(product => {
           product.components.forEach(component => {
-            environments = environments.concat(getUnwrappedEnvironmentData(component))
+            environments = environments.concat(getUnwrappedEnvironmentData(component, product))
           })
         })
       } else {
@@ -248,7 +248,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
   return router
 }
 
-const getUnwrappedEnvironmentData = (component: Component): MonitorEnvironment[] => {
+const getUnwrappedEnvironmentData = (component: Component, product?: Product): MonitorEnvironment[] => {
   const typedEnvironments = component.envs
   const environments: MonitorEnvironment[] = []
 
@@ -261,12 +261,11 @@ const getUnwrappedEnvironmentData = (component: Component): MonitorEnvironment[]
           environmentUrl: environment.url as string,
           environmentHealth: environment.health_path as string,
           environmentType: environment.type as string,
-          isPrisons: component.product?.portfolio === 'Prisons',
-          isProbation: component.product?.portfolio === 'Probation',
+          isPrisons: product?.portfolio === 'Prisons' || component.product?.portfolio === 'Prisons',
+          isProbation: product?.portfolio === 'Probation' || component.product?.portfolio === 'Probation',
         })
       }
     })
   }
-
   return environments
 }
