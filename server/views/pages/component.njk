@@ -147,7 +147,7 @@
             {% if component.jiraProjectKeys | length %}
               {% for jira in component.jiraProjectKeys %}
               <a class="govuk-link--no-visited-state" target="_blank" href="https://dsdmoj.atlassian.net/browse/{{ jira }}?searchContentType=project">
-              <image src="/assets/images/jira_favicon.ico" alt="jira logo" width="32" height="32"></image>
+              <img src="/assets/images/jira_favicon.ico" alt="jira logo" width="32" height="32" />
               {{ jira }} (opens Jira)
               </a>
               {% endfor %}
@@ -217,7 +217,7 @@
             <td>
             {% if component.product.slack_channel_id | length %}
               <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.slack_channel_id }}">
-              <image src="/assets/images/slack_favicon_32.png" alt="slack logo" width="32" height="32"></image>
+              <img src="/assets/images/slack_favicon_32.png" alt="slack logo" width="32" height="32" />
               {% if component.product.slack_channel_name | length %}
               #{{ component.product.slack_channel_name }}
               {% else %}
@@ -244,7 +244,7 @@
             <td>
             {% if component.product.team.slack_channel_id | length %}
               <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.team.slack_channel_id }}">
-              <image src="/assets/images/slack_favicon_32.png" alt="slack logo" width="32" height="32"></image>
+              <img src="/assets/images/slack_favicon_32.png" alt="slack logo" width="32" height="32" />
               {% if component.product.team.slack_channel_name | length %}
               #{{ component.product.team.slack_channel_name }}
               {% else %}
