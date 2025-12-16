@@ -18,7 +18,7 @@
 // For dropdown select size consistency
 .govuk-select {
   width: 100%;
-} 
+}
 
 // For reset button
 .alert-selectors {
@@ -50,17 +50,17 @@
   }
 
   th {
-    background-color: grey;
+    background-color: govuk-colour("dark-grey");
   }
 
   th:hover {
-    border-color: #990;
+    border-color: #5C5C00;
   }
 
   tr  {
-    background-color: grey;
+    background-color: govuk-colour("dark-grey");
   }
-  
+
   th, td {
     border: 1px solid white;
   }
@@ -70,13 +70,13 @@
   }
 }
 
-// For active alerts (red) and silenced (green) rows on alerts table 
+// For active alerts (red) and silenced (green) rows on alerts table
 .silenced-alert {
-  background-color: #990 !important;
+  background-color: #5C5C00 !important;
 }
 
 .active-alert {
-  background-color: govuk-colour('red') !important;
+  background-color: #A72916 !important;
 }
 
 // For update buttons when page is bigger than 640px

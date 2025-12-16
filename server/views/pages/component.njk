@@ -147,7 +147,7 @@
             {% if component.jiraProjectKeys | length %}
               {% for jira in component.jiraProjectKeys %}
               <a class="govuk-link--no-visited-state" target="_blank" href="https://dsdmoj.atlassian.net/browse/{{ jira }}?searchContentType=project">
-              <image src="/assets/images/jira_favicon.ico" width="32" height="32"></image>
+              <image src="/assets/images/jira_favicon.ico" alt="jira logo" width="32" height="32"></image>
               {{ jira }} (opens Jira)
               </a>
               {% endfor %}
@@ -217,7 +217,7 @@
             <td>
             {% if component.product.slack_channel_id | length %}
               <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.slack_channel_id }}">
-              <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+              <image src="/assets/images/slack_favicon_32.png" alt="slack logo" width="32" height="32"></image>
               {% if component.product.slack_channel_name | length %}
               #{{ component.product.slack_channel_name }}
               {% else %}
@@ -231,7 +231,12 @@
           </tr>
           <tr>
             <th>Team</th>
-            <td><a class="govuk-link--no-visited-state" href="/teams/{{ component.product.team.slug }}" data-test="product">{{ component.product.team.name }}</a></td>
+            <td>
+              {% if component.product.team.slug | length %}
+              <a class="govuk-link--no-visited-state" href="/teams/{{ component.product.team.slug }}" data-test="product">{{ component.product.team.name }}</a></td>
+              {% else %}
+                No team associated with this product &#129301;
+              {% endif %}
           </tr>
           <tr>
           <tr>
@@ -239,7 +244,7 @@
             <td>
             {% if component.product.team.slack_channel_id | length %}
               <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.team.slack_channel_id }}">
-              <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+              <image src="/assets/images/slack_favicon_32.png" alt="slack logo" width="32" height="32"></image>
               {% if component.product.team.slack_channel_name | length %}
               #{{ component.product.team.slack_channel_name }}
               {% else %}
@@ -272,7 +277,7 @@
     </div>
 
     <div class="govuk-grid-column-one-third">
-      <h3>Depends on:</h3>
+      <h2>Depends on:</h2>
       <ul>
       {% for dependency, known in component.dependencies %}
         <li>
@@ -288,7 +293,7 @@
         </li>
       {% endfor %}
       </ul>
-      <h3>Relied on by:</h3>
+      <h2>Relied on by:</h2>
       <ul>
         {% for dependent, known in component.dependents %}
         <li>
@@ -300,11 +305,13 @@
         </li>
 
       {% else %}
+          <li>
         <p>No components rely on this component.</p>
+          </li>
       {% endfor %}
       </ul>
 
-      <h3>Protection security configuration</h3>
+      <h2>Protection security configuration</h2>
         {% from "govuk/components/task-list/macro.njk" import govukTaskList %}
         {% set securityConfigurationList = [] %}
 
@@ -345,7 +352,7 @@
 
         {{ govukTaskList({ idPrefix: "security-configuration", items: securityConfigurationList }) }}
 
-      <h3>GitHub Compliance:</h3>
+      <h2>GitHub Compliance:</h2>
       {% if component.standardsCompliance %}
         {% from "govuk/components/task-list/macro.njk" import govukTaskList %}
 

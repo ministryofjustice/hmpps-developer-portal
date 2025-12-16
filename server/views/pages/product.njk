@@ -159,7 +159,7 @@
       <td>
         {% if product.team.slack_channel_id | length %}
         <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.team.slack_channel_id }}">
-        <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+        <image src="/assets/images/slack_favicon_32.png" alt="slack logo" width="32" height="32"></image>
           {% if product.team.slack_channel_name | length %}
           #{{ product.team.slack_channel_name }}
           {% else %}
@@ -176,7 +176,7 @@
       <td>
       {% if product.slackChannelId | length %}
         <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slackChannelId }}">
-        <image src="/assets/images/slack_favicon_32.png" width="32" height="32"></image>
+        <image src="/assets/images/slack_favicon_32.png" alt="slack logo" width="32" height="32"></image>
         {% if product.slackChannelName | length %}
         #{{ product.slackChannelName }}
         {% else %}
@@ -200,7 +200,7 @@
         {% if product.components | length %}
         <ul>
           {% for component in product.components %}
-            <li><a href="/components/{{ component.name }}">{{ component.name }}</a></li>
+            <li><a data-test="component-link" href="/components/{{ component.name }}">{{ component.name }}</a></li>
           {% endfor %}
         </ul>
         {% else %}
