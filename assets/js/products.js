@@ -3,7 +3,7 @@ jQuery(function () {
     {
       data: 'p_id',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/products/${rowData.slug}">${rowData.p_id}</a>`)
+        $(td).html(`<a data-test="id-links" href="/products/${rowData.slug}">${rowData.p_id}</a>`)
       },
     },
     { data: 'name', render: cleanColumnOutput },

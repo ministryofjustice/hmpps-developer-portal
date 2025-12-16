@@ -4,7 +4,7 @@ jQuery(function () {
       data: 'name',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(
-          `<a class="govuk-link--no-visited-state" href="/components/${cleanColumnOutput(rowData.name)}">${cleanColumnOutput(
+          `<a data-test="component-links" class="govuk-link--no-visited-state" href="/components/${cleanColumnOutput(rowData.name)}">${cleanColumnOutput(
             rowData.name,
           )}</a>`,
         )
