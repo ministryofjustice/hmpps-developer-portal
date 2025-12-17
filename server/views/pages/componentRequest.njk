@@ -43,7 +43,7 @@
               {% if componentRequest.jira_project_keys | length %}
                 {% for jira in componentRequest.jira_project_keys %}
                 <a class="govuk-link--no-visited-state" target="_blank" href="https://dsdmoj.atlassian.net/browse/{{ jira }}?searchContentType=project">
-                <image src="/assets/images/jira_favicon.ico" width="32" height="32"></image>
+                <img src="/assets/images/jira_favicon.ico" alt="Jira logo" width="32" height="32" />
                 {{ jira }} (opens Jira)
                 </a>
                 {% endfor %}
