@@ -178,6 +178,16 @@
 
       </td>
     </tr>
+    {% if component.environment.postgres_database_restore %}
+    <tr>
+      <th>DB Restore to PreProd</th>
+      <td>{% if component.environment.postgres_database_restore %}Enabled{% else %}N/A{% endif %}</td>
+    </tr>
+    {% endif %}
+    <tr>
+      <th>Monitoring</th>
+      <td>{% if component.environment.monitor %}Enabled{% else %}Disabled{% endif %}</td>
+    </tr>
   </tbody>
 </table>
 
