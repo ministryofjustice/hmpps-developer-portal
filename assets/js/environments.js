@@ -26,6 +26,8 @@ jQuery(function () {
           alert_severity_label: env.alert_severity_label === null ? 'Not set' : env.alert_severity_label,
           alerts_slack_channel:
             env.alerts_slack_channel === null || env.alerts_slack_channel === '' ? 'N/A' : env.alerts_slack_channel,
+          postgres_database_restore:
+            env.postgres_database_restore === null ? 'Not set' : env.postgres_database_restore.toString(),
           product_id: productData?.p_id ?? '',
           product_name: productData?.name ?? '',
           product_slug: productData?.slug ?? '',
@@ -200,6 +202,14 @@ jQuery(function () {
         $(td).html(rowData.alerts_slack_channel)
       },
       title: 'Alerts Slack Channel',
+    },
+    {
+      data: 'postgres_database_restore',
+      visible: false,
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(rowData.postgres_database_restore)
+      },
+      title: 'Postgres Database Restore',
     },
   ]
 
