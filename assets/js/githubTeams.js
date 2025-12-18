@@ -28,7 +28,7 @@ jQuery(function () {
       createdCell: function (td, _cellData, rowData) {
         const membersList = renderGithubTeams(rowData)
         if (membersList) {
-          $(td).html(membersList)
+          $(td).html(`<ul>${membersList}</ul>`)
         } else {
           $(td).html('No members in this team')
         }

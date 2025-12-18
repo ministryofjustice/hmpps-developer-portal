@@ -3,7 +3,7 @@ jQuery(function () {
     {
       data: 'name',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/teams/${rowData.slug}">${rowData.name}</a>`)
+        $(td).html(`<a href="/teams/${rowData.slug}" data-test="team-link">${rowData.name}</a>`)
       },
     },
     {

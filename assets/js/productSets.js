@@ -3,13 +3,13 @@ jQuery(function () {
     {
       data: 'ps_id',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/product-sets/${rowData.documentId}">${rowData.ps_id}</a>`)
+        $(td).html(`${rowData.ps_id}`)
       },
     },
     {
       data: 'name',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/product-sets/${rowData.documentId}">${rowData.name}</a>`)
+        $(td).html(`<a href="/product-sets/${rowData.documentId}" data-test="product-set-link">${rowData.name}</a>`)
       },
     },
     {
