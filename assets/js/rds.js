@@ -4,7 +4,9 @@ jQuery(function () {
       data: 'tf_label',
       createdCell: function (td, _cellData, rowData) {
         const display = `${rowData.tf_label}`.trim()
-        $(td).html(`<a href="/namespaces/${rowData.namespace}/rds-instance/${display}">${display}</a>`)
+        $(td).html(
+          `<a href="/namespaces/${rowData.namespace}/rds-instance/${display}" data-test="rds-instance-link">${display}</a>`,
+        )
       },
     },
     {

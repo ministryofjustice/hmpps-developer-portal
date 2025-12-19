@@ -8,6 +8,7 @@ const logAccessibilityViolations = (violations: Result[]) => {
     impact,
     description,
     nodes: nodes.length,
+    elements: nodes.map(n => n.html).join(' --next element-- '),
   }))
 
   cy.task('table', violationData)
