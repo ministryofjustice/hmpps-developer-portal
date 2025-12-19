@@ -3,7 +3,7 @@ jQuery(function () {
     {
       data: 'ps_id',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.ps_id}`)
+        $(td).html(rowData.ps_id)
       },
     },
     {
