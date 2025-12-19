@@ -14,7 +14,7 @@ function createSearchableProductList(td, _cellData, rowData) {
   if (Array.isArray(products) && products.length > 0) {
     return `<ul>${productItems}</ul>`
   }
-  return `<p class="no-products">No Products</p>`
+  return '<p class="no-products">No Products</p>'
 }
 
 function createTable({
