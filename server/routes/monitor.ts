@@ -12,6 +12,7 @@ type MonitorEnvironment = {
   environmentType: string
   isPrisons: boolean
   isProbation: boolean
+  dependentCount: number
 }
 
 type HealthResult = { version: string; lastMessageTime: string; dateAdded: string; healthStatus: string }
@@ -241,7 +242,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       },
       {} as Record<string, HealthResult>,
     )
-
+    console.log('Health Queue Result:', result)
     res.send(JSON.stringify(Object.entries(result)))
   })
 
@@ -263,6 +264,7 @@ const getUnwrappedEnvironmentData = (component: Component, product?: Product): M
           environmentType: environment.type as string,
           isPrisons: product?.portfolio === 'Prisons' || component.product?.portfolio === 'Prisons',
           isProbation: product?.portfolio === 'Probation' || component.product?.portfolio === 'Probation',
+          dependentCount: component.dependent_count || 0,
         })
       }
     })

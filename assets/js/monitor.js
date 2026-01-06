@@ -183,20 +183,14 @@ async function populateComponentTable(monitorType, monitorTypeId, monitorSlug) {
   let url = `/monitor/components/${monitorType}/${monitorTypeId}?slug=${encodeURIComponent(monitorSlug)}`
 
   const response = await fetch(url)
-
+  // console.log(response.json())
   if (!response.ok) {
     console.error(`Error fetching component data: ${response.status} ${response.statusText}`)
     throw new Error('There was a problem fetching the component data')
   }
 
   function sortEnvironments(environmentA, environmentB) {
-    if (environmentA.componentName < environmentB.componentName) {
-      return -1
-    } else if (environmentA.componentName > environmentB.componentName) {
-      return 1
-    }
-
-    return 0
+    return environmentB.dependentCount - environmentA.dependentCount
   }
 
   try {
