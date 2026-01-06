@@ -12,7 +12,7 @@ type MonitorEnvironment = {
   environmentType: string
   isPrisons: boolean
   isProbation: boolean
-  dependentsCount: number
+  dependentCount: number
 }
 
 type HealthResult = { version: string; lastMessageTime: string; dateAdded: string; healthStatus: string }
@@ -264,7 +264,7 @@ const getUnwrappedEnvironmentData = (component: Component, product?: Product): M
           environmentType: environment.type as string,
           isPrisons: product?.portfolio === 'Prisons' || component.product?.portfolio === 'Prisons',
           isProbation: product?.portfolio === 'Probation' || component.product?.portfolio === 'Probation',
-          dependentsCount: component.dependent_count || 0,
+          dependentCount: component.dependent_count || 0,
         })
       }
     })
