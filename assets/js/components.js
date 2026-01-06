@@ -178,6 +178,15 @@ jQuery(function () {
         $(td).html(`${value}`)
       },
     },
+    {
+      name: 'dependent_count',
+      data: 'dependent_count',
+      visible: false,
+      createdCell: function (td, _cellData, rowData) {
+        const value = rowData.dependent_count
+        $(td).html(`${value}`)
+      },
+    },
   ]
 
   createTable({

@@ -1900,6 +1900,7 @@ export interface components {
         documentId?: string
         id?: number
       }
+      dependent_count?: number
       description?: string
       disabled_workflows?: unknown
       documentId?: string
@@ -1922,6 +1923,7 @@ export interface components {
             documentId?: string
             id?: number
           }
+          dependent_count?: number
           description?: string
           disabled_workflows?: unknown
           documentId?: string
@@ -1956,6 +1958,7 @@ export interface components {
           path_to_helm_dir?: string
           path_to_project?: string
           product?: {
+            business_owner?: string
             children?: {
               documentId?: string
               id?: number
@@ -1971,6 +1974,9 @@ export interface components {
               documentId?: string
               id?: number
             }
+            decommissioned?: boolean
+            /** Format: date */
+            decommissioned_date?: string
             delivery_manager?: string
             description?: string
             documentId?: string
@@ -1991,6 +1997,7 @@ export interface components {
             }
             phase?: string
             portfolio?: string
+            principal_architect?: string
             product_manager?: string
             product_set?: {
               /** Format: date-time */
@@ -2061,6 +2068,8 @@ export interface components {
             slug?: string
             subproduct?: boolean
             team?: {
+              budget_code?: string
+              confluence_link?: string
               /** Format: date-time */
               createdAt?: string
               createdBy?: {
@@ -2183,6 +2192,7 @@ export interface components {
                 id?: number
               }
             }
+            technical_architect?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
@@ -2192,6 +2202,7 @@ export interface components {
           }
           /** Format: date-time */
           publishedAt?: string
+          security_settings?: unknown
           slack_channel_nonprod_release_notify?: string
           slack_channel_prod_release_notify?: string
           slack_channel_security_scans_notify?: string
@@ -2267,6 +2278,7 @@ export interface components {
         pingdom_cloud_platform_tf_managed?: boolean
         pingdom_paused?: boolean
         pingdom_sre_managed?: boolean
+        postgres_database_restore?: boolean
         /** Format: date-time */
         publishedAt?: string
         swagger_docs?: string
@@ -2343,6 +2355,7 @@ export interface components {
       }
       /** Format: date-time */
       publishedAt?: string
+      security_settings?: unknown
       slack_channel_nonprod_release_notify?: string
       slack_channel_prod_release_notify?: string
       slack_channel_security_scans_notify?: string
@@ -2380,6 +2393,7 @@ export interface components {
         archived?: boolean
         codescanning_summary?: unknown
         container_image?: string
+        dependent_count?: number
         description?: string
         disabled_workflows?: unknown
         envs?: (number | string)[]
@@ -2407,6 +2421,7 @@ export interface components {
         path_to_project?: string
         /** @example string or id */
         product?: number | string
+        security_settings?: unknown
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
@@ -2631,6 +2646,7 @@ export interface components {
           documentId?: string
           id?: number
         }
+        dependent_count?: number
         description?: string
         disabled_workflows?: unknown
         documentId?: string
@@ -2792,6 +2808,7 @@ export interface components {
           pingdom_cloud_platform_tf_managed?: boolean
           pingdom_paused?: boolean
           pingdom_sre_managed?: boolean
+          postgres_database_restore?: boolean
           /** Format: date-time */
           publishedAt?: string
           swagger_docs?: string
@@ -2863,6 +2880,7 @@ export interface components {
         path_to_helm_dir?: string
         path_to_project?: string
         product?: {
+          business_owner?: string
           children?: {
             documentId?: string
             id?: number
@@ -2878,6 +2896,9 @@ export interface components {
             documentId?: string
             id?: number
           }
+          decommissioned?: boolean
+          /** Format: date */
+          decommissioned_date?: string
           delivery_manager?: string
           description?: string
           documentId?: string
@@ -2898,6 +2919,7 @@ export interface components {
           }
           phase?: string
           portfolio?: string
+          principal_architect?: string
           product_manager?: string
           product_set?: {
             /** Format: date-time */
@@ -2968,6 +2990,8 @@ export interface components {
           slug?: string
           subproduct?: boolean
           team?: {
+            budget_code?: string
+            confluence_link?: string
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
@@ -2999,6 +3023,7 @@ export interface components {
               id?: number
             }
           }
+          technical_architect?: string
           /** Format: date-time */
           updatedAt?: string
           updatedBy?: {
@@ -3008,6 +3033,7 @@ export interface components {
         }
         /** Format: date-time */
         publishedAt?: string
+        security_settings?: unknown
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
@@ -3118,6 +3144,7 @@ export interface components {
           documentId?: string
           id?: number
         }
+        dependent_count?: number
         description?: string
         disabled_workflows?: unknown
         documentId?: string
@@ -3279,6 +3306,7 @@ export interface components {
           pingdom_cloud_platform_tf_managed?: boolean
           pingdom_paused?: boolean
           pingdom_sre_managed?: boolean
+          postgres_database_restore?: boolean
           /** Format: date-time */
           publishedAt?: string
           swagger_docs?: string
@@ -3350,6 +3378,7 @@ export interface components {
         path_to_helm_dir?: string
         path_to_project?: string
         product?: {
+          business_owner?: string
           children?: {
             documentId?: string
             id?: number
@@ -3365,6 +3394,9 @@ export interface components {
             documentId?: string
             id?: number
           }
+          decommissioned?: boolean
+          /** Format: date */
+          decommissioned_date?: string
           delivery_manager?: string
           description?: string
           documentId?: string
@@ -3385,6 +3417,7 @@ export interface components {
           }
           phase?: string
           portfolio?: string
+          principal_architect?: string
           product_manager?: string
           product_set?: {
             /** Format: date-time */
@@ -3455,6 +3488,8 @@ export interface components {
           slug?: string
           subproduct?: boolean
           team?: {
+            budget_code?: string
+            confluence_link?: string
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
@@ -3486,6 +3521,7 @@ export interface components {
               id?: number
             }
           }
+          technical_architect?: string
           /** Format: date-time */
           updatedAt?: string
           updatedBy?: {
@@ -3495,6 +3531,7 @@ export interface components {
         }
         /** Format: date-time */
         publishedAt?: string
+        security_settings?: unknown
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
@@ -3546,6 +3583,7 @@ export interface components {
       pingdom_cloud_platform_tf_managed?: boolean
       pingdom_paused?: boolean
       pingdom_sre_managed?: boolean
+      postgres_database_restore?: boolean
       /** Format: date-time */
       publishedAt?: string
       swagger_docs?: string
@@ -3603,6 +3641,7 @@ export interface components {
         pingdom_cloud_platform_tf_managed?: boolean
         pingdom_paused?: boolean
         pingdom_sre_managed?: boolean
+        postgres_database_restore?: boolean
         swagger_docs?: string
         /** @example string or id */
         trivy_scan?: number | string
@@ -4195,6 +4234,7 @@ export interface components {
       meta?: Record<string, never>
     }
     Product: {
+      business_owner?: string
       children?: {
         documentId?: string
         id?: number
@@ -4210,10 +4250,12 @@ export interface components {
         documentId?: string
         id?: number
       }
+      decommissioned?: boolean
+      /** Format: date */
+      decommissioned_date?: string
       delivery_manager?: string
       description?: string
       documentId?: string
-      portfolio?: string
       gdrive_link?: string
       id?: number
       lead_developer?: string
@@ -4226,6 +4268,7 @@ export interface components {
       name: string
       p_id: string
       parent?: {
+        business_owner?: string
         children?: {
           documentId?: string
           id?: number
@@ -4243,6 +4286,7 @@ export interface components {
             documentId?: string
             id?: number
           }
+          dependent_count?: number
           description?: string
           disabled_workflows?: unknown
           documentId?: string
@@ -4313,6 +4357,7 @@ export interface components {
             pingdom_cloud_platform_tf_managed?: boolean
             pingdom_paused?: boolean
             pingdom_sre_managed?: boolean
+            postgres_database_restore?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -4389,6 +4434,7 @@ export interface components {
           }
           /** Format: date-time */
           publishedAt?: string
+          security_settings?: unknown
           slack_channel_nonprod_release_notify?: string
           slack_channel_prod_release_notify?: string
           slack_channel_security_scans_notify?: string
@@ -4414,6 +4460,9 @@ export interface components {
           documentId?: string
           id?: number
         }
+        decommissioned?: boolean
+        /** Format: date */
+        decommissioned_date?: string
         delivery_manager?: string
         description?: string
         documentId?: string
@@ -4434,6 +4483,7 @@ export interface components {
         }
         phase?: string
         portfolio?: string
+        principal_architect?: string
         product_manager?: string
         product_set?: {
           /** Format: date-time */
@@ -4504,6 +4554,8 @@ export interface components {
         slug?: string
         subproduct?: boolean
         team?: {
+          budget_code?: string
+          confluence_link?: string
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
@@ -4626,6 +4678,7 @@ export interface components {
             id?: number
           }
         }
+        technical_architect?: string
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
@@ -4635,6 +4688,7 @@ export interface components {
       }
       phase?: string
       portfolio?: string
+      principal_architect?: string
       product_manager?: string
       product_set?: {
         documentId?: string
@@ -4654,6 +4708,7 @@ export interface components {
         documentId?: string
         id?: number
       }
+      technical_architect?: string
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
@@ -4674,9 +4729,13 @@ export interface components {
     }
     ProductRequest: {
       data: {
+        business_owner?: string
         children?: (number | string)[]
         components?: (number | string)[]
         confluence_link?: string
+        decommissioned?: boolean
+        /** Format: date */
+        decommissioned_date?: string
         delivery_manager?: string
         description?: string
         gdrive_link?: string
@@ -4690,6 +4749,7 @@ export interface components {
         parent?: number | string
         phase?: string
         portfolio?: string
+        principal_architect?: string
         product_manager?: string
         /** @example string or id */
         product_set?: number | string
@@ -4701,6 +4761,7 @@ export interface components {
         subproduct?: boolean
         /** @example string or id */
         team?: number | string
+        technical_architect?: string
       }
     }
     ProductResponse: {
@@ -4724,6 +4785,7 @@ export interface components {
       }[]
       name: string
       products?: {
+        business_owner?: string
         children?: {
           documentId?: string
           id?: number
@@ -4741,6 +4803,7 @@ export interface components {
             documentId?: string
             id?: number
           }
+          dependent_count?: number
           description?: string
           disabled_workflows?: unknown
           documentId?: string
@@ -4811,6 +4874,7 @@ export interface components {
             pingdom_cloud_platform_tf_managed?: boolean
             pingdom_paused?: boolean
             pingdom_sre_managed?: boolean
+            postgres_database_restore?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -4887,6 +4951,7 @@ export interface components {
           }
           /** Format: date-time */
           publishedAt?: string
+          security_settings?: unknown
           slack_channel_nonprod_release_notify?: string
           slack_channel_prod_release_notify?: string
           slack_channel_security_scans_notify?: string
@@ -4912,6 +4977,9 @@ export interface components {
           documentId?: string
           id?: number
         }
+        decommissioned?: boolean
+        /** Format: date */
+        decommissioned_date?: string
         delivery_manager?: string
         description?: string
         documentId?: string
@@ -4932,6 +5000,7 @@ export interface components {
         }
         phase?: string
         portfolio?: string
+        principal_architect?: string
         product_manager?: string
         product_set?: {
           /** Format: date-time */
@@ -5002,6 +5071,8 @@ export interface components {
         slug?: string
         subproduct?: boolean
         team?: {
+          budget_code?: string
+          confluence_link?: string
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
@@ -5124,6 +5195,7 @@ export interface components {
             id?: number
           }
         }
+        technical_architect?: string
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
@@ -5538,6 +5610,7 @@ export interface components {
       name: string
       owner: string
       products?: {
+        business_owner?: string
         children?: {
           documentId?: string
           id?: number
@@ -5555,6 +5628,7 @@ export interface components {
             documentId?: string
             id?: number
           }
+          dependent_count?: number
           description?: string
           disabled_workflows?: unknown
           documentId?: string
@@ -5625,6 +5699,7 @@ export interface components {
             pingdom_cloud_platform_tf_managed?: boolean
             pingdom_paused?: boolean
             pingdom_sre_managed?: boolean
+            postgres_database_restore?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -5701,6 +5776,7 @@ export interface components {
           }
           /** Format: date-time */
           publishedAt?: string
+          security_settings?: unknown
           slack_channel_nonprod_release_notify?: string
           slack_channel_prod_release_notify?: string
           slack_channel_security_scans_notify?: string
@@ -5726,6 +5802,9 @@ export interface components {
           documentId?: string
           id?: number
         }
+        decommissioned?: boolean
+        /** Format: date */
+        decommissioned_date?: string
         delivery_manager?: string
         description?: string
         documentId?: string
@@ -5746,6 +5825,7 @@ export interface components {
         }
         phase?: string
         portfolio?: string
+        principal_architect?: string
         product_manager?: string
         product_set?: {
           /** Format: date-time */
@@ -5816,6 +5896,8 @@ export interface components {
         slug?: string
         subproduct?: boolean
         team?: {
+          budget_code?: string
+          confluence_link?: string
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
@@ -5938,6 +6020,7 @@ export interface components {
             id?: number
           }
         }
+        technical_architect?: string
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
@@ -5983,6 +6066,8 @@ export interface components {
       meta?: Record<string, never>
     }
     Team: {
+      budget_code?: string
+      confluence_link?: string
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
@@ -5998,6 +6083,7 @@ export interface components {
       }[]
       name: string
       products?: {
+        business_owner?: string
         children?: {
           documentId?: string
           id?: number
@@ -6015,6 +6101,7 @@ export interface components {
             documentId?: string
             id?: number
           }
+          dependent_count?: number
           description?: string
           disabled_workflows?: unknown
           documentId?: string
@@ -6085,6 +6172,7 @@ export interface components {
             pingdom_cloud_platform_tf_managed?: boolean
             pingdom_paused?: boolean
             pingdom_sre_managed?: boolean
+            postgres_database_restore?: boolean
             /** Format: date-time */
             publishedAt?: string
             swagger_docs?: string
@@ -6161,6 +6249,7 @@ export interface components {
           }
           /** Format: date-time */
           publishedAt?: string
+          security_settings?: unknown
           slack_channel_nonprod_release_notify?: string
           slack_channel_prod_release_notify?: string
           slack_channel_security_scans_notify?: string
@@ -6186,6 +6275,9 @@ export interface components {
           documentId?: string
           id?: number
         }
+        decommissioned?: boolean
+        /** Format: date */
+        decommissioned_date?: string
         delivery_manager?: string
         description?: string
         documentId?: string
@@ -6206,6 +6298,7 @@ export interface components {
         }
         phase?: string
         portfolio?: string
+        principal_architect?: string
         product_manager?: string
         product_set?: {
           /** Format: date-time */
@@ -6276,6 +6369,8 @@ export interface components {
         slug?: string
         subproduct?: boolean
         team?: {
+          budget_code?: string
+          confluence_link?: string
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
@@ -6398,6 +6493,7 @@ export interface components {
             id?: number
           }
         }
+        technical_architect?: string
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
@@ -6431,6 +6527,8 @@ export interface components {
     }
     TeamRequest: {
       data: {
+        budget_code?: string
+        confluence_link?: string
         locale?: string
         localizations?: (number | string)[]
         name: string
