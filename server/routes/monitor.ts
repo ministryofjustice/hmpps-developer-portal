@@ -242,7 +242,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
       },
       {} as Record<string, HealthResult>,
     )
-    console.log('Health Queue Result:', result)
+
     res.send(JSON.stringify(Object.entries(result)))
   })
 
