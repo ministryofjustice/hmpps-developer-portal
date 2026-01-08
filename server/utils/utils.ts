@@ -17,7 +17,7 @@ type HasName = { name: string }
 type HasRepoName = { github_repo?: string }
 type HasTeamName = { team_name?: string }
 
-type HasNpm = { npm?: unknown }
+type HasNpm = { npm?: string }
 type HasIgnoreScripts = { ignore_scripts?: string | boolean }
 
 const properCase = (word: string): string =>
