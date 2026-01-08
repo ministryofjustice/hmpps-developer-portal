@@ -8,6 +8,7 @@ import {
   utcTimestampToUtcDateTime,
   mapToCanonicalEnv,
   formatTimeStamp,
+  getNpmStatus,
 } from '../utils/utils'
 import { Environment, ServiceArea } from '../data/strapiApiTypes'
 import {
@@ -61,7 +62,7 @@ export default function routes({
         product.components?.find(productComponent => productComponent.name === componentName),
       ),
     )
-
+    const npmStatus = getNpmStatus(component)
     const trivyVulnerabilityCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
     const veracodeVulnerabilityCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
 
@@ -99,6 +100,7 @@ export default function routes({
       trivyResultsLink: `/trivy-scans/${component.name}/environments/prod`,
       veracodeResultsLink: component.veracode_results_url || '/veracode',
       serviceArea: serviceAreaDetails,
+      npmStatus,
     }
 
     let alerts: DisplayAlert[] = []

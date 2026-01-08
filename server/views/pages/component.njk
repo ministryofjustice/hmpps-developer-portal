@@ -337,6 +337,16 @@
               {% endif %}
             {% endset %}
 
+            {% set npmStatusHtml %}
+              {% if component.npmStatus == true %}
+                &#9989;
+              {% elseif component.npmStatus == false %}
+                &#10060;
+              {% else %}
+                Unknown
+              {% endif %}
+            {% endset %}
+
             {% set securityConfigurationList = securityConfigurationList.concat([
               {
                 title: { text: "IP Allow List" },
@@ -345,6 +355,10 @@
               {
                 title: { text: "ModSecurity" },
                 status: { html: modsecStatusHtml }
+              },
+              {
+                title: { text: "npm ignore list enabled" },
+                status: { html: npmStatusHtml }
               }
             ]) %}
           {% endif %}
