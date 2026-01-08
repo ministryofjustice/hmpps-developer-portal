@@ -17,6 +17,9 @@ type HasName = { name: string }
 type HasRepoName = { github_repo?: string }
 type HasTeamName = { team_name?: string }
 
+type HasNpm = { npm?: string }
+type HasIgnoreScripts = { ignore_scripts?: string | boolean }
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -407,4 +410,12 @@ export function getIpAllowListAndModSecurityStatus(environments: Environment[]) 
   const ipAllowListEnabled: boolean = environments.every(env => env.ip_allow_list_enabled)
   const modSecurityEnabled: boolean = environments.every(env => env.modsecurity_enabled)
   return { status: { ipAllowListEnabled, modSecurityEnabled } }
+}
+
+export function getNpmStatus(component: Component): boolean | string {
+  const securitySettings = component.security_settings
+  if (typeof securitySettings !== 'object' || securitySettings === null) return 'unknown'
+  const { npm } = securitySettings as HasNpm
+  if (typeof npm !== 'object' || npm === null) return 'unknown'
+  return (npm as HasIgnoreScripts).ignore_scripts
 }

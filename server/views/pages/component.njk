@@ -319,9 +319,9 @@
           {% if env.name == "prod" %}
             {% set ipStatusHtml %}
               {% if env.ip_allow_list_enabled == true %}
-                &#9989;
+                {# tick symbol #} &#9989;
               {% elseif env.ip_allow_list_enabled == false %}
-                &#10060;
+                {# cross symbol #} &#10060;
               {% else %}
                 Unknown
               {% endif %}
@@ -329,9 +329,19 @@
 
             {% set modsecStatusHtml %}
               {% if env.modsecurity_enabled == true %}
-                &#9989;
+                {# tick symbol #} &#9989;
               {% elseif env.modsecurity_enabled == false %}
-                &#10060;
+                {# cross symbol #} &#10060;
+              {% else %}
+                Unknown
+              {% endif %}
+            {% endset %}
+
+            {% set npmStatusHtml %}
+              {% if component.npmStatus == true %}
+                {# tick symbol #} &#9989;
+              {% elseif component.npmStatus == false %}
+                {# cross symbol #} &#10060;
               {% else %}
                 Unknown
               {% endif %}
@@ -345,6 +355,10 @@
               {
                 title: { text: "ModSecurity" },
                 status: { html: modsecStatusHtml }
+              },
+              {
+                title: { text: "npm ignore list enabled" },
+                status: { html: npmStatusHtml }
               }
             ]) %}
           {% endif %}
