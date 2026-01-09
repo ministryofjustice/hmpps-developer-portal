@@ -43,8 +43,6 @@ export default function routes({
       id: team.t_id,
       name: team.name,
       slug: teamSlug,
-      slackChannelId: team.slack_channel_id,
-      slackChannelName: team.slack_channel_name,
       products,
     }
 
@@ -116,9 +114,6 @@ export default function routes({
         name: team.name,
         componentList,
         encodedTeamName: encodeURIComponent(team.name),
-        slackWorkspaceId: config.slack.workspaceId,
-        slackChannelId: team.slack_channel_id,
-        slackChannelName: team.slack_channel_name,
         alertSummary: teamAlertSummary,
         criticalAndHighTrivy,
         veryHighAndHighVeracode,
