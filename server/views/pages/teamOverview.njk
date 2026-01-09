@@ -22,13 +22,6 @@
 
   <h1>Team Overview for {{ team.name }}</h1>
 
-  {% if team.slackChannelId and team.slackChannelName %}
-    <h2>
-      Slack Channel:
-      <a href="slack://channel?team={{ team.slackWorkspaceId }}&id={{ team.slackChannelId }}" class="slack-icon">#{{ team.slackChannelName }}</a>
-    </h2>
-  {% endif %}
-
   {% if team.alertSummary.total > 0 %}
     {{ mojAlert({
       variant: "warning",
