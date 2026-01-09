@@ -7,6 +7,8 @@ function createSearchableProductList(td, _cellData, rowData) {
   const header = `<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Product List</span></summary>`
   const products = rowData.products
   const productItems = products
+    .slice()
+    .sort((a, b) => a.name.localeCompare(b.name))
     .map(
       product => `<li><a href="/products/${product.slug}" data-test="product-${product.id}">${product.name}</a></li>`,
     )
