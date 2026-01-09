@@ -22,18 +22,24 @@
     <tr>
       <th>Products</th>
       <td>
-        {% if serviceArea.products | length %}
+        {% if serviceArea.products | length -%}
         <ul>
-          {% for product in serviceArea.products %}
+          {% for product in serviceArea.products -%}
             <li>
               <a class="govuk-link--no-visited-state govuk-!-margin-bottom-0 govuk-!-margin-top-3 govuk-heading-s" href="/products/{{ product.slug }}" data-test="product-{{ product.id }}">{{ product.name }}</a>
               <ul>
-              {% for component in product.components %}
-                <li><a class="govuk-link--no-visited-state" href="/components/{{component.name}}" data-test="product-{{ product.id }}-component-{{ component.id }}">{{component.name}}</a></li>
-              {% endfor %}
+              {% if product.components | length -%}
+                {% for component in product.components -%}
+                  <li>
+                    <a class="govuk-link--no-visited-state" href="/components/{{component.name}}" data-test="product-{{ product.id }}-component-{{ component.id }}">
+                      {{ component.name }}{% if component?.archived %} (ARCHIVED){% endif %}
+                    </a>
+                  </li>
+                {%- endfor %}
+              {%- endif %}
               </ul>
             </li>
-          {% endfor %}
+          {%- endfor %}
         </ul>
         {% else %}
         <p data-test="no-products">None</p>

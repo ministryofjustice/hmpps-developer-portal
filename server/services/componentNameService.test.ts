@@ -41,9 +41,9 @@ describe('Component name service', () => {
 
   describe('All components', () => {
     const testComponentsResponse = [
-      { name: 'comp-3', envs: [{ name: 'prod' }] },
-      { name: 'comp-1', envs: [{ name: 'env' }] },
-      { name: 'comp-2' },
+      { name: 'comp-3', archived: false, envs: [{ name: 'prod' }] },
+      { name: 'comp-1', archived: false, envs: [{ name: 'env' }] },
+      { name: 'comp-2', archived: true },
     ] as Component[]
 
     it('should return all deployed components sorted', async () => {
@@ -71,9 +71,9 @@ describe('Component name service', () => {
         {
           documentId: 'documentid9',
           components: [
-            { documentId: 'documentid3', name: 'comp-3', envs: [{ name: 'prod' }] },
-            { documentId: 'documentid1', name: 'comp-1', envs: [{ name: 'env' }] },
-            { documentId: 'documentid3', name: 'comp-2' },
+            { documentId: 'documentid3', name: 'comp-3', envs: [{ name: 'prod' }], archived: false },
+            { documentId: 'documentid1', name: 'comp-1', envs: [{ name: 'env' }], archived: false },
+            { documentId: 'documentid3', name: 'comp-2', archived: true },
           ],
         },
       ],
@@ -97,9 +97,9 @@ describe('Component name service', () => {
       products: [
         {
           components: [
-            { documentId: 'documentid3', name: 'comp-3', envs: [{ name: 'prod' }] },
-            { documentId: 'documentid1', name: 'comp-1', envs: [{ name: 'env' }] },
-            { documentId: 'documentid3', name: 'comp-2' },
+            { documentId: 'documentid3', name: 'comp-3', envs: [{ name: 'prod' }], archived: false },
+            { documentId: 'documentid1', name: 'comp-1', envs: [{ name: 'env' }], archived: false },
+            { documentId: 'documentid3', name: 'comp-2', archived: false },
           ],
         },
       ],
@@ -125,9 +125,9 @@ describe('Component name service', () => {
         documentId: 'documentid8',
         name: 'product-1',
         components: [
-          { documentId: 'documentid3', name: 'comp-3', envs: [{ name: 'prod' }] },
-          { documentId: 'documentid1', name: 'comp-1', envs: [{ name: 'env' }] },
-          { documentId: 'documentid2', name: 'comp-2' },
+          { documentId: 'documentid3', name: 'comp-3', envs: [{ name: 'prod' }], archived: false },
+          { documentId: 'documentid1', name: 'comp-1', envs: [{ name: 'env' }], archived: false },
+          { documentId: 'documentid2', name: 'comp-2', archived: true },
         ],
       },
     ] as Product[]
@@ -148,9 +148,19 @@ describe('Component name service', () => {
         documentId: 'documentid8',
         name: 'custom-component-1',
         components: [
-          { documentId: 'documentid3', name: 'comp-3', envs: [{ documentId: 'documentid7', name: 'prod' }] },
-          { documentId: 'documentid1', name: 'comp-1', envs: [{ documentId: 'documentid9', name: 'env' }] },
-          { documentId: 'documentid3', name: 'comp-2' },
+          {
+            documentId: 'documentid3',
+            name: 'comp-3',
+            envs: [{ documentId: 'documentid7', name: 'prod' }],
+            archived: true,
+          },
+          {
+            documentId: 'documentid1',
+            name: 'comp-1',
+            envs: [{ documentId: 'documentid9', name: 'env' }],
+            archived: false,
+          },
+          { documentId: 'documentid3', name: 'comp-2', archived: true },
         ],
       },
     ] as CustomComponentView[]
@@ -167,8 +177,8 @@ describe('Component name service', () => {
 
   describe('checkComponentExists()', () => {
     const testComponentsResponse = [
-      { name: 'comp-3', envs: [{ name: 'prod' }] },
-      { name: 'comp-1', envs: [{ name: 'env' }] },
+      { name: 'comp-3', envs: [{ name: 'prod' }], archived: false },
+      { name: 'comp-1', envs: [{ name: 'env' }], archived: false },
       { name: 'comp-2' },
     ] as Component[]
 

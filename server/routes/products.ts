@@ -86,64 +86,68 @@ export default function routes({
       veracodeVulnerabilityCount: 0,
     }
     const componentsNeedingUpdates: string[] = []
-    const bannerPromises = displayProduct.components?.map(async component => {
-      try {
-        const allAlerts = await alertsService.getAlertsForComponent(component.name)
-        const activeAlerts = allAlerts
-          .filter(alert => alert.status?.state === 'active')
-          .map(alert => ({
-            componentName: component.description,
-            componentSlug: component.name,
-            alertname: alert.labels?.alertname ?? '',
-            startsAt: utcTimestampToUtcDateTime(alert.startsAt),
-            environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
-            summary: alert.annotations?.summary ?? '',
-            message: alert.annotations?.message ?? '',
-          }))
+    const bannerPromises = displayProduct.components
+      ?.filter(component => !component.archived)
+      .map(async component => {
+        try {
+          const allAlerts = await alertsService.getAlertsForComponent(component.name)
+          const activeAlerts = allAlerts
+            .filter(alert => alert.status?.state === 'active')
+            .map(alert => ({
+              componentName: component.description,
+              componentSlug: component.name,
+              alertname: alert.labels?.alertname ?? '',
+              startsAt: utcTimestampToUtcDateTime(alert.startsAt),
+              environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
+              summary: alert.annotations?.summary ?? '',
+              message: alert.annotations?.message ?? '',
+            }))
 
-        const thisComponent = await serviceCatalogueService.getComponent({ componentName: component.name })
-        const productionEnvironment = getProductionEnvironment(thisComponent.envs)
+          const thisComponent = await serviceCatalogueService.getComponent({ componentName: component.name })
+          const productionEnvironment = getProductionEnvironment(thisComponent.envs)
 
-        const trivyCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
-        const veracodeCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
+          const trivyCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
+          const veracodeCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
 
-        displayProduct.trivyVulnerabilityCount += trivyCount
-        displayProduct.veracodeVulnerabilityCount += veracodeCount
+          displayProduct.trivyVulnerabilityCount += trivyCount
+          displayProduct.veracodeVulnerabilityCount += veracodeCount
 
-        const isKotlin = (component.language || '') === 'Kotlin'
-        const { kotlinOnly } = config.recommendedVersions
+          const isKotlin = (component.language || '') === 'Kotlin'
+          const { kotlinOnly } = config.recommendedVersions
 
-        // Dependency comparison for this component
-        if (!kotlinOnly || isKotlin) {
-          try {
-            const recommended = await recommendedVersionsService.getRecommendedVersions()
-            const comparison = await compareComponentsDependencies([component], recommended)
+          // Dependency comparison for this component
+          if (!kotlinOnly || isKotlin) {
+            try {
+              const recommended = await recommendedVersionsService.getRecommendedVersions()
+              const comparison = await compareComponentsDependencies([component], recommended)
 
-            const { totalItems, aligned, needsUpgrade, aboveBaseline, missing } = comparison.summary
-            logger.debug(
-              `[DependencyComparison] component=${component.name} source=${comparison.recommendedSource} items=${totalItems} aligned=${aligned} needsUpgrade=${needsUpgrade} aboveBaseline=${aboveBaseline} missing=${missing}`,
-            )
+              const { totalItems, aligned, needsUpgrade, aboveBaseline, missing } = comparison.summary
+              logger.debug(
+                `[DependencyComparison] component=${component.name} source=${comparison.recommendedSource} items=${totalItems} aligned=${aligned} needsUpgrade=${needsUpgrade} aboveBaseline=${aboveBaseline} missing=${missing}`,
+              )
 
-            const relevantItems = comparison.items.filter(
-              item =>
-                item.current !== '-' &&
-                !!item.current &&
-                (item.status === 'needs-attention' || item.status === 'needs-upgrade'),
-            )
+              const relevantItems = comparison.items.filter(
+                item =>
+                  item.current !== '-' &&
+                  !!item.current &&
+                  (item.status === 'needs-attention' || item.status === 'needs-upgrade'),
+              )
 
-            if (relevantItems.length > 0) {
-              componentsNeedingUpdates.push(component.name)
+              if (relevantItems.length > 0) {
+                componentsNeedingUpdates.push(component.name)
+              }
+            } catch (e) {
+              logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(e)}`)
             }
-          } catch (e) {
-            logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(e)}`)
           }
+          return { activeAlerts, componentsNeedingUpdates }
+        } catch (err) {
+          logger.error(
+            `Error fetching alerts for ${component.name}: ${err instanceof Error ? err.message : String(err)}`,
+          )
+          return { activeAlerts: [], componentsNeedingUpdates: [] }
         }
-        return { activeAlerts, componentsNeedingUpdates }
-      } catch (err) {
-        logger.error(`Error fetching alerts for ${component.name}: ${err instanceof Error ? err.message : String(err)}`)
-        return { activeAlerts: [], componentsNeedingUpdates: [] }
-      }
-    })
+      })
 
     const productResults = await Promise.all(bannerPromises)
     displayProduct.alerts = productResults

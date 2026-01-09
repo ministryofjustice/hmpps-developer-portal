@@ -228,6 +228,7 @@ export default class StrapiApiClient {
     const populateList = ['products']
 
     if (withProducts) {
+      populateList.push('products.components')
       populateList.push('products.components.envs')
     }
     const populate = createStrapiQuery({ populate: populateList })

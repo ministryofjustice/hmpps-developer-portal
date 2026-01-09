@@ -126,8 +126,9 @@ export default function routes({
     // Dependency comparison for this component
     const comparison = await getDependencyComparison(component, recommendedVersionsService, displayComponent)
     const upgradeNeeded =
-      component.language === 'Kotlin' && (comparison.summary.needsAttention > 0 || comparison.summary.needsUpgrade > 0)
-
+      component.language === 'Kotlin' &&
+      (comparison.summary.needsAttention > 0 || comparison.summary.needsUpgrade > 0) &&
+      !component.archived
     return res.render('pages/component', { component: displayComponent, comparison, upgradeNeeded, hasAlerts })
   })
 

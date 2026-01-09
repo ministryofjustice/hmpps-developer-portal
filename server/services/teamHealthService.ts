@@ -148,7 +148,7 @@ export default class TeamHealthService {
     const versionDetailsByComponent = await this.getVersionDetailsByComponent()
     const allComponents = await this.serviceCatalogueService.getComponents([], false, true)
     const components = allComponents
-      .filter(component => componentNames.includes(component.name))
+      .filter(component => componentNames.includes(component.name) && !component.archived)
       .map(component => {
         const driftData = this.toComponentView(component, versionDetailsByComponent[component.name], now || new Date())
         return driftData
