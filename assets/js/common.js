@@ -10,6 +10,7 @@ function createSearchableProductList(td, _cellData, rowData) {
     .map(
       product => `<li><a href="/products/${product.slug}" data-test="product-${product.id}">${product.name}</a></li>`,
     )
+    .sort()
     .join('\n')
   if (Array.isArray(products) && products.length > 0) {
     return `<ul>${productItems}</ul>`
