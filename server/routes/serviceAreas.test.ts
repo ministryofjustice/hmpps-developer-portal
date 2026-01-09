@@ -37,7 +37,7 @@ const testServiceArea = {
     {
       id: 23,
       name: 'productName',
-      components: [{ id: 1, name: 'component-1' }],
+      components: [{ id: 1, name: 'component-1', archived: false }],
     },
   ],
 } as ServiceArea
@@ -78,6 +78,7 @@ describe('/service-areas', () => {
         .expect('Content-Type', /html/)
         .expect(res => {
           const $ = cheerio.load(res.text)
+
           expect($('[data-test="detail-page-title"]').text()).toContain(testServiceArea.name)
           expect($('[data-test="service-area-id"]').text()).toBe(testServiceArea.sa_id)
           expect($('[data-test="service-area-owner"]').text()).toBe(testServiceArea.owner)
@@ -86,7 +87,7 @@ describe('/service-areas', () => {
           const product = testServiceArea.products[0]
           const component = product.components[0]
           expect($(`[data-test="product-${product.id}"]`).text()).toBe(product.name)
-          expect($(`[data-test="product-${product.id}-component-${component.id}"]`).text()).toBe(component.name)
+          expect($(`[data-test="product-${product.id}-component-${component.id}"]`).text().trim()).toBe(component.name)
         })
     })
 

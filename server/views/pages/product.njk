@@ -200,7 +200,11 @@
         {% if product.components | length %}
         <ul>
           {% for component in product.components %}
-            <li><a data-test="component-link" href="/components/{{ component.name }}">{{ component.name }}</a></li>
+            <li>
+              <a data-test="component-link" href="/components/{{ component.name }}">
+                {{ component.name }}{% if component.archived == true %} (ARCHIVED){% endif %}
+              </a>
+            </li>
           {% endfor %}
         </ul>
         {% else %}
