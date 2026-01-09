@@ -8,7 +8,6 @@ import {
   utcTimestampToUtcDateTime,
 } from '../utils/utils'
 import logger from '../../logger'
-import config from '../config'
 import { DependencyComparisonResult, getDependencyComparison } from '../services/dependencyComparison'
 import { IpAllowListAndModSecurityStatus } from '../data/modelTypes'
 
