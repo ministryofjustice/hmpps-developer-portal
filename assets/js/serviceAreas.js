@@ -14,7 +14,21 @@ jQuery(function () {
     },
     {
       data: 'products',
-      render: createSearchableProductList,
+      createdCell: function (td, _cellData, rowData) {
+        const productsList = createSearchableProductList(td, _cellData, rowData)
+        const detailsContent = `<details class="govuk-details">
+            <summary class="govuk-details__summary">
+              <span class="govuk-details__summary-text">
+                Product List
+              </span>
+            </summary>
+            <div class="govuk-details__text">
+              ${productsList}
+            </div>
+          </details>`
+
+        $(td).html(productsList.startsWith('<ul>') ? detailsContent : productsList)
+      },
     },
   ]
 
