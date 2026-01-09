@@ -19,7 +19,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const displayComponents = components
       .filter(component => {
-        if (!component.archived && component.versions && component.versions[dependencyType]) {
+        if (!component.archived && component?.versions?.[dependencyType]) {
           return component.versions[dependencyType][dependencyName]
         }
 

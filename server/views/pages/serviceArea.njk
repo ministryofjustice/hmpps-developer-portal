@@ -32,7 +32,7 @@
                 {% for component in product.components -%}
                   <li>
                     <a class="govuk-link--no-visited-state" href="/components/{{component.name}}" data-test="product-{{ product.id }}-component-{{ component.id }}">
-                      {{ component.name }}{% if component?.archived %} (ARCHIVED){% endif %}
+                      {{ component.name }}{% if component.archived %} (ARCHIVED){% endif %}
                     </a>
                   </li>
                 {%- endfor %}

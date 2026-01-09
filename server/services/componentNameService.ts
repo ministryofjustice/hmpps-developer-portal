@@ -10,7 +10,7 @@ export default class ComponentNameService {
     const rawComponents = componentData.sort(sortByName)
 
     const components = rawComponents
-      .filter(component => component.envs?.length && component.archived === false)
+      .filter(component => component.envs?.length && !component.archived)
       .map(component => component.name)
 
     return components
