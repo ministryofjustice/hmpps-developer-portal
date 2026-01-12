@@ -135,7 +135,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   router.get('/:componentName/environments/:environmentName', async (req, res) => {
     const name = req.params.componentName
     let scan
-    if (req.params.componentName.startsWith('hmpps-base-container-images')) {
+    if (name.startsWith('hmpps-base-container-images')) {
       scan = await serviceCatalogueService.getTrivyScan({ name })
     } else {
       const componentName = getComponentName(req)
