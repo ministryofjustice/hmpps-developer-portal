@@ -136,9 +136,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const name = req.params.componentName
     let scan
     if (req.params.componentName.startsWith('hmpps-base-container-images')) {
-      console.log('Fetching data for {name}')
       scan = await serviceCatalogueService.getTrivyScan({ name })
-      console.log(scan)
     } else {
       const componentName = getComponentName(req)
       const environmentName = getEnvironmentName(req)
@@ -156,7 +154,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const summaryTable = createSummaryTable(summary)
     const vulnerabilitiesResultsTable = createVulnerabilitiesResultsTable(scanResults)
     const secretResultTable = createSecretResultsTable(scanResults)
-    console.log(scan)
     return res.render('pages/trivyScan', {
       trivyScan: scan,
       scanDate,
