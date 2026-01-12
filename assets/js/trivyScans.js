@@ -79,9 +79,11 @@ jQuery(function () {
       name: 'name',
       createdCell: function (td, _cellData, rowData) {
         const componentName = cleanColumnOutput(rowData.name || 'N/A')
-        $(td).html(`
-          <a class="govuk-link--no-visited-state" href="/components/${componentName}">${componentName}</a>
-        `)
+        $(td).html(
+          componentName.startsWith('hmpps-base-container-images')
+            ? componentName
+            : `<a class="govuk-link--no-visited-state" href="/components/${componentName}">${componentName}</a>`,
+        )
       },
     },
     {

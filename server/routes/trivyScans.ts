@@ -133,14 +133,20 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   router.get('/:componentName/environments/:environmentName', async (req, res) => {
-    const componentName = getComponentName(req)
-    const environmentName = getEnvironmentName(req)
-    const component = await serviceCatalogueService.getComponent({ componentName })
-    const filteredEnvironment =
-      environmentName !== 'unknown'
-        ? component.envs?.find(environment => environment.name === environmentName)
-        : component.envs?.[0]
-    const scan = filteredEnvironment.trivy_scan
+    const { componentName } = req.params
+    let scan
+    if (componentName.startsWith('hmpps-base-container-images')) {
+      scan = await serviceCatalogueService.getTrivyScan({ name: componentName })
+    } else {
+      const formattedComponentName = getComponentName(req)
+      const environmentName = getEnvironmentName(req)
+      const component = await serviceCatalogueService.getComponent({ componentName: formattedComponentName })
+      const filteredEnvironment =
+        environmentName !== 'unknown'
+          ? component.envs?.find(environment => environment.name === environmentName)
+          : component.envs?.[0]
+      scan = filteredEnvironment.trivy_scan
+    }
     const summary = scan.scan_summary?.summary
     const scanResults = scan.scan_summary?.scan_result
     const scanDate = utcTimestampToUtcDateTime(scan.trivy_scan_timestamp)
@@ -148,7 +154,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const summaryTable = createSummaryTable(summary)
     const vulnerabilitiesResultsTable = createVulnerabilitiesResultsTable(scanResults)
     const secretResultTable = createSecretResultsTable(scanResults)
-
     return res.render('pages/trivyScan', {
       trivyScan: scan,
       scanDate,
