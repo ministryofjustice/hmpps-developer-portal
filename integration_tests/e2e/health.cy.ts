@@ -10,6 +10,10 @@ context('Healthcheck', () => {
       cy.request('/health').its('body.status').should('equal', 'UP')
     })
 
+    it('Health check page is visible and includes health of all services', () => {
+      cy.request('/health').its('body.components').then(Object.keys).should('have.length', 2)
+    })
+
     it('Health check page is visible and all services are UP', () => {
       cy.request('/health').its('body.components.serviceCatalogue.status').should('equal', 'UP')
       cy.request('/health').its('body.components.alertManager.status').should('equal', 'UP')
