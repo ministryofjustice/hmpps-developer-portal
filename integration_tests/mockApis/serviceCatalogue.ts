@@ -1,16 +1,18 @@
 import { stubFor } from './wiremock'
 
-const ping = () =>
+const ping = (status = 200) =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/',
+      urlPattern: '/serviceCatalogue/',
     },
     response: {
-      status: 204,
+      status,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: { status: 'UP' },
     },
   })
 
 export default {
-  stubServiceCataloguePing: ping,
+  stubPing: ping,
 }
