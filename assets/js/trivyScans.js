@@ -340,10 +340,8 @@ jQuery(function () {
         return selectedEnvironments.includes(rowEnvironment)
       })
     }
-    console.log('Pre-fileter data in tabke:', table.rows().data().toArray())
     const scans = table.rows().data().toArray()
     const filteredScans = filterLatestRows(scans)
-    console.log('Post-filter data in table:', filteredScans)
     table.clear()
     table.rows.add(filteredScans)
     table.draw(false)
@@ -457,7 +455,6 @@ jQuery(function () {
   }
   function filterLatestRows(scans) {
     const groupedScans = new Map()
-    console.log(groupedScans)
     scans.forEach(scan => {
       const key = `${scan.name}-${scan.environment}`
       const currentTimestamp = new Date(scan.trivy_scan_timestamp).getTime()
