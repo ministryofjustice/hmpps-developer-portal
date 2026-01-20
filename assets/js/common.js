@@ -102,6 +102,9 @@ function createTable({
     data,
     columns,
     createdRow,
+    stateSave: true,
+    // set to save state for 5 minutes
+    duration: 300,
     initComplete: function () {
       if (columnDropdowns) {
         this.api()
