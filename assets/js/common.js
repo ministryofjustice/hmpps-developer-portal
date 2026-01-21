@@ -142,6 +142,7 @@ function createTable({
             // Create input element
             const input = document.createElement('input')
             input.placeholder = title
+            input.value = column.search()
             column.footer().replaceChildren(input)
 
             // Event listener for user input
