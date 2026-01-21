@@ -16,7 +16,7 @@ jQuery(function () {
       data: 'products',
       render: function (data, type, row) {
         const products = Array.isArray(data) ? data : []
-        const searchValue = products.map(p => p.name).join(' ')
+        const searchValue = products.map(product => product.name).join(' ')
 
         if (type === 'filter') {
           return searchValue
