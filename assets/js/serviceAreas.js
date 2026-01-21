@@ -14,20 +14,36 @@ jQuery(function () {
     },
     {
       data: 'products',
-      createdCell: function (td, _cellData, rowData) {
-        const productsList = createSearchableProductList(td, _cellData, rowData)
-        const detailsContent = `<details class="govuk-details">
-            <summary class="govuk-details__summary">
-              <span class="govuk-details__summary-text">
-                Product List
-              </span>
-            </summary>
-            <div class="govuk-details__text">
-              ${productsList}
-            </div>
-          </details>`
+      render: function (data, type, row) {
+        const products = Array.isArray(data) ? data : []
+        const searchValue = products.map(p => p.name).join(' ')
 
-        $(td).html(productsList.startsWith('<ul>') ? detailsContent : productsList)
+        if (type === 'filter') {
+          return searchValue
+        }
+
+        if (type === 'display') {
+          const productsList = createSearchableProductList(products)
+
+          // Only wraps in details component if there's a list, otherwise shows "No Products"
+          if (productsList.startsWith('<ul>')) {
+            return `
+              <details class="govuk-details">
+                <summary class="govuk-details__summary">
+                  <span class="govuk-details__summary-text">
+                    Product List
+                  </span>
+                </summary>
+                <div class="govuk-details__text">
+                  ${productsList}
+                </div>
+              </details>
+            `
+          }
+          return productsList
+        }
+
+        return searchValue
       },
     },
   ]
