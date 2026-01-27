@@ -18,32 +18,29 @@ jQuery(function () {
         const products = Array.isArray(data) ? data : []
         const searchValue = products.map(product => product.name).join(' ')
 
-        if (type === 'filter') {
+        if (type !== 'display') {
           return searchValue
         }
 
-        if (type === 'display') {
-          const productsList = createSearchableProductList(products)
+        const productsList = createSearchableProductList(products)
 
-          // Only wraps in details component if there's a list, otherwise shows "No Products"
-          if (productsList.startsWith('<ul>')) {
-            return `
-              <details class="govuk-details">
-                <summary class="govuk-details__summary">
-                  <span class="govuk-details__summary-text">
-                    Product List
-                  </span>
-                </summary>
-                <div class="govuk-details__text">
-                  ${productsList}
-                </div>
-              </details>
-            `
-          }
-          return productsList
+        // Only wraps in details component if there's a list, otherwise shows "No Products"
+        if (productsList.startsWith('<ul>')) {
+          return `
+            <details class="govuk-details">
+              <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                  Product List
+                </span>
+              </summary>
+              <div class="govuk-details__text">
+                ${productsList}
+              </div>
+            </details>
+          `
         }
 
-        return searchValue
+        return productsList
       },
     },
   ]
