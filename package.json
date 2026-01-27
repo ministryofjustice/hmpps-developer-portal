@@ -63,7 +63,7 @@
     "govuk-frontend": "^5.14.0",
     "helmet": "^8.1.0",
     "http-errors": "^2.0.1",
-    "jquery": "^3.7.1",
+    "jquery": "^4.0.0",
     "js-base64": "^3.7.8",
     "jszip": "3.10.1",
     "mermaid": "^11.12.2",
