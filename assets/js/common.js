@@ -102,6 +102,9 @@ function createTable({
     data,
     columns,
     createdRow,
+    stateSave: true,
+    // set to save state for 5 minutes
+    duration: 300,
     initComplete: function () {
       if (columnDropdowns) {
         this.api()
@@ -139,6 +142,7 @@ function createTable({
             // Create input element
             const input = document.createElement('input')
             input.placeholder = title
+            input.value = column.search()
             column.footer().replaceChildren(input)
 
             // Event listener for user input

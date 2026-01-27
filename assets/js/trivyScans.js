@@ -340,6 +340,10 @@ jQuery(function () {
         return selectedEnvironments.includes(rowEnvironment)
       })
     }
+    const scans = table.rows().data().toArray()
+    const filteredScans = filterLatestRows(scans)
+    table.clear()
+    table.rows.add(filteredScans)
     table.draw(false)
   }
 
@@ -448,6 +452,20 @@ jQuery(function () {
         checkbox.checked = checkbox.id === prodCheckBoxId
       })
     }
+  }
+  function filterLatestRows(scans) {
+    const groupedScans = new Map()
+    scans.forEach(scan => {
+      const key = `${scan.name}-${scan.environment}`
+      const currentTimestamp = new Date(scan.trivy_scan_timestamp).getTime()
+
+      if (!groupedScans.has(key) || currentTimestamp > new Date(groupedScans.get(key).trivy_scan_timestamp).getTime()) {
+        groupedScans.set(key, scan) // Keep only the latest scan
+      }
+    })
+
+    // Convert the grouped scans back into an array
+    return Array.from(groupedScans.values())
   }
 })
 
