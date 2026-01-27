@@ -8,7 +8,9 @@ jQuery(function () {
     },
     {
       data: 'products',
-      render: createSearchableProductList,
+      render: function (data, type, row) {
+        return createSearchableProductList(data)
+      },
     },
     {
       data: 'slug',
