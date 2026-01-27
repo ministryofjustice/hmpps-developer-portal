@@ -59,7 +59,7 @@
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.19",
     "express": "^5.2.1",
-    "express-session": "^1.18.2",
+    "express-session": "^1.19.0",
     "govuk-frontend": "^5.14.0",
     "helmet": "^8.1.0",
     "http-errors": "^2.0.1",
