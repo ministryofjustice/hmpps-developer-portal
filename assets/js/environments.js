@@ -153,7 +153,7 @@ jQuery(function () {
       data: 'ip_allow_list_enabled',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(rowData.ip_allow_list_enabled)
+        $(td).html(rowData.url ? rowData.ip_allow_list_enabled : 'N/A')
       },
       title: 'IP Allow List Enabled',
     },
