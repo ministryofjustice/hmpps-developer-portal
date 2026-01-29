@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^8.0.0",
-    "@ministryofjustice/hmpps-monitoring": "^1.0.0",
+    "@ministryofjustice/hmpps-monitoring": "1.0.1",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
     "body-parser": "^2.2.2",
@@ -95,7 +95,7 @@
     "@types/supertest": "^6.0.3",
     "audit-ci": "^7.1.0",
     "axe-core": "^4.11.1",
-    "cheerio": "^1.1.2",
+    "cheerio": "1.2.0",
     "concurrently": "^9.2.1",
     "cookie-session": "^2.1.1",
     "cypress": "^15.9.0",
@@ -115,5 +115,10 @@
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "mermaid": {
+      "lodash-es": "4.17.23"
+    }
   }
 }
