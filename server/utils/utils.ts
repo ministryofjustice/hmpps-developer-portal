@@ -45,7 +45,7 @@ export const initialiseName = (fullName?: string): string | null => {
 }
 
 export const getNumericId = (req: Request, paramName: string): number => {
-  const id = req.params[paramName]
+  const id = req.params[paramName] as string
 
   if (!Number.isInteger(Number.parseInt(id, 10))) {
     throw new BadRequest()
@@ -57,11 +57,13 @@ export const getNumericId = (req: Request, paramName: string): number => {
 export const getMonitorType = (req: Request): string => {
   const { monitorType } = req.params
 
-  return ['product', 'team', 'service-area', 'custom-component-view'].includes(monitorType) ? monitorType : 'all'
+  return ['product', 'team', 'service-area', 'custom-component-view'].includes(monitorType as string)
+    ? (monitorType as string)
+    : 'all'
 }
 
 export const getMonitorName = (req: Request): string => {
-  const monitorName = req.params?.monitorName || ''
+  const monitorName = (req.params?.monitorName as string) || ''
 
   return monitorName.replace(/[^-a-z0-9]/g, '')
 }
@@ -102,24 +104,24 @@ export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasT
 }
 
 export const getFormattedName = (req: Request, param: string): string => {
-  const paramName = req.params[param]
+  const paramName = req.params[param] as string
   return paramName.replace(/[^-a-zA-Z0-9_.]/g, '')
 }
 
 export const getDocumentID = (req: Request, param: string): string => {
-  return req.params[param]
+  return req.params[param] as string
 }
 
 export const getComponentName = (req: Request): string => {
   const { componentName } = req.params
 
-  return componentName.replace(/[^-a-zA-Z0-9_.]/g, '')
+  return (componentName as string).replace(/[^-a-zA-Z0-9_.]/g, '')
 }
 
 export const getEnvironmentName = (req: Request): string => {
   const { environmentName } = req.params
 
-  return environmentName.replace(/[^-a-z0-9_]/g, '')
+  return (environmentName as string).replace(/[^-a-z0-9_]/g, '')
 }
 
 // Environment types that match our existing type definition
@@ -194,13 +196,13 @@ export async function addTeamToTrivyScan(teams: Team[], trivyScan: TrivyScanType
 }
 
 export const getDependencyName = (req: Request): string => {
-  const dependencyName = req.params.dependencyName || ''
+  const dependencyName = (req.params.dependencyName as string) || ''
   // replace ~ with / so that actions still work
   return dependencyName.replace(/[^-a-z0-9_.~]/gi, '').replace(/~/g, '/')
 }
 
 export const getDependencyType = (req: Request): string => {
-  const dependencyType = req.params.dependencyType || ''
+  const dependencyType = (req.params.dependencyType as string) || ''
 
   return dependencyType.replace(/[^-a-z0-9_]/g, '')
 }

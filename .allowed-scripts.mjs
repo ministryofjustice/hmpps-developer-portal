@@ -3,7 +3,7 @@ import { configureAllowedScripts } from '@ministryofjustice/hmpps-npm-script-all
 export default configureAllowedScripts({
   allowlist: {
     // Needed by esbuild for watching files during development
-    'node_modules/@parcel/watcher@2.5.1': 'ALLOW',
+    'node_modules/@parcel/watcher@2.5.6': 'ALLOW',
     // Needed by cypress for running tests
     'node_modules/cypress@15.9.0': 'ALLOW',
     // Provides native integration, supporting ability to write dtrace probes for bunya
