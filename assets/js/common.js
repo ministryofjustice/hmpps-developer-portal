@@ -3,21 +3,20 @@ function cleanColumnOutput(data) {
   return data.replace(unsafeOutputPattern, '')
 }
 
-function createSearchableProductList(td, _cellData, rowData) {
-  const header = `<details class="govuk-details"><summary class="govuk-details__summary"><span class="govuk-details__summary-text">Product List</span></summary>`
-  const products = rowData.products
+function createSearchableProductList(products) {
+  if (!Array.isArray(products) || products.length === 0) {
+    return '<p class="no-products">No Products</p>'
+  }
+
   const productItems = products
     .slice()
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(
       product => `<li><a href="/products/${product.slug}" data-test="product-${product.id}">${product.name}</a></li>`,
     )
-    .sort()
     .join('\n')
-  if (Array.isArray(products) && products.length > 0) {
-    return `<ul>${productItems}</ul>`
-  }
-  return '<p class="no-products">No Products</p>'
+
+  return `<ul>${productItems}</ul>`
 }
 
 function createTable({
@@ -102,6 +101,9 @@ function createTable({
     data,
     columns,
     createdRow,
+    stateSave: true,
+    // set to save state for 5 minutes
+    duration: 300,
     initComplete: function () {
       if (columnDropdowns) {
         this.api()
@@ -139,6 +141,7 @@ function createTable({
             // Create input element
             const input = document.createElement('input')
             input.placeholder = title
+            input.value = column.search()
             column.footer().replaceChildren(input)
 
             // Event listener for user input
