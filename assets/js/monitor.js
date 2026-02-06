@@ -190,7 +190,13 @@ async function populateComponentTable(monitorType, monitorTypeId, monitorSlug) {
   }
 
   function sortEnvironments(environmentA, environmentB) {
-    return environmentB.dependentCount - environmentA.dependentCount
+    if (environmentA.componentName < environmentB.componentName) {
+      return -1
+    } else if (environmentA.componentName > environmentB.componentName) {
+      return 1
+    }
+
+    return 0
   }
 
   try {
