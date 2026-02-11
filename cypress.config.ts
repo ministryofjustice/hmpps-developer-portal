@@ -12,7 +12,6 @@ export default defineConfig({
   reporterOptions: {
     configFile: 'reporter-config.json',
   },
-  videoUploadOnPasses: false,
   taskTimeout: 60000,
   e2e: {
     // We've imported your old cypress plugins here.
@@ -20,8 +19,6 @@ export default defineConfig({
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
-        ...serviceCatalogue,
-        ...alertManager,
 
         // Log message to console
         log: (message: string) => {
@@ -36,6 +33,9 @@ export default defineConfig({
           console.table(violationData)
           return null
         },
+
+        stubServiceCataloguePing: status => serviceCatalogue.stubPing(status),
+        stubAlertManagerPing: status => alertManager.stubPing(status),
       })
     },
 
