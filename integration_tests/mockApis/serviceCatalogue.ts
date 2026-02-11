@@ -1,6 +1,6 @@
 import { stubFor } from './wiremock'
 
-const ping = (status = 200) =>
+const ping = (status = 204) =>
   stubFor({
     request: {
       method: 'GET',

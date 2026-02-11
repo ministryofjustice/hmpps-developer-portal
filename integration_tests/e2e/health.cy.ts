@@ -2,8 +2,8 @@ context('Healthcheck', () => {
   context('All healthy', () => {
     beforeEach(() => {
       cy.task('reset')
-      cy.task('stubServiceCataloguePing')
-      cy.task('stubAlertManagerPing')
+      cy.task('stubServiceCataloguePing', 204)
+      cy.task('stubAlertManagerPing', 200)
     })
 
     it('Health check page is visible and UP', () => {
