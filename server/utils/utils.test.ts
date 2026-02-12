@@ -497,12 +497,12 @@ describe('Utils', () => {
     })
   })
 
-  describe('addTeamToTrivyScan', () => {
+  describe('addTeamAndPortfolioToTrivyScan', () => {
     it('adds a team to Trivy scan', async () => {
       const teams = [{ name: 'team name', products: [{ components: [{ name: 'example name' }] }] }] as Team[]
       const trivyScan = [{ name: 'example name', team: 'team name' }] as TrivyScanType[]
 
-      const results = await utils.addTeamToTrivyScan(teams, trivyScan)
+      const results = await utils.addTeamAndPortfolioToTrivyScan(teams, trivyScan)
 
       expect(results[0].team).toBe('team name')
     })
