@@ -418,6 +418,16 @@ describe('Utils', () => {
     })
   })
 
+  describe('findPortfolioForTeam', () => {
+    it('should return the correct portfolio for a team', () => {
+      const teams = [{ name: 'team name', products: [{ portfolio: 'prisons' }] }] as Team[]
+
+      const result = utils.findPortfolioForTeam(teams)
+
+      expect(result[0].portfolio).toBe('prisons')
+    })
+  })
+
   describe('findProductMatch', () => {
     it('should return the formatted product name matching the product', () => {
       const products = [{ name: 'Example Product', components: [{ name: 'example name' }] }] as Product[]
