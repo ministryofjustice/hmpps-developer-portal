@@ -20,6 +20,11 @@ type HasTeamName = { team_name?: string }
 type HasNpm = { npm?: string }
 type HasIgnoreScripts = { ignore_scripts?: string | boolean }
 
+interface PortfolioForTeam {
+  teamName: string
+  portfolio?: string
+}
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
 
@@ -154,6 +159,13 @@ export function findTeamMatch(teams: Team[], name: string) {
   )
 }
 
+export function findPortfolioForTeam(teams: Team[]): PortfolioForTeam[] {
+  return teams.map(team => {
+    const portfolio = team.products?.find(product => product.portfolio !== undefined)?.portfolio
+    return { teamName: team.name, portfolio }
+  })
+}
+
 export function findProductMatch(products: Product[], name: string) {
   const formattedName = formatMonitorName(name)
   return products.find(product =>
@@ -183,14 +195,16 @@ export function getComponentsForTeam(team: Team): Component[] {
   return components
 }
 
-export async function addTeamToTrivyScan(teams: Team[], trivyScan: TrivyScanType[]) {
+export async function addTeamAndPortfolioToTrivyScan(teams: Team[], trivyScan: TrivyScanType[]) {
   return trivyScan.map(scan => {
     const scanMatch = findTeamMatch(teams, scan.name)
-
+    const teamPortfolio = findPortfolioForTeam(teams)
     const updatedScan = { ...scan }
 
     if (scanMatch) updatedScan.team = scanMatch.name
 
+    const addPortfolio = teamPortfolio.find(portfolio => portfolio.teamName === scanMatch?.name)
+    updatedScan.portfolio = addPortfolio?.portfolio
     return updatedScan
   })
 }
