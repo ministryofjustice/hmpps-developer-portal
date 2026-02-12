@@ -84,6 +84,7 @@ export default function routes({
       alerts: [] as DisplayAlert[],
       trivyVulnerabilityCount: 0,
       veracodeVulnerabilityCount: 0,
+      decommissioned: product.decommissioned,
     }
     const componentsNeedingUpdates: string[] = []
     const bannerPromises = displayProduct.components

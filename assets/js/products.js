@@ -58,6 +58,13 @@ jQuery(function () {
         $(td).html(`${rowData.lead_developer}`)
       },
     },
+    {
+      data: 'decommissioned',
+      createdCell: function (td, _cellData, rowData) {
+        decommissioned = rowData.decommissioned ? 'Yes' : 'No'
+        $(td).html(`${decommissioned}`)
+      },
+    },
   ]
 
   createTable({
