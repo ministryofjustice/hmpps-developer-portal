@@ -23,12 +23,14 @@ export default class ServiceCatalogueService {
   async getProducts({
     withEnvironments = false,
     withComponents = false,
+    isDecommissioned = false,
   }: {
     withEnvironments?: boolean
     withComponents?: boolean
+    isDecommissioned?: boolean
   }): Promise<Product[]> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const productData = await strapiApiClient.getProducts({ withEnvironments, withComponents })
+    const productData = await strapiApiClient.getProducts({ withEnvironments, withComponents, isDecommissioned })
 
     const products = productData.sort(sortByName)
     return products

@@ -8,7 +8,7 @@
 
 {% block content %}
 {{ breadCrumb(product.name, [{title: "Products", href: "/products"}]) }}
-<h1 id="detailPageTitle">{{ product.name }}</h1>
+<h1 id="detailPageTitle">{{ product.name }}{% if product.decommissioned == true %} (Decommissioned){% endif %}</h1>
 
 {% macro alertMessage(alert) %}
   {{ govukDetails({
@@ -144,6 +144,16 @@
       <th>Phase</th>
       <td>{{ product.phase }}</td>
     </tr>
+    {% if product.decommissioned == true %}
+    <tr>
+      <th>Decommissioned</th>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <th>Decommissioned Date</th>
+      <td>{{ product.decommissionDate }}</td>
+    </tr>
+    {% endif %}
     <tr>
       <th>Team</th>
       <td>
