@@ -8,7 +8,13 @@
 {{ breadCrumb("Products", []) }}
 
 <h1>Products</h1>
-
+<p>
+  {% if decommissioned %}
+    All decommissioned products are displayed on this page. Click <a href="/products">here</a> for live products.
+  {% else %}
+    All live products are displayed on this page. Click <a href="/products?decommissioned=true">here</a> for decommissioned products.
+  {% endif %}
+</p>
 <table id="productsTable" class="stripe">
   <thead>
     <tr>
@@ -22,6 +28,7 @@
       <th>Service Area</th>
       <th>Lead Developer</th>
       <th>Decommissioned</th>
+      <th>Decommissioned date</th>
     </tr>
   </thead>
   <tfoot>
@@ -36,6 +43,7 @@
       <th>Service Area</th>
       <th>Lead Developer</th>
       <th>Decommissioned</th>
+      <th>Decommissioned date</th>
     </tr>
   </tfoot>
 </table>

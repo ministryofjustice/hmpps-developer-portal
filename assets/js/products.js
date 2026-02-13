@@ -1,4 +1,11 @@
 jQuery(function () {
+  const currentUrl = window.location.href
+  const urlParams = new URLSearchParams(window.location.search)
+  const decommissioned = urlParams.get('decommissioned')
+  const isDecommissioned = new URLSearchParams(window.location.search).get('decommissioned') === 'true'
+  console.log(isDecommissioned)
+  const ajaxUrl = decommissioned ? `/products/data?decommissioned=${decommissioned}` : '/products/data'
+
   const columns = [
     {
       data: 'p_id',
@@ -60,16 +67,27 @@ jQuery(function () {
     },
     {
       data: 'decommissioned',
+      visible: isDecommissioned,
       createdCell: function (td, _cellData, rowData) {
-        decommissioned = rowData.decommissioned ? 'Yes' : 'No'
-        $(td).html(`${decommissioned}`)
+        $(td).html(`${rowData.decommissioned ? 'Yes' : 'No'}`)
+      },
+    },
+    {
+      data: 'decommissioned_date',
+      visible: isDecommissioned,
+      createdCell: function (td, _cellData, rowData) {
+        if (rowData.decommissioned_date) {
+          $(td).text(new Date(rowData.decommissioned_date).toLocaleDateString())
+        } else {
+          $(td).text(' ')
+        }
       },
     },
   ]
 
   createTable({
     id: 'productsTable',
-    ajaxUrl: '/products/data',
+    ajaxUrl: ajaxUrl,
     orderColumn: 0,
     orderType: 'asc',
     columns,

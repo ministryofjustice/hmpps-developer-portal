@@ -1,3 +1,4 @@
+import { is } from 'cheerio/dist/commonjs/api/traversing'
 import { RdsEntry } from '../@types'
 import {
   Component,
@@ -77,11 +78,13 @@ describe('Strapi service', () => {
           documentId: 'documentid1',
           name: 'Product 1',
           p_id: '1',
+          decommissioned: false,
         },
         {
           documentId: 'documentid3',
           name: 'Product 2',
           p_id: '2',
+          decommissioned: false,
         },
       ] as Product[]
 
@@ -94,6 +97,7 @@ describe('Strapi service', () => {
         expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
           withEnvironments: false,
           withComponents: false,
+          isDecommissioned: false,
         })
         expect(results).toEqual(testProductsResponse)
       })
@@ -106,6 +110,7 @@ describe('Strapi service', () => {
         expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
           withEnvironments: false,
           withComponents: true,
+          isDecommissioned: false,
         })
       })
 
@@ -117,6 +122,7 @@ describe('Strapi service', () => {
         expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
           withEnvironments: true,
           withComponents: false,
+          isDecommissioned: false,
         })
       })
 
@@ -126,11 +132,13 @@ describe('Strapi service', () => {
         await serviceCatalogueService.getProducts({
           withEnvironments: true,
           withComponents: true,
+          isDecommissioned: false,
         })
 
         expect(strapiApiClient.getProducts).toHaveBeenCalledWith({
           withEnvironments: true,
           withComponents: true,
+          isDecommissioned: false,
         })
       })
     })

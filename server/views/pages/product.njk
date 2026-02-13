@@ -144,6 +144,16 @@
       <th>Phase</th>
       <td>{{ product.phase }}</td>
     </tr>
+    {% if product.decommissioned == true %}
+    <tr>
+      <th>Decommissioned</th>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <th>Decommissioned Date</th>
+      <td>{{ product.decommissionDate }}</td>
+    </tr>
+    {% endif %}
     <tr>
       <th>Team</th>
       <td>

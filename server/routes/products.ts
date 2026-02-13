@@ -2,7 +2,7 @@ import { Router } from 'express'
 import config from '../config'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { getFormattedName, utcTimestampToUtcDateTime, mapToCanonicalEnv } from '../utils/utils'
+import { getFormattedName, utcTimestampToUtcDateTime, mapToCanonicalEnv, utcTimestampToUtcDate } from '../utils/utils'
 import {
   getProductionEnvironment,
   countTrivyHighAndCritical,
@@ -25,16 +25,20 @@ export default function routes({
   const router = Router()
 
   router.get('/', async (req, res) => {
+    const isDecommissioned = req.query.decommissioned === 'true' || false
+
     const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name: 'hmpps-sharepoint-discovery' })
     return res.render('pages/products', {
       jobName: scheduledJobRequest.name,
       lastSuccessfulRun: utcTimestampToUtcDateTime(scheduledJobRequest.last_successful_run),
+      decommissioned: isDecommissioned,
     })
   })
 
   router.get('/data', async (req, res) => {
-    const products = await serviceCatalogueService.getProducts({})
-
+    console.log('Received request for products data with query:', req.query)
+    const isDecommissioned = req.query.decommissioned === 'true' || false
+    const products = await serviceCatalogueService.getProducts({ isDecommissioned })
     res.send(products)
   })
 
@@ -65,6 +69,8 @@ export default function routes({
         .map(link => link.trim()),
       gDriveLink: product.gdrive_link,
       id: product.p_id,
+      decommissioned: product.decommissioned,
+      decommissionDate: product.decommissioned_date ? utcTimestampToUtcDate(product.decommissioned_date) : null,
       isPrisonProduct: product.p_id.startsWith('DPS'),
       serviceOwner: product.service_area?.owner,
       productManager: product.product_manager,
@@ -84,7 +90,6 @@ export default function routes({
       alerts: [] as DisplayAlert[],
       trivyVulnerabilityCount: 0,
       veracodeVulnerabilityCount: 0,
-      decommissioned: product.decommissioned,
     }
     const componentsNeedingUpdates: string[] = []
     const bannerPromises = displayProduct.components
