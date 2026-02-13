@@ -36,7 +36,6 @@ export default function routes({
   })
 
   router.get('/data', async (req, res) => {
-    console.log('Received request for products data with query:', req.query)
     const isDecommissioned = req.query.decommissioned === 'true' || false
     const products = await serviceCatalogueService.getProducts({ isDecommissioned })
     res.send(products)

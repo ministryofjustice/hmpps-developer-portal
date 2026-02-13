@@ -1,4 +1,3 @@
-import { is } from 'cheerio/dist/commonjs/api/traversing'
 import { RdsEntry } from '../@types'
 import {
   Component,
