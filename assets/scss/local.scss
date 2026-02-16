@@ -72,7 +72,7 @@
   }
 }
 
-.veracodeFilter, .trivyFilter, .alertsFilter {
+.veracodeFilter, .alertsFilter {
   .label-and-button {
     .govuk-button {
       margin: 0 0 0 0;
@@ -406,6 +406,35 @@
   height: 32px;
   margin-right: 5px;
 }
+
+// For trivy dropdown name and selector
+
+.trivy-filter .label-and-button .govuk-form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.trivy-filter .label-and-button .govuk-button-group {
+  display: flex;
+  gap: govuk-spacing(4);
+}
+
+// For dropdown and update button size consistency
+.trivy-filter .label-and-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.govuk-button {
+  margin-top: 16px;
+}
+
+// For dropdown select size consistency
+.govuk-select {
+  width: 500px !important;
+}
+
 
 .alertsAndScansCard {
   .govuk-summary-card__content {

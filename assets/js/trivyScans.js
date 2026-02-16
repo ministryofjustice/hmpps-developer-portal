@@ -1,4 +1,5 @@
 const teamFilter = document.getElementById('team')
+const portfolioFilter = document.getElementById('portfolio')
 
 jQuery(function () {
   let currentFilters = getFiltersFromURL()
@@ -39,6 +40,7 @@ jQuery(function () {
             name: item.name,
             build_image_tag: item.build_image_tag,
             team: item.team ? item.team : undefined,
+            portfolio: item.portfolio ? item.portfolio : undefined,
             trivy_scan_timestamp: item.trivy_scan_timestamp,
             total_fixed_critical:
               (summary?.['os-pkgs']?.fixed?.CRITICAL ?? 0) + (summary?.['lang-pkgs']?.fixed?.CRITICAL ?? 0),
@@ -253,7 +255,7 @@ jQuery(function () {
     url: '/trivy-scans/data',
     success: function (data) {
       const transformedData = transformData(data)
-      filteredTableData = setupTeamDropdown(transformedData)
+      filteredTableData = setupDropdown(transformedData)
       createTable({
         id: 'trivyScansTable',
         data: filteredTableData,
@@ -266,25 +268,41 @@ jQuery(function () {
     },
   })
 
-  function setupTeamDropdown(allData) {
+  function setupDropdown(allData) {
     const uniqueTeams = getUniqueTeams(allData)
+    const uniquePortfolio = getUniquePortfolio(allData)
     renderTeamDropdownOptions(uniqueTeams)
+    renderPortfolioDropdownOptions(uniquePortfolio)
 
     // Get filter value from URL
     if (currentFilters.team) {
       teamFilter.value = currentFilters.team
+    }
+    if (currentFilters.portfolio) {
+      portfolioFilter.value = currentFilters.portfolio
     }
 
     // Store data for future filtering without refetching
     $('#trivyScansTable').data('fullData', allData)
 
     // Return filtered or full dataset depending on URL param
-    return currentFilters.team ? allData.filter(item => item.team === currentFilters.team) : allData
+    if (currentFilters.team) {
+      return allData.filter(item => item.team === currentFilters.team)
+    }
+    if (currentFilters.portfolio) {
+      return allData.filter(item => item.portfolio === currentFilters.portfolio)
+    }
+    return []
   }
 
   // Extracts a set of valid teams
   function getUniqueTeams(data) {
     return [...new Set(data.map(item => item.team).filter(Boolean))]
+  }
+
+  // Extracts a set of valid portfolio options
+  function getUniquePortfolio(data) {
+    return [...new Set(data.map(item => item.portfolio).filter(Boolean))]
   }
 
   // Populates the #team dropdown with the team list
@@ -295,6 +313,17 @@ jQuery(function () {
       option.value = team
       option.textContent = team
       teamFilter.appendChild(option)
+    })
+  }
+
+  // Populates the #portfolio dropdown with the portfolio list
+  function renderPortfolioDropdownOptions(portfolio) {
+    portfolioFilter.innerHTML = `<option value="">All (Prisons & Probation)</option>`
+    portfolio.forEach(portfolio => {
+      const option = document.createElement('option')
+      option.value = portfolio
+      option.textContent = portfolio
+      portfolioFilter.appendChild(option)
     })
   }
 
@@ -312,8 +341,28 @@ jQuery(function () {
 
   $('#updateTeam').on('click', function (e) {
     e.preventDefault()
+    // Clear portfolio filter
+    currentFilters = {
+      portfolio: '',
+    }
+    // Reset selects
+    $('#portfolio').val('')
+    updateURLParams(currentFilters)
+    // Remove portfolio filter and redraw
+    updateScansByDropDown()
+  })
 
-    updateScansByTeam()
+  $('#updatePortfolio').on('click', function (e) {
+    e.preventDefault()
+    // Clear teams filter
+    currentFilters = {
+      teams: '',
+    }
+    // Reset selects
+    $('#team').val('')
+    updateURLParams(currentFilters)
+    // Remove team filter and redraw
+    updateScansByDropDown()
   })
 
   function updateEnvironmentList() {
@@ -426,21 +475,31 @@ jQuery(function () {
     table.draw(false)
   }
 
-  function updateScansByTeam(event) {
+  function updateScansByDropDown(event) {
     const selectedTeam = teamFilter.value
+    const selectedPortfolio = portfolioFilter.value
     currentFilters.team = selectedTeam
+    currentFilters.portfolio = selectedPortfolio
     updateURLParams(currentFilters)
 
     // Get original data from the table DOM element
     const fullData = $('#trivyScansTable').data('fullData') || []
 
-    const filtered = selectedTeam ? fullData.filter(item => item.team === selectedTeam) : fullData
+    let filtered
+    if (selectedTeam) {
+      filtered = fullData.filter(item => item.team === selectedTeam)
+    } else if (selectedPortfolio) {
+      filtered = fullData.filter(item => item.portfolio === selectedPortfolio)
+    } else {
+      filtered = fullData
+    }
 
     const table = $('#trivyScansTable').DataTable()
     table.clear()
     table.rows.add(filtered)
     table.draw()
   }
+
   //function to select prod only for Trivy Scans on Team Overview page
   function filterForProdTeamOverview() {
     const params = new URLSearchParams(window.location.search)
@@ -474,6 +533,7 @@ function getFiltersFromURL() {
   const params = new URLSearchParams(location.search)
   return {
     team: params.get('team') || '',
+    portfolio: params.get('portfolio') || '',
   }
 }
 
@@ -481,6 +541,7 @@ function getFiltersFromURL() {
 function updateURLParams(filters) {
   const params = new URLSearchParams()
   if (filters.team) params.set('team', filters.team)
+  if (filters.portfolio) params.set('portfolio', filters.portfolio)
 
   history.replaceState(null, '', `?${params.toString()}`)
 }

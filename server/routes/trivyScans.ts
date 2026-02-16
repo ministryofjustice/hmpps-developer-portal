@@ -5,7 +5,7 @@ import {
   sortBySeverity,
   getComponentName,
   getEnvironmentName,
-  addTeamToTrivyScan,
+  addTeamAndPortfolioToTrivyScan,
 } from '../utils/utils'
 import { ScanResult, Summary } from '../data/converters/modelTypes'
 
@@ -127,7 +127,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   router.get('/data', async (req, res) => {
     const trivyScans = await serviceCatalogueService.getTrivyScans()
     const teams = await serviceCatalogueService.getTeams({ withComponents: true })
-    const revisedScans = await addTeamToTrivyScan(teams, trivyScans)
+    const revisedScans = await addTeamAndPortfolioToTrivyScan(teams, trivyScans)
 
     res.json(revisedScans)
   })
