@@ -485,11 +485,14 @@ jQuery(function () {
     // Get original data from the table DOM element
     const fullData = $('#trivyScansTable').data('fullData') || []
 
-    const filtered = selectedTeam
-      ? fullData.filter(item => item.team === selectedTeam)
-      : selectedPortfolio
-        ? fullData.filter(item => item.portfolio === selectedPortfolio)
-        : fullData
+    let filtered
+    if (selectedTeam) {
+      filtered = fullData.filter(item => item.team === selectedTeam)
+    } else if (selectedPortfolio) {
+      filtered = fullData.filter(item => item.portfolio === selectedPortfolio)
+    } else {
+      filtered = fullData
+    }
 
     const table = $('#trivyScansTable').DataTable()
     table.clear()

@@ -416,7 +416,7 @@
 }
 .trivy-filter .label-and-button .govuk-button-group {
   display: flex;
-  gap: 20px;
+  gap: govuk-spacing(4);
 }
 
 // For dropdown and update button size consistency
