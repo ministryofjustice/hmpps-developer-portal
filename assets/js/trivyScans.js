@@ -287,12 +287,12 @@ jQuery(function () {
 
     // Return filtered or full dataset depending on URL param
     if (currentFilters.team) {
-      allData.filter(item => item.team === currentFilters.team)
+      return allData.filter(item => item.team === currentFilters.team)
     }
     if (currentFilters.portfolio) {
-      allData.filter(item => item.portfolio === currentFilters.portfolio)
+      return allData.filter(item => item.portfolio === currentFilters.portfolio)
     }
-    return allData
+    return []
   }
 
   // Extracts a set of valid teams
