@@ -119,6 +119,15 @@
   "overrides": {
     "mermaid": {
       "lodash-es": "4.17.23"
+    },
+    "@chevrotain/cst-dts-gen": {
+      "lodash-es": "4.17.23"
+    },
+    "@chevrotain/gast": {
+      "lodash-es": "4.17.23"
+    },
+    "chevrotain": {
+      "lodash-es": "4.17.23"
     }
   }
 }
