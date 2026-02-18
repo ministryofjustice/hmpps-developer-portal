@@ -70,6 +70,8 @@ export default function routes({
       productManager: product.product_manager,
       leadDeveloper: product.lead_developer,
       deliveryManager: product.delivery_manager,
+      technicalArchitect: product.technical_architect,
+      oversightPrincipalTechnicalArchitect: product.principal_architect,
       subProduct: product.subproduct,
       phase: product.phase,
       portfolio: product.portfolio,
