@@ -9,12 +9,7 @@ jQuery(function () {
     {
       data: 'budget_code',
       createdCell: function (td, _cellData, rowData) {
-        const budget_code = rowData.budget_code
-        if (budget_code && budget_code.trim() !== '') {
-          $(td).html(`${budget_code}`)
-        } else {
-          $(td).html('')
-        }
+        $(td).html((rowData.budget_code ?? '').trim())
       },
     },
     {
