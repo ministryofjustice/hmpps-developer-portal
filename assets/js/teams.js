@@ -22,6 +22,17 @@ jQuery(function () {
         )
       },
     },
+    {
+      data: 'budget_code',
+      createdCell: function (td, _cellData, rowData) {
+        const budget_code = rowData.budget_code
+        if (budget_code && budget_code.trim() !== '') {
+          $(td).html(`${budget_code}`)
+        } else {
+          $(td).html('')
+        }
+      },
+    },
   ]
 
   createTable({ id: 'teamsTable', ajaxUrl: '/teams/data', orderColumn: 0, orderType: 'asc', columns })
