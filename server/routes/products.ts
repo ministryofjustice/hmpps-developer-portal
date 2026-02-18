@@ -62,11 +62,6 @@ export default function routes({
     const displayProduct = {
       name: product.name,
       description: product.description,
-      confluenceLinks: product.confluence_link
-        ?.split(',')
-        .filter(link => link !== '')
-        .map(link => link.trim()),
-      gDriveLink: product.gdrive_link,
       id: product.p_id,
       decommissioned: product.decommissioned,
       decommissionDate: product.decommissioned_date ? utcTimestampToUtcDate(product.decommissioned_date) : null,
@@ -76,7 +71,6 @@ export default function routes({
       leadDeveloper: product.lead_developer,
       deliveryManager: product.delivery_manager,
       subProduct: product.subproduct,
-      legacyProduct: product.legacy,
       phase: product.phase,
       portfolio: product.portfolio,
       slackChannelId: product.slack_channel_id,

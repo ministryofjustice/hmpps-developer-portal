@@ -109,10 +109,6 @@
       <td>{{ product.description }}</td>
     </tr>
     <tr>
-      <th>Confluence</th>
-      <td>{% if product.confluenceLinks | length %}<ul>{% for confluenceLink in product.confluenceLinks %}<li><a href="{{ confluenceLink }}">{{ confluenceLink }}</a></li>{% endfor %}</ul>{% endif %}</td>
-    </tr>
-    <tr>
       <th>ID</th>
       <td>{{ product.id }}</td>
     </tr>
@@ -135,10 +131,6 @@
     <tr>
       <th>Subproduct?</th>
       <td>{% if product.subProduct %}Yes{% else %}No{% endif %}</td>
-    </tr>
-    <tr>
-      <th>Legacy?</th>
-      <td>{% if product.legacyProduct %}Yes{% else %}No{% endif %}</td>
     </tr>
     <tr>
       <th>Phase</th>
