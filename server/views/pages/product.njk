@@ -109,10 +109,6 @@
       <td>{{ product.description }}</td>
     </tr>
     <tr>
-      <th>Confluence</th>
-      <td>{% if product.confluenceLinks | length %}<ul>{% for confluenceLink in product.confluenceLinks %}<li><a href="{{ confluenceLink }}">{{ confluenceLink }}</a></li>{% endfor %}</ul>{% endif %}</td>
-    </tr>
-    <tr>
       <th>ID</th>
       <td>{{ product.id }}</td>
     </tr>
@@ -129,16 +125,20 @@
       <td data-test="delivery-manager">{{ product.deliveryManager }}</td>
     </tr>
     <tr>
+      <th>Technical Architect</th>
+      <td>{{ product.technicalArchitect }}</td>
+    </tr>
+    <tr>
+      <th>Oversight Princical Technical Architect</th>
+      <td data-test="principal-architect">{{ product.oversightPrincipalTechnicalArchitect }}</td>
+    </tr>
+    <tr>
       <th>Lead developer</th>
       <td data-test="lead-developer">{{ product.leadDeveloper }}</td>
     </tr>
     <tr>
       <th>Subproduct?</th>
       <td>{% if product.subProduct %}Yes{% else %}No{% endif %}</td>
-    </tr>
-    <tr>
-      <th>Legacy?</th>
-      <td>{% if product.legacyProduct %}Yes{% else %}No{% endif %}</td>
     </tr>
     <tr>
       <th>Phase</th>
@@ -167,11 +167,11 @@
     <tr>
       <th>Team Slack</th>
       <td>
-        {% if product.team.slack_channel_id | length %}
-        <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.team.slack_channel_id }}">
+        {% if product.slack_channel_id | length %}
+        <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ product.slack_channel_id }}">
         <img src="/assets/images/slack_favicon_32.png" alt="Slack logo" width="32" height="32" />
-          {% if product.team.slack_channel_name | length %}
-          #{{ product.team.slack_channel_name }}
+          {% if product.slack_channel_name | length %}
+          #{{ product.slack_channel_name }}
           {% else %}
           Link
           {% endif %}
