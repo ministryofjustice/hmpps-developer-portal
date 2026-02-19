@@ -427,32 +427,29 @@
 
 // For trivy dropdown name and selector
 
-.trivy-filter .label-and-button .govuk-form-group {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-.trivy-filter .label-and-button .govuk-button-group {
-  display: flex;
-  gap: govuk-spacing(4);
-}
+.trivy-filter {
+  .label-and-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
 
-// For dropdown and update button size consistency
-.trivy-filter .label-and-button {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex-wrap: nowrap;
-}
-.govuk-button {
-  margin-top: 16px;
-}
+    .govuk-form-group {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
 
-// For dropdown select size consistency
-.govuk-select {
-  width: 500px !important;
-}
+    .govuk-button-group {
+      display: flex;
+      gap: govuk-spacing(4);
+    }
+  }
 
+  .govuk-button {
+    margin-top: govuk-spacing(3);
+  }
+}
 
 .alertsAndScansCard {
   .govuk-summary-card__content {
