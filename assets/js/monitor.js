@@ -3,16 +3,99 @@ jQuery(async function () {
   const monitorId = $('#monitorId').val()
   const monitorName = $('#monitorName').val()
 
-  if (monitorType !== '') {
-    const dropDownTypeId = monitorId && monitorId !== '0' ? parseInt(monitorId, 10) : 0
+  if (monitorType === '') return
 
-    try {
-      await populateComponentTable(monitorType, dropDownTypeId, monitorName)
-      updateEnvironmentList()
-    } catch (error) {
-      console.error('Error populating component table:', error)
+  const dropDownTypeId = monitorId && monitorId !== '0' ? parseInt(monitorId, 10) : 0
+  const ajaxUrl = `/monitor/components/${monitorType}/${dropDownTypeId}?slug=${encodeURIComponent(monitorName)}`
+
+  let monitorTimeoutId = null
+
+  function startWatch() {
+    stopWatch()
+
+    const watch = async () => {
+      await fetchMessages()
+      monitorTimeoutId = setTimeout(watch, 30000)
+    }
+    watch()
+  }
+
+  function stopWatch() {
+    if (monitorTimeoutId) {
+      clearTimeout(monitorTimeoutId)
+      monitorTimeoutId = null
     }
   }
+
+  // columns for DataTable (static fields + placeholders for live fields populated by fetchMessages)
+  const columns = [
+    {
+      data: 'componentName',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(
+          `<a href="/components/${rowData.componentName}" class="statusTileName" target="_blank">${rowData.componentName}</a>`,
+        )
+      },
+    },
+    {
+      data: 'environmentName',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html(
+          `<a href="/components/${rowData.componentName}/environment/${rowData.environmentName}" class="statusTileEnvironment" target="_blank">${rowData.environmentName} (${rowData.environmentType})</a>`,
+        )
+      },
+    },
+    {
+      data: null,
+      createdCell: function (td, _cellData, rowData) {
+        const healthLink = rowData.environmentHealth
+          ? `<a href="${rowData.environmentUrl}${rowData.environmentHealth}" class="statusTileHealth" target="_blank">View</a>`
+          : 'N/A'
+        $(td).html(healthLink)
+      },
+    },
+    {
+      data: null,
+      className: 'statusTileBuild',
+      defaultContent: '',
+    },
+    {
+      data: null,
+      className: 'statusTileStatus',
+      defaultContent: '',
+    },
+    {
+      data: null,
+      className: 'statusTileLastRefresh',
+      defaultContent: '',
+    },
+  ]
+
+  const monitorTable = createTable({
+    id: 'statusTable',
+    ajaxUrl,
+    orderColumn: 0,
+    orderType: 'asc',
+    columns,
+    pageLength: -1,
+    responsive: true,
+    stateSave: false,
+    createdRow: function (row, data) {
+      $(row).attr('id', `tile-${data.componentName}-${data.environmentName}`)
+      $(row).attr('data-prisons', data.isPrisons)
+      $(row).attr('data-probation', data.isProbation)
+      $(row).attr('data-environment', data.environmentName)
+      $(row).attr('data-environment-type', data.environmentType)
+    },
+    ajaxErrorHandler: function (jqXHR, textStatus, errorThrown) {
+      console.error('Health Monitor DataTables error:', textStatus, errorThrown, jqXHR)
+    },
+  })
+
+  monitorTable.on('xhr', () => {
+    startWatch()
+    updateEnvironmentList()
+  })
 
   $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponentView').on('click', async e => {
     e.preventDefault(e)
@@ -40,18 +123,18 @@ jQuery(async function () {
     const dropDownSlug = $(`#${dropDownType} option:selected`).attr('data-slug')
     const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
     const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
-    let pushStateUrl = `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`
+    let replaceStateUrl = `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`
 
     if (dropDownTypeId === 0) {
       dropDownType = 'all'
-      pushStateUrl = '/monitor'
+      replaceStateUrl = '/monitor'
     }
 
-    history.pushState({ info: 'dropdown change' }, '', pushStateUrl)
+    history.replaceState({ info: 'dropdown change' }, '', replaceStateUrl)
 
     try {
-      await populateComponentTable(dropDownType, dropDownTypeId, dropDownSlug)
-      updateEnvironmentList()
+      const newAjaxUrl = `/monitor/components/${dropDownType}/${dropDownTypeId}?slug=${encodeURIComponent(dropDownSlug)}`
+      monitorTable.ajax.url(newAjaxUrl).load()
     } catch (error) {
       console.error('Error updating selection:', error)
     }
@@ -68,11 +151,12 @@ jQuery(async function () {
 function updateEnvironmentList() {
   const validEnvironments = ['prod', 'preprod', 'test', 'stage', 'dev']
   const selectedEnvironments = []
-  let showProbation = false
-  let showPrisons = false
-  let showStatusUp = false
-  let showStatusDown = false
-  let showStatusMissing = false
+
+  let showProbation = $('#hmpps-area-probation').is(':checked')
+  let showPrisons = $('#hmpps-area-prisons').is(':checked')
+  let showStatusUp = $('#status-up').is(':checked')
+  let showStatusDown = $('#status-down').is(':checked')
+  let showStatusMissing = $('#status-missing').is(':checked')
 
   $('.environments .govuk-checkboxes__input:checked').each((index, e) => {
     const environment = $(e).val()
@@ -81,26 +165,6 @@ function updateEnvironmentList() {
       selectedEnvironments.push(environment)
     }
   })
-
-  if ($('#status-up').is(':checked')) {
-    showStatusUp = true
-  }
-
-  if ($('#status-down').is(':checked')) {
-    showStatusDown = true
-  }
-
-  if ($('#status-missing').is(':checked')) {
-    showStatusMissing = true
-  }
-
-  if ($('#hmpps-area-probation').is(':checked')) {
-    showProbation = true
-  }
-
-  if ($('#hmpps-area-prisons').is(':checked')) {
-    showPrisons = true
-  }
 
   $('#statusRows tr')
     .hide()
@@ -120,12 +184,6 @@ function updateEnvironmentList() {
         $(this).show()
       }
     })
-}
-
-const watch = async () => {
-  await fetchMessages()
-
-  setTimeout(watch, 30000)
 }
 
 const fetchMessages = async () => {
@@ -176,46 +234,6 @@ const fetchMessages = async () => {
     })
   } catch (jsonResponseError) {
     console.error(jsonResponseError)
-  }
-}
-
-async function populateComponentTable(monitorType, monitorTypeId, monitorSlug) {
-  let url = `/monitor/components/${monitorType}/${monitorTypeId}?slug=${encodeURIComponent(monitorSlug)}`
-
-  const response = await fetch(url)
-
-  if (!response.ok) {
-    console.error(`Error fetching component data: ${response.status} ${response.statusText}`)
-    throw new Error('There was a problem fetching the component data')
-  }
-
-  function sortEnvironments(environmentA, environmentB) {
-    return environmentB.dependentCount - environmentA.dependentCount
-  }
-
-  try {
-    $('#statusRows').empty()
-
-    const environments = await response.json()
-
-    environments.sort(sortEnvironments).forEach(environment => {
-      const healthLink = environment.environmentHealth
-        ? `<a href="${environment.environmentUrl}${environment.environmentHealth}" class="statusTileHealth" target="_blank">View</a>`
-        : 'N/A'
-      $('#statusRows')
-        .append(`<tr data-prisons="${environment.isPrisons}" data-probation="${environment.isProbation}" data-environment="${environment.environmentName}" data-environment-type="${environment.environmentType}" id="tile-${environment.componentName}-${environment.environmentName}">
-          <td><a href="/components/${environment.componentName}" class="statusTileName" target="_blank">${environment.componentName}</a></td>
-          <td><a href="/components/${environment.componentName}/environment/${environment.environmentName}" class="statusTileEnvironment" target="_blank">${environment.environmentName} (${environment.environmentType})</a></td>
-          <td>${healthLink}</td>
-          <td class="statusTileBuild"></td>
-          <td class="statusTileStatus"></td>
-          <td class="statusTileLastRefresh"></td>
-        </tr>`)
-    })
-
-    watch()
-  } catch (e) {
-    console.error(e)
   }
 }
 
