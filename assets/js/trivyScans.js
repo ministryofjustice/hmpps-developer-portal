@@ -292,7 +292,7 @@ jQuery(function () {
     if (currentFilters.portfolio) {
       return allData.filter(item => item.portfolio === currentFilters.portfolio)
     }
-    return []
+    return allData
   }
 
   // Extracts a set of valid teams
