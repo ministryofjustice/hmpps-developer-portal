@@ -399,6 +399,18 @@
 .trivyData tr.trivyCritical, .trivyData tr.trivyCritical td {
   background-color: govuk-colour('red');
   color: white;
+  a {
+    color: white;
+  }
+  .govuk-details__summary .govuk-details__summary-text {
+    color: white;
+  }
+  .govuk-details__text {
+    color: white;
+  }
+  .govuk-details__summary {
+    color: white;
+  }
 }
 
 .trivy-icon {
