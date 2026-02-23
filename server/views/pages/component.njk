@@ -240,23 +240,6 @@
           </tr>
           <tr>
           <tr>
-          <th>Team Slack</th>
-            <td>
-            {% if component.product.slack_channel_id | length %}
-              <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.slack_channel_id }}">
-              <img src="/assets/images/slack_favicon_32.png" alt="slack logo" width="32" height="32" />
-              {% if component.product.slack_channel_name | length %}
-              #{{ component.product.slack_channel_name }}
-              {% else %}
-              Link
-              {% endif %}
-              (opens slack)</a>
-            {% else %}
-              N/A
-            {% endif %}
-            </td>
-          </tr>
-          <tr>
             <th>Uses</th>
             <td data-test="dependency-types">{{ component.dependencyTypes | join(', ') }}</td>
           </tr>
