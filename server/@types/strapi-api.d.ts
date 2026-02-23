@@ -1967,7 +1967,6 @@ export interface components {
               documentId?: string
               id?: number
             }[]
-            confluence_link?: string
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
@@ -1980,10 +1979,8 @@ export interface components {
             delivery_manager?: string
             description?: string
             documentId?: string
-            gdrive_link?: string
             id?: number
             lead_developer?: string
-            legacy?: boolean
             locale?: string
             localizations?: {
               documentId?: string
@@ -2181,8 +2178,6 @@ export interface components {
               }[]
               /** Format: date-time */
               publishedAt?: string
-              slack_channel_id?: string
-              slack_channel_name?: string
               slug?: string
               t_id?: string
               /** Format: date-time */
@@ -2889,7 +2884,6 @@ export interface components {
             documentId?: string
             id?: number
           }[]
-          confluence_link?: string
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
@@ -2902,10 +2896,8 @@ export interface components {
           delivery_manager?: string
           description?: string
           documentId?: string
-          gdrive_link?: string
           id?: number
           lead_developer?: string
-          legacy?: boolean
           locale?: string
           localizations?: {
             documentId?: string
@@ -3012,8 +3004,6 @@ export interface components {
             }[]
             /** Format: date-time */
             publishedAt?: string
-            slack_channel_id?: string
-            slack_channel_name?: string
             slug?: string
             t_id?: string
             /** Format: date-time */
@@ -3387,7 +3377,6 @@ export interface components {
             documentId?: string
             id?: number
           }[]
-          confluence_link?: string
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
@@ -3400,10 +3389,8 @@ export interface components {
           delivery_manager?: string
           description?: string
           documentId?: string
-          gdrive_link?: string
           id?: number
           lead_developer?: string
-          legacy?: boolean
           locale?: string
           localizations?: {
             documentId?: string
@@ -3510,8 +3497,6 @@ export interface components {
             }[]
             /** Format: date-time */
             publishedAt?: string
-            slack_channel_id?: string
-            slack_channel_name?: string
             slug?: string
             t_id?: string
             /** Format: date-time */
@@ -4243,7 +4228,6 @@ export interface components {
         documentId?: string
         id?: number
       }[]
-      confluence_link?: string
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
@@ -4256,10 +4240,8 @@ export interface components {
       delivery_manager?: string
       description?: string
       documentId?: string
-      gdrive_link?: string
       id?: number
       lead_developer?: string
-      legacy?: boolean
       locale?: string
       localizations?: {
         documentId?: string
@@ -4453,7 +4435,6 @@ export interface components {
           veracode_results_url?: string
           versions?: unknown
         }[]
-        confluence_link?: string
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
@@ -4466,10 +4447,8 @@ export interface components {
         delivery_manager?: string
         description?: string
         documentId?: string
-        gdrive_link?: string
         id?: number
         lead_developer?: string
-        legacy?: boolean
         locale?: string
         localizations?: {
           documentId?: string
@@ -4732,15 +4711,12 @@ export interface components {
         business_owner?: string
         children?: (number | string)[]
         components?: (number | string)[]
-        confluence_link?: string
         decommissioned?: boolean
         /** Format: date */
         decommissioned_date?: string
         delivery_manager?: string
         description?: string
-        gdrive_link?: string
         lead_developer?: string
-        legacy?: boolean
         locale?: string
         localizations?: (number | string)[]
         name: string
@@ -4970,7 +4946,6 @@ export interface components {
           veracode_results_url?: string
           versions?: unknown
         }[]
-        confluence_link?: string
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
@@ -4983,10 +4958,8 @@ export interface components {
         delivery_manager?: string
         description?: string
         documentId?: string
-        gdrive_link?: string
         id?: number
         lead_developer?: string
-        legacy?: boolean
         locale?: string
         localizations?: {
           documentId?: string
@@ -5184,8 +5157,6 @@ export interface components {
           }[]
           /** Format: date-time */
           publishedAt?: string
-          slack_channel_id?: string
-          slack_channel_name?: string
           slug?: string
           t_id?: string
           /** Format: date-time */
@@ -5795,7 +5766,6 @@ export interface components {
           veracode_results_url?: string
           versions?: unknown
         }[]
-        confluence_link?: string
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
@@ -5808,10 +5778,8 @@ export interface components {
         delivery_manager?: string
         description?: string
         documentId?: string
-        gdrive_link?: string
         id?: number
         lead_developer?: string
-        legacy?: boolean
         locale?: string
         localizations?: {
           documentId?: string
@@ -6009,8 +5977,6 @@ export interface components {
           }[]
           /** Format: date-time */
           publishedAt?: string
-          slack_channel_id?: string
-          slack_channel_name?: string
           slug?: string
           t_id?: string
           /** Format: date-time */
@@ -6268,7 +6234,6 @@ export interface components {
           veracode_results_url?: string
           versions?: unknown
         }[]
-        confluence_link?: string
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
@@ -6281,10 +6246,8 @@ export interface components {
         delivery_manager?: string
         description?: string
         documentId?: string
-        gdrive_link?: string
         id?: number
         lead_developer?: string
-        legacy?: boolean
         locale?: string
         localizations?: {
           documentId?: string
@@ -6503,8 +6466,6 @@ export interface components {
       }[]
       /** Format: date-time */
       publishedAt?: string
-      slack_channel_id?: string
-      slack_channel_name?: string
       slug?: string
       t_id: string
       /** Format: date-time */
