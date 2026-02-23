@@ -2215,6 +2215,7 @@ export interface components {
           veracode_results_summary?: unknown
           veracode_results_url?: string
           versions?: unknown
+          workflow_runs_waiting?: unknown
         }
         /** Format: date-time */
         createdAt?: string
@@ -2368,6 +2369,7 @@ export interface components {
       veracode_results_summary?: unknown
       veracode_results_url?: string
       versions?: unknown
+      workflow_runs_waiting?: unknown
     }
     ComponentListResponse: {
       data?: components['schemas']['Component'][]
@@ -2428,6 +2430,7 @@ export interface components {
         veracode_results_summary?: unknown
         veracode_results_url?: string
         versions?: unknown
+        workflow_runs_waiting?: unknown
       }
     }
     ComponentResponse: {
@@ -3041,6 +3044,7 @@ export interface components {
         veracode_results_summary?: unknown
         veracode_results_url?: string
         versions?: unknown
+        workflow_runs_waiting?: unknown
       }[]
       /** Format: date-time */
       createdAt?: string
@@ -3534,6 +3538,7 @@ export interface components {
         veracode_results_summary?: unknown
         veracode_results_url?: string
         versions?: unknown
+        workflow_runs_waiting?: unknown
       }
       /** Format: date-time */
       createdAt?: string
@@ -4434,6 +4439,7 @@ export interface components {
           veracode_results_summary?: unknown
           veracode_results_url?: string
           versions?: unknown
+          workflow_runs_waiting?: unknown
         }[]
         /** Format: date-time */
         createdAt?: string
@@ -4646,8 +4652,6 @@ export interface components {
           }[]
           /** Format: date-time */
           publishedAt?: string
-          slack_channel_id?: string
-          slack_channel_name?: string
           slug?: string
           t_id?: string
           /** Format: date-time */
@@ -4945,6 +4949,7 @@ export interface components {
           veracode_results_summary?: unknown
           veracode_results_url?: string
           versions?: unknown
+          workflow_runs_waiting?: unknown
         }[]
         /** Format: date-time */
         createdAt?: string
@@ -5765,6 +5770,7 @@ export interface components {
           veracode_results_summary?: unknown
           veracode_results_url?: string
           versions?: unknown
+          workflow_runs_waiting?: unknown
         }[]
         /** Format: date-time */
         createdAt?: string
@@ -6233,6 +6239,7 @@ export interface components {
           veracode_results_summary?: unknown
           veracode_results_url?: string
           versions?: unknown
+          workflow_runs_waiting?: unknown
         }[]
         /** Format: date-time */
         createdAt?: string
@@ -6445,8 +6452,6 @@ export interface components {
           }[]
           /** Format: date-time */
           publishedAt?: string
-          slack_channel_id?: string
-          slack_channel_name?: string
           slug?: string
           t_id?: string
           /** Format: date-time */
@@ -6494,8 +6499,6 @@ export interface components {
         localizations?: (number | string)[]
         name: string
         products?: (number | string)[]
-        slack_channel_id?: string
-        slack_channel_name?: string
         slug?: string
         t_id: string
       }
@@ -6842,6 +6845,7 @@ export interface components {
       username?: string
     }
     'Users-Permissions-UserRegistration': {
+      /** @example eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c */
       jwt?: string
       user?: components['schemas']['Users-Permissions-User']
     }
