@@ -36,7 +36,7 @@
     "npm": "^11"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^8.0.0",
+    "@ministryofjustice/frontend": "^8.0.1",
     "@ministryofjustice/hmpps-monitoring": "1.0.2",
     "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.8",
@@ -63,11 +63,11 @@
     "jquery": "^4.0.0",
     "js-base64": "^3.7.8",
     "jszip": "3.10.1",
-    "mermaid": "^11.12.2",
+    "mermaid": "^11.12.3",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
     "pako": "^2.1.0",
-    "redis": "^5.10.0",
+    "redis": "^5.11.0",
     "superagent": "^10.3.0",
     "svg-pan-zoom": "^3.6.2",
     "url-value-parser": "^2.2.0"
