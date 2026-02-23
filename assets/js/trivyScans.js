@@ -469,7 +469,7 @@ jQuery(function () {
       })
     } else {
       severityCheckboxes.forEach(checkbox => {
-        $(checkbox).prop('checked', true)
+        $(checkbox)
       })
     }
     table.draw(false)

@@ -12,6 +12,7 @@
 {{ breadCrumb("Trivy Scans", []) }}
 
   <h1>Trivy Scan Results</h1>
+  <p><strong>Use either the Team filter or the Portfolio filter — but not both at the same time.</strong></p>
   <form>
 		<div class="trivy-filter govuk-button-group">
       <div class="label-and-button">
@@ -19,7 +20,8 @@
           id: "team",
           name: "team",
           label: {
-          text: "Team"
+          text: "Team",
+          classes: "govuk-fieldset__legend--s"
           },
           items: team
         }) }}
@@ -36,7 +38,8 @@
           id: "portfolio",
           name: "portfolio",
           label: {
-          text: "Portfolio"
+          text: "Portfolio",
+          classes: "govuk-fieldset__legend--s"
           },
           items: portfolio
         }) }}
@@ -50,129 +53,144 @@
       </div>
 		</div>
   </form>
-    <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
-    <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
-    <input type="hidden" name="monitorId" id="monitorId" value="{{ monitorId }}">
-    <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-    <div class="monitor">
-      <div class="monitor-filter-block">
-        <div class="govuk-heading-s">Environments</div>
-        {{ govukCheckboxes({
-          classes: "govuk-checkboxes--inline govuk-checkboxes--small environments",
-          name: "environment",
-          items: [
-            {
-              id: "environment-dev",
-              value: "dev",
-              text: "Dev",
-              checked: true
-            },
-            {
-              id: "environment-stage",
-              value: "stage",
-              text: "Stage",
-              checked: true
-            },
-            {
-              id: "environment-test",
-              value: "test",
-              text: "Test",
-              checked: true
-            },
-            {
-              id: "environment-preprod",
-              value: "preprod",
-              text: "PreProd",
-              checked: true
-            },
-            {
-              id: "environment-prod",
-              value: "prod",
-              text: "Prod",
-              checked: true
-            },
-            {
-              id: "environment-unknown",
-              value: "unknown",
-              text: "Unknown (latest image)",
-              checked: true
-            }
-          ]
-        }) }}
-      </div>
 
-      <div class="monitor-filter-block">
-        <div class="govuk-heading-s">Vulnerabilities with  </div>
-        {{ govukCheckboxes({
-          classes: "govuk-checkboxes--inline govuk-checkboxes--small vulnerability",
-          name: "Vulnerabilities with Fix",
-          items: [
-            {
-              id: "showAvailable",
-              value: "Available",
-              text: "Fix Available (F) ",
-              checked: true
-            },
-            {
-              id: "showUnavailable",
-              value: "Unavailable",
-              text: "Fix Unavailable (N)",
-              checked: true
-            },
-            {
-              id: "showNoVulnerabilities",
-              value: "NoVulnerability",
-              text: "No Vulnerabilities",
-              checked: true
-            }
-          ]
-        }) }}
-      </div>
+<input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
+<input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
+<input type="hidden" name="monitorId" id="monitorId" value="{{ monitorId }}">
+<input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
 
-      <div class="monitor-filter-block">
-        <div class="govuk-heading-s">Severity</div>
-        {{ govukCheckboxes({
-          classes: "govuk-checkboxes--inline govuk-checkboxes--small severity",
-          name: "severityColumns",
-          items: [
-            {
-              id: "showSeverityCritical",
-              value: "critical",
-              text: "Critical",
-              checked: true
-            },
-            {
-              id: "showSeverityHigh",
-              value: "high",
-              text: "High",
-              checked: true
-            },
-            {
-              id: "showSeverityMedium",
-              value: "medium",
-              text: "Medium",
-              checked: false
-            },
-            {
-              id: "showSeverityLow",
-              value: "low",
-              text: "Low",
-              checked: false
-            },
-            {
-              id: "showSeverityUnknown",
-              value: "unknown",
-              text: "Unknown",
-              checked: false
-            }
-          ]
-        }) }}
-      </div>
-    </div>
-  </form>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-third">
+    {{ govukCheckboxes({
+      name: "environment",
+      classes: "govuk-checkboxes--small environments",
+      fieldset: {
+        legend: {
+          text: "Environment",
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      items: [
+        {
+          id: "environment-prod",
+          value: "prod",
+          text: "Prod",
+          checked: true
+        },
+        {
+          id: "environment-preprod",
+          value: "preprod",
+          text: "PreProd",
+          checked: true
+        },
+        {
+          id: "environment-test",
+          value: "test",
+          text: "Test",
+          checked: true
+        },
+        {
+          id: "environment-stage",
+          value: "stage",
+          text: "Stage",
+          checked: true
+        },
+        {
+          id: "environment-dev",
+          value: "dev",
+          text: "Dev",
+          checked: true
+        },
+        {
+          id: "environment-unknown",
+          value: "unknown",
+          text: "Unknown (latest image)",
+          checked: true
+        }
+      ]
+    }) }}
+</div>
+  <div class="govuk-grid-column-one-third">
+    {{ govukCheckboxes({
+      name: "severity",
+      classes: "govuk-checkboxes--small severity",
+      fieldset: {
+        legend: {
+          text: "Severity",
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      items: [
+        {
+          id: "showSeverityCritical",
+          value: "critical",
+          text: "Critical",
+          checked: true
+        },
+        {
+          id: "showSeverityHigh",
+          value: "high",
+          text: "High",
+          checked: true
+        },
+        {
+          id: "showSeverityMedium",
+          value: "medium",
+          text: "Medium",
+          checked: false
+        },
+        {
+          id: "showSeverityLow",
+          value: "low",
+          text: "Low",
+          checked: false
+        },
+        {
+          id: "showSeverityUnknown",
+          value: "unknown",
+          text: "Unknown",
+          checked: false
+        }
+      ]
+    }) }}
+</div>
+  <div class="govuk-grid-column-one-third">
+    {{ govukCheckboxes({
+      name: "vulnerabilities",
+      classes: "govuk-checkboxes--small vulnerability",
+      fieldset: {
+        legend: {
+          text: "Vulnerabilities with",
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      items: [
+        {
+          id: "showAvailable",
+          value: "fix available",
+          text: "Fix available (F)",
+          checked: true
+        },
+        {
+          id: "showUnavailable",
+          value: "fix unavailable",
+          text: "Fix unavailable (N)",
+          checked: true
+        },
+        {
+          id: "showNoVulnerabilities",
+          value: "no vulnerabilities",
+          text: "No vulnerabilities",
+          checked: true
+        }
+      ]
+    }) }}
+  </div>
+</div>
+
   <br>
-  <p><strong>Note 1:</strong> The latest images are not retrieved from the health endpoint, making it unclear which environment they are deployed in.</p>
-  <p><strong>Note 2:</strong> Please be aware that only ONE dropdown can be used on the results table at a time.</p>
+  <p><strong>Note:</strong> The latest images are not retrieved from the health endpoint, making it unclear which environment they are deployed in.</p>
   <table id="trivyScansTable" class="stripe">
     <thead>
       <tr>
