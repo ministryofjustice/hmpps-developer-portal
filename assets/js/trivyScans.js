@@ -467,10 +467,6 @@ jQuery(function () {
           })
         }
       })
-    } else {
-      severityCheckboxes.forEach(checkbox => {
-        $(checkbox)
-      })
     }
     table.draw(false)
   }
