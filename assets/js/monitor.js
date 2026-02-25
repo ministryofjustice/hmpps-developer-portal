@@ -38,6 +38,10 @@ jQuery(async function () {
       },
     },
     {
+      data: 'dependentCount',
+      visible: false,
+    },
+    {
       data: 'environmentName',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(
