@@ -94,6 +94,7 @@ jQuery(async function () {
     ajaxErrorHandler: function (jqXHR, textStatus, errorThrown) {
       console.error('Health Monitor DataTables error:', textStatus, errorThrown, jqXHR)
     },
+    customCsvExport: customiseMonitorExport,
   })
 
   monitorTable.on('xhr', () => {

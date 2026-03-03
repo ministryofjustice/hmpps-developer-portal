@@ -32,6 +32,7 @@ function createTable({
   createdRow,
   ajaxErrorHandler,
   stateSave = true,
+  customCsvExport,
 }) {
   const semverTidy = semVer => {
     // sometimes comes through as a number which has no match method
@@ -45,6 +46,7 @@ function createTable({
 
     return `0000${major}`.slice(-4) + `0000${minor}`.slice(-4) + `0000${patch}`.slice(-4)
   }
+
   const ajax = ajaxUrl && {
     url: ajaxUrl,
     dataSrc: '',
@@ -56,6 +58,7 @@ function createTable({
         }
       },
   }
+
   $.extend($.fn.dataTable.ext.type.order, {
     'semver-asc': function (a, b) {
       a = semverTidy(a)
@@ -69,6 +72,17 @@ function createTable({
     },
   })
 
+  const exportConfig = {
+    extend: 'csv',
+    exportOptions: {
+      columns: ':visible',
+    },
+  }
+
+  if (customCsvExport) {
+    exportConfig.customize = customCsvExport
+  }
+
   return new DataTable(`#${id}`, {
     layout: {
       bottomStart: {
@@ -80,12 +94,7 @@ function createTable({
               columns: ':visible',
             },
           },
-          {
-            extend: 'csv',
-            exportOptions: {
-              columns: ':visible',
-            },
-          },
+          exportConfig,
         ],
       },
     },
