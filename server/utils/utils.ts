@@ -1,8 +1,7 @@
 import { type Request } from 'express'
 import { BadRequest } from 'http-errors'
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
-import { formatDate } from 'date-fns'
 
 import { RdsEntry } from '../@types'
 import { TrivyScanType } from '../data/converters/modelTypes'
@@ -282,7 +281,7 @@ export const formatActiveAgencies = (activeAgencies: Array<string>) => {
 }
 
 export const relativeTimeFromNow = (date: Date): string => {
-  return dayjs.default().to(dayjs.default(date))
+  return dayjs().to(dayjs(date))
 }
 
 export type DateDifference = {
@@ -305,8 +304,8 @@ export const differenceInDate = (from: Date, to: Date): DateDifference => {
       sortValue: Number.MIN_SAFE_INTEGER,
     }
   }
-  const fromDayJs = dayjs.default(from)
-  const toDayJs = dayjs.default(to)
+  const fromDayJs = dayjs(from)
+  const toDayJs = dayjs(to)
   const days = fromDayJs.diff(toDayJs, 'days')
 
   return {
@@ -351,10 +350,10 @@ export const median = (values: number[]): number => {
   return sortedValues.length % 2 ? sortedValues[half] : (sortedValues[half - 1] + sortedValues[half]) / 2
 }
 
-export const utcTimestampToUtcDate = (str: string) => (str ? formatDate(new Date(str), 'yyyy-MM-dd') : undefined)
+export const utcTimestampToUtcDate = (str: string) => (str ? dayjs(str).format('YYYY-MM-DD') : undefined)
 
 export const utcTimestampToUtcDateTime = (str: string) =>
-  str ? formatDate(new Date(str), 'dd-MMM-yyyy HH:mm:ss').toUpperCase() : undefined
+  str ? dayjs(str).format('DD-MMM-YYYY HH:mm:ss').toUpperCase() : undefined
 
 export function buildQuery(
   obj: Record<string, unknown>,

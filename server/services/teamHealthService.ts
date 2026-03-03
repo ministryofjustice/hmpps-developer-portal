@@ -1,6 +1,5 @@
 import dayjs from 'dayjs'
 
-import { startOfDay } from 'date-fns'
 import {
   DateDifference,
   associateBy,
@@ -289,7 +288,8 @@ export default class TeamHealthService {
       .filter(env => env.type === 'prod')
       .sort((e1, e2) => e1.buildDate.getTime() - e2.buildDate.getTime())[0]
 
-    const commitDate = component.latest_commit?.date_time && startOfDay(new Date(component.latest_commit?.date_time))
+    const commitDate =
+      component.latest_commit?.date_time && dayjs(new Date(component.latest_commit?.date_time)).startOf('day').toDate()
     const commitSha = component.latest_commit?.sha?.slice(0, 7)
 
     const useLatestDevOverLastCommit = component.part_of_monorepo || latestDevEnvironment?.buildDate >= commitDate
@@ -306,7 +306,7 @@ export default class TeamHealthService {
       baseSha,
       prodEnvSha: earliestProdEnvironment?.sha,
       drift: differenceInDate(baseDate, earliestProdEnvironment?.buildDate),
-      staleness: differenceInDate(startOfDay(now), baseDate),
+      staleness: differenceInDate(dayjs(now).startOf('day').toDate(), baseDate),
       environments: environmentsWithVersions,
     }
   }
