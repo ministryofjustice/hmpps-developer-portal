@@ -32,13 +32,10 @@ const exampleServiceArea = {
       id: 456,
       name: 'A Product name',
       subproduct: false,
-      legacy: false,
       description: 'A description of the project',
       phase: 'Private Beta',
       delivery_manager: 'Delivery Manager',
       product_manager: 'Product Manager',
-      confluence_link: 'https://atlassian.net/wiki/spaces/SOME/overview',
-      gdrive_link: '',
       createdAt: '2024-06-26T10:09:15.667Z',
       updatedAt: '2025-03-28T09:33:49.200Z',
       publishedAt: '2024-06-26T10:09:15.663Z',
@@ -77,11 +74,15 @@ describe('strapiApiClient', () => {
     describe('getProducts', () => {
       it('should return all products by default', async () => {
         const allProducts = {
-          data: [{ documentId: 'documentid1', name: 'Product', p_id: '1' }],
+          data: [{ documentId: 'documentid1', name: 'Product', p_id: '1', decommissioned: false }],
         } as ListResponse<Strapi.Product>
-        const productsResponse = [{ documentId: 'documentid1', name: 'Product', p_id: '1' }] as Product[]
+        const productsResponse = [
+          { documentId: 'documentid1', name: 'Product', p_id: '1', decommissioned: false },
+        ] as Product[]
         fakeStrapiApi
-          .get('/products?populate[product_set]=true&populate[service_area]=true&populate[team]=true')
+          .get(
+            '/products?populate[product_set]=true&populate[service_area]=true&populate[team]=true&filters[$or][0][decommissioned][$null]=true&filters[$or][1][decommissioned][$eq]=false',
+          )
           .reply(200, allProducts)
         const output = await strapiApiClient.getProducts({})
         expect(output).toEqual(productsResponse)
@@ -89,15 +90,17 @@ describe('strapiApiClient', () => {
 
       it('should return products with environments if selected', async () => {
         const allProducts = {
-          data: [{ documentId: 'documentid1', name: 'Product', p_id: '1' }],
+          data: [{ documentId: 'documentid1', name: 'Product', p_id: '1', decommissioned: true }],
         } as ListResponse<Strapi.Product>
-        const productsResponse = [{ documentId: 'documentid1', name: 'Product', p_id: '1' }] as Product[]
+        const productsResponse = [
+          { documentId: 'documentid1', name: 'Product', p_id: '1', decommissioned: true },
+        ] as Product[]
         fakeStrapiApi
           .get(
-            '/products?populate[product_set]=true&populate[service_area]=true&populate[team]=true&populate[components][populate][envs]=true',
+            '/products?populate[product_set]=true&populate[service_area]=true&populate[team]=true&populate[components][populate][envs]=true&filters[decommissioned][$eq]=true',
           )
           .reply(200, allProducts)
-        const output = await strapiApiClient.getProducts({ withEnvironments: true })
+        const output = await strapiApiClient.getProducts({ withEnvironments: true, isDecommissioned: true })
         expect(output).toEqual(productsResponse)
       })
     })

@@ -31,6 +31,7 @@ function createTable({
   columnSearchText = true,
   createdRow,
   ajaxErrorHandler,
+  stateSave = true,
 }) {
   const semverTidy = semVer => {
     // sometimes comes through as a number which has no match method
@@ -101,7 +102,7 @@ function createTable({
     data,
     columns,
     createdRow,
-    stateSave: true,
+    stateSave,
     // set to save state for 5 minutes
     duration: 300,
     initComplete: function () {

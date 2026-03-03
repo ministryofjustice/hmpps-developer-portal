@@ -2,7 +2,7 @@ import { Router } from 'express'
 import config from '../config'
 import type { Services } from '../services'
 import logger from '../../logger'
-import { getFormattedName, utcTimestampToUtcDateTime, mapToCanonicalEnv } from '../utils/utils'
+import { getFormattedName, utcTimestampToUtcDateTime, mapToCanonicalEnv, utcTimestampToUtcDate } from '../utils/utils'
 import {
   getProductionEnvironment,
   countTrivyHighAndCritical,
@@ -25,16 +25,19 @@ export default function routes({
   const router = Router()
 
   router.get('/', async (req, res) => {
+    const isDecommissioned = req.query.decommissioned === 'true' || false
+
     const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({ name: 'hmpps-sharepoint-discovery' })
     return res.render('pages/products', {
       jobName: scheduledJobRequest.name,
       lastSuccessfulRun: utcTimestampToUtcDateTime(scheduledJobRequest.last_successful_run),
+      decommissioned: isDecommissioned,
     })
   })
 
   router.get('/data', async (req, res) => {
-    const products = await serviceCatalogueService.getProducts({})
-
+    const isDecommissioned = req.query.decommissioned === 'true' || false
+    const products = await serviceCatalogueService.getProducts({ isDecommissioned })
     res.send(products)
   })
 
@@ -59,19 +62,17 @@ export default function routes({
     const displayProduct = {
       name: product.name,
       description: product.description,
-      confluenceLinks: product.confluence_link
-        ?.split(',')
-        .filter(link => link !== '')
-        .map(link => link.trim()),
-      gDriveLink: product.gdrive_link,
       id: product.p_id,
+      decommissioned: product.decommissioned,
+      decommissionDate: product.decommissioned_date ? utcTimestampToUtcDate(product.decommissioned_date) : null,
       isPrisonProduct: product.p_id.startsWith('DPS'),
       serviceOwner: product.service_area?.owner,
       productManager: product.product_manager,
       leadDeveloper: product.lead_developer,
       deliveryManager: product.delivery_manager,
+      technicalArchitect: product.technical_architect,
+      oversightPrincipalTechnicalArchitect: product.principal_architect,
       subProduct: product.subproduct,
-      legacyProduct: product.legacy,
       phase: product.phase,
       portfolio: product.portfolio,
       slackChannelId: product.slack_channel_id,

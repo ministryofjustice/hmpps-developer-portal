@@ -1,8 +1,7 @@
 import { type Request } from 'express'
 import { BadRequest } from 'http-errors'
-import * as dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
-import { formatDate } from 'date-fns'
 
 import { RdsEntry } from '../@types'
 import { TrivyScanType } from '../data/converters/modelTypes'
@@ -19,6 +18,11 @@ type HasTeamName = { team_name?: string }
 
 type HasNpm = { npm?: string }
 type HasIgnoreScripts = { ignore_scripts?: string | boolean }
+
+interface PortfolioForTeam {
+  teamName: string
+  portfolio?: string
+}
 
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0].toUpperCase() + word.toLowerCase().slice(1) : word
@@ -45,7 +49,7 @@ export const initialiseName = (fullName?: string): string | null => {
 }
 
 export const getNumericId = (req: Request, paramName: string): number => {
-  const id = req.params[paramName]
+  const id = req.params[paramName] as string
 
   if (!Number.isInteger(Number.parseInt(id, 10))) {
     throw new BadRequest()
@@ -57,11 +61,13 @@ export const getNumericId = (req: Request, paramName: string): number => {
 export const getMonitorType = (req: Request): string => {
   const { monitorType } = req.params
 
-  return ['product', 'team', 'service-area', 'custom-component-view'].includes(monitorType) ? monitorType : 'all'
+  return ['product', 'team', 'service-area', 'custom-component-view'].includes(monitorType as string)
+    ? (monitorType as string)
+    : 'all'
 }
 
 export const getMonitorName = (req: Request): string => {
-  const monitorName = req.params?.monitorName || ''
+  const monitorName = (req.params?.monitorName as string) || ''
 
   return monitorName.replace(/[^-a-z0-9]/g, '')
 }
@@ -102,24 +108,24 @@ export const sortGithubTeamsData = (dataItem: HasTeamName, compareDataItem: HasT
 }
 
 export const getFormattedName = (req: Request, param: string): string => {
-  const paramName = req.params[param]
+  const paramName = req.params[param] as string
   return paramName.replace(/[^-a-zA-Z0-9_.]/g, '')
 }
 
 export const getDocumentID = (req: Request, param: string): string => {
-  return req.params[param]
+  return req.params[param] as string
 }
 
 export const getComponentName = (req: Request): string => {
   const { componentName } = req.params
 
-  return componentName.replace(/[^-a-zA-Z0-9_.]/g, '')
+  return (componentName as string).replace(/[^-a-zA-Z0-9_.]/g, '')
 }
 
 export const getEnvironmentName = (req: Request): string => {
   const { environmentName } = req.params
 
-  return environmentName.replace(/[^-a-z0-9_]/g, '')
+  return (environmentName as string).replace(/[^-a-z0-9_]/g, '')
 }
 
 // Environment types that match our existing type definition
@@ -152,6 +158,13 @@ export function findTeamMatch(teams: Team[], name: string) {
   )
 }
 
+export function findPortfolioForTeam(teams: Team[]): PortfolioForTeam[] {
+  return teams.map(team => {
+    const portfolio = team.products?.find(product => product.portfolio !== undefined)?.portfolio
+    return { teamName: team.name, portfolio }
+  })
+}
+
 export function findProductMatch(products: Product[], name: string) {
   const formattedName = formatMonitorName(name)
   return products.find(product =>
@@ -181,26 +194,28 @@ export function getComponentsForTeam(team: Team): Component[] {
   return components
 }
 
-export async function addTeamToTrivyScan(teams: Team[], trivyScan: TrivyScanType[]) {
+export async function addTeamAndPortfolioToTrivyScan(teams: Team[], trivyScan: TrivyScanType[]) {
   return trivyScan.map(scan => {
     const scanMatch = findTeamMatch(teams, scan.name)
-
+    const teamPortfolio = findPortfolioForTeam(teams)
     const updatedScan = { ...scan }
 
     if (scanMatch) updatedScan.team = scanMatch.name
 
+    const addPortfolio = teamPortfolio.find(portfolio => portfolio.teamName === scanMatch?.name)
+    updatedScan.portfolio = addPortfolio?.portfolio
     return updatedScan
   })
 }
 
 export const getDependencyName = (req: Request): string => {
-  const dependencyName = req.params.dependencyName || ''
+  const dependencyName = (req.params.dependencyName as string) || ''
   // replace ~ with / so that actions still work
   return dependencyName.replace(/[^-a-z0-9_.~]/gi, '').replace(/~/g, '/')
 }
 
 export const getDependencyType = (req: Request): string => {
-  const dependencyType = req.params.dependencyType || ''
+  const dependencyType = (req.params.dependencyType as string) || ''
 
   return dependencyType.replace(/[^-a-z0-9_]/g, '')
 }
@@ -266,7 +281,7 @@ export const formatActiveAgencies = (activeAgencies: Array<string>) => {
 }
 
 export const relativeTimeFromNow = (date: Date): string => {
-  return dayjs.default().to(dayjs.default(date))
+  return dayjs().to(dayjs(date))
 }
 
 export type DateDifference = {
@@ -289,8 +304,8 @@ export const differenceInDate = (from: Date, to: Date): DateDifference => {
       sortValue: Number.MIN_SAFE_INTEGER,
     }
   }
-  const fromDayJs = dayjs.default(from)
-  const toDayJs = dayjs.default(to)
+  const fromDayJs = dayjs(from)
+  const toDayJs = dayjs(to)
   const days = fromDayJs.diff(toDayJs, 'days')
 
   return {
@@ -335,10 +350,10 @@ export const median = (values: number[]): number => {
   return sortedValues.length % 2 ? sortedValues[half] : (sortedValues[half - 1] + sortedValues[half]) / 2
 }
 
-export const utcTimestampToUtcDate = (str: string) => (str ? formatDate(new Date(str), 'yyyy-MM-dd') : undefined)
+export const utcTimestampToUtcDate = (str: string) => (str ? dayjs(str).format('YYYY-MM-DD') : undefined)
 
 export const utcTimestampToUtcDateTime = (str: string) =>
-  str ? formatDate(new Date(str), 'dd-MMM-yyyy HH:mm:ss').toUpperCase() : undefined
+  str ? dayjs(str).format('DD-MMM-YYYY HH:mm:ss').toUpperCase() : undefined
 
 export function buildQuery(
   obj: Record<string, unknown>,

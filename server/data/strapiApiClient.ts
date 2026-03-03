@@ -44,9 +44,11 @@ export default class StrapiApiClient {
   async getProducts({
     withEnvironments = false,
     withComponents = false,
+    isDecommissioned = false,
   }: {
     withEnvironments?: boolean
     withComponents?: boolean
+    isDecommissioned?: boolean
   }): Promise<Product[]> {
     const populate = ['product_set', 'service_area', 'team']
 
@@ -58,10 +60,14 @@ export default class StrapiApiClient {
       populate.push('components.envs')
     }
 
+    const decommissionedFilter = isDecommissioned
+      ? '&filters[decommissioned][$eq]=true'
+      : '&filters[$or][0][decommissioned][$null]=true&filters[$or][1][decommissioned][$eq]=false'
+
     return this.restClient
       .get<ListResponse<Strapi.Product>>({
         path: '/v1/products',
-        query: `${createStrapiQuery({ populate })}`,
+        query: `${createStrapiQuery({ populate })}${decommissionedFilter}`,
       })
       .then(unwrapListResponse)
   }

@@ -43,6 +43,8 @@ export default function routes({
       name: team.name,
       slug: teamSlug,
       products,
+      budgetCode: team.budget_code,
+      confluenceLink: team.confluence_link,
     }
 
     return res.render('pages/team', { team: displayTeam })

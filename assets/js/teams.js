@@ -7,6 +7,12 @@ jQuery(function () {
       },
     },
     {
+      data: 'budget_code',
+      createdCell: function (td, _cellData, rowData) {
+        $(td).html((rowData.budget_code ?? '').trim())
+      },
+    },
+    {
       data: 'products',
       render: function (data, type, row) {
         return createSearchableProductList(data)

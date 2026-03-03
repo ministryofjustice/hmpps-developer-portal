@@ -13,7 +13,7 @@
 
   <h1>Trivy Scan Results</h1>
   <form>
-		<div class="trivyFilter govuk-button-group">
+		<div class="trivy-filter govuk-button-group">
       <div class="label-and-button">
         {{ govukSelect({
           id: "team",
@@ -31,7 +31,25 @@
           attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
         }) }}
       </div>
+      <div class="label-and-button">
+        {{ govukSelect({
+          id: "portfolio",
+          name: "portfolio",
+          label: {
+          text: "Portfolio"
+          },
+          items: portfolio
+        }) }}
+        {{ govukButton({
+          id: "updatePortfolio",
+          name: "updatePortfolio",
+          text: "Update",
+          element: "button",
+          attributes: { "data-associated-select-id": "portfolio", "data-type-name": "portfolio"}
+        }) }}
+      </div>
 		</div>
+  </form>
     <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
     <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
     <input type="hidden" name="monitorId" id="monitorId" value="{{ monitorId }}">
@@ -153,7 +171,8 @@
     </div>
   </form>
   <br>
-  <p><strong>Note:</strong> The latest images are not retrieved from the health endpoint, making it unclear which environment they are deployed in.</p>
+  <p><strong>Note 1:</strong> The latest images are not retrieved from the health endpoint, making it unclear which environment they are deployed in.</p>
+  <p><strong>Note 2:</strong> Please be aware that only ONE dropdown can be used on the results table at a time.</p>
   <table id="trivyScansTable" class="stripe">
     <thead>
       <tr>
@@ -202,7 +221,7 @@
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
   <script src="/assets/js/common.js"></script>
   <script src="/assets/js/trivyScans.js"></script>
 {% endblock %}

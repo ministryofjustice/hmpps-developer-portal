@@ -16,6 +16,22 @@
       <td data-test="team-id">{{ team.id }}</td>
     </tr>
     <tr>
+      <th>Budget Code</th>
+      <td>{{ team.budgetCode }}</td>
+    </tr>
+    <tr>
+      <th>Confluence Page</th>
+      <td>
+        {% if team.confluenceLink %}
+          <a href="{{ team.confluenceLink }}" target="_blank" rel="noopener noreferrer">
+            <img src="/assets/images/confluence.png" alt="Confluence Logo" class="confluence-icon"/>
+          </a>
+        {% else %}
+          No Confluence Page
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
       <th>Products</th>
       <td>
         {% if team.products | length %}

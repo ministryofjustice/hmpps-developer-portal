@@ -188,10 +188,7 @@ describe('Alerts service', () => {
         { labels: { application: 'exampleApp2', environment: 'production' } },
       ] as Alert[]
       const environments = [{ name: 'preprod' }] as Environment[]
-      const teams = [
-        { name: 'Maintenance Team', slack_channel_name: 'maintenance-team' },
-        { name: 'Maintenance Team', slack_channel_name: 'maintenance-team' },
-      ] as Team[]
+      const teams = [{ name: 'Maintenance Team' }, { name: 'Maintenance Team' }] as Team[]
       const products = [{ name: 'TestProduct1' }, { name: 'TestProduct2' }]
       const revisedAlerts = [
         {

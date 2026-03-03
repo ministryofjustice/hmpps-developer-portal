@@ -24,6 +24,7 @@
   th, td {
     color: white;
     padding: govuk-spacing(1);
+    border: 1px solid white;
 
     a:link, a:visited {
       color: white;
@@ -72,7 +73,7 @@
   }
 }
 
-.veracodeFilter, .trivyFilter, .alertsFilter {
+.veracodeFilter, .alertsFilter {
   .label-and-button {
     .govuk-button {
       margin: 0 0 0 0;
@@ -399,12 +400,56 @@
 .trivyData tr.trivyCritical, .trivyData tr.trivyCritical td {
   background-color: govuk-colour('red');
   color: white;
+  a {
+    color: white;
+  }
+  .govuk-details__summary .govuk-details__summary-text {
+    color: white;
+  }
+  .govuk-details__text {
+    color: white;
+  }
+  .govuk-details__summary {
+    color: white;
+  }
 }
 
 .trivy-icon {
   width: 32px;
   height: 32px;
   margin-right: 5px;
+}
+
+.confluence-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 5px;
+}
+
+// For trivy dropdown name and selector
+
+.trivy-filter {
+  .label-and-button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+
+    .govuk-form-group {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .govuk-button-group {
+      display: flex;
+      gap: govuk-spacing(4);
+    }
+  }
+
+  .govuk-button {
+    margin-top: govuk-spacing(3);
+  }
 }
 
 .alertsAndScansCard {

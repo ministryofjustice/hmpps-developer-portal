@@ -99,11 +99,13 @@ export default class AlertsService {
 
   getAlertType = (req: Request): string => {
     const { alertType } = req.params
-    return ['application', 'environment', 'namespace', 'severity'].includes(alertType) ? alertType : 'all'
+    return ['application', 'environment', 'namespace', 'severity'].includes(alertType as string)
+      ? (alertType as string)
+      : 'all'
   }
 
   getAlertName = (req: Request): string => {
     const alertName = req.params?.alertName || ''
-    return alertName
+    return alertName as string
   }
 }

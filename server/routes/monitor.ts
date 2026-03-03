@@ -162,9 +162,11 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           customComponentDocumentId: monitorId.toString(),
           withEnvironments: true,
         })
-        customComponentView.components.forEach(component => {
-          environments = environments.concat(getUnwrappedEnvironmentData(component))
-        })
+        customComponentView.components
+          .filter(component => !component.archived)
+          .forEach(component => {
+            environments = environments.concat(getUnwrappedEnvironmentData(component))
+          })
       } else if (monitorType === 'product') {
         const productSlug = formatMonitorName(req.query.slug as string)
         const product = await serviceCatalogueService.getProduct({
@@ -173,9 +175,11 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           withEnvironments: true,
         })
 
-        product.components.forEach(component => {
-          environments = environments.concat(getUnwrappedEnvironmentData(component, product))
-        })
+        product.components
+          .filter(component => !component.archived)
+          .forEach(component => {
+            environments = environments.concat(getUnwrappedEnvironmentData(component, product))
+          })
       } else if (monitorType === 'team') {
         const teamSlug = formatMonitorName(req.query.slug as string)
         const team = await serviceCatalogueService.getTeam({
@@ -184,9 +188,11 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           withEnvironments: true,
         })
         team.products.forEach(product => {
-          product.components.forEach(component => {
-            environments = environments.concat(getUnwrappedEnvironmentData(component, product))
-          })
+          product.components
+            .filter(component => !component.archived)
+            .forEach(component => {
+              environments = environments.concat(getUnwrappedEnvironmentData(component, product))
+            })
         })
       } else if (monitorType === 'service-area') {
         const serviceAreaSlug = formatMonitorName(req.query.slug as string)
@@ -196,16 +202,20 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
           withProducts: true,
         })
         serviceArea.products.forEach(product => {
-          product.components.forEach(component => {
-            environments = environments.concat(getUnwrappedEnvironmentData(component, product))
-          })
+          product.components
+            .filter(component => !component.archived)
+            .forEach(component => {
+              environments = environments.concat(getUnwrappedEnvironmentData(component, product))
+            })
         })
       } else {
         const components = await serviceCatalogueService.getComponents()
 
-        components.forEach(component => {
-          environments = environments.concat(getUnwrappedEnvironmentData(component))
-        })
+        components
+          .filter(component => !component.archived)
+          .forEach(component => {
+            environments = environments.concat(getUnwrappedEnvironmentData(component))
+          })
       }
       res.json(environments)
     } catch (error) {
