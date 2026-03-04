@@ -3,6 +3,12 @@ function cleanColumnOutput(data) {
   return data.replace(unsafeOutputPattern, '')
 }
 
+function formatCsvCell(value) {
+  const stringValue = value == null ? '' : String(value)
+  const escaped = stringValue.replace(/"/g, '""')
+  return `"${escaped}"`
+}
+
 function createSearchableProductList(products) {
   if (!Array.isArray(products) || products.length === 0) {
     return '<p class="no-products">No Products</p>'
