@@ -2,6 +2,8 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>ministryofjustice/hmpps-renovate-config:node"],
   "prBodyTemplate": "{{{table}}}{{{notes}}}{{{warnings}}}{{{controls}}}",
+  "prCreation": "immediate",
+  "schedule": ["* * * * 0,6"],
   "packageRules": [
     {
       "matchManagers": ["npm"],
@@ -33,7 +35,7 @@
     },
     {
       "matchManagers": ["helm"],
-      "matchPaths": ["helm_deploy/health-developer-portal/**"],
+      "matchPaths": ["helm_deploy/hmpps-developer-portal/**"],
       "groupName": "helm hmpps-developer-portal",
       "schedule": ["after 2am and before 6am on Wednesday"],
       "stabilityDays": 0
