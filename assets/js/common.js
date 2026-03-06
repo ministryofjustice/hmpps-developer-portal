@@ -86,7 +86,7 @@ function createTable({
   }
 
   if (customCsvExport) {
-    exportConfig.customize = customCsvExport
+    exportCsvConfig.customize = customCsvExport
   }
 
   return new DataTable(`#${id}`, {

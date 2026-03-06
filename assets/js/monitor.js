@@ -284,11 +284,8 @@ function customiseMonitorExport(csv, config, api) {
         }
 
         const link = $cell.find('a')
-        if (link.length) {
-          cellsInTheRow.push(link.text().trim())
-          return
-        }
-        cellsInTheRow.push($cell.text().trim())
+        const cellData = link.length ? link : $cell
+        cellsInTheRow.push(cellData.text().trim())
       })
 
     if (cellsInTheRow.length) {
