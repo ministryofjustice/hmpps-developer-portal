@@ -4,7 +4,7 @@ function cleanColumnOutput(data) {
 }
 
 function formatCsvCell(value) {
-  const stringValue = value == null ? '' : String(value)
+  const stringValue = value === null ? '' : String(value)
   const escaped = stringValue.replace(/"/g, '""')
   return `"${escaped}"`
 }
@@ -78,7 +78,7 @@ function createTable({
     },
   })
 
-  const exportConfig = {
+  const exportCsvConfig = {
     extend: 'csv',
     exportOptions: {
       columns: ':visible',
@@ -100,7 +100,7 @@ function createTable({
               columns: ':visible',
             },
           },
-          exportConfig,
+          exportCsvConfig,
         ],
       },
     },
