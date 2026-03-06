@@ -94,6 +94,7 @@ jQuery(async function () {
     ajaxErrorHandler: function (jqXHR, textStatus, errorThrown) {
       console.error('Health Monitor DataTables error:', textStatus, errorThrown, jqXHR)
     },
+    customCsvExport: customiseMonitorExport,
   })
 
   monitorTable.on('xhr', () => {
@@ -256,4 +257,40 @@ function isUp(status) {
 
 function isDown(status) {
   return status && ['DOWN', 'UNKNOWN', '500'].includes(`${status}`.toUpperCase())
+}
+
+function customiseMonitorExport(csv, config, api) {
+  const headers = []
+
+  $('#statusTable thead th:visible').each(function () {
+    headers.push($(this).text().trim())
+  })
+
+  const rows = [headers]
+
+  $('#statusTable tbody tr:visible').each(function () {
+    const cellsInTheRow = []
+
+    $(this)
+      .find('td:visible')
+      .each(function () {
+        const $cell = $(this)
+
+        //check for health link href first, otherwise use the link's text, or plain text
+        const healthLink = $cell.find('a.statusTileHealth')
+        if (healthLink.length) {
+          cellsInTheRow.push(healthLink.attr('href'))
+          return
+        }
+
+        const link = $cell.find('a')
+        const cellData = link.length ? link : $cell
+        cellsInTheRow.push(cellData.text().trim())
+      })
+
+    if (cellsInTheRow.length) {
+      rows.push(cellsInTheRow)
+    }
+  })
+  return rows.map(row => row.map(formatCsvCell).join(',')).join('\n')
 }
