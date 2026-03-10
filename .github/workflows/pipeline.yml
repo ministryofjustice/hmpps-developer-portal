@@ -74,7 +74,7 @@ jobs:
       helm_timeout: '5m'
   deploy_stage:
     name: Deploy to the stage environment
-    if: github.ref == 'refs/heads/stage'
+    if: startsWith(github.ref, 'refs/heads/stage')
     needs:
       - build
       - helm_lint
