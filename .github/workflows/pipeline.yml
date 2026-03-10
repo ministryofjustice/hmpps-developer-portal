@@ -62,7 +62,7 @@ jobs:
       docker_multiplatform: false
   deploy_dev:
     name: Deploy to the dev environment
-    if: !startsWith(github.ref, 'refs/heads/stage')
+    if: ${{ !startsWith(github.ref, 'refs/heads/stage') }}
     needs:
       - build
       - helm_lint
