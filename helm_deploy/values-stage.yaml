@@ -22,4 +22,5 @@ generic-service:
       REDIS_AUTH_TOKEN: "auth_token"
 
 generic-prometheus-alerts:
+  targetApplication: hmpps-developer-portal-stage
   alertSeverity: hmpps-sre-alerts-nonprod
