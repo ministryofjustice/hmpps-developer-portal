@@ -41,7 +41,7 @@ jobs:
   helm_lint:
     strategy:
       matrix:
-        environments: ['dev', 'prod']
+        environments: ['dev', 'prod', 'stage']
     name: helm lint
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
@@ -62,7 +62,7 @@ jobs:
       docker_multiplatform: false
   deploy_dev:
     name: Deploy to the dev environment
-    # if: github.ref == 'refs/heads/main'
+    if: ${{ !startsWith(github.ref, 'refs/heads/stage') }}
     needs:
       - build
       - helm_lint
@@ -70,6 +70,18 @@ jobs:
     secrets: inherit
     with:
       environment: 'dev'
+      app_version: '${{ needs.build.outputs.app_version }}'
+      helm_timeout: '5m'
+  deploy_stage:
+    name: Deploy to the stage environment
+    if: ${{ startsWith(github.ref, 'refs/heads/stage') || github.ref == 'refs/heads/main' }}
+    needs:
+      - build
+      - helm_lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: 'stage'
       app_version: '${{ needs.build.outputs.app_version }}'
       helm_timeout: '5m'
   deploy_prod:
