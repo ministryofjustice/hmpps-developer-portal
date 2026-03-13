@@ -52,7 +52,7 @@
     "datatables.net-dt": "^2.3.7",
     "datatables.net-searchpanes": "^2.3.5",
     "datatables.net-select": "^3.1.3",
-    "dayjs": "^1.11.19",
+    "dayjs": "^1.11.20",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "govuk-frontend": "^5.14.0",
@@ -61,7 +61,7 @@
     "jquery": "^4.0.0",
     "js-base64": "^3.7.8",
     "jszip": "3.10.1",
-    "mermaid": "^11.12.3",
+    "mermaid": "^11.13.0",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
     "pako": "^2.1.0",
@@ -83,7 +83,7 @@
     "@types/express-session": "^1.18.2",
     "@types/http-errors": "^2.0.5",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.11.0",
+    "@types/node": "^24.12.0",
     "@types/nunjucks": "^3.2.6",
     "@types/pako": "^2.0.4",
     "@types/superagent": "^8.1.9",
@@ -97,32 +97,20 @@
     "cypress-axe": "^1.7.0",
     "cypress-multi-reporters": "^2.0.5",
     "dotenv": "^17.3.1",
-    "jest": "^30.2.0",
+    "jest": "^30.3.0",
     "jest-html-reporter": "^4.3.0",
     "jest-junit": "^16.0.0",
-    "lint-staged": "^16.3.2",
+    "lint-staged": "^16.3.3",
     "mocha-junit-reporter": "^2.2.1",
     "nock": "^14.0.11",
     "nodemon": "^3.1.14",
     "prettier": "^3.8.1",
-    "sass": "^1.97.3",
+    "sass": "^1.98.0",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3"
   },
   "overrides": {
-    "mermaid": {
-      "lodash-es": "4.17.23"
-    },
-    "@chevrotain/cst-dts-gen": {
-      "lodash-es": "4.17.23"
-    },
-    "@chevrotain/gast": {
-      "lodash-es": "4.17.23"
-    },
-    "chevrotain": {
-      "lodash-es": "4.17.23"
-    },
     "mocha": {
       "diff": "^8.0.3",
       "serialize-javascript": "^7.0.4"
