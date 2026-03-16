@@ -12,7 +12,7 @@
 
   &-count {
     background-color: $govuk-error-colour;
-    color: govuk-colour("white");
+    color: govuk-colour('white');
     border-radius: 50%;
     width: 50px;
     height: 50px;
@@ -51,7 +51,7 @@
 }
 
 .monitoring-channel-structure {
-  background-color: govuk-colour("light-grey");
+  background-color: govuk-colour('black', $variant: 'tint-95');
   padding: 15px;
   border-radius: 4px;
   font-family: monospace;
