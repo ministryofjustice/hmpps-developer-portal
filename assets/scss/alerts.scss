@@ -76,7 +76,7 @@
 }
 
 .active-alert {
-  background-color: #A72916 !important;
+  background-color: govuk-colour('red', $variant: 'shade-25') !important;
 }
 
 // For update buttons when page is bigger than 640px

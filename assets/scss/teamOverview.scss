@@ -1,6 +1,6 @@
 .monitoring-channel {
   &-warning {
-    background-color: #fef7f7;
+    background-color: govuk-colour('red', $variant: 'tint-95');
     padding: 20px;
     border-left: 5px solid $govuk-error-colour;
     margin-bottom: 30px;
