@@ -1,0 +1,30 @@
+{% extends "../partials/layout.njk" %}
+
+{%- from "moj/components/alert/macro.njk" import mojAlert -%}
+
+{% set pageTitle = applicationName + " - " + Dashboard %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb("Dashboard", []) }}
+
+<h1>Welcome to your dashboard, Username </h1>
+
+  {{ mojAlert({
+      variant: "information",
+      title: "You do not have any pinned products",
+      showTitleAsHeading: true,
+      dismissible: false,
+      html: 'Click on the "add a product" button to add one.'
+    }) }}
+
+{% endblock %}
+<div class="banner">
+  <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
+</div>
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+
+  <script src="/assets/js/common.js"></script>
+{% endblock %}
