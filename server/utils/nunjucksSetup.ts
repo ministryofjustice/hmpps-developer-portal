@@ -16,7 +16,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
 
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Developer Portal'
-  app.locals.isDev = !production
+  app.locals.isDev = !production && !stage
   app.locals.isStage = !production && stage
 
   // Cachebusting version string
