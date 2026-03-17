@@ -11,6 +11,13 @@
   }
   </style>
   {% endif %}
+  {% if isStage %}
+    <style type="text/css" nonce="{{ cspNonce }}">
+      .govuk-template__body {
+        border: 10px solid orange;
+      }
+    </style>
+  {% endif %}
 
   <script src="/assets/js/jquery.min.js"></script>
   <script src="/assets/js/dataTables.min.js"></script>

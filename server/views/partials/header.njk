@@ -39,7 +39,12 @@
       {% if isDev %}
       {{govukTag({
           text: "DEV"
-        })}} 
+        })}}
+      {% endif %}
+      {% if isStage %}
+        {{govukTag({
+          text: "STAGE"
+        })}}
       {% endif %}
     </div>
 
