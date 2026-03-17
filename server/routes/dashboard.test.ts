@@ -1,6 +1,5 @@
 import type { Express } from 'express'
 import request from 'supertest'
-import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import { Product } from '../data/modelTypes'
@@ -30,13 +29,7 @@ describe('/dashboard', () => {
         name: 'hmpps-github-discovery-incremental',
         last_successful_run: '2023-10-01T12:00:00Z',
       })
-      return request(app)
-        .get('/dashboard')
-        .expect('Content-Type', /html/)
-        .expect(200)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-        })
+      return request(app).get('/dashboard').expect('Content-Type', /html/).expect(200)
     })
   })
 })
