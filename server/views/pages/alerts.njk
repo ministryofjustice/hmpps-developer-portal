@@ -47,7 +47,7 @@
     <input type="hidden" name="alertName" id="alertName" value="{{ alertName }}">
     <input type="hidden" name="alertType" id="alertType" value="{{ alertType }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
-    
+
     <div class="alert-selectors govuk-button-group">
       <div class="alert-labels">
         <div class="label-and-button">
@@ -63,7 +63,6 @@
             id: "updateApplicationName",
             name: "updateApplicationName",
             text: "Update",
-            element: "button",
             attributes: { "data-associated-select-id": "applicationName", "data-type-name": "application-name"}
           }) }}
         </div>
@@ -80,7 +79,6 @@
             id: "updateEnvironment",
             name: "updateEnvironment",
             text: "Update",
-            element: "button",
             attributes: { "data-associated-select-id": "environment", "data-type-name": "environments"}
           }) }}
         </div>
@@ -97,7 +95,6 @@
             id: "updateNamespace",
             name: "updateNamespace",
             text: "Update",
-            element: "button",
             attributes: { "data-associated-select-id": "namespace", "data-type-name": "namespaces"}
           }) }}
         </div>
@@ -114,7 +111,6 @@
             id: "updateSeverityLabel",
             name: "updateSeverityLabel",
             text: "Update",
-            element: "button",
             attributes: { "data-associated-select-id": "severityLabel", "data-type-name": "severity-labels"}
           }) }}
         </div>
@@ -131,7 +127,6 @@
             id: "updateTeam",
             name: "updateTeam",
             text: "Update",
-            element: "button",
             attributes: { "data-associated-select-id": "team", "data-type-name": "teams"}
           }) }}
         </div>
@@ -148,7 +143,6 @@
             id: "updatePortfolio",
             name: "updatePortfolio",
             text: "Update",
-            element: "button",
             attributes: { "data-associated-select-id": "portfolio", "data-type-name": "portfolios"}
           }) }}
         </div>
@@ -157,13 +151,12 @@
         {{ govukButton({
           id: "resetFilters",
           name: "resetFilters",
-          text: "Reset Filters",
-          element: "button"
+          text: "Reset Filters"
         }) }}
       </div>
     </div>
   </form>
-  
+
   <p id="lastUpdated"></p>
   <div id="alertsErrorStatus"></div>
 

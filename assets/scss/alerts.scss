@@ -50,7 +50,7 @@
   }
 
   th {
-    background-color: govuk-colour("dark-grey");
+    background-color: govuk-colour('black', $variant: 'tint-25');
   }
 
   th:hover {
@@ -58,7 +58,7 @@
   }
 
   tr  {
-    background-color: govuk-colour("dark-grey");
+    background-color: govuk-colour('black', $variant: 'tint-25');
   }
 
   th, td {
@@ -76,7 +76,7 @@
 }
 
 .active-alert {
-  background-color: #A72916 !important;
+  background-color: govuk-colour('red', $variant: 'shade-25') !important;
 }
 
 // For update buttons when page is bigger than 640px

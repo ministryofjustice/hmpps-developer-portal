@@ -6,7 +6,7 @@
   width: 100%;
 
   tr {
-    background-color: grey;
+    background-color: govuk-colour('black', $variant: 'tint-50');
 
     &.statusTileUp {
       background-color: govuk-colour('green');
@@ -43,7 +43,7 @@
   width: 100%;
   thead {
     tr {
-      background-color: grey;
+      background-color: govuk-colour('black', $variant: 'tint-50');
     }
     button, th {
       color: white;
@@ -191,7 +191,7 @@
 
   th {
     text-align: right;
-    background-color: govuk-colour('light-grey');
+    background-color: govuk-colour('black', $variant: 'tint-95');
 
     &.govuk-table__header {
       text-align: left;
@@ -211,7 +211,7 @@
   }
 
   tr:nth-of-type(2n + 1) td {
-    background-color: govuk-colour('light-grey');
+    background-color: govuk-colour('black', $variant: 'tint-95');
 
     &.statusTileUp {
       color: white;
@@ -261,7 +261,7 @@
 }
 
 .veracode--missing {
-  background-color: govuk-colour('light-grey');
+  background-color: govuk-colour('black', $variant: 'tint-95');
 }
 
 .veracode--passed {
@@ -357,14 +357,14 @@
 
   th {
     text-align: center;
-    background-color: govuk-colour('light-grey');
+    background-color: govuk-colour('black', $variant: 'tint-95');
 
     &.govuk-table__header {
       text-align: left;
     }
   }
   tr:nth-of-type(2n + 1) td {
-    background-color: govuk-colour('light-grey');
+    background-color: govuk-colour('black', $variant: 'tint-95');
   }
 
   &.category {

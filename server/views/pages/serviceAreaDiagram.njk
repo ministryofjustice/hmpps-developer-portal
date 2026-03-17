@@ -10,7 +10,7 @@
 
 {% block content %}
     {% macro serviceAreaDiagram(serviceArea) %}
-        graph {{orientation}} 
+        graph {{orientation}}
           {{serviceArea.id}}["{{serviceArea.name}}"]
           {% for product in serviceArea.products %}
             subgraph {{product.productCode}}["{{product.productName}}"]
@@ -24,7 +24,7 @@
           {% endfor %}
     {% endmacro %}
 
-    <h1 id="detailPageTitle">{{serviceArea.name}}</h1>  
+    <h1 id="detailPageTitle">{{serviceArea.name}}</h1>
     <input type="hidden" id="serviceAreaSlug" name="serviceAreaSlug" value="{{serviceArea.slug}}">
     <div class="monitor-selectors govuk-button-group">
         {{ govukSelect({
@@ -38,14 +38,12 @@
         {{ govukButton({
             id: "updateServiceArea",
             name: "updateServiceArea",
-            text: "Update",
-            element: "button"
+            text: "Update"
         }) }}
         {{ govukButton({
             id: "toggleOrientation",
             name: "toggleOrientation",
-            text: "Toggle Orientation",
-            element: "button"
+            text: "Toggle Orientation"
             }) }}
         {{ govukButton({
             id: "viewImage",
@@ -53,7 +51,7 @@
             href: "https://mermaid.ink/img/pako:" + serviceAreaDiagram(serviceArea) | toMermaidEncodedString
         }) }}
     </div>
-  
+
   {% set source %}
     <a class="govuk-link--no-visited-state" href="https://mermaid.live/edit#pako:{{ serviceAreaDiagram(serviceArea) | toMermaidEncodedString }}">View in mermaid js editor</a>
     <br/>
@@ -65,9 +63,9 @@
     html: source,
     classes: "govuk-!-margin-top-9"
    }) }}
- 
+
    <div class="service-area-diagram"></div>
-  
+
     <div>
        <h2 id="serviceAreaName">{{serviceArea.name}}</h2>
        <h3>Contains</h3>
@@ -78,7 +76,7 @@
                 {% for component in product.components %}
                     <li>{{component.name }}</li>
                 {% endfor %}
-              </ul>  
+              </ul>
             </li>
             {% else %}
                 <p>No other services</p>
@@ -92,6 +90,6 @@
 
     <script type="module" src="/assets/frontendInit.js"></script>
     <script type="module" src="/assets/svg-pan-zoom.min.js"></script>
-    
+
     <script type="module" src="/assets/js/serviceAreaDiagram.js"></script>
 {% endblock %}
