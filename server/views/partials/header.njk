@@ -38,9 +38,9 @@
       <a class="moj-header__link moj-header__link--service-name" href="/">{{ applicationName }}</a>
 
       {% if isDev or isStage %}
-      {{ govukTag
-        ({ text: "{{ isDev ? 'DEV' : 'STAGE' }}" })
-        }}
+        {{ govukTag({
+          text: isDev ? 'DEV' : 'STAGE'
+        }) }}
       {% endif %}
 
     </div>
