@@ -37,9 +37,12 @@
 
       <a class="moj-header__link moj-header__link--service-name" href="/">{{ applicationName }}</a>
 
-      {% if isDev or isStage %}
+      {%  if isDev %}
+        {% set header = 'DEV' %}
+      {%  elif isStage %}
+        {% set header = 'STAGE' %}
         {{ govukTag({
-          text: isDev ? 'DEV' : 'STAGE'
+          text: header
         }) }}
       {% endif %}
 
