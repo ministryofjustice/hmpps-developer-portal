@@ -9,13 +9,15 @@ import { ApplicationInfo } from '../applicationInfo'
 import { FieldValidationError } from '../@types/FieldValidationError'
 
 const production = process.env.NODE_ENV === 'production'
+const stage = process.env.NODE_ENV === 'stage'
 
 export default function nunjucksSetup(app: express.Express, applicationInfo: ApplicationInfo): void {
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Developer Portal'
-  app.locals.isDev = !production
+  app.locals.isDev = !production && !stage
+  app.locals.isStage = !production && stage
 
   // Cachebusting version string
   if (production) {
