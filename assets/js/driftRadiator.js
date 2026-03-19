@@ -42,12 +42,21 @@ class DeploymentRenderer {
             const gitDiffUrl = `https://github.com/ministryofjustice/${component.repo}/compare/${env.sha}...${component.baseSha}`
             const showDiff = Boolean(component.baseSha) && env.sha !== component.baseSha
             const diffAnchor = showDiff ? `(<a class="govuk-link--no-visited-state" href="${gitDiffUrl}">diff</a>)` : ''
+            const dayLabel = env.daysSinceUpdated === 1 ? 'day' : 'days'
+            const staleTooltip =
+              env.daysSinceUpdated > 0
+                ? ' title="This data is not up-to-date (it was last updated ' +
+                  env.daysSinceUpdated +
+                  ' ' +
+                  dayLabel +
+                  ' ago)"'
+                : ''
             return `
           <li>
-            <a class="env govuk-link--no-visited-state" href="/components/${component.name}/environment/${env.name}">
+            <a class="env govuk-link--no-visited-state" href="/components/${component.name}/environment/${env.name}"${staleTooltip}>
                 ${env.name}${env.daysSinceUpdated > 0 ? '&#129301' : ''}
                 <!-- ${env.daysSinceUpdated} days since last update --!>
-            </a> 
+            </a>
                 ${env.version}
                 ${diffAnchor}
           </li>`
@@ -66,7 +75,7 @@ class DeploymentRenderer {
           </td>
           <td class="govuk-table__cell">
             <div>
-              <span class="env">Main:</span> 
+              <span class="env">Main:</span>
               <span class="govuk-!-padding-left-7">${component.latestCommit.date} <span class="govuk-!-padding-left-8">${component.latestCommit.sha}</span></span>
             </div>
             <div class="govuk-!-margin-top-0"">
