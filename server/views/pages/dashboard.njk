@@ -11,6 +11,21 @@
 
 <h1>Welcome to your dashboard, Username </h1>
 
+  {% from "govuk/components/input/macro.njk" import govukInput %}
+
+  {{ govukInput({
+  label: {
+    text: "Please enter your name",
+    classes: "govuk-label--m"
+  },
+  id: "dashboard-user-name",
+  name: "userName",
+  button: {
+  text: "Search"
+    }
+}) }}
+  <p id ="output"></p>
+
   {{ mojAlert({
       variant: "information",
       title: "You do not have any pinned products",
@@ -25,6 +40,6 @@
 </div>
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-
+  <script type="module" src="/assets/js/userCookies.js"></script>
   <script src="/assets/js/common.js"></script>
 {% endblock %}
