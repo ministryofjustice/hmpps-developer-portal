@@ -332,13 +332,11 @@
 
             {% set securityConfigurationList = securityConfigurationList.concat([
               {
-                title: { text: "IP Allow List" },
-                hint: { html: "Enable on Ingress resource using <a href='https://github.com/ministryofjustice/hmpps-helm-charts/blob/main/charts/generic-service/values.yaml' target='_blank' class='govuk-link--no-visited-state'><i>allowlist</i> helm value.</a>" },
+                title: { html: "IP Allow List <a href='https://github.com/ministryofjustice/hmpps-helm-charts/blob/main/charts/generic-service/values.yaml' target='_blank' title='Enable on Ingress resource using allowlist helm value' class='govuk-link--no-visited-state'>&#9432;</a>" },
                 status: { html: ipStatusHtml }
               },
               {
-                title: { text: "ModSecurity" },
-                hint: { html: "Should be enabled if site is public facing and has no IP allow list enabled. Configure it via 'modsecurity_enabled' in <a href='https://github.com/ministryofjustice/hmpps-helm-charts/blob/main/charts/generic-service/values.yaml' target='_blank' class='govuk-link--no-visited-state'>helm values</a>, also see <a href='https://user-guide.cloud-platform.service.justice.gov.uk/documentation/networking/modsecurity.html' target='_blank' class='govuk-link--no-visited-state'>Cloudplatform guide</a>" },
+                title: { html: "ModSecurity <a href='https://github.com/ministryofjustice/hmpps-helm-charts/blob/main/charts/generic-service/values.yaml' target='_blank' title='Should be enabled if site is public facing and has no IP allow list. Configure via modsecurity_enabled in helm values.' class='govuk-link--no-visited-state'>&#9432;</a>" },
                 status: { html: modsecStatusHtml }
               }
             ]) %}
@@ -346,8 +344,7 @@
             {% if component.language == "TypeScript" or component.language == "JavaScript" %}
               {% set securityConfigurationList = securityConfigurationList.concat([
                 {
-                  title: { text: "npm ignore-scripts" },
-                  hint: { html: "See <a href='https://www.npmjs.com/package/@ministryofjustice/hmpps-npm-script-allowlist' target='_blank' class='govuk-link--no-visited-state'>hmpps-npm-allow-scripts</a>" },
+                  title: { html: "npm ignore-scripts <a href='https://www.npmjs.com/package/@ministryofjustice/hmpps-npm-script-allowlist' target='_blank' title='See hmpps-npm-allow-scripts package' class='govuk-link--no-visited-state'>&#9432;</a>" },
                   status: { html: npmStatusHtml }
                 }
               ]) %}
