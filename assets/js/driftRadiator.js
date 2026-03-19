@@ -45,11 +45,7 @@ class DeploymentRenderer {
             const dayLabel = env.daysSinceUpdated === 1 ? 'day' : 'days'
             const staleTooltip =
               env.daysSinceUpdated > 0
-                ? ' title="This data is not up-to-date (it was last updated ' +
-                  env.daysSinceUpdated +
-                  ' ' +
-                  dayLabel +
-                  ' ago)"'
+                ? ` title="This data is not up-to-date (it was last updated ${env.daysSinceUpdated} ${dayLabel} ago)"`
                 : ''
             return `
           <li>
