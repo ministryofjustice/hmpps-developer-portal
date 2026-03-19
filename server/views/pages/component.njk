@@ -338,12 +338,17 @@
               {
                 title: { text: "ModSecurity" },
                 status: { html: modsecStatusHtml }
-              },
-              {
-                title: { text: "npm ignore list enabled" },
-                status: { html: npmStatusHtml }
               }
             ]) %}
+
+            {% if component.language == "TypeScript" or component.language == "JavaScript" %}
+              {% set securityConfigurationList = securityConfigurationList.concat([
+                {
+                  title: { text: "npm ignore-scripts" },
+                  status: { html: npmStatusHtml }
+                }
+              ]) %}
+            {% endif %}
           {% endif %}
         {% endfor %}
 
