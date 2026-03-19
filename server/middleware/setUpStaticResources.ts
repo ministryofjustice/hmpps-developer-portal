@@ -51,6 +51,10 @@ export default function setUpStaticResources(): Router {
     router.use('/assets/js/dayjs/plugin/relativeTime.js', express.static(path.join(process.cwd(), dir), cacheControl))
   })
 
+  Array.of('/node_modules/js-cookie/dist/js.cookie.min.js').forEach(dir => {
+    router.use('/assets/js/js-cookie.js', express.static(path.join(process.cwd(), dir), cacheControl))
+  })
+
   // Don't cache dynamic resources
   router.use(noCache())
 

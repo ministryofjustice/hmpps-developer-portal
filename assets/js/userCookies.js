@@ -1,6 +1,3 @@
-// import Cookies from 'js-cookie'
-import Cookies from 'https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/+esm'
-
 class UserCookies {
   constructor(userName, expiryDays = 7) {
     if (!userName || typeof userName !== 'string') {
@@ -11,9 +8,6 @@ class UserCookies {
   }
   //Set userName cookie
   setUserName(name) {
-    if (!name || typeof name !== 'string') {
-      throw new Error('Name must be a string')
-    }
     Cookies.set(this.userName, name, { expires: this.expiryDays, path: '/' })
   }
 
@@ -38,13 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   input.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
-      console.log('enter clicked', event)
       event.preventDefault()
       try {
         const name = input.value.trim()
-        console.log(name)
         userCookie.setUserName()
-        console.log(userCookie)
         document.getElementById('output').textContent = `Name saved: ${name}`
         event.target.value = '' //clear input after saving
       } catch (err) {
