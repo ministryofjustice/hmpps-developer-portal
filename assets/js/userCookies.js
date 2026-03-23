@@ -1,43 +1,29 @@
-class UserCookies {
-  constructor(userName, expiryDays = 7) {
-    if (!userName || typeof userName !== 'string') {
-      throw new Error('Name must be a string')
-    }
-    this.userName = userName
-    this.expiryDays = expiryDays
-  }
-  //Set userName cookie
-  setUserName(name) {
-    Cookies.set(this.userName, name, { expires: this.expiryDays, path: '/' })
-  }
-
-  //Read userName cookie
-  getUserName() {
-    return Cookies.get(this.userName) || null
-  }
-
-  //Delete userName cookie
-  deleteUserName() {
-    Cookies.remove(this.userName, { path: '/' })
-  }
-}
-
-//Create instance
-const userCookie = new UserCookies('username', 7)
-
-//Event listener
 document.addEventListener('DOMContentLoaded', () => {
-  // document.getElementById('dashboard-user-name').addEventListener('keydown', (event) => {
   const input = document.getElementById('dashboard-user-name')
 
-  input.addEventListener('keydown', function (event) {
+  input.addEventListener('keydown', async event => {
     if (event.key === 'Enter') {
       event.preventDefault()
+      const value = input.value.trim()
+      if (!value) {
+        document.getElementById('output').textContent = 'Please enter a name and press enter'
+        throw new Error('Please enter a name')
+      }
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
       try {
-        const name = input.value.trim()
-        userCookie.setUserName()
-        document.getElementById('output').textContent = `Name saved: ${name}`
-        event.target.value = '' //clear input after saving
+        const response = await fetch('/dashboard/name', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken,
+          },
+          body: JSON.stringify({ name: value }),
+        })
+        const data = await response.json()
+        document.getElementById('output').textContent = data.message || `Name set as: ${value}`
+        input.value = ''
       } catch (err) {
         document.getElementById('output').textContent = err.message
       }
