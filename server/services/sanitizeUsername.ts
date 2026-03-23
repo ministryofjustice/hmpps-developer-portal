@@ -13,7 +13,7 @@ export function sanitizeNameInput(input: unknown, options: NameOptions = {}): st
   let name = input.replace(regex, '')
   try {
     name = name.normalize('NFC')
-  } catch (error) {
+  } catch {
     return input
   }
   name = name.trim()
