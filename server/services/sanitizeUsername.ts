@@ -14,8 +14,7 @@ export function sanitizeNameInput(input: unknown, options: NameOptions = {}): st
   try {
     name = name.normalize('NFC')
   } catch (error) {
-    // intentionally left empty because this error is safe to ignore
-    console.debug('Ignored error:', error)
+    return input
   }
   name = name.trim()
   if (collapseWhitespace) {
