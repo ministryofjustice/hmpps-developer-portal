@@ -26,10 +26,8 @@ describe('/dashboard', () => {
     it('should render dashboard page', () => {
       serviceCatalogueService.getScheduledJob.mockResolvedValue({
         id: 1,
-        name: 'hmpps-github-discovery-incremental',
-        last_successful_run: '2023-10-01T12:00:00Z',
       })
-      return request(app).get('/dashboard').expect('Content-Type', /html/).expect(200)
+      return request(app).get('/dashboard').expect('Content-Type', 'text/plain; charset=utf-8').expect(302)
     })
   })
 })

@@ -13,7 +13,7 @@ export class CookieService {
 
   // Build a Set-Cookie string
   setStringHeader(name: string, value: string): string {
-    return `${encodeURIComponent(name)}=${encodeURIComponent(value)} Path=/; HttpOnly; SameSite=Lax`
+    return `${encodeURIComponent(name)}=${encodeURIComponent(value)}; Path=/; Max-Age=31536000; HttpOnly; SameSite=Lax`
   }
 }
 

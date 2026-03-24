@@ -1,31 +1,29 @@
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('dashboard-user-name')
+  const output = document.getElementById('output')
+  const initialName = ' '
 
-  input.addEventListener('keydown', async event => {
+  if (!input) return
+
+  if (initialName && !input.value) {
+    input.value = initialName
+  }
+  input.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
-      event.preventDefault()
       const value = input.value.trim()
+
       if (!value) {
-        document.getElementById('output').textContent = 'Please enter a name and press enter'
-        throw new Error('Please enter a name')
+        event.preventDefault()
+
+        if (output) {
+          output.textContent = 'Please enter a name and press enter'
+          throw new Error('Please enter a name')
+        }
+        return
       }
-      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      try {
-        const response = await fetch('/dashboard/name', {
-          method: 'POST',
-          credentials: 'same-origin',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfToken,
-          },
-          body: JSON.stringify({ name: value }),
-        })
-        const data = await response.json()
-        document.getElementById('output').textContent = data.message || `Name set as: ${value}`
-        input.value = ''
-      } catch (err) {
-        document.getElementById('output').textContent = err.message
+
+      if (output) {
+        output.textContent = `Name set as: ${value}`
       }
     }
   })
