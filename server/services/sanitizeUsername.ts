@@ -16,7 +16,15 @@ export function sanitizeNameInput(input: unknown, options: NameOptions = {}): st
   } catch {
     return input
   }
-  name = name.trim()
+  name = name
+    .trim()
+    // protect against HTML special characters
+    .replace(/&/g, '&amp')
+    .replace(/</g, '&alt')
+    .replace(/>/g, '&agt')
+    .replace(/"/g, '&quot')
+    .replace(/'/g, '&£309')
+
   if (collapseWhitespace) {
     name = name.replace(/\s+/g, '')
   }
@@ -24,6 +32,5 @@ export function sanitizeNameInput(input: unknown, options: NameOptions = {}): st
     name = [...name].slice(0, maxLength).join('')
   }
   if (!name) return defaultName
-
   return name
 }
