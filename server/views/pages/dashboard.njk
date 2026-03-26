@@ -1,31 +1,36 @@
 {% extends "../partials/layout.njk" %}
 
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set pageTitle = applicationName + " - " + Dashboard %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-  <meta name="csrf-token" content="{{ csrfToken }}">
 
-{{ breadCrumb("Dashboard", []) }}
+  {{ breadCrumb("Dashboard", []) }}
 
-<h1>Welcome to your dashboard, Username </h1>
+  <form action="/dashboard/name" method="POST" name="_csrf" value="{{ csrfToken }}">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+    {% if name %}
+      <h1>Welcome to your dashboard, {{ name }}</h1>
+    {% else %}
+      <h1>Welcome to your dashboard, </h1>
+      {{ govukInput({
+        label: {
+        text: "Please enter your name",
+        classes: "govuk-label--m"
+        },
+        id: "dashboard-user-name",
+        name: "name",
+        button: {
+          text: "Search"
+        }
+      }) }}
+      <p id ="output"></p>
+    {% endif %}
+  </form>
 
-  {% from "govuk/components/input/macro.njk" import govukInput %}
-
-  {{ govukInput({
-  label: {
-    text: "Please enter your name",
-    classes: "govuk-label--m"
-  },
-  id: "dashboard-user-name",
-  name: "userName",
-  button: {
-  text: "Search"
-    }
-}) }}
-  <p id ="output"></p>
 
   {{ mojAlert({
       variant: "information",
@@ -33,7 +38,7 @@
       showTitleAsHeading: true,
       dismissible: false,
       html: 'Click on the "add a product" button to add one.'
-    }) }}
+   }) }}
 
 {% endblock %}
 <div class="banner">
@@ -41,7 +46,6 @@
 </div>
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  <script type="module" src="/assets/js/js-cookie.js"></script>
   <script type="module" src="/assets/js/userCookies.js"></script>
   <script src="/assets/js/common.js"></script>
 {% endblock %}

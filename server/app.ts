@@ -48,6 +48,7 @@ export default function createApp(services: Services): express.Application {
   app.set('port', process.env.PORT || 3000)
 
   app.use(cookieParser())
+  app.use(express.urlencoded({ extended: true }))
   app.use(appInsightsMiddleware())
   app.use(setUpHealthChecks(services.applicationInfo))
   app.use(setUpWebSecurity())
