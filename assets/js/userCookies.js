@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('dashboard-user-name')
-  const output = document.getElementById('output')
+  const output = document.getElementById('name-output')
   const initialName = ' '
 
   if (!input) return

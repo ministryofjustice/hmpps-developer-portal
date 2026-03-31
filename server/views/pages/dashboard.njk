@@ -2,6 +2,12 @@
 
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{%- from "moj/components/search/macro.njk" import mojSearch -%}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{%- from "moj/components/alert/macro.njk" import mojAlert -%}
+
 
 {% set pageTitle = applicationName + " - " + Dashboard %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -27,11 +33,105 @@
           text: "Search"
         }
       }) }}
-      <p id ="output"></p>
+      <p id ="name-output"></p>
     {% endif %}
   </form>
 
+  {% if error == "notfound" %}
+  {{ mojAlert({
+      variant: "error",
+      title: attemptedProduct,
+      showTitleAsHeading: true,
+      dismissible: false,
+      text: "is not a valid product name. See full list below to find your product ('See full list of products')"
+    }) }}
+  {% endif %}
 
+  {% if error == "empty" %}
+    <p class= "error-message">Please enter a product name</p>
+  {% endif %}
+
+  <form action="/dashboard/saved-products/add" method="POST" name="_csrf" value="{{ csrfToken }}" style="margin-bottom: 15px">
+  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+  {{ mojSearch({
+    action: "#",
+    method: "post",
+    input: {
+      id: "search-products",
+      name: "product"
+    },
+    label: {
+      text: "Find a product",
+      classes: "govuk-!-font-weight-bold"
+    },
+    button: {
+      text: "Add a product",
+      id: "add-product-button"
+    }
+  }) }}
+
+    {% macro deleteButton(index) %}
+      <form action="/dashboard/saved-products/delete" method="POST" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="index" value=" {{  loop.index0 }}">
+        {{ govukButton({
+            type: submit,
+            text: "Remove Product"
+        }) }}
+      </form>
+  {% endmacro %}
+
+  {% macro allProductsList(products) %}
+  <ul>
+    {% for product in products %}
+    <li>{{ product }}</li>
+    {% endfor %}
+  </ul>
+  {% endmacro %}
+
+    {{ govukDetails({
+      summaryText: "See full list of products",
+      text: allProductsList(allProducts)
+    }) }}
+
+    {%  for product in productsList %}
+  {{ govukSummaryList({
+     card: {
+     title: {
+       text: product
+      },
+      actions: {
+      items: [
+        {
+          text: deleteButton(loop.index0)
+        }
+      ]
+    }
+  },
+  rows: [
+    {
+      key: {
+        text: "Info to be added"
+      },
+      value: {
+        html: "Info to be added"
+      }
+    },
+    {
+      key: {
+        text: "Info to be added"
+      },
+      value: {
+        html: "Info to be added"
+      }
+    }
+  ]
+}) }}
+    {%  endfor %}
+  </form>
+
+
+  {% if productsList.length == 0 %}
   {{ mojAlert({
       variant: "information",
       title: "You do not have any pinned products",
@@ -39,6 +139,7 @@
       dismissible: false,
       html: 'Click on the "add a product" button to add one.'
    }) }}
+  {% endif %}
 
 {% endblock %}
 <div class="banner">
@@ -47,5 +148,6 @@
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
   <script type="module" src="/assets/js/userCookies.js"></script>
+  <script type="module" src="/assets/js/productCookies.js"></script
   <script src="/assets/js/common.js"></script>
 {% endblock %}
