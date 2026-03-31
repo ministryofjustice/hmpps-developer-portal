@@ -114,7 +114,7 @@ jQuery(function () {
       data: 'github_project_teams_admin',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const githubTeams = rowData.github_project_teams_admin
+        const githubTeams = (rowData.github_project_teams_admin ?? [])
           .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
           .join('')
 
@@ -129,7 +129,7 @@ jQuery(function () {
       data: 'github_project_teams_write',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const githubTeams = rowData.github_project_teams_write
+        const githubTeams = (rowData.github_project_teams_write ?? [])
           .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
           .join('')
 
@@ -144,7 +144,7 @@ jQuery(function () {
       data: 'github_project_teams_maintain',
       visible: false,
       createdCell: function (td, _cellData, rowData) {
-        const githubTeams = rowData.github_project_teams_maintain
+        const githubTeams = (rowData.github_project_teams_maintain ?? [])
           .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
           .join('')
 
@@ -200,7 +200,7 @@ jQuery(function () {
 
 const renderGithubTeams = (teams, noTeamsMessage) => {
   return (
-    teams
+    (teams ?? [])
       .map(
         githubTeam =>
           `<li><a href="/github-teams/${githubTeam}"  class="govuk-link govuk-link--no-visited-state">${githubTeam}</a></li>`,
