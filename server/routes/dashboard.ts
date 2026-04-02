@@ -1,37 +1,28 @@
 import { Router } from 'express'
+import cookieParser from 'cookie-parser'
 import type { Services } from '../services'
-import { cookieService, fetchProductList } from '../services/cookieService'
+import { cookieService } from '../services/cookieService'
 import { sanitizeCookieInput } from '../services/sanitizeCookieInput'
+import { cookieKeys } from '../config'
 
 export default function routes({ serviceCatalogueService }: Services): Router {
   const router = Router()
 
-  const userNameCookie = 'user_name'
-  const productCookie = 'product_name'
-
-  router.get('/data', async (req, res) => {
-    const products = await serviceCatalogueService.getProducts({})
-    res.send(products)
-  })
-
-  // redirect route to stop CSRF middleware blocking redirect GET routes
-  router.get('/user-dashboard', (req, res) => {
-    return res.redirect('/dashboard')
-  })
+  router.use(cookieParser())
 
   // dashboard GET route for both users name and saved products
   router.get('/', async (req, res) => {
-    const name = cookieService.getString(req.cookies, userNameCookie)
-    const productsList = cookieService.getFavouritesFromCookie(req, productCookie)
+    const name = cookieService.getString(req.cookies, cookieKeys.userNameCookie)
+    const productsList = cookieService.getFavouritesFromCookie(req.cookies, cookieKeys.productNameCookie)
     const error = req.query.error as string | undefined
     const attemptedProduct = req.query.value as string | undefined
-    const allProducts = await fetchProductList()
+    const products = await serviceCatalogueService.getProducts({})
     return res.render('pages/dashboard.njk', {
       name,
       productsList,
       error,
       attemptedProduct,
-      allProducts,
+      products,
     })
   })
 
@@ -43,49 +34,58 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       collapseWhitespace: false,
       defaultInput: 'User',
     })
-    const header = cookieService.setStringHeader(userNameCookie, safeName)
+    const header = cookieService.setStringHeaderName(cookieKeys.userNameCookie, safeName)
     res.setHeader('Set-Cookie', header)
-    res.redirect('/dashboard/user-dashboard')
+    res.redirect('/dashboard')
   })
 
   // Route to add saved products
   router.post('/saved-products/add', async (req, res) => {
     const rawInput = req.body.product
-    const product = sanitizeCookieInput(rawInput, {
+    const productInput = sanitizeCookieInput(rawInput, {
       collapseWhitespace: false,
       defaultInput: '',
     })
-    if (!product) {
+    if (!productInput) {
       return res.redirect('/dashboard')
     }
     // Fetch full product list from API
-    const allProducts = await fetchProductList()
+    const products = await serviceCatalogueService.getProducts({})
     // Match
-    const exists = allProducts.some(name => name.toLowerCase() === product.toLocaleLowerCase())
+    const exists = products.some(product => product.name.toLowerCase() === productInput.toLowerCase())
     if (!exists) {
-      return res.redirect(`/dashboard?error=notfound&value=${encodeURIComponent(product)}`)
+      return res.redirect(`/dashboard?error=notfound&value=${encodeURIComponent(productInput)}`)
     }
 
     // Load users current saved product list
-    const currentProductsList = await cookieService.getFavouritesFromCookie(req, productCookie)
-    // Add new product
-    currentProductsList.push(product)
+    const currentProductsList: string[] = cookieService.getFavouritesFromCookie(
+      req.cookies,
+      cookieKeys.productNameCookie,
+    )
+    // Add new product if not already in array
+    if (!currentProductsList.includes(productInput)) {
+      currentProductsList.push(productInput)
+    }
     // Save to cookie
-    const header = cookieService.setProductCookie(productCookie, currentProductsList)
+    const header = cookieService.setStringHeaderProduct(cookieKeys.productNameCookie, currentProductsList)
     res.setHeader('Set-Cookie', header)
-    return res.redirect('/dashboard/user-dashboard')
+    return res.redirect('/dashboard')
   })
 
   // Route to delete a saved product
-  router.post('/saved-products/delete', async (req, res) => {
-    const index = Number(req.query.index)
-    const currentProductsList = await cookieService.getFavouritesFromCookie(req, productCookie)
+  router.post('/saved-products/delete', (req, res) => {
+    const rawIndex = req.body.index
+    const index = Number.parseInt(String(rawIndex), 10)
+    const currentProductsList = cookieService.getFavouritesFromCookie(req.cookies, cookieKeys.productNameCookie)
+    if (!Number.isInteger(index) || index < 0 || index >= currentProductsList.length) {
+      return res.redirect(`/dashboard?error=notfound&value=${index}`)
+    }
     // Remove a product from current product list
     currentProductsList.splice(index, 1)
     // Save updated list to cookie
-    const header = cookieService.setProductCookie(productCookie, currentProductsList)
+    const header = cookieService.setStringHeaderProduct(cookieKeys.productNameCookie, currentProductsList)
     res.setHeader('Set-Cookie', header)
-    res.redirect('/dashboard/user-dashboard')
+    return res.redirect('/dashboard')
   })
 
   return router

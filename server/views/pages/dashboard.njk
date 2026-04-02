@@ -1,6 +1,5 @@
 {% extends "../partials/layout.njk" %}
 
-{%- from "moj/components/alert/macro.njk" import mojAlert -%}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {%- from "moj/components/search/macro.njk" import mojSearch -%}
 {% from "govuk/components/button/macro.njk" import govukButton %}
@@ -9,19 +8,19 @@
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
 
 
-{% set pageTitle = applicationName + " - " + Dashboard %}
+{% set pageTitle = applicationName + " - Dashboard" %}
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
   {{ breadCrumb("Dashboard", []) }}
 
-  <form action="/dashboard/name" method="POST" name="_csrf" value="{{ csrfToken }}">
+  <form action="/dashboard/name" method="POST">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {% if name %}
-      <h1>Welcome to your dashboard, {{ name }}</h1>
+      <h1 id="welcome-known-user-heading">Welcome to your dashboard, {{ name }}</h1>
     {% else %}
-      <h1>Welcome to your dashboard, </h1>
+      <h1 id="welcome-unknown-user-heading">Welcome to your dashboard, </h1>
       {{ govukInput({
         label: {
         text: "Please enter your name",
@@ -33,7 +32,7 @@
           text: "Search"
         }
       }) }}
-      <p id ="name-output"></p>
+      <p id="name-output"></p>
     {% endif %}
   </form>
 
@@ -51,7 +50,7 @@
     <p class= "error-message">Please enter a product name</p>
   {% endif %}
 
-  <form action="/dashboard/saved-products/add" method="POST" name="_csrf" value="{{ csrfToken }}" style="margin-bottom: 15px">
+  <form action="/dashboard/saved-products/add" method="POST" style="margin-bottom: 15px">
   <input type="hidden" name="_csrf" value="{{ csrfToken }}">
   {{ mojSearch({
     action: "#",
@@ -71,11 +70,11 @@
   }) }}
 
     {% macro deleteButton(index) %}
-      <form action="/dashboard/saved-products/delete" method="POST" name="_csrf" value="{{ csrfToken }}">
+      <form action="/dashboard/saved-products/delete" method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        <input type="hidden" name="index" value=" {{  loop.index0 }}">
+        <input type="hidden" name="index" value="{{ index | string }}">
         {{ govukButton({
-            type: submit,
+            type: "submit",
             text: "Remove Product"
         }) }}
       </form>
@@ -84,14 +83,14 @@
   {% macro allProductsList(products) %}
   <ul>
     {% for product in products %}
-    <li>{{ product }}</li>
+    <li>{{ product.name }}</li>
     {% endfor %}
   </ul>
   {% endmacro %}
 
     {{ govukDetails({
       summaryText: "See full list of products",
-      text: allProductsList(allProducts)
+      text: allProductsList(products)
     }) }}
 
     {%  for product in productsList %}
@@ -148,6 +147,6 @@
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
   <script type="module" src="/assets/js/userCookies.js"></script>
-  <script type="module" src="/assets/js/productCookies.js"></script
+  <script type="module" src="/assets/js/productCookies.js"></script>
   <script src="/assets/js/common.js"></script>
 {% endblock %}

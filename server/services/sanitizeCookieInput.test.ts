@@ -15,11 +15,11 @@ describe('sanitizeCookieInput', () => {
   })
   it('removes html characters', () => {
     const input = '<script>example</script>'
-    expect(sanitizeCookieInput(input)).toBe('&altscript&agtexample&alt/script&agt')
+    expect(sanitizeCookieInput(input)).toBe('&ltscript&gtexample&lt/script&gt')
   })
   it('returns default input when type of input is not a string', () => {
     const input = 123
-    expect(sanitizeCookieInput(input)).toBe(' ')
+    expect(sanitizeCookieInput(input)).toBe('')
   })
   it('removes control characters', () => {
     const input = 'A\u0000B\u0007C'
@@ -41,7 +41,7 @@ describe('sanitizeCookieInput', () => {
   })
   it('removes whitespace', () => {
     const input = 'A \t B \n C'
-    expect(sanitizeCookieInput(input)).toBe('ABC')
+    expect(sanitizeCookieInput(input)).toBe('A B C')
   })
   it('adjusts length if too long', () => {
     const input = 'ABCDEFGHIJKLMNOP'
