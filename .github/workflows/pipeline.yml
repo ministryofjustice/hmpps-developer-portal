@@ -60,6 +60,7 @@ jobs:
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
     needs:
       # - node_integration_tests
+      - slsa
       - node_unit_tests
     with:
       docker_registry: 'ghcr.io'
@@ -71,7 +72,6 @@ jobs:
     name: Deploy to the dev environment
     if: ${{ !startsWith(github.ref, 'refs/heads/stage') }}
     needs:
-      - slsa
       - build
       - helm_lint
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
