@@ -80,3 +80,8 @@ export default {
     kotlinOnly: get('RECOMMENDED_VERSIONS_KOTLIN_ONLY', 'true'),
   },
 }
+
+export const cookieKeys = {
+  userNameCookie: 'user_name',
+  productNameCookie: 'product_name',
+} as const
