@@ -22,6 +22,13 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 jobs:
+  # ⛓️ SLSA Protection - Add BEFORE pip install
+  slsa:
+    name: SLSA
+    runs-on: ubuntu-latest
+    steps:
+    - name: run SLSA scan
+      uses: ministryofjustice/devsecops-actions/sca/slsa@e3c63a5986ea6e7d57d38b7f72e5b8cf08dc7020
   node_build:
     name: node build
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_build.yml@v2 # WORKFLOW_VERSION
@@ -64,6 +71,7 @@ jobs:
     name: Deploy to the dev environment
     if: ${{ !startsWith(github.ref, 'refs/heads/stage') }}
     needs:
+      - slsa
       - build
       - helm_lint
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
