@@ -28,10 +28,8 @@ export default function routes(service: Services): Router {
 
   router.post('/hide-cookie-notice', (req, res) => {
     const rawInput = req.body.cookies.hide
-    console.log(rawInput)
     const header = cookieService.setStringHeader(config.cookieKeys.hideCookies, rawInput)
     const valueHeader = cookieService.removeEncodedQuotes(header)
-    console.log(valueHeader)
     res.setHeader('Set-Cookie', valueHeader)
     res.redirect('/')
   })
