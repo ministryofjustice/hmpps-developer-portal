@@ -12,17 +12,22 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
   // dashboard GET route for both users name and saved products
   router.get('/', async (req, res) => {
+    console.log('Incoming Cookie header:', req.headers.cookie)
     const name = cookieService.getString(req.cookies, config.cookieKeys.userNameCookie)
+    console.log('NAME:', name)
     const productsList = cookieService.getFavouritesFromCookie(req.cookies, config.cookieKeys.productNameCookie)
     const error = req.query.error as string | undefined
     const attemptedProduct = req.query.value as string | undefined
     const products = await serviceCatalogueService.getProducts({})
+    const usersCookiePrefs = cookieService.getString(req.cookies, config.cookieKeys.userPreferencesCookie)
+    console.log('USERCOOKIESPREFS', usersCookiePrefs)
     return res.render('pages/dashboard.njk', {
       name,
       productsList,
       error,
       attemptedProduct,
       products,
+      usersCookiePrefs,
     })
   })
 

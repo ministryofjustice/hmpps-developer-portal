@@ -37,6 +37,7 @@ import githubTeamsRoutes from './routes/githubTeams'
 import scheduledJobsRoutes from './routes/scheduledJobs'
 import alertsRoutes from './routes/alerts'
 import dashboardRoutes from './routes/dashboard'
+import cookiesPageRoutes from './routes/cookiesPage'
 
 import type { Services } from './services'
 
@@ -81,6 +82,7 @@ export default function createApp(services: Services): express.Application {
   app.use('/alerts', alertsRoutes(services))
   app.use('/trivy-scans', trivyScansRoutes(services))
   app.use('/dashboard', dashboardRoutes(services))
+  app.use('/cookies', cookiesPageRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

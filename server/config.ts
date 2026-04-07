@@ -82,5 +82,7 @@ export default {
   cookieKeys: {
     userNameCookie: 'user_name',
     productNameCookie: 'product_name',
+    userPreferencesCookie: 'cookie_policy',
+    hideCookies: 'hide_cookies',
   } as const,
 }
