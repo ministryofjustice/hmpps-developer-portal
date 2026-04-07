@@ -11,9 +11,26 @@ export class CookieService {
     }
   }
 
-  // Build a Set-Cookie string
-  setStringHeader(name: string, value: string): string {
-    return `${encodeURIComponent(name)}=${encodeURIComponent(value)}; Path=/; Max-Age=31536000; HttpOnly; SameSite=Lax`
+  // Build cookie header
+  setStringHeader(key: string, value: string | unknown): string {
+    return `${encodeURIComponent(key)}=${encodeURIComponent(JSON.stringify(value))}; Path=/; Max-Age=31536000; HttpOnly; SameSite=Lax`
+  }
+
+  removeEncodedQuotes(name: string): string {
+    if (typeof name !== 'string') return name
+    return name.replace(/%22/g, '')
+  }
+
+  getFavouritesFromCookie(cookies: Record<string, string>, key: string): string[] | null {
+    const rawData = cookies[key]
+    if (!rawData || typeof rawData !== 'string') {
+      return []
+    }
+    try {
+      return JSON.parse(decodeURIComponent(rawData))
+    } catch {
+      return []
+    }
   }
 }
 
