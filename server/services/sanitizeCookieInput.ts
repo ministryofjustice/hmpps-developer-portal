@@ -6,9 +6,7 @@ export interface InputOptions {
 }
 
 export function sanitizeCookieInput(input: unknown, options: InputOptions = {}): string {
-  const { maxLength = 100, collapseWhitespace = true } = options
-  let { defaultInput } = options
-  if (typeof defaultInput !== 'string') defaultInput = ''
+  const { maxLength = 100, collapseWhitespace = true, defaultInput = '' } = options
 
   if (typeof input !== 'string') {
     return defaultInput
@@ -23,17 +21,18 @@ export function sanitizeCookieInput(input: unknown, options: InputOptions = {}):
   value = value
     .trim()
     // protect against HTML special characters
-    .replace(/&/g, '&amp')
-    .replace(/</g, '&lt')
-    .replace(/>/g, '&gt')
-    .replace(/"/g, '&quot')
-    .replace(/'/g, '&#39')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 
   if (collapseWhitespace) {
     value = value.replace(/\s+/g, ' ').trim()
   }
-  if ([...value].length > maxLength) {
-    value = [...value].slice(0, maxLength).join('')
+  const chars = [...value]
+  if (chars.length > maxLength) {
+    value = chars.slice(0, maxLength).join('')
   }
   if (!value) return defaultInput
   return value

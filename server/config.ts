@@ -79,9 +79,8 @@ export default {
     componentName: get('HMPPS_TEMPLATE_COMPONENT_NAME', 'hmpps-template-kotlin'),
     kotlinOnly: get('RECOMMENDED_VERSIONS_KOTLIN_ONLY', 'true'),
   },
+  cookieKeys: {
+    userNameCookie: 'user_name',
+    productNameCookie: 'product_name',
+  } as const,
 }
-
-export const cookieKeys = {
-  userNameCookie: 'user_name',
-  productNameCookie: 'product_name',
-} as const

@@ -5,7 +5,7 @@ import ServiceCatalogueService from '../services/serviceCatalogueService'
 import { CookieService } from '../services/cookieService'
 import { Product } from '../data/modelTypes'
 import { sanitizeCookieInput } from '../services/sanitizeCookieInput'
-import { cookieKeys } from '../config'
+import config from '../config'
 
 jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/cookieService')
@@ -52,7 +52,7 @@ describe('/dashboard', () => {
       MockedCookieService.prototype.getString.mockReturnValue('testName')
       return request(app)
         .get('/dashboard')
-        .set('Cookie', [`${cookieKeys.userNameCookie}=testName`])
+        .set('Cookie', [`${config.cookieKeys.userNameCookie}=testName`])
         .expect(res => {
           expect(res.text).toContain('id="welcome-known-user-heading"')
         })
@@ -69,7 +69,7 @@ describe('/dashboard', () => {
       MockedCookieService.prototype.getFavouritesFromCookie.mockReturnValue(['sanitizedValue'])
       return request(app)
         .get('/dashboard')
-        .set('Cookie', [`${cookieKeys.productNameCookie}=%5B%22sanitizedValue%22%5D`])
+        .set('Cookie', [`${config.cookieKeys.productNameCookie}=%5B%22sanitizedValue%22%5D`])
         .expect(res => {
           expect(res.text).toContain('class="govuk-summary-card"')
         })
@@ -108,7 +108,7 @@ describe('/dashboard', () => {
     it('should add a product to the product cookie and redirect user to the dashboard', () => {
       return request(app)
         .post('/dashboard/saved-products/add')
-        .set('Cookie', [`${cookieKeys.productNameCookie}=%5B%22test%22%5D`])
+        .set('Cookie', [`${config.cookieKeys.productNameCookie}=%5B%22test%22%5D`])
         .send({ product: 'product 1' })
         .expect(async res => {
           expect(mockedSanitizeService).toHaveBeenCalledWith('product 1', {
@@ -139,7 +139,7 @@ describe('/dashboard', () => {
     it('should remove a product from the product cookie and redirect user to the dashboard', () => {
       return request(app)
         .post('/dashboard/saved-products/delete')
-        .set('Cookie', [`${cookieKeys.productNameCookie}=%5B%22test%22%5D`])
+        .set('Cookie', [`${config.cookieKeys.productNameCookie}=%5B%22test%22%5D`])
         .send({ index: '1' })
         .expect(res => {
           expect(MockedCookieService.prototype.setStringHeader).toHaveBeenCalledWith(
