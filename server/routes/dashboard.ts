@@ -34,8 +34,9 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       collapseWhitespace: false,
       defaultInput: 'User',
     })
-    const header = cookieService.setStringHeaderName(cookieKeys.userNameCookie, safeName)
-    res.setHeader('Set-Cookie', header)
+    const header = cookieService.setStringHeader(cookieKeys.userNameCookie, safeName)
+    const nameHeader = cookieService.removeEncodedQuotes(header)
+    res.setHeader('Set-Cookie', nameHeader)
     res.redirect('/dashboard')
   })
 
@@ -67,7 +68,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       currentProductsList.push(productInput)
     }
     // Save to cookie
-    const header = cookieService.setStringHeaderProduct(cookieKeys.productNameCookie, currentProductsList)
+    const header = cookieService.setStringHeader(cookieKeys.productNameCookie, currentProductsList)
     res.setHeader('Set-Cookie', header)
     return res.redirect('/dashboard')
   })
@@ -83,7 +84,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     // Remove a product from current product list
     currentProductsList.splice(index, 1)
     // Save updated list to cookie
-    const header = cookieService.setStringHeaderProduct(cookieKeys.productNameCookie, currentProductsList)
+    const header = cookieService.setStringHeader(cookieKeys.productNameCookie, currentProductsList)
     res.setHeader('Set-Cookie', header)
     return res.redirect('/dashboard')
   })

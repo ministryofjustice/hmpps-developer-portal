@@ -21,15 +21,14 @@ const mockCurrentProductsList = ['product 3']
 
 beforeEach(() => {
   jest.clearAllMocks()
-  MockedCookieService.prototype.setStringHeaderName.mockReturnValue(
+  MockedCookieService.prototype.setStringHeader.mockReturnValue(
     'user_name=sanitizedValue; Path=/; HttpOnly; SameSite=Lax',
   )
-  // MockedCookieService.prototype.getString.mockReturnValue('testName')
-
   jest
-    .spyOn(MockedCookieService.prototype, 'setStringHeaderProduct')
+    .spyOn(MockedCookieService.prototype, 'setStringHeader')
     .mockReturnValue('product_name=sanitizedValue; Path=/; HttpOnly; SameSite=Lax')
   jest.spyOn(MockedCookieService.prototype, 'getFavouritesFromCookie').mockReturnValue(mockCurrentProductsList)
+  jest.spyOn(MockedCookieService.prototype, 'removeEncodedQuotes').mockReturnValue('user_name=sanitizedValue')
 
   serviceCatalogueService.getProducts.mockResolvedValue(mockProductsList)
   mockedSanitizeService.mockReturnValue('sanitizedValue')
@@ -97,7 +96,7 @@ describe('/dashboard', () => {
             collapseWhitespace: false,
             defaultInput: 'User',
           })
-          expect(MockedCookieService.prototype.setStringHeaderName).toHaveBeenCalledWith('user_name', 'sanitizedValue')
+          expect(MockedCookieService.prototype.setStringHeader).toHaveBeenCalledWith('user_name', 'sanitizedValue')
           expect(res.header['set-cookie'][0]).toContain('user_name=sanitizedValue')
           expect(res.status).toBe(302)
           expect(res.header.location).toBe('/dashboard')
@@ -122,11 +121,11 @@ describe('/dashboard', () => {
             expect.any(Object),
             'product_name',
           )
-          expect(MockedCookieService.prototype.setStringHeaderProduct).toHaveBeenCalledWith(
+          expect(MockedCookieService.prototype.setStringHeader).toHaveBeenCalledWith(
             'product_name',
             mockCurrentProductsList,
           )
-          const prodList = MockedCookieService.prototype.setStringHeaderProduct.mock.calls[0]
+          const prodList = MockedCookieService.prototype.setStringHeader.mock.calls[0]
           const finalSavedProdList = prodList[1]
           expect(finalSavedProdList).toEqual(['product 3', 'sanitizedValue'])
           expect(res.header['set-cookie'][0]).toContain('product_name=sanitizedValue; Path=/; HttpOnly; SameSite=Lax')
@@ -143,11 +142,11 @@ describe('/dashboard', () => {
         .set('Cookie', [`${cookieKeys.productNameCookie}=%5B%22test%22%5D`])
         .send({ index: '1' })
         .expect(res => {
-          expect(MockedCookieService.prototype.setStringHeaderProduct).toHaveBeenCalledWith(
+          expect(MockedCookieService.prototype.setStringHeader).toHaveBeenCalledWith(
             'product_name',
             mockCurrentProductsList,
           )
-          const prodList = MockedCookieService.prototype.setStringHeaderProduct.mock.calls[0]
+          const prodList = MockedCookieService.prototype.setStringHeader.mock.calls[0]
           const finalSavedProdList = prodList[1]
           expect(finalSavedProdList).toEqual(['product 3'])
           expect(res.header['set-cookie'][0]).toContain('product_name=sanitizedValue; Path=/; HttpOnly; SameSite=Lax')
