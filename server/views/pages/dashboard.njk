@@ -32,7 +32,6 @@
           text: "Search"
         }
       }) }}
-      <p id="name-output"></p>
     {% endif %}
   </form>
 
@@ -129,7 +128,6 @@
     {%  endfor %}
   </form>
 
-
   {% if productsList.length == 0 %}
   {{ mojAlert({
       variant: "information",
@@ -146,7 +144,5 @@
 </div>
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  <script type="module" src="/assets/js/userCookies.js"></script>
-  <script type="module" src="/assets/js/productCookies.js"></script>
   <script src="/assets/js/common.js"></script>
 {% endblock %}
