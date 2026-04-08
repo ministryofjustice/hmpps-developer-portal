@@ -12,7 +12,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   router.get('/data/:dependencyType/:dependencyName', async (req, res) => {
-    const dependencyType = getDependencyType(req)
+    const dependencyType = getDependencyType(req).replace(/_/g, ' ')
     const dependencyName = getDependencyName(req).replace(/~/g, '/')
 
     const components = await serviceCatalogueService.getComponents()
