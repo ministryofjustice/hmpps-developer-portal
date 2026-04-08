@@ -30,12 +30,19 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         const githubRepo = component.github_repo ?? ''
 
         let dependencyVersion = ''
+        let dependencyHash = ''
         let location = ''
         if (typeof dependencyData === 'string' || typeof dependencyData === 'number') {
           dependencyVersion = String(dependencyData)
         } else if (typeof dependencyData === 'object' && dependencyData !== null) {
           const ref = dependencyData.ref ?? dependencyData.version ?? ''
-          dependencyVersion = dependencyData.hash ? `${ref} (${dependencyData.hash})` : ref
+          const shortHash =
+            typeof dependencyData.hash === 'string' && dependencyData.hash.trim()
+              ? dependencyData.hash.trim().slice(0, 7)
+              : ''
+
+          dependencyVersion = shortHash ? `${ref} (${shortHash})` : ref
+          dependencyHash = dependencyData.hash?.trim() ?? ''
           location = dependencyData?.path
         }
 
@@ -46,6 +53,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
           id: component.id,
           componentName: component?.name ?? '',
           dependencyVersion,
+          dependencyHash,
           location: githubUrl,
         }
       })

@@ -28,6 +28,59 @@ jQuery(function () {
     {
       data: 'dependencyVersion',
       type: 'semver',
+      createdCell: function (td, _cellData, rowData) {
+        const version = rowData.dependencyVersion || ''
+        const hash = typeof rowData.dependencyHash === 'string' ? rowData.dependencyHash.trim() : ''
+
+        if (!hash) {
+          $(td).text(version)
+          return
+        }
+
+        const tooltipId = `dep-hash-${rowData.id}`
+        const escapedHash = cleanColumnOutput(hash)
+        const escapedVersion = cleanColumnOutput(version)
+
+        $(td).html(`
+          <span class="moj-tooltip-wrapper" style="position:relative;display:inline-block;">
+            <button
+              type="button"
+              class="govuk-link"
+              aria-describedby="${tooltipId}"
+              aria-expanded="false"
+              style="background:none;border:0;padding:0;cursor:help;text-decoration:underline;"
+            >
+              ${escapedVersion}
+            </button>
+            <span
+              id="${tooltipId}"
+              role="tooltip"
+              hidden
+              style="position:absolute;left:0;top:calc(100% + 6px);z-index:1000;background:#0b0c0c;color:#fff;padding:6px 8px;border-radius:4px;white-space:nowrap;font-size:14px;"
+            >
+              ${escapedHash}
+            </span>
+          </span>
+        `)
+
+        const button = td.querySelector('button')
+        const tooltip = td.querySelector('[role="tooltip"]')
+
+        const show = () => {
+          tooltip.hidden = false
+          button.setAttribute('aria-expanded', 'true')
+        }
+
+        const hide = () => {
+          tooltip.hidden = true
+          button.setAttribute('aria-expanded', 'false')
+        }
+
+        button.addEventListener('mouseenter', show)
+        button.addEventListener('focus', show)
+        button.addEventListener('mouseleave', hide)
+        button.addEventListener('blur', hide)
+      },
     },
     {
       data: 'location',
