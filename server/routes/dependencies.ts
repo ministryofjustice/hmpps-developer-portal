@@ -34,7 +34,8 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         if (typeof dependencyData === 'string' || typeof dependencyData === 'number') {
           dependencyVersion = String(dependencyData)
         } else if (typeof dependencyData === 'object' && dependencyData !== null) {
-          dependencyVersion = dependencyData.ref ?? dependencyData.version ?? ''
+          const ref = dependencyData.ref ?? dependencyData.version ?? ''
+          dependencyVersion = dependencyData.hash ? `${ref} (${dependencyData.hash})` : ref
           location = dependencyData?.path
         }
 

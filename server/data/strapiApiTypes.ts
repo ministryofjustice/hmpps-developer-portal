@@ -19,7 +19,7 @@ type HasNamespace = { ns: Namespace }
 type HasEnvironments = { envs: Environment[] }
 type HasTrivyScan = { trivy_scan?: TrivyScanType }
 type HasVeracodeSummary = { veracode_results_summary: VeracodeResultsSummary }
-type Version = { ref: string; version: string; path: string }
+type Version = { ref: string; version: string; path: string; hash?: string }
 type HasVersions = { versions: Record<string, Record<string, Version | string | Record<string, string>>> }
 type HasIpAllowlist = { ip_allow_list: Record<string, Record<string, string | Record<string, string>>> }
 
