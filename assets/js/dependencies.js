@@ -5,8 +5,8 @@ jQuery(function () {
     const typeSelect = document.getElementById('dependencyType')
     const nameSelect = document.getElementById('dependencyName')
 
-    const type = typeSelect.value.replace(/[^-a-z0-9:_]/g, '')
-    const name = nameSelect.value.replace(/[^-a-z0-9:_\/.]/gi, '').replace(/\//g, '~')
+    const type = typeSelect.value.replace(/[^-A-Za-z0-9:_]/g, '')
+    const name = nameSelect.value.replace(/[^-A-Za-z0-9:_\/.]/gi, '').replace(/\//g, '~')
 
     if (type && name) {
       // Redirect to the existing route
