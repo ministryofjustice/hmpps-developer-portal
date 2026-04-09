@@ -12,9 +12,9 @@
 {% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
-
   {{ breadCrumb("Dashboard", []) }}
 
+  {% if usersCookiePrefs == 'yes' %}
   <form action="/dashboard/name" method="POST">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {% if name %}
@@ -27,10 +27,7 @@
         classes: "govuk-label--m"
         },
         id: "dashboard-user-name",
-        name: "name",
-        button: {
-          text: "Search"
-        }
+        name: "name"
       }) }}
     {% endif %}
   </form>
@@ -136,6 +133,14 @@
       dismissible: false,
       html: 'Click on the "add a product" button to add one.'
    }) }}
+  {% endif %}
+  {% else %}
+   {{ mojAlert({
+      variant: "information",
+      title: "You are not able to use the dashboard without additional cookies",
+      dismissible: false,
+      html: 'You are not able to use the dashboard without additional cookies. If you would like to change your cookie preferences, you can do so here <a href="/cookies">Cookies</a>.'
+    }) }}
   {% endif %}
 
 {% endblock %}

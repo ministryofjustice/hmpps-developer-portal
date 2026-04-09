@@ -49,46 +49,57 @@ describe('/dashboard', () => {
         .expect(200)
     })
     it('shows the users name when it has been set', () => {
-      MockedCookieService.prototype.getString.mockReturnValue('testName')
+      MockedCookieService.prototype.getString.mockReturnValueOnce('testName').mockReturnValueOnce('yes')
       return request(app)
         .get('/dashboard')
-        .set('Cookie', [`${config.cookieKeys.userNameCookie}=testName`])
+        .set('Cookie', [
+          `${config.cookieKeys.userNameCookie}=testName`,
+          `${config.cookieKeys.userPreferencesCookie}=yes`,
+          `${config.cookieKeys.hideCookies}=yes`,
+        ])
         .expect(res => {
           expect(res.text).toContain('id="welcome-known-user-heading"')
         })
     })
     it('shows the enter user name input box when it has not been set', () => {
-      MockedCookieService.prototype.getString.mockReturnValue(undefined)
+      MockedCookieService.prototype.getString.mockReturnValueOnce(undefined).mockReturnValueOnce('yes')
       return request(app)
         .get('/dashboard')
+        .set('Cookie', [`${config.cookieKeys.userPreferencesCookie}=yes`, `${config.cookieKeys.hideCookies}=yes`])
         .expect(res => {
           expect(res.text).toContain('id="welcome-unknown-user-heading"')
         })
     })
     it('shows the products summary box when it has been set', () => {
       MockedCookieService.prototype.getFavouritesFromCookie.mockReturnValue(['sanitizedValue'])
+      MockedCookieService.prototype.getString.mockReturnValue('yes')
       return request(app)
         .get('/dashboard')
-        .set('Cookie', [`${config.cookieKeys.productNameCookie}=%5B%22sanitizedValue%22%5D`])
+        .set('Cookie', [
+          `${config.cookieKeys.userPreferencesCookie}=yes`,
+          `${config.cookieKeys.productNameCookie}=%5B%22sanitizedValue%22%5D`,
+        ])
         .expect(res => {
           expect(res.text).toContain('class="govuk-summary-card"')
         })
     })
-    it('shows the you have no pinned products box when no products have been set', () => {
+    it('shows that you have no pinned products box when no products have been set', () => {
       MockedCookieService.prototype.getFavouritesFromCookie.mockReturnValue(undefined)
+      MockedCookieService.prototype.getString.mockReturnValue('yes')
       return request(app)
         .get('/dashboard')
+        .set('Cookie', [`${config.cookieKeys.userPreferencesCookie}=yes`])
         .expect(res => {
           expect(res.text).not.toContain('class="govuk-summary-card"')
         })
     })
   })
-  // another test here to render with correct name once cookie set and correct products pinned when product list set? Or is this covered by POST/name?
 
   describe('POST /name', () => {
     it('should set the users name as a user_name cookie and redirect user to dashboard', () => {
       return request(app)
         .post('/dashboard/name')
+        .set('Cookie', [`${config.cookieKeys.userPreferencesCookie}=yes`])
         .send({ name: 'testUser' })
         .expect(res => {
           expect(mockedSanitizeService).toHaveBeenCalledWith('testUser', {
@@ -108,7 +119,10 @@ describe('/dashboard', () => {
     it('should add a product to the product cookie and redirect user to the dashboard', () => {
       return request(app)
         .post('/dashboard/saved-products/add')
-        .set('Cookie', [`${config.cookieKeys.productNameCookie}=%5B%22test%22%5D`])
+        .set('Cookie', [
+          `${config.cookieKeys.userPreferencesCookie}=yes`,
+          `${config.cookieKeys.productNameCookie}=%5B%22test%22%5D`,
+        ])
         .send({ product: 'product 1' })
         .expect(async res => {
           expect(mockedSanitizeService).toHaveBeenCalledWith('product 1', {
@@ -139,7 +153,10 @@ describe('/dashboard', () => {
     it('should remove a product from the product cookie and redirect user to the dashboard', () => {
       return request(app)
         .post('/dashboard/saved-products/delete')
-        .set('Cookie', [`${config.cookieKeys.productNameCookie}=%5B%22test%22%5D`])
+        .set('Cookie', [
+          `${config.cookieKeys.userPreferencesCookie}=yes`,
+          `${config.cookieKeys.productNameCookie}=%5B%22test%22%5D`,
+        ])
         .send({ index: '1' })
         .expect(res => {
           expect(MockedCookieService.prototype.setStringHeader).toHaveBeenCalledWith(

@@ -17,12 +17,14 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const error = req.query.error as string | undefined
     const attemptedProduct = req.query.value as string | undefined
     const products = await serviceCatalogueService.getProducts({})
+    const usersCookiePrefs = cookieService.getString(req.cookies, config.cookieKeys.userPreferencesCookie)
     return res.render('pages/dashboard.njk', {
       name,
       productsList,
       error,
       attemptedProduct,
       products,
+      usersCookiePrefs,
     })
   })
 
