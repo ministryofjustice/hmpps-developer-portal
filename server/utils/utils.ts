@@ -217,7 +217,7 @@ export const getDependencyName = (req: Request): string => {
 export const getDependencyType = (req: Request): string => {
   const dependencyType = (req.params.dependencyType as string) || ''
 
-  return dependencyType.replace(/[^-a-z0-9_]/g, '')
+  return dependencyType.replace(/[^-A-Za-z0-9:_ ]/g, '')
 }
 
 export async function getDependencyNames(serviceCatalogueService: ServiceCatalogueService, dependencyType: string) {

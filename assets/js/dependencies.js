@@ -5,7 +5,7 @@ jQuery(function () {
     const typeSelect = document.getElementById('dependencyType')
     const nameSelect = document.getElementById('dependencyName')
 
-    const type = typeSelect.value.replace(/[^-a-z0-9:_]/g, '')
+    const type = typeSelect.value.replace(/[^-A-Za-z0-9:_ ]/g, '')
     const name = nameSelect.value.replace(/[^-a-z0-9:_\/.]/gi, '').replace(/\//g, '~')
 
     if (type && name) {
@@ -17,6 +17,7 @@ jQuery(function () {
   const columns = [
     {
       data: 'componentName',
+      className: 'td-nowrap',
       createdCell: function (td, _cellData, rowData) {
         $(td).html(
           `<a href="/components/${cleanColumnOutput(rowData.componentName)}">${cleanColumnOutput(
@@ -28,9 +29,25 @@ jQuery(function () {
     {
       data: 'dependencyVersion',
       type: 'semver',
+      className: 'td-nowrap',
+      createdCell: function (td, _cellData, rowData) {
+        const version = rowData.dependencyVersion || ''
+        const hash = typeof rowData.dependencyHash === 'string' ? rowData.dependencyHash.trim() : ''
+
+        $(td).text(version)
+
+        if (hash) {
+          $(td).attr('title', hash) // native hover tooltip
+          $(td).attr('aria-label', `${version}. Full commit hash ${hash}`)
+        } else {
+          $(td).removeAttr('title')
+          $(td).removeAttr('aria-label')
+        }
+      },
     },
     {
       data: 'location',
+      className: 'td-nowrap',
       createdCell: function (td, _cellData, rowData) {
         const url = rowData.location
         try {
