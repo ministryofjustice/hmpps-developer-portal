@@ -5,7 +5,7 @@ jQuery(function () {
     const typeSelect = document.getElementById('dependencyType')
     const nameSelect = document.getElementById('dependencyName')
 
-    const type = typeSelect.value.replace(/[^-A-Za-z0-9:_ ]/g, '').replace(/ /g, '_')
+    const type = typeSelect.value.replace(/[^-A-Za-z0-9:_ ]/g, '')
     const name = nameSelect.value.replace(/[^-a-z0-9:_\/.]/gi, '').replace(/\//g, '~')
 
     if (type && name) {
@@ -61,7 +61,7 @@ jQuery(function () {
 
   createTable({
     id: 'dependenciesTable',
-    ajaxUrl: `/dependencies/data/${dataDependencyType.replace(/ /g, '_')}/${dataDependencyName.replace(/\//g, '~')}`,
+    ajaxUrl: `/dependencies/data/${dataDependencyType}/${dataDependencyName.replace(/\//g, '~')}`,
     orderColumn: 1,
     orderType: 'asc',
     columns,
