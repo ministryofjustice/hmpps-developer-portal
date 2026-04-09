@@ -239,7 +239,7 @@ export async function getDependencyNames(serviceCatalogueService: ServiceCatalog
 export const isValidDropDown = (req: Request, paramName: string): boolean => {
   const param = req.query[paramName] as string
 
-  return param !== undefined && /^[A-Za-z0-9_-]+$/.test(param)
+  return param !== undefined && /^[a-z0-9_-]+$/.test(param)
 }
 
 export const groupBy = <T>(arr: Array<T>, keyGetter: (t: T) => string): Record<string, T[]> => {

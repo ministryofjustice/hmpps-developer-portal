@@ -569,7 +569,7 @@ describe('Utils', () => {
       ['Valid', 'product', true],
       ['Valid', 'product-2-de', true],
       ['Invalid', '%^$kjg', false],
-      ['Valid', 'product-2-De', true],
+      ['Invalid', 'product-2-De', false],
       ['Invalid', 'product 2 De ^% l', false],
       ['Empty string', '', false],
     ])('%s isValidDropDown() with "%s" should return "%s"', (_: string, a: string, expected: boolean) => {
