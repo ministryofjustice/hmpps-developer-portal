@@ -43,10 +43,7 @@ type ServiceArea = Omit<components['schemas']['ServiceArea'], 'products'> & HasP
 
 type CustomComponentView = Omit<components['schemas']['CustomComponentView'], 'components'> & HasComponents
 
-type Environment = components['schemas']['Component']['envs'][0] &
-  HasNamespace &
-  HasComponent &
-  HasIpAllowlist
+type Environment = components['schemas']['Component']['envs'][0] & HasNamespace & HasComponent & HasIpAllowlist
 
 type EnvironmentForMapping = Environment
 

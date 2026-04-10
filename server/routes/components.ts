@@ -11,10 +11,7 @@ import {
   getNpmStatus,
 } from '../utils/utils'
 import { Environment, ServiceArea } from '../data/strapiApiTypes'
-import {
-  getProductionEnvironment,
-  countVeracodeHighAndVeryHigh,
-} from '../utils/vulnerabilitySummary'
+import { getProductionEnvironment, countVeracodeHighAndVeryHigh } from '../utils/vulnerabilitySummary'
 import { getDependencyComparison } from '../services/dependencyComparison'
 
 interface DisplayAlert {

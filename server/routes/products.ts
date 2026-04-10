@@ -3,10 +3,7 @@ import config from '../config'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { getFormattedName, utcTimestampToUtcDateTime, mapToCanonicalEnv, utcTimestampToUtcDate } from '../utils/utils'
-import {
-  getProductionEnvironment,
-  countVeracodeHighAndVeryHigh,
-} from '../utils/vulnerabilitySummary'
+import { countVeracodeHighAndVeryHigh } from '../utils/vulnerabilitySummary'
 import { compareComponentsDependencies } from '../services/dependencyComparison'
 
 interface DisplayAlert {
