@@ -1,4 +1,4 @@
-import { Product, TrivyScanType, Team, Component } from '../data/modelTypes'
+import { Product, Team, Component } from '../data/modelTypes'
 
 export const mockProducts = [
   { id: 1, name: 'Product 1', p_id: 'p1' },
@@ -245,35 +245,3 @@ export const mockVeracodeComponents = [
     },
   },
 ] as Component[]
-
-export const mockTrivyScans = [
-  {
-    name: 'ComponentA',
-    environments: ['prod'],
-    scan_summary: {
-      scan_result: {
-        'os-pkgs': [{ Severity: 'CRITICAL' }, { Severity: 'HIGH' }, { Severity: 'LOW' }],
-        'lang-pkgs': [{ Severity: 'HIGH' }, { Severity: 'CRITICAL' }],
-      },
-    },
-  },
-  {
-    name: 'ComponentB',
-    environments: ['prod'],
-    scan_summary: {
-      scan_result: {
-        'os-pkgs': [{ Severity: 'HIGH' }, { Severity: 'HIGH' }],
-        'lang-pkgs': [],
-      },
-    },
-  },
-  {
-    name: 'NonMatchingComponent',
-    scan_summary: {
-      scan_result: {
-        'os-pkgs': [{ Severity: 'CRITICAL' }],
-        'lang-pkgs': [],
-      },
-    },
-  },
-] as TrivyScanType[]

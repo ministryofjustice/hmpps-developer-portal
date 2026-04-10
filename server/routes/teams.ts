@@ -65,8 +65,6 @@ export default function routes({
 
     try {
       const teamAlertSummary = await teamsSummaryCountService.getTeamAlertSummary(teamSlug)
-      const teamTrivyScanSummary = await teamsSummaryCountService.getTeamTrivyVulnerabilityCounts(products)
-      const criticalAndHighTrivy = teamTrivyScanSummary.critical + teamTrivyScanSummary.high
       const teamVeracodeScanSummary = await teamsSummaryCountService.getTeamVeracodeVulnerabilityCounts(products)
       const veryHighAndHighVeracode = teamVeracodeScanSummary.veryHigh + teamVeracodeScanSummary.high
 
@@ -116,7 +114,6 @@ export default function routes({
         componentList,
         encodedTeamName: encodeURIComponent(team.name),
         alertSummary: teamAlertSummary,
-        criticalAndHighTrivy,
         veryHighAndHighVeracode,
         channelRecommendations,
         channelTree,

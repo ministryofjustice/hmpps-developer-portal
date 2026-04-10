@@ -13,7 +13,6 @@ import {
 import { Environment, ServiceArea } from '../data/strapiApiTypes'
 import {
   getProductionEnvironment,
-  countTrivyHighAndCritical,
   countVeracodeHighAndVeryHigh,
 } from '../utils/vulnerabilitySummary'
 import { getDependencyComparison } from '../services/dependencyComparison'
@@ -63,7 +62,6 @@ export default function routes({
       ),
     )
     const npmStatus = getNpmStatus(component)
-    const trivyVulnerabilityCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
     const veracodeVulnerabilityCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
 
     const displayComponent = {
@@ -95,9 +93,7 @@ export default function routes({
       github_enforce_admins_enabled: component.github_enforce_admins_enabled,
       standardsCompliance: component.standards_compliance,
       alerts: [] as DisplayAlert[],
-      trivyVulnerabilityCount,
       veracodeVulnerabilityCount,
-      trivyResultsLink: `/trivy-scans/${component.name}/environments/prod`,
       veracodeResultsLink: component.veracode_results_url || '/veracode',
       serviceArea: serviceAreaDetails,
       npmStatus,
