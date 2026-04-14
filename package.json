@@ -72,7 +72,7 @@
   },
   "devDependencies": {
     "@ministryofjustice/eslint-config-hmpps": "^1.0.3",
-    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
+    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.4",
     "@ministryofjustice/hmpps-precommit-hooks": "^2.0.2",
     "@tsconfig/node24": "^24.0.4",
     "@types/bunyan": "^1.8.11",
@@ -108,11 +108,9 @@
     "sass": "^1.99.0",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.9",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "overrides": {
-    "lodash": "^4.18.0",
-    "lodash-es": "^4.18.0",
     "mocha": {
       "diff": "^8.0.4",
       "serialize-javascript": "^7.0.5"
