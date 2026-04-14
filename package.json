@@ -8,7 +8,7 @@
     "build": "npm run compile-sass && tsc && npm run copy-views",
     "clean": "rm -rf dist build node_modules stylesheets",
     "compile-sass": "sass --quiet-deps --no-source-map --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=. assets/scss/application.scss:./assets/stylesheets/application.css --style compressed",
-    "copy-views": "mkdir -p dist/server/ && cp -R server/views dist/server/",
+    "copy-views": "cp -R server/views dist/server/",
     "int-test-ui": "cypress open",
     "int-test": "cypress run --config video=false",
     "lint-fix": "eslint .  --cache --max-warnings 0 --fix",
