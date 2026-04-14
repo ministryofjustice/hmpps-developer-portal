@@ -93,7 +93,9 @@
               {{ details.name }}{% if details.archived == true %} (ARCHIVED){% endif %}
             </a>
               {% for name in dashboard.alerts %}
-                {% if name.componentSlug == details.name %}{{ mojBadge({ text: "Active Alert", classes: "moj-badge--red" }) }} {% endif %}
+                {% if name.componentSlug == details.name and name.environment == 'prod' or name.environment == 'production'%}{{ mojBadge({ text: "Active Alert - PROD", classes: "moj-badge--red" }) }}
+                {% elseif name.componentSlug == details.name %}{{ mojBadge({ text: "Active Alert", classes: "moj-badge--red" }) }}
+                {% endif %}
               {% endfor %}
               {% for name in dashboard.veracodeComponentName %}
                 {% if name == details.name %}{{ mojBadge({ text: "Veracode", classes: "moj-badge--purple" }) }} {% endif %}
@@ -134,7 +136,7 @@
             <ul class="govuk-list govuk-list--bullet">
               {% for componentName in dashboard.alerts %}
                 <li>
-                  <a class="govuk-link" href="/components/{{ componentName.componentSlug }}">{{ componentName.componentSlug }}</a></li>
+                  <a class="govuk-link" href="/components/{{ componentName.componentSlug }}">{{ componentName.componentSlug }} ({{ componentName.environment }})</a></li>
               {% endfor %}
             </ul>
           </div>
