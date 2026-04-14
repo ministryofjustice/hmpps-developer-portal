@@ -135,8 +135,14 @@
             <p><a class="govuk-link" href="/alerts?">See active alerts</a></p>
             <ul class="govuk-list govuk-list--bullet">
               {% for componentName in dashboard.alerts %}
-                <li>
-                  <a class="govuk-link" href="/components/{{ componentName.componentSlug }}">{{ componentName.componentSlug }} ({{ componentName.environment }})</a></li>
+                {% if componentName.environment == 'prod' %}
+                  <li><strong><a class="govuk-link" href="/components/{{ componentName.componentSlug }}">{{ componentName.componentSlug }} ({{ componentName.environment }})</a></strong></li>
+                {% endif %}
+              {% endfor %}
+              {% for componentName in dashboard.alerts %}
+                {% if componentName.environment != 'prod' %}
+                  <li><a class="govuk-link" href="/components/{{ componentName.componentSlug }}">{{ componentName.componentSlug }} ({{ componentName.environment }})</a></li>
+                {% endif %}
               {% endfor %}
             </ul>
           </div>
