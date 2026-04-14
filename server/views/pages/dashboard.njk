@@ -6,7 +6,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {%- from "moj/components/alert/macro.njk" import mojAlert -%}
-
+{%- from "moj/components/badge/macro.njk" import mojBadge -%}
 
 {% set pageTitle = applicationName + " - Dashboard" %}
 {% set mainClasses = "app-container govuk-body" %}
@@ -14,11 +14,11 @@
 {% block content %}
   {{ breadCrumb("Dashboard", []) }}
 
-  {% if usersCookiePrefs == 'yes' %}
+  {% if dashboard.usersCookiePrefs == 'yes' %}
   <form action="/dashboard/name" method="POST">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-    {% if name %}
-      <h1 id="welcome-known-user-heading">Welcome to your dashboard, {{ name }}</h1>
+    {% if dashboard.name %}
+      <h1 id="welcome-known-user-heading">Welcome to your dashboard, {{ dashboard.name }}</h1>
     {% else %}
       <h1 id="welcome-unknown-user-heading">Welcome to your dashboard, </h1>
       {{ govukInput({
@@ -32,17 +32,17 @@
     {% endif %}
   </form>
 
-  {% if error == "notfound" %}
+  {% if dashboard.error == "notfound" %}
   {{ mojAlert({
       variant: "error",
       title: attemptedProduct,
       showTitleAsHeading: true,
       dismissible: false,
-      text: "is not a valid product name. See full list below to find your product ('See full list of products')"
+      text: dashboard.attemptedProduct + " is not a valid product name. See full list below to find your product ('See full list of products')"
     }) }}
   {% endif %}
 
-  {% if error == "empty" %}
+  {% if dashboard.error == "empty" %}
     <p class= "error-message">Please enter a product name</p>
   {% endif %}
 
@@ -65,10 +65,10 @@
     }
   }) }}
 
-    {% macro deleteButton(index) %}
+    {% macro deleteButton(product) %}
       <form action="/dashboard/saved-products/delete" method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        <input type="hidden" name="index" value="{{ index | string }}">
+        <input type="hidden" name="delete" value="{{ product | string }}">
         {{ govukButton({
             type: "submit",
             text: "Remove Product"
@@ -77,65 +77,148 @@
   {% endmacro %}
 
   {% macro allProductsList(products) %}
-  <ul>
-    {% for product in products %}
-    <li>{{ product.name }}</li>
-    {% endfor %}
-  </ul>
+    <ul>
+      {% for product in dashboard.products %}
+        <li>{{ product.name }}</li>
+      {% endfor %}
+    </ul>
   {% endmacro %}
+
+ {% macro componentsList(componentsInfo)%}
+    {% if dashboard.component | length %}
+      <ul>
+        {% for details in componentsInfo %}
+          <li>
+            <a data-test="component-link" href="/components/{{ details.name }}">
+              {{ details.name }}{% if details.archived == true %} (ARCHIVED){% endif %}
+            </a>
+              {% for name in dashboard.alerts %}
+                {% if name.componentSlug == details.name %}{{ mojBadge({ text: "Active Alert", classes: "moj-badge--red" }) }} {% endif %}
+              {% endfor %}
+              {% for name in dashboard.veracodeComponentName %}
+                {% if name == details.name %}{{ mojBadge({ text: "Veracode", classes: "moj-badge--purple" }) }} {% endif %}
+              {% endfor %}
+              {% for name in upgradeNeeded %}
+                {% if name == details.name %}{{ mojBadge({ text: "Upgrade needed", classes: "moj-badge--blue" }) }} {% endif %}
+              {% endfor %}
+          </li>
+    {% else %}
+      <li>None</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+ {% endmacro %}
 
     {{ govukDetails({
       summaryText: "See full list of products",
       text: allProductsList(products)
     }) }}
 
-    {%  for product in productsList %}
-  {{ govukSummaryList({
-     card: {
-     title: {
-       text: product
-      },
-      actions: {
-      items: [
-        {
-          text: deleteButton(loop.index0)
-        }
-      ]
-    }
-  },
-  rows: [
-    {
-      key: {
-        text: "Info to be added"
-      },
-      value: {
-        html: "Info to be added"
-      }
-    },
-    {
-      key: {
-        text: "Info to be added"
-      },
-      value: {
-        html: "Info to be added"
-      }
-    }
-  ]
-}) }}
+  {% macro alertsInformation(alertsInfo) %}
+    {% if dashboard.alertsInfo | length %}
+      {% for alert in alertsInfo %}
+        <h3>{{ alert.componentSlug }}</h3>
+          <p>{{ alert.alertname }}</p>
+      {% else %}
+        <p> There are no active alerts for this product </p>
+      {% endfor %}
+    {% endif %}
+  {% endmacro %}
+
+    <div class="govuk-grid-row hmpps-miniSummaryWrapper govuk-!-margin-bottom-6">
+      <div class="govuk-grid-column-one-third">
+        {% if dashboard.alerts | length > 0 %}
+          <div id="dashboard-alerts-popup" class="govuk-inset-text govuk-!-margin-bottom-4">
+            <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Active alerts identified on one or more components</p>
+            <p><a href="/alerts?environment=prod&team=' + team.encodedTeamName + '" class="govuk-link">See active alerts</a></p>
+            <ul class="govuk-list govuk-list--bullet">
+              {% for componentName in dashboard.alerts %}
+                <li>
+                  <a class="govuk-link" href="/components/{{ componentName.componentSlug }}">{{ componentName.componentSlug }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        {% if dashboard.veracodeVulnerabilityCount > 0 %}
+          <div id="dashboard-veracode-popup" class="govuk-inset-text govuk-!-margin-bottom-4">
+            <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities identified in production environment</p>
+            <p><strong>{{ dashboard.veracodeVulnerabilityCount }}</strong> very high and/or high vulnerabilities have been identified in the latest Veracode scan. <a class="govuk-link--no-visited-state" href="/veracode?&results=failed">See veracode results.</a></p>
+            <ul class="govuk-list govuk-list--bullet">
+              {% for componentName in dashboard.veracodeComponentName %}
+                <li>
+                  <a class="govuk-link" href="/components/{{ componentName }}">{{ componentName }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        {% if upgradeNeeded.length %}
+          <div id="dashboard-upgrade-popup" class="govuk-inset-text govuk-!-margin-bottom-4">
+            <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Components needing dependency upgrades identified</p>
+            <ul class="govuk-list govuk-list--bullet">
+              {% for componentName in upgradeNeeded %}
+                <li>
+                  <a class="govuk-link" href="/components/{{ componentName }}">{{ componentName }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    {% for product in dashboard.filteredProductsObject %}
+      {{ govukSummaryList({
+        card: {
+          title: {
+            text: product.name
+          },
+            actions: {
+              items: [
+                {
+                  text: deleteButton(product.name)
+                }
+              ]
+            }
+        },
+        rows: [
+          {
+             key: {
+               text: 'Description'
+             },
+             value: {
+               html: product.description
+             }
+          },
+          {
+             key: {
+               text: "Components"
+             },
+             value: {
+               html: componentsList(dashboard.component[loop.index0])
+             }
+          }
+        ]
+      }) }}
     {%  endfor %}
   </form>
 
-  {% if productsList.length == 0 %}
-  {{ mojAlert({
+  {% if dashboard.productsList.length == 0 %}
+    {{ mojAlert({
       variant: "information",
       title: "You do not have any pinned products",
       showTitleAsHeading: true,
       dismissible: false,
       html: 'Click on the "add a product" button to add one.'
-   }) }}
+    }) }}
   {% endif %}
+
   {% else %}
-   {{ mojAlert({
+    {{ mojAlert({
       variant: "information",
       title: "You are not able to use the dashboard without additional cookies",
       dismissible: false,

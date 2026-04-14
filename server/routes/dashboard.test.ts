@@ -16,8 +16,25 @@ const mockedSanitizeService = jest.mocked(sanitizeCookieInput)
 const MockedCookieService = CookieService as jest.MockedClass<typeof CookieService>
 let app: Express
 
-const mockProductsList = [{ name: 'sanitizedValue' }, { name: 'product 2' }] as Product[]
+const mockProductsList = [{ name: 'sanitizedValue', slug: 'sanitizedValue' }, { name: 'product 2' }] as Product[]
 const mockCurrentProductsList = ['product 3']
+const testProduct = {
+  name: 'sanitizedValue',
+  p_id: '1',
+  lead_developer: 'Some Lead Developer',
+  product_manager: 'Some Product Manager',
+  delivery_manager: 'Some Lead Developer',
+  team: {
+    name: 'Test Team',
+  },
+  components: [
+    {
+      name: 'test-component',
+      description: 'Test Component Description',
+      language: 'Kotlin',
+    },
+  ],
+} as Product
 
 beforeEach(() => {
   jest.clearAllMocks()
@@ -32,6 +49,7 @@ beforeEach(() => {
 
   serviceCatalogueService.getProducts.mockResolvedValue(mockProductsList)
   mockedSanitizeService.mockReturnValue('sanitizedValue')
+  serviceCatalogueService.getProduct.mockResolvedValue(testProduct)
 
   app = appWithAllRoutes({ services: { serviceCatalogueService } })
 })
@@ -157,12 +175,9 @@ describe('/dashboard', () => {
           `${config.cookieKeys.userPreferencesCookie}=yes`,
           `${config.cookieKeys.productNameCookie}=%5B%22test%22%5D`,
         ])
-        .send({ index: '1' })
+        .send({ delete: 'sanitizedValue' })
         .expect(res => {
-          expect(MockedCookieService.prototype.setStringHeader).toHaveBeenCalledWith(
-            'product_name',
-            mockCurrentProductsList,
-          )
+          expect(MockedCookieService.prototype.setStringHeader).toHaveBeenCalledWith('product_name', ['product 3'])
           const prodList = MockedCookieService.prototype.setStringHeader.mock.calls[0]
           const finalSavedProdList = prodList[1]
           expect(finalSavedProdList).toEqual(['product 3'])
