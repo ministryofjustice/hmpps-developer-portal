@@ -130,7 +130,7 @@
         {% if dashboard.alerts | length > 0 %}
           <div id="dashboard-alerts-popup" class="govuk-inset-text govuk-!-margin-bottom-4">
             <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Active alerts identified on one or more components</p>
-            <p><a href="/alerts?environment=prod&team=' + team.encodedTeamName + '" class="govuk-link">See active alerts</a></p>
+            <p><a class="govuk-link" href="/alerts?">See active alerts</a></p>
             <ul class="govuk-list govuk-list--bullet">
               {% for componentName in dashboard.alerts %}
                 <li>
