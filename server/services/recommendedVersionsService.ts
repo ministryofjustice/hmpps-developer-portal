@@ -171,7 +171,7 @@ export default class RecommendedVersionsService {
       const values = ((component as ComponentWithValues).values || {}) as Record<string, unknown>
 
       // Preferred keys from versions
-      const helmDeps = (versions.helm_dependencies as Record<string, unknown>) || {}
+      const helmDeps = (versions['Helm Dependencies'] as Record<string, unknown>) || {}
       let helmGenericPrometheusAlerts = this.parseVersionValue(helmDeps?.generic_prometheus_alerts)
       let helmGenericService = this.parseVersionValue(helmDeps?.generic_service)
       // Fallback to hyphenated keys directly under helm_dependencies
@@ -182,12 +182,12 @@ export default class RecommendedVersionsService {
         helmGenericService = this.parseVersionValue(helmDeps['generic-service'])
       }
       let gradleHmppsGradleSpringBoot = this.parseVersionValue(
-        (versions.gradle as Record<string, unknown>)?.hmpps_gradle_spring_boot,
+        (versions.Gradle as Record<string, unknown>)?.hmpps_gradle_spring_boot,
       )
 
       // Legacy helm shape in versions
       if (!helmGenericPrometheusAlerts || !helmGenericService) {
-        const helm = versions.helm as Record<string, unknown>
+        const helm = versions.Helm as Record<string, unknown>
         const deps = (helm?.dependencies as Record<string, unknown>) || {}
         helmGenericPrometheusAlerts =
           helmGenericPrometheusAlerts || this.parseVersionValue(deps['generic-prometheus-alerts'])
