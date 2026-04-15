@@ -35,8 +35,8 @@
   {% if dashboard.error == "notfound" %}
   {{ mojAlert({
       variant: "error",
-      title: attemptedProduct,
-      showTitleAsHeading: true,
+      title: dashboard.attemptedProduct,
+      showTitleAsHeading: false,
       dismissible: false,
       text: dashboard.attemptedProduct + " is not a valid product name. See full list below to find your product ('See full list of products')"
     }) }}
@@ -78,7 +78,7 @@
 
   {% macro allProductsList(products) %}
     <ul>
-      {% for product in dashboard.products %}
+      {% for product in products %}
         <li>{{ product.name }}</li>
       {% endfor %}
     </ul>
@@ -93,7 +93,7 @@
               {{ details.name }}{% if details.archived == true %} (ARCHIVED){% endif %}
             </a>
               {% for name in dashboard.alerts %}
-                {% if name.componentSlug == details.name and name.environment == 'prod' or name.environment == 'production'%}{{ mojBadge({ text: "Active Alert - PROD", classes: "moj-badge--red" }) }}
+                {% if name.componentSlug == details.name and name.environment == 'prod' or name.componentSlug == details.name and name.environment == 'production'%}{{ mojBadge({ text: "Active Alert - PROD", classes: "moj-badge--red" }) }}
                 {% elseif name.componentSlug == details.name %}{{ mojBadge({ text: "Active Alert", classes: "moj-badge--red" }) }}
                 {% endif %}
               {% endfor %}
@@ -113,7 +113,7 @@
 
     {{ govukDetails({
       summaryText: "See full list of products",
-      text: allProductsList(products)
+      text: allProductsList(dashboard.products)
     }) }}
 
   {% macro alertsInformation(alertsInfo) %}
@@ -165,7 +165,7 @@
       </div>
 
       <div class="govuk-grid-column-one-third">
-        {% if upgradeNeeded.length %}
+        {% if upgradeNeeded | length %}
           <div id="dashboard-upgrade-popup" class="govuk-inset-text govuk-!-margin-bottom-4">
             <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Components needing dependency upgrades identified</p>
             <ul class="govuk-list govuk-list--bullet">
@@ -199,7 +199,7 @@
                text: 'Description'
              },
              value: {
-               html: product.description
+               text: product.description
              }
           },
           {

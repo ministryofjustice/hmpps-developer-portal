@@ -32,11 +32,12 @@ export default function routes({
       const normalisedName = (product.name || '').trim().toLowerCase()
       return newProductSet.has(normalisedName)
     })
+    const recommended = await recommendedVersionsService.getRecommendedVersions()
     const productSlugs = filteredProductsObject.map(product => product.slug)
-    const product: Product[] = await Promise.all(
+    const productBySlug: Product[] = await Promise.all(
       productSlugs.map(productSlug => serviceCatalogueService.getProduct({ productSlug })),
     )
-    const components = product.map(prod => prod.components)
+    const components = productBySlug.map(prod => prod.components)
     const usersCookiePrefs = cookieService.getString(req.cookies, config.cookieKeys.userPreferencesCookie)
     const displayProduct = {
       name,
@@ -44,7 +45,7 @@ export default function routes({
       error,
       attemptedProduct,
       products,
-      product,
+      product: productBySlug,
       component: components,
       usersCookiePrefs,
       filteredProductsObject,
@@ -52,22 +53,14 @@ export default function routes({
       veracodeVulnerabilityCount: 0,
       veracodeComponentName: [] as string[],
     }
-    const componentArray: Component[] = []
-    components.forEach(component => {
-      component.forEach(item => {
-        componentArray.push(item)
-      })
-    })
+
+    const componentArray: Component[] = components.flat()
     const componentsNeedingUpdates: string[] = []
     const bannerPromises = componentArray
-      ?.filter(component => !component.archived)
+      .filter(component => !component.archived)
       .map(async component => {
         try {
           const allAlerts = await alertsService.getAlertsForComponent(component.name)
-          let total = 0
-          if (Array.isArray(allAlerts) && allAlerts.length > 0) {
-            total += 1
-          }
 
           const activeAlerts = allAlerts
             .filter(alert => alert.status?.state === 'active')
@@ -79,7 +72,6 @@ export default function routes({
               environment: mapToCanonicalEnv(alert.labels?.environment ?? ''),
               summary: alert.annotations?.summary ?? '',
               message: alert.annotations?.message ?? '',
-              total,
             }))
 
           const veracodeCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
@@ -94,7 +86,7 @@ export default function routes({
           // Dependency comparison for this component
           if (!kotlinOnly || isKotlin) {
             try {
-              const recommended = await recommendedVersionsService.getRecommendedVersions()
+              // const recommended = await recommendedVersionsService.getRecommendedVersions()
               const comparison = compareComponentsDependencies([component], recommended)
               const relevantItems = comparison.items.filter(
                 item =>
@@ -188,13 +180,14 @@ export default function routes({
 
   // Route to delete a saved product
   router.post('/saved-products/delete', (req, res) => {
-    const rawName = req.body.delete.trim()
-    const currentProductsList = cookieService.getFavouritesFromCookie(
-      req.cookies,
-      config.cookieKeys.productNameCookie.toLowerCase(),
-    )
+    const rawName = req.body.delete
+    if (!rawName || typeof rawName !== 'string') {
+      throw new Error('delete is missing or is not a string')
+    }
+    const name = rawName.trim()
+    const currentProductsList = cookieService.getFavouritesFromCookie(req.cookies, config.cookieKeys.productNameCookie)
     // Remove a product from current product list
-    const updatedList = currentProductsList.filter(product => product.toLowerCase() !== rawName.toLowerCase())
+    const updatedList = currentProductsList.filter(product => product.toLowerCase() !== name.toLowerCase())
     // Save updated list to cookie
     const header = cookieService.setStringHeader(config.cookieKeys.productNameCookie, updatedList)
     res.setHeader('Set-Cookie', header)
