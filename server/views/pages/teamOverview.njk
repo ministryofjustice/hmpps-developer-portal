@@ -71,29 +71,6 @@
         {{ govukSummaryList({
           card: {
             title: {
-              text: "Trivy (critical & high)"
-            }
-          },
-          rows: [
-            {
-              key: {
-                text: team.criticalAndHighTrivy, classes: "totalNumber"
-              },
-              value: {
-                html: '<a href="/trivy-scans?checkbox=environment-prod&team=' + team.encodedTeamName + '" class="govuk-link">See Trivy scan results</a>'
-              },
-              classes: "alertsAndScansBox"
-            }
-          ]
-        }) }}
-      </div>
-    </div>
-
-    <div class="govuk-grid-column-one-third">
-      <div class= alertsAndScansCard>
-        {{ govukSummaryList({
-          card: {
-            title: {
               text: "Veracode (very high & high)"
             }
           },

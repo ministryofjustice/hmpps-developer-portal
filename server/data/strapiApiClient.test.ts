@@ -13,8 +13,6 @@ import {
   GithubRepoRequest,
   GithubTeam,
   ScheduledJob,
-  TrivyScan,
-  TrivyScanType,
 } from './modelTypes'
 import { ListResponse, SingleResponse } from './strapiClientTypes'
 
@@ -213,9 +211,7 @@ describe('strapiApiClient', () => {
         } as SingleResponse<Strapi.Component>
         const componentResponse = { documentId: 'documentid1', name: 'component' } as Component
         fakeStrapiApi
-          .get(
-            '/components?filters[name][$eq]=component&populate[product][populate][team]=true&populate[envs][populate][trivy_scan]=true',
-          )
+          .get('/components?filters[name][$eq]=component&populate[product][populate][team]=true')
           .reply(200, component)
         const output = await strapiApiClient.getComponent({ componentName: 'component' })
         expect(output).toEqual(componentResponse)
@@ -524,68 +520,6 @@ describe('strapiApiClient', () => {
         fakeStrapiApi.get('/scheduled-jobs?filters[name][$eq]=test-job').reply(200, scheduledJob)
         const output = await strapiApiClient.getScheduledJob({ name: 'test-job' })
         expect(output).toEqual(scheduledJobResponse)
-      })
-    })
-  })
-
-  describe('Trivy Scans', () => {
-    describe('getTrivyScans', () => {
-      it('should return all trivy scans', async () => {
-        const allTrivyScans = {
-          data: [
-            {
-              id: 1,
-              name: 'test-scan',
-              trivy_scan_timestamp: '2023-01-01T00:00:00Z',
-              build_image_tag: 'latest',
-              scan_status: 'Succeeded',
-              environments: ['dev'],
-              scan_summary: {},
-            },
-          ],
-        } as unknown as ListResponse<Strapi.TrivyScan>
-        const trivyScansResponse = [
-          {
-            id: 1,
-            name: 'test-scan',
-            trivy_scan_timestamp: '2023-01-01T00:00:00Z',
-            build_image_tag: 'latest',
-            scan_status: 'Succeeded',
-            environments: ['dev'],
-            scan_summary: {},
-          },
-        ] as TrivyScanType[]
-        fakeStrapiApi.get('/trivy-scans').reply(200, allTrivyScans)
-        const output = await strapiApiClient.getTrivyScans()
-        expect(output).toEqual(trivyScansResponse)
-      })
-    })
-
-    describe('getTrivyScan', () => {
-      it('should return a single trivy scan', async () => {
-        const trivyScan = {
-          data: {
-            id: 1,
-            name: 'test-scan',
-            trivy_scan_timestamp: '2023-01-01T00:00:00Z',
-            build_image_tag: 'latest',
-            scan_status: 'Succeeded',
-            environments: ['dev'],
-            scan_summary: {},
-          },
-        } as unknown as SingleResponse<Strapi.TrivyScan>
-        const trivyScanResponse = {
-          id: 1,
-          name: 'test-scan',
-          trivy_scan_timestamp: '2023-01-01T00:00:00Z',
-          build_image_tag: 'latest',
-          scan_status: 'Succeeded',
-          environments: ['dev'],
-          scan_summary: {},
-        } as unknown as TrivyScan
-        fakeStrapiApi.get('/trivy-scans?filters[name][$eq]=test-scan').reply(200, trivyScan)
-        const output = await strapiApiClient.getTrivyScan({ name: 'test-scan' })
-        expect(output).toEqual(trivyScanResponse)
       })
     })
   })

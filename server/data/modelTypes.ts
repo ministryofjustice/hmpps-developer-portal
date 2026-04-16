@@ -18,8 +18,6 @@ export type GithubTeam = Strapi.GithubTeam
 export type GithubTeamRequest = Strapi.GithubTeamRequest
 export type ScheduledJob = Strapi.ScheduledJob
 export type ScheduledJobRequest = Strapi.ScheduledJobRequest
-export type TrivyScan = Strapi.TrivyScan
-export type TrivyScanRequest = Strapi.TrivyScanRequest
 
 export type Summary = {
   config?: Record<string, number>
@@ -72,16 +70,6 @@ export type ScanResult = {
 export type ScanSummary = {
   summary?: Summary
   scan_result?: ScanResult
-}
-
-export type TrivyScanType = {
-  id: number
-  name: string
-  trivy_scan_timestamp: string
-  build_image_tag: string
-  scan_status: 'Failed' | 'Succeeded'
-  environments: string[]
-  scan_summary: ScanSummary
 }
 
 export type GithubProjectVisibility = GithubRepoRequestRequest['data']['github_project_visibility']
