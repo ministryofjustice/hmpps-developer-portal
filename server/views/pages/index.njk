@@ -19,7 +19,7 @@
 {% set rejectedHtml %}
   <p class="govuk-body">You’ve rejected additional cookies. You can <a class="govuk-link" href="/cookies">change your cookie settings</a> at any time.</p>
 {% endset %}
-
+<div class="cookie-banner">
 <form action="/set-cookie-preference" method="POST">
   <input type="hidden" name="_csrf" value="{{ csrfToken }}">
   {{ govukCookieBanner({
@@ -52,10 +52,12 @@
   }) }}
 </form>
 
+
 <form action="/hide-cookie-notice" method="POST">
   <input type="hidden" name="_csrf" value="{{ csrfToken }}">
     {{ govukCookieBanner({
       ariaLabel: "Cookies on [name of service]",
+      hidden: usersCookiePrefs == undefined or hideCookies,
       messages: [
         {
            html: acceptHtml,
@@ -84,7 +86,9 @@
       ]
     }) }}
 </form>
+</div>
 {% endif %}
+
 
   <h1>Developer Portal</h1>
   <h2><a class="govuk-link--no-visited-state" href="/dashboard" data-test="service-area-link">Dashboard</a></h2>
