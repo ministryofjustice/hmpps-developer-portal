@@ -72,7 +72,7 @@ export default function routes({
             }))
 
           const veracodeCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
-          let relevantItems: DependencyComparisonItem[]
+          let relevantItems: DependencyComparisonItem[] = []
 
           const isKotlin = (component.language || '') === 'Kotlin'
           const { kotlinOnly } = config.recommendedVersions
@@ -94,7 +94,7 @@ export default function routes({
           }
           return {
             activeAlerts,
-            needsUpdate: relevantItems?.length > 0 ? component.name : null,
+            needsUpdate: relevantItems.length > 0 ? component.name : null,
             veracodeCount,
             veracodeComponentName: veracodeCount > 0 ? component.name : null,
           }
@@ -103,10 +103,10 @@ export default function routes({
             `Error fetching alerts for ${component.name}: ${err instanceof Error ? err.message : String(err)}`,
           )
           return {
-            activeAlerts: [] as [],
-            needsUpdate: [] as string[],
-            veracodeCount: [] as number[],
-            veracodeComponentName: [] as string[],
+            activeAlerts: [],
+            needsUpdate: null,
+            veracodeCount: 0,
+            veracodeComponentName: null,
           }
         }
       })
