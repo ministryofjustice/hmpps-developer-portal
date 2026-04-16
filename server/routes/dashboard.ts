@@ -8,7 +8,7 @@ import { DisplayAlert } from './products'
 import { formatMonitorName, mapToCanonicalEnv, utcTimestampToUtcDateTime } from '../utils/utils'
 import { Component, Product } from '../data/modelTypes'
 import { countVeracodeHighAndVeryHigh } from '../utils/vulnerabilitySummary'
-import { compareComponentsDependencies } from '../services/dependencyComparison'
+import { compareComponentsDependencies, DependencyComparisonItem } from '../services/dependencyComparison'
 import logger from '../../logger'
 
 export default function routes({
@@ -50,12 +50,9 @@ export default function routes({
       usersCookiePrefs,
       filteredProductsObject,
       alerts: [] as DisplayAlert[],
-      veracodeVulnerabilityCount: 0,
-      veracodeComponentName: [] as string[],
     }
 
     const componentArray: Component[] = components.flat()
-    const componentsNeedingUpdates: string[] = []
     const bannerPromises = componentArray
       .filter(component => !component.archived)
       .map(async component => {
@@ -75,10 +72,7 @@ export default function routes({
             }))
 
           const veracodeCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
-          displayProduct.veracodeVulnerabilityCount += veracodeCount
-          if (veracodeCount > 0) {
-            displayProduct.veracodeComponentName.push(component.name)
-          }
+          let relevantItems: DependencyComparisonItem[]
 
           const isKotlin = (component.language || '') === 'Kotlin'
           const { kotlinOnly } = config.recommendedVersions
@@ -88,26 +82,32 @@ export default function routes({
             try {
               // const recommended = await recommendedVersionsService.getRecommendedVersions()
               const comparison = compareComponentsDependencies([component], recommended)
-              const relevantItems = comparison.items.filter(
+              relevantItems = comparison.items.filter(
                 item =>
                   item.current !== '-' &&
                   !!item.current &&
                   (item.status === 'needs-attention' || item.status === 'needs-upgrade'),
               )
-
-              if (relevantItems.length > 0) {
-                componentsNeedingUpdates.push(component.name)
-              }
             } catch (e) {
               logger.warn(`[DependencyComparison] Failed for component='${component.name}': ${String(e)}`)
             }
           }
-          return { activeAlerts, componentsNeedingUpdates }
+          return {
+            activeAlerts,
+            needsUpdate: relevantItems?.length > 0 ? component.name : null,
+            veracodeCount,
+            veracodeComponentName: veracodeCount > 0 ? component.name : null,
+          }
         } catch (err) {
           logger.error(
             `Error fetching alerts for ${component.name}: ${err instanceof Error ? err.message : String(err)}`,
           )
-          return { activeAlerts: [], componentsNeedingUpdates: [] }
+          return {
+            activeAlerts: [] as [],
+            needsUpdate: [] as string[],
+            veracodeCount: [] as number[],
+            veracodeComponentName: [] as string[],
+          }
         }
       })
 
@@ -116,15 +116,17 @@ export default function routes({
       .filter(result => result && Array.isArray(result.activeAlerts))
       .flatMap(result => result.activeAlerts)
 
-    const upgradeNeeded = Array.from(
-      new Set(
-        productResults
-          .filter(result => result && Array.isArray(result.componentsNeedingUpdates))
-          .flatMap(result => result.componentsNeedingUpdates),
-      ),
-    )
+    const upgradeNeeded = productResults
+      .map(i => i.needsUpdate)
+      .filter((needsUpdate): needsUpdate is string => needsUpdate !== null)
 
-    return res.render('pages/dashboard.njk', { dashboard: displayProduct, upgradeNeeded })
+    const veracodeName = productResults
+      .map(i => i.veracodeComponentName)
+      .filter((compName): compName is string => compName !== null)
+
+    const veracodeCount = productResults.map(i => i.veracodeCount).filter((count): count is number => count !== 0)
+
+    return res.render('pages/dashboard.njk', { dashboard: displayProduct, upgradeNeeded, veracodeName, veracodeCount })
   })
 
   // Route to add users name
@@ -182,7 +184,7 @@ export default function routes({
   router.post('/saved-products/delete', (req, res) => {
     const rawName = req.body.delete
     if (!rawName || typeof rawName !== 'string') {
-      throw new Error('delete is missing or is not a string')
+      return res.redirect('/dashboard')
     }
     const name = rawName.trim()
     const currentProductsList = cookieService.getFavouritesFromCookie(req.cookies, config.cookieKeys.productNameCookie)
