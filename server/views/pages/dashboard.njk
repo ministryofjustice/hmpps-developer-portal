@@ -130,7 +130,7 @@
     <div class="govuk-grid-row hmpps-miniSummaryWrapper govuk-!-margin-bottom-6">
       <div class="govuk-grid-column-one-third">
         {% if dashboard.alerts | length > 0 %}
-          <div id="dashboard-alerts-popup" class="govuk-inset-text govuk-!-margin-bottom-4">
+          <div id="dashboard-alerts-panel" class="govuk-inset-text govuk-!-margin-bottom-4">
             <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Active alerts identified on one or more components</p>
             <p><a class="govuk-link" href="/alerts?">See active alerts</a></p>
             <ul class="govuk-list govuk-list--bullet">
@@ -151,7 +151,7 @@
 
       <div class="govuk-grid-column-one-third">
         {% if veracodeCount > 0 %}
-          <div id="dashboard-veracode-popup" class="govuk-inset-text govuk-!-margin-bottom-4">
+          <div id="dashboard-veracode-panel" class="govuk-inset-text govuk-!-margin-bottom-4">
             <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities identified in production environment</p>
             <p><strong>{{ veracodeCount }}</strong> very high and/or high vulnerabilities have been identified in the latest Veracode scan. <a class="govuk-link--no-visited-state" href="/veracode?&results=failed">See veracode results.</a></p>
             <ul class="govuk-list govuk-list--bullet">
@@ -166,7 +166,7 @@
 
       <div class="govuk-grid-column-one-third">
         {% if upgradeNeeded | length %}
-          <div id="dashboard-upgrade-popup" class="govuk-inset-text govuk-!-margin-bottom-4">
+          <div id="dashboard-upgrade-panel" class="govuk-inset-text govuk-!-margin-bottom-4">
             <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Components needing dependency upgrades identified</p>
             <ul class="govuk-list govuk-list--bullet">
               {% for componentName in upgradeNeeded %}
