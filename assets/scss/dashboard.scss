@@ -1,0 +1,20 @@
+
+#dashboard-alerts-panel {
+  border-left: 5px solid govuk-colour("red");
+  background-color: govuk-colour("red", $variant: "tint-80")
+}
+
+#dashboard-veracode-panel {
+  border-left: 5px solid govuk-colour("purple");
+  background-color: govuk-colour("purple", $variant: "tint-80")
+}
+
+#dashboard-upgrade-panel {
+  border-left: 5px solid govuk-colour("blue");
+  background-color: govuk-colour("blue", $variant: "tint-80")
+}
+
+.cookie-banner {
+  padding-left: 20px;
+  background-color: govuk-functional-colour(template-background);
+}

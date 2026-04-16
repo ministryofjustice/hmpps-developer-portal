@@ -10,7 +10,7 @@ import {
 } from '../utils/vulnerabilitySummary'
 import { compareComponentsDependencies } from '../services/dependencyComparison'
 
-interface DisplayAlert {
+export interface DisplayAlert {
   alertname: string
   environment: string
   summary: string
