@@ -168,7 +168,6 @@ export default function routes({
       req.cookies,
       config.cookieKeys.productNameCookie,
     )
-    console.log('CURRENT LIST', currentProductsList)
     // Add new product if not already in array
     if (
       !currentProductsList.some(
@@ -179,7 +178,6 @@ export default function routes({
     }
     // Save to cookie
     const header = cookieService.setStringHeader(config.cookieKeys.productNameCookie, currentProductsList)
-    console.log('HEADER', header)
     res.setHeader('Set-Cookie', header)
     return res.redirect('/dashboard')
   })
