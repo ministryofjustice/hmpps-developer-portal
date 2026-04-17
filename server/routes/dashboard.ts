@@ -37,6 +37,7 @@ export default function routes({
     const productBySlug: Product[] = await Promise.all(
       productSlugs.map(productSlug => serviceCatalogueService.getProduct({ productSlug })),
     )
+    const productsNameList = products.map(prod => prod.name)
     const components = productBySlug.map(prod => prod.components)
     const usersCookiePrefs = cookieService.getString(req.cookies, config.cookieKeys.userPreferencesCookie)
     const displayProduct = {
@@ -45,6 +46,7 @@ export default function routes({
       error,
       attemptedProduct,
       products,
+      productsNameList,
       product: productBySlug,
       component: components,
       usersCookiePrefs,
@@ -166,6 +168,7 @@ export default function routes({
       req.cookies,
       config.cookieKeys.productNameCookie,
     )
+    console.log('CURRENT LIST', currentProductsList)
     // Add new product if not already in array
     if (
       !currentProductsList.some(
@@ -176,6 +179,7 @@ export default function routes({
     }
     // Save to cookie
     const header = cookieService.setStringHeader(config.cookieKeys.productNameCookie, currentProductsList)
+    console.log('HEADER', header)
     res.setHeader('Set-Cookie', header)
     return res.redirect('/dashboard')
   })

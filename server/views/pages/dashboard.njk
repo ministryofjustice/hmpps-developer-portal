@@ -34,6 +34,7 @@
 
   {% if dashboard.error == "notfound" %}
   {{ mojAlert({
+      id: "product-not-found",
       variant: "error",
       title: dashboard.attemptedProduct,
       showTitleAsHeading: false,
@@ -46,24 +47,17 @@
     <p class= "error-message">Please enter a product name</p>
   {% endif %}
 
-  <form action="/dashboard/saved-products/add" method="POST" style="margin-bottom: 15px">
-  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-  {{ mojSearch({
-    action: "#",
-    method: "post",
-    input: {
-      id: "search-products",
-      name: "product"
-    },
-    label: {
-      text: "Find a product",
-      classes: "govuk-!-font-weight-bold"
-    },
-    button: {
-      text: "Add a product",
-      id: "add-product-button"
-    }
-  }) }}
+    <form action="/dashboard/saved-products/add" method="POST" id="add-product-form" style="margin-bottom: 15px">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      <div class="form-field">
+        <link rel="stylesheet" href="assets/scss/accessible-autocomplete.min.css" />
+        <label for="product-autocomplete"><strong>Select a product</strong></label>
+        <input type="hidden" name="product" id="input-autocomplete">
+        <div id="product-autocomplete-container"
+             data-source='{{ dashboard.productsNameList | dump | safe }}'>
+        </div>
+      </div>
+    </form>
 
     {% macro deleteButton(product) %}
       <form action="/dashboard/saved-products/delete" method="POST">
@@ -239,6 +233,12 @@
   <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
 </div>
 {% block bodyEnd %}
-  <script type="module" src="/assets/frontendInit.js"></script>
+  <script type="module" src="/assets/js/frontendInit.js"></script>
+  <script
+    type="application/json"
+    id="autocomplete-source">
+  {{ dashboard.productsNameList | dump | safe }}
+</script>
+  <script type="module" src="/assets/js/dashboard.js"></script>
   <script src="/assets/js/common.js"></script>
 {% endblock %}
