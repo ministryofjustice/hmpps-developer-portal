@@ -18,3 +18,15 @@
   padding-left: 20px;
   background-color: govuk-functional-colour(template-background);
 }
+
+.no-products-on-dashboard {
+  width: 100%;
+  display: block;
+  clear: both;
+  padding-top: 1rem;
+}
+
+#add-product-form {
+  margin-bottom: 15px;
+  float: none;
+}

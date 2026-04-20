@@ -1,4 +1,10 @@
-const { accessibleAutocomplete } = require('./accessible-autocomplete.min')
+/**
+ * @global
+ * @function accessibleAutocomplete
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  window.accessibleAutocomplete()
+})
 
 const source = JSON.parse(document.getElementById('autocomplete-source').textContent)
 const form = document.getElementById('add-product-form')
