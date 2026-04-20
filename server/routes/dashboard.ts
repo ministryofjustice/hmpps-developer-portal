@@ -22,7 +22,6 @@ export default function routes({
 
   // dashboard GET route for both users name and saved products
   router.get('/', async (req, res) => {
-    const name = cookieService.getString(req.cookies, config.cookieKeys.userNameCookie)
     const productsList = cookieService.getFavouritesFromCookie(req.cookies, config.cookieKeys.productNameCookie)
     const error = req.query.error as string | undefined
     const attemptedProduct = req.query.value as string | undefined
@@ -41,7 +40,6 @@ export default function routes({
     const components = productBySlug.map(prod => prod.components)
     const usersCookiePrefs = cookieService.getString(req.cookies, config.cookieKeys.userPreferencesCookie)
     const displayProduct = {
-      name,
       productsList,
       error,
       attemptedProduct,
@@ -129,20 +127,6 @@ export default function routes({
     const veracodeCount = productResults.map(i => i.veracodeCount).filter((count): count is number => count !== 0)
 
     return res.render('pages/dashboard.njk', { dashboard: displayProduct, upgradeNeeded, veracodeName, veracodeCount })
-  })
-
-  // Route to add users name
-  router.post('/name', (req, res) => {
-    const rawInput = req.body?.name
-    const safeName = sanitizeCookieInput(rawInput, {
-      maxLength: 30,
-      collapseWhitespace: false,
-      defaultInput: 'User',
-    })
-    const header = cookieService.setStringHeader(config.cookieKeys.userNameCookie, safeName)
-    const nameHeader = cookieService.removeEncodedQuotes(header)
-    res.setHeader('Set-Cookie', nameHeader)
-    res.redirect('/dashboard')
   })
 
   // Route to add saved products
