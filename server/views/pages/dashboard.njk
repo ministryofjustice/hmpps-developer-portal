@@ -17,18 +17,6 @@
   {% if dashboard.usersCookiePrefs == 'yes' %}
     <h1>Welcome to your dashboard</h1>
 
-    {% macro deleteButton(product) %}
-      <form action="/dashboard/saved-products/delete" method="POST">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        <input type="hidden" name="delete" value="{{ product | string }}">
-        {{ govukButton({
-            type: "submit",
-            text: "Remove Product",
-            classes: "govuk-button--warning"
-        }) }}
-      </form>
-  {% endmacro %}
-
   {% macro allProductsList(products) %}
     <ul>
       {% for product in products %}
@@ -127,16 +115,36 @@
       </div>
     </div>
 
+    {% macro productLink(prod) %}
+    <a class="govuk-link" href="/products/{{ prod.slug }}">View product page</a>
+    {% endmacro %}
+
+    {% macro deleteButton(productName) %}
+      <form action="/dashboard/saved-products/delete" method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="delete" value="{{ productName.name | string }}">
+        {{ govukButton({
+            type: "submit",
+            text: "Remove Product",
+            classes: "govuk-button--warning"
+        }) }}
+      </form>
+    {% endmacro %}
+
+    <div class="users-products">
     {% for product in dashboard.filteredProductsObject %}
       {{ govukSummaryList({
         card: {
           title: {
-            text: product.name
-          },
+            html: product.name
+            },
             actions: {
               items: [
                 {
-                  text: deleteButton(product.name)
+                 html: productLink(product)
+                },
+                {
+                 html: deleteButton(product)
                 }
               ]
             }
@@ -144,7 +152,7 @@
         rows: [
           {
              key: {
-               text: 'Description'
+               text: "Description"
              },
              value: {
                text: product.description
@@ -161,6 +169,7 @@
         ]
       }) }}
     {%  endfor %}
+    </div>
 
     {% if dashboard.error == "notfound" %}
       {{ mojAlert({
@@ -182,6 +191,7 @@
       <div class="form-field">
         <link rel="stylesheet" href="assets/scss/accessible-autocomplete.min.css" />
         <label for="product-autocomplete"><strong>Select a product</strong></label></div>
+      <p>Type the name of a product to add to your dashboard.</p>
       <div class="govuk-grid-column-two-thirds" style="padding: 0">
       <input type="hidden" name="product" id="input-autocomplete">
         <div id="product-autocomplete-container"
