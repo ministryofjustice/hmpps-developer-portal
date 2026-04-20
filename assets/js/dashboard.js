@@ -2,23 +2,26 @@
  * @global
  * @function accessibleAutocomplete
  */
+
 document.addEventListener('DOMContentLoaded', () => {
-  window.accessibleAutocomplete()
-})
+  const sourceElement = document.getElementById('autocomplete-source')
+  const container = document.getElementById('product-autocomplete-container')
+  const form = document.getElementById('add-product-form')
+  const hiddenInput = document.getElementById('input-autocomplete')
 
-const source = JSON.parse(document.getElementById('autocomplete-source').textContent)
-const form = document.getElementById('add-product-form')
+  if (!sourceElement || !container || !form || !hiddenInput) return
 
-form.addEventListener('submit', () => {
-  const autoInput = document.querySelector('#product-autocomplete-container input')
-  if (!autoInput) return
-  document.getElementById('input-autocomplete').value = autoInput.value
-})
+  const source = JSON.parse(sourceElement.textContent)
 
-accessibleAutocomplete({
-  container: document.getElementById('product-autocomplete-container'),
-  inputId: 'product-autocomplete',
-  element: document.querySelector('#product-autocomplete-container'),
-  id: 'product-autocomplete-container',
-  source: source,
+  accessibleAutocomplete({
+    element: container,
+    id: 'product-autocomplete',
+    source: source,
+  })
+
+  form.addEventListener('submit', () => {
+    const autoInput = container.querySelector('input')
+    if (!autoInput) return
+    hiddenInput.value = autoInput.value
+  })
 })
