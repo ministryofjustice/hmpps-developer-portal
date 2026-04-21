@@ -7,9 +7,9 @@ export default configureAllowedScripts({
     // Needed by cypress for running tests
     'node_modules/cypress@15.13.1': 'ALLOW',
     // Provides native integration, supporting ability to write dtrace probes for bunya
-    'node_modules/dtrace-provider@0.8.8': 'ALLOW',
+    'node_modules/dtrace-provider@^0.8.8': 'FORBID',
     // Needed by jest for running tests in watch mode
-    'node_modules/fsevents@2.3.3': 'ALLOW',
+    'node_modules/fsevents@^2.3.3': 'FORBID',
     // Native solution to quickly resolve module paths, used by jest and eslint
     'node_modules/unrs-resolver@1.11.1': 'ALLOW',
   },
