@@ -15,66 +15,7 @@
   {{ breadCrumb("Dashboard", []) }}
 
   {% if dashboard.usersCookiePrefs == 'yes' %}
-  <form action="/dashboard/name" method="POST">
-    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-    {% if dashboard.name %}
-      <h1 id="welcome-known-user-heading">Welcome to your dashboard, {{ dashboard.name }}</h1>
-    {% else %}
-      <h1 id="welcome-unknown-user-heading">Welcome to your dashboard, </h1>
-      {{ govukInput({
-        label: {
-        text: "Please enter your name",
-        classes: "govuk-label--m"
-        },
-        id: "dashboard-user-name",
-        name: "name"
-      }) }}
-    {% endif %}
-  </form>
-
-  {% if dashboard.error == "notfound" %}
-  {{ mojAlert({
-      variant: "error",
-      title: dashboard.attemptedProduct,
-      showTitleAsHeading: false,
-      dismissible: false,
-      text: dashboard.attemptedProduct + " is not a valid product name. See full list below to find your product ('See full list of products')"
-    }) }}
-  {% endif %}
-
-  {% if dashboard.error == "empty" %}
-    <p class= "error-message">Please enter a product name</p>
-  {% endif %}
-
-  <form action="/dashboard/saved-products/add" method="POST" style="margin-bottom: 15px">
-  <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-  {{ mojSearch({
-    action: "#",
-    method: "post",
-    input: {
-      id: "search-products",
-      name: "product"
-    },
-    label: {
-      text: "Find a product",
-      classes: "govuk-!-font-weight-bold"
-    },
-    button: {
-      text: "Add a product",
-      id: "add-product-button"
-    }
-  }) }}
-
-    {% macro deleteButton(product) %}
-      <form action="/dashboard/saved-products/delete" method="POST">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        <input type="hidden" name="delete" value="{{ product | string }}">
-        {{ govukButton({
-            type: "submit",
-            text: "Remove Product"
-        }) }}
-      </form>
-  {% endmacro %}
+    <h1>Welcome to your dashboard</h1>
 
   {% macro allProductsList(products) %}
     <ul>
@@ -89,7 +30,7 @@
       <ul>
         {% for details in componentsInfo %}
           <li>
-            <a data-test="component-link" href="/components/{{ details.name }}">
+            <a class="govuk-link--no-visited-state" data-test="component-link" href="/components/{{ details.name }}">
               {{ details.name }}{% if details.archived == true %} (ARCHIVED){% endif %}
             </a>
               {% for name in dashboard.alerts %}
@@ -101,7 +42,7 @@
                 {% if name == details.name %}{{ mojBadge({ text: "Veracode", classes: "moj-badge--purple" }) }} {% endif %}
               {% endfor %}
               {% for name in upgradeNeeded %}
-                {% if name == details.name %}{{ mojBadge({ text: "Upgrade needed", classes: "moj-badge--blue" }) }} {% endif %}
+                {% if name == details.name %}{{ mojBadge({ text: "Dependency", classes: "moj-badge--blue" }) }} {% endif %}
               {% endfor %}
           </li>
     {% else %}
@@ -110,11 +51,6 @@
       </ul>
     {% endif %}
  {% endmacro %}
-
-    {{ govukDetails({
-      summaryText: "See full list of products",
-      text: allProductsList(dashboard.products)
-    }) }}
 
   {% macro alertsInformation(alertsInfo) %}
     {% if dashboard.alertsInfo | length %}
@@ -132,16 +68,16 @@
         {% if dashboard.alerts | length > 0 %}
           <div id="dashboard-alerts-panel" class="govuk-inset-text govuk-!-margin-bottom-4">
             <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Active alerts identified on one or more components</p>
-            <p><a class="govuk-link" href="/alerts?">See active alerts</a></p>
+            <p><a class="govuk-link--no-visited-state" href="/alerts?">See active alerts</a></p>
             <ul class="govuk-list govuk-list--bullet">
               {% for componentName in dashboard.alerts %}
                 {% if componentName.environment == 'prod' %}
-                  <li><strong><a class="govuk-link" href="/components/{{ componentName.componentSlug }}">{{ componentName.componentSlug }} ({{ componentName.environment }})</a></strong></li>
+                  <li><strong><a class="govuk-link--no-visited-state" href="/components/{{ componentName.componentSlug }}">{{ componentName.componentSlug }} ({{ componentName.environment }})</a></strong></li>
                 {% endif %}
               {% endfor %}
               {% for componentName in dashboard.alerts %}
                 {% if componentName.environment != 'prod' %}
-                  <li><a class="govuk-link" href="/components/{{ componentName.componentSlug }}">{{ componentName.componentSlug }} ({{ componentName.environment }})</a></li>
+                  <li><a class="govuk-link--no-visited-state" href="/components/{{ componentName.componentSlug }}">{{ componentName.componentSlug }} ({{ componentName.environment }})</a></li>
                 {% endif %}
               {% endfor %}
             </ul>
@@ -157,7 +93,7 @@
             <ul class="govuk-list govuk-list--bullet">
               {% for componentName in veracodeName %}
                 <li>
-                  <a class="govuk-link" href="/components/{{ componentName }}">{{ componentName }}</a></li>
+                  <a class="govuk-link--no-visited-state" href="/components/{{ componentName }}">{{ componentName }}</a></li>
               {% endfor %}
             </ul>
           </div>
@@ -171,7 +107,7 @@
             <ul class="govuk-list govuk-list--bullet">
               {% for componentName in upgradeNeeded %}
                 <li>
-                  <a class="govuk-link" href="/components/{{ componentName }}">{{ componentName }}</a></li>
+                  <a class="govuk-link--no-visited-state" href="/components/{{ componentName }}">{{ componentName }}</a></li>
               {% endfor %}
             </ul>
           </div>
@@ -179,16 +115,36 @@
       </div>
     </div>
 
+    {% macro productLink(prod) %}
+    <a class="govuk-link--no-visited-state" href="/products/{{ prod.slug }}">View product page</a>
+    {% endmacro %}
+
+    {% macro deleteButton(productName) %}
+      <form action="/dashboard/saved-products/delete" method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <input type="hidden" name="delete" value="{{ productName.name | string }}">
+        {{ govukButton({
+            type: "submit",
+            text: "Remove Product",
+            classes: "govuk-button--warning"
+        }) }}
+      </form>
+    {% endmacro %}
+
+    <div class="users-products">
     {% for product in dashboard.filteredProductsObject %}
       {{ govukSummaryList({
         card: {
           title: {
-            text: product.name
-          },
+            html: product.name
+            },
             actions: {
               items: [
                 {
-                  text: deleteButton(product.name)
+                 html: productLink(product)
+                },
+                {
+                 html: deleteButton(product)
                 }
               ]
             }
@@ -196,7 +152,7 @@
         rows: [
           {
              key: {
-               text: 'Description'
+               text: "Description"
              },
              value: {
                text: product.description
@@ -213,8 +169,46 @@
         ]
       }) }}
     {%  endfor %}
-  </form>
+    </div>
 
+    {% if dashboard.error == "notfound" %}
+      {{ mojAlert({
+      id: "product-not-found",
+      variant: "error",
+      title: dashboard.attemptedProduct,
+      showTitleAsHeading: false,
+      dismissible: false,
+      text: dashboard.attemptedProduct + " is not a valid product name. See full list below to find your product ('See full list of products')"
+    }) }}
+    {% endif %}
+
+    {% if dashboard.error == "empty" %}
+      <p class= "error-message">Please enter a product name</p>
+    {% endif %}
+
+    {% set hasProducts = dashboard.productsList and dashboard.productsList | length > 0 %}
+
+    <div class="add-product {% if hasProducts %} with-gap {% endif %}">
+      <form action="/dashboard/saved-products/add" method="POST" id="add-product-form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <div class="form-field">
+          <link rel="stylesheet" href="assets/scss/accessible-autocomplete.min.css" />
+          <label for="product-autocomplete"><strong>Select a product</strong></label></div>
+        <p>Type the name of a product to add to your dashboard.</p>
+        <div class="govuk-grid-column-two-thirds" style="padding: 0">
+          <input type="hidden" name="product" id="input-autocomplete">
+          <div id="product-autocomplete-container"
+               data-source='{{ dashboard.productsNameList | dump | safe }}'></div>
+        </div>
+        <div class="govuk-grid-column-one-third">
+          {{ govukButton({
+             text: "Add product"
+          }) }}
+        </div>
+      </form>
+    </div>
+
+    <div class="no-products-on-dashboard">
   {% if dashboard.productsList.length == 0 %}
     {{ mojAlert({
       variant: "information",
@@ -224,6 +218,7 @@
       html: 'Click on the "add a product" button to add one.'
     }) }}
   {% endif %}
+    </div>
 
   {% else %}
     {{ mojAlert({
@@ -239,6 +234,13 @@
   <p>Last successful data collection by  {{ jobName }} at {{ lastSuccessfulRun }}</p>
 </div>
 {% block bodyEnd %}
-  <script type="module" src="/assets/frontendInit.js"></script>
+  <script type="module" src="/assets/js/frontendInit.js"></script>
+    <script type="module" src="/assets/js/accessible-autocomplete.min.js"></script>
+  <script type="module" src="/assets/js/dashboard.js"></script>
+  <script
+    type="application/json"
+    id="autocomplete-source">
+  {{ dashboard.productsNameList | dump | safe }}
+</script>
   <script src="/assets/js/common.js"></script>
 {% endblock %}
