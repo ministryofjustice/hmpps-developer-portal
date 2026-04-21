@@ -186,23 +186,27 @@
       <p class= "error-message">Please enter a product name</p>
     {% endif %}
 
-    <form action="/dashboard/saved-products/add" method="POST" id="add-product-form">
-      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-      <div class="form-field">
-        <link rel="stylesheet" href="assets/scss/accessible-autocomplete.min.css" />
-        <label for="product-autocomplete"><strong>Select a product</strong></label></div>
-      <p>Type the name of a product to add to your dashboard.</p>
-      <div class="govuk-grid-column-two-thirds" style="padding: 0">
-      <input type="hidden" name="product" id="input-autocomplete">
-        <div id="product-autocomplete-container"
-             data-source='{{ dashboard.productsNameList | dump | safe }}'></div>
-      </div>
+    {% set hasProducts = dashboard.productsList and dashboard.productsList | length > 0 %}
+
+    <div class="add-product {% if hasProducts %} with-gap {% endif %}">
+      <form action="/dashboard/saved-products/add" method="POST" id="add-product-form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <div class="form-field">
+          <link rel="stylesheet" href="assets/scss/accessible-autocomplete.min.css" />
+          <label for="product-autocomplete"><strong>Select a product</strong></label></div>
+        <p>Type the name of a product to add to your dashboard.</p>
+        <div class="govuk-grid-column-two-thirds" style="padding: 0">
+          <input type="hidden" name="product" id="input-autocomplete">
+          <div id="product-autocomplete-container"
+               data-source='{{ dashboard.productsNameList | dump | safe }}'></div>
+        </div>
         <div class="govuk-grid-column-one-third">
           {{ govukButton({
-          text: "Add product"
+             text: "Add product"
           }) }}
         </div>
-    </form>
+      </form>
+    </div>
 
     <div class="no-products-on-dashboard">
   {% if dashboard.productsList.length == 0 %}
