@@ -24,7 +24,7 @@ ARG BUILD_NUMBER
 ARG GIT_REF
 ARG GIT_BRANCH
 
-COPY package*.json ./
+COPY package*.json .allowed-scripts.mjs .npmrc ./
 RUN CYPRESS_INSTALL_BINARY=0 npm run setup --no-audit
 ENV NODE_ENV='production'
 
