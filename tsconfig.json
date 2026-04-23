@@ -1,8 +1,8 @@
 {
   "extends": "@tsconfig/node24/tsconfig.json",
   "compileOnSave": true,
+  "isolatedModules": true,
   "compilerOptions": {
-    "isolatedModules": true,
     "target": "es2018",
     "outDir": "./dist",
     "sourceMap": true,
