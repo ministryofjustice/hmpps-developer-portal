@@ -11,6 +11,7 @@ import TeamHealthService from './teamHealthService'
 import AlertsService from './alertsService'
 import MonitoringChannelService from './monitoringChannelService'
 import RecommendedVersionsService from './recommendedVersionsService'
+import { CookieService } from './cookieService'
 
 export const services = () => {
   const { strapiApiClientBuilder, applicationInfo, alertsApiClient } = dataAccess()
@@ -31,6 +32,7 @@ export const services = () => {
   )
   const monitoringChannelService = new MonitoringChannelService()
   const recommendedVersionsService = new RecommendedVersionsService(serviceCatalogueService)
+  const cookieService = new CookieService()
 
   return {
     applicationInfo,
@@ -44,6 +46,7 @@ export const services = () => {
     teamsSummaryCountService,
     monitoringChannelService,
     recommendedVersionsService,
+    cookieService,
   }
 }
 

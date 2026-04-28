@@ -1,6 +1,8 @@
+export type CookieMap = Record<string, string>
+
 export class CookieService {
   // Get cookie value from parsed object and decode it
-  getString(cookies: Record<string, string>, name: string): string | null {
+  getString(cookies: CookieMap, name: string): string | null {
     const raw = cookies[name]
     if (!raw) return null
 
