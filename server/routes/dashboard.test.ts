@@ -60,7 +60,7 @@ beforeEach(() => {
           }
           return null
         },
-        removeEncodedQuotes: (_value: string | null): string | null => null,
+        removeEncodedQuotes: (): string | null => null,
         setStringHeader: (_key: string, _value: string): string | null => null,
       },
     },
