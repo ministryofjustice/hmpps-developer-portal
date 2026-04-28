@@ -60,7 +60,7 @@ beforeEach(() => {
           }
           return null
         },
-        removeEncodedQuotes: (_unusedValue: string): string | null => null,
+        removeEncodedQuotes: (_name: string | null): string | null => null,
         setStringHeader: (_key: string, _value: string): string | null => null,
       },
     },
@@ -95,7 +95,7 @@ describe('/dashboard', () => {
                 }
                 return null
               },
-              removeEncodedQuotes: (value: string | null): string | null => null,
+              removeEncodedQuotes: (_name: string | null): string | null => null,
               setStringHeader: (_key: string, _value: string): string | null => null,
             },
           },
@@ -125,10 +125,10 @@ describe('/dashboard', () => {
               alertsService: alertsServiceStub as AlertsService,
               recommendedVersionsService: recommendedVersionServiceStub as RecommendedVersionsService,
               cookieService: {
-                getFavouritesFromCookie: (): string[] | null => ['invalid product'],
-                getString: (): string => 'yes',
-                removeEncodedQuotes: (): string | null => null,
-                setStringHeader: (): string | null => null,
+                getFavouritesFromCookie: (_req: unknown): string[] | null => ['invalid product'],
+                getString: (_cookies: CookieMap, _name: string): string => 'yes',
+                removeEncodedQuotes: (_name: string | null): string | null => null,
+                setStringHeader: (_key: string, _value: string): string | null => null,
               },
             },
           })
@@ -146,10 +146,10 @@ describe('/dashboard', () => {
               alertsService: alertsServiceStub as AlertsService,
               recommendedVersionsService: recommendedVersionServiceStub as RecommendedVersionsService,
               cookieService: {
-                getFavouritesFromCookie: (): string[] | null => ['product 1'],
-                getString: (): string => 'yes',
-                removeEncodedQuotes: (): string | null => null,
-                setStringHeader: (): string | null => null,
+                getFavouritesFromCookie: (_req: unknown): string[] | null => ['product 1'],
+                getString: (_cookies: CookieMap, _name: string): string => 'yes',
+                removeEncodedQuotes: (_name: string | null): string | null => null,
+                setStringHeader: (_key: string, _value: string): string | null => null,
               },
             },
           })
@@ -165,10 +165,10 @@ describe('/dashboard', () => {
               alertsService: alertServiceNoAlertsStub as AlertsService,
               recommendedVersionsService: recommendedVersionServiceStub as RecommendedVersionsService,
               cookieService: {
-                getFavouritesFromCookie: (): string[] | null => ['product 1'],
-                getString: (): string => 'yes',
-                removeEncodedQuotes: (): string | null => null,
-                setStringHeader: (): string | null => null,
+                getFavouritesFromCookie: (_req: unknown): string[] | null => ['product 1'],
+                getString: (_cookies: CookieMap, _name: string): string => 'yes',
+                removeEncodedQuotes: (_name: string | null): string | null => null,
+                setStringHeader: (_key: string, _value: string): string | null => null,
               },
             },
           })
