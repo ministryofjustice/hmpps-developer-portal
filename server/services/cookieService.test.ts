@@ -29,6 +29,12 @@ describe('CookieService', () => {
       }
       expect(service.getString(cookies, 'token')).toBe('my value')
     })
+    it('returns raw if invalid URI-encoded string is passed', () => {
+      const cookies = {
+        token: '%E0%A4',
+      }
+      expect(service.getString(cookies, 'token')).toBe('%E0%A4')
+    })
   })
 
   describe('setStringHeader', () => {
@@ -43,6 +49,17 @@ describe('CookieService', () => {
     it('handles empty values', () => {
       const result = service.setStringHeader('token', '')
       expect(result).toBe('token=%22%22; Path=/; Max-Age=31536000; HttpOnly; SameSite=Lax')
+    })
+  })
+
+  describe('removeEncodedQuotes', () => {
+    it('removes encoded quotes from a string', () => {
+      const result = service.removeEncodedQuotes('%22name%22')
+      expect(result).toBe('name')
+    })
+    it('returns the same if no encoded', () => {
+      const result = service.removeEncodedQuotes('name')
+      expect(result).toBe('name')
     })
   })
 

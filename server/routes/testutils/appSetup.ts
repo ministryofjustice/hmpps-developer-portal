@@ -20,6 +20,7 @@ import namespacesRoutes from '../namespaces'
 import teamHealthRoutes from '../teamHealth'
 import githubTeamsRoutes from '../githubTeams'
 import dashboardRoutes from '../dashboard'
+import cookiesPageRoutes from '../cookiesPage'
 
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
@@ -69,6 +70,7 @@ function appSetup(services: Services, production: boolean): Express {
   app.use('/team-health', teamHealthRoutes(services))
   app.use('/githubTeams', githubTeamsRoutes(services))
   app.use('/dashboard', dashboardRoutes(services))
+  app.use('/cookies', cookiesPageRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(production))
