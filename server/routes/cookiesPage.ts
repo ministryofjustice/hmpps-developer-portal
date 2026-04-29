@@ -1,9 +1,8 @@
 import { Router } from 'express'
-
-import { cookieService } from '../services/cookieService'
+import type { Services } from '../services'
 import config from '../config'
 
-export default function cookiesPageRoutes(): Router {
+export default function routes({ cookieService }: Services): Router {
   const router = Router()
 
   router.get('/', (req, res, next) => {

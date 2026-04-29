@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import cookieParser from 'cookie-parser'
 import type { Services } from '../services'
-import { cookieService } from '../services/cookieService'
 import { sanitizeCookieInput } from '../services/sanitizeCookieInput'
 import config from '../config'
 import { DisplayAlert } from './products'
@@ -15,6 +14,7 @@ export default function routes({
   serviceCatalogueService,
   alertsService,
   recommendedVersionsService,
+  cookieService,
 }: Services): Router {
   const router = Router()
 
@@ -22,15 +22,22 @@ export default function routes({
 
   // dashboard GET route for both users name and saved products
   router.get('/', async (req, res) => {
-    const productsList = cookieService.getFavouritesFromCookie(req.cookies, config.cookieKeys.productNameCookie)
+    const productsList = cookieService.getFavouritesFromCookie(req.cookies, config.cookieKeys.productNameCookie) ?? []
     const error = req.query.error as string | undefined
     const attemptedProduct = req.query.value as string | undefined
     const products: Product[] = await serviceCatalogueService.getProducts({})
-    const newProductSet = new Set(productsList.map(product => product.trim().toLowerCase()))
+    const normalisedFavourites: string[] = Array.isArray(productsList) ? productsList : []
+
+    const newProductSet = new Set(
+      normalisedFavourites
+        .map(product => product.trim().toLowerCase())
+        .filter((product): product is string => Boolean(product)),
+    )
     const filteredProductsObject = products.filter(product => {
       const normalisedName = (product.name || '').trim().toLowerCase()
       return newProductSet.has(normalisedName)
     })
+
     const recommended = await recommendedVersionsService.getRecommendedVersions()
     const productSlugs = filteredProductsObject.map(product => product.slug)
     const productBySlug: Product[] = await Promise.all(
@@ -80,7 +87,6 @@ export default function routes({
           // Dependency comparison for this component
           if (!kotlinOnly || isKotlin) {
             try {
-              // const recommended = await recommendedVersionsService.getRecommendedVersions()
               const comparison = compareComponentsDependencies([component], recommended)
               relevantItems = comparison.items.filter(
                 item =>
@@ -142,7 +148,7 @@ export default function routes({
     // Fetch full product list from API
     const products = await serviceCatalogueService.getProducts({})
     // Match
-    const exists = products.some(product => product.name.toLowerCase().trim() === productInput.toLowerCase())
+    const exists = products.some(product => product.name.toLowerCase().trim() === productInput.toLowerCase().trim())
     if (!exists) {
       return res.redirect(`/dashboard?error=notfound&value=${encodeURIComponent(productInput)}`)
     }

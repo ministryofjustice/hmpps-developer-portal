@@ -23,6 +23,7 @@
     "start": "node $NODE_OPTIONS dist/server.js | bunyan -o short",
     "test:ci": "jest --runInBand",
     "test": "jest",
+    "test-coverage": "jest --coverage",
     "typecheck-main": "tsc",
     "typecheck": "tsc && tsc -p integration_tests",
     "watch-node-feature": "export $(cat feature.env) && nodemon --watch dist/ $NODE_DEBUG_OPTION dist/server.js | bunyan -o short",

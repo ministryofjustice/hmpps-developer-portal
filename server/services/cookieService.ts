@@ -1,9 +1,10 @@
+export type CookieMap = Record<string, string>
+
 export class CookieService {
   // Get cookie value from parsed object and decode it
-  getString(cookies: Record<string, string>, name: string): string | null {
+  getString(cookies: CookieMap, name: string): string | null {
     const raw = cookies[name]
     if (!raw) return null
-
     try {
       return decodeURIComponent(raw)
     } catch {
@@ -17,7 +18,6 @@ export class CookieService {
   }
 
   removeEncodedQuotes(name: string): string {
-    if (typeof name !== 'string') return name
     return name.replace(/%22/g, '')
   }
 
