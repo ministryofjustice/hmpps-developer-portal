@@ -9,6 +9,7 @@ import { compareComponentsDependencies } from '../services/dependencyComparison'
 import { appWithAllRoutes } from './testutils/appSetup'
 import resetAllMocks = jest.resetAllMocks
 import { Alert } from '../@types'
+import * as dependencyHelpers from '../services/dependencyComparison'
 
 let app: Express
 
@@ -43,6 +44,8 @@ const recommendedVersionServiceStub: Pick<RecommendedVersionsService, 'getRecomm
 }
 
 beforeEach(() => {
+  ;(dependencyHelpers.compareComponentsDependencies as jest.Mock).mockReturnValue({ items: [] })
+
   jest.mock('../config', () => ({
     recommendedVersions: {
       kotlinOnly: 'true',
@@ -231,7 +234,7 @@ describe('/dashboard', () => {
   })
 
   describe('POST/', () => {
-    it('redirects to /dashboard when product exists', async () => {
+    it('redirects to /dashboard and adds product to cookie when product exists', async () => {
       const serviceCatalogueServiceStub = createServiceCatalogueServiceStub('Kotlin')
       app = appWithAllRoutes({
         services: {
@@ -286,6 +289,7 @@ describe('/dashboard', () => {
       expect(url.pathname).toBe('/dashboard')
 
       expect(res.headers['set-cookie']).toEqual(expect.arrayContaining([expect.not.stringContaining('product 1')]))
+      expect(res.headers['set-cookie']).toEqual(expect.arrayContaining([expect.stringContaining('product_name=')]))
     })
 
     it('redirect to /dashboard when product match not found', async () => {
