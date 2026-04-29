@@ -112,7 +112,7 @@ export default class StrapiApiClient {
   }
 
   async getComponent({ componentName }: { componentName: string }): Promise<Component> {
-    const populate = createStrapiQuery({ populate: ['product.team'] })
+    const populate = createStrapiQuery({ populate: ['product.team', 'envs'] })
 
     return this.restClient
       .get<SingleResponse<Strapi.Component>>({
