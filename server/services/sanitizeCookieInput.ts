@@ -18,14 +18,7 @@ export function sanitizeCookieInput(input: unknown, options: InputOptions = {}):
   } catch {
     return input
   }
-  value = value
-    .trim()
-    // protect against HTML special characters
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
+  value = value.trim()
 
   if (collapseWhitespace) {
     value = value.replace(/\s+/g, ' ').trim()

@@ -13,10 +13,6 @@ describe('sanitizeCookieInput', () => {
     const input = 'example'
     expect(sanitizeCookieInput(input)).toBe('example')
   })
-  it('removes html characters', () => {
-    const input = '<script>example</script>'
-    expect(sanitizeCookieInput(input)).toBe('&lt;script&gt;example&lt;/script&gt;')
-  })
   it('returns default input when type of input is not a string', () => {
     const input = 123
     expect(sanitizeCookieInput(input)).toBe('')
