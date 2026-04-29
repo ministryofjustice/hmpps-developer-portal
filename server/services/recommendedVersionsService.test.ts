@@ -6,14 +6,14 @@ jest.mock('./serviceCatalogueService')
 // Minimal shape used by RecommendedVersionsService when reading from Strapi
 type strapiComponentMock = {
   versions?: {
-    helm_dependencies?: Record<string, unknown>
-    helm?: { dependencies?: Record<string, unknown> }
-    gradle?: { hmpps_gradle_spring_boot?: unknown }
+    ['Helm Dependencies']?: Record<string, unknown>
+    ['Helm']?: { dependencies?: Record<string, unknown> }
+    ['Gradle']?: { hmpps_gradle_spring_boot?: unknown }
   }
   values?: {
-    helm_dependencies?: Record<string, unknown>
-    helm?: { dependencies?: Record<string, unknown> }
-    gradle?: { hmpps_gradle_spring_boot?: unknown }
+    ['Helm Dependencies']?: Record<string, unknown>
+    ['Helm']?: { dependencies?: Record<string, unknown> }
+    ['Gradle']?: { hmpps_gradle_spring_boot?: unknown }
   }
 }
 
@@ -35,11 +35,11 @@ describe('RecommendedVersionsService (Strapi only)', () => {
   it('returns versions from Strapi component (preferred keys)', async () => {
     const component = {
       versions: {
-        helm_dependencies: {
+        'Helm Dependencies': {
           generic_prometheus_alerts: { ref: '1.2.3' },
           generic_service: { ref: '4.5.6' },
         },
-        gradle: {
+        Gradle: {
           hmpps_gradle_spring_boot: { ref: '7.8.9' },
         },
       },
@@ -55,13 +55,13 @@ describe('RecommendedVersionsService (Strapi only)', () => {
   it('supports legacy helm dependencies shape', async () => {
     const component = {
       versions: {
-        helm: {
+        Helm: {
           dependencies: {
             'generic-prometheus-alerts': '2.3.4',
             'generic-service': '5.6.7',
           },
         },
-        gradle: {
+        Gradle: {
           hmpps_gradle_spring_boot: '8.9.10',
         },
       },
@@ -87,11 +87,11 @@ describe('RecommendedVersionsService (Strapi only)', () => {
   it('caches results for TTL duration', async () => {
     const component = {
       versions: {
-        helm_dependencies: {
+        'Helm Dependencies': {
           generic_prometheus_alerts: { ref: '9.9.9' },
           generic_service: { ref: '9.9.8' },
         },
-        gradle: {
+        Gradle: {
           hmpps_gradle_spring_boot: { ref: '9.9.7' },
         },
       },

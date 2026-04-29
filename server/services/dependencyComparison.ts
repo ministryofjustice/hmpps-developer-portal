@@ -122,10 +122,10 @@ const classifyVersionStatus = (current?: string, recommended?: string): Dependen
 const getCurrentDependencyVersionsFromComponent = (component: Component) => {
   const versions = (component.versions || {}) as Record<string, unknown>
 
-  const helmDeps = (versions.helm_dependencies as Record<string, unknown>) || {}
-  const helmLegacy = (versions.helm as Record<string, unknown>) || {}
+  const helmDeps = (versions['Helm Dependencies'] as Record<string, unknown>) || {}
+  const helmLegacy = (versions.Helm as Record<string, unknown>) || {}
   const helmLegacyDeps = (helmLegacy.dependencies as Record<string, unknown>) || {}
-  const gradle = (versions.gradle as Record<string, unknown>) || {}
+  const gradle = (versions.Gradle as Record<string, unknown>) || {}
 
   const currentGenericPrometheusAlerts =
     parseVersionToString(helmDeps?.generic_prometheus_alerts) ||
