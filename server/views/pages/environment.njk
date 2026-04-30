@@ -123,7 +123,7 @@
               <td scope="row" class="govuk-table__cell">{{ name }}</td>
               <td class="govuk-table__cell">{{ range }}</td>
             </tr>
-            {% endfor %} 
+            {% endfor %}
           </tbody>
         </table>
       </td>
@@ -165,19 +165,6 @@
       <th>Alerts Slack Channel</th>
       <td>{% if component.environment.alerts_slack_channel %}{{ component.environment.alerts_slack_channel }}{% else %}N/A{% endif %}</td>
     </tr>
-    <tr>
-      <th>Trivy Scan Results</th>
-      <td>
-        {% if component.environment.trivy_scan.scan_status == "Succeeded" %}
-          <a class="govuk-link--no-visited-state" href="/trivy-scans/{{component.name}}/environments/{{ component.environment.name }}">
-            <img src="/assets/images/trivy.png" alt="Trivy Logo" class="trivy-icon"/>
-          </a>
-        {% else %}
-          <p><b>No Trivy image scan data available at the moment.</b></p>
-        {% endif %}
-
-      </td>
-    </tr>
     {% if component.environment.postgres_database_restore %}
     <tr>
       <th>DB Restore to PreProd</th>
@@ -204,7 +191,7 @@
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" crossorigin="anonymous" charset="utf-8"></script>
   <script nonce="{{ cspNonce }}">

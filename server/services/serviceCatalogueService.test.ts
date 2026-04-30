@@ -11,7 +11,6 @@ import {
   ScheduledJob,
   ServiceArea,
   Team,
-  TrivyScanType,
 } from '../data/modelTypes'
 import StrapiApiClient from '../data/strapiApiClient'
 import { Environment } from '../data/strapiApiTypes'
@@ -528,37 +527,6 @@ describe('Strapi service', () => {
 
         expect(strapiApiClient.getScheduledJob).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testScheduledJobResponse)
-      })
-    })
-  })
-
-  describe('Trivy Scans', () => {
-    describe('getTrivyScans', () => {
-      const testTrivyScansResponse = [
-        { id: 1, name: 'Scan 1' },
-        { id: 2, name: 'Scan 2' },
-      ] as TrivyScanType[]
-
-      it('should return an ordered array of trivy scans by name', async () => {
-        strapiApiClient.getTrivyScans.mockResolvedValue(testTrivyScansResponse)
-
-        const results = await serviceCatalogueService.getTrivyScans()
-
-        expect(strapiApiClient.getTrivyScans).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testTrivyScansResponse)
-      })
-    })
-
-    describe('getTrivyScan', () => {
-      const testTrivyScanResponse = { id: 1, name: 'Scan 1' } as TrivyScanType
-
-      it('should return the selected trivy scan', async () => {
-        strapiApiClient.getTrivyScan.mockResolvedValue(testTrivyScanResponse)
-
-        const results = await serviceCatalogueService.getTrivyScan({ name: 'Scan 1' })
-
-        expect(strapiApiClient.getTrivyScan).toHaveBeenCalledTimes(1)
-        expect(results).toEqual(testTrivyScanResponse)
       })
     })
   })

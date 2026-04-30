@@ -13,10 +13,7 @@ import type {
   ScheduledJob,
   ServiceArea,
   Team,
-  TrivyScan,
-  TrivyScanType,
 } from './modelTypes'
-import convertTrivyScan from './converters/trivyScans'
 import { ListResponse, SingleResponse } from './strapiClientTypes'
 import { createStrapiQuery } from '../utils/utils'
 
@@ -115,7 +112,7 @@ export default class StrapiApiClient {
   }
 
   async getComponent({ componentName }: { componentName: string }): Promise<Component> {
-    const populate = createStrapiQuery({ populate: ['product.team', 'envs.trivy_scan'] })
+    const populate = createStrapiQuery({ populate: ['product.team', 'envs'] })
 
     return this.restClient
       .get<SingleResponse<Strapi.Component>>({
@@ -343,22 +340,6 @@ export default class StrapiApiClient {
     return this.restClient
       .get<SingleResponse<Strapi.ScheduledJob>>({
         path: '/v1/scheduled-jobs',
-        query: `filters[name][$eq]=${name}`,
-      })
-      .then(unwrapSingleResponse)
-  }
-
-  async getTrivyScans(): Promise<TrivyScanType[]> {
-    const results = await this.restClient.get<ListResponse<Strapi.TrivyScan>>({
-      path: '/v1/trivy-scans',
-    })
-    return results.data.map(convertTrivyScan)
-  }
-
-  async getTrivyScan({ name }: { name: string }): Promise<TrivyScan> {
-    return this.restClient
-      .get<SingleResponse<Strapi.TrivyScan>>({
-        path: '/v1/trivy-scans',
         query: `filters[name][$eq]=${name}`,
       })
       .then(unwrapSingleResponse)

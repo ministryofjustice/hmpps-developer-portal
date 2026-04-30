@@ -33,8 +33,6 @@ export default class HomePage extends Page {
 
   veracodeLink = (): PageElement => cy.get('[data-test="veracode-link"]').click()
 
-  trivyLink = (): PageElement => cy.get('[data-test="trivy-link"]').click()
-
   rdsLink = (): PageElement => cy.get('[data-test="rds-link"]').click()
 
   scheduledJobsLink = (): PageElement => cy.get('[data-test="scheduled-jobs-link"]').click()

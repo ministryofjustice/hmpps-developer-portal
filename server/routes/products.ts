@@ -3,11 +3,7 @@ import config from '../config'
 import type { Services } from '../services'
 import logger from '../../logger'
 import { getFormattedName, utcTimestampToUtcDateTime, mapToCanonicalEnv, utcTimestampToUtcDate } from '../utils/utils'
-import {
-  getProductionEnvironment,
-  countTrivyHighAndCritical,
-  countVeracodeHighAndVeryHigh,
-} from '../utils/vulnerabilitySummary'
+import { countVeracodeHighAndVeryHigh } from '../utils/vulnerabilitySummary'
 import { compareComponentsDependencies } from '../services/dependencyComparison'
 
 interface DisplayAlert {
@@ -83,7 +79,6 @@ export default function routes({
       components,
       slug: productSlug,
       alerts: [] as DisplayAlert[],
-      trivyVulnerabilityCount: 0,
       veracodeVulnerabilityCount: 0,
     }
     const componentsNeedingUpdates: string[] = []
@@ -104,13 +99,8 @@ export default function routes({
               message: alert.annotations?.message ?? '',
             }))
 
-          const thisComponent = await serviceCatalogueService.getComponent({ componentName: component.name })
-          const productionEnvironment = getProductionEnvironment(thisComponent.envs)
-
-          const trivyCount = countTrivyHighAndCritical(productionEnvironment?.trivy_scan?.scan_summary?.summary)
           const veracodeCount = countVeracodeHighAndVeryHigh(component.veracode_results_summary)
 
-          displayProduct.trivyVulnerabilityCount += trivyCount
           displayProduct.veracodeVulnerabilityCount += veracodeCount
 
           const isKotlin = (component.language || '') === 'Kotlin'
