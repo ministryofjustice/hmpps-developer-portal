@@ -22,9 +22,8 @@ jQuery(function () {
       data: 'slug',
       createdCell: function (td, _cellData, rowData) {
         const monitor_name = `${formatMonitorName(rowData.name)}`
-        const trivy_link = formatTrivyLink(rowData.name)
         $(td).html(
-          `<details class="govuk-details"><summary class="govuk-details__summary" data-test="all-links"><span class="govuk-details__summary-text">Links</span></summary><li><a class="govuk-link--no-visited-state" href="/monitor/team/${monitor_name}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${monitor_name}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" href="/trivy-scans?team=${trivy_link}">Trivy</a></li><li><a class="govuk-link--no-visited-state" data-test="team-overview-link" href="/teams/team-overview/${rowData.slug}">Team Overview</a></li>`,
+          `<details class="govuk-details"><summary class="govuk-details__summary" data-test="all-links"><span class="govuk-details__summary-text">Links</span></summary><li><a class="govuk-link--no-visited-state" href="/monitor/team/${monitor_name}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${monitor_name}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" data-test="team-overview-link" href="/teams/team-overview/${rowData.slug}">Team Overview</a></li>`,
         )
       },
     },
@@ -40,8 +39,4 @@ function formatMonitorName(name) {
     .replace(/ /g, '-')
     .replace(/[^-a-z0-9]/g, '')
     .replace(/-+/g, '-')
-}
-
-function formatTrivyLink(link) {
-  return link.replace(/&/g, '%26').split(' ').join('+')
 }

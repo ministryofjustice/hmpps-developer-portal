@@ -5,7 +5,7 @@
 
 import { components } from '../@types/strapi-api'
 
-import { TrivyScanType, VeracodeResultsSummary } from './modelTypes'
+import { VeracodeResultsSummary } from './modelTypes'
 
 type HasComponent = { component: Component }
 type HasComponents = { components: Component[] }
@@ -17,7 +17,6 @@ type HasTeam = { team: Team }
 type HasServiceArea = { service_area: ServiceArea }
 type HasNamespace = { ns: Namespace }
 type HasEnvironments = { envs: Environment[] }
-type HasTrivyScan = { trivy_scan?: TrivyScanType }
 type HasVeracodeSummary = { veracode_results_summary: VeracodeResultsSummary }
 type Version = { ref: string; version: string; path: string; hash?: string }
 type HasVersions = { versions: Record<string, Record<string, Version | string | Record<string, string>>> }
@@ -44,11 +43,7 @@ type ServiceArea = Omit<components['schemas']['ServiceArea'], 'products'> & HasP
 
 type CustomComponentView = Omit<components['schemas']['CustomComponentView'], 'components'> & HasComponents
 
-type Environment = components['schemas']['Component']['envs'][0] &
-  HasNamespace &
-  HasTrivyScan &
-  HasComponent &
-  HasIpAllowlist
+type Environment = components['schemas']['Component']['envs'][0] & HasNamespace & HasComponent & HasIpAllowlist
 
 type EnvironmentForMapping = Environment
 
@@ -63,9 +58,6 @@ type GithubTeamRequest = components['schemas']['GithubTeamRequest']
 
 type ScheduledJob = components['schemas']['ScheduledJob']
 type ScheduledJobRequest = components['schemas']['ScheduledJobRequest']
-
-type TrivyScan = components['schemas']['TrivyScan']
-type TrivyScanRequest = components['schemas']['TrivyScanRequest']
 
 export {
   Product,
@@ -83,6 +75,4 @@ export {
   GithubTeamRequest,
   ScheduledJob,
   ScheduledJobRequest,
-  TrivyScan,
-  TrivyScanRequest,
 }
