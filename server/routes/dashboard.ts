@@ -44,7 +44,10 @@ export default function routes({
       productSlugs.map(productSlug => serviceCatalogueService.getProduct({ productSlug })),
     )
     const productsNameList = products.map(prod => prod.name)
-    const components = productBySlug.map(prod => prod.components)
+    let components = productBySlug.map(prod => prod.components)
+    components = components.map(group =>
+      group.sort((a, b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' })),
+    )
     const usersCookiePrefs = cookieService.getString(req.cookies, config.cookieKeys.userPreferencesCookie)
     const displayProduct = {
       productsList,

@@ -26,11 +26,113 @@
   padding-top: 1rem;
 }
 
-#add-product-form {
-  margin-bottom: 15px;
-  float: none;
+.autocomplete-products-menu {
+  margin-top: 16px;
+  padding-bottom: 70px
 }
 
-.with-gap {
-  padding-top: 100px;
+
+.users-products .govuk-summary-card__title {
+  @include govuk-font($size: 24, $weight: bold);
+}
+
+//dashboard card on index page
+
+.card {
+  position: absolute;
+  top: 100px;
+  right: 100px;
+
+  margin-bottom: 40px;
+  background: #fff;
+  border: 1px solid #d9dadb;
+  width: 300px;
+  padding: 25px
+}
+
+.card__heading {
+  margin-top: 0;
+  margin-bottom: 15px
+}
+
+.card__description {
+  margin-bottom: 0
+}
+
+.card--clickable {
+  border-bottom-width: 5px
+}
+
+.card--clickable:hover,.card--clickable:active {
+  cursor: pointer
+}
+
+.card--clickable:hover .card__heading a,.card--clickable:hover .card__link,.card--clickable:active .card__heading a,.card--clickable:active .card__link {
+  color: #003078;
+  text-decoration: none
+}
+
+.card--clickable:hover .card__heading a:focus,.card--clickable:hover .card__link:focus,.card--clickable:active .card__heading a:focus,.card--clickable:active .card__link:focus {
+  outline: 3px solid transparent;
+  color: #0b0c0c;
+  background-color: #fd0;
+  box-shadow: 0 -2px #fd0,0 4px #0b0c0c;
+  text-decoration: none
+}
+
+.card--clickable:hover {
+  border-color: #b1b4b6
+}
+
+.card--clickable:active {
+  border-color: #b1b4b6;
+  bottom: -1px
+}
+
+.card-group {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  padding: 0
+}
+
+@media(max-width: 48.0525em) {
+  .card {
+    margin-bottom: 40px;
+    background: #fff;
+    border: 1px solid #d9dadb;
+    position: static;
+    width: 100%;
+    padding: 25px
+  }
+
+  .card-group {
+    margin-bottom:30px
+  }
+}
+
+.card-group__item {
+  display: flex;
+  list-style-type: none;
+  margin-bottom: 0
+}
+
+@media(max-width: 48.0525em) {
+  .card-group__item {
+    flex:0 0 100%
+  }
+}
+
+.card-group__item .card {
+  margin-bottom: 25px
+}
+
+@media(max-width: 48.0525em) {
+  .card-group__item .card {
+    margin-bottom:15px
+  }
+
+  .card-group__item:last-child .card {
+    margin-bottom: 0
+  }
 }
