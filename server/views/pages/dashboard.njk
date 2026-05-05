@@ -115,10 +115,44 @@
       </div>
     </div>
 
+    {% if dashboard.error == "notfound" %}
+      {{ mojAlert({
+      id: "product-not-found",
+      variant: "error",
+      title: dashboard.attemptedProduct,
+      showTitleAsHeading: false,
+      dismissible: false,
+      text: dashboard.attemptedProduct + " is not a valid product name."
+    }) }}
+    {% endif %}
+
+
+    <div class="autocomplete-products-menu">
+      <form action="/dashboard/saved-products/add" method="POST" id="add-product-form">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <div class="form-field">
+          <link rel="stylesheet" href="assets/scss/accessible-autocomplete.min.css" />
+          <label for="product-autocomplete"></label></div>
+        <p><strong>Type a product name to search and add it to your dashboard</strong></p>
+        <div class="govuk-grid-column-two-thirds" style="padding: 0">
+          <input type="hidden" name="product" id="input-autocomplete">
+          <div id="product-autocomplete-container"
+               data-source='{{ dashboard.productsNameList | dump | safe }}'></div>
+        </div>
+        <div class="govuk-grid-column-one-third">
+          {{ govukButton({
+             text: "Add product"
+          }) }}
+        </div>
+      </form>
+    </div>
+
+
     {% macro productLink(prod) %}
     <a class="govuk-link--no-visited-state" href="/products/{{ prod.slug }}">View product page</a>
     {% endmacro %}
 
+<div class = dashboard_product_delete_button>
     {% macro deleteButton(productName) %}
       <form action="/dashboard/saved-products/delete" method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -126,10 +160,30 @@
         {{ govukButton({
             type: "submit",
             text: "Remove Product",
-            classes: "govuk-button--warning"
+            classes: "govuk-button--secondary"
         }) }}
       </form>
     {% endmacro %}
+</div>
+
+    {% macro viewProductPageButton(productName) %}
+        <input type="hidden" name="view product" value="{{ productName.name | string }}">
+        {{ govukButton({
+            type: "submit",
+            text: "View product page",
+            href: "/products/" + productName.slug,
+            classes: "govuk-button"
+        }) }}
+    {% endmacro %}
+
+    {% macro deleteProductLink(product) %}
+      <form action="/dashboard/saved-products/delete" method="POST">
+      <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+      <input type="hidden" name="delete" value="{{ productName.name }}">
+      <a class="govuk-link--no-visited-state">Remove product</a>
+      </form>
+    {% endmacro %}
+
 
     <div class="users-products">
     {% for product in dashboard.filteredProductsObject %}
@@ -141,7 +195,7 @@
             actions: {
               items: [
                 {
-                 html: productLink(product)
+                 html: viewProductPageButton(product)
                 },
                 {
                  html: deleteButton(product)
@@ -171,42 +225,10 @@
     {%  endfor %}
     </div>
 
-    {% if dashboard.error == "notfound" %}
-      {{ mojAlert({
-      id: "product-not-found",
-      variant: "error",
-      title: dashboard.attemptedProduct,
-      showTitleAsHeading: false,
-      dismissible: false,
-      text: dashboard.attemptedProduct + " is not a valid product name."
-    }) }}
-    {% endif %}
-
     {% if dashboard.error == "empty" %}
       <p class= "error-message">Please enter a product name</p>
     {% endif %}
 
-    {% set hasProducts = dashboard.productsList and dashboard.productsList | length > 0 %}
-
-    <div class="add-product {% if hasProducts %} with-gap {% endif %}">
-      <form action="/dashboard/saved-products/add" method="POST" id="add-product-form">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
-        <div class="form-field">
-          <link rel="stylesheet" href="assets/scss/accessible-autocomplete.min.css" />
-          <label for="product-autocomplete"><strong>Select a product</strong></label></div>
-        <p>Type the name of a product to add to your dashboard.</p>
-        <div class="govuk-grid-column-two-thirds" style="padding: 0">
-          <input type="hidden" name="product" id="input-autocomplete">
-          <div id="product-autocomplete-container"
-               data-source='{{ dashboard.productsNameList | dump | safe }}'></div>
-        </div>
-        <div class="govuk-grid-column-one-third">
-          {{ govukButton({
-             text: "Add product"
-          }) }}
-        </div>
-      </form>
-    </div>
 
     <div class="no-products-on-dashboard">
   {% if dashboard.productsList.length == 0 %}
