@@ -32,7 +32,6 @@ import {
   utcTimestampToUtcDateTime,
   formatTimeStamp,
 } from './utils'
-import { TrivyScanType } from '../data/converters/modelTypes'
 import * as utils from './utils'
 import { Component, Product, Team } from '../data/modelTypes'
 import { ServiceCatalogueService } from '../services'
@@ -507,17 +506,6 @@ describe('Utils', () => {
     })
   })
 
-  describe('addTeamAndPortfolioToTrivyScan', () => {
-    it('adds a team to Trivy scan', async () => {
-      const teams = [{ name: 'team name', products: [{ components: [{ name: 'example name' }] }] }] as Team[]
-      const trivyScan = [{ name: 'example name', team: 'team name' }] as TrivyScanType[]
-
-      const results = await utils.addTeamAndPortfolioToTrivyScan(teams, trivyScan)
-
-      expect(results[0].team).toBe('team name')
-    })
-  })
-
   describe('getDependencyName', () => {
     it.each([
       ['Already clean', 'product', 'product'],
@@ -776,8 +764,8 @@ describe('Utils', () => {
             ],
             [
               'Multiple dotted entries',
-              { populate: ['product.team', 'envs.trivy_scan'] },
-              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D=true',
+              { populate: ['product.team', 'envs.veracode_scan'] },
+              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Bveracode_scan%5D=true',
             ],
             [
               'Single deep dotted entry',
@@ -786,8 +774,8 @@ describe('Utils', () => {
             ],
             [
               'Multiple deep dotted entries',
-              { populate: ['product.team.extra', 'envs.trivy_scan.extra'] },
-              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Btrivy_scan%5D%5Bpopulate%5D%5Bextra%5D=true',
+              { populate: ['product.team.extra', 'envs.veracode_scan.extra'] },
+              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Bveracode_scan%5D%5Bpopulate%5D%5Bextra%5D=true',
             ],
             [
               'Nested entries with hierarchical structure',

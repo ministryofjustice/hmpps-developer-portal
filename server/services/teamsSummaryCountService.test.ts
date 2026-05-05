@@ -28,12 +28,10 @@ import {
   mockEmptyProducts,
   mockActiveAndInactiveAlerts,
   mockAlertsCount,
-  mockTrivyScans,
-  mockComponents,
   mockVeracodeComponents,
 } from './teamsSummaryCountService.test-helpers'
 import ServiceCatalogueService from './serviceCatalogueService'
-import { Component, Product, TrivyScan, TrivyScanType } from '../data/modelTypes'
+import { Component, Product, VeracodeResultsSummary } from '../data/modelTypes'
 
 jest.mock('../../logger')
 jest.mock('../data/strapiApiClient')
@@ -45,7 +43,7 @@ type ProductParams = { productSlug: string }
 const mockLogger = logger as jest.Mocked<typeof logger>
 const strapiApiClient = new StrapiApiClient() as jest.Mocked<StrapiApiClient>
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
-const alertSerice = new AlertsService(null) as jest.Mocked<AlertsService>
+const alertService = new AlertsService(null) as jest.Mocked<AlertsService>
 const mockStrapiClient = strapiApiClient as jest.Mocked<StrapiApiClient>
 
 let service: TeamsSummaryCountService
@@ -53,7 +51,7 @@ let service: TeamsSummaryCountService
 describe('TeamsSummaryCountService', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    service = new TeamsSummaryCountService(alertSerice, serviceCatalogueService, () => mockStrapiClient)
+    service = new TeamsSummaryCountService(alertService, serviceCatalogueService, () => mockStrapiClient)
   })
 
   describe('TeamsSummaryCountService.getProductsForTeam', () => {
@@ -144,19 +142,19 @@ describe('TeamsSummaryCountService', () => {
         return Promise.resolve(mockProductResponseWithComponents2)
       })
 
-      alertSerice.getAlerts.mockResolvedValue(mockAlerts)
+      alertService.getAlerts.mockResolvedValue(mockAlerts)
 
       const result = await service.getTeamAlertSummary(teamSlug)
       expect(mockStrapiClient.getTeam).toHaveBeenCalledWith({ teamSlug })
       expect(mockStrapiClient.getProduct).toHaveBeenCalledTimes(2)
-      expect(alertSerice.getAlerts).toHaveBeenCalled()
+      expect(alertService.getAlerts).toHaveBeenCalled()
 
       expect(result).toEqual(mockTeamAlertSummary)
     })
 
     it('should handle empty product list', async () => {
       mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithoutProducts)
-      alertSerice.getAlerts.mockResolvedValue([])
+      alertService.getAlerts.mockResolvedValue([])
       const result = await service.getTeamAlertSummary('empty-team')
       expect(result).toEqual({ products: {}, total: 0 })
     })
@@ -164,7 +162,7 @@ describe('TeamsSummaryCountService', () => {
     it('should handle products with no components', async () => {
       mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithEmptyProduct)
       mockStrapiClient.getProduct.mockResolvedValue(mockProductResponseWithNoComponents)
-      alertSerice.getAlerts.mockResolvedValue([])
+      alertService.getAlerts.mockResolvedValue([])
       const result = await service.getTeamAlertSummary('team-beta')
 
       expect(result).toEqual({
@@ -176,7 +174,7 @@ describe('TeamsSummaryCountService', () => {
     it('should handle various alert count scenarios', async () => {
       mockStrapiClient.getTeam.mockResolvedValue(mockTeamResponseWithOneProduct)
       mockStrapiClient.getProduct.mockResolvedValue(mockProductResponseWithComponentsAndAlerts)
-      alertSerice.getAlerts.mockResolvedValue(mockAlertsForProductWithComponentsAndAlerts)
+      alertService.getAlerts.mockResolvedValue(mockAlertsForProductWithComponentsAndAlerts)
 
       const result = await service.getTeamAlertSummary('team-gamma')
 
@@ -187,7 +185,7 @@ describe('TeamsSummaryCountService', () => {
   describe('TeamsSummaryCountService.getFiringAlertCountsForComponents', () => {
     it('should count active alerts for matching components', async () => {
       const componentNames = ['component-1', 'component-2', 'component-3']
-      alertSerice.getAlerts.mockResolvedValue(mockAlertsCount)
+      alertService.getAlerts.mockResolvedValue(mockAlertsCount)
       const result = await service.getFiringAlertCountsForComponents(componentNames)
 
       expect(result).toEqual({
@@ -199,7 +197,7 @@ describe('TeamsSummaryCountService', () => {
 
     it('should handle component names with no active alerts', async () => {
       const componentNames = ['no-alerts-component', 'component-with-alert']
-      alertSerice.getAlerts.mockResolvedValue(mockActiveAndInactiveAlerts)
+      alertService.getAlerts.mockResolvedValue(mockActiveAndInactiveAlerts)
       const result = await service.getFiringAlertCountsForComponents(componentNames)
 
       expect(result).toEqual({
@@ -213,7 +211,7 @@ describe('TeamsSummaryCountService', () => {
       const mockAlertsWithMissingComponent = [
         { status: { state: 'active' }, labels: { component: 'some-other-component', environment: 'prod' } },
       ]
-      alertSerice.getAlerts.mockResolvedValue(mockAlertsWithMissingComponent)
+      alertService.getAlerts.mockResolvedValue(mockAlertsWithMissingComponent)
       const result = await service.getFiringAlertCountsForComponents(componentNames)
 
       expect(result).toEqual({
@@ -231,7 +229,7 @@ describe('TeamsSummaryCountService', () => {
         { labels: { component: 'component-2', environment: 'prod' } },
         { labels: { environment: 'prod' } },
       ]
-      alertSerice.getAlerts.mockResolvedValue(mockAlertsWithMissingLabelsOrStatus)
+      alertService.getAlerts.mockResolvedValue(mockAlertsWithMissingLabelsOrStatus)
       const result = await service.getFiringAlertCountsForComponents(componentNames)
 
       expect(result).toEqual({
@@ -242,7 +240,7 @@ describe('TeamsSummaryCountService', () => {
 
     it('should handle empty alerts array', async () => {
       const componentNames = ['component-1', 'component-2']
-      alertSerice.getAlerts.mockResolvedValue([])
+      alertService.getAlerts.mockResolvedValue([])
       const result = await service.getFiringAlertCountsForComponents(componentNames)
 
       expect(result).toEqual({
@@ -253,56 +251,13 @@ describe('TeamsSummaryCountService', () => {
 
     it('should handle errors from alerts service', async () => {
       const componentNames = ['component-1', 'component-2']
-      alertSerice.getAlerts.mockRejectedValue(new Error('Failed to fetch alerts'))
+      alertService.getAlerts.mockRejectedValue(new Error('Failed to fetch alerts'))
       const result = await service.getFiringAlertCountsForComponents(componentNames)
 
       expect(result).toEqual({})
 
       expect(mockLogger.error).toHaveBeenCalledWith(
         expect.stringContaining('[getFiringAlertCountsForComponents] Error:'),
-        expect.any(Error),
-      )
-    })
-  })
-
-  /**
-   * getTeamTrivyVulnerabilityCounts tests
-   */
-  describe('TeamsSummaryCountService.getTeamTrivyVulnerabilityCounts', () => {
-    it('should count CRITICAL and HIGH vulns for matching components', async () => {
-      serviceCatalogueService.getTrivyScans.mockResolvedValue(mockTrivyScans)
-      serviceCatalogueService.getComponents.mockResolvedValue(mockComponents)
-      const result = await service.getTeamTrivyVulnerabilityCounts(mockProducts)
-      expect(result).toEqual({ critical: 2, high: 4 })
-    })
-
-    it('should return 0,0 if products is empty', async () => {
-      const result = await service.getTeamTrivyVulnerabilityCounts([])
-      expect(result).toEqual({ critical: 0, high: 0 })
-    })
-
-    it('should return 0,0 if no matching components', async () => {
-      serviceCatalogueService.getTrivyScans.mockResolvedValue([
-        {
-          name: 'NonMatchingComponent',
-          scan_summary: { scan_result: { 'os-pkgs': [{ Severity: 'CRITICAL' }], 'lang-pkgs': [] } },
-        } as TrivyScanType,
-      ])
-      serviceCatalogueService.getComponents.mockResolvedValue([
-        { name: 'ComponentX', product: { id: 99 } } as Component,
-      ])
-      const products = [{ id: 1, name: 'Product 1' }] as Product[]
-      const result = await service.getTeamTrivyVulnerabilityCounts(products)
-      expect(result).toEqual({ critical: 0, high: 0 })
-    })
-
-    it('should log error and return 0,0 on exception', async () => {
-      serviceCatalogueService.getTrivyScans!.mockRejectedValue(new Error('fail'))
-      const products = [{ id: 1, name: 'Product 1' }] as Product[]
-      const result = await service.getTeamTrivyVulnerabilityCounts(products)
-      expect(result).toEqual({ critical: 0, high: 0 })
-      expect(mockLogger.error).toHaveBeenCalledWith(
-        expect.stringContaining('Error in getTeamTrivyVulnerabilityCounts'),
         expect.any(Error),
       )
     })
@@ -328,7 +283,23 @@ describe('TeamsSummaryCountService', () => {
         {
           name: 'OtherComponent',
           product: { id: 99 },
-          veracode_results_summary: { severity: [{ category: [{ Severity: 'VERY_HIGH', count: 10 }] }] } as TrivyScan,
+          veracode_results_summary: {
+            'static-analysis': {
+              score: 10,
+            },
+            severity: [
+              {
+                level: 1,
+                category: [
+                  {
+                    count: 10,
+                    severity: 'VERY_HIGH',
+                    categoryname: 'very_high',
+                  },
+                ],
+              },
+            ],
+          } as VeracodeResultsSummary,
         } as Component,
       ])
       const result = await service.getTeamVeracodeVulnerabilityCounts([{ id: 1, name: 'Product 1' }] as Product[])
