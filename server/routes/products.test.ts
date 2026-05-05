@@ -60,20 +60,6 @@ const mockComponent = {
   envs: [
     {
       name: 'prod',
-      trivy_scan: {
-        scan_summary: {
-          summary: {
-            'os-pkgs': {
-              fixed: { HIGH: 1, CRITICAL: 1 },
-              unfixed: { HIGH: 0, CRITICAL: 0 },
-            },
-            'lang-pkgs': {
-              fixed: { HIGH: 0, CRITICAL: 0 },
-              unfixed: { HIGH: 0, CRITICAL: 0 },
-            },
-          },
-        },
-      },
     },
   ],
   language: 'Kotlin',
@@ -82,21 +68,6 @@ const mockComponent = {
 const testProductionEnvironment = {
   name: 'prod',
   namespace: 'test-namespace',
-  trivy_scan: {
-    scan_summary: {
-      summary: {
-        secret: {},
-        'os-pkgs': {
-          fixed: { HIGH: 1, CRITICAL: 1 },
-          unfixed: { HIGH: 0, CRITICAL: 0 },
-        },
-        'lang-pkgs': {
-          fixed: { HIGH: 0, CRITICAL: 0 },
-          unfixed: { HIGH: 0, CRITICAL: 0 },
-        },
-      },
-    },
-  },
 } as unknown as Environment
 
 const mockComparison = {
@@ -195,24 +166,6 @@ describe('/products', () => {
           expect(rows.length).toBe(1)
           const firstCellText = rows.eq(0).find('.govuk-table__cell').first().text().trim()
           expect(firstCellText).toBe('test-alert')
-        })
-    })
-
-    it('should render product page with Trivy vunnerability banner', () => {
-      const mockedCountTrivyHighAndCritical = jest.spyOn(vulnerabilitySummary, 'countTrivyHighAndCritical')
-      mockedCountTrivyHighAndCritical.mockReturnValue(2)
-      return request(app)
-        .get('/products/testproduct')
-        .expect('Content-Type', /html/)
-        .expect(res => {
-          const $ = cheerio.load(res.text)
-          expect($('#detailPageTitle').text()).toContain(testProduct.name)
-          const vulnerabilityBanner = $('.vulnerability-alert-banner')
-          expect(vulnerabilityBanner.length).toBe(1)
-          expect(vulnerabilityBanner.text()).toMatch(/Trivy/i)
-          const link = vulnerabilityBanner.find('a')
-          expect(link.length).toBe(1)
-          expect(link.attr('href')).toContain('/trivy-scans')
         })
     })
 

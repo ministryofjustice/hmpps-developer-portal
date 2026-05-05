@@ -2,8 +2,7 @@ import logger from '../../logger'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
 import AlertsService from './alertsService'
 import ServiceCatalogueService from './serviceCatalogueService'
-import { formatMonitorName } from '../utils/utils'
-import { Component, Product, TrivyScanType } from '../data/modelTypes'
+import { Component, Product } from '../data/modelTypes'
 import { Alert } from '../@types'
 
 // Valid Veracode severity levels
@@ -152,74 +151,6 @@ export default class TeamsSummaryCountService {
   async filterAlertsByEnv(env: string): Promise<Alert[]> {
     const allAlerts = await this.alertsService.getAlerts()
     return allAlerts.filter(alerts => alerts.labels.environment === env)
-  }
-
-  /**
-   * Helper: Get Trivy CRITICAL & HIGH vuln counts for a team's products
-   */
-  async getTeamTrivyVulnerabilityCounts(products: Product[]): Promise<{ critical: number; high: number }> {
-    if (!Array.isArray(products) || products.length === 0) {
-      return { critical: 0, high: 0 }
-    }
-
-    try {
-      const trivyScans = await this.filterTrivyByEnvironments(['prod', 'production'])
-      const allComponents = await this.serviceCatalogueService.getComponents()
-
-      const productIds = new Set(products.map(p => p.id))
-      const validComponents = allComponents
-        .filter(component => {
-          const productId = component?.product?.id
-          return productId && productIds.has(productId)
-        })
-        .map(component => formatMonitorName(component.name))
-
-      const componentNamesSet = new Set(validComponents)
-
-      const counts = trivyScans.reduce(
-        (vulnerabilityCounts, scan) => {
-          if (!componentNamesSet.has(formatMonitorName(scan.name))) {
-            return vulnerabilityCounts
-          }
-
-          const vulns = [
-            ...(scan?.scan_summary?.scan_result?.['os-pkgs'] ?? []),
-            ...(scan?.scan_summary?.scan_result?.['lang-pkgs'] ?? []),
-          ]
-
-          return vulns.reduce((innerCounts, vuln) => {
-            if (vuln.Severity === 'CRITICAL') {
-              return {
-                ...innerCounts,
-                critical: innerCounts.critical + 1,
-              }
-            }
-            if (vuln.Severity === 'HIGH') {
-              return {
-                ...innerCounts,
-                high: innerCounts.high + 1,
-              }
-            }
-            return innerCounts
-          }, vulnerabilityCounts)
-        },
-        { critical: 0, high: 0 },
-      )
-
-      return counts
-    } catch (err) {
-      logger.error('Error in getTeamTrivyVulnerabilityCounts:', err)
-      return { critical: 0, high: 0 }
-    }
-  }
-
-  /**
-   * Helper: Function to filter by specified env, or default to prod if none provided
-   */
-  async filterTrivyByEnvironments(environmentList: string[]): Promise<TrivyScanType[]> {
-    return (await this.serviceCatalogueService.getTrivyScans()).filter(trivy =>
-      (trivy.environments ?? []).some(environment => environmentList.includes(environment)),
-    )
   }
 
   /**

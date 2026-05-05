@@ -74,15 +74,3 @@ export type ScanSummary = {
   summary?: Summary
   scan_result?: ScanResult
 }
-
-export type TrivyScanType = {
-  id: number
-  name: string
-  trivy_scan_timestamp: string
-  build_image_tag: string
-  scan_status: string
-  environments: string[]
-  scan_summary: ScanSummary
-  team?: string
-  portfolio?: string
-}

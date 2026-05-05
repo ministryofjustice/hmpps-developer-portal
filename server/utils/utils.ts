@@ -4,7 +4,6 @@ import dayjs from 'dayjs'
 import * as relativeTime from 'dayjs/plugin/relativeTime'
 
 import { RdsEntry } from '../@types'
-import { TrivyScanType } from '../data/converters/modelTypes'
 
 import type { ServiceCatalogueService } from '../services'
 import { Component, Environment, Product, Team } from '../data/modelTypes'
@@ -194,20 +193,6 @@ export function getComponentsForTeam(team: Team): Component[] {
   return components
 }
 
-export async function addTeamAndPortfolioToTrivyScan(teams: Team[], trivyScan: TrivyScanType[]) {
-  return trivyScan.map(scan => {
-    const scanMatch = findTeamMatch(teams, scan.name)
-    const teamPortfolio = findPortfolioForTeam(teams)
-    const updatedScan = { ...scan }
-
-    if (scanMatch) updatedScan.team = scanMatch.name
-
-    const addPortfolio = teamPortfolio.find(portfolio => portfolio.teamName === scanMatch?.name)
-    updatedScan.portfolio = addPortfolio?.portfolio
-    return updatedScan
-  })
-}
-
 export const getDependencyName = (req: Request): string => {
   const dependencyName = (req.params.dependencyName as string) || ''
   // replace ~ with / so that actions still work
@@ -217,7 +202,7 @@ export const getDependencyName = (req: Request): string => {
 export const getDependencyType = (req: Request): string => {
   const dependencyType = (req.params.dependencyType as string) || ''
 
-  return dependencyType.replace(/[^-a-z0-9_]/g, '')
+  return dependencyType.replace(/[^-A-Za-z0-9:_ ]/g, '')
 }
 
 export async function getDependencyNames(serviceCatalogueService: ServiceCatalogueService, dependencyType: string) {

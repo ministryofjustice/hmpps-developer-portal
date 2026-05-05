@@ -82,13 +82,6 @@
 {% endif %}
 
 {# Vulnerability banners #}
-{% if product.trivyVulnerabilityCount > 0 %}
-  <div class="govuk-inset-text govuk-!-margin-bottom-4 vulnerability-alert-banner">
-    <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities found in Production environment</p>
-    <p><strong>{{ product.trivyVulnerabilityCount }}</strong> critical and/or high vulnerabilities have been identified in the latest Trivy scan. <a class="govuk-link--no-visited-state" href="/trivy-scans?team={{ product.teamName }}">See results.</a></p>
-  </div>
-{% endif %}
-
 {% if product.veracodeVulnerabilityCount > 0 %}
   <div class="govuk-inset-text govuk-!-margin-bottom-4 vulnerability-alert-banner">
     <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities found in Production environment</p>
@@ -129,11 +122,11 @@
       <td>{{ product.technicalArchitect }}</td>
     </tr>
     <tr>
-      <th>Oversight Princical Technical Architect</th>
+      <th>Oversight Principal Technical Architect</th>
       <td data-test="principal-architect">{{ product.oversightPrincipalTechnicalArchitect }}</td>
     </tr>
     <tr>
-      <th>Lead developer</th>
+      <th>Lead Developer</th>
       <td data-test="lead-developer">{{ product.leadDeveloper }}</td>
     </tr>
     <tr>

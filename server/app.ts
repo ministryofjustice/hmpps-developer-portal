@@ -27,7 +27,6 @@ import serviceAreaRoutes from './routes/serviceAreas'
 import monitorRoutes from './routes/monitor'
 import dependencyRoutes from './routes/dependencies'
 import driftRadiatorRoutes from './routes/driftRadiator'
-import trivyScansRoutes from './routes/trivyScans'
 import veracodeRoutes from './routes/veracode'
 import teamHealthRoutes from './routes/teamHealth'
 import missingFromCatalogueRoutes from './routes/missingFromCatalogue'
@@ -80,7 +79,6 @@ export default function createApp(services: Services): express.Application {
   app.use('/github-teams', githubTeamsRoutes(services))
   app.use('/scheduled-jobs', scheduledJobsRoutes(services))
   app.use('/alerts', alertsRoutes(services))
-  app.use('/trivy-scans', trivyScansRoutes(services))
   app.use('/dashboard', dashboardRoutes(services))
   app.use('/cookies', cookiesPageRoutes(services))
 

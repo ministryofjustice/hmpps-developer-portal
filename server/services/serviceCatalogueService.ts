@@ -2,7 +2,6 @@ import { RdsEntry } from '../@types'
 import type { StrapiApiClient, RestClientBuilder } from '../data'
 import type {
   Product,
-  TrivyScanType,
   Team,
   ServiceArea,
   ProductSet,
@@ -204,21 +203,6 @@ export default class ServiceCatalogueService {
     const strapiApiClient = this.strapiApiClientFactory('')
     const scheduledJobData = await strapiApiClient.getScheduledJob({ name })
     return scheduledJobData
-  }
-
-  async getTrivyScans(): Promise<TrivyScanType[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const trivyScansData = await strapiApiClient.getTrivyScans()
-    const trivyScans = trivyScansData.sort(sortByName)
-    return trivyScans
-  }
-
-  async getTrivyScan({ name }: { name: string }): Promise<TrivyScanType> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const trivyScansData = await strapiApiClient.getTrivyScan({ name })
-    const trivyScansRequest =
-      Array.isArray(trivyScansData) && trivyScansData.length > 0 ? trivyScansData[0].attributes : trivyScansData
-    return trivyScansRequest
   }
 
   async getRdsInstances(): Promise<RdsEntry[]> {
