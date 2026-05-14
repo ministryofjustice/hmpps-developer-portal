@@ -14,6 +14,6 @@ jobs:
     with:
       retention_count: 5 # optional, defaults to 5
     secrets:
-      SP_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
-      SP_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
-      AZ_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      SHAREPOINT_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
+      SHAREPOINT_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
