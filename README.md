@@ -1,7 +1,7 @@
 # hmpps-developer-portal
 
-[![repo standards badge](https://img.shields.io/badge/dynamic/json?color=blue&style=flat&logo=github&label=MoJ%20Compliant&query=%24.result&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-developer-portal)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-github-repositories.html#hmpps-developer-portal 'Link to report')
-[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-developer-portal/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-developer-portal)
+[![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/hmpps-developer-portal/badge?style=flat)](https://github-community.service.justice.gov.uk/repository-standards/hmpps-developer-portal)
+[![Pipeline [test -> build -> deploy]](https://github.com/ministryofjustice/hmpps-developer-portal/actions/workflows/pipeline.yml/badge.svg?branch=main)](https://github.com/ministryofjustice/hmpps-developer-portal/actions/workflows/pipeline.yml)
 
 A portal to expose useful information to developers.
 
