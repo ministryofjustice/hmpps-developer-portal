@@ -10,13 +10,10 @@ permissions: {}
 jobs:
   backup:
     name: Backup to SharePoint
-    runs-on: ubuntu-latest
-    env:
-      SP_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
-      SP_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
-      AZ_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-    steps:
-      - name: Backup repository to SharePoint
-        uses: ministryofjustice/hmpps-github-shared-actions/.github/actions/sharepoint_repository_backup@e0e6abc2f67f2bbb81a74610d6c307ab468a1a77 # v1.0.12
-        with:
-          retention_count: 5 # optional, defaults to 5
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/backup_repository.yml@v2
+    with:
+      retention_count: 5 # optional, defaults to 5
+    secrets:
+      SHAREPOINT_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
+      SHAREPOINT_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
