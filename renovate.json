@@ -31,7 +31,9 @@
       "matchManagers": ["github-actions"],
       "groupName": "github-actions",
       "schedule": ["after 2am and before 6am on Wednesday"],
-      "stabilityDays": 0
+      "stabilityDays": 0,
+      "matchUpdateTypes": ["minor", "patch"],
+      "enabled": true
     },
     {
       "matchManagers": ["helm"],
@@ -43,5 +45,6 @@
   ],
   "vulnerabilityAlerts": {
     "stabilityDays": 0
-  }
+  },
+  "platformCommit": "enabled"
 }
