@@ -22,359 +22,355 @@
 
   {{ breadCrumb(component.name, breadCrumbList) }}
 
-  <div class="govuk-grid-row">
-    <h1 data-test="detail-page-title">{{ component.name }} {% if component.archived == true %} (Archived){% endif %}</h1>
+  <h1 data-test="detail-page-title">{{ component.name }} {% if component.archived == true %} (Archived){% endif %}</h1>
 
-    {% macro alertMessage(alert) %}
-      {{ govukDetails({
-        summaryText: "Show message",
-        text: alert.message
+  {% macro alertMessage(alert) %}
+    {{ govukDetails({
+      summaryText: "Show message",
+      text: alert.message
+    }) }}
+  {% endmacro %}
+
+  {% macro additionalAlerts(alerts) %}
+    {{ govukDetails({
+      summaryText: "Show all " + component.alerts.length + " alerts",
+      text: nestedTable(alerts)
+    }) }}
+  {% endmacro %}
+
+  {% macro nestedTable(alerts) %}
+    {{ govukTable({ rows: alerts }) }}
+  {% endmacro %}
+
+  {% if hasAlerts %}
+  <div id ="component-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+
+      {% set firstAlertRow = [] %}
+      {% set additionalAlertsRow = [] %}
+      {% for alert in component.alerts %}
+        {% set tableRowContent =  [
+          { text: alert.alertname },
+          { text: alert.startsAt },
+          { text: alert.environment },
+          { text: alert.summary },
+          { text: alertMessage(alert) }
+        ] %}
+        {% if loop.first %}
+          {% set firstAlertRowData = firstAlertRow.push(tableRowContent) %}
+        {% else %}
+          {% set additionalAlertRowData = additionalAlertsRow.push(tableRowContent) %}
+        {% endif %}
+      {% endfor %}
+    {% if component.alerts | length > 1 %}
+      {% set additionalRows = firstAlertRow.push([ { colspan: 4, text: additionalAlerts(additionalAlertsRow)} ]) %}
+    {% endif %}
+
+      {{ govukTable({
+        caption: "Active Alerts",
+        captionClasses: "govuk-table__caption--m",
+        head: [
+          { text: "Alert Name" },
+          { text: "Started At" },
+          { text: "Environment" },
+          { text: "Summary" },
+          { text: "Message" }
+        ],
+        rows: firstAlertRow
       }) }}
-    {% endmacro %}
+    </div>
+  {% endif %}
 
-    {% macro additionalAlerts(alerts) %}
-      {{ govukDetails({
-        summaryText: "Show all " + component.alerts.length + " alerts",
-        text: nestedTable(alerts)
+  {% if upgradeNeeded %}
+    <div id = "dependency-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
+      {% set filteredRows = [] %}
+      {% for item in comparison.items %}
+        {% if (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
+          {% set upgradeDependencyRows = filteredRows.push([
+            { text: item.key },
+            { text: item.current },
+            { text: item.recommended }
+          ]) %}
+        {% endif %}
+      {% endfor %}
+
+      {{ govukTable({
+        caption: "Recommended Dependency Updates",
+        captionClasses: "govuk-table__caption--m",
+        firstCellIsHeader: true,
+        head: [
+          { text: "Dependency" },
+          { text: "Current Version" },
+          { text: "Recommended Version" }
+        ],
+        rows: filteredRows,
+        format: "numeric"
       }) }}
-    {% endmacro %}
+    </div>
+  {% endif %}
 
-    {% macro nestedTable(alerts) %}
-      {{ govukTable({ rows: alerts }) }}
-    {% endmacro %}
+  {# Vulnerability banners #}
+  {% if component.veracodeVulnerabilityCount > 0 %}
+    <div class="govuk-inset-text govuk-!-margin-bottom-4 vulnerability-alert-banner">
+      <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities found in Production environment</p>
+      <p><strong>{{ component.veracodeVulnerabilityCount }}</strong> very high and/or high vulnerabilities have been identified in the latest Veracode scan. <a class="govuk-link--no-visited-state" href="{{ component.veracodeResultsLink }}">See results.</a></p>
+    </div>
+  {% endif %}
 
-    {% if hasAlerts %}
-    <div id ="component-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
-
-        {% set firstAlertRow = [] %}
-        {% set additionalAlertsRow = [] %}
-        {% for alert in component.alerts %}
-          {% set tableRowContent =  [
-            { text: alert.alertname },
-            { text: alert.startsAt },
-            { text: alert.environment },
-            { text: alert.summary },
-            { text: alertMessage(alert) }
-          ] %}
-          {% if loop.first %}
-            {% set firstAlertRowData = firstAlertRow.push(tableRowContent) %}
+  <div class="govuk-grid-column-two-thirds">
+    <table class="componentData">
+      <tbody>
+        <tr>
+          <th>Description</th>
+          <td data-test="description">{{ component.description }}</td>
+        </tr>
+        <tr>
+          <th>Archived</th>
+          <td>{{ component.archived }}</td>
+        </tr>
+        <tr>
+          <th>Title</th>
+          <td data-test="title">{{ component.title }}</td>
+        </tr>
+        <tr>
+          <th>Jira Project Keys</th>
+          <td data-test="jira-project-keys">
+          {% if component.jiraProjectKeys | length %}
+            {% for jira in component.jiraProjectKeys %}
+            <a class="govuk-link--no-visited-state" target="_blank" href="https://dsdmoj.atlassian.net/browse/{{ jira }}?searchContentType=project">
+            <img src="/assets/images/jira_favicon.ico" alt="jira logo" width="32" height="32" />
+            {{ jira }} (opens Jira)
+            </a>
+            {% endfor %}
           {% else %}
-            {% set additionalAlertRowData = additionalAlertsRow.push(tableRowContent) %}
+            No Jira &#129301; - please provide one.
           {% endif %}
-        {% endfor %}
-     {% if component.alerts | length > 1 %}
-        {% set additionalRows = firstAlertRow.push([ { colspan: 4, text: additionalAlerts(additionalAlertsRow)} ]) %}
-     {% endif %}
-
-        {{ govukTable({
-          caption: "Active Alerts",
-          captionClasses: "govuk-table__caption--m",
-          head: [
-            { text: "Alert Name" },
-            { text: "Started At" },
-            { text: "Environment" },
-            { text: "Summary" },
-            { text: "Message" }
-          ],
-          rows: firstAlertRow
-        }) }}
-      </div>
-    {% endif %}
-
-    {% if upgradeNeeded %}
-      <div id = "dependency-alert-popup" class="govuk-inset-text govuk-!-margin-bottom-4" data-test="alerts">
-        {% set filteredRows = [] %}
-        {% for item in comparison.items %}
-          {% if (item.current != '-' and item.current) and item.status == 'needs-attention' or item.status == 'needs-upgrade' %}
-            {% set upgradeDependencyRows = filteredRows.push([
-              { text: item.key },
-              { text: item.current },
-              { text: item.recommended }
-            ]) %}
+          </td>
+        </tr>
+        <tr>
+          <th>GitHub Write</th>
+          <td data-test="github-write">{{ githubTeams(component.githubWrite) }}</td>
+        </tr>
+        <tr>
+          <th>GitHub Admin</th>
+          <td data-test="github-admin">{{ githubTeams(component.githubAdmin) }}</td>
+        </tr>
+        <tr>
+          <th>GitHub Restricted</th>
+          <td data-test="github-restricted">{{ githubTeams(component.githubRestricted) }}</td>
+        </tr>
+        <tr>
+          <th>GitHub Repo</th>
+          <td><a class="govuk-link--no-visited-state" href="https://github.com/ministryofjustice/{{ component.githubRepo }}" target="_blank" data-test="github-repo">{{ component.githubRepo }}</a> (opens in new window)</td>
+        </tr>
+        <tr>
+          <th>GitHub Visibility</th>
+          <td data-test="github-visibility">{{ component.githubVisibility }}</td>
+        </tr>
+        <tr>
+          <th>App Insights Cloud Role Name</th>
+          <td data-test="appinsights-name">{{ component.appInsightsName }}</td>
+        </tr>
+        <tr>
+          <th>App Insights Alerts Enabled</th>
+          <td data-test="appinsights-alert-enabled">{{ component.appInsightsAlertsEnabled }}</td>
+        </tr>
+        <tr>
+          <th>API</th>
+          <td data-test="api">{% if component.api %}Yes{% else %}No{% endif %}</td>
+        </tr>
+        <tr>
+          <th>Frontend</th>
+          <td data-test="frontend">{% if component.frontEnd %}Yes{% else %}No{% endif %}</td>
+        </tr>
+        <tr>
+          <th>Part of monorepo</th>
+          <td data-test="part-of-monorepo">{% if component.partOfMonorepo %}Yes{% else %}No{% endif %}</td>
+        </tr>
+        <tr>
+          <th>Language</th>
+          <td data-test="language">{{ component.language }}</td>
+        </tr>
+        <tr>
+          <th>Service Area</th>
+          <td><a class="govuk-link--no-visited-state" href="/service-areas/{{ component.serviceArea.slug }}" data-test="service-area">{{ component.serviceArea.name }}</a></td>
+        </tr>
+        <tr>
+          <th>Product</th>
+          <td><a class="govuk-link--no-visited-state" href="/products/{{ component.product.slug }}" data-test="product">{{ component.product.name }}</a></td>
+        </tr>
+        <tr>
+          <th>Product Phase</th>
+          <td data-test="product-phase">{{ component.product.phase }}</td>
+        </tr>
+        <tr>
+        <th>Product Slack</th>
+          <td>
+          {% if component.product.slack_channel_id | length %}
+            <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.slack_channel_id }}">
+            <img src="/assets/images/slack_favicon_32.png" alt="slack logo" width="32" height="32" />
+            {% if component.product.slack_channel_name | length %}
+            #{{ component.product.slack_channel_name }}
+            {% else %}
+            Link
+            {% endif %}
+            (opens slack)</a>
+          {% else %}
+            No product slack &#129301; - please provide one.
           {% endif %}
-        {% endfor %}
-
-        {{ govukTable({
-          caption: "Recommended Dependency Updates",
-          captionClasses: "govuk-table__caption--m",
-          firstCellIsHeader: true,
-          head: [
-            { text: "Dependency" },
-            { text: "Current Version" },
-            { text: "Recommended Version" }
-          ],
-          rows: filteredRows,
-          format: "numeric"
-        }) }}
-      </div>
-    {% endif %}
-
-    {# Vulnerability banners #}
-    {% if component.veracodeVulnerabilityCount > 0 %}
-      <div class="govuk-inset-text govuk-!-margin-bottom-4 vulnerability-alert-banner">
-        <p class="govuk-!-font-weight-bold govuk-!-margin-bottom-1">Vulnerabilities found in Production environment</p>
-        <p><strong>{{ component.veracodeVulnerabilityCount }}</strong> very high and/or high vulnerabilities have been identified in the latest Veracode scan. <a class="govuk-link--no-visited-state" href="{{ component.veracodeResultsLink }}">See results.</a></p>
-      </div>
-    {% endif %}
-  </div>
-
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <table class="componentData">
-        <tbody>
-          <tr>
-            <th>Description</th>
-            <td data-test="description">{{ component.description }}</td>
-          </tr>
-          <tr>
-            <th>Archived</th>
-            <td>{{ component.archived }}</td>
-          </tr>
-          <tr>
-            <th>Title</th>
-            <td data-test="title">{{ component.title }}</td>
-          </tr>
-          <tr>
-            <th>Jira Project Keys</th>
-            <td data-test="jira-project-keys">
-            {% if component.jiraProjectKeys | length %}
-              {% for jira in component.jiraProjectKeys %}
-              <a class="govuk-link--no-visited-state" target="_blank" href="https://dsdmoj.atlassian.net/browse/{{ jira }}?searchContentType=project">
-              <img src="/assets/images/jira_favicon.ico" alt="jira logo" width="32" height="32" />
-              {{ jira }} (opens Jira)
-              </a>
+          </td>
+        </tr>
+        <tr>
+          <th>Team</th>
+          <td>
+            {% if component.product.team.slug | length %}
+            <a class="govuk-link--no-visited-state" href="/teams/{{ component.product.team.slug }}" data-test="product">{{ component.product.team.name }}</a></td>
+            {% else %}
+              No team associated with this product &#129301;
+            {% endif %}
+        </tr>
+        <tr>
+        <tr>
+          <th>Uses</th>
+          <td data-test="dependency-types">{{ component.dependencyTypes | join(', ') }}</td>
+        </tr>
+        <tr>
+          <th>Environments</th>
+          <td>
+            {% if component.envs | length %}
+              {% for environment in component.envs %}
+                <a class="govuk-link--no-visited-state" href="/components/{{ component.name }}/environment/{{ environment.name }}" data-test="environment">{{ environment.name }}</a>&nbsp;
               {% endfor %}
             {% else %}
-              No Jira &#129301; - please provide one.
+            <p data-test="no-environments">None</p>
             {% endif %}
-            </td>
-          </tr>
-          <tr>
-            <th>GitHub Write</th>
-            <td data-test="github-write">{{ githubTeams(component.githubWrite) }}</td>
-          </tr>
-          <tr>
-            <th>GitHub Admin</th>
-            <td data-test="github-admin">{{ githubTeams(component.githubAdmin) }}</td>
-          </tr>
-          <tr>
-            <th>GitHub Restricted</th>
-            <td data-test="github-restricted">{{ githubTeams(component.githubRestricted) }}</td>
-          </tr>
-          <tr>
-            <th>GitHub Repo</th>
-            <td><a class="govuk-link--no-visited-state" href="https://github.com/ministryofjustice/{{ component.githubRepo }}" target="_blank" data-test="github-repo">{{ component.githubRepo }}</a> (opens in new window)</td>
-          </tr>
-          <tr>
-            <th>GitHub Visibility</th>
-            <td data-test="github-visibility">{{ component.githubVisibility }}</td>
-          </tr>
-          <tr>
-            <th>App Insights Cloud Role Name</th>
-            <td data-test="appinsights-name">{{ component.appInsightsName }}</td>
-          </tr>
-          <tr>
-            <th>App Insights Alerts Enabled</th>
-            <td data-test="appinsights-alert-enabled">{{ component.appInsightsAlertsEnabled }}</td>
-          </tr>
-          <tr>
-            <th>API</th>
-            <td data-test="api">{% if component.api %}Yes{% else %}No{% endif %}</td>
-          </tr>
-          <tr>
-            <th>Frontend</th>
-            <td data-test="frontend">{% if component.frontEnd %}Yes{% else %}No{% endif %}</td>
-          </tr>
-          <tr>
-            <th>Part of monorepo</th>
-            <td data-test="part-of-monorepo">{% if component.partOfMonorepo %}Yes{% else %}No{% endif %}</td>
-          </tr>
-          <tr>
-            <th>Language</th>
-            <td data-test="language">{{ component.language }}</td>
-          </tr>
-          <tr>
-            <th>Service Area</th>
-            <td><a class="govuk-link--no-visited-state" href="/service-areas/{{ component.serviceArea.slug }}" data-test="service-area">{{ component.serviceArea.name }}</a></td>
-          </tr>
-          <tr>
-            <th>Product</th>
-            <td><a class="govuk-link--no-visited-state" href="/products/{{ component.product.slug }}" data-test="product">{{ component.product.name }}</a></td>
-          </tr>
-          <tr>
-            <th>Product Phase</th>
-            <td data-test="product-phase">{{ component.product.phase }}</td>
-          </tr>
-          <tr>
-          <th>Product Slack</th>
-            <td>
-            {% if component.product.slack_channel_id | length %}
-              <a class="govuk-link--no-visited-state" href="slack://channel?team=T02DYEB3A&id={{ component.product.slack_channel_id }}">
-              <img src="/assets/images/slack_favicon_32.png" alt="slack logo" width="32" height="32" />
-              {% if component.product.slack_channel_name | length %}
-              #{{ component.product.slack_channel_name }}
-              {% else %}
-              Link
-              {% endif %}
-              (opens slack)</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="govuk-grid-column-one-third">
+    <h2>Depends on:</h2>
+    <ul>
+    {% for dependency, known in component.dependencies %}
+      <li>
+        {% if known %}
+          <a data-test="dependency-{{loop.index0}}" href="/components/{{dependency}}" class="govuk-link--no-visited-state">{{dependency}}</a>
+        {% else %}
+          {{dependency}}
+        {% endif %}
+      </li>
+    {% else %}
+      <li>
+        <p>This component relies on no other components.</p>
+      </li>
+    {% endfor %}
+    </ul>
+    <h2>Relied on by:</h2>
+    <ul>
+      {% for dependent, known in component.dependents %}
+      <li>
+        {% if known %}
+          <a data-test="dependent-{{loop.index0}}" href="/components/{{dependent}}" class="govuk-link--no-visited-state">{{dependent}}</a>
+        {% else %}
+          {{dependent}}
+        {% endif %}
+      </li>
+
+    {% else %}
+        <li>
+      <p>No components rely on this component.</p>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <h2>Protection security configuration</h2>
+      {% from "govuk/components/task-list/macro.njk" import govukTaskList %}
+      {% set securityConfigurationList = [] %}
+
+      {% for env in component.envs %}
+        {% if env.name == "prod" %}
+          {% set ipStatusHtml %}
+            {% if env.ip_allow_list_enabled == true %}
+              {# tick symbol #} &#9989;
+            {% elseif env.ip_allow_list_enabled == false %}
+              {# cross symbol #} &#10060;
             {% else %}
-              No product slack &#129301; - please provide one.
+              Unknown
             {% endif %}
-            </td>
-          </tr>
-          <tr>
-            <th>Team</th>
-            <td>
-              {% if component.product.team.slug | length %}
-              <a class="govuk-link--no-visited-state" href="/teams/{{ component.product.team.slug }}" data-test="product">{{ component.product.team.name }}</a></td>
-              {% else %}
-                No team associated with this product &#129301;
-              {% endif %}
-          </tr>
-          <tr>
-          <tr>
-            <th>Uses</th>
-            <td data-test="dependency-types">{{ component.dependencyTypes | join(', ') }}</td>
-          </tr>
-          <tr>
-            <th>Environments</th>
-            <td>
-              {% if component.envs | length %}
-                {% for environment in component.envs %}
-                  <a class="govuk-link--no-visited-state" href="/components/{{ component.name }}/environment/{{ environment.name }}" data-test="environment">{{ environment.name }}</a>&nbsp;
-                {% endfor %}
-              {% else %}
-              <p data-test="no-environments">None</p>
-              {% endif %}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+          {% endset %}
 
-    <div class="govuk-grid-column-one-third">
-      <h2>Depends on:</h2>
-      <ul>
-      {% for dependency, known in component.dependencies %}
-        <li>
-          {% if known %}
-            <a data-test="dependency-{{loop.index0}}" href="/components/{{dependency}}" class="govuk-link--no-visited-state">{{dependency}}</a>
-          {% else %}
-            {{dependency}}
-          {% endif %}
-        </li>
-      {% else %}
-        <li>
-          <p>This component relies on no other components.</p>
-        </li>
-      {% endfor %}
-      </ul>
-      <h2>Relied on by:</h2>
-      <ul>
-        {% for dependent, known in component.dependents %}
-        <li>
-          {% if known %}
-            <a data-test="dependent-{{loop.index0}}" href="/components/{{dependent}}" class="govuk-link--no-visited-state">{{dependent}}</a>
-          {% else %}
-            {{dependent}}
-          {% endif %}
-        </li>
+          {% set modsecStatusHtml %}
+            {% if env.modsecurity_enabled == true %}
+              {# tick symbol #} &#9989;
+            {% elseif env.modsecurity_enabled == false %}
+              {# cross symbol #} &#10060;
+            {% else %}
+              Unknown
+            {% endif %}
+          {% endset %}
 
-      {% else %}
-          <li>
-        <p>No components rely on this component.</p>
-          </li>
-      {% endfor %}
-      </ul>
+          {% set npmStatusHtml %}
+            {% if component.npmStatus == true %}
+              {# tick symbol #} &#9989;
+            {% elseif component.npmStatus == false %}
+              {# cross symbol #} &#10060;
+            {% else %}
+              Unknown
+            {% endif %}
+          {% endset %}
 
-      <h2>Protection security configuration</h2>
-        {% from "govuk/components/task-list/macro.njk" import govukTaskList %}
-        {% set securityConfigurationList = [] %}
+          {% set securityConfigurationList = securityConfigurationList.concat([
+            {
+              title: { text: "IP Allow List" },
+              status: { html: ipStatusHtml }
+            },
+            {
+              title: { text: "ModSecurity" },
+              status: { html: modsecStatusHtml }
+            }
+          ]) %}
 
-        {% for env in component.envs %}
-          {% if env.name == "prod" %}
-            {% set ipStatusHtml %}
-              {% if env.ip_allow_list_enabled == true %}
-                {# tick symbol #} &#9989;
-              {% elseif env.ip_allow_list_enabled == false %}
-                {# cross symbol #} &#10060;
-              {% else %}
-                Unknown
-              {% endif %}
-            {% endset %}
-
-            {% set modsecStatusHtml %}
-              {% if env.modsecurity_enabled == true %}
-                {# tick symbol #} &#9989;
-              {% elseif env.modsecurity_enabled == false %}
-                {# cross symbol #} &#10060;
-              {% else %}
-                Unknown
-              {% endif %}
-            {% endset %}
-
-            {% set npmStatusHtml %}
-              {% if component.npmStatus == true %}
-                {# tick symbol #} &#9989;
-              {% elseif component.npmStatus == false %}
-                {# cross symbol #} &#10060;
-              {% else %}
-                Unknown
-              {% endif %}
-            {% endset %}
-
+          {% if component.language == "TypeScript" or component.language == "JavaScript" %}
             {% set securityConfigurationList = securityConfigurationList.concat([
               {
-                title: { text: "IP Allow List" },
-                status: { html: ipStatusHtml }
-              },
-              {
-                title: { text: "ModSecurity" },
-                status: { html: modsecStatusHtml }
+                title: { text: "npm ignore-scripts" },
+                status: { html: npmStatusHtml }
               }
             ]) %}
-
-            {% if component.language == "TypeScript" or component.language == "JavaScript" %}
-              {% set securityConfigurationList = securityConfigurationList.concat([
-                {
-                  title: { text: "npm ignore-scripts" },
-                  status: { html: npmStatusHtml }
-                }
-              ]) %}
-            {% endif %}
           {% endif %}
-        {% endfor %}
-
-        {{ govukTaskList({ idPrefix: "security-configuration", items: securityConfigurationList }) }}
-
-      <h2>GitHub Compliance:</h2>
-      {% if component.standardsCompliance %}
-        {% from "govuk/components/task-list/macro.njk" import govukTaskList %}
-
-        {% set standardsComplianceList = [] %}
-        {% for key, value in component.standardsCompliance %}
-        {% if value == true %}
-          {% set statusHtml = "&#9989;" %}
-        {% else %}
-          {% set statusHtml = "&#10060;" %}
         {% endif %}
-        {% set standardsComplianceItem =
-          {
-            title: {
-              text: key | snakeToTitleCase
-            },
-            status: {
-              html: statusHtml
-            }
-          }
-        %}
-        {% set standardsComplianceList = (standardsComplianceList.push(standardsComplianceItem), standardsComplianceList) %}
-        {% endfor %}
-        {{ govukTaskList({idPrefix: "github-compliance", items: standardsComplianceList }) }}
+      {% endfor %}
+
+      {{ govukTaskList({ idPrefix: "security-configuration", items: securityConfigurationList }) }}
+
+    <h2>GitHub Compliance:</h2>
+    {% if component.standardsCompliance %}
+      {% from "govuk/components/task-list/macro.njk" import govukTaskList %}
+
+      {% set standardsComplianceList = [] %}
+      {% for key, value in component.standardsCompliance %}
+      {% if value == true %}
+        {% set statusHtml = "&#9989;" %}
       {% else %}
-        <p>No GitHub compliance data available.</p>
+        {% set statusHtml = "&#10060;" %}
       {% endif %}
-    </div>
+      {% set standardsComplianceItem =
+        {
+          title: {
+            text: key | snakeToTitleCase
+          },
+          status: {
+            html: statusHtml
+          }
+        }
+      %}
+      {% set standardsComplianceList = (standardsComplianceList.push(standardsComplianceItem), standardsComplianceList) %}
+      {% endfor %}
+      {{ govukTaskList({idPrefix: "github-compliance", items: standardsComplianceList }) }}
+    {% else %}
+      <p>No GitHub compliance data available.</p>
+    {% endif %}
   </div>
 
   {{ driftRadiatorTable({ standalone: true }) }}
