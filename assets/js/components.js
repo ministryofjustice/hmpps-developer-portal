@@ -187,6 +187,15 @@ jQuery(function () {
         $(td).html(`${value}`)
       },
     },
+    {
+      name: 'ip_allowlist_version',
+      data: 'ip_allowlist_version',
+      visible: true,
+      createdCell: function (td, _cellData, rowData) {
+        const value = rowData.ip_allowlist_version
+        $(td).html(`${value}`)
+      },
+    },
   ]
 
   createTable({

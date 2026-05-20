@@ -94,6 +94,7 @@ export default function routes({
       veracodeResultsLink: component.veracode_results_url || '/veracode',
       serviceArea: serviceAreaDetails,
       npmStatus,
+      ip_allowlist_version: component.ip_allowlist_version,
     }
 
     let alerts: DisplayAlert[] = []

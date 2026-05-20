@@ -882,6 +882,38 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/snyk-scans': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/snyk-scans']
+    put?: never
+    post: operations['post/snyk-scans']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/snyk-scans/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/snyk-scans/{id}']
+    put: operations['put/snyk-scans/{id}']
+    post?: never
+    delete: operations['delete/snyk-scans/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/teams': {
     parameters: {
       query?: never
@@ -909,6 +941,38 @@ export interface paths {
     put: operations['put/teams/{id}']
     post?: never
     delete: operations['delete/teams/{id}']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/trivy-scans': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/trivy-scans']
+    put?: never
+    post: operations['post/trivy-scans']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/trivy-scans/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['get/trivy-scans/{id}']
+    put: operations['put/trivy-scans/{id}']
+    post?: never
+    delete: operations['delete/trivy-scans/{id}']
     options?: never
     head?: never
     patch?: never
@@ -1866,7 +1930,7 @@ export interface components {
       createdAt?: string
       createdBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       dependent_count?: number
       description?: string
@@ -1876,6 +1940,7 @@ export interface components {
         active_agencies?: unknown
         alert_severity_label?: string
         alerts_slack_channel?: string
+        aws_messaging_config?: unknown
         build_image_tag?: string
         cluster?: string
         component?: {
@@ -1889,7 +1954,7 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           dependent_count?: number
           description?: string
@@ -1897,7 +1962,7 @@ export interface components {
           documentId?: string
           envs?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           frontend?: boolean
           github_enforce_admins_enabled?: boolean
@@ -1912,14 +1977,17 @@ export interface components {
           github_repo_is_template?: boolean
           github_template_repo?: string
           github_topics?: unknown
-          id?: number
+          id?: string | number
+          ip_allowlist_digest_sha?: string
+          ip_allowlist_version?: string
           jira_project_keys?: unknown
           language?: string
           latest_commit?: components['schemas']['PropertiesCommitComponent']
+          library?: boolean
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           part_of_monorepo?: boolean
@@ -1929,17 +1997,17 @@ export interface components {
             business_owner?: string
             children?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             components?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             decommissioned?: boolean
             /** Format: date */
@@ -1947,18 +2015,18 @@ export interface components {
             delivery_manager?: string
             description?: string
             documentId?: string
-            id?: number
+            id?: string | number
             lead_developer?: string
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             name?: string
             p_id?: string
             parent?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             phase?: string
             portfolio?: string
@@ -1969,20 +2037,20 @@ export interface components {
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               documentId?: string
-              id?: number
+              id?: string | number
               lead_developer?: string
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               name?: string
               products?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               ps_id?: string
               /** Format: date-time */
@@ -1992,7 +2060,7 @@ export interface components {
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
             }
             /** Format: date-time */
@@ -2002,20 +2070,20 @@ export interface components {
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               documentId?: string
-              id?: number
+              id?: string | number
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               name?: string
               owner?: string
               products?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               /** Format: date-time */
               publishedAt?: string
@@ -2025,7 +2093,7 @@ export interface components {
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
             }
             slack_channel_id?: string
@@ -2038,24 +2106,28 @@ export interface components {
               /** Format: date-time */
               createdAt?: string
               createdBy?: {
+                apiTokens?: {
+                  documentId?: string
+                  id?: string | number
+                }[]
                 blocked?: boolean
                 /** Format: date-time */
                 createdAt?: string
                 createdBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 documentId?: string
                 /** Format: email */
                 email?: string
                 firstname?: string
-                id?: number
+                id?: string | number
                 isActive?: boolean
                 lastname?: string
                 locale?: string
                 localizations?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }[]
                 preferedLanguage?: string
                 /** Format: date-time */
@@ -2068,47 +2140,120 @@ export interface components {
                   createdAt?: string
                   createdBy?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }
                   description?: string
                   documentId?: string
-                  id?: number
+                  id?: string | number
                   locale?: string
                   localizations?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }[]
                   name?: string
                   permissions?: {
                     action?: string
                     actionParameters?: unknown
+                    apiToken?: {
+                      accessKey?: string
+                      adminPermissions?: {
+                        documentId?: string
+                        id?: string | number
+                      }[]
+                      adminUserOwner?: {
+                        documentId?: string
+                        id?: string | number
+                      }
+                      /** Format: date-time */
+                      createdAt?: string
+                      createdBy?: {
+                        documentId?: string
+                        id?: string | number
+                      }
+                      description?: string
+                      documentId?: string
+                      encryptedKey?: string
+                      /** Format: date-time */
+                      expiresAt?: string
+                      id?: string | number
+                      /** @enum {string} */
+                      kind?: 'content-api' | 'admin'
+                      /** Format: date-time */
+                      lastUsedAt?: string
+                      /** @example 123456789 */
+                      lifespan?: string
+                      locale?: string
+                      localizations?: {
+                        documentId?: string
+                        id?: string | number
+                      }[]
+                      name?: string
+                      permissions?: {
+                        action?: string
+                        /** Format: date-time */
+                        createdAt?: string
+                        createdBy?: {
+                          documentId?: string
+                          id?: string | number
+                        }
+                        documentId?: string
+                        id?: string | number
+                        locale?: string
+                        localizations?: {
+                          documentId?: string
+                          id?: string | number
+                        }[]
+                        /** Format: date-time */
+                        publishedAt?: string
+                        token?: {
+                          documentId?: string
+                          id?: string | number
+                        }
+                        /** Format: date-time */
+                        updatedAt?: string
+                        updatedBy?: {
+                          documentId?: string
+                          id?: string | number
+                        }
+                      }[]
+                      /** Format: date-time */
+                      publishedAt?: string
+                      /** @enum {string} */
+                      type?: 'read-only' | 'full-access' | 'custom'
+                      /** Format: date-time */
+                      updatedAt?: string
+                      updatedBy?: {
+                        documentId?: string
+                        id?: string | number
+                      }
+                    }
                     conditions?: unknown
                     /** Format: date-time */
                     createdAt?: string
                     createdBy?: {
                       documentId?: string
-                      id?: number
+                      id?: string | number
                     }
                     documentId?: string
-                    id?: number
+                    id?: string | number
                     locale?: string
                     localizations?: {
                       documentId?: string
-                      id?: number
+                      id?: string | number
                     }[]
                     properties?: unknown
                     /** Format: date-time */
                     publishedAt?: string
                     role?: {
                       documentId?: string
-                      id?: number
+                      id?: string | number
                     }
                     subject?: string
                     /** Format: date-time */
                     updatedAt?: string
                     updatedBy?: {
                       documentId?: string
-                      id?: number
+                      id?: string | number
                     }
                   }[]
                   /** Format: date-time */
@@ -2117,32 +2262,32 @@ export interface components {
                   updatedAt?: string
                   updatedBy?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }
                   users?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }[]
                 }[]
                 /** Format: date-time */
                 updatedAt?: string
                 updatedBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 username?: string
               }
               documentId?: string
-              id?: number
+              id?: string | number
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               name?: string
               products?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               /** Format: date-time */
               publishedAt?: string
@@ -2152,7 +2297,7 @@ export interface components {
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
             }
             technical_architect?: string
@@ -2160,7 +2305,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }
           /** Format: date-time */
@@ -2169,13 +2314,14 @@ export interface components {
           slack_channel_nonprod_release_notify?: string
           slack_channel_prod_release_notify?: string
           slack_channel_security_scans_notify?: string
+          sqs_alerts_config?: unknown
           standards_compliance?: unknown
           title?: string
           /** Format: date-time */
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           veracode_exempt?: boolean
           veracode_last_completed_scan_date?: string
@@ -2183,17 +2329,18 @@ export interface components {
           veracode_results_summary?: unknown
           veracode_results_url?: string
           versions?: unknown
+          worker?: boolean
           workflow_runs_waiting?: unknown
         }
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
         health_path?: string
-        id?: number
+        id?: string | number
         include_in_subject_access_requests?: boolean
         info_path?: string
         ip_allow_list?: unknown
@@ -2201,7 +2348,7 @@ export interface components {
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         manually_managed?: boolean
         modsecurity_audit_enabled?: boolean
@@ -2215,16 +2362,16 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           documentId?: string
           elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
           hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
@@ -2235,7 +2382,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         pingdom_check_id?: number
@@ -2245,6 +2392,38 @@ export interface components {
         postgres_database_restore?: boolean
         /** Format: date-time */
         publishedAt?: string
+        snyk_scan?: {
+          build_image_tag?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: string | number
+          }
+          documentId?: string
+          environments?: unknown
+          id?: string | number
+          image_id?: string
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: string | number
+          }[]
+          name?: string
+          /** Format: date-time */
+          publishedAt?: string
+          /** @enum {string} */
+          scan_status?: 'Failed' | 'Succeeded'
+          scan_summary?: unknown
+          snyk_scan_timestamp?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: string | number
+          }
+        }
+        sqs_alerts_config?: unknown
         swagger_docs?: string
         /** @enum {string} */
         type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
@@ -2252,7 +2431,7 @@ export interface components {
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         url?: string
       }[]
@@ -2269,14 +2448,17 @@ export interface components {
       github_repo_is_template?: boolean
       github_template_repo?: string
       github_topics?: unknown
-      id?: number
+      id?: string | number
+      ip_allowlist_digest_sha?: string
+      ip_allowlist_version?: string
       jira_project_keys?: unknown
       language?: string
       latest_commit?: components['schemas']['PropertiesCommitComponent']
+      library?: boolean
       locale?: string
       localizations?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }[]
       name: string
       part_of_monorepo?: boolean
@@ -2284,7 +2466,7 @@ export interface components {
       path_to_project?: string
       product?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       /** Format: date-time */
       publishedAt?: string
@@ -2292,13 +2474,14 @@ export interface components {
       slack_channel_nonprod_release_notify?: string
       slack_channel_prod_release_notify?: string
       slack_channel_security_scans_notify?: string
+      sqs_alerts_config?: unknown
       standards_compliance?: unknown
       title?: string
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       veracode_exempt?: boolean
       veracode_last_completed_scan_date?: string
@@ -2306,6 +2489,7 @@ export interface components {
       veracode_results_summary?: unknown
       veracode_results_url?: string
       versions?: unknown
+      worker?: boolean
       workflow_runs_waiting?: unknown
     }
     ComponentListResponse: {
@@ -2344,9 +2528,12 @@ export interface components {
         github_repo_is_template?: boolean
         github_template_repo?: string
         github_topics?: unknown
+        ip_allowlist_digest_sha?: string
+        ip_allowlist_version?: string
         jira_project_keys?: unknown
         language?: string
         latest_commit?: components['schemas']['PropertiesCommitComponent']
+        library?: boolean
         locale?: string
         localizations?: (number | string)[]
         name: string
@@ -2359,6 +2546,7 @@ export interface components {
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
+        sqs_alerts_config?: unknown
         standards_compliance?: unknown
         title?: string
         veracode_exempt?: boolean
@@ -2367,6 +2555,7 @@ export interface components {
         veracode_results_summary?: unknown
         veracode_results_url?: string
         versions?: unknown
+        worker?: boolean
         workflow_runs_waiting?: unknown
       }
     }
@@ -2379,24 +2568,28 @@ export interface components {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
+        apiTokens?: {
+          documentId?: string
+          id?: string | number
+        }[]
         blocked?: boolean
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
         /** Format: email */
         email?: string
         firstname?: string
-        id?: number
+        id?: string | number
         isActive?: boolean
         lastname?: string
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         preferedLanguage?: string
         /** Format: date-time */
@@ -2409,47 +2602,120 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           description?: string
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           permissions?: {
             action?: string
             actionParameters?: unknown
+            apiToken?: {
+              accessKey?: string
+              adminPermissions?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              adminUserOwner?: {
+                documentId?: string
+                id?: string | number
+              }
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              description?: string
+              documentId?: string
+              encryptedKey?: string
+              /** Format: date-time */
+              expiresAt?: string
+              id?: string | number
+              /** @enum {string} */
+              kind?: 'content-api' | 'admin'
+              /** Format: date-time */
+              lastUsedAt?: string
+              /** @example 123456789 */
+              lifespan?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                documentId?: string
+                id?: string | number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: string | number
+                }[]
+                /** Format: date-time */
+                publishedAt?: string
+                token?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              type?: 'read-only' | 'full-access' | 'custom'
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
             conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             properties?: unknown
             /** Format: date-time */
             publishedAt?: string
             role?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }[]
           /** Format: date-time */
@@ -2458,24 +2724,24 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           users?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
         }[]
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         username?: string
       }
       documentId?: string
       env_name?: string
-      id?: number
+      id?: string | number
       is_production?: boolean
       locale?: string
       localizations?: {
@@ -2484,16 +2750,16 @@ export interface components {
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
         env_name?: string
-        id?: number
+        id?: string | number
         is_production?: boolean
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         namespace?: string
         /** Format: date-time */
@@ -2511,7 +2777,7 @@ export interface components {
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
       }[]
       namespace?: string
@@ -2530,7 +2796,7 @@ export interface components {
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
     }
     CpNamespaceRequestListResponse: {
@@ -2579,7 +2845,7 @@ export interface components {
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         dependent_count?: number
         description?: string
@@ -2589,21 +2855,22 @@ export interface components {
           active_agencies?: unknown
           alert_severity_label?: string
           alerts_slack_channel?: string
+          aws_messaging_config?: unknown
           build_image_tag?: string
           cluster?: string
           component?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           documentId?: string
           health_path?: string
-          id?: number
+          id?: string | number
           include_in_subject_access_requests?: boolean
           info_path?: string
           ip_allow_list?: unknown
@@ -2611,7 +2878,7 @@ export interface components {
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           manually_managed?: boolean
           modsecurity_audit_enabled?: boolean
@@ -2624,24 +2891,28 @@ export interface components {
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
+              apiTokens?: {
+                documentId?: string
+                id?: string | number
+              }[]
               blocked?: boolean
               /** Format: date-time */
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               documentId?: string
               /** Format: email */
               email?: string
               firstname?: string
-              id?: number
+              id?: string | number
               isActive?: boolean
               lastname?: string
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               preferedLanguage?: string
               /** Format: date-time */
@@ -2654,47 +2925,120 @@ export interface components {
                 createdAt?: string
                 createdBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 description?: string
                 documentId?: string
-                id?: number
+                id?: string | number
                 locale?: string
                 localizations?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }[]
                 name?: string
                 permissions?: {
                   action?: string
                   actionParameters?: unknown
+                  apiToken?: {
+                    accessKey?: string
+                    adminPermissions?: {
+                      documentId?: string
+                      id?: string | number
+                    }[]
+                    adminUserOwner?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    /** Format: date-time */
+                    createdAt?: string
+                    createdBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    description?: string
+                    documentId?: string
+                    encryptedKey?: string
+                    /** Format: date-time */
+                    expiresAt?: string
+                    id?: string | number
+                    /** @enum {string} */
+                    kind?: 'content-api' | 'admin'
+                    /** Format: date-time */
+                    lastUsedAt?: string
+                    /** @example 123456789 */
+                    lifespan?: string
+                    locale?: string
+                    localizations?: {
+                      documentId?: string
+                      id?: string | number
+                    }[]
+                    name?: string
+                    permissions?: {
+                      action?: string
+                      /** Format: date-time */
+                      createdAt?: string
+                      createdBy?: {
+                        documentId?: string
+                        id?: string | number
+                      }
+                      documentId?: string
+                      id?: string | number
+                      locale?: string
+                      localizations?: {
+                        documentId?: string
+                        id?: string | number
+                      }[]
+                      /** Format: date-time */
+                      publishedAt?: string
+                      token?: {
+                        documentId?: string
+                        id?: string | number
+                      }
+                      /** Format: date-time */
+                      updatedAt?: string
+                      updatedBy?: {
+                        documentId?: string
+                        id?: string | number
+                      }
+                    }[]
+                    /** Format: date-time */
+                    publishedAt?: string
+                    /** @enum {string} */
+                    type?: 'read-only' | 'full-access' | 'custom'
+                    /** Format: date-time */
+                    updatedAt?: string
+                    updatedBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                  }
                   conditions?: unknown
                   /** Format: date-time */
                   createdAt?: string
                   createdBy?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }
                   documentId?: string
-                  id?: number
+                  id?: string | number
                   locale?: string
                   localizations?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }[]
                   properties?: unknown
                   /** Format: date-time */
                   publishedAt?: string
                   role?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }
                   subject?: string
                   /** Format: date-time */
                   updatedAt?: string
                   updatedBy?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }
                 }[]
                 /** Format: date-time */
@@ -2703,29 +3047,29 @@ export interface components {
                 updatedAt?: string
                 updatedBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 users?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }[]
               }[]
               /** Format: date-time */
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               username?: string
             }
             documentId?: string
             elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
             hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             name?: string
             pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
@@ -2736,7 +3080,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }
           pingdom_check_id?: number
@@ -2746,6 +3090,38 @@ export interface components {
           postgres_database_restore?: boolean
           /** Format: date-time */
           publishedAt?: string
+          snyk_scan?: {
+            build_image_tag?: string
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: string | number
+            }
+            documentId?: string
+            environments?: unknown
+            id?: string | number
+            image_id?: string
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: string | number
+            }[]
+            name?: string
+            /** Format: date-time */
+            publishedAt?: string
+            /** @enum {string} */
+            scan_status?: 'Failed' | 'Succeeded'
+            scan_summary?: unknown
+            snyk_scan_timestamp?: string
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: string | number
+            }
+          }
+          sqs_alerts_config?: unknown
           swagger_docs?: string
           /** @enum {string} */
           type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
@@ -2753,7 +3129,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           url?: string
         }[]
@@ -2770,14 +3146,17 @@ export interface components {
         github_repo_is_template?: boolean
         github_template_repo?: string
         github_topics?: unknown
-        id?: number
+        id?: string | number
+        ip_allowlist_digest_sha?: string
+        ip_allowlist_version?: string
         jira_project_keys?: unknown
         language?: string
         latest_commit?: components['schemas']['PropertiesCommitComponent']
+        library?: boolean
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         name?: string
         part_of_monorepo?: boolean
@@ -2787,17 +3166,17 @@ export interface components {
           business_owner?: string
           children?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           components?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           decommissioned?: boolean
           /** Format: date */
@@ -2805,18 +3184,18 @@ export interface components {
           delivery_manager?: string
           description?: string
           documentId?: string
-          id?: number
+          id?: string | number
           lead_developer?: string
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           p_id?: string
           parent?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           phase?: string
           portfolio?: string
@@ -2827,20 +3206,20 @@ export interface components {
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             lead_developer?: string
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             name?: string
             products?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             ps_id?: string
             /** Format: date-time */
@@ -2850,7 +3229,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }
           /** Format: date-time */
@@ -2860,20 +3239,20 @@ export interface components {
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             name?: string
             owner?: string
             products?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             /** Format: date-time */
             publishedAt?: string
@@ -2883,7 +3262,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }
           slack_channel_id?: string
@@ -2897,19 +3276,19 @@ export interface components {
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             name?: string
             products?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             /** Format: date-time */
             publishedAt?: string
@@ -2919,7 +3298,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }
           technical_architect?: string
@@ -2927,7 +3306,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         /** Format: date-time */
@@ -2936,13 +3315,14 @@ export interface components {
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
+        sqs_alerts_config?: unknown
         standards_compliance?: unknown
         title?: string
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         veracode_exempt?: boolean
         veracode_last_completed_scan_date?: string
@@ -2950,34 +3330,35 @@ export interface components {
         veracode_results_summary?: unknown
         veracode_results_url?: string
         versions?: unknown
+        worker?: boolean
         workflow_runs_waiting?: unknown
       }[]
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       documentId?: string
-      id?: number
+      id?: string | number
       locale?: string
       localizations?: {
         components?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
-        id?: number
+        id?: string | number
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         name?: string
         /** Format: date-time */
@@ -2987,7 +3368,7 @@ export interface components {
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
       }[]
       name: string
@@ -2998,7 +3379,7 @@ export interface components {
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
     }
     CustomComponentViewListResponse: {
@@ -3029,6 +3410,7 @@ export interface components {
       active_agencies?: unknown
       alert_severity_label?: string
       alerts_slack_channel?: string
+      aws_messaging_config?: unknown
       build_image_tag?: string
       cluster?: string
       component?: {
@@ -3042,7 +3424,7 @@ export interface components {
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         dependent_count?: number
         description?: string
@@ -3052,21 +3434,22 @@ export interface components {
           active_agencies?: unknown
           alert_severity_label?: string
           alerts_slack_channel?: string
+          aws_messaging_config?: unknown
           build_image_tag?: string
           cluster?: string
           component?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           documentId?: string
           health_path?: string
-          id?: number
+          id?: string | number
           include_in_subject_access_requests?: boolean
           info_path?: string
           ip_allow_list?: unknown
@@ -3074,7 +3457,7 @@ export interface components {
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           manually_managed?: boolean
           modsecurity_audit_enabled?: boolean
@@ -3087,24 +3470,28 @@ export interface components {
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
+              apiTokens?: {
+                documentId?: string
+                id?: string | number
+              }[]
               blocked?: boolean
               /** Format: date-time */
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               documentId?: string
               /** Format: email */
               email?: string
               firstname?: string
-              id?: number
+              id?: string | number
               isActive?: boolean
               lastname?: string
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               preferedLanguage?: string
               /** Format: date-time */
@@ -3117,47 +3504,120 @@ export interface components {
                 createdAt?: string
                 createdBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 description?: string
                 documentId?: string
-                id?: number
+                id?: string | number
                 locale?: string
                 localizations?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }[]
                 name?: string
                 permissions?: {
                   action?: string
                   actionParameters?: unknown
+                  apiToken?: {
+                    accessKey?: string
+                    adminPermissions?: {
+                      documentId?: string
+                      id?: string | number
+                    }[]
+                    adminUserOwner?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    /** Format: date-time */
+                    createdAt?: string
+                    createdBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    description?: string
+                    documentId?: string
+                    encryptedKey?: string
+                    /** Format: date-time */
+                    expiresAt?: string
+                    id?: string | number
+                    /** @enum {string} */
+                    kind?: 'content-api' | 'admin'
+                    /** Format: date-time */
+                    lastUsedAt?: string
+                    /** @example 123456789 */
+                    lifespan?: string
+                    locale?: string
+                    localizations?: {
+                      documentId?: string
+                      id?: string | number
+                    }[]
+                    name?: string
+                    permissions?: {
+                      action?: string
+                      /** Format: date-time */
+                      createdAt?: string
+                      createdBy?: {
+                        documentId?: string
+                        id?: string | number
+                      }
+                      documentId?: string
+                      id?: string | number
+                      locale?: string
+                      localizations?: {
+                        documentId?: string
+                        id?: string | number
+                      }[]
+                      /** Format: date-time */
+                      publishedAt?: string
+                      token?: {
+                        documentId?: string
+                        id?: string | number
+                      }
+                      /** Format: date-time */
+                      updatedAt?: string
+                      updatedBy?: {
+                        documentId?: string
+                        id?: string | number
+                      }
+                    }[]
+                    /** Format: date-time */
+                    publishedAt?: string
+                    /** @enum {string} */
+                    type?: 'read-only' | 'full-access' | 'custom'
+                    /** Format: date-time */
+                    updatedAt?: string
+                    updatedBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                  }
                   conditions?: unknown
                   /** Format: date-time */
                   createdAt?: string
                   createdBy?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }
                   documentId?: string
-                  id?: number
+                  id?: string | number
                   locale?: string
                   localizations?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }[]
                   properties?: unknown
                   /** Format: date-time */
                   publishedAt?: string
                   role?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }
                   subject?: string
                   /** Format: date-time */
                   updatedAt?: string
                   updatedBy?: {
                     documentId?: string
-                    id?: number
+                    id?: string | number
                   }
                 }[]
                 /** Format: date-time */
@@ -3166,29 +3626,29 @@ export interface components {
                 updatedAt?: string
                 updatedBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 users?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }[]
               }[]
               /** Format: date-time */
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               username?: string
             }
             documentId?: string
             elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
             hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             name?: string
             pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
@@ -3199,7 +3659,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }
           pingdom_check_id?: number
@@ -3209,6 +3669,38 @@ export interface components {
           postgres_database_restore?: boolean
           /** Format: date-time */
           publishedAt?: string
+          snyk_scan?: {
+            build_image_tag?: string
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: string | number
+            }
+            documentId?: string
+            environments?: unknown
+            id?: string | number
+            image_id?: string
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: string | number
+            }[]
+            name?: string
+            /** Format: date-time */
+            publishedAt?: string
+            /** @enum {string} */
+            scan_status?: 'Failed' | 'Succeeded'
+            scan_summary?: unknown
+            snyk_scan_timestamp?: string
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: string | number
+            }
+          }
+          sqs_alerts_config?: unknown
           swagger_docs?: string
           /** @enum {string} */
           type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
@@ -3216,7 +3708,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           url?: string
         }[]
@@ -3233,14 +3725,17 @@ export interface components {
         github_repo_is_template?: boolean
         github_template_repo?: string
         github_topics?: unknown
-        id?: number
+        id?: string | number
+        ip_allowlist_digest_sha?: string
+        ip_allowlist_version?: string
         jira_project_keys?: unknown
         language?: string
         latest_commit?: components['schemas']['PropertiesCommitComponent']
+        library?: boolean
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         name?: string
         part_of_monorepo?: boolean
@@ -3250,17 +3745,17 @@ export interface components {
           business_owner?: string
           children?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           components?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           decommissioned?: boolean
           /** Format: date */
@@ -3268,18 +3763,18 @@ export interface components {
           delivery_manager?: string
           description?: string
           documentId?: string
-          id?: number
+          id?: string | number
           lead_developer?: string
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           p_id?: string
           parent?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           phase?: string
           portfolio?: string
@@ -3290,20 +3785,20 @@ export interface components {
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             lead_developer?: string
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             name?: string
             products?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             ps_id?: string
             /** Format: date-time */
@@ -3313,7 +3808,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }
           /** Format: date-time */
@@ -3323,20 +3818,20 @@ export interface components {
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             name?: string
             owner?: string
             products?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             /** Format: date-time */
             publishedAt?: string
@@ -3346,7 +3841,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }
           slack_channel_id?: string
@@ -3360,19 +3855,19 @@ export interface components {
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             name?: string
             products?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             /** Format: date-time */
             publishedAt?: string
@@ -3382,7 +3877,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }
           technical_architect?: string
@@ -3390,7 +3885,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         /** Format: date-time */
@@ -3399,13 +3894,14 @@ export interface components {
         slack_channel_nonprod_release_notify?: string
         slack_channel_prod_release_notify?: string
         slack_channel_security_scans_notify?: string
+        sqs_alerts_config?: unknown
         standards_compliance?: unknown
         title?: string
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         veracode_exempt?: boolean
         veracode_last_completed_scan_date?: string
@@ -3413,17 +3909,18 @@ export interface components {
         veracode_results_summary?: unknown
         veracode_results_url?: string
         versions?: unknown
+        worker?: boolean
         workflow_runs_waiting?: unknown
       }
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       documentId?: string
       health_path?: string
-      id?: number
+      id?: string | number
       include_in_subject_access_requests?: boolean
       info_path?: string
       ip_allow_list?: unknown
@@ -3431,7 +3928,7 @@ export interface components {
       locale?: string
       localizations?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }[]
       manually_managed?: boolean
       modsecurity_audit_enabled?: boolean
@@ -3442,7 +3939,7 @@ export interface components {
       namespace?: string
       ns?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       pingdom_check_id?: number
       pingdom_cloud_platform_tf_managed?: boolean
@@ -3451,6 +3948,11 @@ export interface components {
       postgres_database_restore?: boolean
       /** Format: date-time */
       publishedAt?: string
+      snyk_scan?: {
+        documentId?: string
+        id?: string | number
+      }
+      sqs_alerts_config?: unknown
       swagger_docs?: string
       /** @enum {string} */
       type: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
@@ -3458,7 +3960,7 @@ export interface components {
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       url?: string
     }
@@ -3478,6 +3980,7 @@ export interface components {
         active_agencies?: unknown
         alert_severity_label?: string
         alerts_slack_channel?: string
+        aws_messaging_config?: unknown
         build_image_tag?: string
         cluster?: string
         /** @example string or id */
@@ -3503,8 +4006,10 @@ export interface components {
         pingdom_paused?: boolean
         pingdom_sre_managed?: boolean
         postgres_database_restore?: boolean
-        swagger_docs?: string
         /** @example string or id */
+        snyk_scan?: number | string
+        sqs_alerts_config?: unknown
+        swagger_docs?: string
         /** @enum {string} */
         type: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
         url?: string
@@ -3530,24 +4035,28 @@ export interface components {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
+        apiTokens?: {
+          documentId?: string
+          id?: string | number
+        }[]
         blocked?: boolean
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
         /** Format: email */
         email?: string
         firstname?: string
-        id?: number
+        id?: string | number
         isActive?: boolean
         lastname?: string
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         preferedLanguage?: string
         /** Format: date-time */
@@ -3560,47 +4069,120 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           description?: string
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           permissions?: {
             action?: string
             actionParameters?: unknown
+            apiToken?: {
+              accessKey?: string
+              adminPermissions?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              adminUserOwner?: {
+                documentId?: string
+                id?: string | number
+              }
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              description?: string
+              documentId?: string
+              encryptedKey?: string
+              /** Format: date-time */
+              expiresAt?: string
+              id?: string | number
+              /** @enum {string} */
+              kind?: 'content-api' | 'admin'
+              /** Format: date-time */
+              lastUsedAt?: string
+              /** @example 123456789 */
+              lifespan?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                documentId?: string
+                id?: string | number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: string | number
+                }[]
+                /** Format: date-time */
+                publishedAt?: string
+                token?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              type?: 'read-only' | 'full-access' | 'custom'
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
             conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             properties?: unknown
             /** Format: date-time */
             publishedAt?: string
             role?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }[]
           /** Format: date-time */
@@ -3609,18 +4191,18 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           users?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
         }[]
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         username?: string
       }
@@ -3631,7 +4213,7 @@ export interface components {
       github_project_visibility?: 'public' | 'internal' | 'private'
       github_projects_teams_admin?: unknown
       github_repo?: string
-      id?: number
+      id?: string | number
       jira_project_keys?: unknown
       locale?: string
       localizations?: {
@@ -3642,7 +4224,7 @@ export interface components {
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
         github_project_branch_protection_restricted_teams?: unknown
@@ -3651,12 +4233,12 @@ export interface components {
         github_project_visibility?: 'public' | 'internal' | 'private'
         github_projects_teams_admin?: unknown
         github_repo?: string
-        id?: number
+        id?: string | number
         jira_project_keys?: unknown
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         namespace?: string
         nonprod_alerts_severity_label?: string
@@ -3668,7 +4250,7 @@ export interface components {
         request_github_pr_number?: number
         request_github_pr_status?: string
         /** @enum {string} */
-        request_type?: string
+        request_type?: 'Add' | 'Archive'
         requester_email?: string
         requester_name?: string
         requester_team?: string
@@ -3679,7 +4261,7 @@ export interface components {
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
       }[]
       namespace?: string
@@ -3692,7 +4274,7 @@ export interface components {
       request_github_pr_number?: number
       request_github_pr_status?: string
       /** @enum {string} */
-      request_type?: string
+      request_type?: 'Add' | 'Archive'
       requester_email?: string
       requester_name?: string
       requester_team?: string
@@ -3703,7 +4285,7 @@ export interface components {
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
     }
     GithubRepoRequestListResponse: {
@@ -3739,7 +4321,7 @@ export interface components {
         request_github_pr_number?: number
         request_github_pr_status?: string
         /** @enum {string} */
-        request_type?: string
+        request_type?: 'Add' | 'Archive'
         requester_email?: string
         requester_name?: string
         requester_team?: string
@@ -3756,24 +4338,28 @@ export interface components {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
+        apiTokens?: {
+          documentId?: string
+          id?: string | number
+        }[]
         blocked?: boolean
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
         /** Format: email */
         email?: string
         firstname?: string
-        id?: number
+        id?: string | number
         isActive?: boolean
         lastname?: string
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         preferedLanguage?: string
         /** Format: date-time */
@@ -3786,47 +4372,120 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           description?: string
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           permissions?: {
             action?: string
             actionParameters?: unknown
+            apiToken?: {
+              accessKey?: string
+              adminPermissions?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              adminUserOwner?: {
+                documentId?: string
+                id?: string | number
+              }
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              description?: string
+              documentId?: string
+              encryptedKey?: string
+              /** Format: date-time */
+              expiresAt?: string
+              id?: string | number
+              /** @enum {string} */
+              kind?: 'content-api' | 'admin'
+              /** Format: date-time */
+              lastUsedAt?: string
+              /** @example 123456789 */
+              lifespan?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                documentId?: string
+                id?: string | number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: string | number
+                }[]
+                /** Format: date-time */
+                publishedAt?: string
+                token?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              type?: 'read-only' | 'full-access' | 'custom'
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
             conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             properties?: unknown
             /** Format: date-time */
             publishedAt?: string
             role?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }[]
           /** Format: date-time */
@@ -3835,39 +4494,39 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           users?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
         }[]
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         username?: string
       }
       documentId?: string
       github_team_id?: number
-      id?: number
+      id?: string | number
       locale?: string
       localizations?: {
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
         github_team_id?: number
-        id?: number
+        id?: string | number
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         members?: unknown
         parent_team_name?: string
@@ -3880,7 +4539,7 @@ export interface components {
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
       }[]
       members?: unknown
@@ -3894,7 +4553,7 @@ export interface components {
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
     }
     GithubTeamListResponse: {
@@ -3928,24 +4587,28 @@ export interface components {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
+        apiTokens?: {
+          documentId?: string
+          id?: string | number
+        }[]
         blocked?: boolean
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
         /** Format: email */
         email?: string
         firstname?: string
-        id?: number
+        id?: string | number
         isActive?: boolean
         lastname?: string
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         preferedLanguage?: string
         /** Format: date-time */
@@ -3958,47 +4621,120 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           description?: string
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           permissions?: {
             action?: string
             actionParameters?: unknown
+            apiToken?: {
+              accessKey?: string
+              adminPermissions?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              adminUserOwner?: {
+                documentId?: string
+                id?: string | number
+              }
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              description?: string
+              documentId?: string
+              encryptedKey?: string
+              /** Format: date-time */
+              expiresAt?: string
+              id?: string | number
+              /** @enum {string} */
+              kind?: 'content-api' | 'admin'
+              /** Format: date-time */
+              lastUsedAt?: string
+              /** @example 123456789 */
+              lifespan?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                documentId?: string
+                id?: string | number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: string | number
+                }[]
+                /** Format: date-time */
+                publishedAt?: string
+                token?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              type?: 'read-only' | 'full-access' | 'custom'
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
             conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             properties?: unknown
             /** Format: date-time */
             publishedAt?: string
             role?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }[]
           /** Format: date-time */
@@ -4007,41 +4743,41 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           users?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
         }[]
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         username?: string
       }
       documentId?: string
       elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
       hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
-      id?: number
+      id?: string | number
       locale?: string
       localizations?: {
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
         elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
         hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
-        id?: number
+        id?: string | number
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         name?: string
         pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
@@ -4052,7 +4788,7 @@ export interface components {
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
       }[]
       name: string
@@ -4064,7 +4800,7 @@ export interface components {
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
     }
     NamespaceListResponse: {
@@ -4097,17 +4833,17 @@ export interface components {
       business_owner?: string
       children?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }[]
       components?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }[]
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       decommissioned?: boolean
       /** Format: date */
@@ -4115,12 +4851,12 @@ export interface components {
       delivery_manager?: string
       description?: string
       documentId?: string
-      id?: number
+      id?: string | number
       lead_developer?: string
       locale?: string
       localizations?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }[]
       name: string
       p_id: string
@@ -4128,7 +4864,7 @@ export interface components {
         business_owner?: string
         children?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         components?: {
           api?: boolean
@@ -4141,7 +4877,7 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           dependent_count?: number
           description?: string
@@ -4151,21 +4887,22 @@ export interface components {
             active_agencies?: unknown
             alert_severity_label?: string
             alerts_slack_channel?: string
+            aws_messaging_config?: unknown
             build_image_tag?: string
             cluster?: string
             component?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
             health_path?: string
-            id?: number
+            id?: string | number
             include_in_subject_access_requests?: boolean
             info_path?: string
             ip_allow_list?: unknown
@@ -4173,7 +4910,7 @@ export interface components {
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             manually_managed?: boolean
             modsecurity_audit_enabled?: boolean
@@ -4187,16 +4924,16 @@ export interface components {
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               documentId?: string
               elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
               hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
-              id?: number
+              id?: string | number
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               name?: string
               pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
@@ -4207,7 +4944,7 @@ export interface components {
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
             }
             pingdom_check_id?: number
@@ -4217,6 +4954,38 @@ export interface components {
             postgres_database_restore?: boolean
             /** Format: date-time */
             publishedAt?: string
+            snyk_scan?: {
+              build_image_tag?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              documentId?: string
+              environments?: unknown
+              id?: string | number
+              image_id?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              scan_status?: 'Failed' | 'Succeeded'
+              scan_summary?: unknown
+              snyk_scan_timestamp?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
+            sqs_alerts_config?: unknown
             swagger_docs?: string
             /** @enum {string} */
             type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
@@ -4224,7 +4993,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             url?: string
           }[]
@@ -4241,14 +5010,17 @@ export interface components {
           github_repo_is_template?: boolean
           github_template_repo?: string
           github_topics?: unknown
-          id?: number
+          id?: string | number
+          ip_allowlist_digest_sha?: string
+          ip_allowlist_version?: string
           jira_project_keys?: unknown
           language?: string
           latest_commit?: components['schemas']['PropertiesCommitComponent']
+          library?: boolean
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           part_of_monorepo?: boolean
@@ -4256,7 +5028,7 @@ export interface components {
           path_to_project?: string
           product?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           /** Format: date-time */
           publishedAt?: string
@@ -4264,13 +5036,14 @@ export interface components {
           slack_channel_nonprod_release_notify?: string
           slack_channel_prod_release_notify?: string
           slack_channel_security_scans_notify?: string
+          sqs_alerts_config?: unknown
           standards_compliance?: unknown
           title?: string
           /** Format: date-time */
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           veracode_exempt?: boolean
           veracode_last_completed_scan_date?: string
@@ -4278,13 +5051,14 @@ export interface components {
           veracode_results_summary?: unknown
           veracode_results_url?: string
           versions?: unknown
+          worker?: boolean
           workflow_runs_waiting?: unknown
         }[]
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         decommissioned?: boolean
         /** Format: date */
@@ -4292,18 +5066,18 @@ export interface components {
         delivery_manager?: string
         description?: string
         documentId?: string
-        id?: number
+        id?: string | number
         lead_developer?: string
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         name?: string
         p_id?: string
         parent?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         phase?: string
         portfolio?: string
@@ -4314,20 +5088,20 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           documentId?: string
-          id?: number
+          id?: string | number
           lead_developer?: string
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           ps_id?: string
           /** Format: date-time */
@@ -4337,7 +5111,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         /** Format: date-time */
@@ -4347,20 +5121,20 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           owner?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           /** Format: date-time */
           publishedAt?: string
@@ -4370,7 +5144,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         slack_channel_id?: string
@@ -4383,24 +5157,28 @@ export interface components {
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
+            apiTokens?: {
+              documentId?: string
+              id?: string | number
+            }[]
             blocked?: boolean
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
             /** Format: email */
             email?: string
             firstname?: string
-            id?: number
+            id?: string | number
             isActive?: boolean
             lastname?: string
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             preferedLanguage?: string
             /** Format: date-time */
@@ -4413,47 +5191,120 @@ export interface components {
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               description?: string
               documentId?: string
-              id?: number
+              id?: string | number
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               name?: string
               permissions?: {
                 action?: string
                 actionParameters?: unknown
+                apiToken?: {
+                  accessKey?: string
+                  adminPermissions?: {
+                    documentId?: string
+                    id?: string | number
+                  }[]
+                  adminUserOwner?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                  /** Format: date-time */
+                  createdAt?: string
+                  createdBy?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                  description?: string
+                  documentId?: string
+                  encryptedKey?: string
+                  /** Format: date-time */
+                  expiresAt?: string
+                  id?: string | number
+                  /** @enum {string} */
+                  kind?: 'content-api' | 'admin'
+                  /** Format: date-time */
+                  lastUsedAt?: string
+                  /** @example 123456789 */
+                  lifespan?: string
+                  locale?: string
+                  localizations?: {
+                    documentId?: string
+                    id?: string | number
+                  }[]
+                  name?: string
+                  permissions?: {
+                    action?: string
+                    /** Format: date-time */
+                    createdAt?: string
+                    createdBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    documentId?: string
+                    id?: string | number
+                    locale?: string
+                    localizations?: {
+                      documentId?: string
+                      id?: string | number
+                    }[]
+                    /** Format: date-time */
+                    publishedAt?: string
+                    token?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    /** Format: date-time */
+                    updatedAt?: string
+                    updatedBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                  }[]
+                  /** Format: date-time */
+                  publishedAt?: string
+                  /** @enum {string} */
+                  type?: 'read-only' | 'full-access' | 'custom'
+                  /** Format: date-time */
+                  updatedAt?: string
+                  updatedBy?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                }
                 conditions?: unknown
                 /** Format: date-time */
                 createdAt?: string
                 createdBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 documentId?: string
-                id?: number
+                id?: string | number
                 locale?: string
                 localizations?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }[]
                 properties?: unknown
                 /** Format: date-time */
                 publishedAt?: string
                 role?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 subject?: string
                 /** Format: date-time */
                 updatedAt?: string
                 updatedBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
               }[]
               /** Format: date-time */
@@ -4462,32 +5313,32 @@ export interface components {
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               users?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
             }[]
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             username?: string
           }
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           /** Format: date-time */
           publishedAt?: string
@@ -4497,7 +5348,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         technical_architect?: string
@@ -4505,7 +5356,7 @@ export interface components {
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
       }
       phase?: string
@@ -4514,13 +5365,13 @@ export interface components {
       product_manager?: string
       product_set?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       /** Format: date-time */
       publishedAt?: string
       service_area?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       slack_channel_id?: string
       slack_channel_name?: string
@@ -4528,14 +5379,14 @@ export interface components {
       subproduct?: boolean
       team?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       technical_architect?: string
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
     }
     ProductListResponse: {
@@ -4592,22 +5443,22 @@ export interface components {
       createdAt?: string
       createdBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       documentId?: string
-      id?: number
+      id?: string | number
       lead_developer?: string
       locale?: string
       localizations?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }[]
       name: string
       products?: {
         business_owner?: string
         children?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         components?: {
           api?: boolean
@@ -4620,7 +5471,7 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           dependent_count?: number
           description?: string
@@ -4630,21 +5481,22 @@ export interface components {
             active_agencies?: unknown
             alert_severity_label?: string
             alerts_slack_channel?: string
+            aws_messaging_config?: unknown
             build_image_tag?: string
             cluster?: string
             component?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
             health_path?: string
-            id?: number
+            id?: string | number
             include_in_subject_access_requests?: boolean
             info_path?: string
             ip_allow_list?: unknown
@@ -4652,7 +5504,7 @@ export interface components {
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             manually_managed?: boolean
             modsecurity_audit_enabled?: boolean
@@ -4666,16 +5518,16 @@ export interface components {
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               documentId?: string
               elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
               hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
-              id?: number
+              id?: string | number
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               name?: string
               pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
@@ -4686,7 +5538,7 @@ export interface components {
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
             }
             pingdom_check_id?: number
@@ -4696,6 +5548,38 @@ export interface components {
             postgres_database_restore?: boolean
             /** Format: date-time */
             publishedAt?: string
+            snyk_scan?: {
+              build_image_tag?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              documentId?: string
+              environments?: unknown
+              id?: string | number
+              image_id?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              scan_status?: 'Failed' | 'Succeeded'
+              scan_summary?: unknown
+              snyk_scan_timestamp?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
+            sqs_alerts_config?: unknown
             swagger_docs?: string
             /** @enum {string} */
             type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
@@ -4703,7 +5587,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             url?: string
           }[]
@@ -4720,14 +5604,17 @@ export interface components {
           github_repo_is_template?: boolean
           github_template_repo?: string
           github_topics?: unknown
-          id?: number
+          id?: string | number
+          ip_allowlist_digest_sha?: string
+          ip_allowlist_version?: string
           jira_project_keys?: unknown
           language?: string
           latest_commit?: components['schemas']['PropertiesCommitComponent']
+          library?: boolean
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           part_of_monorepo?: boolean
@@ -4735,7 +5622,7 @@ export interface components {
           path_to_project?: string
           product?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           /** Format: date-time */
           publishedAt?: string
@@ -4743,13 +5630,14 @@ export interface components {
           slack_channel_nonprod_release_notify?: string
           slack_channel_prod_release_notify?: string
           slack_channel_security_scans_notify?: string
+          sqs_alerts_config?: unknown
           standards_compliance?: unknown
           title?: string
           /** Format: date-time */
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           veracode_exempt?: boolean
           veracode_last_completed_scan_date?: string
@@ -4757,13 +5645,14 @@ export interface components {
           veracode_results_summary?: unknown
           veracode_results_url?: string
           versions?: unknown
+          worker?: boolean
           workflow_runs_waiting?: unknown
         }[]
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         decommissioned?: boolean
         /** Format: date */
@@ -4771,18 +5660,18 @@ export interface components {
         delivery_manager?: string
         description?: string
         documentId?: string
-        id?: number
+        id?: string | number
         lead_developer?: string
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         name?: string
         p_id?: string
         parent?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         phase?: string
         portfolio?: string
@@ -4793,20 +5682,20 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           documentId?: string
-          id?: number
+          id?: string | number
           lead_developer?: string
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           ps_id?: string
           /** Format: date-time */
@@ -4816,7 +5705,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         /** Format: date-time */
@@ -4826,20 +5715,20 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           owner?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           /** Format: date-time */
           publishedAt?: string
@@ -4849,7 +5738,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         slack_channel_id?: string
@@ -4862,24 +5751,28 @@ export interface components {
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
+            apiTokens?: {
+              documentId?: string
+              id?: string | number
+            }[]
             blocked?: boolean
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
             /** Format: email */
             email?: string
             firstname?: string
-            id?: number
+            id?: string | number
             isActive?: boolean
             lastname?: string
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             preferedLanguage?: string
             /** Format: date-time */
@@ -4892,47 +5785,120 @@ export interface components {
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               description?: string
               documentId?: string
-              id?: number
+              id?: string | number
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               name?: string
               permissions?: {
                 action?: string
                 actionParameters?: unknown
+                apiToken?: {
+                  accessKey?: string
+                  adminPermissions?: {
+                    documentId?: string
+                    id?: string | number
+                  }[]
+                  adminUserOwner?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                  /** Format: date-time */
+                  createdAt?: string
+                  createdBy?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                  description?: string
+                  documentId?: string
+                  encryptedKey?: string
+                  /** Format: date-time */
+                  expiresAt?: string
+                  id?: string | number
+                  /** @enum {string} */
+                  kind?: 'content-api' | 'admin'
+                  /** Format: date-time */
+                  lastUsedAt?: string
+                  /** @example 123456789 */
+                  lifespan?: string
+                  locale?: string
+                  localizations?: {
+                    documentId?: string
+                    id?: string | number
+                  }[]
+                  name?: string
+                  permissions?: {
+                    action?: string
+                    /** Format: date-time */
+                    createdAt?: string
+                    createdBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    documentId?: string
+                    id?: string | number
+                    locale?: string
+                    localizations?: {
+                      documentId?: string
+                      id?: string | number
+                    }[]
+                    /** Format: date-time */
+                    publishedAt?: string
+                    token?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    /** Format: date-time */
+                    updatedAt?: string
+                    updatedBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                  }[]
+                  /** Format: date-time */
+                  publishedAt?: string
+                  /** @enum {string} */
+                  type?: 'read-only' | 'full-access' | 'custom'
+                  /** Format: date-time */
+                  updatedAt?: string
+                  updatedBy?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                }
                 conditions?: unknown
                 /** Format: date-time */
                 createdAt?: string
                 createdBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 documentId?: string
-                id?: number
+                id?: string | number
                 locale?: string
                 localizations?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }[]
                 properties?: unknown
                 /** Format: date-time */
                 publishedAt?: string
                 role?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 subject?: string
                 /** Format: date-time */
                 updatedAt?: string
                 updatedBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
               }[]
               /** Format: date-time */
@@ -4941,32 +5907,32 @@ export interface components {
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               users?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
             }[]
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             username?: string
           }
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           /** Format: date-time */
           publishedAt?: string
@@ -4976,7 +5942,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         technical_architect?: string
@@ -4984,7 +5950,7 @@ export interface components {
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
       }[]
       ps_id: string
@@ -4995,7 +5961,7 @@ export interface components {
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
     }
     ProductSetListResponse: {
@@ -5027,31 +5993,35 @@ export interface components {
     PropertiesCommitComponent: {
       /** Format: date-time */
       date_time?: string
-      id?: number
+      id?: string | number
       sha?: string
     }
     RecommendedVersion: {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
+        apiTokens?: {
+          documentId?: string
+          id?: string | number
+        }[]
         blocked?: boolean
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
         /** Format: email */
         email?: string
         firstname?: string
-        id?: number
+        id?: string | number
         isActive?: boolean
         lastname?: string
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         preferedLanguage?: string
         /** Format: date-time */
@@ -5064,47 +6034,120 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           description?: string
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           permissions?: {
             action?: string
             actionParameters?: unknown
+            apiToken?: {
+              accessKey?: string
+              adminPermissions?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              adminUserOwner?: {
+                documentId?: string
+                id?: string | number
+              }
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              description?: string
+              documentId?: string
+              encryptedKey?: string
+              /** Format: date-time */
+              expiresAt?: string
+              id?: string | number
+              /** @enum {string} */
+              kind?: 'content-api' | 'admin'
+              /** Format: date-time */
+              lastUsedAt?: string
+              /** @example 123456789 */
+              lifespan?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                documentId?: string
+                id?: string | number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: string | number
+                }[]
+                /** Format: date-time */
+                publishedAt?: string
+                token?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              type?: 'read-only' | 'full-access' | 'custom'
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
             conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             properties?: unknown
             /** Format: date-time */
             publishedAt?: string
             role?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }[]
           /** Format: date-time */
@@ -5113,59 +6156,65 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           users?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
         }[]
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         username?: string
       }
       documentId?: string
-      id?: number
+      id?: string | number
       locale?: string
       localizations?: {
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
-        id?: number
+        id?: string | number
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         name?: string
+        /** Format: date */
+        published_date?: string
         /** Format: date-time */
         publishedAt?: string
+        source?: string
         type?: string
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         version?: string
       }[]
       name?: string
+      /** Format: date */
+      published_date?: string
       /** Format: date-time */
       publishedAt?: string
+      source?: string
       type?: string
       /** Format: date-time */
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       version?: string
     }
@@ -5185,6 +6234,9 @@ export interface components {
         locale?: string
         localizations?: (number | string)[]
         name?: string
+        /** Format: date */
+        published_date?: string
+        source?: string
         type?: string
         version?: string
       }
@@ -5197,24 +6249,28 @@ export interface components {
       /** Format: date-time */
       createdAt?: string
       createdBy?: {
+        apiTokens?: {
+          documentId?: string
+          id?: string | number
+        }[]
         blocked?: boolean
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         documentId?: string
         /** Format: email */
         email?: string
         firstname?: string
-        id?: number
+        id?: string | number
         isActive?: boolean
         lastname?: string
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         preferedLanguage?: string
         /** Format: date-time */
@@ -5227,47 +6283,120 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           description?: string
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           permissions?: {
             action?: string
             actionParameters?: unknown
+            apiToken?: {
+              accessKey?: string
+              adminPermissions?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              adminUserOwner?: {
+                documentId?: string
+                id?: string | number
+              }
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              description?: string
+              documentId?: string
+              encryptedKey?: string
+              /** Format: date-time */
+              expiresAt?: string
+              id?: string | number
+              /** @enum {string} */
+              kind?: 'content-api' | 'admin'
+              /** Format: date-time */
+              lastUsedAt?: string
+              /** @example 123456789 */
+              lifespan?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                documentId?: string
+                id?: string | number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: string | number
+                }[]
+                /** Format: date-time */
+                publishedAt?: string
+                token?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              type?: 'read-only' | 'full-access' | 'custom'
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
             conditions?: unknown
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
-            id?: number
+            id?: string | number
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             properties?: unknown
             /** Format: date-time */
             publishedAt?: string
             role?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             subject?: string
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
           }[]
           /** Format: date-time */
@@ -5276,25 +6405,25 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           users?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
         }[]
         /** Format: date-time */
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         username?: string
       }
       description?: string
       documentId?: string
       error_details?: unknown
-      id?: number
+      id?: string | number
       /** Format: date-time */
       last_scheduled_run?: string
       /** Format: date-time */
@@ -5305,12 +6434,12 @@ export interface components {
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         description?: string
         documentId?: string
         error_details?: unknown
-        id?: number
+        id?: string | number
         /** Format: date-time */
         last_scheduled_run?: string
         /** Format: date-time */
@@ -5318,7 +6447,7 @@ export interface components {
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         name?: string
         /** Format: date-time */
@@ -5330,7 +6459,7 @@ export interface components {
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
       }[]
       name?: string
@@ -5343,7 +6472,7 @@ export interface components {
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
     }
     ScheduledJobListResponse: {
@@ -5382,14 +6511,14 @@ export interface components {
       createdAt?: string
       createdBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       documentId?: string
-      id?: number
+      id?: string | number
       locale?: string
       localizations?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }[]
       name: string
       owner: string
@@ -5397,7 +6526,7 @@ export interface components {
         business_owner?: string
         children?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         components?: {
           api?: boolean
@@ -5410,7 +6539,7 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           dependent_count?: number
           description?: string
@@ -5420,21 +6549,22 @@ export interface components {
             active_agencies?: unknown
             alert_severity_label?: string
             alerts_slack_channel?: string
+            aws_messaging_config?: unknown
             build_image_tag?: string
             cluster?: string
             component?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
             health_path?: string
-            id?: number
+            id?: string | number
             include_in_subject_access_requests?: boolean
             info_path?: string
             ip_allow_list?: unknown
@@ -5442,7 +6572,7 @@ export interface components {
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             manually_managed?: boolean
             modsecurity_audit_enabled?: boolean
@@ -5456,16 +6586,16 @@ export interface components {
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               documentId?: string
               elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
               hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
-              id?: number
+              id?: string | number
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               name?: string
               pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
@@ -5476,7 +6606,7 @@ export interface components {
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
             }
             pingdom_check_id?: number
@@ -5486,6 +6616,38 @@ export interface components {
             postgres_database_restore?: boolean
             /** Format: date-time */
             publishedAt?: string
+            snyk_scan?: {
+              build_image_tag?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              documentId?: string
+              environments?: unknown
+              id?: string | number
+              image_id?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              scan_status?: 'Failed' | 'Succeeded'
+              scan_summary?: unknown
+              snyk_scan_timestamp?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
+            sqs_alerts_config?: unknown
             swagger_docs?: string
             /** @enum {string} */
             type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
@@ -5493,7 +6655,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             url?: string
           }[]
@@ -5510,14 +6672,17 @@ export interface components {
           github_repo_is_template?: boolean
           github_template_repo?: string
           github_topics?: unknown
-          id?: number
+          id?: string | number
+          ip_allowlist_digest_sha?: string
+          ip_allowlist_version?: string
           jira_project_keys?: unknown
           language?: string
           latest_commit?: components['schemas']['PropertiesCommitComponent']
+          library?: boolean
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           part_of_monorepo?: boolean
@@ -5525,7 +6690,7 @@ export interface components {
           path_to_project?: string
           product?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           /** Format: date-time */
           publishedAt?: string
@@ -5533,13 +6698,14 @@ export interface components {
           slack_channel_nonprod_release_notify?: string
           slack_channel_prod_release_notify?: string
           slack_channel_security_scans_notify?: string
+          sqs_alerts_config?: unknown
           standards_compliance?: unknown
           title?: string
           /** Format: date-time */
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           veracode_exempt?: boolean
           veracode_last_completed_scan_date?: string
@@ -5547,13 +6713,14 @@ export interface components {
           veracode_results_summary?: unknown
           veracode_results_url?: string
           versions?: unknown
+          worker?: boolean
           workflow_runs_waiting?: unknown
         }[]
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         decommissioned?: boolean
         /** Format: date */
@@ -5561,18 +6728,18 @@ export interface components {
         delivery_manager?: string
         description?: string
         documentId?: string
-        id?: number
+        id?: string | number
         lead_developer?: string
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         name?: string
         p_id?: string
         parent?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         phase?: string
         portfolio?: string
@@ -5583,20 +6750,20 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           documentId?: string
-          id?: number
+          id?: string | number
           lead_developer?: string
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           ps_id?: string
           /** Format: date-time */
@@ -5606,7 +6773,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         /** Format: date-time */
@@ -5616,20 +6783,20 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           owner?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           /** Format: date-time */
           publishedAt?: string
@@ -5639,7 +6806,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         slack_channel_id?: string
@@ -5652,24 +6819,28 @@ export interface components {
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
+            apiTokens?: {
+              documentId?: string
+              id?: string | number
+            }[]
             blocked?: boolean
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
             /** Format: email */
             email?: string
             firstname?: string
-            id?: number
+            id?: string | number
             isActive?: boolean
             lastname?: string
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             preferedLanguage?: string
             /** Format: date-time */
@@ -5682,47 +6853,120 @@ export interface components {
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               description?: string
               documentId?: string
-              id?: number
+              id?: string | number
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               name?: string
               permissions?: {
                 action?: string
                 actionParameters?: unknown
+                apiToken?: {
+                  accessKey?: string
+                  adminPermissions?: {
+                    documentId?: string
+                    id?: string | number
+                  }[]
+                  adminUserOwner?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                  /** Format: date-time */
+                  createdAt?: string
+                  createdBy?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                  description?: string
+                  documentId?: string
+                  encryptedKey?: string
+                  /** Format: date-time */
+                  expiresAt?: string
+                  id?: string | number
+                  /** @enum {string} */
+                  kind?: 'content-api' | 'admin'
+                  /** Format: date-time */
+                  lastUsedAt?: string
+                  /** @example 123456789 */
+                  lifespan?: string
+                  locale?: string
+                  localizations?: {
+                    documentId?: string
+                    id?: string | number
+                  }[]
+                  name?: string
+                  permissions?: {
+                    action?: string
+                    /** Format: date-time */
+                    createdAt?: string
+                    createdBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    documentId?: string
+                    id?: string | number
+                    locale?: string
+                    localizations?: {
+                      documentId?: string
+                      id?: string | number
+                    }[]
+                    /** Format: date-time */
+                    publishedAt?: string
+                    token?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    /** Format: date-time */
+                    updatedAt?: string
+                    updatedBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                  }[]
+                  /** Format: date-time */
+                  publishedAt?: string
+                  /** @enum {string} */
+                  type?: 'read-only' | 'full-access' | 'custom'
+                  /** Format: date-time */
+                  updatedAt?: string
+                  updatedBy?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                }
                 conditions?: unknown
                 /** Format: date-time */
                 createdAt?: string
                 createdBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 documentId?: string
-                id?: number
+                id?: string | number
                 locale?: string
                 localizations?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }[]
                 properties?: unknown
                 /** Format: date-time */
                 publishedAt?: string
                 role?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 subject?: string
                 /** Format: date-time */
                 updatedAt?: string
                 updatedBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
               }[]
               /** Format: date-time */
@@ -5731,32 +6975,32 @@ export interface components {
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               users?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
             }[]
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             username?: string
           }
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           /** Format: date-time */
           publishedAt?: string
@@ -5766,7 +7010,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         technical_architect?: string
@@ -5774,7 +7018,7 @@ export interface components {
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
       }[]
       /** Format: date-time */
@@ -5785,7 +7029,7 @@ export interface components {
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
     }
     ServiceAreaListResponse: {
@@ -5814,6 +7058,261 @@ export interface components {
       data?: components['schemas']['ServiceArea']
       meta?: Record<string, never>
     }
+    SnykScan: {
+      build_image_tag?: string
+      /** Format: date-time */
+      createdAt?: string
+      createdBy?: {
+        apiTokens?: {
+          documentId?: string
+          id?: string | number
+        }[]
+        blocked?: boolean
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: string | number
+        }
+        documentId?: string
+        /** Format: email */
+        email?: string
+        firstname?: string
+        id?: string | number
+        isActive?: boolean
+        lastname?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: string | number
+        }[]
+        preferedLanguage?: string
+        /** Format: date-time */
+        publishedAt?: string
+        registrationToken?: string
+        resetPasswordToken?: string
+        roles?: {
+          code?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: string | number
+          }
+          description?: string
+          documentId?: string
+          id?: string | number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: string | number
+          }[]
+          name?: string
+          permissions?: {
+            action?: string
+            actionParameters?: unknown
+            apiToken?: {
+              accessKey?: string
+              adminPermissions?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              adminUserOwner?: {
+                documentId?: string
+                id?: string | number
+              }
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              description?: string
+              documentId?: string
+              encryptedKey?: string
+              /** Format: date-time */
+              expiresAt?: string
+              id?: string | number
+              /** @enum {string} */
+              kind?: 'content-api' | 'admin'
+              /** Format: date-time */
+              lastUsedAt?: string
+              /** @example 123456789 */
+              lifespan?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                documentId?: string
+                id?: string | number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: string | number
+                }[]
+                /** Format: date-time */
+                publishedAt?: string
+                token?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              type?: 'read-only' | 'full-access' | 'custom'
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
+            conditions?: unknown
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: string | number
+            }
+            documentId?: string
+            id?: string | number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: string | number
+            }[]
+            properties?: unknown
+            /** Format: date-time */
+            publishedAt?: string
+            role?: {
+              documentId?: string
+              id?: string | number
+            }
+            subject?: string
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: string | number
+            }
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: string | number
+          }
+          users?: {
+            documentId?: string
+            id?: string | number
+          }[]
+        }[]
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: string | number
+        }
+        username?: string
+      }
+      documentId?: string
+      environments?: unknown
+      id?: string | number
+      image_id?: string
+      locale?: string
+      localizations?: {
+        build_image_tag?: string
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: string | number
+        }
+        documentId?: string
+        environments?: unknown
+        id?: string | number
+        image_id?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: string | number
+        }[]
+        name?: string
+        /** Format: date-time */
+        publishedAt?: string
+        /** @enum {string} */
+        scan_status?: 'Failed' | 'Succeeded'
+        scan_summary?: unknown
+        snyk_scan_timestamp?: string
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: string | number
+        }
+      }[]
+      name?: string
+      /** Format: date-time */
+      publishedAt?: string
+      /** @enum {string} */
+      scan_status?: 'Failed' | 'Succeeded'
+      scan_summary?: unknown
+      snyk_scan_timestamp?: string
+      /** Format: date-time */
+      updatedAt?: string
+      updatedBy?: {
+        documentId?: string
+        id?: string | number
+      }
+    }
+    SnykScanListResponse: {
+      data?: components['schemas']['SnykScan'][]
+      meta?: {
+        pagination?: {
+          page?: number
+          pageCount?: number
+          pageSize?: number
+          total?: number
+        }
+      }
+    }
+    SnykScanRequest: {
+      data: {
+        build_image_tag?: string
+        environments?: unknown
+        image_id?: string
+        locale?: string
+        localizations?: (number | string)[]
+        name?: string
+        /** @enum {string} */
+        scan_status?: 'Failed' | 'Succeeded'
+        scan_summary?: unknown
+        snyk_scan_timestamp?: string
+      }
+    }
+    SnykScanResponse: {
+      data?: components['schemas']['SnykScan']
+      meta?: Record<string, never>
+    }
     Team: {
       budget_code?: string
       confluence_link?: string
@@ -5821,21 +7320,21 @@ export interface components {
       createdAt?: string
       createdBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
       documentId?: string
-      id?: number
+      id?: string | number
       locale?: string
       localizations?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }[]
       name: string
       products?: {
         business_owner?: string
         children?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         components?: {
           api?: boolean
@@ -5848,7 +7347,7 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           dependent_count?: number
           description?: string
@@ -5858,21 +7357,22 @@ export interface components {
             active_agencies?: unknown
             alert_severity_label?: string
             alerts_slack_channel?: string
+            aws_messaging_config?: unknown
             build_image_tag?: string
             cluster?: string
             component?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
             health_path?: string
-            id?: number
+            id?: string | number
             include_in_subject_access_requests?: boolean
             info_path?: string
             ip_allow_list?: unknown
@@ -5880,7 +7380,7 @@ export interface components {
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             manually_managed?: boolean
             modsecurity_audit_enabled?: boolean
@@ -5894,16 +7394,16 @@ export interface components {
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               documentId?: string
               elasticache_cluster?: components['schemas']['TfModulesElasticacheClusterComponent'][]
               hmpps_template?: components['schemas']['TfModulesHmppsTerraformTemplateComponent'][]
-              id?: number
+              id?: string | number
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               name?: string
               pingdom_check?: components['schemas']['TfModulesPingdomCheckComponent'][]
@@ -5914,7 +7414,7 @@ export interface components {
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
             }
             pingdom_check_id?: number
@@ -5924,6 +7424,38 @@ export interface components {
             postgres_database_restore?: boolean
             /** Format: date-time */
             publishedAt?: string
+            snyk_scan?: {
+              build_image_tag?: string
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              documentId?: string
+              environments?: unknown
+              id?: string | number
+              image_id?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              scan_status?: 'Failed' | 'Succeeded'
+              scan_summary?: unknown
+              snyk_scan_timestamp?: string
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
+            sqs_alerts_config?: unknown
             swagger_docs?: string
             /** @enum {string} */
             type?: 'dev' | 'test' | 'stage' | 'preprod' | 'prod'
@@ -5931,7 +7463,7 @@ export interface components {
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             url?: string
           }[]
@@ -5948,14 +7480,17 @@ export interface components {
           github_repo_is_template?: boolean
           github_template_repo?: string
           github_topics?: unknown
-          id?: number
+          id?: string | number
+          ip_allowlist_digest_sha?: string
+          ip_allowlist_version?: string
           jira_project_keys?: unknown
           language?: string
           latest_commit?: components['schemas']['PropertiesCommitComponent']
+          library?: boolean
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           part_of_monorepo?: boolean
@@ -5963,7 +7498,7 @@ export interface components {
           path_to_project?: string
           product?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           /** Format: date-time */
           publishedAt?: string
@@ -5971,13 +7506,14 @@ export interface components {
           slack_channel_nonprod_release_notify?: string
           slack_channel_prod_release_notify?: string
           slack_channel_security_scans_notify?: string
+          sqs_alerts_config?: unknown
           standards_compliance?: unknown
           title?: string
           /** Format: date-time */
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           veracode_exempt?: boolean
           veracode_last_completed_scan_date?: string
@@ -5985,13 +7521,14 @@ export interface components {
           veracode_results_summary?: unknown
           veracode_results_url?: string
           versions?: unknown
+          worker?: boolean
           workflow_runs_waiting?: unknown
         }[]
         /** Format: date-time */
         createdAt?: string
         createdBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         decommissioned?: boolean
         /** Format: date */
@@ -5999,18 +7536,18 @@ export interface components {
         delivery_manager?: string
         description?: string
         documentId?: string
-        id?: number
+        id?: string | number
         lead_developer?: string
         locale?: string
         localizations?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }[]
         name?: string
         p_id?: string
         parent?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
         phase?: string
         portfolio?: string
@@ -6021,20 +7558,20 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           documentId?: string
-          id?: number
+          id?: string | number
           lead_developer?: string
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           ps_id?: string
           /** Format: date-time */
@@ -6044,7 +7581,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         /** Format: date-time */
@@ -6054,20 +7591,20 @@ export interface components {
           createdAt?: string
           createdBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           owner?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           /** Format: date-time */
           publishedAt?: string
@@ -6077,7 +7614,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         slack_channel_id?: string
@@ -6090,24 +7627,28 @@ export interface components {
           /** Format: date-time */
           createdAt?: string
           createdBy?: {
+            apiTokens?: {
+              documentId?: string
+              id?: string | number
+            }[]
             blocked?: boolean
             /** Format: date-time */
             createdAt?: string
             createdBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             documentId?: string
             /** Format: email */
             email?: string
             firstname?: string
-            id?: number
+            id?: string | number
             isActive?: boolean
             lastname?: string
             locale?: string
             localizations?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }[]
             preferedLanguage?: string
             /** Format: date-time */
@@ -6120,47 +7661,120 @@ export interface components {
               createdAt?: string
               createdBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               description?: string
               documentId?: string
-              id?: number
+              id?: string | number
               locale?: string
               localizations?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
               name?: string
               permissions?: {
                 action?: string
                 actionParameters?: unknown
+                apiToken?: {
+                  accessKey?: string
+                  adminPermissions?: {
+                    documentId?: string
+                    id?: string | number
+                  }[]
+                  adminUserOwner?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                  /** Format: date-time */
+                  createdAt?: string
+                  createdBy?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                  description?: string
+                  documentId?: string
+                  encryptedKey?: string
+                  /** Format: date-time */
+                  expiresAt?: string
+                  id?: string | number
+                  /** @enum {string} */
+                  kind?: 'content-api' | 'admin'
+                  /** Format: date-time */
+                  lastUsedAt?: string
+                  /** @example 123456789 */
+                  lifespan?: string
+                  locale?: string
+                  localizations?: {
+                    documentId?: string
+                    id?: string | number
+                  }[]
+                  name?: string
+                  permissions?: {
+                    action?: string
+                    /** Format: date-time */
+                    createdAt?: string
+                    createdBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    documentId?: string
+                    id?: string | number
+                    locale?: string
+                    localizations?: {
+                      documentId?: string
+                      id?: string | number
+                    }[]
+                    /** Format: date-time */
+                    publishedAt?: string
+                    token?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                    /** Format: date-time */
+                    updatedAt?: string
+                    updatedBy?: {
+                      documentId?: string
+                      id?: string | number
+                    }
+                  }[]
+                  /** Format: date-time */
+                  publishedAt?: string
+                  /** @enum {string} */
+                  type?: 'read-only' | 'full-access' | 'custom'
+                  /** Format: date-time */
+                  updatedAt?: string
+                  updatedBy?: {
+                    documentId?: string
+                    id?: string | number
+                  }
+                }
                 conditions?: unknown
                 /** Format: date-time */
                 createdAt?: string
                 createdBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 documentId?: string
-                id?: number
+                id?: string | number
                 locale?: string
                 localizations?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }[]
                 properties?: unknown
                 /** Format: date-time */
                 publishedAt?: string
                 role?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
                 subject?: string
                 /** Format: date-time */
                 updatedAt?: string
                 updatedBy?: {
                   documentId?: string
-                  id?: number
+                  id?: string | number
                 }
               }[]
               /** Format: date-time */
@@ -6169,32 +7783,32 @@ export interface components {
               updatedAt?: string
               updatedBy?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }
               users?: {
                 documentId?: string
-                id?: number
+                id?: string | number
               }[]
             }[]
             /** Format: date-time */
             updatedAt?: string
             updatedBy?: {
               documentId?: string
-              id?: number
+              id?: string | number
             }
             username?: string
           }
           documentId?: string
-          id?: number
+          id?: string | number
           locale?: string
           localizations?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           name?: string
           products?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }[]
           /** Format: date-time */
           publishedAt?: string
@@ -6204,7 +7818,7 @@ export interface components {
           updatedAt?: string
           updatedBy?: {
             documentId?: string
-            id?: number
+            id?: string | number
           }
         }
         technical_architect?: string
@@ -6212,7 +7826,7 @@ export interface components {
         updatedAt?: string
         updatedBy?: {
           documentId?: string
-          id?: number
+          id?: string | number
         }
       }[]
       /** Format: date-time */
@@ -6223,7 +7837,7 @@ export interface components {
       updatedAt?: string
       updatedBy?: {
         documentId?: string
-        id?: number
+        id?: string | number
       }
     }
     TeamListResponse: {
@@ -6258,7 +7872,7 @@ export interface components {
       business_unit?: string
       engine_version?: string
       environment_name?: string
-      id?: number
+      id?: string | number
       infrastructure_support?: string
       is_production?: boolean
       namespace?: string
@@ -6279,7 +7893,7 @@ export interface components {
       environment_name?: string
       github_repo?: string
       github_team_name?: string
-      id?: number
+      id?: string | number
       is_production?: boolean
       namespace?: string
       prevent_self_review?: boolean
@@ -6297,7 +7911,7 @@ export interface components {
     TfModulesPingdomCheckComponent: {
       encryption?: boolean
       host?: string
-      id?: number
+      id?: string | number
       integrationids?: unknown
       name?: string
       notifyagainevery?: number
@@ -6326,7 +7940,7 @@ export interface components {
       db_parameter?: unknown
       deletion_protection?: boolean
       environment_name?: string
-      id?: number
+      id?: string | number
       infrastructure_support?: string
       is_production?: string
       maintenance_window?: string
@@ -6340,6 +7954,261 @@ export interface components {
       tf_line_start?: number
       tf_mod_version?: string
       tf_path?: string
+    }
+    TrivyScan: {
+      build_image_tag?: string
+      /** Format: date-time */
+      createdAt?: string
+      createdBy?: {
+        apiTokens?: {
+          documentId?: string
+          id?: string | number
+        }[]
+        blocked?: boolean
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: string | number
+        }
+        documentId?: string
+        /** Format: email */
+        email?: string
+        firstname?: string
+        id?: string | number
+        isActive?: boolean
+        lastname?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: string | number
+        }[]
+        preferedLanguage?: string
+        /** Format: date-time */
+        publishedAt?: string
+        registrationToken?: string
+        resetPasswordToken?: string
+        roles?: {
+          code?: string
+          /** Format: date-time */
+          createdAt?: string
+          createdBy?: {
+            documentId?: string
+            id?: string | number
+          }
+          description?: string
+          documentId?: string
+          id?: string | number
+          locale?: string
+          localizations?: {
+            documentId?: string
+            id?: string | number
+          }[]
+          name?: string
+          permissions?: {
+            action?: string
+            actionParameters?: unknown
+            apiToken?: {
+              accessKey?: string
+              adminPermissions?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              adminUserOwner?: {
+                documentId?: string
+                id?: string | number
+              }
+              /** Format: date-time */
+              createdAt?: string
+              createdBy?: {
+                documentId?: string
+                id?: string | number
+              }
+              description?: string
+              documentId?: string
+              encryptedKey?: string
+              /** Format: date-time */
+              expiresAt?: string
+              id?: string | number
+              /** @enum {string} */
+              kind?: 'content-api' | 'admin'
+              /** Format: date-time */
+              lastUsedAt?: string
+              /** @example 123456789 */
+              lifespan?: string
+              locale?: string
+              localizations?: {
+                documentId?: string
+                id?: string | number
+              }[]
+              name?: string
+              permissions?: {
+                action?: string
+                /** Format: date-time */
+                createdAt?: string
+                createdBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                documentId?: string
+                id?: string | number
+                locale?: string
+                localizations?: {
+                  documentId?: string
+                  id?: string | number
+                }[]
+                /** Format: date-time */
+                publishedAt?: string
+                token?: {
+                  documentId?: string
+                  id?: string | number
+                }
+                /** Format: date-time */
+                updatedAt?: string
+                updatedBy?: {
+                  documentId?: string
+                  id?: string | number
+                }
+              }[]
+              /** Format: date-time */
+              publishedAt?: string
+              /** @enum {string} */
+              type?: 'read-only' | 'full-access' | 'custom'
+              /** Format: date-time */
+              updatedAt?: string
+              updatedBy?: {
+                documentId?: string
+                id?: string | number
+              }
+            }
+            conditions?: unknown
+            /** Format: date-time */
+            createdAt?: string
+            createdBy?: {
+              documentId?: string
+              id?: string | number
+            }
+            documentId?: string
+            id?: string | number
+            locale?: string
+            localizations?: {
+              documentId?: string
+              id?: string | number
+            }[]
+            properties?: unknown
+            /** Format: date-time */
+            publishedAt?: string
+            role?: {
+              documentId?: string
+              id?: string | number
+            }
+            subject?: string
+            /** Format: date-time */
+            updatedAt?: string
+            updatedBy?: {
+              documentId?: string
+              id?: string | number
+            }
+          }[]
+          /** Format: date-time */
+          publishedAt?: string
+          /** Format: date-time */
+          updatedAt?: string
+          updatedBy?: {
+            documentId?: string
+            id?: string | number
+          }
+          users?: {
+            documentId?: string
+            id?: string | number
+          }[]
+        }[]
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: string | number
+        }
+        username?: string
+      }
+      documentId?: string
+      environments?: unknown
+      id?: string | number
+      image_id?: string
+      locale?: string
+      localizations?: {
+        build_image_tag?: string
+        /** Format: date-time */
+        createdAt?: string
+        createdBy?: {
+          documentId?: string
+          id?: string | number
+        }
+        documentId?: string
+        environments?: unknown
+        id?: string | number
+        image_id?: string
+        locale?: string
+        localizations?: {
+          documentId?: string
+          id?: string | number
+        }[]
+        name?: string
+        /** Format: date-time */
+        publishedAt?: string
+        /** @enum {string} */
+        scan_status?: 'Failed' | 'Succeeded'
+        scan_summary?: unknown
+        trivy_scan_timestamp?: string
+        /** Format: date-time */
+        updatedAt?: string
+        updatedBy?: {
+          documentId?: string
+          id?: string | number
+        }
+      }[]
+      name?: string
+      /** Format: date-time */
+      publishedAt?: string
+      /** @enum {string} */
+      scan_status?: 'Failed' | 'Succeeded'
+      scan_summary?: unknown
+      trivy_scan_timestamp?: string
+      /** Format: date-time */
+      updatedAt?: string
+      updatedBy?: {
+        documentId?: string
+        id?: string | number
+      }
+    }
+    TrivyScanListResponse: {
+      data?: components['schemas']['TrivyScan'][]
+      meta?: {
+        pagination?: {
+          page?: number
+          pageCount?: number
+          pageSize?: number
+          total?: number
+        }
+      }
+    }
+    TrivyScanRequest: {
+      data: {
+        build_image_tag?: string
+        environments?: unknown
+        image_id?: string
+        locale?: string
+        localizations?: (number | string)[]
+        name?: string
+        /** @enum {string} */
+        scan_status?: 'Failed' | 'Succeeded'
+        scan_summary?: unknown
+        trivy_scan_timestamp?: string
+      }
+    }
+    TrivyScanResponse: {
+      data?: components['schemas']['TrivyScan']
+      meta?: Record<string, never>
     }
     UploadFile: {
       alternativeText?: string
@@ -6616,7 +8485,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -6683,7 +8552,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -6754,7 +8623,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -6978,7 +8847,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -7045,7 +8914,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -7116,7 +8985,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -7340,7 +9209,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -7407,7 +9276,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -7478,7 +9347,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -7702,7 +9571,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -7769,7 +9638,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -7840,7 +9709,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -8064,7 +9933,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -8131,7 +10000,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -8202,7 +10071,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -8426,7 +10295,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -8493,7 +10362,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -8564,7 +10433,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -8788,7 +10657,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -8855,7 +10724,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -8926,7 +10795,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -9150,7 +11019,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -9217,7 +11086,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -9288,7 +11157,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -9512,7 +11381,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -9579,7 +11448,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -9650,7 +11519,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -9874,7 +11743,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -9941,7 +11810,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -10012,7 +11881,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -10236,7 +12105,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -10303,7 +12172,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -10374,7 +12243,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -10598,7 +12467,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -10665,7 +12534,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -10736,7 +12605,369 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': number
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/snyk-scans': {
+    parameters: {
+      query?: {
+        /** @description Fields to return (ex: title,author) */
+        fields?: string
+        /** @description Filters to apply */
+        filters?: {
+          [key: string]: unknown
+        }
+        /** @description Locale to apply */
+        locale?: string
+        /** @description Number of entities to return (default: 25) */
+        'pagination[limit]'?: number
+        /** @description Page number (default: 0) */
+        'pagination[page]'?: number
+        /** @description Page size (default: 25) */
+        'pagination[pageSize]'?: number
+        /** @description Offset value (default: 0) */
+        'pagination[start]'?: number
+        /** @description Return page/pageSize (default: true) */
+        'pagination[withCount]'?: boolean
+        /** @description Relations to return */
+        populate?: string
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
+        sort?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SnykScanListResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'post/snyk-scans': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SnykScanRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SnykScanResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/snyk-scans/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SnykScanResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'put/snyk-scans/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SnykScanRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SnykScanResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'delete/snyk-scans/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
       }
       cookie?: never
     }
@@ -10960,7 +13191,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -11027,7 +13258,7 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
       }
       cookie?: never
     }
@@ -11098,7 +13329,369 @@ export interface operations {
       query?: never
       header?: never
       path: {
-        id: number
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': number
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/trivy-scans': {
+    parameters: {
+      query?: {
+        /** @description Fields to return (ex: title,author) */
+        fields?: string
+        /** @description Filters to apply */
+        filters?: {
+          [key: string]: unknown
+        }
+        /** @description Locale to apply */
+        locale?: string
+        /** @description Number of entities to return (default: 25) */
+        'pagination[limit]'?: number
+        /** @description Page number (default: 0) */
+        'pagination[page]'?: number
+        /** @description Page size (default: 25) */
+        'pagination[pageSize]'?: number
+        /** @description Offset value (default: 0) */
+        'pagination[start]'?: number
+        /** @description Return page/pageSize (default: true) */
+        'pagination[withCount]'?: boolean
+        /** @description Relations to return */
+        populate?: string
+        /** @description Sort by attributes ascending (asc) or descending (desc) */
+        sort?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TrivyScanListResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'post/trivy-scans': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TrivyScanRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TrivyScanResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'get/trivy-scans/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TrivyScanResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'put/trivy-scans/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TrivyScanRequest']
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TrivyScanResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Error']
+        }
+      }
+    }
+  }
+  'delete/trivy-scans/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
       }
       cookie?: never
     }
