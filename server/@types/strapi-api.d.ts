@@ -4250,7 +4250,7 @@ export interface components {
         request_github_pr_number?: number
         request_github_pr_status?: string
         /** @enum {string} */
-        request_type?: 'Add' | 'Archive'
+        request_type?: string
         requester_email?: string
         requester_name?: string
         requester_team?: string
@@ -4274,7 +4274,7 @@ export interface components {
       request_github_pr_number?: number
       request_github_pr_status?: string
       /** @enum {string} */
-      request_type?: 'Add' | 'Archive'
+      request_type?: string
       requester_email?: string
       requester_name?: string
       requester_team?: string
@@ -4321,7 +4321,7 @@ export interface components {
         request_github_pr_number?: number
         request_github_pr_status?: string
         /** @enum {string} */
-        request_type?: 'Add' | 'Archive'
+        request_type?: string
         requester_email?: string
         requester_name?: string
         requester_team?: string
