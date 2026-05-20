@@ -190,7 +190,7 @@ jQuery(function () {
     {
       name: 'ip_allowlist_version',
       data: 'ip_allowlist_version',
-      visible: true,
+      visible: false,
       createdCell: function (td, _cellData, rowData) {
         const value = rowData.ip_allowlist_version
         $(td).html(`${value}`)
