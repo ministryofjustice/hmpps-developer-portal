@@ -183,6 +183,10 @@
           <td data-test="frontend">{% if component.frontEnd %}Yes{% else %}No{% endif %}</td>
         </tr>
         <tr>
+          <th>Production IP Allowlist version</th>
+          <td>{{ component.ip_allowlist_version }}</td>
+        </tr>
+        <tr>
           <th>Part of monorepo</th>
           <td data-test="part-of-monorepo">{% if component.partOfMonorepo %}Yes{% else %}No{% endif %}</td>
         </tr>
