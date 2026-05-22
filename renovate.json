@@ -14,12 +14,12 @@
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "all non major NPM dependencies",
       "groupSlug": "all-npm-minor-patch",
-      "stabilityDays": 5
+      "stabilityDays": 7
     },
     {
       "matchPackageNames": ["typescript", "govuk-frontend"],
       "rangeStrategy": "bump",
-      "stabilityDays": 0
+      "stabilityDays": 7
     },
     {
       "matchManagers": ["npm"],
