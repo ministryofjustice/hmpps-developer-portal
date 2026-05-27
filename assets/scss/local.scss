@@ -528,6 +528,28 @@
 }
 
 .snykScansPage {
+  .snyk-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: govuk-spacing(2);
+    align-items: flex-end;
+  }
+
+  .snyk-filter .label-and-button {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: govuk-spacing(1);
+    align-items: flex-end;
+  }
+
+  .snyk-filter .label-and-button .govuk-form-group {
+    margin-bottom: 0;
+  }
+
+  .snyk-filter .label-and-button .govuk-button {
+    margin-bottom: 0;
+  }
+
   #snykScansTable,
   #snykScansTable_wrapper {
     width: 100% !important;
