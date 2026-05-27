@@ -12,6 +12,8 @@ import type {
   Namespace,
   ScheduledJob,
   CustomComponentView,
+  SnykScan,
+  SnykVulnerability,
 } from '../data/modelTypes'
 import { Environment } from '../data/strapiApiTypes'
 import { sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
@@ -273,5 +275,31 @@ export default class ServiceCatalogueService {
     const environmentList = environmentData.data
 
     return environmentList
+  }
+
+  async getSnykScans(): Promise<SnykScan[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const snykScansData = await strapiApiClient.getSnykScans()
+    const snykScans = snykScansData.sort(sortByName)
+    return snykScans
+  }
+
+  async getSnykScan({ name, environmentName }: { name: string; environmentName: string }): Promise<SnykScan> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const snykScansData = await strapiApiClient.getSnykScan({ name, environmentName })
+    console.log('snykScansData', snykScansData)
+    return snykScansData
+  }
+
+  async getSnykVulnerabilities(): Promise<SnykVulnerability[]> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const snykVulnerabilitiesData = await strapiApiClient.getSnykVulnerabilities()
+    return snykVulnerabilitiesData
+  }
+  
+  async getSnykVulnerability({ snyk_id }: { snyk_id: string }): Promise<SnykVulnerability> {
+    const strapiApiClient = this.strapiApiClientFactory('')
+    const snykVulnerabilityData = await strapiApiClient.getSnykVulnerability({ snyk_id })
+    return snykVulnerabilityData
   }
 }

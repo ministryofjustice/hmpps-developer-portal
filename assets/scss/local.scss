@@ -423,3 +423,89 @@
   font-weight: bold;
   white-space: preserve nowrap;
 }
+
+.snykData {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td,
+  img {
+    padding: govuk-spacing(1);
+    vertical-align: top;
+    border: 1px solid govuk-colour('mid-grey');
+  }
+
+  th {
+    text-align: center;
+    background-color: govuk-colour('black', $variant: 'tint-95');
+
+    &.govuk-table__header {
+      text-align: left;
+    }
+  }
+
+  tr:nth-of-type(2n + 1) td {
+    background-color: govuk-colour('black', $variant: 'tint-95');
+  }
+
+  th,
+  td {
+    &.snykId {
+      width: 16%;
+    }
+
+    &.severity {
+      width: 8%;
+    }
+
+    &.title {
+      width: 18%;
+    }
+
+    &.package {
+      width: 10%;
+    }
+
+    &.affectedVersions {
+      width: 12%;
+    }
+
+    &.fixedVersions {
+      width: 12%;
+    }
+
+    &.fixAvailable {
+      width: 8%;
+    }
+
+    &.cves {
+      width: 8%;
+    }
+
+    &.published {
+      width: 8%;
+    }
+
+    &.snykLink {
+      width: 6%;
+    }
+  }
+}
+
+.snykData tr.snykCritical, .snykData tr.snykCritical td {
+  background-color: govuk-colour('red');
+  color: white;
+  a {
+    color: white;
+  }
+  .govuk-details__summary .govuk-details__summary-text {
+    color: white;
+  }
+  .govuk-details__text {
+    color: white;
+  }
+  .govuk-details__summary {
+    color: white;
+  }
+}

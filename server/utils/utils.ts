@@ -6,7 +6,7 @@ import * as relativeTime from 'dayjs/plugin/relativeTime'
 import { RdsEntry } from '../@types'
 
 import type { ServiceCatalogueService } from '../services'
-import { Component, Environment, Product, Team } from '../data/modelTypes'
+import { Component, Environment, Product, Team, SnykScan } from '../data/modelTypes'
 import logger from '../../logger'
 
 dayjs.extend(relativeTime.default)
@@ -418,4 +418,27 @@ export function getNpmStatus(component: Component): boolean | string {
   const { npm } = securitySettings as HasNpm
   if (typeof npm !== 'object' || npm === null) return 'unknown'
   return (npm as HasIgnoreScripts).ignore_scripts
+}
+
+export async function addTeamAndPortfolioToSnykScan(teams: Team[], snykScan: SnykScan[]) {
+  const teamPortfolio = findPortfolioForTeam(teams)
+
+  return snykScan
+    .map(scan => {
+      const scanMatch = findTeamMatch(teams, scan.name)
+      const addPortfolio = teamPortfolio.find(portfolio => portfolio.teamName === scanMatch?.name)
+
+      return {
+        ...scan,
+        team: scanMatch?.name,
+        portfolio: addPortfolio?.portfolio,
+      }
+    })
+    .sort((a, b) => {
+      const byName = (a.name || '').localeCompare(b.name || '')
+      if (byName !== 0) {
+        return byName
+      }
+      return (a.environment_name || '').localeCompare(b.environment_name || '')
+    })
 }
