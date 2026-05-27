@@ -287,7 +287,6 @@ export default class ServiceCatalogueService {
   async getSnykScan({ name, environmentName }: { name: string; environmentName: string }): Promise<SnykScan> {
     const strapiApiClient = this.strapiApiClientFactory('')
     const snykScansData = await strapiApiClient.getSnykScan({ name, environmentName })
-    console.log('snykScansData', snykScansData)
     return snykScansData
   }
 
@@ -296,10 +295,10 @@ export default class ServiceCatalogueService {
     const snykVulnerabilitiesData = await strapiApiClient.getSnykVulnerabilities()
     return snykVulnerabilitiesData
   }
-  
-  async getSnykVulnerability({ snyk_id }: { snyk_id: string }): Promise<SnykVulnerability> {
+
+  async getSnykVulnerability({ snykId }: { snykId: string }): Promise<SnykVulnerability> {
     const strapiApiClient = this.strapiApiClientFactory('')
-    const snykVulnerabilityData = await strapiApiClient.getSnykVulnerability({ snyk_id })
+    const snykVulnerabilityData = await strapiApiClient.getSnykVulnerability({ snykId })
     return snykVulnerabilityData
   }
 }

@@ -377,11 +377,11 @@ export default class StrapiApiClient {
     return results.data
   }
 
-  async getSnykVulnerability({ snyk_id }: { snyk_id: string }): Promise<SnykVulnerability> {
+  async getSnykVulnerability({ snykId }: { snykId: string }): Promise<SnykVulnerability> {
     return this.restClient
       .get<SingleResponse<Strapi.SnykVulnerability>>({
         path: `/v1/snyk-vulnerabilities`,
-        query: `filters[snyk_id][$eq]=${snyk_id}`,  
+        query: `filters[snyk_id][$eq]=${snykId}`,
       })
       .then(unwrapSingleResponse)
   }

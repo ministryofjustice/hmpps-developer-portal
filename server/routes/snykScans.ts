@@ -1,9 +1,14 @@
 import { Router } from 'express'
 import type { Services } from '../services'
-import {
-  utcTimestampToUtcDateTime,
-  addTeamAndPortfolioToSnykScan,
-} from '../utils/utils'
+import { utcTimestampToUtcDateTime, addTeamAndPortfolioToSnykScan } from '../utils/utils'
+
+type SnykCveRef = { snyk_id?: string }
+type SnykScanRecord = Record<string, unknown> & {
+  snyk_scan_timestamp?: string
+  snyk_ids?: string[]
+  snyk_cves?: SnykCveRef[]
+  snyk_vulnerabilities?: unknown[]
+}
 
 const createSummaryTable = (scan: Record<string, unknown>): Array<{ type: string; count: number }> => {
   const severities = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN'] as const
@@ -77,10 +82,11 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   })
 
   router.get('/:componentName/environments/:environmentName', async (req, res) => {
-    const componentName = req.params.componentName
-    const environmentName = req.params.environmentName
-    let scan: Record<string, unknown>
-    scan = await serviceCatalogueService.getSnykScan({ name: componentName, environmentName })
+    const { componentName, environmentName } = req.params
+    const scan = (await serviceCatalogueService.getSnykScan({
+      name: componentName,
+      environmentName,
+    })) as SnykScanRecord
 
     if (!scan) {
       return res.status(404).send('Snyk scan not found')
@@ -93,9 +99,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
 
     const snykVulnerabilities = await serviceCatalogueService.getSnykVulnerabilities()
     const vulnerabilitiesBySnykId = new Map(
-      snykVulnerabilities
-        .filter(item => item?.snyk_id)
-        .map(item => [item.snyk_id, item]),
+      snykVulnerabilities.filter(item => item?.snyk_id).map(item => [item.snyk_id, item]),
     )
 
     const enrichedVulnerabilities = Array.from(scanSnykIds).map(snykId => {
@@ -117,12 +121,12 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       }
     })
 
-    const scanWithVulnerabilityDetails: Record<string, unknown> = {
-      ...(scan as Record<string, unknown>),
+    const scanWithVulnerabilityDetails: SnykScanRecord = {
+      ...scan,
       snyk_vulnerabilities: enrichedVulnerabilities,
     }
 
-    const scanDate = utcTimestampToUtcDateTime(`${scanWithVulnerabilityDetails['snyk_scan_timestamp'] || ''}`)
+    const scanDate = utcTimestampToUtcDateTime(`${scanWithVulnerabilityDetails.snyk_scan_timestamp || ''}`)
 
     const summaryTable = createSummaryTable(scanWithVulnerabilityDetails)
     const vulnerabilitiesResultsTable = createVulnerabilitiesResultsTable(scanWithVulnerabilityDetails)
