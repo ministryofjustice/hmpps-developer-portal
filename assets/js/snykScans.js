@@ -46,23 +46,15 @@ jQuery(function () {
         return sum + (parseInt(data[index], 10) || 0)
       }, 0)
 
-      if (isAvailableChecked && isUnavailableChecked) {
-        return totalFixedSum > 0 && totalUnfixedSum > 0
-      }
+      const hasAvailableVulnerability = totalFixedSum > 0
+      const hasUnavailableVulnerability = totalUnfixedSum > 0
+      const hasNoVulnerability = !hasAvailableVulnerability && !hasUnavailableVulnerability
 
-      if (isAvailableChecked) {
-        return totalFixedSum > 0
-      }
-
-      if (isUnavailableChecked) {
-        return totalUnfixedSum > 0
-      }
-
-      if (isNoVulnerabilitiesChecked) {
-        return totalFixedSum === 0 && totalUnfixedSum === 0
-      }
-
-      return true
+      return (
+        (isAvailableChecked && hasAvailableVulnerability) ||
+        (isUnavailableChecked && hasUnavailableVulnerability) ||
+        (isNoVulnerabilitiesChecked && hasNoVulnerability)
+      )
     })
 
     hasCombinedFilter = true
@@ -535,10 +527,6 @@ jQuery(function () {
             }
           })
         }
-      })
-    } else {
-      severityCheckboxes.forEach(checkbox => {
-        $(checkbox).prop('checked', true)
       })
     }
 

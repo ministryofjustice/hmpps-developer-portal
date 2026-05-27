@@ -31,7 +31,7 @@ const createSummaryTable = (scan: Record<string, unknown>): Array<{ type: string
   return severities.flatMap(severity => {
     const key = keyBySeverity[severity]
     const displaySeverity = displayBySeverity[severity]
-    return [
+    const rows = [
       {
         type: `${displaySeverity} Fixable`,
         count: Number(scan?.[`${key}_fixable`] || 0),
@@ -41,6 +41,8 @@ const createSummaryTable = (scan: Record<string, unknown>): Array<{ type: string
         count: Number(scan?.[`${key}_unfixable`] || 0),
       },
     ]
+
+    return rows.filter(row => row.count > 0)
   })
 }
 

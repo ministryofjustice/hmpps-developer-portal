@@ -16,7 +16,7 @@
   <p><strong>Scan Timestamp:</strong> {{ scanDate }}</p>
 
   <h2>Scan Summary </h2>
-  <table class="snykData">
+  <table class="snykData snykSummaryData">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
         <th class="govuk-table__header">Type</th>
@@ -25,7 +25,7 @@
     </thead>
     <tbody class="govuk-table__body">
       {% for row in summaryTable %}
-        <tr class="govuk-table__row {% if 'Critical' in row.type or 'High' in row.type %}snykCritical{% endif %}">
+        <tr class="govuk-table__row {% if 'Critical' in row.type %}snykCritical{% elif 'High' in row.type %}snykHigh{% endif %}">
           <td class="govuk-table__cell">{{ row.type }}</td>
           <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.count }}</td>
         </tr>
@@ -52,7 +52,7 @@
       </thead>
       <tbody class="govuk-table__body">
         {% for row in vulnerabilitiesResultsTable %}
-          <tr class="govuk-table__row {% if row.severity == 'HIGH' or row.severity == 'CRITICAL' %}snykCritical{% endif %}">
+          <tr class="govuk-table__row {% if row.severity == 'CRITICAL' %}snykCritical{% elif row.severity == 'HIGH' %}snykHigh{% endif %}">
             <td class="govuk-table__cell snykId">{{ row.snyk_id }}</td>
             <td class="govuk-table__cell severity">{{ row.severity }}</td>
             <td class="govuk-table__cell title">{{ row.title or "N/A" }}</td>
