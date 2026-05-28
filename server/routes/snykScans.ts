@@ -1,16 +1,109 @@
 import { Router } from 'express'
 import type { Services } from '../services'
 import { utcTimestampToUtcDateTime, addTeamAndPortfolioToSnykScan } from '../utils/utils'
+import type { SnykScan, SnykVulnerability } from '../data/modelTypes'
 
-type SnykCveRef = { snyk_id?: string }
-type SnykScanRecord = Record<string, unknown> & {
-  snyk_scan_timestamp?: string
-  snyk_ids?: string[]
-  snyk_cves?: SnykCveRef[]
-  snyk_vulnerabilities?: unknown[]
+type CriticalReferenceRow = {
+  snyk_id: string
+  severity: string
+  affected_package_name: string
+  affected_versions: string[]
+  fixed_versions: string[]
+  cves: string[]
+  affected_components: string[]
+  published_date: string
 }
 
-const createSummaryTable = (scan: Record<string, unknown>): Array<{ type: string; count: number }> => {
+type EnrichedSnykVulnerability = SnykVulnerability & {
+  PrimaryURL: string
+}
+
+type SnykScanWithVulnerabilities = SnykScan & {
+  snyk_vulnerabilities: EnrichedSnykVulnerability[]
+}
+
+const createCriticalReferenceRows = (
+  scans: SnykScan[],
+  vulnerabilities: SnykVulnerability[],
+): CriticalReferenceRow[] => {
+  const criticalAndHighVulnerabilities = vulnerabilities.filter(vulnerability => {
+    const severity = String(vulnerability?.severity || '').toUpperCase()
+    return (severity === 'CRITICAL' || severity === 'HIGH') && !!vulnerability?.snyk_id
+  })
+
+  const criticalIds = new Set(criticalAndHighVulnerabilities.map(vulnerability => String(vulnerability.snyk_id)))
+  const componentsBySnykId = new Map<string, Set<string>>()
+
+  scans.forEach(scan => {
+    const componentName = String(scan?.name || '').trim()
+    if (!componentName) {
+      return
+    }
+
+    const scanSnykIds = new Set<string>([
+      ...(Array.isArray(scan.snyk_ids) ? scan.snyk_ids.filter(Boolean) : []),
+      ...(Array.isArray(scan.snyk_cves) ? scan.snyk_cves.map(item => item?.snyk_id).filter(Boolean) : []),
+    ])
+
+    scanSnykIds.forEach(snykId => {
+      if (!criticalIds.has(snykId)) {
+        return
+      }
+
+      if (!componentsBySnykId.has(snykId)) {
+        componentsBySnykId.set(snykId, new Set())
+      }
+
+      componentsBySnykId.get(snykId)?.add(componentName)
+    })
+  })
+
+  return criticalAndHighVulnerabilities
+    .map(vulnerability => {
+      const snykId = vulnerability.snyk_id
+      const cves = Array.isArray(vulnerability?.cves)
+        ? [
+            ...new Set(
+              vulnerability.cves
+                .filter(Boolean)
+                .map(cve => String(cve).toUpperCase()),
+            ),
+          ]
+        : []
+      const affectedVersions = Array.isArray(vulnerability?.affected_versions)
+        ? [
+            ...new Set(
+              vulnerability.affected_versions
+                .filter(Boolean)
+                .map(version => String(version)),
+            ),
+          ]
+        : []
+      const fixedVersions = Array.isArray(vulnerability?.fixed_versions)
+        ? [
+            ...new Set(
+              vulnerability.fixed_versions
+                .filter(Boolean)
+                .map(version => String(version)),
+            ),
+          ]
+        : []
+      const affectedComponents = [...(componentsBySnykId.get(snykId) ?? new Set())]
+
+      return {
+        snyk_id: snykId,
+        severity: vulnerability?.severity || 'UNKNOWN',
+        affected_package_name: vulnerability?.affected_package_name || '',
+        affected_versions: affectedVersions,
+        fixed_versions: fixedVersions,
+        cves,
+        affected_components: affectedComponents,
+        published_date: vulnerability?.published_date || ''
+      }
+    })
+}
+
+const createSummaryTable = (scan: SnykScan): Array<{ type: string; count: number }> => {
   const severities = ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW', 'UNKNOWN'] as const
   const keyBySeverity = {
     CRITICAL: 'critical',
@@ -46,7 +139,7 @@ const createSummaryTable = (scan: Record<string, unknown>): Array<{ type: string
   })
 }
 
-const createVulnerabilitiesResultsTable = (scan: Record<string, unknown>) => {
+const createVulnerabilitiesResultsTable = (scan: SnykScanWithVulnerabilities) => {
   const snykVulnerabilities = Array.isArray(scan?.snyk_vulnerabilities) ? scan.snyk_vulnerabilities : []
   const severityOrder = {
     CRITICAL: 0,
@@ -88,7 +181,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const scan = (await serviceCatalogueService.getSnykScan({
       name: componentName,
       environmentName,
-    })) as SnykScanRecord
+    })) as SnykScan
 
     if (!scan) {
       return res.status(404).send('Snyk scan not found')
@@ -104,7 +197,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       snykVulnerabilities.filter(item => item?.snyk_id).map(item => [item.snyk_id, item]),
     )
 
-    const enrichedVulnerabilities = Array.from(scanSnykIds).map(snykId => {
+    const enrichedVulnerabilities: EnrichedSnykVulnerability[] = Array.from(scanSnykIds).map(snykId => {
       const vuln = vulnerabilitiesBySnykId.get(snykId)
       return {
         snyk_id: snykId,
@@ -123,7 +216,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       }
     })
 
-    const scanWithVulnerabilityDetails: SnykScanRecord = {
+    const scanWithVulnerabilityDetails: SnykScanWithVulnerabilities = {
       ...scan,
       snyk_vulnerabilities: enrichedVulnerabilities,
     }
@@ -141,5 +234,17 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       secretResultTable,
     })
   })
+
+  router.get('/critical-cves', async (req, res) => {
+    return res.render('pages/snykCriticalCves')
+  })
+
+  router.get('/critical-cves/data', async (req, res) => {
+    const scans = (await serviceCatalogueService.getSnykScans()) as SnykScan[]
+    const vulnerabilities = (await serviceCatalogueService.getSnykVulnerabilities()) as SnykVulnerability[]
+    const criticalReferences = createCriticalReferenceRows(scans, vulnerabilities)
+    return res.json(criticalReferences)
+  })
+  
   return router
 }

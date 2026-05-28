@@ -1,0 +1,98 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% set pageTitle = applicationName + " - Snyk Critical References" %}
+{% set mainClasses = "app-container govuk-body" %}
+{% set containerClasses = "wide-screen" %}
+
+{% block content %}
+
+{{ breadCrumb("Snyk Critical References", [{title: "Snyk Scans", href: "/snyk-scans"}]) }}
+
+  <h1>Snyk Critical & High CVE References</h1>
+
+  <div class="snyk-critical-controls">
+    {{ govukRadios({
+      idPrefix: "criticalView",
+      name: "criticalView",
+      classes: "govuk-radios--inline",
+      fieldset: {
+        legend: {
+          text: "View by",
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      items: [
+        {
+          value: "snyk",
+          text: "SNYK",
+          checked: true
+        },
+        {
+          value: "cve",
+          text: "CVE"
+        }
+      ]
+    }) }}
+
+    {{ govukCheckboxes({
+      idPrefix: "severityFilter",
+      name: "severityFilter",
+      classes: "govuk-checkboxes--inline",
+      fieldset: {
+        legend: {
+          text: "Severity",
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      items: [
+        {
+          value: "CRITICAL",
+          text: "CRITICAL",
+          checked: true
+        },
+        {
+          value: "HIGH",
+          text: "HIGH",
+          checked: true
+        }
+      ]
+    }) }}
+  </div>
+
+  <table id="snykCriticalCvesTable" class="stripe">
+    <thead>
+      <tr>
+        <th>Published Date</th>
+        <th>SNYK ID</th>
+        <th>CVE(s)</th>
+        <th>Severity</th>
+        <th>Package</th>
+        <th>Affected Version(s)</th>
+        <th>Fixed Version(s)</th>
+        <th>Affected Components</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>SNYK ID</th>
+        <th>Severity</th>
+        <th>Package</th>
+        <th>Affected Version(s)</th>
+        <th>Fixed Version(s)</th>
+        <th>CVE(s)</th>
+        <th>Published Date</th>
+        <th>Affected Components</th>
+      </tr>
+    </tfoot>
+  </table>
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/snykCriticalCves.js"></script>
+{% endblock %}

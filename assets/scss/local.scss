@@ -260,6 +260,51 @@
   margin: 0 govuk-spacing(2) 0 0;
 }
 
+.snyk-critical-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: govuk-spacing(3);
+  margin-bottom: govuk-spacing(3);
+
+  .govuk-form-group {
+    margin-bottom: 0;
+  }
+
+  .govuk-fieldset {
+    display: flex;
+    align-items: center;
+    gap: govuk-spacing(2);
+  }
+
+  .govuk-fieldset__legend {
+    margin-bottom: 0;
+  }
+
+  .govuk-radios--inline,
+  .govuk-checkboxes--inline {
+    margin-bottom: 0;
+  }
+}
+
+#snykCriticalCvesTable {
+  width: 100%;
+  table-layout: auto;
+
+  th,
+  td {
+    vertical-align: top;
+  white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+}
+
+#snykCriticalCvesTable_wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .veracode--missing {
   background-color: govuk-colour('black', $variant: 'tint-95');
 }

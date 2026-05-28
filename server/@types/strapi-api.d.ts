@@ -2423,6 +2423,7 @@ export interface components {
           /** @enum {string} */
           scan_status?: 'Failed' | 'Succeeded'
           snyk_ids?: unknown
+          snyk_cves?: unknown
           snyk_scan_timestamp?: string
           unknown_fixable?: number
           unknown_unfixable?: number
@@ -3131,6 +3132,7 @@ export interface components {
             /** @enum {string} */
             scan_status?: 'Failed' | 'Succeeded'
             snyk_ids?: unknown
+            snyk_cves?: unknown
             snyk_scan_timestamp?: string
             unknown_fixable?: number
             unknown_unfixable?: number
@@ -3720,6 +3722,7 @@ export interface components {
             /** @enum {string} */
             scan_status?: 'Failed' | 'Succeeded'
             snyk_ids?: unknown
+            snyk_cves?: unknown
             snyk_scan_timestamp?: string
             unknown_fixable?: number
             unknown_unfixable?: number
@@ -5015,6 +5018,7 @@ export interface components {
               /** @enum {string} */
               scan_status?: 'Failed' | 'Succeeded'
               snyk_ids?: unknown
+              snyk_cves?: unknown
               snyk_scan_timestamp?: string
               unknown_fixable?: number
               unknown_unfixable?: number
@@ -5619,6 +5623,7 @@ export interface components {
               /** @enum {string} */
               scan_status?: 'Failed' | 'Succeeded'
               snyk_ids?: unknown
+              snyk_cves?: unknown
               snyk_scan_timestamp?: string
               unknown_fixable?: number
               unknown_unfixable?: number
@@ -6697,6 +6702,7 @@ export interface components {
               /** @enum {string} */
               scan_status?: 'Failed' | 'Succeeded'
               snyk_ids?: unknown
+              snyk_cves?: unknown
               snyk_scan_timestamp?: string
               unknown_fixable?: number
               unknown_unfixable?: number
@@ -7334,6 +7340,7 @@ export interface components {
         /** @enum {string} */
         scan_status?: 'Failed' | 'Succeeded'
         snyk_ids?: unknown
+        snyk_cves?: unknown
         snyk_scan_timestamp?: string
         unknown_fixable?: number
         unknown_unfixable?: number
@@ -7354,6 +7361,7 @@ export interface components {
       /** @enum {string} */
       scan_status?: 'Failed' | 'Succeeded'
       snyk_ids?: unknown
+      snyk_cves?: unknown
       snyk_scan_timestamp?: string
       unknown_fixable?: number
       unknown_unfixable?: number
@@ -7394,6 +7402,7 @@ export interface components {
         /** @enum {string} */
         scan_status?: 'Failed' | 'Succeeded'
         snyk_ids?: unknown
+        snyk_cves?: unknown
         snyk_scan_timestamp?: string
         unknown_fixable?: number
         unknown_unfixable?: number
@@ -7818,6 +7827,7 @@ export interface components {
               /** @enum {string} */
               scan_status?: 'Failed' | 'Succeeded'
               snyk_ids?: unknown
+              snyk_cves?: unknown
               snyk_scan_timestamp?: string
               unknown_fixable?: number
               unknown_unfixable?: number
