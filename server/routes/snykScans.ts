@@ -58,49 +58,30 @@ const createCriticalReferenceRows = (
     })
   })
 
-  return criticalAndHighVulnerabilities
-    .map(vulnerability => {
-      const snykId = vulnerability.snyk_id
-      const cves = Array.isArray(vulnerability?.cves)
-        ? [
-            ...new Set(
-              vulnerability.cves
-                .filter(Boolean)
-                .map(cve => String(cve).toUpperCase()),
-            ),
-          ]
-        : []
-      const affectedVersions = Array.isArray(vulnerability?.affected_versions)
-        ? [
-            ...new Set(
-              vulnerability.affected_versions
-                .filter(Boolean)
-                .map(version => String(version)),
-            ),
-          ]
-        : []
-      const fixedVersions = Array.isArray(vulnerability?.fixed_versions)
-        ? [
-            ...new Set(
-              vulnerability.fixed_versions
-                .filter(Boolean)
-                .map(version => String(version)),
-            ),
-          ]
-        : []
-      const affectedComponents = [...(componentsBySnykId.get(snykId) ?? new Set())]
+  return criticalAndHighVulnerabilities.map(vulnerability => {
+    const snykId = vulnerability.snyk_id
+    const cves = Array.isArray(vulnerability?.cves)
+      ? [...new Set(vulnerability.cves.filter(Boolean).map(cve => String(cve).toUpperCase()))]
+      : []
+    const affectedVersions = Array.isArray(vulnerability?.affected_versions)
+      ? [...new Set(vulnerability.affected_versions.filter(Boolean).map(version => String(version)))]
+      : []
+    const fixedVersions = Array.isArray(vulnerability?.fixed_versions)
+      ? [...new Set(vulnerability.fixed_versions.filter(Boolean).map(version => String(version)))]
+      : []
+    const affectedComponents = [...(componentsBySnykId.get(snykId) ?? new Set())]
 
-      return {
-        snyk_id: snykId,
-        severity: vulnerability?.severity || 'UNKNOWN',
-        affected_package_name: vulnerability?.affected_package_name || '',
-        affected_versions: affectedVersions,
-        fixed_versions: fixedVersions,
-        cves,
-        affected_components: affectedComponents,
-        published_date: vulnerability?.published_date || ''
-      }
-    })
+    return {
+      snyk_id: snykId,
+      severity: vulnerability?.severity || 'UNKNOWN',
+      affected_package_name: vulnerability?.affected_package_name || '',
+      affected_versions: affectedVersions,
+      fixed_versions: fixedVersions,
+      cves,
+      affected_components: affectedComponents,
+      published_date: vulnerability?.published_date || '',
+    }
+  })
 }
 
 const createSummaryTable = (scan: SnykScan): Array<{ type: string; count: number }> => {
@@ -245,6 +226,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     const criticalReferences = createCriticalReferenceRows(scans, vulnerabilities)
     return res.json(criticalReferences)
   })
-  
+
   return router
 }
