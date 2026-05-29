@@ -190,7 +190,8 @@ export default function routes({ serviceCatalogueService }: Services): Router {
         fix_available: vuln?.fix_available || '',
         affected_package_name: vuln?.affected_package_name || '',
         affected_versions: Array.isArray(vuln?.affected_versions) ? vuln.affected_versions : [],
-        fixed_versions: Array.isArray(vuln?.fixed_versions) ? vuln.fixed_versions : []      }
+        fixed_versions: Array.isArray(vuln?.fixed_versions) ? vuln.fixed_versions : [],
+      }
     })
 
     const scanWithVulnerabilityDetails: SnykScanWithVulnerabilities = {
