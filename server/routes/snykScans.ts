@@ -155,6 +155,32 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     res.json(revisedScans)
   })
 
+  router.get('/critical-cves', async (req, res) => {
+    return res.render('pages/snykCriticalCves')
+  })
+
+  router.get('/critical-cves/data', async (req, res) => {
+    const scans = ((await serviceCatalogueService.getSnykScans()) as SnykScan[]).filter(
+      scan => scan.environment_name === 'prod',
+    )
+    const normalizeSnykId = (value: unknown) => String(value ?? '').trim()
+    const affectedSnykIds = new Set<string>(
+      scans
+        .flatMap(scan => [
+          ...(Array.isArray(scan.snyk_ids) ? scan.snyk_ids : []),
+          ...(Array.isArray(scan.snyk_cves) ? scan.snyk_cves.map(item => item?.snyk_id) : []),
+        ])
+        .map(snykId => normalizeSnykId(snykId))
+        .filter(Boolean),
+    )
+
+    const vulnerabilities = ((await serviceCatalogueService.getSnykVulnerabilities()) as SnykVulnerability[]).filter(
+      vulnerability => affectedSnykIds.has(normalizeSnykId(vulnerability?.snyk_id)),
+    )
+    const criticalReferences = createCriticalReferenceRows(scans, vulnerabilities)
+    return res.json(criticalReferences)
+  })
+
   router.get('/:componentName/environments/:environmentName', async (req, res) => {
     const { componentName, environmentName } = req.params
     const scan = (await serviceCatalogueService.getSnykScan({
@@ -211,32 +237,6 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       vulnerabilitiesResultsTable,
       secretResultTable,
     })
-  })
-
-  router.get('/critical-cves', async (req, res) => {
-    return res.render('pages/snykCriticalCves')
-  })
-
-  router.get('/critical-cves/data', async (req, res) => {
-    const scans = ((await serviceCatalogueService.getSnykScans()) as SnykScan[]).filter(
-      scan => scan.environment_name === 'prod',
-    )
-    const normalizeSnykId = (value: unknown) => String(value ?? '').trim()
-    const affectedSnykIds = new Set<string>(
-      scans
-        .flatMap(scan => [
-          ...(Array.isArray(scan.snyk_ids) ? scan.snyk_ids : []),
-          ...(Array.isArray(scan.snyk_cves) ? scan.snyk_cves.map(item => item?.snyk_id) : []),
-        ])
-        .map(snykId => normalizeSnykId(snykId))
-        .filter(Boolean),
-    )
-
-    const vulnerabilities = ((await serviceCatalogueService.getSnykVulnerabilities()) as SnykVulnerability[]).filter(
-      vulnerability => affectedSnykIds.has(normalizeSnykId(vulnerability?.snyk_id)),
-    )
-    const criticalReferences = createCriticalReferenceRows(scans, vulnerabilities)
-    return res.json(criticalReferences)
   })
 
   return router
