@@ -362,10 +362,13 @@ export default class StrapiApiClient {
   }
 
   async getSnykScan({ name, environmentName }: { name: string; environmentName: string }): Promise<SnykScan> {
+    const encodedName = encodeURIComponent(name)
+    const encodedEnvironmentName = encodeURIComponent(environmentName)
+
     return this.restClient
       .get<SingleResponse<Strapi.SnykScan>>({
         path: '/v1/snyk-scans',
-        query: `filters[name][$eq]=${name}&filters[environment_name][$eq]=${environmentName}`,
+        query: `filters[name][$eq]=${encodedName}&filters[environment_name][$eq]=${encodedEnvironmentName}`,
       })
       .then(unwrapSingleResponse)
   }
@@ -378,10 +381,12 @@ export default class StrapiApiClient {
   }
 
   async getSnykVulnerability({ snykId }: { snykId: string }): Promise<SnykVulnerability> {
+    const encodedSnykId = encodeURIComponent(snykId)
+
     return this.restClient
       .get<SingleResponse<Strapi.SnykVulnerability>>({
         path: `/v1/snyk-vulnerabilities`,
-        query: `filters[snyk_id][$eq]=${snykId}`,
+        query: `filters[snyk_id][$eq]=${encodedSnykId}`,
       })
       .then(unwrapSingleResponse)
   }

@@ -23,7 +23,7 @@
           label: {
           text: "Team"
           },
-          items: team
+          items: []
         }) }}
         {{ govukButton({
           id: "updateTeam",
@@ -39,7 +39,7 @@
           label: {
           text: "Portfolio"
           },
-          items: portfolio
+          items: []
         }) }}
         {{ govukButton({
           id: "updatePortfolio",
@@ -50,9 +50,6 @@
       </div>
 		</div>
       <p class="govuk-hint snykFilterHint">Use either Team or Portfolio at one time to filter this table.</p>
-    <input type="hidden" name="monitorName" id="monitorName" value="{{ monitorName }}">
-    <input type="hidden" name="monitorType" id="monitorType" value="{{ monitorType }}">
-    <input type="hidden" name="monitorId" id="monitorId" value="{{ monitorId }}">
     <input type="hidden" name="_csrf" id="csrf" value="{{ csrfToken }}">
     <div class="monitor snykMonitorFilters">
       <div class="monitor-filter-block">

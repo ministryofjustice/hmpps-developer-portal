@@ -491,39 +491,28 @@ jQuery(function () {
     vulnerabilityFilterState.isUnavailableChecked = isUnavailableChecked
     vulnerabilityFilterState.isNoVulnerabilitiesChecked = isNoVulnerabilitiesChecked
 
-    if (isNoVulnerabilitiesChecked) {
-      availableColumns.forEach(column => {
-        if (snykTable) {
-          snykTable.column(`${column}`).visible(false)
-        }
-      })
-      unavailableColumns.forEach(column => {
-        if (snykTable) {
-          snykTable.column(`${column}`).visible(false)
-        }
-      })
-    }
+    const shouldShowVulnerabilityColumns = !isNoVulnerabilitiesChecked
 
     availableColumns.forEach(column => {
       if (snykTable) {
-        snykTable.column(`${column}`).visible(isAvailableChecked)
+        snykTable.column(column).visible(shouldShowVulnerabilityColumns && isAvailableChecked)
       }
     })
 
     unavailableColumns.forEach(column => {
       if (snykTable) {
-        snykTable.column(`${column}`).visible(isUnavailableChecked)
+        snykTable.column(column).visible(shouldShowVulnerabilityColumns && isUnavailableChecked)
       }
     })
 
-    if (action === 'severity') {
+    if (action === 'severity' && shouldShowVulnerabilityColumns) {
       severityCheckboxes.forEach(checkbox => {
         const severity = $(checkbox).val()
         const isVisible = $(checkbox).is(':checked')
         if (severityColumns[severity]) {
           severityColumns[severity].forEach(column => {
             if (snykTable) {
-              snykTable.column(`${column}`).visible(isVisible)
+              snykTable.column(column).visible(isVisible)
             }
           })
         }
