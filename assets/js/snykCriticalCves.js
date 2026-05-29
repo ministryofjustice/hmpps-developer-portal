@@ -2,6 +2,8 @@ jQuery(function () {
   let criticalRows = []
   let activeView = 'snyk'
   let selectedSeverities = new Set(['CRITICAL', 'HIGH'])
+  let selectedLanguages = new Set()
+  let availableLanguages = []
   let table
 
   const columns = [
@@ -120,16 +122,71 @@ jQuery(function () {
     },
   ]
 
-  function getFilteredRowsBySeverity() {
+  function getLanguageValue(row) {
+    const language = `${row.language || ''}`.trim() || 'Unknown'
+    return cleanColumnOutput(language)
+  }
+
+  function renderLanguageFilters(rows) {
+    availableLanguages = [...new Set(rows.map(getLanguageValue))].sort((a, b) => a.localeCompare(b))
+    selectedLanguages = new Set(availableLanguages)
+
+    const languageFilterContainer = $('#languageFilterContainer')
+    if (availableLanguages.length === 0) {
+      languageFilterContainer.html('')
+      return
+    }
+
+    const languageItems = availableLanguages
+      .map(
+        language => `
+          <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="languageFilter-${language.toLowerCase().replace(/[^a-z0-9]+/g, '-')}" name="languageFilter" type="checkbox" value="${language}" checked>
+            <label class="govuk-label govuk-checkboxes__label" for="languageFilter-${language.toLowerCase().replace(/[^a-z0-9]+/g, '-')}">${language}</label>
+          </div>`,
+      )
+      .join('')
+
+    languageFilterContainer.html(`
+      <div class="govuk-form-group">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">Language</legend>
+          <div class="govuk-checkboxes govuk-checkboxes--inline" data-module="govuk-checkboxes">${languageItems}</div>
+        </fieldset>
+      </div>
+    `)
+
+    $('input[name="languageFilter"]').on('change', function () {
+      const selected = $('input[name="languageFilter"]:checked')
+        .map(function () {
+          return `${$(this).val() || ''}`
+        })
+        .get()
+
+      selectedLanguages = new Set(selected)
+
+      renderTable(activeView)
+    })
+  }
+
+  function getFilteredRowsBySeverityAndLanguage() {
     if (selectedSeverities.size === 0) {
       return []
     }
 
-    return criticalRows.filter(row => selectedSeverities.has(`${row.severity || ''}`.toUpperCase()))
+    if (availableLanguages.length > 0 && selectedLanguages.size === 0) {
+      return []
+    }
+
+    return criticalRows.filter(row => {
+      const rowSeverity = `${row.severity || ''}`.toUpperCase()
+      const rowLanguage = getLanguageValue(row)
+      return selectedSeverities.has(rowSeverity) && (availableLanguages.length === 0 || selectedLanguages.has(rowLanguage))
+    })
   }
 
   function getRowsForView(view) {
-    const rowsForSeverity = getFilteredRowsBySeverity()
+    const rowsForSeverity = getFilteredRowsBySeverityAndLanguage()
 
     if (view === 'cve') {
       const groupedByCve = new Map()
@@ -240,6 +297,7 @@ jQuery(function () {
     url: '/snyk-scans/critical-cves/data',
     success: function (data) {
       criticalRows = Array.isArray(data) ? data : []
+      renderLanguageFilters(criticalRows)
       setActiveView(activeView)
     },
     error: function () {

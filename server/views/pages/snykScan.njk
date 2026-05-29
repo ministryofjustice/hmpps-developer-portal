@@ -38,8 +38,8 @@
     <table class="govuk-table snykData">
       <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-          <th class="govuk-table__header snykId">Snyk ID</th>
           <th class="govuk-table__header severity">Severity</th>
+          <th class="govuk-table__header snykId">Snyk ID</th>
           <th class="govuk-table__header title">Title</th>
           <th class="govuk-table__header package">Package</th>
           <th class="govuk-table__header affectedVersions">Affected Version(s)</th>
@@ -47,14 +47,13 @@
           <th class="govuk-table__header fixAvailable">Fix Available</th>
           <th class="govuk-table__header cves">CVEs</th>
           <th class="govuk-table__header published">Published</th>
-          <th class="govuk-table__header snykLink">Snyk Link</th>
         </tr>
       </thead>
       <tbody class="govuk-table__body">
         {% for row in vulnerabilitiesResultsTable %}
           <tr class="govuk-table__row {% if row.severity == 'CRITICAL' %}snykCritical{% elif row.severity == 'HIGH' %}snykHigh{% endif %}">
-            <td class="govuk-table__cell snykId">{{ row.snyk_id }}</td>
             <td class="govuk-table__cell severity">{{ row.severity }}</td>
+            <td class="govuk-table__cell snykId"><a href="https://security.snyk.io/vuln/{{ row.snyk_id | urlencode }}" class="govuk-link" target="_blank">{{ row.snyk_id }}</a></td>
             <td class="govuk-table__cell title">{{ row.title or "N/A" }}</td>
             <td class="govuk-table__cell package">{{ row.affected_package_name or "N/A" }}</td>
             <td class="govuk-table__cell affectedVersions">{{ row.affected_versions | join(", ") if row.affected_versions else "N/A" }}</td>
@@ -62,7 +61,6 @@
             <td class="govuk-table__cell fixAvailable">{{ row.fix_available or "N/A" }}</td>
             <td class="govuk-table__cell cves">{{ row.cves | join(", ") if row.cves else "None" }}</td>
             <td class="govuk-table__cell published">{{ row.published_date or "N/A" }}</td>
-            <td class="govuk-table__cell snykLink"><a href="{{ row.PrimaryURL }}" class="govuk-link" target="_blank">View</a></td>
           </tr>
           {% if row.description %}
             <tr class="govuk-table__row">

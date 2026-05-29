@@ -548,28 +548,14 @@
   color: govuk-colour('orange');
 }
 
-.snykData:not(.snykSummaryData) tr.snykCritical td {
+.snykData:not(.snykSummaryData) tr.snykCritical td.severity {
   font-weight: bold;
   color: govuk-colour('red');
-
-  a,
-  .govuk-details__summary,
-  .govuk-details__summary .govuk-details__summary-text,
-  .govuk-details__text {
-    color: inherit;
-  }
 }
 
-.snykData:not(.snykSummaryData) tr.snykHigh td {
+.snykData:not(.snykSummaryData) tr.snykHigh td.severity {
   font-weight: bold;
   color: govuk-colour('orange');
-
-  a,
-  .govuk-details__summary,
-  .govuk-details__summary .govuk-details__summary-text,
-  .govuk-details__text {
-    color: inherit;
-  }
 }
 
 .snykScansPage {

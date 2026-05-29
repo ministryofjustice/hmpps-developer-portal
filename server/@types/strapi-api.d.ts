@@ -7597,6 +7597,7 @@ export interface components {
       exploit_maturity?: string
       fix_available?: string
       fixed_versions?: unknown
+      language?: string
       id?: number
       locale?: string
       localizations?: {
@@ -7616,6 +7617,7 @@ export interface components {
         exploit_maturity?: string
         fix_available?: string
         fixed_versions?: unknown
+        language?: string
         id?: number
         locale?: string
         localizations?: {
@@ -7672,6 +7674,7 @@ export interface components {
         exploit_maturity?: string
         fix_available?: string
         fixed_versions?: unknown
+        language?: string
         locale?: string
         localizations?: (number | string)[]
         /** Format: date */

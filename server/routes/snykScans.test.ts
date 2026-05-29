@@ -13,10 +13,11 @@ let app: Express
 
 const testSnykScans = [
   {
-    id: 1,
+    id: 11,
     name: 'component-a',
     environment_name: 'dev',
     build_image_tag: '2026-01-01.1.abcdef0',
+    image_id: 'ghcr.io/moj/component-a:2026-01-01.1.abcdef0',
     scan_status: 'Succeeded',
     snyk_scan_timestamp: '2026-05-27T10:00:00.000Z',
     critical_fixable: 1,
@@ -30,42 +31,30 @@ const testSnykScans = [
     unknown_fixable: 0,
     unknown_unfixable: 0,
     snyk_ids: ['SNYK-HIGH-1', 'SNYK-CRITICAL-1'],
+    snyk_cves: [{ snyk_id: 'SNYK-HIGH-1', cves: ['CVE-2026-0001'] }],
+  },
+  {
+    id: 21,
+    name: 'component-a',
+    environment_name: 'prod',
+    scan_status: 'Succeeded',
+    snyk_ids: ['SNYK-HIGH-1', 'SNYK-CRITICAL-1'],
+  },
+  {
+    id: 22,
+    name: 'component-b',
+    environment_name: 'prod',
+    scan_status: 'Succeeded',
+    snyk_ids: ['SNYK-HIGH-2'],
+  },
+  {
+    id: 23,
+    name: 'component-c',
+    environment_name: 'dev',
+    scan_status: 'Succeeded',
+    snyk_ids: ['SNYK-HIGH-3'],
   },
 ] as unknown as SnykScan[]
-
-const testTeams = [
-  {
-    name: 'team-a',
-    products: [
-      {
-        portfolio: 'portfolio-a',
-        components: [{ name: 'component-a' }],
-      },
-    ],
-  },
-] as unknown as Team[]
-
-const testSnykScan = {
-  id: 11,
-  name: 'component-a',
-  environment_name: 'dev',
-  build_image_tag: '2026-01-01.1.abcdef0',
-  image_id: 'ghcr.io/moj/component-a:2026-01-01.1.abcdef0',
-  scan_status: 'Succeeded',
-  snyk_scan_timestamp: '2026-05-27T10:00:00.000Z',
-  critical_fixable: 1,
-  critical_unfixable: 0,
-  high_fixable: 1,
-  high_unfixable: 0,
-  medium_fixable: 0,
-  medium_unfixable: 0,
-  low_fixable: 0,
-  low_unfixable: 0,
-  unknown_fixable: 0,
-  unknown_unfixable: 0,
-  snyk_ids: ['SNYK-HIGH-1', 'SNYK-CRITICAL-1'],
-  snyk_cves: [{ snyk_id: 'SNYK-HIGH-1', cves: ['CVE-2026-0001'] }],
-} as unknown as SnykScan
 
 const testSnykVulnerabilities = [
   {
@@ -74,6 +63,10 @@ const testSnykVulnerabilities = [
     title: 'High vulnerability',
     cves: ['CVE-2026-0001'],
     affected_package_name: 'openssl',
+    affected_versions: ['1.1.1'],
+    fixed_versions: ['1.1.2'],
+    published_date: '2026-05-20',
+    language: 'TypeScript',
   },
   {
     snyk_id: 'SNYK-CRITICAL-1',
@@ -81,13 +74,50 @@ const testSnykVulnerabilities = [
     title: 'Critical vulnerability',
     cves: ['CVE-2026-0002'],
     affected_package_name: 'glibc',
+    affected_versions: ['2.31'],
+    fixed_versions: ['2.32'],
+    published_date: '2026-05-19',
+    language: 'Java',
+  },
+  {
+    snyk_id: 'SNYK-HIGH-2',
+    severity: 'HIGH',
+    cves: ['CVE-2026-0003'],
+    affected_package_name: 'lodash',
+    language: 'Python',
+  },
+  {
+    snyk_id: 'SNYK-HIGH-3',
+    severity: 'HIGH',
+    cves: ['CVE-2026-0004'],
+    affected_package_name: 'express',
+    language: 'Node',
+  },
+  {
+    snyk_id: 'SNYK-MEDIUM-1',
+    severity: 'MEDIUM',
+    cves: ['CVE-2026-0005'],
+    affected_package_name: 'zlib',
+    language: 'Go',
   },
 ] as unknown as SnykVulnerability[]
 
 beforeEach(() => {
   serviceCatalogueService.getSnykScans.mockResolvedValue(testSnykScans)
-  serviceCatalogueService.getTeams.mockResolvedValue(testTeams)
-  serviceCatalogueService.getSnykScan.mockResolvedValue(testSnykScan)
+  serviceCatalogueService.getTeams.mockResolvedValue([
+    {
+      name: 'team-a',
+      products: [
+        {
+          portfolio: 'portfolio-a',
+          components: [{ name: 'component-a' }],
+        },
+      ],
+    },
+  ] as unknown as Team[])
+  serviceCatalogueService.getSnykScan.mockResolvedValue(
+    testSnykScans.find(scan => scan.name === 'component-a' && scan.environment_name === 'dev') as SnykScan,
+  )
   serviceCatalogueService.getSnykVulnerabilities.mockResolvedValue(testSnykVulnerabilities)
 
   app = appWithAllRoutes({ services: { serviceCatalogueService } })
@@ -117,6 +147,7 @@ describe('/snyk-scans', () => {
 
   describe('GET /data', () => {
     it('should output JSON data for snyk scans', () => {
+      serviceCatalogueService.getSnykScans.mockResolvedValue([testSnykScans[0]] as SnykScan[])
       return request(app)
         .get('/snyk-scans/data')
         .expect('Content-Type', /application\/json/)
@@ -153,6 +184,64 @@ describe('/snyk-scans', () => {
           expect(criticalIndex).toBeGreaterThan(-1)
           expect(highIndex).toBeGreaterThan(-1)
           expect(criticalIndex).toBeLessThan(highIndex)
+        })
+    })
+  })
+
+  describe('GET /critical-cves', () => {
+    it('should render critical cves page', () => {
+      return request(app)
+        .get('/snyk-scans/critical-cves')
+        .expect('Content-Type', /html/)
+        .expect(res => {
+          const $ = cheerio.load(res.text)
+          expect($('h1').text()).toContain('Snyk Critical & High CVE References')
+          expect($('#snykCriticalCvesTable').length).toBe(1)
+        })
+    })
+  })
+
+  describe('GET /critical-cves/data', () => {
+    it('should return critical/high vulnerabilities only for affected prod scan snyk ids with components mapped', () => {
+      serviceCatalogueService.getSnykVulnerabilities.mockResolvedValue(testSnykVulnerabilities)
+
+      return request(app)
+        .get('/snyk-scans/critical-cves/data')
+        .expect('Content-Type', /application\/json/)
+        .expect(res => {
+          expect(res.body).toHaveLength(3)
+
+          const returnedIds = res.body.map((row: { snyk_id: string }) => row.snyk_id)
+          expect(returnedIds).toEqual(expect.arrayContaining(['SNYK-HIGH-1', 'SNYK-CRITICAL-1', 'SNYK-HIGH-2']))
+          expect(returnedIds).not.toContain('SNYK-HIGH-3')
+          expect(returnedIds).not.toContain('SNYK-MEDIUM-1')
+
+          const highOne = res.body.find((row: { snyk_id: string }) => row.snyk_id === 'SNYK-HIGH-1')
+          expect(highOne).toEqual(
+            expect.objectContaining({
+              severity: 'HIGH',
+              affected_components: ['component-a'],
+              language: 'TypeScript',
+            }),
+          )
+
+          const highTwo = res.body.find((row: { snyk_id: string }) => row.snyk_id === 'SNYK-HIGH-2')
+          expect(highTwo).toEqual(
+            expect.objectContaining({
+              severity: 'HIGH',
+              affected_components: ['component-b'],
+              language: 'Python',
+            }),
+          )
+
+          const criticalOne = res.body.find((row: { snyk_id: string }) => row.snyk_id === 'SNYK-CRITICAL-1')
+          expect(criticalOne).toEqual(
+            expect.objectContaining({
+              severity: 'CRITICAL',
+              affected_components: ['component-a'],
+              language: 'Java',
+            }),
+          )
         })
     })
   })
