@@ -3,11 +3,16 @@ import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
+import SnykVulnerabilityService from '../services/snykVulnerabilityService'
 import { SnykScan, SnykVulnerability, Team } from '../data/modelTypes'
 
 jest.mock('../services/serviceCatalogueService.ts')
+jest.mock('../services/snykVulnerabilityService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
+const snykVulnerabilityService = new SnykVulnerabilityService(
+  serviceCatalogueService,
+) as jest.Mocked<SnykVulnerabilityService>
 
 let app: Express
 
@@ -120,7 +125,89 @@ beforeEach(() => {
   )
   serviceCatalogueService.getSnykVulnerabilities.mockResolvedValue(testSnykVulnerabilities)
 
-  app = appWithAllRoutes({ services: { serviceCatalogueService } })
+  const detailScan = testSnykScans.find(
+    scan => scan.name === 'component-a' && scan.environment_name === 'dev',
+  ) as SnykScan
+  const detailVulnerabilities = ['SNYK-CRITICAL-1', 'SNYK-HIGH-1'].map(
+    id => testSnykVulnerabilities.find(vulnerability => vulnerability.snyk_id === id) as SnykVulnerability,
+  )
+  snykVulnerabilityService.getSnykScanPageData.mockResolvedValue({
+    snykScan: {
+      ...detailScan,
+      snyk_vulnerabilities: detailVulnerabilities,
+    },
+    scanDate: '27 MAY 2026 10:00:00',
+    summaryTable: [
+      { type: 'Critical Fixable', count: 1 },
+      { type: 'High Fixable', count: 1 },
+    ],
+    vulnerabilitiesResultsTable: detailVulnerabilities,
+    secretResultTable: [],
+  })
+  snykVulnerabilityService.getCriticalReferenceRowsForProd.mockResolvedValue([
+    {
+      snyk_id: 'SNYK-HIGH-1',
+      severity: 'HIGH',
+      affected_package_name: 'openssl',
+      affected_versions: ['1.1.1'],
+      fixed_versions: ['1.1.2'],
+      cves: ['CVE-2026-0001'],
+      affected_components: ['component-a'],
+      published_date: '2026-05-20',
+      language: 'TypeScript',
+    },
+    {
+      snyk_id: 'SNYK-CRITICAL-1',
+      severity: 'CRITICAL',
+      affected_package_name: 'glibc',
+      affected_versions: ['2.31'],
+      fixed_versions: ['2.32'],
+      cves: ['CVE-2026-0002'],
+      affected_components: ['component-a'],
+      published_date: '2026-05-19',
+      language: 'Java',
+    },
+    {
+      snyk_id: 'SNYK-HIGH-2',
+      severity: 'HIGH',
+      affected_package_name: 'lodash',
+      affected_versions: [],
+      fixed_versions: [],
+      cves: ['CVE-2026-0003'],
+      affected_components: ['component-b'],
+      published_date: '',
+      language: 'Python',
+    },
+  ])
+  snykVulnerabilityService.buildSnykScansTableRows.mockImplementation(scans =>
+    scans.map(scan => ({
+      environment: scan.environment_name || 'unknown',
+      name: scan.name,
+      build_image_tag: scan.build_image_tag,
+      team: 'team-a',
+      portfolio: 'portfolio-a',
+      snyk_scan_timestamp: scan.snyk_scan_timestamp,
+      snyk_scan_timestamp_ms: Date.parse(scan.snyk_scan_timestamp || '') || 0,
+      total_fixed_critical: Number(scan.critical_fixable || 0),
+      total_fixed_high: Number(scan.high_fixable || 0),
+      total_fixed_medium: Number(scan.medium_fixable || 0),
+      total_fixed_low: Number(scan.low_fixable || 0),
+      total_fixed_unknown: Number(scan.unknown_fixable || 0),
+      total_unfixed_critical: Number(scan.critical_unfixable || 0),
+      total_unfixed_high: Number(scan.high_unfixable || 0),
+      total_unfixed_medium: Number(scan.medium_unfixable || 0),
+      total_unfixed_low: Number(scan.low_unfixable || 0),
+      total_unfixed_unknown: Number(scan.unknown_unfixable || 0),
+      result_link: `/snyk-scans/${scan.name}/environments/${scan.environment_name || 'unknown'}`,
+      vulnerability_refs: [] as Array<{
+        snykId: string
+        snykUrl: string
+        cves: Array<{ value: string; url: string }>
+      }>,
+    })),
+  )
+
+  app = appWithAllRoutes({ services: { serviceCatalogueService, snykVulnerabilityService } })
 })
 
 afterEach(() => {
@@ -156,7 +243,7 @@ describe('/snyk-scans', () => {
           expect(res.body[0]).toEqual(
             expect.objectContaining({
               name: 'component-a',
-              environment_name: 'dev',
+              environment: 'dev',
               team: 'team-a',
               portfolio: 'portfolio-a',
             }),
@@ -203,8 +290,6 @@ describe('/snyk-scans', () => {
 
   describe('GET /critical-cves/data', () => {
     it('should return critical/high vulnerabilities only for affected prod scan snyk ids with components mapped', () => {
-      serviceCatalogueService.getSnykVulnerabilities.mockResolvedValue(testSnykVulnerabilities)
-
       return request(app)
         .get('/snyk-scans/critical-cves/data')
         .expect('Content-Type', /application\/json/)

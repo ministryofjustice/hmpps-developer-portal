@@ -61,64 +61,7 @@ jQuery(function () {
   }
 
   function transformData(data) {
-    const scans = extractScans(data)
-    const latestScanByComponentEnvironment = new Map()
-
-    scans
-      .filter(item => item.scan_status === 'Succeeded')
-      .forEach(item => {
-        const snykCves = Array.isArray(item.snyk_cves) ? item.snyk_cves : []
-        const snykIds = Array.isArray(item.snyk_ids) ? item.snyk_ids.filter(Boolean) : []
-
-        const vulnerabilityRefs = snykCves.length > 0
-          ? snykCves
-            .filter(ref => ref?.snyk_id)
-            .map(ref => ({
-              snykId: ref.snyk_id,
-              snykUrl: `https://security.snyk.io/vuln/${encodeURIComponent(ref.snyk_id)}`,
-              cves: Array.isArray(ref.cves) ? [...new Set(ref.cves.filter(Boolean))] : [],
-            }))
-          : [...new Set(snykIds)].map(snykId => ({
-            snykId,
-            snykUrl: `https://security.snyk.io/vuln/${encodeURIComponent(snykId)}`,
-            cves: [],
-          }))
-
-        const itemEnvironments = [item.environment_name || 'unknown']
-
-        itemEnvironments.forEach(env => {
-          const transformedRow = {
-            environment: env,
-            name: item.name,
-            build_image_tag: item.build_image_tag,
-            team: item.team ? item.team : undefined,
-            portfolio: item.portfolio ? item.portfolio : undefined,
-            snyk_scan_timestamp: item.snyk_scan_timestamp,
-            snyk_scan_timestamp_ms: Date.parse(item.snyk_scan_timestamp) || 0,
-            total_fixed_critical: Number(item.critical_fixable || 0),
-            total_fixed_high: Number(item.high_fixable || 0),
-            total_fixed_medium: Number(item.medium_fixable || 0),
-            total_fixed_low: Number(item.low_fixable || 0),
-            total_fixed_unknown: Number(item.unknown_fixable || 0),
-            total_unfixed_critical: Number(item.critical_unfixable || 0),
-            total_unfixed_high: Number(item.high_unfixable || 0),
-            total_unfixed_medium: Number(item.medium_unfixable || 0),
-            total_unfixed_low: Number(item.low_unfixable || 0),
-            total_unfixed_unknown: Number(item.unknown_unfixable || 0),
-            result_link: `<a class="govuk-link--no-visited-state" href="/snyk-scans/${item.name}/environments/${env}">View</a>`,
-            vulnerability_refs: vulnerabilityRefs,
-          }
-
-          const groupKey = `${transformedRow.name}-${transformedRow.environment}`
-          const existingRow = latestScanByComponentEnvironment.get(groupKey)
-
-          if (!existingRow || transformedRow.snyk_scan_timestamp_ms > existingRow.snyk_scan_timestamp_ms) {
-            latestScanByComponentEnvironment.set(groupKey, transformedRow)
-          }
-        })
-      })
-
-    return Array.from(latestScanByComponentEnvironment.values())
+    return extractScans(data)
   }
 
   function extractScans(rawData) {
@@ -171,7 +114,9 @@ jQuery(function () {
       data: 'result_link',
       name: 'result_link',
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(rowData.result_link)
+        const path = cleanColumnOutput(rowData.result_link || '')
+        const link = path ? `<a class="govuk-link--no-visited-state" href="${path}">View</a>` : 'N/A'
+        $(td).html(link)
       },
     },
     {
@@ -287,7 +232,8 @@ jQuery(function () {
           return vulnerabilityRefs
             .map(ref => {
               const cves = Array.isArray(ref.cves) ? ref.cves : []
-              return [ref.snykId, ...cves].filter(Boolean).join(' ')
+              const cveValues = cves.map(cve => cve?.value || cve).filter(Boolean)
+              return [ref.snykId, ...cveValues].filter(Boolean).join(' ')
             })
             .join(' ')
         }
@@ -304,14 +250,13 @@ jQuery(function () {
                 : snykIdText
               const cves = Array.isArray(ref.cves) ? ref.cves : []
               const cveText = cves.length > 0
-                ? cves.map(cve => {
-                  const normalizedCve = `${cve || ''}`.trim().toUpperCase()
-                  const safeCve = cleanColumnOutput(normalizedCve)
-                  const cveUrl = /^CVE-\d{4}-\d+$/i.test(normalizedCve)
-                    ? `https://www.cve.org/CVERecord?id=${encodeURIComponent(normalizedCve)}`
-                    : ''
-                  return cveUrl ? `<a href="${cveUrl}" target="_blank">${safeCve}</a>` : safeCve
-                }).join(', ')
+                ? cves
+                  .map(cve => {
+                    const cveValue = cleanColumnOutput(cve?.value || cve || '')
+                    return cve?.url ? `<a href="${cve.url}" target="_blank">${cveValue}</a>` : cveValue
+                  })
+                  .filter(Boolean)
+                  .join(', ')
                 : 'No CVE'
 
               return `<li>${snykLink}: ${cveText}</li>`
@@ -491,7 +436,8 @@ jQuery(function () {
     vulnerabilityFilterState.isUnavailableChecked = isUnavailableChecked
     vulnerabilityFilterState.isNoVulnerabilitiesChecked = isNoVulnerabilitiesChecked
 
-    const shouldShowVulnerabilityColumns = !isNoVulnerabilitiesChecked
+    const showOnlyNoVulnerabilities = isNoVulnerabilitiesChecked && !isAvailableChecked && !isUnavailableChecked
+    const shouldShowVulnerabilityColumns = !showOnlyNoVulnerabilities
 
     availableColumns.forEach(column => {
       if (snykTable) {
