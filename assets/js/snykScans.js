@@ -60,10 +60,6 @@ jQuery(function () {
     hasCombinedFilter = true
   }
 
-  function transformData(data) {
-    return extractScans(data)
-  }
-
   function extractScans(rawData) {
     const source = Array.isArray(rawData?.data) ? rawData.data : rawData
     if (!Array.isArray(source)) {
@@ -114,8 +110,9 @@ jQuery(function () {
       data: 'result_link',
       name: 'result_link',
       createdCell: function (td, _cellData, rowData) {
-        const path = cleanColumnOutput(rowData.result_link || '')
-        const link = path ? `<a class="govuk-link--no-visited-state" href="${path}">View</a>` : 'N/A'
+        const path = `${rowData.result_link || ''}`.trim()
+        const safePath = path.startsWith('/snyk-scans/') ? path : ''
+        const link = safePath ? `<a class="govuk-link--no-visited-state" href="${safePath}">View</a>` : 'N/A'
         $(td).html(link)
       },
     },
@@ -285,7 +282,7 @@ jQuery(function () {
   $.ajax({
     url: '/snyk-scans/data',
     success: function (data) {
-      const transformedData = transformData(data)
+      const transformedData = extractScans(data)
       const filteredTableData = setupDropdown(transformedData)
       snykTable = createTable({
         id: 'snykScansTable',
