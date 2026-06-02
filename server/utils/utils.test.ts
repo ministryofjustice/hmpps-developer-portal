@@ -507,11 +507,11 @@ describe('Utils', () => {
   })
 
   describe('addTeamAndPortfolioToSnykScan', () => {
-    it('adds a team to Snyk scan', async () => {
+    it('adds a team to Snyk scan', () => {
       const teams = [{ name: 'team name', products: [{ components: [{ name: 'example name' }] }] }] as Team[]
       const snykScan = [{ name: 'example name', team: 'team name' }] as unknown as SnykScan[]
 
-      const results = await utils.addTeamAndPortfolioToSnykScan(teams, snykScan)
+      const results = utils.addTeamAndPortfolioToSnykScan(teams, snykScan)
 
       expect(results[0].team).toBe('team name')
     })

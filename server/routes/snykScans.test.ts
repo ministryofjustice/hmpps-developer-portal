@@ -2,6 +2,7 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
+import type { RestClientBuilder, StrapiApiClient } from '../data'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import SnykVulnerabilityService from '../services/snykVulnerabilityService'
 import { SnykScan, SnykVulnerability, Team } from '../data/modelTypes'
@@ -10,8 +11,9 @@ jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/snykVulnerabilityService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
+const strapiApiClientFactory = jest.fn() as unknown as RestClientBuilder<StrapiApiClient>
 const snykVulnerabilityService = new SnykVulnerabilityService(
-  serviceCatalogueService,
+  strapiApiClientFactory,
 ) as jest.Mocked<SnykVulnerabilityService>
 
 let app: Express
@@ -236,7 +238,32 @@ describe('/snyk-scans', () => {
 
   describe('GET /data', () => {
     it('should output JSON data for snyk scans', () => {
-      serviceCatalogueService.getSnykScans.mockResolvedValue([testSnykScans[0]] as SnykScan[])
+      snykVulnerabilityService.getSnykScansTableData.mockResolvedValue([
+        {
+          environment: 'dev',
+          name: 'component-a',
+          build_image_tag: '2026-01-01.1.abcdef0',
+          team: 'team-a',
+          portfolio: 'portfolio-a',
+          snyk_scan_timestamp: '2026-05-27T10:00:00.000Z',
+          snyk_scan_timestamp_ms: Date.parse('2026-05-27T10:00:00.000Z'),
+          total_fixed_critical: 1,
+          total_fixed_high: 1,
+          total_fixed_medium: 0,
+          total_fixed_low: 0,
+          total_fixed_unknown: 0,
+          total_unfixed_critical: 0,
+          total_unfixed_high: 0,
+          total_unfixed_medium: 0,
+          total_unfixed_low: 0,
+          total_unfixed_unknown: 0,
+          result_link: '/snyk-scans/component-a/environments/dev',
+          vulnerability_search_text: '',
+          vulnerability_details_html: 'None',
+          vulnerability_refs: [],
+        },
+      ])
+
       return request(app)
         .get('/snyk-scans/data')
         .expect('Content-Type', /application\/json/)

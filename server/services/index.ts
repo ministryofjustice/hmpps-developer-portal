@@ -32,7 +32,7 @@ export const services = () => {
   )
   const monitoringChannelService = new MonitoringChannelService()
   const recommendedVersionsService = new RecommendedVersionsService(serviceCatalogueService)
-  const snykVulnerabilityService = new SnykVulnerabilityService(serviceCatalogueService)
+  const snykVulnerabilityService = new SnykVulnerabilityService(strapiApiClientBuilder)
 
   return {
     applicationInfo,

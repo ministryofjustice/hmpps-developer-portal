@@ -420,7 +420,7 @@ export function getNpmStatus(component: Component): boolean | string {
   return (npm as HasIgnoreScripts).ignore_scripts
 }
 
-export async function addTeamAndPortfolioToSnykScan(teams: Team[], snykScan: SnykScan[]) {
+export function addTeamAndPortfolioToSnykScan(teams: Team[], snykScan: SnykScan[]) {
   const teamPortfolio = findPortfolioForTeam(teams)
 
   return snykScan
