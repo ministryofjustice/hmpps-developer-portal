@@ -221,60 +221,16 @@ jQuery(function () {
       },
     },
     {
-      data: 'vulnerability_refs',
+      data: 'vulnerability_details_html',
       name: 'vulnerability_refs',
-      render: function (data, type) {
+      render: function (data, type, rowData) {
         if (type === 'filter' || type === 'sort') {
-          const vulnerabilityRefs = Array.isArray(data) ? data : []
-          return vulnerabilityRefs
-            .map(ref => {
-              const cves = Array.isArray(ref.cves) ? ref.cves : []
-              const cveValues = cves.map(cve => cve?.value || cve).filter(Boolean)
-              return [ref.snykId, ...cveValues].filter(Boolean).join(' ')
-            })
-            .join(' ')
+          return rowData?.vulnerability_search_text || ''
         }
         return ''
       },
-      createdCell: function (td, _cellData, rowData) {
-        const vulnerabilityRefs = Array.isArray(rowData.vulnerability_refs) ? rowData.vulnerability_refs : []
-        const vulnerabilityDetails = vulnerabilityRefs.length > 0
-          ? vulnerabilityRefs
-            .map(ref => {
-              const snykIdText = cleanColumnOutput(ref.snykId || 'N/A')
-              const snykLink = ref.snykUrl
-                ? `<a href="${ref.snykUrl}" target="_blank">${snykIdText}</a>`
-                : snykIdText
-              const cves = Array.isArray(ref.cves) ? ref.cves : []
-              const cveText = cves.length > 0
-                ? cves
-                  .map(cve => {
-                    const cveValue = cleanColumnOutput(cve?.value || cve || '')
-                    return cve?.url ? `<a href="${cve.url}" target="_blank">${cveValue}</a>` : cveValue
-                  })
-                  .filter(Boolean)
-                  .join(', ')
-                : 'No CVE'
-
-              return `<li>${snykLink}: ${cveText}</li>`
-            })
-            .join('')
-          : 'None'
-
-        if (vulnerabilityDetails === 'None') {
-          $(td).html(vulnerabilityDetails)
-        } else {
-          const detailsContent = `
-            <details class="govuk-details">
-              <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">SNYK IDs</span>
-              </summary>
-              <div class="govuk-details__text">
-                <ul class="govuk-list govuk-list--bullet">${vulnerabilityDetails}</ul>
-              </div>
-            </details>`
-          $(td).html(detailsContent)
-        }
+      createdCell: function (td, cellData) {
+        $(td).html(cellData || 'None')
       },
     },
   ]

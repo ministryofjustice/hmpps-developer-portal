@@ -199,6 +199,8 @@ beforeEach(() => {
       total_unfixed_low: Number(scan.low_unfixable || 0),
       total_unfixed_unknown: Number(scan.unknown_unfixable || 0),
       result_link: `/snyk-scans/${scan.name}/environments/${scan.environment_name || 'unknown'}`,
+      vulnerability_search_text: '',
+      vulnerability_details_html: 'None',
       vulnerability_refs: [] as Array<{
         snykId: string
         snykUrl: string
