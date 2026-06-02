@@ -13,6 +13,8 @@ import type {
   ScheduledJob,
   ServiceArea,
   Team,
+  SnykScan,
+  SnykVulnerability,
 } from './modelTypes'
 import { ListResponse, SingleResponse } from './strapiClientTypes'
 import { createStrapiQuery } from '../utils/utils'
@@ -350,5 +352,42 @@ export default class StrapiApiClient {
       path: '/v1/environments',
       query: 'populate[component]=true',
     })
+  }
+
+  async getSnykScans(): Promise<SnykScan[]> {
+    const results = await this.restClient.get<ListResponse<Strapi.SnykScan>>({
+      path: '/v1/snyk-scans',
+    })
+    return results.data
+  }
+
+  async getSnykScan({ name, environmentName }: { name: string; environmentName: string }): Promise<SnykScan> {
+    const encodedName = encodeURIComponent(name)
+    const encodedEnvironmentName = encodeURIComponent(environmentName)
+
+    return this.restClient
+      .get<SingleResponse<Strapi.SnykScan>>({
+        path: '/v1/snyk-scans',
+        query: `filters[name][$eq]=${encodedName}&filters[environment_name][$eq]=${encodedEnvironmentName}`,
+      })
+      .then(unwrapSingleResponse)
+  }
+
+  async getSnykVulnerabilities(): Promise<SnykVulnerability[]> {
+    const results = await this.restClient.get<ListResponse<Strapi.SnykVulnerability>>({
+      path: '/v1/snyk-vulnerabilities',
+    })
+    return results.data
+  }
+
+  async getSnykVulnerability({ snykId }: { snykId: string }): Promise<SnykVulnerability> {
+    const encodedSnykId = encodeURIComponent(snykId)
+
+    return this.restClient
+      .get<SingleResponse<Strapi.SnykVulnerability>>({
+        path: `/v1/snyk-vulnerabilities`,
+        query: `filters[snyk_id][$eq]=${encodedSnykId}`,
+      })
+      .then(unwrapSingleResponse)
   }
 }

@@ -1,0 +1,82 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% set pageTitle = applicationName + " - " + snykScan.name %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{{ breadCrumb(snykScan.name, [{title: "Snyk Scans", href: "/snyk-scans"}]) }}
+
+  <h1 data-test="detail-page-title">Snyk scan report for {{ snykScan.name }}</h1>
+
+  <p><strong>Build Image Tag:</strong> {{ snykScan.build_image_tag or "N/A" }}</p>
+  <p><strong>Image ID:</strong> {{ snykScan.image_id or "N/A" }}</p>
+  <p><strong>Environment:</strong> {{ snykScan.environment_name or "unknown" }}</p>
+  <p><strong>Scan Timestamp:</strong> {{ scanDate }}</p>
+
+  <h2>Scan Summary </h2>
+  <table class="snykData snykSummaryData">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th class="govuk-table__header">Type</th>
+        <th class="govuk-table__header govuk-table__header--numeric">Count</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for row in summaryTable %}
+        <tr class="govuk-table__row {% if 'Critical' in row.type %}snykCritical{% elif 'High' in row.type %}snykHigh{% endif %}">
+          <td class="govuk-table__cell">{{ row.type }}</td>
+          <td class="govuk-table__cell govuk-table__cell--numeric">{{ row.count }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <br><br>
+  <h2 class="govuk-heading-m" id="vulnerabilities">Snyk Vulnerabilities</h2>
+  {% if vulnerabilitiesResultsTable.length > 0 %}
+    <table class="govuk-table snykData">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header severity">Severity</th>
+          <th class="govuk-table__header snykId">Snyk ID</th>
+          <th class="govuk-table__header title">Title</th>
+          <th class="govuk-table__header package">Package</th>
+          <th class="govuk-table__header affectedVersions">Affected Version(s)</th>
+          <th class="govuk-table__header fixedVersions">Fixed Version(s)</th>
+          <th class="govuk-table__header fixAvailable">Fix Available</th>
+          <th class="govuk-table__header cves">CVEs</th>
+          <th class="govuk-table__header published">Published</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% for row in vulnerabilitiesResultsTable %}
+          <tr class="govuk-table__row {% if row.severity == 'CRITICAL' %}snykCritical{% elif row.severity == 'HIGH' %}snykHigh{% endif %}">
+            <td class="govuk-table__cell severity">{{ row.severity }}</td>
+            <td class="govuk-table__cell snykId"><a href="https://security.snyk.io/vuln/{{ row.snyk_id | urlencode }}" class="govuk-link" target="_blank">{{ row.snyk_id }}</a></td>
+            <td class="govuk-table__cell title">{{ row.title or "N/A" }}</td>
+            <td class="govuk-table__cell package">{{ row.affected_package_name or "N/A" }}</td>
+            <td class="govuk-table__cell affectedVersions">{{ row.affected_versions | join(", ") if row.affected_versions else "N/A" }}</td>
+            <td class="govuk-table__cell fixedVersions">{{ row.fixed_versions | join(", ") if row.fixed_versions else "N/A" }}</td>
+            <td class="govuk-table__cell fixAvailable">{{ row.fix_available or "N/A" }}</td>
+            <td class="govuk-table__cell cves">{{ row.cves | join(", ") if row.cves else "None" }}</td>
+            <td class="govuk-table__cell published">{{ row.published_date or "N/A" }}</td>
+          </tr>
+          {% if row.description %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell" colspan="9">
+                {{ govukDetails({
+                  summaryText: "Description for " + row.snyk_id,
+                  text: row.description
+                }) }}
+              </td>
+            </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No Snyk vulnerabilities found for this scan.</p>
+  {% endif %}
+
+{% endblock %}

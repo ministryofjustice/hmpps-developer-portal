@@ -17,6 +17,7 @@ type HasTeam = { team: Team }
 type HasServiceArea = { service_area: ServiceArea }
 type HasNamespace = { ns: Namespace }
 type HasEnvironments = { envs: Environment[] }
+type HasSnykScan = { snyk_scan?: SnykScan }
 type HasVeracodeSummary = { veracode_results_summary: VeracodeResultsSummary }
 type Version = { ref: string; version: string; path: string; hash?: string }
 type HasVersions = { versions: Record<string, Record<string, Version | string | Record<string, string>>> }
@@ -43,7 +44,11 @@ type ServiceArea = Omit<components['schemas']['ServiceArea'], 'products'> & HasP
 
 type CustomComponentView = Omit<components['schemas']['CustomComponentView'], 'components'> & HasComponents
 
-type Environment = components['schemas']['Component']['envs'][0] & HasNamespace & HasComponent & HasIpAllowlist
+type Environment = components['schemas']['Component']['envs'][0] &
+  HasNamespace &
+  HasSnykScan &
+  HasComponent &
+  HasIpAllowlist
 
 type EnvironmentForMapping = Environment
 
@@ -58,6 +63,12 @@ type GithubTeamRequest = components['schemas']['GithubTeamRequest']
 
 type ScheduledJob = components['schemas']['ScheduledJob']
 type ScheduledJobRequest = components['schemas']['ScheduledJobRequest']
+
+type SnykScan = components['schemas']['SnykScan']
+type SnykScanRequest = components['schemas']['SnykScanRequest']
+
+type SnykVulnerability = components['schemas']['SnykVulnerability']
+type SnykVulnerabilityRequest = components['schemas']['SnykVulnerabilityRequest']
 
 export {
   Product,
@@ -75,4 +86,8 @@ export {
   GithubTeamRequest,
   ScheduledJob,
   ScheduledJobRequest,
+  SnykScan,
+  SnykScanRequest,
+  SnykVulnerability,
+  SnykVulnerabilityRequest,
 }

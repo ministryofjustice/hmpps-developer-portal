@@ -33,7 +33,7 @@ import {
   formatTimeStamp,
 } from './utils'
 import * as utils from './utils'
-import { Component, Product, Team } from '../data/modelTypes'
+import { Component, Product, SnykScan, Team } from '../data/modelTypes'
 import { ServiceCatalogueService } from '../services'
 
 describe('Utils', () => {
@@ -506,6 +506,17 @@ describe('Utils', () => {
     })
   })
 
+  describe('addTeamAndPortfolioToSnykScan', () => {
+    it('adds a team to Snyk scan', () => {
+      const teams = [{ name: 'team name', products: [{ components: [{ name: 'example name' }] }] }] as Team[]
+      const snykScan = [{ name: 'example name', team: 'team name' }] as unknown as SnykScan[]
+
+      const results = utils.addTeamAndPortfolioToSnykScan(teams, snykScan)
+
+      expect(results[0].team).toBe('team name')
+    })
+  })
+
   describe('getDependencyName', () => {
     it.each([
       ['Already clean', 'product', 'product'],
@@ -764,8 +775,8 @@ describe('Utils', () => {
             ],
             [
               'Multiple dotted entries',
-              { populate: ['product.team', 'envs.veracode_scan'] },
-              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Bveracode_scan%5D=true',
+              { populate: ['product.team', 'envs.snyk_scan'] },
+              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Bsnyk_scan%5D=true',
             ],
             [
               'Single deep dotted entry',
@@ -774,8 +785,8 @@ describe('Utils', () => {
             ],
             [
               'Multiple deep dotted entries',
-              { populate: ['product.team.extra', 'envs.veracode_scan.extra'] },
-              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Bveracode_scan%5D%5Bpopulate%5D%5Bextra%5D=true',
+              { populate: ['product.team.extra', 'envs.snyk_scan.extra'] },
+              'populate%5Bproduct%5D%5Bpopulate%5D%5Bteam%5D%5Bpopulate%5D%5Bextra%5D=true&populate%5Benvs%5D%5Bpopulate%5D%5Bsnyk_scan%5D%5Bpopulate%5D%5Bextra%5D=true',
             ],
             [
               'Nested entries with hierarchical structure',
