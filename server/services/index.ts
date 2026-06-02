@@ -12,6 +12,7 @@ import AlertsService from './alertsService'
 import MonitoringChannelService from './monitoringChannelService'
 import RecommendedVersionsService from './recommendedVersionsService'
 import SnykVulnerabilityService from './snykVulnerabilityService'
+import CveSlaService from './cveSlaService'
 
 export const services = () => {
   const { strapiApiClientBuilder, applicationInfo, alertsApiClient } = dataAccess()
@@ -33,9 +34,11 @@ export const services = () => {
   const monitoringChannelService = new MonitoringChannelService()
   const recommendedVersionsService = new RecommendedVersionsService(serviceCatalogueService)
   const snykVulnerabilityService = new SnykVulnerabilityService(strapiApiClientBuilder)
+  const cveSlaService = new CveSlaService(serviceCatalogueService)
 
   return {
     applicationInfo,
+    cveSlaService,
     serviceCatalogueService,
     componentNameService,
     redisService,
@@ -52,4 +55,4 @@ export const services = () => {
 
 export type Services = ReturnType<typeof services>
 
-export { ServiceCatalogueService, RedisService, ComponentNameService, DataFilterService, AlertsService }
+export { ServiceCatalogueService, RedisService, ComponentNameService, DataFilterService, AlertsService, CveSlaService }

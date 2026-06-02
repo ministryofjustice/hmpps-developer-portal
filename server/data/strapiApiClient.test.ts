@@ -13,6 +13,8 @@ import {
   GithubRepoRequest,
   GithubTeam,
   ScheduledJob,
+  SnykScan,
+  SnykVulnerability,
 } from './modelTypes'
 import { ListResponse, SingleResponse } from './strapiClientTypes'
 
@@ -533,6 +535,102 @@ describe('strapiApiClient', () => {
         fakeStrapiApi.get('/environments?populate[component]=true').reply(200, allEnvironments)
         const output = await strapiApiClient.getEnvironments()
         expect(output).toEqual(allEnvironments)
+      })
+    })
+  })
+
+  describe('Snyk Scans', () => {
+    describe('getSnykScans', () => {
+      it('should return all snyk scans', async () => {
+        const allSnykScans = {
+          data: [{ documentId: 'documentid1', name: 'test-scan', environment_name: 'production' }],
+        } as ListResponse<Strapi.SnykScan>
+        const snykScansResponse = [
+          { documentId: 'documentid1', name: 'test-scan', environment_name: 'production' },
+        ] as SnykScan[]
+        fakeStrapiApi.get('/snyk-scans').reply(200, allSnykScans)
+        const output = await strapiApiClient.getSnykScans()
+        expect(output).toEqual(snykScansResponse)
+      })
+    })
+
+    describe('getSnykScan', () => {
+      it('should return a single snyk scan by name and environment name', async () => {
+        const snykScan = {
+          data: { documentId: 'documentid1', name: 'test-scan', environment_name: 'production' },
+        } as SingleResponse<Strapi.SnykScan>
+        const snykScanResponse = {
+          documentId: 'documentid1',
+          name: 'test-scan',
+          environment_name: 'production',
+        } as SnykScan
+        fakeStrapiApi
+          .get('/snyk-scans?filters[name][$eq]=test-scan&filters[environment_name][$eq]=production')
+          .reply(200, snykScan)
+        const output = await strapiApiClient.getSnykScan({ name: 'test-scan', environmentName: 'production' })
+        expect(output).toEqual(snykScanResponse)
+      })
+
+      it('should URL-encode name and environment name', async () => {
+        const snykScan = {
+          data: { documentId: 'documentid2', name: 'test scan', environment_name: 'pre production' },
+        } as SingleResponse<Strapi.SnykScan>
+        const snykScanResponse = {
+          documentId: 'documentid2',
+          name: 'test scan',
+          environment_name: 'pre production',
+        } as SnykScan
+        fakeStrapiApi
+          .get('/snyk-scans?filters[name][$eq]=test%20scan&filters[environment_name][$eq]=pre%20production')
+          .reply(200, snykScan)
+        const output = await strapiApiClient.getSnykScan({ name: 'test scan', environmentName: 'pre production' })
+        expect(output).toEqual(snykScanResponse)
+      })
+    })
+  })
+
+  describe('Snyk Vulnerabilities', () => {
+    describe('getSnykVulnerabilities', () => {
+      it('should return all snyk vulnerabilities', async () => {
+        const allSnykVulnerabilities = {
+          data: [{ documentId: 'documentid1', snyk_id: 'SNYK-JS-001', severity: 'high' }],
+        } as ListResponse<Strapi.SnykVulnerability>
+        const snykVulnerabilitiesResponse = [
+          { documentId: 'documentid1', snyk_id: 'SNYK-JS-001', severity: 'high' },
+        ] as SnykVulnerability[]
+        fakeStrapiApi.get('/snyk-vulnerabilities').reply(200, allSnykVulnerabilities)
+        const output = await strapiApiClient.getSnykVulnerabilities()
+        expect(output).toEqual(snykVulnerabilitiesResponse)
+      })
+    })
+
+    describe('getSnykVulnerability', () => {
+      it('should return a single snyk vulnerability by snyk id', async () => {
+        const snykVulnerability = {
+          data: { documentId: 'documentid1', snyk_id: 'SNYK-JS-001', severity: 'high' },
+        } as SingleResponse<Strapi.SnykVulnerability>
+        const snykVulnerabilityResponse = {
+          documentId: 'documentid1',
+          snyk_id: 'SNYK-JS-001',
+          severity: 'high',
+        } as SnykVulnerability
+        fakeStrapiApi.get('/snyk-vulnerabilities?filters[snyk_id][$eq]=SNYK-JS-001').reply(200, snykVulnerability)
+        const output = await strapiApiClient.getSnykVulnerability({ snykId: 'SNYK-JS-001' })
+        expect(output).toEqual(snykVulnerabilityResponse)
+      })
+
+      it('should URL-encode the snyk id', async () => {
+        const snykVulnerability = {
+          data: { documentId: 'documentid2', snyk_id: 'SNYK JS 002', severity: 'critical' },
+        } as SingleResponse<Strapi.SnykVulnerability>
+        const snykVulnerabilityResponse = {
+          documentId: 'documentid2',
+          snyk_id: 'SNYK JS 002',
+          severity: 'critical',
+        } as SnykVulnerability
+        fakeStrapiApi.get('/snyk-vulnerabilities?filters[snyk_id][$eq]=SNYK%20JS%20002').reply(200, snykVulnerability)
+        const output = await strapiApiClient.getSnykVulnerability({ snykId: 'SNYK JS 002' })
+        expect(output).toEqual(snykVulnerabilityResponse)
       })
     })
   })
