@@ -211,7 +211,7 @@ describe('CveSlaService', () => {
       const result = await cveSlaService.getCveSlaForServiceArea('my-service-area')
 
       expect(result.slaBreached).toBe(false)
-      expect(result.products[0].components[0].vulnerabilities).toBeUndefined()
+      expect(result.products[0].components[0].vulnerabilities).toStrictEqual([])
     })
 
     it('returns slaBreached: false for a service area with no products', async () => {

@@ -1,6 +1,6 @@
-import { assert } from 'console'
-import { Component, SnykVulnerability } from '../data/strapiApiTypes'
+import assert from 'assert'
 import ServiceCatalogueService from './serviceCatalogueService'
+import { Component, SnykVulnerability } from '../data/modelTypes'
 
 export default class CveSlaService {
   THRESHOLD_DAYS = 7
@@ -43,27 +43,28 @@ export default class CveSlaService {
 
   private getProductionCves(component: Component, vulnLookup: Record<string, SnykVulnerability>) {
     const productionEnv = component.envs.find(env => env.name.toLowerCase().startsWith('prod'))
-    const vulnerabilities = (productionEnv?.snyk_scan?.snyk_ids as string[])
-      ?.map(id => {
-        const vuln = vulnLookup[id]
-        assert(vuln, `Vulnerability with Snyk ID ${id} not found in lookup`)
-        assert(
-          ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].includes(vuln.severity),
-          `Unexpected severity level: ${vuln.severity}`,
-        )
-        return {
-          vulnerabilityId: vuln.snyk_id,
-          severityLevel: vuln.severity,
-          publishedDate: vuln.published_date,
-          slaBreached: this.slaBreached(vuln.published_date),
-        }
-      })
-      .filter(vuln => ['HIGH', 'CRITICAL'].includes(vuln.severityLevel))
+    const vulnerabilities =
+      (productionEnv?.snyk_scan?.snyk_ids as string[])
+        ?.map(id => {
+          const vuln = vulnLookup[id]
+          assert(vuln, `Vulnerability with Snyk ID ${id} not found in lookup`)
+          assert(
+            ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'].includes(vuln.severity.toUpperCase()),
+            `Unexpected severity level: ${vuln.severity}`,
+          )
+          return {
+            vulnerabilityId: vuln.snyk_id,
+            severityLevel: vuln.severity.toUpperCase(),
+            publishedDate: vuln.published_date,
+            slaBreached: this.slaBreached(vuln.published_date),
+          }
+        })
+        ?.filter(vuln => ['HIGH', 'CRITICAL'].includes(vuln.severityLevel)) || []
 
     return {
       componentName: component.name,
       vulnerabilities,
-      slaBreached: vulnerabilities?.some(vuln => vuln.slaBreached) || false,
+      slaBreached: vulnerabilities.some(vuln => vuln.slaBreached) || false,
     }
   }
 

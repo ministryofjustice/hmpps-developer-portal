@@ -58,7 +58,10 @@ describe('/cve-slas', () => {
     it('should redirect to the first service area slug', async () => {
       return request(app).get('/cve-slas').expect(302).expect('Location', 'cve-slas/hmpps-area')
     })
-
+    it('should error if no service areas', async () => {
+      serviceCatalogueService.getServiceAreas = jest.fn().mockResolvedValue([])
+      return request(app).get('/cve-slas').expect(302).expect('Location', 'cve-slas/hmpps-area')
+    })
     it('should call getServiceAreas with withComponents: false', async () => {
       await request(app).get('/cve-slas').expect(302)
       expect(serviceCatalogueService.getServiceAreas).toHaveBeenCalledWith({ withComponents: false })
