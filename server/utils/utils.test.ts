@@ -33,7 +33,7 @@ import {
   formatTimeStamp,
 } from './utils'
 import * as utils from './utils'
-import { Component, Product, SnykScan, Team } from '../data/modelTypes'
+import { Component, Product, Team } from '../data/modelTypes'
 import { ServiceCatalogueService } from '../services'
 
 describe('Utils', () => {
@@ -503,17 +503,6 @@ describe('Utils', () => {
       const result = utils.getComponentsForTeam(team)
 
       expect(result).toEqual([{ name: 'componentA' }])
-    })
-  })
-
-  describe('addTeamAndPortfolioToSnykScan', () => {
-    it('adds a team to Snyk scan', () => {
-      const teams = [{ name: 'team name', products: [{ components: [{ name: 'example name' }] }] }] as Team[]
-      const snykScan = [{ name: 'example name', team: 'team name' }] as unknown as SnykScan[]
-
-      const results = utils.addTeamAndPortfolioToSnykScan(teams, snykScan)
-
-      expect(results[0].team).toBe('team name')
     })
   })
 

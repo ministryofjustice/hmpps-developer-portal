@@ -110,7 +110,6 @@ const testSnykVulnerabilities = [
 ] as unknown as SnykVulnerability[]
 
 beforeEach(() => {
-  serviceCatalogueService.getSnykScans.mockResolvedValue(testSnykScans)
   serviceCatalogueService.getTeams.mockResolvedValue([
     {
       name: 'team-a',
@@ -122,10 +121,6 @@ beforeEach(() => {
       ],
     },
   ] as unknown as Team[])
-  serviceCatalogueService.getSnykScan.mockResolvedValue(
-    testSnykScans.find(scan => scan.name === 'component-a' && scan.environment_name === 'dev') as SnykScan,
-  )
-  serviceCatalogueService.getSnykVulnerabilities.mockResolvedValue(testSnykVulnerabilities)
 
   const detailScan = testSnykScans.find(
     scan => scan.name === 'component-a' && scan.environment_name === 'dev',

@@ -225,16 +225,21 @@ export default class StrapiApiClient {
     serviceAreaDocumentId = '',
     serviceAreaSlug = '',
     withProducts = false,
+    withSnykScan = false,
   }: {
     serviceAreaDocumentId?: string
     serviceAreaSlug?: string
     withProducts?: boolean
+    withSnykScan?: boolean
   }): Promise<ServiceArea> {
     const populateList = ['products']
 
     if (withProducts) {
       populateList.push('products.components')
       populateList.push('products.components.envs')
+      if (withSnykScan) {
+        populateList.push('products.components.envs.snyk_scan')
+      }
     }
     const populate = createStrapiQuery({ populate: populateList })
     const query = serviceAreaSlug ? `filters[slug][$eq]=${serviceAreaSlug}&${populate}` : populate
