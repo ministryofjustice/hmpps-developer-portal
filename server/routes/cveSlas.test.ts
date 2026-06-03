@@ -60,7 +60,7 @@ describe('/cve-slas', () => {
     })
     it('should error if no service areas', async () => {
       serviceCatalogueService.getServiceAreas = jest.fn().mockResolvedValue([])
-      return request(app).get('/cve-slas').expect(302).expect('Location', 'cve-slas/hmpps-area')
+      return request(app).get('/cve-slas').expect(500)
     })
     it('should call getServiceAreas with withComponents: false', async () => {
       await request(app).get('/cve-slas').expect(302)

@@ -44,18 +44,20 @@ describe('CveSlaService', () => {
   })
 
   describe('slaBreached', () => {
+    const DAYS_IN_MILLIS = 24 * 60 * 60 * 1000
+
     it('returns true when published date is more than 7 days ago', () => {
-      const longAgo = new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString()
+      const longAgo = new Date(Date.now() - 8 * DAYS_IN_MILLIS).toISOString()
       expect(cveSlaService.slaBreached(longAgo)).toBe(true)
     })
 
     it('returns false when published date is within 7 days', () => {
-      const recent = new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString()
+      const recent = new Date(Date.now() - 6 * DAYS_IN_MILLIS).toISOString()
       expect(cveSlaService.slaBreached(recent)).toBe(false)
     })
 
     it('returns false when published date is exactly 7 days ago', () => {
-      const exactly30 = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+      const exactly30 = new Date(Date.now() - 7 * DAYS_IN_MILLIS).toISOString()
       expect(cveSlaService.slaBreached(exactly30)).toBe(false)
     })
   })
