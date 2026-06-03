@@ -591,16 +591,38 @@ describe('strapiApiClient', () => {
 
   describe('Snyk Vulnerabilities', () => {
     describe('getSnykVulnerabilities', () => {
-      it('should return all snyk vulnerabilities', async () => {
+      it('should return single page of snyk vulnerabilities', async () => {
         const allSnykVulnerabilities = {
           data: [{ documentId: 'documentid1', snyk_id: 'SNYK-JS-001', severity: 'high' }],
+          meta: { pagination: { page: 1, pageSize: 1, total: 1, pageCount: 1 } },
         } as ListResponse<Strapi.SnykVulnerability>
         const snykVulnerabilitiesResponse = [
           { documentId: 'documentid1', snyk_id: 'SNYK-JS-001', severity: 'high' },
         ] as SnykVulnerability[]
-        fakeStrapiApi.get('/snyk-vulnerabilities').reply(200, allSnykVulnerabilities)
+        fakeStrapiApi
+          .get('/snyk-vulnerabilities?pagination[pageSize]=500&pagination[page]=1')
+          .reply(200, allSnykVulnerabilities)
         const output = await strapiApiClient.getSnykVulnerabilities()
         expect(output).toEqual(snykVulnerabilitiesResponse)
+      })
+
+      it('should return all snyk vulnerabilities', async () => {
+        const page1 = {
+          data: [{ documentId: 'documentid1', snyk_id: 'SNYK-JS-001', severity: 'high' }],
+          meta: { pagination: { page: 1, pageSize: 1, total: 2, pageCount: 2 } },
+        } as ListResponse<Strapi.SnykVulnerability>
+        const page2 = {
+          data: [{ documentId: 'documentid2', snyk_id: 'SNYK-JS-002', severity: 'high' }],
+          meta: { pagination: { page: 2, pageSize: 1, total: 2, pageCount: 2 } },
+        } as ListResponse<Strapi.SnykVulnerability>
+
+        fakeStrapiApi
+          .get('/snyk-vulnerabilities?pagination[pageSize]=500&pagination[page]=1')
+          .reply(200, page1)
+          .get('/snyk-vulnerabilities?pagination[pageSize]=500&pagination[page]=2')
+          .reply(200, page2)
+        const output = await strapiApiClient.getSnykVulnerabilities()
+        expect(output).toEqual([...page1.data, ...page2.data])
       })
     })
 
