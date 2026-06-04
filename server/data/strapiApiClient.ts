@@ -379,10 +379,28 @@ export default class StrapiApiClient {
   }
 
   async getSnykVulnerabilities(): Promise<SnykVulnerability[]> {
-    const results = await this.restClient.get<ListResponse<Strapi.SnykVulnerability>>({
-      path: '/v1/snyk-vulnerabilities',
-    })
-    return results.data
+    return this.retrieveAllPages((paginationParams: string) =>
+      this.restClient.get<ListResponse<Strapi.SnykVulnerability>>({
+        path: `/v1/snyk-vulnerabilities?${paginationParams}`,
+      }),
+    )
+  }
+
+  private async retrieveAllPages<T extends Payload>(
+    retrievePage: (paginationParams: string) => Promise<ListResponse<T>>,
+  ): Promise<Array<T>> {
+    let page = 1
+    let maxPage = 1
+    const results: T[] = []
+    do {
+      // eslint-disable-next-line no-await-in-loop
+      const response = await retrievePage(`pagination[pageSize]=500&pagination[page]=${page}`)
+      response.data.forEach(vuln => results.push(vuln))
+      page += 1
+      maxPage = response.meta.pagination.pageCount
+    } while (page <= maxPage)
+
+    return results
   }
 
   async getSnykVulnerability({ snykId }: { snykId: string }): Promise<SnykVulnerability> {
