@@ -1,9 +1,9 @@
 import { MoJSelectDataItem } from '../@types'
-import type { StrapiApiClient, RestClientBuilder } from '../data'
+import type { StrapiApiClient } from '../data'
 import { formatMonitorName, sortByName } from '../utils/utils'
 
 export default class DataFilterService {
-  constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
+  constructor(private readonly strapiApiClient: StrapiApiClient) {}
 
   async getCustomComponentsDropDownList({
     customComponentName,
@@ -12,8 +12,7 @@ export default class DataFilterService {
     customComponentName: string
     useFormattedName?: boolean
   }): Promise<MoJSelectDataItem[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const customComponentsData = await strapiApiClient.getCustomComponentViews({})
+    const customComponentsData = await this.strapiApiClient.getCustomComponentViews({})
     const customComponents = customComponentsData.sort(sortByName)
     const customComponentsList = customComponents.map(customComponentView => {
       const formattedName = formatMonitorName(customComponentView.name)
@@ -38,8 +37,7 @@ export default class DataFilterService {
     serviceAreaName: string
     useFormattedName?: boolean
   }): Promise<MoJSelectDataItem[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const serviceAreasData = await strapiApiClient.getServiceAreas({})
+    const serviceAreasData = await this.strapiApiClient.getServiceAreas({})
     const serviceAreas = serviceAreasData.sort(sortByName)
     const serviceAreaList = serviceAreas.map(serviceArea => {
       const formattedName = formatMonitorName(serviceArea.name)
@@ -63,8 +61,7 @@ export default class DataFilterService {
     teamName: string
     useFormattedName?: boolean
   }): Promise<MoJSelectDataItem[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const teamsData = await strapiApiClient.getTeams({})
+    const teamsData = await this.strapiApiClient.getTeams({})
     const teams = teamsData.sort(sortByName)
     const teamsList = teams.map(team => {
       const formattedName = formatMonitorName(team.name)
@@ -88,8 +85,7 @@ export default class DataFilterService {
     productName: string
     useFormattedName?: boolean
   }): Promise<MoJSelectDataItem[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const productsData = await strapiApiClient.getProducts({})
+    const productsData = await this.strapiApiClient.getProducts({})
     const products = productsData.sort(sortByName)
     const productsList = products.map(product => {
       const formattedName = formatMonitorName(product.name)
@@ -113,8 +109,7 @@ export default class DataFilterService {
     productId: string
     useFormattedName?: boolean
   }): Promise<MoJSelectDataItem[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const productsData = await strapiApiClient.getProducts({})
+    const productsData = await this.strapiApiClient.getProducts({})
     const products = productsData.sort(sortByName)
     const productsIdList = products.map(product => {
       const formattedName = formatMonitorName(product.name)

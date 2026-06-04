@@ -2,7 +2,7 @@ import type { Express } from 'express'
 import request from 'supertest'
 import * as cheerio from 'cheerio'
 import { appWithAllRoutes } from './testutils/appSetup'
-import type { RestClientBuilder, StrapiApiClient } from '../data'
+import type { StrapiApiClient } from '../data'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import SnykVulnerabilityService from '../services/snykVulnerabilityService'
 import { SnykScan, SnykVulnerability, Team } from '../data/modelTypes'
@@ -11,10 +11,8 @@ jest.mock('../services/serviceCatalogueService.ts')
 jest.mock('../services/snykVulnerabilityService.ts')
 
 const serviceCatalogueService = new ServiceCatalogueService(null) as jest.Mocked<ServiceCatalogueService>
-const strapiApiClientFactory = jest.fn() as unknown as RestClientBuilder<StrapiApiClient>
-const snykVulnerabilityService = new SnykVulnerabilityService(
-  strapiApiClientFactory,
-) as jest.Mocked<SnykVulnerabilityService>
+const strapiApiClient = jest.fn() as unknown as StrapiApiClient
+const snykVulnerabilityService = new SnykVulnerabilityService(strapiApiClient) as jest.Mocked<SnykVulnerabilityService>
 
 let app: Express
 

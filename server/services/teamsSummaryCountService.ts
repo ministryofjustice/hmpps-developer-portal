@@ -1,5 +1,5 @@
 import logger from '../../logger'
-import type { StrapiApiClient, RestClientBuilder } from '../data'
+import type { StrapiApiClient } from '../data'
 import AlertsService from './alertsService'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { Component, Product } from '../data/modelTypes'
@@ -17,7 +17,7 @@ export default class TeamsSummaryCountService {
   constructor(
     private readonly alertsService: AlertsService,
     private readonly serviceCatalogueService: ServiceCatalogueService,
-    private readonly strapiClient: RestClientBuilder<StrapiApiClient>,
+    private readonly strapiClient: StrapiApiClient,
   ) {}
 
   /**
@@ -25,7 +25,7 @@ export default class TeamsSummaryCountService {
    */
   async getProductsForTeam(teamSlug: string): Promise<Product[]> {
     try {
-      const team = await this.strapiClient('').getTeam({ teamSlug })
+      const team = await this.strapiClient.getTeam({ teamSlug })
       const products = team.products || []
       logger.info(`[getProductsForTeam] Found ${products.length} products for team ${teamSlug}`)
       return products
@@ -42,7 +42,7 @@ export default class TeamsSummaryCountService {
     const promises = products?.map(async product => {
       const productSlug = product?.slug
       try {
-        const productResp: Product = await this.strapiClient('').getProduct({ productSlug })
+        const productResp: Product = await this.strapiClient.getProduct({ productSlug })
         const components = Array.isArray(productResp) ? productResp[0]?.components || [] : productResp?.components || []
 
         return { name: product.name, components }

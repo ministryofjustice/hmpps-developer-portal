@@ -15,25 +15,21 @@ import SnykVulnerabilityService from './snykVulnerabilityService'
 import CveSlaService from './cveSlaService'
 
 export const services = () => {
-  const { strapiApiClientBuilder, applicationInfo, alertsApiClient } = dataAccess()
+  const { strapiApiClient, applicationInfo, alertsApiClient } = dataAccess()
   const client = createRedisClient()
   client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
 
-  const serviceCatalogueService = new ServiceCatalogueService(strapiApiClientBuilder)
-  const componentNameService = new ComponentNameService(strapiApiClientBuilder)
+  const serviceCatalogueService = new ServiceCatalogueService(strapiApiClient)
+  const componentNameService = new ComponentNameService(strapiApiClient)
   const redisService = new RedisService(client)
-  const productDependenciesService = new ProductDependenciesService(strapiApiClientBuilder, redisService)
-  const dataFilterService = new DataFilterService(strapiApiClientBuilder)
+  const productDependenciesService = new ProductDependenciesService(strapiApiClient, redisService)
+  const dataFilterService = new DataFilterService(strapiApiClient)
   const teamHealthService = new TeamHealthService(redisService, serviceCatalogueService)
   const alertsService = new AlertsService(alertsApiClient)
-  const teamsSummaryCountService = new TeamsSummaryCountService(
-    alertsService,
-    serviceCatalogueService,
-    strapiApiClientBuilder,
-  )
+  const teamsSummaryCountService = new TeamsSummaryCountService(alertsService, serviceCatalogueService, strapiApiClient)
   const monitoringChannelService = new MonitoringChannelService()
   const recommendedVersionsService = new RecommendedVersionsService(serviceCatalogueService)
-  const snykVulnerabilityService = new SnykVulnerabilityService(strapiApiClientBuilder)
+  const snykVulnerabilityService = new SnykVulnerabilityService(strapiApiClient)
   const cveSlaService = new CveSlaService(serviceCatalogueService)
 
   return {
