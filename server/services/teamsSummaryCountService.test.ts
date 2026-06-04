@@ -51,7 +51,7 @@ let service: TeamsSummaryCountService
 describe('TeamsSummaryCountService', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    service = new TeamsSummaryCountService(alertService, serviceCatalogueService, () => mockStrapiClient)
+    service = new TeamsSummaryCountService(alertService, serviceCatalogueService, mockStrapiClient)
   })
 
   describe('TeamsSummaryCountService.getProductsForTeam', () => {

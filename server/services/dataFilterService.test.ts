@@ -43,11 +43,8 @@ describe('Data Filter service', () => {
 
   let dataFilterService: DataFilterService
 
-  const StrapiApiClientFactory = jest.fn()
-
   beforeEach(() => {
-    StrapiApiClientFactory.mockReturnValue(strapiApiClient)
-    dataFilterService = new DataFilterService(StrapiApiClientFactory)
+    dataFilterService = new DataFilterService(strapiApiClient)
   })
 
   afterEach(() => {

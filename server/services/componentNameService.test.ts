@@ -28,11 +28,8 @@ describe('Component name service', () => {
 
   let componentNameService: ComponentNameService
 
-  const StrapiApiClientFactory = jest.fn()
-
   beforeEach(() => {
-    StrapiApiClientFactory.mockReturnValue(strapiApiClient)
-    componentNameService = new ComponentNameService(StrapiApiClientFactory)
+    componentNameService = new ComponentNameService(strapiApiClient)
   })
 
   afterEach(() => {
