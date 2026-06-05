@@ -1,5 +1,5 @@
 import { type Request } from 'express'
-import type { AlertsApiClient, RestClientBuilder } from '../data'
+import type { AlertsApiClient } from '../data'
 import { Alert } from '../@types'
 import { Environment } from '../data/strapiApiTypes'
 import logger from '../../logger'
@@ -8,12 +8,11 @@ import type { ServiceCatalogueService } from '.'
 import type { Team, Product } from '../data/modelTypes'
 
 export default class AlertsService {
-  constructor(private readonly alertsApiClientFactory: RestClientBuilder<AlertsApiClient>) {}
+  constructor(private readonly alertsApiClient: AlertsApiClient) {}
 
   async getAlerts(): Promise<Alert[]> {
-    const alertsApiClient = this.alertsApiClientFactory('')
     try {
-      return await alertsApiClient.getAlerts()
+      return await this.alertsApiClient.getAlerts()
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       logger.error(`Error fetching alerts: ${msg}`)
@@ -22,9 +21,8 @@ export default class AlertsService {
   }
 
   async getAlertsForComponent(componentName: string): Promise<Alert[]> {
-    const alertsApiClient = this.alertsApiClientFactory('')
     try {
-      return await alertsApiClient.getAlertsForComponent(componentName)
+      return await this.alertsApiClient.getAlertsForComponent(componentName)
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err)
       logger.error(`Error fetching alerts for ${componentName}: ${msg}`)

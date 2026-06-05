@@ -58,11 +58,8 @@ describe('Strapi service', () => {
 
   let serviceCatalogueService: ServiceCatalogueService
 
-  const StrapiApiClientFactory = jest.fn()
-
   beforeEach(() => {
-    StrapiApiClientFactory.mockReturnValue(strapiApiClient)
-    serviceCatalogueService = new ServiceCatalogueService(StrapiApiClientFactory)
+    serviceCatalogueService = new ServiceCatalogueService(strapiApiClient)
   })
 
   afterEach(() => {

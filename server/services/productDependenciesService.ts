@@ -1,4 +1,4 @@
-import type { StrapiApiClient, RestClientBuilder } from '../data'
+import type { StrapiApiClient } from '../data'
 import { formatMonitorName } from '../utils/utils'
 import type RedisService from './redisService'
 
@@ -18,12 +18,12 @@ export type ProductDependencies = {
 
 export default class ServiceCatalogueService {
   constructor(
-    private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>,
+    private readonly strapiApiClient: StrapiApiClient,
     private readonly redisService: RedisService,
   ) {}
 
   async getProducts(): Promise<ProductDependencies[]> {
-    const products = (await this.strapiApiClientFactory('').getProducts({ withComponents: true }))
+    const products = (await this.strapiApiClient.getProducts({ withComponents: true }))
       .filter(product => product.components?.length)
       .map(product => ({
         productName: product.name,
@@ -54,7 +54,7 @@ export default class ServiceCatalogueService {
   }
 
   async getComponentsWithUnknownProducts(): Promise<string[]> {
-    const products = (await this.strapiApiClientFactory('').getProducts({ withComponents: true }))
+    const products = (await this.strapiApiClient.getProducts({ withComponents: true }))
       .filter(product => product.components?.length)
       .map(product => ({
         productName: product.name,

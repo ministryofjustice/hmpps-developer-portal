@@ -1,5 +1,5 @@
 import { RdsEntry } from '../@types'
-import type { StrapiApiClient, RestClientBuilder } from '../data'
+import type { StrapiApiClient } from '../data'
 import type {
   Product,
   Team,
@@ -18,7 +18,7 @@ import { Environment } from '../data/strapiApiTypes'
 import { sortRdsInstances, sortComponentRequestData, sortGithubTeamsData, sortByName } from '../utils/utils'
 
 export default class ServiceCatalogueService {
-  constructor(private readonly strapiApiClientFactory: RestClientBuilder<StrapiApiClient>) {}
+  constructor(private readonly strapiApiClient: StrapiApiClient) {}
 
   async getProducts({
     withEnvironments = false,
@@ -29,8 +29,7 @@ export default class ServiceCatalogueService {
     withComponents?: boolean
     isDecommissioned?: boolean
   }): Promise<Product[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const productData = await strapiApiClient.getProducts({ withEnvironments, withComponents, isDecommissioned })
+    const productData = await this.strapiApiClient.getProducts({ withEnvironments, withComponents, isDecommissioned })
 
     const products = productData.sort(sortByName)
     return products
@@ -45,15 +44,13 @@ export default class ServiceCatalogueService {
     productDocumentId?: string
     withEnvironments?: boolean
   }): Promise<Product> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const productData = await strapiApiClient.getProduct({ productSlug, productDocumentId, withEnvironments })
+    const productData = await this.strapiApiClient.getProduct({ productSlug, productDocumentId, withEnvironments })
 
     return productData
   }
 
   async getTeams({ withComponents = false }: { withComponents?: boolean }): Promise<Team[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const teamData = await strapiApiClient.getTeams({ withComponents })
+    const teamData = await this.strapiApiClient.getTeams({ withComponents })
 
     const teams = teamData.sort(sortByName)
 
@@ -69,8 +66,7 @@ export default class ServiceCatalogueService {
     teamSlug?: string
     withEnvironments?: boolean
   }): Promise<Team> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const teamData = await strapiApiClient.getTeam({ teamDocumentId, teamSlug, withEnvironments })
+    const teamData = await this.strapiApiClient.getTeam({ teamDocumentId, teamSlug, withEnvironments })
 
     return teamData
   }
@@ -80,22 +76,19 @@ export default class ServiceCatalogueService {
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
   ): Promise<Component[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const componentData = await strapiApiClient.getComponents(exemptionFilters, includeTeams, includeLatestCommit)
+    const componentData = await this.strapiApiClient.getComponents(exemptionFilters, includeTeams, includeLatestCommit)
     const components = componentData.sort(sortByName)
 
     return components
   }
 
   async getComponent({ componentName }: { componentName: string }): Promise<Component> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const componentItem = await strapiApiClient.getComponent({ componentName })
+    const componentItem = await this.strapiApiClient.getComponent({ componentName })
     return componentItem
   }
 
   async getDependencies(): Promise<string[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const componentData = await strapiApiClient.getComponents()
+    const componentData = await this.strapiApiClient.getComponents()
     const components = componentData.sort(sortByName)
     let dependencies: string[] = []
 
@@ -115,8 +108,7 @@ export default class ServiceCatalogueService {
   }
 
   async getServiceAreas({ withComponents = false }: { withComponents?: boolean }): Promise<ServiceArea[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const serviceAreaData = await strapiApiClient.getServiceAreas({ withComponents })
+    const serviceAreaData = await this.strapiApiClient.getServiceAreas({ withComponents })
     return serviceAreaData.sort(sortByName)
   }
 
@@ -131,8 +123,7 @@ export default class ServiceCatalogueService {
     withProducts?: boolean
     withSnykScan?: boolean
   }): Promise<ServiceArea> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const serviceAreaData = await strapiApiClient.getServiceArea({
+    const serviceAreaData = await this.strapiApiClient.getServiceArea({
       serviceAreaDocumentId,
       serviceAreaSlug,
       withProducts,
@@ -143,8 +134,7 @@ export default class ServiceCatalogueService {
   }
 
   async getProductSets(): Promise<ProductSet[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const productSetData = await strapiApiClient.getProductSets()
+    const productSetData = await this.strapiApiClient.getProductSets()
 
     const productSets = productSetData.sort(sortByName)
 
@@ -152,14 +142,12 @@ export default class ServiceCatalogueService {
   }
 
   async getProductSet({ productSetDocumentId = '' }: { productSetDocumentId: string }): Promise<ProductSet> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const productSetData = await strapiApiClient.getProductSet({ productSetDocumentId })
+    const productSetData = await this.strapiApiClient.getProductSet({ productSetDocumentId })
     return productSetData
   }
 
   async getNamespaces(): Promise<Namespace[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const namespaceData = await strapiApiClient.getNamespaces()
+    const namespaceData = await this.strapiApiClient.getNamespaces()
 
     return namespaceData.sort(sortByName)
   }
@@ -171,47 +159,40 @@ export default class ServiceCatalogueService {
     namespaceDocumentId?: string
     namespaceSlug?: string
   }): Promise<Namespace> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const namespaceData = await strapiApiClient.getNamespace({ namespaceDocumentId, namespaceSlug })
+    const namespaceData = await this.strapiApiClient.getNamespace({ namespaceDocumentId, namespaceSlug })
 
     return namespaceData
   }
 
   async getGithubTeams(): Promise<GithubTeam[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const githubTeamsData = await strapiApiClient.getGithubTeams()
+    const githubTeamsData = await this.strapiApiClient.getGithubTeams()
     const githubTeams = githubTeamsData.sort(sortGithubTeamsData)
     return githubTeams
   }
 
   async getGithubTeam({ teamName }: { teamName: string }): Promise<GithubTeam> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const githubTeamData = await strapiApiClient.getGithubTeam({ teamName })
+    const githubTeamData = await this.strapiApiClient.getGithubTeam({ teamName })
     return githubTeamData
   }
 
   async getGithubSubTeams({ parentTeamName }: { parentTeamName: string }): Promise<GithubTeam[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const githubSubTeamsData = await strapiApiClient.getGithubSubTeams({ parentTeamName })
+    const githubSubTeamsData = await this.strapiApiClient.getGithubSubTeams({ parentTeamName })
     return githubSubTeamsData
   }
 
   async getScheduledJobs(): Promise<ScheduledJob[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const scheduledJobsData = await strapiApiClient.getScheduledJobs()
+    const scheduledJobsData = await this.strapiApiClient.getScheduledJobs()
     const scheduledJobsRequests = scheduledJobsData.sort(sortByName)
     return scheduledJobsRequests
   }
 
   async getScheduledJob({ name }: { name: string }): Promise<ScheduledJob> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const scheduledJobData = await strapiApiClient.getScheduledJob({ name })
+    const scheduledJobData = await this.strapiApiClient.getScheduledJob({ name })
     return scheduledJobData
   }
 
   async getRdsInstances(): Promise<RdsEntry[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const namespaceData = await strapiApiClient.getNamespaces()
+    const namespaceData = await this.strapiApiClient.getNamespaces()
     const rdsInstances = namespaceData.reduce((existing, namespace) => {
       const instances = namespace.rds_instance.map(rdsInstance => {
         return {
@@ -246,8 +227,7 @@ export default class ServiceCatalogueService {
     customComponentDocumentId: string
     withEnvironments?: boolean
   }): Promise<CustomComponentView> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const customComponentData = await strapiApiClient.getCustomComponentView({
+    const customComponentData = await this.strapiApiClient.getCustomComponentView({
       customComponentDocumentId,
       withEnvironments,
     })
@@ -256,32 +236,27 @@ export default class ServiceCatalogueService {
   }
 
   async getGithubRepoRequests(): Promise<GithubRepoRequest[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const componentRequestsData = await strapiApiClient.getGithubRepoRequests()
+    const componentRequestsData = await this.strapiApiClient.getGithubRepoRequests()
     return componentRequestsData.sort(sortComponentRequestData)
   }
 
   async getGithubRepoRequest({ repoName }: { repoName: string }): Promise<GithubRepoRequest[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    return strapiApiClient.getGithubRepoRequest({ repoName })
+    return this.strapiApiClient.getGithubRepoRequest({ repoName })
   }
 
   async postGithubRepoRequest(request: GithubRepoRequestRequest): Promise<void> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    return strapiApiClient.postGithubRepoRequest(request)
+    return this.strapiApiClient.postGithubRepoRequest(request)
   }
 
   async getEnvironments(): Promise<Environment[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const environmentData = await strapiApiClient.getEnvironments()
+    const environmentData = await this.strapiApiClient.getEnvironments()
     const environmentList = environmentData.data
 
     return environmentList
   }
 
   async getSnykVulnerabilities(): Promise<SnykVulnerability[]> {
-    const strapiApiClient = this.strapiApiClientFactory('')
-    const snykVulnerabilitiesData = await strapiApiClient.getSnykVulnerabilities()
+    const snykVulnerabilitiesData = await this.strapiApiClient.getSnykVulnerabilities()
     return snykVulnerabilitiesData
   }
 }

@@ -15,12 +15,10 @@ describe('Alerts service', () => {
 
   let alertsService: AlertsService
 
-  const AlertsApiClientFactory = jest.fn()
   type AlertTypeParams = { alertType: string }
 
   beforeEach(() => {
-    AlertsApiClientFactory.mockReturnValue(alertsApiClient)
-    alertsService = new AlertsService(AlertsApiClientFactory)
+    alertsService = new AlertsService(alertsApiClient)
   })
 
   afterEach(() => {
