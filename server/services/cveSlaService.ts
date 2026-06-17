@@ -1,14 +1,32 @@
 import assert from 'assert'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { Component, SnykVulnerability } from '../data/modelTypes'
+import { Product } from '../data/strapiApiTypes'
 
-export type ComponentInfo = ReturnType<CveSlaService['getProductionCves']>
-export type ProductInfo = { productName: string; components: ComponentInfo[]; breachedComponents: ComponentInfo[] }
+export type ComponentInfo = ReturnType<CveSlaService['getComponentInfo']>
+export type ProductInfo = {
+  name: string
+  slug: string
+  components: ComponentInfo[]
+  numberOfBreachedComponents: number
+}
 
 export default class CveSlaService {
   THRESHOLD_DAYS = 7
 
   constructor(private readonly serviceCatalogueService: ServiceCatalogueService) {}
+
+  async getCveSlaForProduct(serviceAreaSlug: string, productSlug: string) {
+    const serviceArea = await this.getCveSlaForServiceArea(serviceAreaSlug)
+
+    const productInfo = serviceArea.productsWithComponents.find(product => product.slug === productSlug)
+    assert(productInfo !== undefined, `Product: ${productSlug} does not exist in service area: ${serviceAreaSlug}`)
+
+    return {
+      serviceArea: { name: serviceArea.name, slug: serviceArea.slug },
+      product: productInfo,
+    }
+  }
 
   async getCveSlaForServiceArea(serviceAreaSlug: string) {
     const serviceArea = await this.serviceCatalogueService.getServiceArea({
@@ -22,27 +40,39 @@ export default class CveSlaService {
     const vulnLookup = Object.fromEntries(snykVulns.map(vuln => [vuln.snyk_id, vuln]))
 
     const products = serviceArea.products
-      .map(product => {
-        const components = product.components
-          .map(component => this.getProductionCves(component, vulnLookup))
-          .sort(this.compareComponents)
-
-        return {
-          productName: product.name,
-          components,
-          breachedComponents: components.filter(component => component.breachedVulnerabilities.length),
-        }
-      })
+      .map(product => this.getProductInfo(product, vulnLookup))
       .sort(this.compareProducts)
 
     return {
-      serviceArea: serviceArea.name,
+      name: serviceArea.name,
+      slug: serviceArea.slug,
       productsWithComponents: products?.filter(product => product.components.length),
-      breachedProducts: products?.filter(product => product.breachedComponents.length),
+      numberOfBreachedProducts: products?.filter(product => product.numberOfBreachedComponents > 0).length,
+      numberOfBreachedVulnerabilities: products?.reduce(
+        (total, product) => total + product.numberOfBreachedVulnerabilities,
+        0,
+      ),
     }
   }
 
-  private getProductionCves(component: Component, vulnLookup: Record<string, SnykVulnerability>) {
+  private getProductInfo(product: Product, vulnLookup: Record<string, SnykVulnerability>) {
+    const components = product.components
+      .map(component => this.getComponentInfo(component, vulnLookup))
+      .sort(this.compareComponents)
+
+    return {
+      name: product.name,
+      slug: product.slug,
+      components,
+      numberOfBreachedComponents: components.filter(component => component.breachedVulnerabilities.length).length,
+      numberOfBreachedVulnerabilities: components.reduce(
+        (total, component) => total + component.breachedVulnerabilities.length,
+        0,
+      ),
+    }
+  }
+
+  private getComponentInfo(component: Component, vulnLookup: Record<string, SnykVulnerability>) {
     const productionEnv = component.envs.find(env => env.name.toLowerCase().startsWith('prod'))
     const vulnerabilities =
       (productionEnv?.snyk_scan?.snyk_ids as string[])
@@ -63,8 +93,8 @@ export default class CveSlaService {
         ?.filter(vuln => ['HIGH', 'CRITICAL'].includes(vuln.severityLevel)) || []
 
     return {
-      componentName: component.name,
-      vulnerabilities,
+      name: component.name,
+      scanName: productionEnv?.name,
       breachedVulnerabilities: vulnerabilities.filter(vuln => vuln.slaBreached),
     }
   }
@@ -78,11 +108,11 @@ export default class CveSlaService {
 
   compareComponents(component1: ComponentInfo, component2: ComponentInfo) {
     const result = component2.breachedVulnerabilities.length - component1.breachedVulnerabilities.length
-    return result !== 0 ? result : component1.componentName.localeCompare(component2.componentName)
+    return result !== 0 ? result : component1.name.localeCompare(component2.name)
   }
 
   compareProducts(product1: ProductInfo, product2: ProductInfo) {
-    const result = product2.breachedComponents.length - product1.breachedComponents.length
-    return result !== 0 ? result : product1.productName.localeCompare(product2.productName)
+    const result = product2.numberOfBreachedComponents - product1.numberOfBreachedComponents
+    return result !== 0 ? result : product1.name.localeCompare(product2.name)
   }
 }

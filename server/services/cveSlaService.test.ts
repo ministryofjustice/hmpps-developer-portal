@@ -28,9 +28,11 @@ const makeComponent = (overrides: Partial<Component> = {}): Component =>
 const makeServiceArea = (overrides: Partial<ServiceArea> = {}): ServiceArea =>
   ({
     name: 'My Service Area',
+    slug: 'service-area-1',
     products: [
       {
         name: 'My Product',
+        slug: 'product-1',
         components: [makeComponent()],
       },
     ],
@@ -72,77 +74,75 @@ describe('CveSlaService', () => {
 
     it('priortises vulnerability count', () => {
       const c1: Partial<ComponentInfo> = {
-        componentName: 'aaa',
+        name: 'aaa',
         breachedVulnerabilities: [vulnerability],
       }
       const c2: Partial<ComponentInfo> = {
-        componentName: 'zzz',
+        name: 'zzz',
         breachedVulnerabilities: [vulnerability, vulnerability],
       }
       const c3: Partial<ComponentInfo> = {
-        componentName: 'mmm',
+        name: 'mmm',
         breachedVulnerabilities: [vulnerability, vulnerability, vulnerability],
       }
 
-      const names = [c1, c2, c3].sort(cveSlaService.compareComponents).map(component => component.componentName)
+      const names = [c1, c2, c3].sort(cveSlaService.compareComponents).map(component => component.name)
       expect(names).toStrictEqual(['mmm', 'zzz', 'aaa'])
     })
 
     it('priortises by name is equal vuln count', () => {
       const c1: Partial<ComponentInfo> = {
-        componentName: 'aaa',
+        name: 'aaa',
         breachedVulnerabilities: [vulnerability],
       }
       const c2: Partial<ComponentInfo> = {
-        componentName: 'zzz',
+        name: 'zzz',
         breachedVulnerabilities: [vulnerability],
       }
       const c3: Partial<ComponentInfo> = {
-        componentName: 'mmm',
+        name: 'mmm',
         breachedVulnerabilities: [vulnerability],
       }
 
-      const names = [c1, c2, c3].sort(cveSlaService.compareComponents).map(component => component.componentName)
+      const names = [c1, c2, c3].sort(cveSlaService.compareComponents).map(component => component.name)
       expect(names).toStrictEqual(['aaa', 'mmm', 'zzz'])
     })
   })
 
   describe('compare product info', () => {
-    const component: ComponentInfo = {} as ComponentInfo
-
     it('priortises breached components count', () => {
       const p1: Partial<ProductInfo> = {
-        productName: 'aaa',
-        breachedComponents: [component],
+        name: 'aaa',
+        numberOfBreachedComponents: 1,
       }
       const p2: Partial<ProductInfo> = {
-        productName: 'zzz',
-        breachedComponents: [component, component],
+        name: 'zzz',
+        numberOfBreachedComponents: 2,
       }
       const p3: Partial<ProductInfo> = {
-        productName: 'mmm',
-        breachedComponents: [component, component, component],
+        name: 'mmm',
+        numberOfBreachedComponents: 3,
       }
 
-      const names = [p1, p2, p3].sort(cveSlaService.compareProducts).map(product => product.productName)
+      const names = [p1, p2, p3].sort(cveSlaService.compareProducts).map(product => product.name)
       expect(names).toStrictEqual(['mmm', 'zzz', 'aaa'])
     })
 
     it('priortises by name is equal vuln count', () => {
       const p1: Partial<ProductInfo> = {
-        productName: 'aaa',
-        breachedComponents: [component],
+        name: 'aaa',
+        numberOfBreachedComponents: 1,
       }
       const p2: Partial<ProductInfo> = {
-        productName: 'zzz',
-        breachedComponents: [component],
+        name: 'zzz',
+        numberOfBreachedComponents: 1,
       }
       const p3: Partial<ProductInfo> = {
-        productName: 'mmm',
-        breachedComponents: [component],
+        name: 'mmm',
+        numberOfBreachedComponents: 1,
       }
 
-      const names = [p1, p2, p3].sort(cveSlaService.compareProducts).map(product => product.productName)
+      const names = [p1, p2, p3].sort(cveSlaService.compareProducts).map(product => product.name)
       expect(names).toStrictEqual(['aaa', 'mmm', 'zzz'])
     })
   })
@@ -156,90 +156,21 @@ describe('CveSlaService', () => {
       const result = await cveSlaService.getCveSlaForServiceArea('my-service-area')
 
       expect(result).toStrictEqual({
-        serviceArea: 'My Service Area',
-        breachedProducts: [
-          {
-            productName: 'My Product',
-            components: [
-              {
-                breachedVulnerabilities: [
-                  {
-                    publishedDate: oldDate,
-                    severityLevel: 'HIGH',
-                    slaBreached: true,
-                    vulnerabilityId: 'SNYK-001',
-                  },
-                ],
-                componentName: 'my-component',
-                vulnerabilities: [
-                  {
-                    publishedDate: oldDate,
-                    severityLevel: 'HIGH',
-                    slaBreached: true,
-                    vulnerabilityId: 'SNYK-001',
-                  },
-                ],
-              },
-            ],
-            breachedComponents: [
-              {
-                componentName: 'my-component',
-                breachedVulnerabilities: [
-                  {
-                    publishedDate: oldDate,
-                    severityLevel: 'HIGH',
-                    slaBreached: true,
-                    vulnerabilityId: 'SNYK-001',
-                  },
-                ],
-                vulnerabilities: [
-                  {
-                    publishedDate: oldDate,
-                    severityLevel: 'HIGH',
-                    slaBreached: true,
-                    vulnerabilityId: 'SNYK-001',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+        name: 'My Service Area',
+        slug: 'service-area-1',
+        numberOfBreachedProducts: 1,
+        numberOfBreachedVulnerabilities: 1,
         productsWithComponents: [
           {
-            productName: 'My Product',
+            name: 'My Product',
+            slug: 'product-1',
+            numberOfBreachedComponents: 1,
+            numberOfBreachedVulnerabilities: 1,
             components: [
               {
+                name: 'my-component',
+                scanName: 'production',
                 breachedVulnerabilities: [
-                  {
-                    publishedDate: oldDate,
-                    severityLevel: 'HIGH',
-                    slaBreached: true,
-                    vulnerabilityId: 'SNYK-001',
-                  },
-                ],
-                componentName: 'my-component',
-                vulnerabilities: [
-                  {
-                    publishedDate: oldDate,
-                    severityLevel: 'HIGH',
-                    slaBreached: true,
-                    vulnerabilityId: 'SNYK-001',
-                  },
-                ],
-              },
-            ],
-            breachedComponents: [
-              {
-                breachedVulnerabilities: [
-                  {
-                    publishedDate: oldDate,
-                    severityLevel: 'HIGH',
-                    slaBreached: true,
-                    vulnerabilityId: 'SNYK-001',
-                  },
-                ],
-                componentName: 'my-component',
-                vulnerabilities: [
                   {
                     publishedDate: oldDate,
                     severityLevel: 'HIGH',
@@ -261,7 +192,7 @@ describe('CveSlaService', () => {
 
       const result = await cveSlaService.getCveSlaForServiceArea('my-service-area')
 
-      expect(result.breachedProducts).toHaveLength(0)
+      expect(result.numberOfBreachedProducts).toStrictEqual(0)
       expect(result.productsWithComponents[0].components[0].breachedVulnerabilities).toHaveLength(0)
     })
 
@@ -288,7 +219,7 @@ describe('CveSlaService', () => {
 
       const result = await cveSlaService.getCveSlaForServiceArea('my-service-area')
 
-      expect(result.breachedProducts.length).toBe(0)
+      expect(result.numberOfBreachedProducts).toStrictEqual(0)
       expect(result.productsWithComponents[0].components[0].breachedVulnerabilities).toHaveLength(0)
     })
 
@@ -314,16 +245,15 @@ describe('CveSlaService', () => {
 
       const result = await cveSlaService.getCveSlaForServiceArea('my-service-area')
 
-      expect(result.breachedProducts).toHaveLength(1)
-      expect(result.breachedProducts[0].components[0].vulnerabilities[0].severityLevel).toBe('CRITICAL')
+      expect(result.numberOfBreachedProducts).toStrictEqual(1)
+      expect(result.productsWithComponents[0].components[0].breachedVulnerabilities[0].severityLevel).toBe('CRITICAL')
     })
 
     it('uses the production environment (starts with "prod") for vulnerability data', async () => {
       const oldDate = new Date(Date.now() - 60 * DAYS_IN_MILLIS).toISOString()
-      const recentDate = new Date(Date.now() - 5 * DAYS_IN_MILLIS).toISOString()
       serviceCatalogueService.getSnykVulnerabilities.mockResolvedValue([
         makeVuln({ snyk_id: 'SNYK-DEV', severity: 'HIGH', published_date: oldDate }),
-        makeVuln({ snyk_id: 'SNYK-PROD', severity: 'HIGH', published_date: recentDate }),
+        makeVuln({ snyk_id: 'SNYK-PROD', severity: 'HIGH', published_date: oldDate }),
       ])
       serviceCatalogueService.getServiceArea.mockResolvedValue(
         makeServiceArea({
@@ -344,9 +274,11 @@ describe('CveSlaService', () => {
       )
 
       const result = await cveSlaService.getCveSlaForServiceArea('my-service-area')
-      expect(result.breachedProducts).toHaveLength(0)
-      expect(result.productsWithComponents[0].components[0].vulnerabilities).toHaveLength(1)
-      expect(result.productsWithComponents[0].components[0].vulnerabilities[0].vulnerabilityId).toBe('SNYK-PROD')
+      expect(result.numberOfBreachedProducts).toStrictEqual(1)
+      expect(result.productsWithComponents[0].components[0].breachedVulnerabilities).toHaveLength(1)
+      expect(result.productsWithComponents[0].components[0].breachedVulnerabilities[0].vulnerabilityId).toBe(
+        'SNYK-PROD',
+      )
     })
 
     it('returns no vulnerabilities when component has no production environment', async () => {
@@ -368,8 +300,8 @@ describe('CveSlaService', () => {
 
       const result = await cveSlaService.getCveSlaForServiceArea('my-service-area')
 
-      expect(result.breachedProducts).toHaveLength(0)
-      expect(result.productsWithComponents[0].components[0].vulnerabilities).toStrictEqual([])
+      expect(result.numberOfBreachedProducts).toStrictEqual(0)
+      expect(result.productsWithComponents[0].components[0].breachedVulnerabilities).toStrictEqual([])
     })
 
     it('returns slaBreached: false for a service area with no products', async () => {
@@ -378,7 +310,7 @@ describe('CveSlaService', () => {
 
       const result = await cveSlaService.getCveSlaForServiceArea('my-service-area')
 
-      expect(result.breachedProducts).toHaveLength(0)
+      expect(result.numberOfBreachedProducts).toStrictEqual(0)
       expect(result.productsWithComponents).toHaveLength(0)
     })
 
@@ -424,14 +356,26 @@ describe('CveSlaService', () => {
 
       const result = await cveSlaService.getCveSlaForServiceArea('my-service-area')
 
-      expect(result.breachedProducts).toHaveLength(1)
+      expect(result.numberOfBreachedProducts).toStrictEqual(1)
       expect(result.productsWithComponents).toHaveLength(1)
 
-      expect(result.breachedProducts[0].breachedComponents).toHaveLength(1)
-      expect(result.breachedProducts[0].breachedComponents.find(c => c.componentName === 'comp-ok')).not.toBeNull()
-      expect(
-        result.breachedProducts[0].breachedComponents.find(c => c.componentName === 'comp-breached'),
-      ).not.toBeNull()
+      expect(result.productsWithComponents[0].numberOfBreachedComponents).toBe(1)
+      expect(result.productsWithComponents[0].components).toHaveLength(2)
+
+      expect(result.productsWithComponents[0].components[0]).toMatchObject({
+        name: 'comp-breached',
+        breachedVulnerabilities: [
+          {
+            severityLevel: 'HIGH',
+            slaBreached: true,
+            vulnerabilityId: 'SNYK-OLD',
+          },
+        ],
+      })
+      expect(result.productsWithComponents[0].components[1]).toMatchObject({
+        name: 'comp-ok',
+        breachedVulnerabilities: [],
+      })
     })
   })
 })
