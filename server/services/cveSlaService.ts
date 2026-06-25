@@ -133,7 +133,8 @@ export default class CveSlaService {
     const time1 = Date.parse(vuln1.publishedDate)
     const time2 = Date.parse(vuln2.publishedDate)
     const dateComparison =
-      (Number.isNaN(time1) ? Number.POSITIVE_INFINITY : time1) - (Number.isNaN(time2) ? Number.POSITIVE_INFINITY : time2)
+      (Number.isNaN(time1) ? Number.POSITIVE_INFINITY : time1) -
+      (Number.isNaN(time2) ? Number.POSITIVE_INFINITY : time2)
     if (dateComparison !== 0) return dateComparison
     return vuln1.vulnerabilityId.localeCompare(vuln2.vulnerabilityId)
   }

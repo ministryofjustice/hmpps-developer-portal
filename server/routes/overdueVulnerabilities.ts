@@ -8,7 +8,7 @@ export default function routes({ serviceCatalogueService, cveSlaService }: Servi
   router.get('/', async (req, res) => {
     const serviceAreas = await serviceCatalogueService.getServiceAreas({ withComponents: false })
     assert(serviceAreas.length > 0, 'No service areas found in the service catalogue')
-    res.redirect(`overdue-vulnerabilities/${serviceAreas[0].slug}`)
+    res.redirect(`/overdue-vulnerabilities/${serviceAreas[0].slug}`)
   })
 
   router.get('/:serviceAreaSlug.json', async (req, res) => {
