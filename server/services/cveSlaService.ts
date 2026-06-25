@@ -130,7 +130,10 @@ export default class CveSlaService {
     const severityOrder = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']
     const severityComparison = severityOrder.indexOf(vuln2.severityLevel) - severityOrder.indexOf(vuln1.severityLevel)
     if (severityComparison !== 0) return severityComparison
-    const dateComparison = new Date(vuln1.publishedDate).getTime() - new Date(vuln2.publishedDate).getTime()
+    const time1 = Date.parse(vuln1.publishedDate)
+    const time2 = Date.parse(vuln2.publishedDate)
+    const dateComparison =
+      (Number.isNaN(time1) ? Number.POSITIVE_INFINITY : time1) - (Number.isNaN(time2) ? Number.POSITIVE_INFINITY : time2)
     if (dateComparison !== 0) return dateComparison
     return vuln1.vulnerabilityId.localeCompare(vuln2.vulnerabilityId)
   }
