@@ -26,7 +26,7 @@
         <ul>
           {% for product in serviceArea.products -%}
             <li>
-              <a class="govuk-link--no-visited-state govuk-!-margin-bottom-0 govuk-!-margin-top-3 govuk-heading-s" href="/products/{{ product.slug }}" data-test="product-{{ product.id }}">{{ product.name }}</a>
+              <a class="govuk-link--no-visited-state govuk-!-margin-bottom-0 govuk-!-margin-top-3 govuk-heading-s" href="/products/{{ product.slug }}" data-test="product-{{ product.id }}">{{ product.name }}{% if product.decommissioned %} (DECOMMISIONED){% endif %}</a>
               <ul>
               {% if product.components | length -%}
                 {% for component in product.components -%}
