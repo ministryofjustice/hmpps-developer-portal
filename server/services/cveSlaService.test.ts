@@ -74,7 +74,7 @@ describe('CveSlaService', () => {
   })
 
   describe('compare vulnerability info', () => {
-    it('priortises severity', () => {
+    it('prioritises severity', () => {
       const v1 = makeVulnInfo({ vulnerabilityId: 'vuln-1', severityLevel: 'HIGH', publishedDate: '2026-01-01' })
       const v2 = makeVulnInfo({ vulnerabilityId: 'vuln-2', severityLevel: 'CRITICAL', publishedDate: '2026-01-01' })
       const v3 = makeVulnInfo({ vulnerabilityId: 'vuln-3', severityLevel: 'MEDIUM', publishedDate: '2026-01-01' })
