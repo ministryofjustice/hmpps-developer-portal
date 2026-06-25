@@ -9,7 +9,7 @@
 
 {% block content %}
 
-  {{ breadCrumb("Breached vulnerability SLAs", []) }}
+  {{ breadCrumb("Overdue vulnerabilities", []) }}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ govukSelect({
@@ -32,12 +32,29 @@
   </div>
 
 
-  <h1>Vulnerability SLAs for {{ serviceArea.name }}</h1>
+  <h1>Overdue vulnerabilities for {{ serviceArea.name }}</h1>
   {% set info %}
-    <p>This shows products and components that have breached SLA targets for HIGH or CRITICAL vulnerabilities.</p>
-    <p>In line with <a href="https://security-guidance.service.justice.gov.uk/patch-management-guide/#patching-schedule">MoJ guidance</a>, these vulnerabilities are expected to be resolved within 3–7 days.</p>
-    <p>Any flagged components contain HIGH or CRITICAL vulnerabilities that have remained unresolved (or unsuppressed) for more than 7 days since publication.</p>
-    <p>This data is refreshed nightly.</p>
+    <p>
+      This page highlights products and components with HIGH or CRITICAL security issues that are overdue for fixing.
+    </p>
+    <p>
+      Under <a href="https://security-guidance.service.justice.gov.uk/patch-management-guide/#patching-schedule">MoJ guidance</a>, these issues should typically be resolved within <strong>3–7 days</strong>.
+    </p>
+    <p>
+      A security issue is considered overdue if it:
+    </p>
+    <ul>
+      <li>is rated <strong>HIGH or CRITICAL</strong>, and</li>
+      <li>is still present more than <strong>7 days after its publication date</strong></li>
+    </ul>
+
+    <p>
+      <strong>Note:</strong> This view does not currently take into account suppressions defined in <code>.snyk</code> files. A <a href="https://dsdmoj.atlassian.net/browse/HEAT-1279">ticket</a> for this is planned.
+    </p>
+
+    <p>
+      Data on this page comes from <a class="govuk-link--no-visited-state" href="/scheduled-jobs/hmpps-snyk-discovery-full">nightly scans of production images</a>.
+    </p>
   {% endset %}
   {{ govukDetails({
         summaryText: "About this page",
@@ -70,5 +87,5 @@
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
   <script src="/assets/js/common.js"></script>
-  <script src="/assets/js/vulnerabilitySlas.js"></script>
+  <script src="/assets/js/overdueVulnerabilities.js"></script>
 {% endblock %}

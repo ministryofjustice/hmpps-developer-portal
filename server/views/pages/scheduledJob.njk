@@ -34,7 +34,17 @@
         </tr>
         <tr>
           <th>Last run errors</th>
-          <td>{{ scheduledJob.error_details }}</a></td>
+          <td>
+            {% if scheduledJob.error_details and scheduledJob.error_details.length is defined and scheduledJob.error_details is not string %}
+               <ul>
+                  {% for error in scheduledJob.error_details %}
+                    <li>{{error}}</li>
+                  {% endfor %}
+                </ul>
+            {% else %}
+              {{ scheduledJob.error_details  }}
+            {% endif %}
+          </td>
         </tr>
       </tbody>
     </table>

@@ -8,7 +8,7 @@ export default function routes({ serviceCatalogueService, cveSlaService }: Servi
   router.get('/', async (req, res) => {
     const serviceAreas = await serviceCatalogueService.getServiceAreas({ withComponents: false })
     assert(serviceAreas.length > 0, 'No service areas found in the service catalogue')
-    res.redirect(`vulnerability-slas/${serviceAreas[0].slug}`)
+    res.redirect(`overdue-vulnerabilities/${serviceAreas[0].slug}`)
   })
 
   router.get('/:serviceAreaSlug.json', async (req, res) => {
@@ -21,7 +21,7 @@ export default function routes({ serviceCatalogueService, cveSlaService }: Servi
     const { serviceAreaSlug } = req.params
     const serviceAreas = await serviceCatalogueService.getServiceAreas({ withComponents: false })
     const serviceArea = await cveSlaService.getCveSlaForServiceArea(serviceAreaSlug)
-    res.render(`pages/vulnerabilitySlasForServiceArea`, {
+    res.render(`pages/overdueVulnerabilitiesForServiceArea`, {
       serviceArea,
       serviceAreas,
       selectedServiceArea: serviceAreaSlug,
@@ -32,7 +32,7 @@ export default function routes({ serviceCatalogueService, cveSlaService }: Servi
     const { serviceAreaSlug, productSlug } = req.params
     const serviceAreas = await serviceCatalogueService.getServiceAreas({ withComponents: false })
     const result = await cveSlaService.getCveSlaForProduct(serviceAreaSlug, productSlug)
-    res.render(`pages/vulnerabilitySlasForProduct`, {
+    res.render(`pages/overdueVulnerabilitiesForProduct`, {
       serviceArea: result.serviceArea,
       product: result.product,
       serviceAreas,

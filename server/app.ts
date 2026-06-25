@@ -35,7 +35,7 @@ import githubTeamsRoutes from './routes/githubTeams'
 import scheduledJobsRoutes from './routes/scheduledJobs'
 import alertsRoutes from './routes/alerts'
 import snykScansRoutes from './routes/snykScans'
-import vulnerabilitySlasRoutes from './routes/vulnerabilitySlas'
+import overdueVulnerabilitiesRoutes from './routes/overdueVulnerabilities'
 
 import type { Services } from './services'
 
@@ -77,7 +77,7 @@ export default function createApp(services: Services): express.Application {
   app.use('/scheduled-jobs', scheduledJobsRoutes(services))
   app.use('/alerts', alertsRoutes(services))
   app.use('/snyk-scans', snykScansRoutes(services))
-  app.use('/vulnerability-slas', vulnerabilitySlasRoutes(services))
+  app.use('/overdue-vulnerabilities', overdueVulnerabilitiesRoutes(services))
 
   app.use((req, res, next) => next(createError(404, 'Not found')))
   app.use(errorHandler(process.env.NODE_ENV === 'production'))

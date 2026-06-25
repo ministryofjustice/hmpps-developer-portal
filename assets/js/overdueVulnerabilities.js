@@ -2,6 +2,6 @@ jQuery(async function () {
   $('#updateServiceArea').on('click', async e => {
     e.preventDefault(e)
     const serviceAreaSlug = document.getElementById('service-area').value
-    window.location = `/vulnerability-slas/${serviceAreaSlug}`
+    window.location = `/overdue-vulnerabilities/${serviceAreaSlug}`
   })
 })
