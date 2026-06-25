@@ -17,12 +17,13 @@ jQuery(function () {
       render: function (data, type, row) {
         const products = Array.isArray(data) ? data : []
         const searchValue = products.map(product => product.name).join(' ')
+        const displayProducts = products.filter(product => !product.decommissioned)
 
         if (type !== 'display') {
           return searchValue
         }
 
-        const productsList = createSearchableProductList(products)
+        const productsList = createSearchableProductList(displayProducts)
 
         // Only wraps in details component if there's a list, otherwise shows "No Products"
         if (productsList.startsWith('<ul>')) {
