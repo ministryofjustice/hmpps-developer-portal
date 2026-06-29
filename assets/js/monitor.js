@@ -103,7 +103,7 @@ jQuery(async function () {
   })
 
   $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponentView').on('click', async e => {
-    e.preventDefault(e)
+    e.preventDefault()
 
     let dropDownType = ''
 

@@ -97,10 +97,12 @@ export default class CveSlaService {
             publishedDate: vuln.published_date,
             breachedSince: vuln.published_date ? relativeTimeFromNow(new Date(vuln.published_date)) : 'n/a',
             slaBreached: this.slaBreached(vuln.published_date),
+            fixAvailable: String(vuln.fix_available).toLowerCase() === 'true',
           }
         })
-        .sort(this.compareVulnerabilities)
-        ?.filter(vuln => ['HIGH', 'CRITICAL'].includes(vuln.severityLevel)) || []
+        ?.sort(this.compareVulnerabilities)
+        ?.filter(vuln => ['HIGH', 'CRITICAL'].includes(vuln.severityLevel))
+        ?.filter(vuln => vuln.fixAvailable) || []
 
     return {
       name: component.name,

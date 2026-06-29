@@ -6,6 +6,7 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/accordion/macro.njk" import govukAccordion %}
 
 {% block content %}
 
@@ -37,18 +38,14 @@
     </div>
   </div>
 
-  {% set product = product %}
   <h1>Overdue vulnerabilities for {{ product.name }}</h1>
     <p>{{ product.numberOfBreachedComponents }} / {{ product.components.length }} components have vulnerabilties that have breached their SLA</p>
 
-    {% for component in product.components %}
-      <h3>
-          <a href="/components/{{component.name}}" class="govuk-link--no-visited-state">{{component.name}}</a>
-      </h3>
-      <p>
-        {{ component.breachedVulnerabilities.length }} vulnerabilties with breached SLAs.
-        See all production vulnerabilities <a href="/snyk-scans/{{component.name}}/environments/{{component.scanName}}" class="govuk-link--no-visited-state">here</a>
-      </p>
+
+  {% set items = [] %}
+  {% for component in product.components %}
+    {% set html %}
+      <p>See all production vulnerabilities <a href="/snyk-scans/{{ component.name }}/environments/{{component.scanName}}" class="govuk-link--no-visited-state">here</a></p>
       {% if component.breachedVulnerabilities.length %}
           {% set rows = [] %}
           {% for vuln in component.breachedVulnerabilities %}
@@ -73,11 +70,30 @@
               rows: rows
           }) }}
       {% endif %}
-    {% endfor %}
+    {% endset %}
+
+    {% set items = (items.push({
+      heading: {
+        text: component.name
+      },
+      summary: {
+        html: '<p>' + component.breachedVulnerabilities.length + ' vulnerabilties with breached SLAs present in production for <a href="/components/' +  component.name + '" class="govuk-link--no-visited-state">' + component.name  + '</a>.<br/></p>'
+      },
+      content: {
+        html: html
+      }
+    }), items) %}
+  {% endfor %}
+
+
+    {{ govukAccordion({
+      id: "components",
+      items: items
+    }) }}
 {% endblock %}
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
   <script src="/assets/js/common.js"></script>
-  <script src="/assets/js/overdueVulnerabilities.js"></script>
+  <script src="/assets/js/overdueVulnerabilitiesForProduct.js"></script>
 {% endblock %}

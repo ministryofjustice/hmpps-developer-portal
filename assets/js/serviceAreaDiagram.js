@@ -19,13 +19,13 @@ jQuery(async function () {
   graph.setAttribute('width', '100%')
 
   $('#updateServiceArea').on('click', async e => {
-    e.preventDefault(e)
+    e.preventDefault()
     const serviceAreaId = document.getElementById('serviceArea').value
     window.location = `/service-areas/${serviceAreaId}/diagram`
   })
 
   $('#toggleOrientation').on('click', async e => {
-    e.preventDefault(e)
+    e.preventDefault()
     const urlParams = new URLSearchParams(window.location.search)
     const orientation = urlParams.get('orientation') == 'TB' ? 'LR' : 'TB'
     const serviceAreaId = document.getElementById('serviceAreaSlug').value

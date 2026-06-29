@@ -11,6 +11,7 @@ const makeVuln = (overrides: Partial<SnykVulnerability> = {}): SnykVulnerability
   snyk_id: 'SNYK-001',
   severity: 'HIGH',
   published_date: '2020-01-01',
+  fix_available: 'true',
   ...overrides,
 })
 
@@ -115,6 +116,7 @@ describe('CveSlaService', () => {
       slaBreached: true,
       vulnerabilityId: '01',
       breachedSince: relativeTimeFromNow(new Date('2020-01-02')),
+      fixAvailable: true,
     }
 
     it('priortises vulnerability count', () => {
@@ -222,6 +224,7 @@ describe('CveSlaService', () => {
                     slaBreached: true,
                     vulnerabilityId: 'SNYK-001',
                     breachedSince: relativeTimeFromNow(new Date(oldDate)),
+                    fixAvailable: true,
                   },
                 ],
               },

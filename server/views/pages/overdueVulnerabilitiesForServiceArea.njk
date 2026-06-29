@@ -32,7 +32,7 @@
   </div>
 
 
-  <h1>Overdue vulnerabilities for {{ serviceArea.name }}</h1>
+  <h1>Overdue vulnerabilities for {{ serviceAreaName }}</h1>
   {% set info %}
     <p>
       This page highlights products and components with HIGH or CRITICAL security issues that are overdue for fixing.
@@ -45,15 +45,12 @@
     </p>
     <ul>
       <li>is rated <strong>HIGH or CRITICAL</strong>, and</li>
-      <li>is still present more than <strong>7 days after its publication date</strong></li>
+      <li>a fix has been published, and</li>
+      <li>it is still present more than <strong>7 days after its publication date</strong></li>
     </ul>
 
     <p>
-      <strong>Note:</strong> This view does not currently take into account suppressions defined in <code>.snyk</code> files. A <a href="https://dsdmoj.atlassian.net/browse/HEAT-1279">ticket</a> for this is planned.
-    </p>
-
-    <p>
-      Data on this page comes from <a class="govuk-link--no-visited-state" href="/scheduled-jobs/hmpps-snyk-discovery-full">nightly scans of production images</a>.
+      Data on this page comes from <a class="govuk-link--no-visited-state" href="/scheduled-jobs/hmpps-snyk-discovery-full">nightly scans of production images</a> rather than the dependencies associated with the current HEAD of the main branch.
     </p>
   {% endset %}
   {{ govukDetails({
@@ -61,31 +58,28 @@
         html: info
   }) }}
 
-  {% set rows = [] %}
-  {% for product in serviceArea.productsWithComponents %}
-    {% set rows = (rows.push([
-      { html: '<a href="' + serviceArea.slug +'/product/' + product.slug + '" class="govuk-link--no-visited-state">' +product.name },
-      { text: product.numberOfBreachedComponents },
-      { text: product.components.length },
-      { text: product.numberOfBreachedVulnerabilities }]),
-       rows) %}
-  {% endfor %}
-  {{ govukTable({
-      caption: "Products",
-      captionClasses: "govuk-table__caption--l",
-      firstCellIsHeader: false,
-      head: [
-          { html: "Product name" },
-          { text: "Breached components" },
-          { text: "Total components" },
-          { text: "Number of breached vulnerabilities" }
-      ],
-      rows: rows
-  }) }}
+    <table id="products" class="stripe">
+    <thead>
+      <tr>
+        <th>Product name</th>
+        <th class="govuk-!-width-one-fifth">Breached components</th>
+        <th class="govuk-!-width-one-fifth">Total components</th>
+        <th class="govuk-!-width-one-quarter">Number of breached vulnerabilities</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Product name</th>
+        <th class="govuk-!-width-one-fifth">Breached components</th>
+        <th class="govuk-!-width-one-fifth">Total components</th>
+        <th class="govuk-!-width-one-quarter">Number of breached vulnerabilities</th>
+      </tr>
+    </tfoot>
+  </table>
 {% endblock %}
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
   <script src="/assets/js/common.js"></script>
-  <script src="/assets/js/overdueVulnerabilities.js"></script>
+  <script src="/assets/js/overdueVulnerabilitiesForServiceArea.js"></script>
 {% endblock %}

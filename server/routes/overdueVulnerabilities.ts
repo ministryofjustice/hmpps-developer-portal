@@ -14,16 +14,24 @@ export default function routes({ serviceCatalogueService, cveSlaService }: Servi
   router.get('/:serviceAreaSlug.json', async (req, res) => {
     const { serviceAreaSlug } = req.params
     const cves = await cveSlaService.getCveSlaForServiceArea(serviceAreaSlug)
-    res.json(cves)
+    res.json(
+      cves.productsWithComponents.map(product => ({
+        name: product.name,
+        slug: product.slug,
+        totalComponents: product.components.length,
+        numberOfBreachedComponents: product.numberOfBreachedComponents,
+        numberOfBreachedVulnerabilities: product.numberOfBreachedVulnerabilities,
+      })),
+    )
   })
 
   router.get('/:serviceAreaSlug', async (req, res) => {
     const { serviceAreaSlug } = req.params
     const serviceAreas = await serviceCatalogueService.getServiceAreas({ withComponents: false })
-    const serviceArea = await cveSlaService.getCveSlaForServiceArea(serviceAreaSlug)
+    const serviceAreaName = serviceAreas.find(sa => sa.slug === serviceAreaSlug)?.name
     res.render(`pages/overdueVulnerabilitiesForServiceArea`, {
-      serviceArea,
       serviceAreas,
+      serviceAreaName,
       selectedServiceArea: serviceAreaSlug,
     })
   })
