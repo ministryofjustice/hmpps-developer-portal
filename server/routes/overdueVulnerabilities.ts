@@ -8,22 +8,30 @@ export default function routes({ serviceCatalogueService, cveSlaService }: Servi
   router.get('/', async (req, res) => {
     const serviceAreas = await serviceCatalogueService.getServiceAreas({ withComponents: false })
     assert(serviceAreas.length > 0, 'No service areas found in the service catalogue')
-    res.redirect(`vulnerability-slas/${serviceAreas[0].slug}`)
+    res.redirect(`/overdue-vulnerabilities/${serviceAreas[0].slug}`)
   })
 
   router.get('/:serviceAreaSlug.json', async (req, res) => {
     const { serviceAreaSlug } = req.params
     const cves = await cveSlaService.getCveSlaForServiceArea(serviceAreaSlug)
-    res.json(cves)
+    res.json(
+      cves.productsWithComponents.map(product => ({
+        name: product.name,
+        slug: product.slug,
+        totalComponents: product.components.length,
+        numberOfBreachedComponents: product.numberOfBreachedComponents,
+        numberOfBreachedVulnerabilities: product.numberOfBreachedVulnerabilities,
+      })),
+    )
   })
 
   router.get('/:serviceAreaSlug', async (req, res) => {
     const { serviceAreaSlug } = req.params
     const serviceAreas = await serviceCatalogueService.getServiceAreas({ withComponents: false })
-    const serviceArea = await cveSlaService.getCveSlaForServiceArea(serviceAreaSlug)
-    res.render(`pages/vulnerabilitySlasForServiceArea`, {
-      serviceArea,
+    const serviceAreaName = serviceAreas.find(sa => sa.slug === serviceAreaSlug)?.name
+    res.render(`pages/overdueVulnerabilitiesForServiceArea`, {
       serviceAreas,
+      serviceAreaName,
       selectedServiceArea: serviceAreaSlug,
     })
   })
@@ -32,7 +40,7 @@ export default function routes({ serviceCatalogueService, cveSlaService }: Servi
     const { serviceAreaSlug, productSlug } = req.params
     const serviceAreas = await serviceCatalogueService.getServiceAreas({ withComponents: false })
     const result = await cveSlaService.getCveSlaForProduct(serviceAreaSlug, productSlug)
-    res.render(`pages/vulnerabilitySlasForProduct`, {
+    res.render(`pages/overdueVulnerabilitiesForProduct`, {
       serviceArea: result.serviceArea,
       product: result.product,
       serviceAreas,

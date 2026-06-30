@@ -1,0 +1,85 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - CVE Vulnerabilities" %}
+{% set mainClasses = "app-container govuk-body" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+
+  {{ breadCrumb("Overdue vulnerabilities", []) }}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukSelect({
+          id: "service-area",
+          name: "serviceArea",
+          label: {
+              text: "Service Area:"
+          },
+          items: serviceAreas | sort(false, false, 'serviceAreaName') | toSelect('slug', 'name', selectedServiceArea)
+      }) }}
+    </div>
+    <div class="govuk-grid-column-one-third">
+      {{ govukButton({
+        id: "updateServiceArea",
+        name: "updateServiceArea",
+        text: "View",
+        classes: "update-service-area"
+      }) }}
+    </div>
+  </div>
+
+
+  <h1>Overdue vulnerabilities for {{ serviceAreaName }}</h1>
+  {% set info %}
+    <p>
+      This page highlights products and components with HIGH or CRITICAL security issues that are overdue for fixing.
+    </p>
+    <p>
+      Under <a href="https://security-guidance.service.justice.gov.uk/patch-management-guide/#patching-schedule">MoJ guidance</a>, these issues should typically be resolved within <strong>3–7 days</strong>.
+    </p>
+    <p>
+      A security issue is considered overdue if it:
+    </p>
+    <ul>
+      <li>is rated <strong>HIGH or CRITICAL</strong>, and</li>
+      <li>a fix has been published, and</li>
+      <li>it is still present more than <strong>7 days after its publication date</strong></li>
+    </ul>
+
+    <p>
+      Data on this page comes from <a class="govuk-link--no-visited-state" href="/scheduled-jobs/hmpps-snyk-discovery-full">nightly scans of production images</a> rather than the dependencies associated with the current HEAD of the main branch.
+    </p>
+  {% endset %}
+  {{ govukDetails({
+        summaryText: "About this page",
+        html: info
+  }) }}
+
+    <table id="products" class="stripe">
+    <thead>
+      <tr>
+        <th>Product name</th>
+        <th class="govuk-!-width-one-fifth">Breached components</th>
+        <th class="govuk-!-width-one-fifth">Total components</th>
+        <th class="govuk-!-width-one-quarter">Number of breached vulnerabilities</th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Product name</th>
+        <th class="govuk-!-width-one-fifth">Breached components</th>
+        <th class="govuk-!-width-one-fifth">Total components</th>
+        <th class="govuk-!-width-one-quarter">Number of breached vulnerabilities</th>
+      </tr>
+    </tfoot>
+  </table>
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/overdueVulnerabilitiesForServiceArea.js"></script>
+{% endblock %}

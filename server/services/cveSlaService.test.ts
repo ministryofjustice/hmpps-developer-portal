@@ -1,6 +1,7 @@
 import ServiceCatalogueService from './serviceCatalogueService'
-import CveSlaService, { type ComponentInfo, type ProductInfo } from './cveSlaService'
+import CveSlaService, { Vulnerability, type ComponentInfo, type ProductInfo } from './cveSlaService'
 import { Component, Product, ServiceArea, SnykVulnerability } from '../data/strapiApiTypes'
+import { relativeTimeFromNow } from '../utils/utils'
 
 jest.mock('./serviceCatalogueService')
 
@@ -10,6 +11,15 @@ const makeVuln = (overrides: Partial<SnykVulnerability> = {}): SnykVulnerability
   snyk_id: 'SNYK-001',
   severity: 'HIGH',
   published_date: '2020-01-01',
+  fix_available: 'true',
+  ...overrides,
+})
+
+const makeVulnInfo = (overrides: Partial<Vulnerability> = {}): Vulnerability => ({
+  vulnerabilityId: 'SNYK-001',
+  severityLevel: 'HIGH',
+  publishedDate: '2020-01-01',
+  slaBreached: true,
   ...overrides,
 })
 
@@ -64,12 +74,49 @@ describe('CveSlaService', () => {
     })
   })
 
+  describe('compare vulnerability info', () => {
+    it('prioritises severity', () => {
+      const v1 = makeVulnInfo({ vulnerabilityId: 'vuln-1', severityLevel: 'HIGH', publishedDate: '2026-01-01' })
+      const v2 = makeVulnInfo({ vulnerabilityId: 'vuln-2', severityLevel: 'CRITICAL', publishedDate: '2026-01-01' })
+      const v3 = makeVulnInfo({ vulnerabilityId: 'vuln-3', severityLevel: 'MEDIUM', publishedDate: '2026-01-01' })
+
+      const vulnerabilityIds = [v1, v2, v3]
+        .sort(cveSlaService.compareVulnerabilities)
+        .map(vulnerability => vulnerability.vulnerabilityId)
+      expect(vulnerabilityIds).toStrictEqual(['vuln-2', 'vuln-1', 'vuln-3'])
+    })
+
+    it('then by date', () => {
+      const v1 = makeVulnInfo({ vulnerabilityId: 'vuln-1', severityLevel: 'HIGH', publishedDate: '2026-01-01' })
+      const v2 = makeVulnInfo({ vulnerabilityId: 'vuln-2', severityLevel: 'HIGH', publishedDate: '2026-01-03' })
+      const v3 = makeVulnInfo({ vulnerabilityId: 'vuln-3', severityLevel: 'HIGH', publishedDate: '2026-01-02' })
+
+      const vulnerabilityIds = [v1, v2, v3]
+        .sort(cveSlaService.compareVulnerabilities)
+        .map(vulnerability => vulnerability.vulnerabilityId)
+      expect(vulnerabilityIds).toStrictEqual(['vuln-1', 'vuln-3', 'vuln-2'])
+    })
+
+    it('then by name', () => {
+      const v1 = makeVulnInfo({ vulnerabilityId: 'vuln-1', severityLevel: 'HIGH', publishedDate: '2026-01-01' })
+      const v2 = makeVulnInfo({ vulnerabilityId: 'vuln-2', severityLevel: 'HIGH', publishedDate: '2026-01-01' })
+      const v3 = makeVulnInfo({ vulnerabilityId: 'vuln-3', severityLevel: 'HIGH', publishedDate: '2026-01-01' })
+
+      const vulnerabilityIds = [v1, v2, v3]
+        .sort(cveSlaService.compareVulnerabilities)
+        .map(vulnerability => vulnerability.vulnerabilityId)
+      expect(vulnerabilityIds).toStrictEqual(['vuln-1', 'vuln-2', 'vuln-3'])
+    })
+  })
+
   describe('compare component info', () => {
     const vulnerability = {
       publishedDate: '2020-01-02',
       severityLevel: 'HIGH',
       slaBreached: true,
       vulnerabilityId: '01',
+      breachedSince: relativeTimeFromNow(new Date('2020-01-02')),
+      fixAvailable: true,
     }
 
     it('priortises vulnerability count', () => {
@@ -176,6 +223,8 @@ describe('CveSlaService', () => {
                     severityLevel: 'HIGH',
                     slaBreached: true,
                     vulnerabilityId: 'SNYK-001',
+                    breachedSince: relativeTimeFromNow(new Date(oldDate)),
+                    fixAvailable: true,
                   },
                 ],
               },
