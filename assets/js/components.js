@@ -1,4 +1,9 @@
 jQuery(function () {
+  const urlParams = new URLSearchParams(window.location.search)
+  const archived = urlParams.get('archived')
+  const isArchived = archived === 'true'
+  const ajaxUrl = archived ? `/components/data?archived=${archived}` : '/components/data?archived=false'
+
   const columns = [
     {
       data: 'name',
@@ -157,9 +162,9 @@ jQuery(function () {
     },
     {
       data: 'archived',
-      visible: false,
+      visible: isArchived,
       createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.archived}`)
+        $(td).html(`${rowData.archived ? 'Yes' : 'No'}`)
       },
     },
     {
@@ -200,7 +205,7 @@ jQuery(function () {
 
   createTable({
     id: 'componentsTable',
-    ajaxUrl: '/components/data',
+    ajaxUrl,
     orderColumn: 0,
     orderType: 'asc',
     columns,

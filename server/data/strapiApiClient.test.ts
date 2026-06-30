@@ -204,6 +204,34 @@ describe('strapiApiClient', () => {
 
         expect(output).toEqual(componentsResponse)
       })
+
+      it('should return archived components when archived filter is true', async () => {
+        const allComponents = {
+          data: [{ documentId: 'documentid1', name: 'Component' }],
+        } as ListResponse<Strapi.Component>
+        const componentsResponse = [{ documentId: 'documentid1', name: 'Component' }] as Component[]
+        fakeStrapiApi
+          .get('/components?populate[product][populate][team]=true&populate[envs]=true&filters[archived][$eq]=true')
+          .reply(200, allComponents)
+        const output = await strapiApiClient.getComponents([], true, false, true)
+
+        expect(output).toEqual(componentsResponse)
+      })
+
+      it('should return live components when archived filter is false', async () => {
+        const allComponents = {
+          data: [{ documentId: 'documentid1', name: 'Component' }],
+        } as ListResponse<Strapi.Component>
+        const componentsResponse = [{ documentId: 'documentid1', name: 'Component' }] as Component[]
+        fakeStrapiApi
+          .get(
+            '/components?populate[product][populate][team]=true&populate[envs]=true&filters[$or][0][archived][$null]=true&filters[$or][1][archived][$eq]=false',
+          )
+          .reply(200, allComponents)
+        const output = await strapiApiClient.getComponents([], true, false, false)
+
+        expect(output).toEqual(componentsResponse)
+      })
     })
 
     describe('getComponent', () => {

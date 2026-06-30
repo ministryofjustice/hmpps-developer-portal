@@ -240,6 +240,14 @@ describe('Strapi service', () => {
         expect(strapiApiClient.getComponents).toHaveBeenCalledTimes(1)
         expect(results).toEqual(testComponents)
       })
+
+      it('should pass archived filter when provided', async () => {
+        strapiApiClient.getComponents.mockResolvedValue(testComponentsResponse)
+
+        await serviceCatalogueService.getComponents([], true, false, true)
+
+        expect(strapiApiClient.getComponents).toHaveBeenCalledWith([], true, false, true)
+      })
     })
 
     describe('getComponent', () => {
