@@ -105,12 +105,12 @@ export default class StrapiApiClient {
     const filters = exemptionFilters.map((filterValue, index) => {
       return `filters[veracode_exempt][$in][${index}]=${filterValue}`
     })
-    const archivedFilter =
-      isArchived === true
-        ? 'filters[archived][$eq]=true'
-        : isArchived === false
-          ? 'filters[$or][0][archived][$null]=true&filters[$or][1][archived][$eq]=false'
-          : ''
+    let archivedFilter = ''
+    if (isArchived === true) {
+      archivedFilter = 'filters[archived][$eq]=true'
+    } else if (isArchived === false) {
+      archivedFilter = 'filters[$or][0][archived][$null]=true&filters[$or][1][archived][$eq]=false'
+    }
     const queryFilters = [...filters, archivedFilter].filter(Boolean).join('&')
 
     return this.restClient

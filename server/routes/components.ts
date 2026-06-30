@@ -43,7 +43,12 @@ export default function routes({
 
   router.get('/data', async (req, res) => {
     const archivedQuery = req.query.archived
-    const isArchived = archivedQuery === 'true' ? true : archivedQuery === 'false' ? false : undefined
+    let isArchived: boolean | undefined
+    if (archivedQuery === 'true') {
+      isArchived = true
+    } else if (archivedQuery === 'false') {
+      isArchived = false
+    }
     const components = await serviceCatalogueService.getComponents([], true, false, isArchived)
 
     res.send(components)
