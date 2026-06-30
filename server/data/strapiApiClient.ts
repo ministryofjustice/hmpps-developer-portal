@@ -97,6 +97,7 @@ export default class StrapiApiClient {
     exemptionFilters: string[] = [],
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
+    isArchived?: boolean,
   ): Promise<Component[]> {
     const populate = createStrapiQuery({
       populate: [`product${includeTeams ? '.team' : ''}`, 'envs', ...(includeLatestCommit ? ['latest_commit'] : [])],
@@ -104,11 +105,18 @@ export default class StrapiApiClient {
     const filters = exemptionFilters.map((filterValue, index) => {
       return `filters[veracode_exempt][$in][${index}]=${filterValue}`
     })
+    const archivedFilter =
+      isArchived === true
+        ? 'filters[archived][$eq]=true'
+        : isArchived === false
+          ? 'filters[$or][0][archived][$null]=true&filters[$or][1][archived][$eq]=false'
+          : ''
+    const queryFilters = [...filters, archivedFilter].filter(Boolean).join('&')
 
     return this.restClient
       .get<ListResponse<Strapi.Component>>({
         path: '/v1/components',
-        query: `${populate}&${filters.join('&')}`,
+        query: `${populate}&${queryFilters}`,
       })
       .then(unwrapListResponse)
   }

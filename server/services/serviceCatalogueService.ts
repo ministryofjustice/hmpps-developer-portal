@@ -75,8 +75,14 @@ export default class ServiceCatalogueService {
     exemptionFilters: string[] = [],
     includeTeams: boolean = true,
     includeLatestCommit: boolean = false,
+    isArchived?: boolean,
   ): Promise<Component[]> {
-    const componentData = await this.strapiApiClient.getComponents(exemptionFilters, includeTeams, includeLatestCommit)
+    const componentData = await this.strapiApiClient.getComponents(
+      exemptionFilters,
+      includeTeams,
+      includeLatestCommit,
+      isArchived,
+    )
     const components = componentData.sort(sortByName)
 
     return components

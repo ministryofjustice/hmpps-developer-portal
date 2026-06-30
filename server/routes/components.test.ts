@@ -217,6 +217,21 @@ describe('/components', () => {
           expect($('#componentsTable').length).toBe(1)
         })
     })
+
+    it('should render archived components page message', () => {
+      serviceCatalogueService.getScheduledJob.mockResolvedValue({
+        id: 1,
+        name: 'hmpps-github-discovery-incremental',
+        last_successful_run: '2023-10-01T12:00:00Z',
+      })
+      return request(app)
+        .get('/components?archived=true')
+        .expect('Content-Type', /html/)
+        .expect(200)
+        .expect(res => {
+          expect(res.text).toContain('All archived components are displayed on this page.')
+        })
+    })
   })
 
   describe('GET /:componentId', () => {
@@ -274,6 +289,26 @@ describe('/components', () => {
         .expect('Content-Type', /application\/json/)
         .expect(res => {
           expect(res.text).toStrictEqual(JSON.stringify(testComponents))
+        })
+    })
+
+    it('should request archived components when archived query is true', () => {
+      return request(app)
+        .get('/components/data?archived=true')
+        .expect('Content-Type', /application\/json/)
+        .expect(200)
+        .expect(() => {
+          expect(serviceCatalogueService.getComponents).toHaveBeenCalledWith([], true, false, true)
+        })
+    })
+
+    it('should request live components when archived query is false', () => {
+      return request(app)
+        .get('/components/data?archived=false')
+        .expect('Content-Type', /application\/json/)
+        .expect(200)
+        .expect(() => {
+          expect(serviceCatalogueService.getComponents).toHaveBeenCalledWith([], true, false, false)
         })
     })
   })

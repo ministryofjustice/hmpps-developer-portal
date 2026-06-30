@@ -30,17 +30,21 @@ export default function routes({
   const router = Router()
 
   router.get('/', async (req, res) => {
+    const isArchived = req.query.archived === 'true' || false
     const scheduledJobRequest = await serviceCatalogueService.getScheduledJob({
       name: 'hmpps-github-discovery-incremental',
     })
     return res.render('pages/components', {
       jobName: scheduledJobRequest.name,
       lastSuccessfulRun: utcTimestampToUtcDateTime(scheduledJobRequest.last_successful_run),
+      archived: isArchived,
     })
   })
 
   router.get('/data', async (req, res) => {
-    const components = await serviceCatalogueService.getComponents()
+    const archivedQuery = req.query.archived
+    const isArchived = archivedQuery === 'true' ? true : archivedQuery === 'false' ? false : undefined
+    const components = await serviceCatalogueService.getComponents([], true, false, isArchived)
 
     res.send(components)
   })
