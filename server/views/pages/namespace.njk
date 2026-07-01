@@ -79,7 +79,7 @@
         {% if namespace.hmppsEgressControls | length %}
         <ul>
           {% for hmppsEgressControl in namespace.hmppsEgressControls %}
-            <li><a href="/namespaces/{{ namespace.name }}/hmpps-egress-control/{{ hmppsEgressControl.tf_label }}">{{ hmppsEgressControl.tf_label }}</a></li>
+            <li><a href="/namespaces/{{ namespace.name }}/hmpps-egress-control/{{ hmppsEgressControl.tf_label | urlencode }}">{{ hmppsEgressControl.tf_label }}</a></li>
           {% endfor %}
         </ul>
         {% else %}
