@@ -96,13 +96,18 @@ export default function routes({ serviceCatalogueService }: Services): Router {
   router.get('/:namespaceSlug/hmpps-egress-control/:tf_egress_control', async (req, res) => {
     const namespaceSlug = getFormattedName(req, 'namespaceSlug')
     const namespace = await serviceCatalogueService.getNamespace({ namespaceSlug })
-    const egressControlLabel = req.params.tf_egress_control
-    const hmppsEgressControls = namespace.hmpps_egress_controls
-    const filteredEgressControl = hmppsEgressControls?.find(control => control.tf_label === egressControlLabel)
+
+    const egressControlLabel = decodeURIComponent(req.params.tf_egress_control)
+    const hmppsEgressControls = namespace.hmpps_egress_controls ?? []
+    const filteredEgressControl = hmppsEgressControls.find(control => control.tf_label === egressControlLabel)
+
+    if (!filteredEgressControl) {
+      return res.status(404).send('HMPPS egress control not found')
+    }
 
     const displayNamespace = {
       name: namespace.name,
-      hmppsEgressControl: filteredEgressControl || null,
+      hmppsEgressControl: filteredEgressControl,
     }
     return res.render('pages/hmppsEgressControl', { namespace: displayNamespace })
   })
