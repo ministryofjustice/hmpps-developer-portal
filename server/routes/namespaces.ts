@@ -27,6 +27,7 @@ export default function routes({ serviceCatalogueService }: Services): Router {
       name: namespace.name,
       pingdomCheck: namespace.pingdom_check,
       hmppsTemplate: namespace.hmpps_template,
+      hmppsEgressControls: namespace.hmpps_egress_controls,
       rdsInstances: namespace.rds_instance,
       elasticacheCluster: namespace.elasticache_cluster,
     }
@@ -90,6 +91,20 @@ export default function routes({ serviceCatalogueService }: Services): Router {
     }
 
     return res.render('pages/pingdom', { namespace: displayNamespace })
+  })
+
+  router.get('/:namespaceSlug/hmpps-egress-control/:tf_egress_control', async (req, res) => {
+    const namespaceSlug = getFormattedName(req, 'namespaceSlug')
+    const namespace = await serviceCatalogueService.getNamespace({ namespaceSlug })
+    const egressControlLabel = req.params.tf_egress_control
+    const hmppsEgressControls = namespace.hmpps_egress_controls
+    const filteredEgressControl = hmppsEgressControls?.find(control => control.tf_label === egressControlLabel)
+
+    const displayNamespace = {
+      name: namespace.name,
+      hmppsEgressControl: filteredEgressControl || null,
+    }
+    return res.render('pages/hmppsEgressControl', { namespace: displayNamespace })
   })
   return router
 }

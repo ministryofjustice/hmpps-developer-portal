@@ -117,6 +117,37 @@ jQuery(function () {
           .toLowerCase()
       },
     },
+    {
+      data: 'hmpps_egress_controls',
+      createdCell: function (td, _cellData, rowData) {
+        const hmppsEgressControls = (rowData.hmpps_egress_controls || [])
+          .map(
+            control =>
+              `<a href="/namespaces/${rowData.name}/hmpps-egress-control/${control.tf_label}">${control.tf_label}</a>`,
+          )
+          .join('<br>')
+
+        $(td).html(hmppsEgressControls || 'N/A')
+      },
+      render: function (data, type, rowData) {
+        if (type === 'display') {
+          return data && data.length
+            ? data
+                .map(
+                  control =>
+                    `<a href="/namespaces/${rowData.name}/hmpps-egress-control/${control.tf_label}">${control.tf_label}</a>`,
+                )
+                .join('<br>')
+            : 'N/A'
+        }
+
+        if (!data || !data.length) return 'zzzzz'
+        return data
+          .map(control => control.tf_label)
+          .join(' ')
+          .toLowerCase()
+      },
+    },
   ]
 
   createTable({ id: 'namespacesTable', ajaxUrl: '/namespaces/data', orderColumn: 0, orderType: 'asc', columns })

@@ -2,13 +2,14 @@
 
 set -euo pipefail
 
-POD_NAME=$(kubectl -n hmpps-portfolio-management-prod get pods -l=app=hmpps-service-catalogue  -o jsonpath='{.items[0].metadata.name }')
+SWAGGER_URL="https://service-catalogue.hmpps.service.justice.gov.uk/v1/swagger.json"
+SWAGGER_OUTPUT="/tmp/full_documentation.json"
 
-echo "Downloading open api docs from ${POD_NAME} to /tmp/full_documentation.json"
-kubectl -n hmpps-portfolio-management-prod cp "${POD_NAME}:/opt/app/src/extensions/documentation/documentation/1.0.0/full_documentation.json"  /tmp/full_documentation.json  
+echo "Downloading open api docs from ${SWAGGER_URL} to ${SWAGGER_OUTPUT}"
+curl --fail --silent --show-error --location "${SWAGGER_URL}" --output "${SWAGGER_OUTPUT}"
 
 echo "Running open api typescript generator"
-npx openapi-typescript /tmp/full_documentation.json --alphabetize --output ./server/@types/strapi-api.d.ts
+npx openapi-typescript "${SWAGGER_OUTPUT}" --alphabetize --output ./server/@types/strapi-api.d.ts
 
 echo "Linting generated types"
 npm run lint-fix
@@ -16,4 +17,4 @@ npm run lint-fix
 echo "Running typecheck"
 npm run typecheck
 
-rm /tmp/full_documentation.json
+rm "${SWAGGER_OUTPUT}"
