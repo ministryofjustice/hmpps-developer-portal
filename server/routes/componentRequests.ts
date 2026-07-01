@@ -363,7 +363,7 @@ export const buildFormData = (formData: Record<string, unknown>): GithubRepoRequ
       requester_email: sanitiseString(formData.requester_email?.toString()),
       requester_team: formData.requester_team?.toString(),
       request_github_pr_status: 'Pending',
-      request_type: formData.request_type?.toString() as 'Add' | 'Archive',
+      ...(formData.request_type ? { request_type: formData.request_type.toString() as 'Add' | 'Archive' } : {}),
     },
   }
 }
