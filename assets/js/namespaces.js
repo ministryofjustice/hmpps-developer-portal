@@ -123,7 +123,7 @@ jQuery(function () {
         const hmppsEgressControls = (rowData.hmpps_egress_controls || [])
           .map(
             control =>
-              `<a href="/namespaces/${rowData.name}/hmpps-egress-control/${control.tf_label}">${control.tf_label}</a>`,
+              `<a href="/namespaces/${rowData.name}/hmpps-egress-control/${encodeURIComponent(control.tf_label)}">${control.tf_label}</a>`,
           )
           .join('<br>')
 
