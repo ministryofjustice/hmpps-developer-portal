@@ -135,7 +135,7 @@ jQuery(function () {
             ? data
                 .map(
                   control =>
-                    `<a href="/namespaces/${rowData.name}/hmpps-egress-control/${control.tf_label}">${control.tf_label}</a>`,
+                    `<a href="/namespaces/${rowData.name}/hmpps-egress-control/${encodeURIComponent(control.tf_label)}">${control.tf_label}</a>`,
                 )
                 .join('<br>')
             : 'N/A'
