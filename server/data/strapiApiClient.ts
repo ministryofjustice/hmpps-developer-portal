@@ -186,7 +186,13 @@ export default class StrapiApiClient {
     namespaceDocumentId?: string
     namespaceSlug?: string
   }): Promise<Namespace> {
-    const populateList = ['rds_instance', 'elasticache_cluster', 'pingdom_check', 'hmpps_template']
+    const populateList = [
+      'rds_instance',
+      'elasticache_cluster',
+      'pingdom_check',
+      'hmpps_template',
+      'hmpps_egress_controls',
+    ]
 
     const populate = createStrapiQuery({ populate: populateList })
     const query = namespaceSlug ? `filters[name][$eq]=${namespaceSlug}&${populate}` : populate

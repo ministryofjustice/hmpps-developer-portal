@@ -15,6 +15,7 @@ type RdsEntry = Record<string, unknown>
 type ElasticacheCluster = Record<string, unknown>
 type PingdomCheck = Record<string, unknown>
 type HmppsTemplate = Record<string, unknown>
+type HmppsEgressControl = Record<string, unknown>
 
 const mockScheduledJob = {
   id: 12,
@@ -43,6 +44,7 @@ const mockNamespaces = [
     elasticache_cluster: [] as ElasticacheCluster[],
     pingdom_check: [] as PingdomCheck[],
     hmpps_template: [] as HmppsTemplate[],
+    hmpps_egress_controls: [] as HmppsEgressControl[],
   },
   {
     id: 456,
@@ -55,6 +57,7 @@ const mockNamespaces = [
     elasticache_cluster: [] as ElasticacheCluster[],
     pingdom_check: [] as PingdomCheck[],
     hmpps_template: [] as HmppsTemplate[],
+    hmpps_egress_controls: [] as HmppsEgressControl[],
   },
 ]
 
@@ -85,6 +88,26 @@ const mockNamespace = {
   elasticache_cluster: [] as ElasticacheCluster[],
   pingdom_check: [] as PingdomCheck[],
   hmpps_template: [] as HmppsTemplate[],
+  hmpps_egress_controls: [] as HmppsEgressControl[],
+}
+
+const mockEgressControl = {
+  tf_label: 'hmpps_mock_egress_control',
+  enable_envoy_setup: true,
+  enable_egress_controls: true,
+  namespace: 'hmpps-mock-namespace-api-dev',
+  envoy_extra_allowed_hosts_exact: ['example.com', 'api.example.com'],
+  envoy_extra_allowed_hosts_suffixes: ['.example.net'],
+  tf_path: 'terraform/modules/hmpps-egress-controls',
+  tf_line_start: 12,
+  tf_line_end: 34,
+  tf_mod_version: '1.2.3',
+  tf_filename: 'hmpps-egress-control.tf',
+}
+
+const mockNamespaceWithEgressControl = {
+  ...mockNamespace,
+  hmpps_egress_controls: [mockEgressControl],
 }
 
 beforeEach(() => {
@@ -129,6 +152,7 @@ describe('/namespaces', () => {
           elasticache_cluster: [] as ElasticacheCluster[],
           pingdom_check: [] as PingdomCheck[],
           hmpps_template: [] as HmppsTemplate[],
+          hmpps_egress_controls: [] as HmppsEgressControl[],
         },
         {
           id: 456,
@@ -141,6 +165,7 @@ describe('/namespaces', () => {
           elasticache_cluster: [] as ElasticacheCluster[],
           pingdom_check: [] as PingdomCheck[],
           hmpps_template: [] as HmppsTemplate[],
+          hmpps_egress_controls: [] as HmppsEgressControl[],
         },
       ]
       return request(app)
@@ -167,6 +192,32 @@ describe('/namespaces', () => {
           expect(serviceCatalogueService.getNamespace).toHaveBeenCalled()
           expect(namespaceRDSLink.text().trim()).toBe('hmpps_mock_namespace_api_rds')
         })
+    })
+  })
+
+  describe('GET /:namespaceSlug/hmpps-egress-control/:tf_egress_control', () => {
+    it('should fetch namespace data and display the egress control', async () => {
+      serviceCatalogueService.getNamespace.mockResolvedValueOnce(mockNamespaceWithEgressControl)
+
+      return request(app)
+        .get('/namespaces/hmpps-mock-namespace-api-dev/hmpps-egress-control/hmpps_mock_egress_control')
+        .expect('Content-Type', /html/)
+        .expect(200)
+        .expect(res => {
+          expect(serviceCatalogueService.getNamespace).toHaveBeenCalled()
+          const $ = cheerio.load(res.text)
+          expect($('[data-test="detail-page-title"]').text()).toBe('hmpps_mock_egress_control')
+          expect($('body').text()).toContain('hmpps_mock_egress_control')
+          expect($('body').text()).toContain('enable_envoy_setup')
+          expect($('body').text()).toContain('example.com')
+        })
+    })
+
+    it('should return 404 when the egress control is not found', async () => {
+      return request(app)
+        .get('/namespaces/hmpps-mock-namespace-api-dev/hmpps-egress-control/missing_control')
+        .expect(404)
+        .expect('HMPPS egress control not found')
     })
   })
 })
