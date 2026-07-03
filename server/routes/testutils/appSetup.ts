@@ -25,16 +25,6 @@ import overdueVulnerabilitiesRoutes from '../overdueVulnerabilities'
 import nunjucksSetup from '../../utils/nunjucksSetup'
 import errorHandler from '../../errorHandler'
 import type { Services } from '../../services'
-import type { ApplicationInfo } from '../../applicationInfo'
-
-const testAppInfo: ApplicationInfo = {
-  applicationName: 'test',
-  buildNumber: '1',
-  gitRef: 'long ref',
-  gitShortHash: 'short ref',
-  productId: 'product id',
-  branchName: 'main',
-}
 
 export const flashProvider = jest.fn()
 
@@ -43,7 +33,7 @@ function appSetup(services: Services, production: boolean): Express {
 
   app.set('view engine', 'njk')
 
-  nunjucksSetup(app, testAppInfo)
+  nunjucksSetup(app)
   app.use(cookieSession({ keys: [''] }))
   app.use((req, res, next) => {
     req.flash = flashProvider
