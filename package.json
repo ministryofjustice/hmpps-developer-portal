@@ -64,7 +64,7 @@
     "mermaid": "^11.15.0",
     "nocache": "^4.0.0",
     "nunjucks": "^3.2.4",
-    "pako": "^2.1.0",
+    "pako": "^3.0.0",
     "redis": "^6.0.1",
     "superagent": "^10.3.0",
     "svg-pan-zoom": "^3.6.2",
