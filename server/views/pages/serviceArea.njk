@@ -25,20 +25,24 @@
         {% if serviceArea.products | length -%}
         <ul>
           {% for product in serviceArea.products -%}
-            <li>
-              <a class="govuk-link--no-visited-state govuk-!-margin-bottom-0 govuk-!-margin-top-3 govuk-heading-s" href="/products/{{ product.slug }}" data-test="product-{{ product.id }}">{{ product.name }}</a>
-              <ul>
-              {% if product.components | length -%}
-                {% for component in product.components -%}
-                  <li>
-                    <a class="govuk-link--no-visited-state" href="/components/{{component.name}}" data-test="product-{{ product.id }}-component-{{ component.id }}">
-                      {{ component.name }}{% if component.archived %} (ARCHIVED){% endif %}
-                    </a>
-                  </li>
-                {%- endfor %}
-              {%- endif %}
-              </ul>
-            </li>
+            {% if not product.decommissioned %}
+              <li>
+                <a class="govuk-link--no-visited-state govuk-!-margin-bottom-0 govuk-!-margin-top-3 govuk-heading-s" href="/products/{{ product.slug }}" data-test="product-{{ product.id }}">{{ product.name }}</a>
+                <ul>
+                {% if product.components | length -%}
+                  {% for component in product.components -%}
+                    {% if not component.archived %}
+                      <li>
+                        <a class="govuk-link--no-visited-state" href="/components/{{component.name}}" data-test="product-{{ product.id }}-component-{{ component.id }}">
+                          {{ component.name }}
+                        </a>
+                      </li>
+                    {%- endif %}
+                  {%- endfor %}
+                {%- endif %}
+                </ul>
+              </li>
+            {%- endif %}
           {%- endfor %}
         </ul>
         {% else %}

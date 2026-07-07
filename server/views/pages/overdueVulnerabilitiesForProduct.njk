@@ -1,0 +1,99 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - CVE Vulnerabilities" %}
+{% set mainClasses = "app-container govuk-body" %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/accordion/macro.njk" import govukAccordion %}
+
+{% block content %}
+
+  {% set breadCrumbList = [
+      {title: "Overdue vulnerabilties", href: '/overdue-vulnerabilities'},
+      {title: serviceArea.name, href: '/overdue-vulnerabilities/' + serviceArea.slug }
+    ]
+  %}
+
+  {{ breadCrumb(product.name, breadCrumbList) }}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukSelect({
+          id: "service-area",
+          name: "serviceArea",
+          label: {
+              text: "Service Area:"
+          },
+          items: serviceAreas | sort(false, false, 'serviceAreaName') | toSelect('slug', 'name', selectedServiceArea)
+      }) }}
+    </div>
+    <div class="govuk-grid-column-one-third">
+      {{ govukButton({
+        id: "updateServiceArea",
+        name: "updateServiceArea",
+        text: "View",
+        classes: "update-service-area"
+      }) }}
+    </div>
+  </div>
+
+  <h1>Overdue vulnerabilities for {{ product.name }}</h1>
+    <p>{{ product.numberOfBreachedComponents }} / {{ product.components.length }} components have vulnerabilties that have breached their SLA</p>
+
+
+  {% set items = [] %}
+  {% for component in product.components %}
+    {% set html %}
+      <p>See all production vulnerabilities <a href="/snyk-scans/{{ component.name }}/environments/{{component.scanName}}" class="govuk-link--no-visited-state">here</a></p>
+      {% if component.breachedVulnerabilities.length %}
+          {% set rows = [] %}
+          {% for vuln in component.breachedVulnerabilities %}
+              {% set rows = (rows.push([
+                { html: '<a href="https://security.snyk.io/vuln/' + vuln.vulnerabilityId + '" class="govuk-link--no-visited-state">' + vuln.vulnerabilityId + '</a>' },
+                { text: vuln.severityLevel },
+                { text: vuln.publishedDate },
+                { text: vuln.breachedSince }
+                ])
+              , rows) %}
+          {% endfor %}
+          {{ govukTable({
+              caption: "Overdue vulnerabilities",
+              captionClasses: "govuk-table__caption--s",
+              firstCellIsHeader: false,
+              head: [
+                  { text: "Vuln ID" },
+                  { text: "Severity Level" },
+                  { text: "Published date" },
+                  { text: "Overdue since" }
+              ],
+              rows: rows
+          }) }}
+      {% endif %}
+    {% endset %}
+
+    {% set items = (items.push({
+      heading: {
+        text: component.name
+      },
+      summary: {
+        html: '<p>' + component.breachedVulnerabilities.length + ' vulnerabilties with breached SLAs present in production for <a href="/components/' +  component.name + '" class="govuk-link--no-visited-state">' + component.name  + '</a>.<br/></p>'
+      },
+      content: {
+        html: html
+      }
+    }), items) %}
+  {% endfor %}
+
+
+    {{ govukAccordion({
+      id: "components",
+      items: items
+    }) }}
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+  <script src="/assets/js/common.js"></script>
+  <script src="/assets/js/overdueVulnerabilitiesForProduct.js"></script>
+{% endblock %}

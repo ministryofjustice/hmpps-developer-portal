@@ -1,0 +1,80 @@
+{% extends "../partials/layout.njk" %}
+
+{% set pageTitle = applicationName + " - " + namespace.hmppsEgressControl.tf_label %}
+{% set mainClasses = "app-container govuk-body" %}
+
+{% block content %}
+
+{% set breadCrumbList = [
+    {title: "Namespaces", href: "/namespaces"},
+    {title: namespace.name, href: "/namespaces/" + namespace.name}
+  ]
+%}
+
+{{ breadCrumb(namespace.hmppsEgressControl.tf_label, breadCrumbList) }}
+
+<h1 data-test="detail-page-title">{{ namespace.hmppsEgressControl.tf_label }}</h1>
+
+<table class="componentData">
+  <tbody>
+    <tr>
+      <th>tf_label</th>
+      <td>{{ namespace.hmppsEgressControl.tf_label }}</td>
+    </tr>
+    <tr>
+      <th>enable_envoy_setup</th>
+      <td>{{ namespace.hmppsEgressControl.enable_envoy_setup }}</td>
+    </tr>
+    <tr>
+      <th>enable_egress_controls</th>
+      <td>{{ namespace.hmppsEgressControl.enable_egress_controls }}</td>
+    </tr>
+    <tr>
+      <th>namespace</th>
+      <td>{{ namespace.hmppsEgressControl.namespace }}</td>
+    </tr>
+    <tr>
+      <th>envoy_extra_allowed_hosts_exact</th>
+      <td>
+        {% for host in namespace.hmppsEgressControl.envoy_extra_allowed_hosts_exact %}
+          {{ host }}<br>
+        {% endfor %}
+      </td>
+    </tr>
+    <tr>
+      <th>envoy_extra_allowed_hosts_suffixes</th>
+      <td>
+        {% for suffix in namespace.hmppsEgressControl.envoy_extra_allowed_hosts_suffixes %}
+          {{ suffix }}<br>
+        {% endfor %}
+      </td>
+    </tr>
+    <tr>
+      <th>tf_path</th>
+      <td>{{ namespace.hmppsEgressControl.tf_path }}</td>
+    </tr>
+    <tr>
+      <th>tf_line_start</th>
+      <td>{{ namespace.hmppsEgressControl.tf_line_start }}</td>
+    </tr>
+    <tr>
+      <th>tf_line_end</th>
+      <td>{{ namespace.hmppsEgressControl.tf_line_end }}</td>
+    </tr>
+    <tr>
+      <th>tf_mod_version</th>
+      <td>{{ namespace.hmppsEgressControl.tf_mod_version }}</td>
+    </tr>
+    <tr>
+      <th>source code</th>
+      <td><a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ namespace.hmppsEgressControl.tf_filename }}">{{ namespace.hmppsEgressControl.tf_filename }}</a></td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/frontendInit.js"></script>
+
+{% endblock %}

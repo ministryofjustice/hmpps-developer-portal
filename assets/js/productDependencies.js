@@ -19,12 +19,12 @@ jQuery(async function () {
   graph.setAttribute('width', '100%')
 
   $('#updateProduct').on('click', async e => {
-    e.preventDefault(e)
+    e.preventDefault()
     const productCode = document.getElementById('product').value
     window.location = `/product-dependencies/${productCode}`
   })
   $('#toggleOrientation').on('click', async e => {
-    e.preventDefault(e)
+    e.preventDefault()
     const urlParams = new URLSearchParams(window.location.search)
     const orientation = urlParams.get('orientation') == 'LR' ? 'TB' : 'LR'
     const productCode = document.getElementById('product').value

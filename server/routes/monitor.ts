@@ -37,7 +37,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
             product => product.slug === monitorName || formatMonitorName(product.slug) === monitorName,
           )
           if (matchingProduct?.id) {
-            monitorId = matchingProduct.id
+            monitorId = Number(matchingProduct.id)
           }
         } catch (error) {
           logger.error(`Failed to find product by name ${monitorName}`, error)
@@ -51,7 +51,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
             team => team.slug === monitorName || formatMonitorName(team.slug) === monitorName,
           )
           if (matchingTeam?.id) {
-            monitorId = matchingTeam.id
+            monitorId = Number(matchingTeam.id)
           }
         } catch (error) {
           logger.error(`Failed to find team by name ${monitorName}`, error)
@@ -65,7 +65,7 @@ export default function routes({ serviceCatalogueService, redisService, dataFilt
             serviceArea => serviceArea.slug === monitorName || formatMonitorName(serviceArea.slug) === monitorName,
           )
           if (matchingServiceArea?.id) {
-            monitorId = matchingServiceArea.id
+            monitorId = Number(matchingServiceArea.id)
           }
         } catch (error) {
           logger.error(`Failed to find service area by name ${monitorName}`, error)

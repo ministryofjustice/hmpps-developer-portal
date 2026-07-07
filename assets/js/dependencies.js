@@ -1,6 +1,6 @@
 jQuery(function () {
   $('#selectDependency').on('click', async e => {
-    e.preventDefault(e)
+    e.preventDefault()
 
     const typeSelect = document.getElementById('dependencyType')
     const nameSelect = document.getElementById('dependencyName')

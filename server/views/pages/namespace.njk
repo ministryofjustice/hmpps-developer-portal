@@ -13,7 +13,7 @@
   <tbody>
     <tr>
       <th>Github Code</th>
-      <td> 
+      <td>
         <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}" target="_blank"> {{ namespace.name }} </a>
       </td>
     </tr>
@@ -70,6 +70,20 @@
         </ul>
         {% else %}
           <p data-test="no-rds-instances">None</p>
+        {% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th>HMPPS egress controls</th>
+      <td>
+        {% if namespace.hmppsEgressControls | length %}
+        <ul>
+          {% for hmppsEgressControl in namespace.hmppsEgressControls %}
+            <li><a href="/namespaces/{{ namespace.name }}/hmpps-egress-control/{{ hmppsEgressControl.tf_label | urlencode }}">{{ hmppsEgressControl.tf_label }}</a></li>
+          {% endfor %}
+        </ul>
+        {% else %}
+          <p data-test="no-hmpps-egress-controls">None</p>
         {% endif %}
       </td>
     </tr>
@@ -336,9 +350,76 @@
   {% endfor %}
 {% endif %}
 
+{% if namespace.hmppsEgressControls | length %}
+  <h1>HMPPS Egress Controls</h1>
+  {% for hmppsEgressControl in namespace.hmppsEgressControls %}
+    <h2>{{ hmppsEgressControl.tf_label }}</h2>
+    <table class="componentData" id="{{ hmppsEgressControl.tf_label | replace(' ', '-') | lower }}">
+      <tbody>
+        <tr>
+          <th>tf_label</th>
+          <td>{{ hmppsEgressControl.tf_label }}</td>
+        </tr>
+        <tr>
+          <th>enable_envoy_setup</th>
+          <td>{{ hmppsEgressControl.enable_envoy_setup }}</td>
+        </tr>
+        <tr>
+          <th>enable_egress_controls</th>
+          <td>{{ hmppsEgressControl.enable_egress_controls }}</td>
+        </tr>
+        <tr>
+          <th>namespace</th>
+          <td>{{ hmppsEgressControl.namespace }}</td>
+        </tr>
+        <tr>
+          <th>envoy_extra_allowed_hosts_exact</th>
+          <td>
+            {% for host in hmppsEgressControl.envoy_extra_allowed_hosts_exact %}
+              {{ host }}<br>
+            {% endfor %}
+          </td>
+        </tr>
+        <tr>
+          <th>envoy_extra_allowed_hosts_suffixes</th>
+          <td>
+            {% for suffix in hmppsEgressControl.envoy_extra_allowed_hosts_suffixes %}
+              {{ suffix }}<br>
+            {% endfor %}
+          </td>
+        </tr>
+        <tr>
+          <th>tf_path</th>
+          <td>{{ hmppsEgressControl.tf_path }}</td>
+        </tr>
+        <tr>
+          <th>tf_line_start</th>
+          <td>{{ hmppsEgressControl.tf_line_start }}</td>
+        </tr>
+        <tr>
+          <th>tf_line_end</th>
+          <td>{{ hmppsEgressControl.tf_line_end }}</td>
+        </tr>
+        <tr>
+          <th>tf_mod_version</th>
+          <td>{{ hmppsEgressControl.tf_mod_version }}</td>
+        </tr>
+        <tr>
+          <th>source code</th>
+          <td>
+            <a href="https://github.com/ministryofjustice/cloud-platform-environments/tree/main/namespaces/live.cloud-platform.service.justice.gov.uk/{{ namespace.name }}/resources/{{ hmppsEgressControl.tf_filename }}">
+              {{ hmppsEgressControl.tf_filename }}
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  {% endfor %}
+{% endif %}
+
 {% endblock %}
 
 {% block bodyEnd %}
   <script type="module" src="/assets/frontendInit.js"></script>
-  
+
 {% endblock %}

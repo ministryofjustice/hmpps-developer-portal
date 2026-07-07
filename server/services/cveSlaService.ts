@@ -2,6 +2,7 @@ import assert from 'assert'
 import ServiceCatalogueService from './serviceCatalogueService'
 import { Component, SnykVulnerability } from '../data/modelTypes'
 import { Product } from '../data/strapiApiTypes'
+import { relativeTimeFromNow } from '../utils/utils'
 
 export type ComponentInfo = ReturnType<CveSlaService['getComponentInfo']>
 export type ProductInfo = {
@@ -9,6 +10,13 @@ export type ProductInfo = {
   slug: string
   components: ComponentInfo[]
   numberOfBreachedComponents: number
+}
+
+export type Vulnerability = {
+  vulnerabilityId: string
+  severityLevel: string
+  publishedDate: string
+  slaBreached: boolean
 }
 
 export default class CveSlaService {
@@ -87,10 +95,14 @@ export default class CveSlaService {
             vulnerabilityId: vuln.snyk_id,
             severityLevel: vuln.severity.toUpperCase(),
             publishedDate: vuln.published_date,
+            breachedSince: vuln.published_date ? relativeTimeFromNow(new Date(vuln.published_date)) : 'n/a',
             slaBreached: this.slaBreached(vuln.published_date),
+            fixAvailable: String(vuln.fix_available).toLowerCase() === 'true',
           }
         })
-        ?.filter(vuln => ['HIGH', 'CRITICAL'].includes(vuln.severityLevel)) || []
+        ?.sort(this.compareVulnerabilities)
+        ?.filter(vuln => ['HIGH', 'CRITICAL'].includes(vuln.severityLevel))
+        ?.filter(vuln => vuln.fixAvailable) || []
 
     return {
       name: component.name,
@@ -114,5 +126,18 @@ export default class CveSlaService {
   compareProducts(product1: ProductInfo, product2: ProductInfo) {
     const result = product2.numberOfBreachedComponents - product1.numberOfBreachedComponents
     return result !== 0 ? result : product1.name.localeCompare(product2.name)
+  }
+
+  compareVulnerabilities(vuln1: Vulnerability, vuln2: Vulnerability) {
+    const severityOrder = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']
+    const severityComparison = severityOrder.indexOf(vuln2.severityLevel) - severityOrder.indexOf(vuln1.severityLevel)
+    if (severityComparison !== 0) return severityComparison
+    const time1 = Date.parse(vuln1.publishedDate)
+    const time2 = Date.parse(vuln2.publishedDate)
+    const dateComparison =
+      (Number.isNaN(time1) ? Number.POSITIVE_INFINITY : time1) -
+      (Number.isNaN(time2) ? Number.POSITIVE_INFINITY : time2)
+    if (dateComparison !== 0) return dateComparison
+    return vuln1.vulnerabilityId.localeCompare(vuln2.vulnerabilityId)
   }
 }

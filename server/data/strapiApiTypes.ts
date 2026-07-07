@@ -70,7 +70,7 @@ type SnykScanRequest = components['schemas']['SnykScanRequest']
 type SnykVulnerability = components['schemas']['SnykVulnerability']
 type SnykVulnerabilityRequest = components['schemas']['SnykVulnerabilityRequest']
 
-export {
+export type {
   Product,
   Component,
   Team,

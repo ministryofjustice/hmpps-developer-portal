@@ -8,6 +8,13 @@
 {{ breadCrumb("Components", []) }}
 
 <h1>Components</h1>
+<p>
+  {% if archived %}
+    All archived components are displayed on this page. Click <a href="/components">here</a> for live components.
+  {% else %}
+    All live components are displayed on this page. Click <a href="/components?archived=true">here</a> for archived components.
+  {% endif %}
+</p>
 
 <table id="componentsTable" class="stripe">
   <thead>

@@ -6,7 +6,7 @@ import ComponentNameService from '../services/componentNameService'
 import ServiceCatalogueService from '../services/serviceCatalogueService'
 import DataFilterService from '../services/dataFilterService'
 import { buildFormData, convertTeamsStringToArray } from './componentRequests'
-import { GithubProjectVisibility, GithubRepoRequestRequest } from '../data/modelTypes'
+import { GithubProjectVisibility, GithubRepoRequest, GithubRepoRequestRequest } from '../data/modelTypes'
 
 jest.mock('../services/componentNameService.ts')
 jest.mock('../services/serviceCatalogueService.ts')
@@ -41,7 +41,7 @@ const testComponentsRequest = [
   },
 ]
 
-const testComponentRequest = [
+const testComponentRequest: GithubRepoRequest[] = [
   {
     id: 123,
     github_repo: 'hmpps-visit-allocation-api',
