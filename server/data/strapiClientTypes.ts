@@ -20,7 +20,7 @@ export type DeepUnwrap<T> =
   T extends ListResponse<infer U> ? Unwrapped<U>[] :
   T extends SingleResponse<infer U> ? Unwrapped<U> :
   T extends Record<string | number | symbol, unknown>? T:
-  T;
+  T
 // prettier-enable
 
 // Transform utility that applies DeepUnwrap to each property
