@@ -1,0 +1,11 @@
+{
+  "name": "Proxy to Service Catalogue",
+  "request": {
+    "urlPattern": "/serviceCatalogue/.*"
+  },
+  "response": {
+    "proxyBaseUrl": "{{systemValue type='ENVIRONMENT' key='WIREMOCK_SERVICE_CATALOGUE_URL'}}",
+    "proxyUrlPrefixToRemove": "/serviceCatalogue"
+  },
+  "priority": 100
+}
