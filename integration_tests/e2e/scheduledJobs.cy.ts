@@ -5,7 +5,7 @@ import ScheduledJobsPage from '../pages/scheduledJobs'
 
 context('Visit Scheduled Jobs Page', () => {
   it('should load the home page, go to Scheduled Jobs page, click the first job link and visit that page', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     const homePage = Page.verifyOnPage(HomePage)
     homePage.scheduledJobsLink()
 

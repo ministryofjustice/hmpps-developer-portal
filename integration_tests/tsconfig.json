@@ -5,7 +5,7 @@
     "types": ["cypress", "cypress-axe", "express", "express-session"],
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "rootDir": "./integration_tests"
+    "rootDir": "."
   },
   "include": ["**/index.d.ts"]
 }

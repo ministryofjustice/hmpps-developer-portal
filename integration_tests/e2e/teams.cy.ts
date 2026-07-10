@@ -6,7 +6,7 @@ import Page from '../pages/page'
 
 context('Visit Teams Page', () => {
   it('should load the home page, go to teams page, expand links for the first team (row), and click on the link to the team overview page', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     const homePage = Page.verifyOnPage(HomePage)
     homePage.teamsLink()
 
@@ -18,7 +18,7 @@ context('Visit Teams Page', () => {
   })
 
   it('should load the home page, go to teams page, click the link of the first team, and visit that team page', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     const homePage = Page.verifyOnPage(HomePage)
     homePage.teamsLink()
 

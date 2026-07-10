@@ -4,7 +4,7 @@ import AlertsPage from '../pages/alerts'
 
 context('Visit alerts scan page', () => {
   it('should load the home page and go to alerts page', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     const homePage = Page.verifyOnPage(HomePage)
     homePage.alertsLink()
 

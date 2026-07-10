@@ -5,7 +5,7 @@ import RdsInstancePage from '../pages/rdsInstance'
 
 context('Visit RDS Page', () => {
   it('should load the home page, go to RDS page, click the first RDS instance link and visit that page', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     const homePage = Page.verifyOnPage(HomePage)
     homePage.rdsLink()
 
