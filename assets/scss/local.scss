@@ -6,7 +6,7 @@
   width: 100%;
 
   tr {
-    background-color: govuk-colour('black', $variant: 'tint-50');
+    background-color: govuk-colour('dark-grey');
 
     &.statusTileUp {
       background-color: govuk-colour('green');
