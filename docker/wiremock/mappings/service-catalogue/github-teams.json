@@ -1,0 +1,51 @@
+{
+  "name": "github-teams-list",
+  "priority": 5,
+  "request": {
+    "urlPath": "/serviceCatalogue/v1/github-teams",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "data": [
+        {
+          "id": 801,
+          "documentId": "ghtdocid0000000000000001",
+          "github_team_id": 90001,
+          "team_name": "hmpps-developers",
+          "parent_team_name": null,
+          "team_desc": "All HMPPS developers",
+          "members": [
+            "example-dev-a",
+            "example-dev-b"
+          ],
+          "terraform_managed": true
+        },
+        {
+          "id": 802,
+          "documentId": "ghtdocid0000000000000002",
+          "github_team_id": 90002,
+          "team_name": "developer-experience",
+          "parent_team_name": "hmpps-developers",
+          "team_desc": "Developer Experience team",
+          "members": [
+            "example-dev-a"
+          ],
+          "terraform_managed": true
+        }
+      ],
+      "meta": {
+        "pagination": {
+          "page": 1,
+          "pageSize": 100,
+          "pageCount": 1,
+          "total": 2
+        }
+      }
+    }
+  }
+}

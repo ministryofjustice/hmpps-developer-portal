@@ -1,0 +1,178 @@
+{
+  "mappings": [
+    {
+      "name": "product-sets-list",
+      "priority": 5,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/product-sets",
+        "method": "GET"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 401,
+              "documentId": "psdocid0000000000000001",
+              "name": "Digital Products",
+              "slug": "digital-products",
+              "ps_id": "PS01",
+              "lead_developer": "Lead Dev A",
+              "createdAt": "2024-01-01T00:00:00.000Z",
+              "updatedAt": "2026-01-01T00:00:00.000Z",
+              "publishedAt": "2026-01-01T00:00:00.000Z",
+              "products": [
+                {
+                  "id": 201,
+                  "documentId": "proddocid00000000000001",
+                  "name": "Service Catalogue",
+                  "slug": "service-catalogue",
+                  "p_id": "DPS000",
+                  "subproduct": false,
+                  "description": "Service Catalogue - synthetic product for isolated e2e tests",
+                  "phase": "Live",
+                  "portfolio": "Prisons",
+                  "delivery_manager": "Delivery Manager A",
+                  "product_manager": "Product Manager A",
+                  "lead_developer": "Lead Dev A",
+                  "technical_architect": "Technical Architect A",
+                  "principal_architect": "Principal Architect A",
+                  "business_owner": null,
+                  "slack_channel_id": null,
+                  "slack_channel_name": null,
+                  "decommissioned": false,
+                  "decommissioned_date": null,
+                  "createdAt": "2024-01-01T00:00:00.000Z",
+                  "updatedAt": "2026-01-01T00:00:00.000Z",
+                  "publishedAt": "2026-01-01T00:00:00.000Z"
+                },
+                {
+                  "id": 202,
+                  "documentId": "proddocid00000000000002",
+                  "name": "Accredited Programmes",
+                  "slug": "accredited-programmes",
+                  "p_id": "DPS010",
+                  "subproduct": false,
+                  "description": "Accredited Programmes - synthetic product for isolated e2e tests",
+                  "phase": "Live",
+                  "portfolio": "Probation",
+                  "delivery_manager": "Delivery Manager A",
+                  "product_manager": "Product Manager A",
+                  "lead_developer": "Lead Dev A",
+                  "technical_architect": "Technical Architect A",
+                  "principal_architect": "Principal Architect A",
+                  "business_owner": null,
+                  "slack_channel_id": null,
+                  "slack_channel_name": null,
+                  "decommissioned": false,
+                  "decommissioned_date": null,
+                  "createdAt": "2024-01-01T00:00:00.000Z",
+                  "updatedAt": "2026-01-01T00:00:00.000Z",
+                  "publishedAt": "2026-01-01T00:00:00.000Z"
+                }
+              ]
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 100,
+              "pageCount": 1,
+              "total": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "product-set-by-id",
+      "priority": 1,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/product-sets/psdocid0000000000000001",
+        "method": "GET"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 401,
+              "documentId": "psdocid0000000000000001",
+              "name": "Digital Products",
+              "slug": "digital-products",
+              "ps_id": "PS01",
+              "lead_developer": "Lead Dev A",
+              "createdAt": "2024-01-01T00:00:00.000Z",
+              "updatedAt": "2026-01-01T00:00:00.000Z",
+              "publishedAt": "2026-01-01T00:00:00.000Z",
+              "products": [
+                {
+                  "id": 201,
+                  "documentId": "proddocid00000000000001",
+                  "name": "Service Catalogue",
+                  "slug": "service-catalogue",
+                  "p_id": "DPS000",
+                  "subproduct": false,
+                  "description": "Service Catalogue - synthetic product for isolated e2e tests",
+                  "phase": "Live",
+                  "portfolio": "Prisons",
+                  "delivery_manager": "Delivery Manager A",
+                  "product_manager": "Product Manager A",
+                  "lead_developer": "Lead Dev A",
+                  "technical_architect": "Technical Architect A",
+                  "principal_architect": "Principal Architect A",
+                  "business_owner": null,
+                  "slack_channel_id": null,
+                  "slack_channel_name": null,
+                  "decommissioned": false,
+                  "decommissioned_date": null,
+                  "createdAt": "2024-01-01T00:00:00.000Z",
+                  "updatedAt": "2026-01-01T00:00:00.000Z",
+                  "publishedAt": "2026-01-01T00:00:00.000Z"
+                },
+                {
+                  "id": 202,
+                  "documentId": "proddocid00000000000002",
+                  "name": "Accredited Programmes",
+                  "slug": "accredited-programmes",
+                  "p_id": "DPS010",
+                  "subproduct": false,
+                  "description": "Accredited Programmes - synthetic product for isolated e2e tests",
+                  "phase": "Live",
+                  "portfolio": "Probation",
+                  "delivery_manager": "Delivery Manager A",
+                  "product_manager": "Product Manager A",
+                  "lead_developer": "Lead Dev A",
+                  "technical_architect": "Technical Architect A",
+                  "principal_architect": "Principal Architect A",
+                  "business_owner": null,
+                  "slack_channel_id": null,
+                  "slack_channel_name": null,
+                  "decommissioned": false,
+                  "decommissioned_date": null,
+                  "createdAt": "2024-01-01T00:00:00.000Z",
+                  "updatedAt": "2026-01-01T00:00:00.000Z",
+                  "publishedAt": "2026-01-01T00:00:00.000Z"
+                }
+              ]
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 25,
+              "pageCount": 1,
+              "total": 1
+            }
+          }
+        }
+      }
+    }
+  ]
+}

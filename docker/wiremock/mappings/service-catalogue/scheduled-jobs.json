@@ -1,0 +1,389 @@
+{
+  "mappings": [
+    {
+      "name": "scheduled-jobs-list",
+      "priority": 5,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/scheduled-jobs",
+        "method": "GET",
+        "queryParameters": {
+          "filters[name][$eq]": {
+            "absent": true
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 1,
+              "documentId": "jobdocid0000000000000001",
+              "name": "hmpps-github-discovery-incremental",
+              "description": "Discovers component metadata from GitHub incrementally",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            },
+            {
+              "id": 2,
+              "documentId": "jobdocid0000000000000002",
+              "name": "hmpps-github-teams-discovery",
+              "description": "Discovers GitHub teams and their members",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            },
+            {
+              "id": 3,
+              "documentId": "jobdocid0000000000000003",
+              "name": "hmpps-health-ping",
+              "description": "Pings component health endpoints",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            },
+            {
+              "id": 4,
+              "documentId": "jobdocid0000000000000004",
+              "name": "hmpps-sharepoint-discovery",
+              "description": "Discovers product metadata from SharePoint",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            },
+            {
+              "id": 5,
+              "documentId": "jobdocid0000000000000005",
+              "name": "hmpps-terraform-discovery",
+              "description": "Discovers namespace and RDS metadata from Terraform",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            },
+            {
+              "id": 6,
+              "documentId": "jobdocid0000000000000006",
+              "name": "hmpps-veracode-discovery",
+              "description": "Discovers Veracode scan results",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 100,
+              "pageCount": 1,
+              "total": 6
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scheduled-job-hmpps-github-discovery-incremental",
+      "priority": 1,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/scheduled-jobs",
+        "method": "GET",
+        "queryParameters": {
+          "filters[name][$eq]": {
+            "equalTo": "hmpps-github-discovery-incremental"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 1,
+              "documentId": "jobdocid0000000000000001",
+              "name": "hmpps-github-discovery-incremental",
+              "description": "Discovers component metadata from GitHub incrementally",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 25,
+              "pageCount": 1,
+              "total": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scheduled-job-hmpps-github-teams-discovery",
+      "priority": 1,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/scheduled-jobs",
+        "method": "GET",
+        "queryParameters": {
+          "filters[name][$eq]": {
+            "equalTo": "hmpps-github-teams-discovery"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 2,
+              "documentId": "jobdocid0000000000000002",
+              "name": "hmpps-github-teams-discovery",
+              "description": "Discovers GitHub teams and their members",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 25,
+              "pageCount": 1,
+              "total": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scheduled-job-hmpps-health-ping",
+      "priority": 1,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/scheduled-jobs",
+        "method": "GET",
+        "queryParameters": {
+          "filters[name][$eq]": {
+            "equalTo": "hmpps-health-ping"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 3,
+              "documentId": "jobdocid0000000000000003",
+              "name": "hmpps-health-ping",
+              "description": "Pings component health endpoints",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 25,
+              "pageCount": 1,
+              "total": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scheduled-job-hmpps-sharepoint-discovery",
+      "priority": 1,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/scheduled-jobs",
+        "method": "GET",
+        "queryParameters": {
+          "filters[name][$eq]": {
+            "equalTo": "hmpps-sharepoint-discovery"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 4,
+              "documentId": "jobdocid0000000000000004",
+              "name": "hmpps-sharepoint-discovery",
+              "description": "Discovers product metadata from SharePoint",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 25,
+              "pageCount": 1,
+              "total": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scheduled-job-hmpps-terraform-discovery",
+      "priority": 1,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/scheduled-jobs",
+        "method": "GET",
+        "queryParameters": {
+          "filters[name][$eq]": {
+            "equalTo": "hmpps-terraform-discovery"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 5,
+              "documentId": "jobdocid0000000000000005",
+              "name": "hmpps-terraform-discovery",
+              "description": "Discovers namespace and RDS metadata from Terraform",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 25,
+              "pageCount": 1,
+              "total": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scheduled-job-hmpps-veracode-discovery",
+      "priority": 1,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/scheduled-jobs",
+        "method": "GET",
+        "queryParameters": {
+          "filters[name][$eq]": {
+            "equalTo": "hmpps-veracode-discovery"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 6,
+              "documentId": "jobdocid0000000000000006",
+              "name": "hmpps-veracode-discovery",
+              "description": "Discovers Veracode scan results",
+              "schedule": "0 * * * *",
+              "last_scheduled_run": "2026-07-10T06:00:00.000Z",
+              "last_successful_run": "2026-07-10T06:00:00.000Z",
+              "result": "Succeeded",
+              "error_details": [],
+              "createdAt": "2025-01-01T00:00:00.000Z",
+              "updatedAt": "2026-07-10T06:00:00.000Z",
+              "publishedAt": "2026-07-10T06:00:00.000Z"
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 25,
+              "pageCount": 1,
+              "total": 1
+            }
+          }
+        }
+      }
+    }
+  ]
+}

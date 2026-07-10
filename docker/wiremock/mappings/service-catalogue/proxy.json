@@ -5,7 +5,8 @@
   },
   "response": {
     "proxyBaseUrl": "{{systemValue type='ENVIRONMENT' key='WIREMOCK_SERVICE_CATALOGUE_URL'}}",
-    "proxyUrlPrefixToRemove": "/serviceCatalogue"
+    "proxyUrlPrefixToRemove": "/serviceCatalogue",
+    "transformers": ["response-template"]
   },
   "priority": 100
 }

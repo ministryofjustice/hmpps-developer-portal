@@ -2,7 +2,7 @@ version: '3.1'
 services:
 
   redis:
-    image: 'redis:7.4'
+    image: 'redis/redis-stack-server:7.4.0-v7'
     networks:
       - hmpps_int
     ports:
@@ -21,7 +21,9 @@ services:
     environment:
       WIREMOCK_SERVICE_CATALOGUE_URL: ${WIREMOCK_SERVICE_CATALOGUE_URL:-https://service-catalogue-dev.hmpps.service.justice.gov.uk}
       WIREMOCK_ALERTMANAGER_URL: ${WIREMOCK_ALERTMANAGER_URL:-http://monitoring-alerts-service.cloud-platform-monitoring-alerts:8080/alertmanager}
-    command: --global-response-templating
+      # Recorded catalogue responses are large; the journal needs more than the default heap
+      JAVA_OPTS: -Xmx2g
+    command: --local-response-templating --max-request-journal-entries 200
 
 networks:
   hmpps_int:
