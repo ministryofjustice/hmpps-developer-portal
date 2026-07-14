@@ -1,47 +1,50 @@
+import { AxeBuilder } from '@axe-core/playwright'
+import { expect, type Page as PlaywrightPage } from '@playwright/test'
+import axe from 'axe-core'
 import logAccessibilityViolations from '../support/logAccessibilityViolations'
 
-export type PageElement = Cypress.Chainable<JQuery>
+const axeSource = `${axe.source}
+axe.configure({ rules: [
+  // Known issue with skip link not in a landmark: https://design-system.service.gov.uk/components/skip-link/
+  { id: 'region', selector: '*:not(.govuk-skip-link)' },
+
+  // Known issue with radio conditional reveal: https://github.com/alphagov/govuk-frontend/issues/979
+  { id: 'aria-allowed-attr', selector: '*:not(.govuk-radios__input[aria-expanded])' },
+]})`
 
 export default abstract class Page {
-  static verifyOnPage<T>(constructor: new (title?: string) => T, title?: string): T {
-    return new constructor(title)
+  static verifyOnPage<T extends Page>(Ctor: new (page: PlaywrightPage) => T, page: PlaywrightPage): Promise<T>
+
+  static verifyOnPage<T extends Page>(
+    Ctor: new (page: PlaywrightPage, title: string) => T,
+    page: PlaywrightPage,
+    title: string,
+  ): Promise<T>
+
+  static async verifyOnPage<T extends Page>(
+    Ctor: new (page: PlaywrightPage, title?: string) => T,
+    page: PlaywrightPage,
+    title?: string,
+  ): Promise<T> {
+    const instance = new Ctor(page, title)
+    await expect(page.locator('h1')).toContainText(instance.title)
+    await instance.runAxe()
+
+    return instance
   }
 
-  constructor(
+  protected constructor(
+    protected readonly page: PlaywrightPage,
     private readonly title: string,
-    private readonly options: { axeTest?: boolean } = {
-      axeTest: true,
-    },
-  ) {
-    this.checkOnPage()
+  ) {}
 
-    if (options.axeTest) {
-      this.runAxe()
+  private async runAxe(): Promise<void> {
+    const { violations } = await new AxeBuilder({ page: this.page, axeSource }).analyze()
+
+    if (violations.length > 0) {
+      logAccessibilityViolations(violations)
     }
-  }
 
-  checkOnPage(): void {
-    cy.get('h1').contains(this.title)
-  }
-
-  runAxe = (): void => {
-    cy.injectAxe()
-
-    cy.configureAxe({
-      rules: [
-        // Known issue with skip link not in a landmark: https://design-system.service.gov.uk/components/skip-link/
-        { id: 'region', selector: '*:not(.govuk-skip-link)' },
-
-        // Known issue with radio conditional reveal: https://github.com/alphagov/govuk-frontend/issues/979
-        { id: 'aria-allowed-attr', selector: '*:not(.govuk-radios__input[aria-expanded])' },
-      ],
-    })
-
-    cy.checkA11y(
-      undefined,
-      undefined,
-      logAccessibilityViolations,
-      false, // skipFailures
-    )
+    expect(violations).toEqual([])
   }
 }
