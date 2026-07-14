@@ -242,20 +242,9 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script src="https://www.gstatic.com/charts/loader.js"></script>
-  <script src="/assets/js/dayjs/dayjs.min.js"></script>
-  <script src="/assets/js/dayjs/plugin/relativeTime.js"></script>
-  <script src="/assets/js/driftRadiator.js"></script>
-  <script nonce="{{ cspNonce }}">
-    jQuery(function () {
-      const components = {{team.componentList | toJson(2) | safe }}
-      const csrfToken = "{{ csrfToken }}"
-      const renderer = new DeploymentRenderer(csrfToken, 'list')
-      renderer.start(components)
-    })
-  </script>
+  <script type="application/json" id="drift-radiator-data">{{ { "components": team.componentList, "csrfToken": csrfToken, "viewMode": "list" } | toJson | safe }}</script>
+  {{ super() }}
 {% endblock %}
 
 {% block pageScripts %}
-  <script src="/assets/js/monitoringChannels.js"></script>
 {% endblock %}

@@ -1,157 +1,4 @@
-jQuery(async function () {
-  const monitorType = $('#monitorType').val()
-  const monitorId = $('#monitorId').val()
-  const monitorName = $('#monitorName').val()
-
-  if (monitorType === '') return
-
-  const dropDownTypeId = monitorId && monitorId !== '0' ? parseInt(monitorId, 10) : 0
-  const ajaxUrl = `/monitor/components/${monitorType}/${dropDownTypeId}?slug=${encodeURIComponent(monitorName)}`
-
-  let monitorTimeoutId = null
-
-  function startWatch() {
-    stopWatch()
-
-    const watch = async () => {
-      await fetchMessages()
-      monitorTimeoutId = setTimeout(watch, 30000)
-    }
-    watch()
-  }
-
-  function stopWatch() {
-    if (monitorTimeoutId) {
-      clearTimeout(monitorTimeoutId)
-      monitorTimeoutId = null
-    }
-  }
-
-  // columns for DataTable (static fields + placeholders for live fields populated by fetchMessages)
-  const columns = [
-    {
-      data: 'componentName',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(
-          `<a href="/components/${rowData.componentName}" class="statusTileName" target="_blank">${rowData.componentName}</a>`,
-        )
-      },
-    },
-    {
-      data: 'dependentCount',
-      visible: false,
-    },
-    {
-      data: 'environmentName',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(
-          `<a href="/components/${rowData.componentName}/environment/${rowData.environmentName}" class="statusTileEnvironment" target="_blank">${rowData.environmentName} (${rowData.environmentType})</a>`,
-        )
-      },
-    },
-    {
-      data: null,
-      createdCell: function (td, _cellData, rowData) {
-        const healthLink = rowData.environmentHealth
-          ? `<a href="${rowData.environmentUrl}${rowData.environmentHealth}" class="statusTileHealth" target="_blank">View</a>`
-          : 'N/A'
-        $(td).html(healthLink)
-      },
-    },
-    {
-      data: null,
-      className: 'statusTileBuild',
-      defaultContent: '',
-    },
-    {
-      data: null,
-      className: 'statusTileStatus',
-      defaultContent: '',
-    },
-    {
-      data: null,
-      className: 'statusTileLastRefresh',
-      defaultContent: '',
-    },
-  ]
-
-  const monitorTable = createTable({
-    id: 'statusTable',
-    ajaxUrl,
-    orderColumn: 0,
-    orderType: 'asc',
-    columns,
-    pageLength: -1,
-    responsive: true,
-    stateSave: false,
-    createdRow: function (row, data) {
-      $(row).attr('id', `tile-${data.componentName}-${data.environmentName}`)
-      $(row).attr('data-prisons', data.isPrisons)
-      $(row).attr('data-probation', data.isProbation)
-      $(row).attr('data-environment', data.environmentName)
-      $(row).attr('data-environment-type', data.environmentType)
-    },
-    ajaxErrorHandler: function (jqXHR, textStatus, errorThrown) {
-      console.error('Health Monitor DataTables error:', textStatus, errorThrown, jqXHR)
-    },
-    customCsvExport: customiseMonitorExport,
-  })
-
-  monitorTable.on('xhr', () => {
-    startWatch()
-    updateEnvironmentList()
-  })
-
-  $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponentView').on('click', async e => {
-    e.preventDefault()
-
-    let dropDownType = ''
-
-    switch (e.target.id) {
-      case 'updateProduct':
-        dropDownType = 'product'
-        break
-      case 'updateTeam':
-        dropDownType = 'team'
-        break
-      case 'updateServiceArea':
-        dropDownType = 'service-area'
-        break
-      case 'updateCustomComponentView':
-        dropDownType = 'custom-component-view'
-        break
-      default:
-        return false
-    }
-
-    const dropDownText = $(`#${dropDownType} option:selected`).text()
-    const dropDownSlug = $(`#${dropDownType} option:selected`).attr('data-slug')
-    const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
-    const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
-    let replaceStateUrl = `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`
-
-    if (dropDownTypeId === 0) {
-      dropDownType = 'all'
-      replaceStateUrl = '/monitor'
-    }
-
-    history.replaceState({ info: 'dropdown change' }, '', replaceStateUrl)
-
-    try {
-      const newAjaxUrl = `/monitor/components/${dropDownType}/${dropDownTypeId}?slug=${encodeURIComponent(dropDownSlug)}`
-      monitorTable.ajax.url(newAjaxUrl).load()
-    } catch (error) {
-      console.error('Error updating selection:', error)
-    }
-  })
-
-  $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
-    'change',
-    e => {
-      updateEnvironmentList()
-    },
-  )
-})
+import { createTable, formatCsvCell } from './common.js'
 
 function updateEnvironmentList() {
   const validEnvironments = ['prod', 'preprod', 'test', 'stage', 'dev']
@@ -222,8 +69,6 @@ const fetchMessages = async () => {
           $(tileName).removeClass('statusTileUp statusTileDown')
 
           let statusClass
-          // Check the last time we received data from this endpoint
-          // If older than 10 mins, mark as stale.
           if (new Date() - new Date(dateAdded) > 60 * 10 * 1000) {
             statusClass = 'statusTileStale'
           } else {
@@ -276,7 +121,6 @@ function customiseMonitorExport(csv, config, api) {
       .each(function () {
         const $cell = $(this)
 
-        //check for health link href first, otherwise use the link's text, or plain text
         const healthLink = $cell.find('a.statusTileHealth')
         if (healthLink.length) {
           cellsInTheRow.push(healthLink.attr('href'))
@@ -293,4 +137,160 @@ function customiseMonitorExport(csv, config, api) {
     }
   })
   return rows.map(row => row.map(formatCsvCell).join(',')).join('\n')
+}
+
+if (document.querySelector('#statusTable')) {
+  jQuery(async function () {
+    const monitorType = $('#monitorType').val()
+    const monitorId = $('#monitorId').val()
+    const monitorName = $('#monitorName').val()
+
+    if (monitorType === '') return
+
+    const dropDownTypeId = monitorId && monitorId !== '0' ? parseInt(monitorId, 10) : 0
+    const ajaxUrl = `/monitor/components/${monitorType}/${dropDownTypeId}?slug=${encodeURIComponent(monitorName)}`
+
+    let monitorTimeoutId = null
+
+    function startWatch() {
+      stopWatch()
+
+      const watch = async () => {
+        await fetchMessages()
+        monitorTimeoutId = setTimeout(watch, 30000)
+      }
+      watch()
+    }
+
+    function stopWatch() {
+      if (monitorTimeoutId) {
+        clearTimeout(monitorTimeoutId)
+        monitorTimeoutId = null
+      }
+    }
+
+    const columns = [
+      {
+        data: 'componentName',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(
+            `<a href="/components/${rowData.componentName}" class="statusTileName" target="_blank">${rowData.componentName}</a>`,
+          )
+        },
+      },
+      {
+        data: 'dependentCount',
+        visible: false,
+      },
+      {
+        data: 'environmentName',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(
+            `<a href="/components/${rowData.componentName}/environment/${rowData.environmentName}" class="statusTileEnvironment" target="_blank">${rowData.environmentName} (${rowData.environmentType})</a>`,
+          )
+        },
+      },
+      {
+        data: null,
+        createdCell: function (td, _cellData, rowData) {
+          const healthLink = rowData.environmentHealth
+            ? `<a href="${rowData.environmentUrl}${rowData.environmentHealth}" class="statusTileHealth" target="_blank">View</a>`
+            : 'N/A'
+          $(td).html(healthLink)
+        },
+      },
+      {
+        data: null,
+        className: 'statusTileBuild',
+        defaultContent: '',
+      },
+      {
+        data: null,
+        className: 'statusTileStatus',
+        defaultContent: '',
+      },
+      {
+        data: null,
+        className: 'statusTileLastRefresh',
+        defaultContent: '',
+      },
+    ]
+
+    const monitorTable = createTable({
+      id: 'statusTable',
+      ajaxUrl,
+      orderColumn: 0,
+      orderType: 'asc',
+      columns,
+      pageLength: -1,
+      responsive: true,
+      stateSave: false,
+      createdRow: function (row, data) {
+        $(row).attr('id', `tile-${data.componentName}-${data.environmentName}`)
+        $(row).attr('data-prisons', data.isPrisons)
+        $(row).attr('data-probation', data.isProbation)
+        $(row).attr('data-environment', data.environmentName)
+        $(row).attr('data-environment-type', data.environmentType)
+      },
+      ajaxErrorHandler: function (jqXHR, textStatus, errorThrown) {
+        console.error('Health Monitor DataTables error:', textStatus, errorThrown, jqXHR)
+      },
+      customCsvExport: customiseMonitorExport,
+    })
+
+    monitorTable.on('xhr', () => {
+      startWatch()
+      updateEnvironmentList()
+    })
+
+    $('#updateProduct,#updateTeam,#updateServiceArea,#updateCustomComponentView').on('click', async e => {
+      e.preventDefault()
+
+      let dropDownType = ''
+
+      switch (e.target.id) {
+        case 'updateProduct':
+          dropDownType = 'product'
+          break
+        case 'updateTeam':
+          dropDownType = 'team'
+          break
+        case 'updateServiceArea':
+          dropDownType = 'service-area'
+          break
+        case 'updateCustomComponentView':
+          dropDownType = 'custom-component-view'
+          break
+        default:
+          return false
+      }
+
+      const dropDownText = $(`#${dropDownType} option:selected`).text()
+      const dropDownSlug = $(`#${dropDownType} option:selected`).attr('data-slug')
+      const dropDownTypeIdValue = Number.parseInt($(`#${dropDownType}`).val())
+      const dropDownTypeId = Number.isNaN(dropDownTypeIdValue) ? 0 : dropDownTypeIdValue
+      let replaceStateUrl = `/monitor/${dropDownType}/${formatMonitorName(dropDownText)}`
+
+      if (dropDownTypeId === 0) {
+        dropDownType = 'all'
+        replaceStateUrl = '/monitor'
+      }
+
+      history.replaceState({ info: 'dropdown change' }, '', replaceStateUrl)
+
+      try {
+        const newAjaxUrl = `/monitor/components/${dropDownType}/${dropDownTypeId}?slug=${encodeURIComponent(dropDownSlug)}`
+        monitorTable.ajax.url(newAjaxUrl).load()
+      } catch (error) {
+        console.error('Error updating selection:', error)
+      }
+    })
+
+    $('.environments .govuk-checkboxes__input,.status .govuk-checkboxes__input,.area .govuk-checkboxes__input').on(
+      'change',
+      e => {
+        updateEnvironmentList()
+      },
+    )
+  })
 }
