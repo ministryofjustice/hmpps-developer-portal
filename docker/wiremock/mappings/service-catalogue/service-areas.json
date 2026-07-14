@@ -206,7 +206,18 @@
                           "updatedAt": "2026-07-01T00:00:00.000Z",
                           "publishedAt": "2026-07-01T00:00:00.000Z",
                           "postgres_database_restore": false,
-                          "documentId": "envdocid11205931"
+                          "documentId": "envdocid11205931",
+                          "snyk_scan": {
+                            "id": 802,
+                            "documentId": "snykscandocid0000000002",
+                            "name": "hmpps-developer-portal",
+                            "scan_status": "Succeeded",
+                            "environment_name": "prod",
+                            "build_image_tag": "2026-07-10.1.abc1234",
+                            "snyk_scan_timestamp": "2026-07-10T04:05:00.000000",
+                            "snyk_ids": ["SNYK-JAVA-SYNTHETIC-CRITICAL-0001", "SNYK-JAVA-SYNTHETIC-HIGH-0002"],
+                            "snyk_cves": null
+                          }
                         }
                       ],
                       "language": "Java",
@@ -556,7 +567,18 @@
                           "updatedAt": "2026-07-01T00:00:00.000Z",
                           "publishedAt": "2026-07-01T00:00:00.000Z",
                           "postgres_database_restore": false,
-                          "documentId": "envdocid11205931"
+                          "documentId": "envdocid11205931",
+                          "snyk_scan": {
+                            "id": 802,
+                            "documentId": "snykscandocid0000000002",
+                            "name": "hmpps-developer-portal",
+                            "scan_status": "Succeeded",
+                            "environment_name": "prod",
+                            "build_image_tag": "2026-07-10.1.abc1234",
+                            "snyk_scan_timestamp": "2026-07-10T04:05:00.000000",
+                            "snyk_ids": ["SNYK-JAVA-SYNTHETIC-CRITICAL-0001", "SNYK-JAVA-SYNTHETIC-HIGH-0002"],
+                            "snyk_cves": null
+                          }
                         }
                       ],
                       "language": "Java",

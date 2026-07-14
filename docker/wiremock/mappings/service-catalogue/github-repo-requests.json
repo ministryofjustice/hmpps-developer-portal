@@ -1,0 +1,125 @@
+{
+  "mappings": [
+    {
+      "name": "github-repo-requests-list",
+      "priority": 5,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/github-repo-requests",
+        "method": "GET",
+        "queryParameters": {
+          "filters[github_repo][$eq]": {
+            "absent": true
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 701,
+              "documentId": "repreqdocid00000000001",
+              "github_repo": "hmpps-synthetic-service",
+              "repo_description": "Synthetic service repository request for isolated e2e tests",
+              "base_template": "hmpps-template-typescript",
+              "jira_project_keys": ["DSOS"],
+              "github_project_visibility": "public",
+              "product": "DPS000",
+              "github_project_teams_write": ["developer-experience"],
+              "github_projects_teams_admin": ["hmpps-sre"],
+              "github_project_branch_protection_restricted_teams": null,
+              "prod_alerts_severity_label": "hmpps-synthetic-service-prod",
+              "nonprod_alerts_severity_label": "hmpps-synthetic-service-nonprod",
+              "createdAt": "2026-06-01T09:00:00.000Z",
+              "updatedAt": "2026-06-01T11:00:00.000Z",
+              "publishedAt": "2026-06-01T09:00:00.000Z",
+              "slack_channel_prod_release_notify": "synthetic-service-releases",
+              "alerts_nonprod_slack_channel": null,
+              "alerts_prod_slack_channel": null,
+              "slack_channel_nonprod_release_notify": "synthetic-service-releases",
+              "slack_channel_security_scans_notify": "synthetic-service-security",
+              "requester_name": "Synthetic Requester A",
+              "requester_email": "synthetic.requester.a@justice.gov.uk",
+              "requester_team": "developer-experience",
+              "request_github_pr_status": "Completed",
+              "request_github_pr_number": 5001,
+              "namespace": null,
+              "request_type": "Add"
+            },
+            {
+              "id": 702,
+              "documentId": "repreqdocid00000000002",
+              "github_repo": "hmpps-synthetic-api",
+              "repo_description": "Synthetic API repository request for isolated e2e tests",
+              "base_template": "hmpps-template-kotlin",
+              "jira_project_keys": ["DSOS", "HAAR"],
+              "github_project_visibility": "public",
+              "product": "DPS010",
+              "github_project_teams_write": ["developer-experience"],
+              "github_projects_teams_admin": ["hmpps-sre"],
+              "github_project_branch_protection_restricted_teams": null,
+              "prod_alerts_severity_label": "hmpps-synthetic-api-prod",
+              "nonprod_alerts_severity_label": "hmpps-synthetic-api-nonprod",
+              "createdAt": "2026-06-15T10:30:00.000Z",
+              "updatedAt": "2026-06-15T10:30:00.000Z",
+              "publishedAt": "2026-06-15T10:30:00.000Z",
+              "slack_channel_prod_release_notify": "synthetic-api-releases",
+              "alerts_nonprod_slack_channel": null,
+              "alerts_prod_slack_channel": null,
+              "slack_channel_nonprod_release_notify": "synthetic-api-releases",
+              "slack_channel_security_scans_notify": "synthetic-api-security",
+              "requester_name": "Synthetic Requester B",
+              "requester_email": "synthetic.requester.b@justice.gov.uk",
+              "requester_team": "developer-experience",
+              "request_github_pr_status": "Pending",
+              "request_github_pr_number": null,
+              "namespace": null,
+              "request_type": "Add"
+            },
+            {
+              "id": 703,
+              "documentId": "repreqdocid00000000003",
+              "github_repo": "hmpps-synthetic-worker",
+              "repo_description": "Synthetic worker archive request for isolated e2e tests",
+              "base_template": null,
+              "jira_project_keys": [],
+              "github_project_visibility": "public",
+              "product": "DPS000",
+              "github_project_teams_write": null,
+              "github_projects_teams_admin": null,
+              "github_project_branch_protection_restricted_teams": null,
+              "prod_alerts_severity_label": null,
+              "nonprod_alerts_severity_label": null,
+              "createdAt": "2026-07-01T08:15:00.000Z",
+              "updatedAt": "2026-07-02T08:15:00.000Z",
+              "publishedAt": "2026-07-01T08:15:00.000Z",
+              "slack_channel_prod_release_notify": null,
+              "alerts_nonprod_slack_channel": null,
+              "alerts_prod_slack_channel": null,
+              "slack_channel_nonprod_release_notify": null,
+              "slack_channel_security_scans_notify": null,
+              "requester_name": "Synthetic Requester C",
+              "requester_email": "synthetic.requester.c@justice.gov.uk",
+              "requester_team": "developer-experience",
+              "request_github_pr_status": "Completed",
+              "request_github_pr_number": 5003,
+              "namespace": null,
+              "request_type": "Archive"
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 25,
+              "pageCount": 1,
+              "total": 3
+            }
+          }
+        }
+      }
+    }
+  ]
+}
