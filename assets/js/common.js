@@ -1,15 +1,15 @@
-function cleanColumnOutput(data) {
+export function cleanColumnOutput(data) {
   const unsafeOutputPattern = />|<|&|"|\/|'/g
   return data.replace(unsafeOutputPattern, '')
 }
 
-function formatCsvCell(value) {
+export function formatCsvCell(value) {
   const stringValue = value === null ? '' : String(value)
   const escaped = stringValue.replace(/"/g, '""')
   return `"${escaped}"`
 }
 
-function createSearchableProductList(products) {
+export function createSearchableProductList(products) {
   if (!Array.isArray(products) || products.length === 0) {
     return '<p class="no-products">No Products</p>'
   }
@@ -25,7 +25,7 @@ function createSearchableProductList(products) {
   return `<ul>${productItems}</ul>`
 }
 
-function createTable({
+export function createTable({
   id,
   ajaxUrl,
   data,

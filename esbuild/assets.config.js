@@ -30,7 +30,9 @@ const getAssetsConfig = buildConfig => ({
   sourcemap: !buildConfig.isProduction,
   platform: 'browser',
   target: 'es2018',
-  external: ['/assets/*'],
+  format: 'esm',
+  splitting: true,
+  external: ['/assets/*', 'plotly.js', 'google-charts'],
   bundle: true,
   plugins: [
     cleanPlugin(globSync(buildConfig.assets.clear)),
