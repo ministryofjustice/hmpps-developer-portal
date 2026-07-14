@@ -1,17 +1,16 @@
+import { type Page as PlaywrightPage } from '@playwright/test'
 import Page from './page'
 
 export default class RdsPage extends Page {
-  constructor() {
-    super('RDS Instances')
+  constructor(page: PlaywrightPage) {
+    super(page, 'RDS Instances')
   }
 
-  rdsInstanceLink = (): Cypress.Chainable<string> =>
-    cy
-      .get('[data-test="rds-instance-link"]')
-      .first()
-      .then($element => {
-        const rdsInstanceName = $element.text().trim()
-        cy.wrap($element).click()
-        return cy.wrap(rdsInstanceName)
-      })
+  async rdsInstanceLink(): Promise<string> {
+    const link = this.page.locator('[data-test="rds-instance-link"]').first()
+    const rdsInstanceName = (await link.textContent())?.trim() ?? ''
+    await link.click()
+
+    return rdsInstanceName
+  }
 }

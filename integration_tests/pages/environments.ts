@@ -1,17 +1,16 @@
+import { type Page as PlaywrightPage } from '@playwright/test'
 import Page from './page'
 
 export default class EnvironmentsPage extends Page {
-  constructor() {
-    super('Environments')
+  constructor(page: PlaywrightPage) {
+    super(page, 'Environments')
   }
 
-  environmentLink = (): Cypress.Chainable<string> =>
-    cy
-      .get('[data-test="environment"]')
-      .first()
-      .then($element => {
-        const environmentName = $element.text().trim()
-        cy.wrap($element).click()
-        return cy.wrap(environmentName)
-      })
+  async environmentLink(): Promise<string> {
+    const link = this.page.locator('[data-test="environment"]').first()
+    const environmentName = (await link.textContent())?.trim() ?? ''
+    await link.click()
+
+    return environmentName
+  }
 }
