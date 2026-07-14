@@ -1,24 +1,28 @@
-jQuery(function () {
-  const columns = [
-    {
-      data: 'ps_id',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(rowData.ps_id)
-      },
-    },
-    {
-      data: 'name',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/product-sets/${rowData.documentId}" data-test="product-set-link">${rowData.name}</a>`)
-      },
-    },
-    {
-      data: 'products',
-      render: function (data, type, row) {
-        return createSearchableProductList(data)
-      },
-    },
-  ]
+import { createTable, createSearchableProductList } from './common.js'
 
-  createTable({ id: 'productSetsTable', ajaxUrl: '/product-sets/data', orderColumn: 1, orderType: 'asc', columns })
-})
+if (document.querySelector('#productSetsTable')) {
+  jQuery(function () {
+    const columns = [
+      {
+        data: 'ps_id',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(rowData.ps_id)
+        },
+      },
+      {
+        data: 'name',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(`<a href="/product-sets/${rowData.documentId}" data-test="product-set-link">${rowData.name}</a>`)
+        },
+      },
+      {
+        data: 'products',
+        render: function (data, type, row) {
+          return createSearchableProductList(data)
+        },
+      },
+    ]
+
+    createTable({ id: 'productSetsTable', ajaxUrl: '/product-sets/data', orderColumn: 1, orderType: 'asc', columns })
+  })
+}
