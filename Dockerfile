@@ -39,9 +39,6 @@ COPY --from=build --chown=appuser:appgroup \
         ./
 
 COPY --from=build --chown=appuser:appgroup \
-        /app/assets ./assets
-
-COPY --from=build --chown=appuser:appgroup \
         /app/dist ./dist
 
 COPY --from=build --chown=appuser:appgroup \

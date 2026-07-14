@@ -3,7 +3,7 @@
 {% from "../partials/breadCrumb.njk" import breadCrumb %}
 
 {% block head %}
-  <link href="/assets/stylesheets/application.css?{{ version }}" rel="stylesheet"/>
+  <link href="{{ '/assets/css/application.css' | assetMap }}" rel="stylesheet"/>
   {% if isDev %}
   <style type="text/css" nonce="{{ cspNonce }}">
   .govuk-template__body {
@@ -50,5 +50,5 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script type="module" src="/assets/frontendInit.js"></script>
+  <script type="module" src="/assets/js/frontendInit.js"></script>
 {% endblock %}

@@ -4,6 +4,8 @@ export default configureAllowedScripts({
   allowlist: {
     // Needed by esbuild for watching files during development
     'node_modules/@parcel/watcher@2.5.6': 'ALLOW',
+    // Needed by esbuild for installing platform-specific binaries
+    'node_modules/esbuild@0.28.1': 'ALLOW',
     // Provides native integration, supporting ability to write dtrace probes for bunya
     'node_modules/dtrace-provider@^0.8.8': 'FORBID',
     // Needed by jest for running tests in watch mode
