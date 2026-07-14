@@ -1,18 +1,11 @@
-const lastIds = {
-  [`h:${environmentName}`]: '0',
-  [`i:${environmentName}`]: '0',
-  [`v:${environmentName}`]: '0',
-}
-const data = {
-  [`h:${environmentName}`]: '',
-  [`i:${environmentName}`]: '',
-  [`v:${environmentName}`]: '',
-}
+let environmentName
+let componentName
+let lastIds
+let data
 let streamData = []
 let streamVersionData = []
 
 function drawHealthChart(stream) {
-  // Start with null's in the the arrays so all traces appear in the legend.
   const traceUpX = [null]
   const traceUpY = [null]
   const traceUpText = [null]
@@ -112,7 +105,6 @@ function drawHealthChart(stream) {
   rangeSelectorStart.setHours(rangeSelectorStart.getHours() - 1)
 
   const layout = {
-    //autosize: true,
     xaxis: {
       maxallowed: dateNow,
       minallowed: rangeStart,
@@ -150,7 +142,7 @@ function drawHealthChart(stream) {
             step: 'day',
             stepmode: 'backward',
           },
-          { step: 'all' }, // this doesn't work, possible bug.
+          { step: 'all' },
         ],
       },
       rangeslider: { range: [rangeStart, dateNow] },
@@ -193,12 +185,8 @@ function drawVersionChart(stream) {
   for (let i = 0; i < stream.length; i++) {
     const eventEpochTime = parseInt(stream[i].id.split('-')[0])
     const eventTimeStart = new Date(eventEpochTime)
-    // Set default endtime, this is used for the latest event
-    // Increase size of the latest event so it's more visible + 7 days)
     let eventTimeEnd = new Date(Date.now() + 60 * 60 * 24 * 7 * 1000)
 
-    // This makes the time line look better if each block butts up to the next,
-    // however we need to see the big gaps, e.g. if there are missing data.
     if (stream[i + 1]) {
       const nextEventEpochTime = parseInt(stream[i + 1].id.split('-')[0])
       eventTimeEnd = new Date(nextEventEpochTime)
@@ -275,12 +263,10 @@ function drawVersionChart(stream) {
 
       const commitSha = version.split('.').pop()
       let previousCommitSha = ''
-      // First item in the chart should not refer to the previous row which does not exist.
       if (selectedItem.row != 0) {
         const previousVersion = dataVersionTimeline.getValue(selectedItem.row - 1, 1)
         previousCommitSha = previousVersion.split('.').pop()
       } else {
-        // Just use the git shortcut for the previous commit.
         previousCommitSha = `${commitSha}^`
       }
 
@@ -290,14 +276,11 @@ function drawVersionChart(stream) {
 
       gitCommits.forEach(commit => {
         let message = commit.message
-        // Replace newlines with html break.
         message = message.replace(/(\n)/gm, '<br>')
-        // Try to find Jira tickets and create links
         message = message.replace(
           /([A-Z][A-Z0-9]+-[0-9]+)/gm,
           '<a href="https://dsdmoj.atlassian.net/browse/$1" target="_blank">$1</a>',
         )
-        // Try to find PR numbers and create links
         message = message.replace(
           /[\(]?#([0-9]{1,5})[\)]?/gm,
           ` <a href="https://github.com/ministryofjustice/${componentName}/pull/$1" target="_blank">$&</a> `,
@@ -336,9 +319,7 @@ function drawVersionChart(stream) {
 
   google.visualization.events.addListener(versionChart, 'select', selectHandler)
   google.visualization.events.addOneTimeListener(versionChart, 'ready', function () {
-    // Get the last item in the table - the last deployed build
     let selectedItem = dataVersionTimeline.getNumberOfRows() - 1
-    // Set the current selection to the last deployed buildz
     google.visualization.events.trigger(versionChart, 'select', [{ row: selectedItem, column: null }])
   })
   google.visualization.events.addListener(tableChart, 'select', selectHandlerTable)
@@ -389,7 +370,6 @@ const fetchMessages = async queryStringOptions => {
               streamData.push(message)
             })
 
-            // Don't draw chart if data is more than 5 hours old.
             const currentEpochTime = Date.now()
             if (currentEpochTime - lastTime < 1000 * 60 * 60 * 5) {
               drawHealthChart(streamData)
@@ -402,7 +382,7 @@ const fetchMessages = async queryStringOptions => {
               output = data[streamKey].error
             } else if (data[streamKey].hasOwnProperty('json')) {
               try {
-                health = JSON.parse(data[streamKey].json)
+                const health = JSON.parse(data[streamKey].json)
                 output = JSON.stringify(health, null, 2)
 
                 if (health.hasOwnProperty('status')) {
@@ -446,10 +426,27 @@ const watch = async () => {
   setTimeout(watch, 10000)
 }
 
-jQuery(function () {
-  google.charts.load('current', { packages: ['corechart'] })
-  google.charts.load('current', { packages: ['timeline'] })
-  google.charts.load('current', { packages: ['table'] })
+if (document.querySelector('#healthChart')) {
+  const marker = document.querySelector('#healthChart')
+  environmentName = marker.dataset.environmentName
+  componentName = marker.dataset.componentName
 
-  google.charts.setOnLoadCallback(watch)
-})
+  lastIds = {
+    [`h:${environmentName}`]: '0',
+    [`i:${environmentName}`]: '0',
+    [`v:${environmentName}`]: '0',
+  }
+  data = {
+    [`h:${environmentName}`]: '',
+    [`i:${environmentName}`]: '',
+    [`v:${environmentName}`]: '',
+  }
+
+  jQuery(function () {
+    google.charts.load('current', { packages: ['corechart'] })
+    google.charts.load('current', { packages: ['timeline'] })
+    google.charts.load('current', { packages: ['table'] })
+
+    google.charts.setOnLoadCallback(watch)
+  })
+}
