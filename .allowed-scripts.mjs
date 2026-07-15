@@ -8,6 +8,8 @@ export default configureAllowedScripts({
     'node_modules/dtrace-provider@^0.8.8': 'FORBID',
     // Needed by jest for running tests in watch mode
     'node_modules/fsevents@^2.3.3': 'FORBID',
+    // Optional file watcher bundled with playwright, not needed for running tests
+    'node_modules/playwright/node_modules/fsevents@^2.3.2': 'FORBID',
     // Native solution to quickly resolve module paths, used by jest and eslint
     'node_modules/unrs-resolver@1.12.2': 'ALLOW',
   },
