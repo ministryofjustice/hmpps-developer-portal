@@ -122,8 +122,8 @@ assets/stylesheets/*.css
 .vscode
 dist/
 test_results/
-integration_tests/videos/
-integration_tests/screenshots/
+playwright-report/
+test-results/
 */*.iml
 **/Chart.lock
 

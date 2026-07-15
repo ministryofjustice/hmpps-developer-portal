@@ -1,9 +1,12 @@
-import Page, { PageElement } from './page'
+import { type Page as PlaywrightPage } from '@playwright/test'
+import Page from './page'
 
 export default class ServiceAreasPage extends Page {
-  constructor() {
-    super('Service Areas')
+  constructor(page: PlaywrightPage) {
+    super(page, 'Service Areas')
   }
 
-  serviceAreaNameLink = (): PageElement => cy.get('[data-test="service-area-name-link"]').first().click()
+  async serviceAreaNameLink(): Promise<void> {
+    await this.page.locator('[data-test="service-area-name-link"]').first().click()
+  }
 }

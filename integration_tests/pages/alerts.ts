@@ -1,7 +1,8 @@
+import { type Page as PlaywrightPage } from '@playwright/test'
 import Page from './page'
 
 export default class AlertsPage extends Page {
-  constructor() {
-    super('Alerts')
+  constructor(page: PlaywrightPage) {
+    super(page, 'Alerts')
   }
 }

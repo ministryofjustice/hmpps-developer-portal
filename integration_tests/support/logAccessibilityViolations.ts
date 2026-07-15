@@ -1,7 +1,8 @@
 import type { Result } from 'axe-core'
 
-const logAccessibilityViolations = (violations: Result[]) => {
-  cy.task('log', `\n${violations.length} accessibility violation(s) detected`)
+const logAccessibilityViolations = (violations: Result[]): void => {
+  // eslint-disable-next-line no-console
+  console.log(`\n${violations.length} accessibility violation(s) detected`)
 
   const violationData = violations.map(({ id, impact, description, nodes }) => ({
     id,
@@ -11,7 +12,8 @@ const logAccessibilityViolations = (violations: Result[]) => {
     elements: nodes.map(n => n.html).join(' --next element-- '),
   }))
 
-  cy.task('table', violationData)
+  // eslint-disable-next-line no-console
+  console.table(violationData)
 }
 
 export default logAccessibilityViolations
