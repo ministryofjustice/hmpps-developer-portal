@@ -1,4 +1,4 @@
-import { type Page as PlaywrightPage } from '@playwright/test'
+import { type Locator, type Page as PlaywrightPage } from '@playwright/test'
 import Page from './page'
 
 export default class TeamsPage extends Page {
@@ -20,5 +20,21 @@ export default class TeamsPage extends Page {
     await link.click()
 
     return teamName
+  }
+
+  teamLinks(): Locator {
+    return this.page.locator('[data-test="team-link"]')
+  }
+
+  async searchName(term: string): Promise<void> {
+    const input = this.page.getByPlaceholder('Name (regex)', { exact: true })
+    await input.click()
+    await input.pressSequentially(term)
+  }
+
+  async clearNameSearch(): Promise<void> {
+    const input = this.page.getByPlaceholder('Name (regex)', { exact: true })
+    await input.press('ControlOrMeta+a')
+    await input.press('Backspace')
   }
 }
