@@ -83,7 +83,7 @@
     "@types/express-session": "^1.19.0",
     "@types/http-errors": "^2.0.5",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.13.2",
+    "@types/node": "^24.13.3",
     "@types/nunjucks": "^3.2.6",
     "@types/pako": "^2.0.4",
     "@types/superagent": "^8.1.10",
@@ -93,7 +93,7 @@
     "cheerio": "1.2.0",
     "concurrently": "^10.0.3",
     "cookie-session": "^2.1.1",
-    "cypress": "^15.18.0",
+    "cypress": "^15.18.1",
     "cypress-axe": "^1.7.0",
     "cypress-multi-reporters": "^2.0.5",
     "dotenv": "^17.4.2",
@@ -112,8 +112,7 @@
   },
   "overrides": {
     "@opentelemetry/core": "2.9.0",
-    "form-data": "4.0.6",
-    "js-yaml": "5.2.1",
+    "brace-expansion": "5.0.7",
     "mocha": {
       "diff": "^8.0.4",
       "serialize-javascript": "^7.0.7"
