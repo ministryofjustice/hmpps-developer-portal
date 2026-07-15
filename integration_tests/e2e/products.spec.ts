@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 import HomePage from '../pages/home'
 import ProductsPage from '../pages/products'
 import ProductPage from '../pages/product'
@@ -25,5 +25,29 @@ test.describe('visit the Service Catalogue product page', () => {
     await productPage.componentLink()
 
     await Page.verifyOnPage(ComponentPage, page, 'hmpps-component-dependencies')
+  })
+})
+
+test.describe('Products table', () => {
+  test('should render all products when table loads', async ({ page }) => {
+    await page.goto('/products')
+    const productsPage = await Page.verifyOnPage(ProductsPage, page)
+
+    await expect(productsPage.idLinks()).toHaveCount(2)
+    await expect(page.locator('[data-test="id-links"][href="/products/service-catalogue"]')).toBeVisible()
+    await expect(page.locator('[data-test="id-links"][href="/products/accredited-programmes"]')).toBeVisible()
+  })
+
+  test('should filter rows when typing in name column search', async ({ page }) => {
+    await page.goto('/products')
+    const productsPage = await Page.verifyOnPage(ProductsPage, page)
+    await expect(productsPage.idLinks()).toHaveCount(2)
+
+    await productsPage.searchName('Catalogue')
+
+    await expect(productsPage.idLinks()).toHaveText(['DPS000'])
+
+    await productsPage.clearNameSearch()
+    await expect(productsPage.idLinks()).toHaveCount(2)
   })
 })
