@@ -109,6 +109,26 @@ const seed = async (): Promise<null> => {
   return null
 }
 
+// Overwrites a single latest:health entry so monitor polling picks up a new
+// status on its next fetch. The dateAdded is refreshed so the tile is not stale.
+const setHealth = async (component: string, env: string, status: string): Promise<null> => {
+  const client = createClient({ url })
+  client.on('error', error => {
+    // eslint-disable-next-line no-console
+    console.error('Redis client error:', error)
+  })
+
+  await client.connect()
+
+  const health: LatestHealth = { json: `{"status":"${status}"}`, dateAdded: new Date().toISOString() }
+
+  await client.json.set('latest:health', `$["health:${component}:${env}"]`, health)
+  await client.quit()
+
+  return null
+}
+
 export default {
   seed,
+  setHealth,
 }
