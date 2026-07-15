@@ -1,0 +1,185 @@
+{
+  "mappings": [
+    {
+      "name": "snyk-scans-list",
+      "priority": 5,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/snyk-scans",
+        "method": "GET",
+        "queryParameters": {
+          "filters[name][$eq]": {
+            "absent": true
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 801,
+              "documentId": "snykscandocid0000000001",
+              "name": "hmpps-developer-portal",
+              "build_image_tag": "2026-07-10.1.abc1234",
+              "scan_status": "Succeeded",
+              "image_id": "quay.io/hmpps/hmpps-developer-portal:2026-07-10.1.abc1234",
+              "createdAt": "2026-07-10T04:00:00.000Z",
+              "updatedAt": "2026-07-10T04:00:00.000Z",
+              "publishedAt": "2026-07-10T04:00:00.000Z",
+              "snyk_scan_timestamp": "2026-07-10T04:00:00.000000",
+              "environment_name": "dev",
+              "critical_fixable": 0,
+              "critical_unfixable": 0,
+              "high_fixable": 1,
+              "high_unfixable": 0,
+              "medium_fixable": 2,
+              "medium_unfixable": 0,
+              "low_fixable": 3,
+              "low_unfixable": 1,
+              "unknown_fixable": 0,
+              "unknown_unfixable": 0,
+              "snyk_ids": [],
+              "snyk_cves": null
+            },
+            {
+              "id": 802,
+              "documentId": "snykscandocid0000000002",
+              "name": "hmpps-developer-portal",
+              "build_image_tag": "2026-07-10.1.abc1234",
+              "scan_status": "Succeeded",
+              "image_id": "quay.io/hmpps/hmpps-developer-portal:2026-07-10.1.abc1234",
+              "createdAt": "2026-07-10T04:05:00.000Z",
+              "updatedAt": "2026-07-10T04:05:00.000Z",
+              "publishedAt": "2026-07-10T04:05:00.000Z",
+              "snyk_scan_timestamp": "2026-07-10T04:05:00.000000",
+              "environment_name": "prod",
+              "critical_fixable": 1,
+              "critical_unfixable": 0,
+              "high_fixable": 1,
+              "high_unfixable": 0,
+              "medium_fixable": 1,
+              "medium_unfixable": 0,
+              "low_fixable": 2,
+              "low_unfixable": 0,
+              "unknown_fixable": 0,
+              "unknown_unfixable": 0,
+              "snyk_ids": ["SNYK-JAVA-SYNTHETIC-CRITICAL-0001", "SNYK-JAVA-SYNTHETIC-HIGH-0002"],
+              "snyk_cves": null
+            },
+            {
+              "id": 803,
+              "documentId": "snykscandocid0000000003",
+              "name": "hmpps-component-dependencies",
+              "build_image_tag": "2026-07-09.2.def5678",
+              "scan_status": "Failed",
+              "image_id": "quay.io/hmpps/hmpps-component-dependencies:2026-07-09.2.def5678",
+              "createdAt": "2026-07-09T04:00:00.000Z",
+              "updatedAt": "2026-07-09T04:00:00.000Z",
+              "publishedAt": "2026-07-09T04:00:00.000Z",
+              "snyk_scan_timestamp": "2026-07-09T04:00:00.000000",
+              "environment_name": "dev",
+              "critical_fixable": 0,
+              "critical_unfixable": 0,
+              "high_fixable": 0,
+              "high_unfixable": 0,
+              "medium_fixable": 0,
+              "medium_unfixable": 0,
+              "low_fixable": 0,
+              "low_unfixable": 0,
+              "unknown_fixable": 0,
+              "unknown_unfixable": 0,
+              "snyk_ids": [],
+              "snyk_cves": null
+            },
+            {
+              "id": 804,
+              "documentId": "snykscandocid0000000004",
+              "name": "hmpps-component-dependencies",
+              "build_image_tag": "2026-07-09.2.def5678",
+              "scan_status": "Succeeded",
+              "image_id": "quay.io/hmpps/hmpps-component-dependencies:2026-07-09.2.def5678",
+              "createdAt": "2026-07-09T04:05:00.000Z",
+              "updatedAt": "2026-07-09T04:05:00.000Z",
+              "publishedAt": "2026-07-09T04:05:00.000Z",
+              "snyk_scan_timestamp": "2026-07-09T04:05:00.000000",
+              "environment_name": "prod",
+              "critical_fixable": 0,
+              "critical_unfixable": 0,
+              "high_fixable": 1,
+              "high_unfixable": 0,
+              "medium_fixable": 1,
+              "medium_unfixable": 1,
+              "low_fixable": 0,
+              "low_unfixable": 0,
+              "unknown_fixable": 0,
+              "unknown_unfixable": 0,
+              "snyk_ids": ["SNYK-JAVA-SYNTHETIC-HIGH-0003", "SNYK-JAVA-SYNTHETIC-MEDIUM-0004"],
+              "snyk_cves": null
+            },
+            {
+              "id": 805,
+              "documentId": "snykscandocid0000000005",
+              "name": "accredited-programmes-and-delius",
+              "build_image_tag": "2026-07-08.3.ghi9012",
+              "scan_status": "Succeeded",
+              "image_id": "quay.io/hmpps/accredited-programmes-and-delius:2026-07-08.3.ghi9012",
+              "createdAt": "2026-07-08T04:00:00.000Z",
+              "updatedAt": "2026-07-08T04:00:00.000Z",
+              "publishedAt": "2026-07-08T04:00:00.000Z",
+              "snyk_scan_timestamp": "2026-07-08T04:00:00.000000",
+              "environment_name": "dev",
+              "critical_fixable": 0,
+              "critical_unfixable": 0,
+              "high_fixable": 0,
+              "high_unfixable": 0,
+              "medium_fixable": 1,
+              "medium_unfixable": 0,
+              "low_fixable": 1,
+              "low_unfixable": 0,
+              "unknown_fixable": 0,
+              "unknown_unfixable": 0,
+              "snyk_ids": [],
+              "snyk_cves": null
+            },
+            {
+              "id": 806,
+              "documentId": "snykscandocid0000000006",
+              "name": "accredited-programmes-and-delius",
+              "build_image_tag": "2026-07-08.3.ghi9012",
+              "scan_status": "Succeeded",
+              "image_id": "quay.io/hmpps/accredited-programmes-and-delius:2026-07-08.3.ghi9012",
+              "createdAt": "2026-07-08T04:05:00.000Z",
+              "updatedAt": "2026-07-08T04:05:00.000Z",
+              "publishedAt": "2026-07-08T04:05:00.000Z",
+              "snyk_scan_timestamp": "2026-07-08T04:05:00.000000",
+              "environment_name": "prod",
+              "critical_fixable": 0,
+              "critical_unfixable": 1,
+              "high_fixable": 0,
+              "high_unfixable": 0,
+              "medium_fixable": 0,
+              "medium_unfixable": 0,
+              "low_fixable": 1,
+              "low_unfixable": 0,
+              "unknown_fixable": 0,
+              "unknown_unfixable": 0,
+              "snyk_ids": ["SNYK-JAVA-SYNTHETIC-CRITICAL-0006", "SNYK-JS-SYNTHETIC-LOW-0005"],
+              "snyk_cves": null
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 1500,
+              "pageCount": 1,
+              "total": 6
+            }
+          }
+        }
+      }
+    }
+  ]
+}

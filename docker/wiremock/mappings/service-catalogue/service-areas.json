@@ -1,0 +1,726 @@
+{
+  "mappings": [
+    {
+      "name": "service-areas-list",
+      "priority": 5,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/service-areas",
+        "method": "GET",
+        "queryParameters": {
+          "filters[slug][$eq]": {
+            "absent": true
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 301,
+              "documentId": "sadocid0000000000000001",
+              "name": "Accommodation & Interventions",
+              "slug": "accommodation-and-interventions",
+              "sa_id": "SA01",
+              "owner": "Service Owner A",
+              "createdAt": "2024-01-01T00:00:00.000Z",
+              "updatedAt": "2026-01-01T00:00:00.000Z",
+              "publishedAt": "2026-01-01T00:00:00.000Z",
+              "products": [
+                {
+                  "id": 201,
+                  "documentId": "proddocid00000000000001",
+                  "name": "Service Catalogue",
+                  "slug": "service-catalogue",
+                  "p_id": "DPS000",
+                  "subproduct": false,
+                  "description": "Service Catalogue - synthetic product for isolated e2e tests",
+                  "phase": "Live",
+                  "portfolio": "Prisons",
+                  "delivery_manager": "Delivery Manager A",
+                  "product_manager": "Product Manager A",
+                  "lead_developer": "Lead Dev A",
+                  "technical_architect": "Technical Architect A",
+                  "principal_architect": "Principal Architect A",
+                  "business_owner": null,
+                  "slack_channel_id": null,
+                  "slack_channel_name": null,
+                  "decommissioned": false,
+                  "decommissioned_date": null,
+                  "createdAt": "2024-01-01T00:00:00.000Z",
+                  "updatedAt": "2026-01-01T00:00:00.000Z",
+                  "publishedAt": "2026-01-01T00:00:00.000Z",
+                  "product_set": {
+                    "id": 401,
+                    "documentId": "psdocid0000000000000001",
+                    "name": "Digital Products",
+                    "slug": "digital-products",
+                    "ps_id": "PS01",
+                    "lead_developer": "Lead Dev A",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "team": {
+                    "id": 101,
+                    "documentId": "teamdocid00000000000001",
+                    "name": "Developer Experience",
+                    "slug": "developer-experience",
+                    "t_id": "T01",
+                    "budget_code": "DX1",
+                    "confluence_link": "https://example.gov.uk/wiki/developer-experience",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "service_area": {
+                    "id": 301,
+                    "documentId": "sadocid0000000000000001",
+                    "name": "Accommodation & Interventions",
+                    "slug": "accommodation-and-interventions",
+                    "sa_id": "SA01",
+                    "owner": "Service Owner A",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "components": [
+                    {
+                      "id": 502,
+                      "documentId": "compdocid00000000000002",
+                      "name": "hmpps-component-dependencies",
+                      "archived": false,
+                      "envs": [
+                        {
+                          "id": 637388,
+                          "name": "dev",
+                          "type": "dev",
+                          "namespace": "hmpps-component-dependencies-dev",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://hmpps-component-dependencies-dev.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "hmpps-component-dependencies-alerts-nonprod",
+                          "alerts_slack_channel": "#hmpps-component-dependencies-alerts-nonprod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid91737388"
+                        },
+                        {
+                          "id": 969328,
+                          "name": "prod",
+                          "type": "prod",
+                          "namespace": "hmpps-component-dependencies-prod",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://hmpps-component-dependencies-prod.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "hmpps-component-dependencies-alerts-prod",
+                          "alerts_slack_channel": "#hmpps-component-dependencies-alerts-prod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid43269328"
+                        }
+                      ],
+                      "language": "Java",
+                      "veracode_results_summary": null
+                    },
+                    {
+                      "id": 503,
+                      "documentId": "compdocid00000000000003",
+                      "name": "hmpps-developer-portal",
+                      "archived": false,
+                      "envs": [
+                        {
+                          "id": 186422,
+                          "name": "dev",
+                          "type": "dev",
+                          "namespace": "hmpps-developer-portal-dev",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://hmpps-developer-portal-dev.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "hmpps-developer-portal-alerts-nonprod",
+                          "alerts_slack_channel": "#hmpps-developer-portal-alerts-nonprod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid49186422"
+                        },
+                        {
+                          "id": 605931,
+                          "name": "prod",
+                          "type": "prod",
+                          "namespace": "hmpps-developer-portal-prod",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://hmpps-developer-portal-prod.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "hmpps-developer-portal-alerts-prod",
+                          "alerts_slack_channel": "#hmpps-developer-portal-alerts-prod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid11205931",
+                          "snyk_scan": {
+                            "id": 802,
+                            "documentId": "snykscandocid0000000002",
+                            "name": "hmpps-developer-portal",
+                            "scan_status": "Succeeded",
+                            "environment_name": "prod",
+                            "build_image_tag": "2026-07-10.1.abc1234",
+                            "snyk_scan_timestamp": "2026-07-10T04:05:00.000000",
+                            "snyk_ids": ["SNYK-JAVA-SYNTHETIC-CRITICAL-0001", "SNYK-JAVA-SYNTHETIC-HIGH-0002"],
+                            "snyk_cves": null
+                          }
+                        }
+                      ],
+                      "language": "Java",
+                      "veracode_results_summary": null
+                    }
+                  ]
+                },
+                {
+                  "id": 202,
+                  "documentId": "proddocid00000000000002",
+                  "name": "Accredited Programmes",
+                  "slug": "accredited-programmes",
+                  "p_id": "DPS010",
+                  "subproduct": false,
+                  "description": "Accredited Programmes - synthetic product for isolated e2e tests",
+                  "phase": "Live",
+                  "portfolio": "Probation",
+                  "delivery_manager": "Delivery Manager A",
+                  "product_manager": "Product Manager A",
+                  "lead_developer": "Lead Dev A",
+                  "technical_architect": "Technical Architect A",
+                  "principal_architect": "Principal Architect A",
+                  "business_owner": null,
+                  "slack_channel_id": null,
+                  "slack_channel_name": null,
+                  "decommissioned": false,
+                  "decommissioned_date": null,
+                  "createdAt": "2024-01-01T00:00:00.000Z",
+                  "updatedAt": "2026-01-01T00:00:00.000Z",
+                  "publishedAt": "2026-01-01T00:00:00.000Z",
+                  "product_set": {
+                    "id": 401,
+                    "documentId": "psdocid0000000000000001",
+                    "name": "Digital Products",
+                    "slug": "digital-products",
+                    "ps_id": "PS01",
+                    "lead_developer": "Lead Dev A",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "team": {
+                    "id": 101,
+                    "documentId": "teamdocid00000000000001",
+                    "name": "Developer Experience",
+                    "slug": "developer-experience",
+                    "t_id": "T01",
+                    "budget_code": "DX1",
+                    "confluence_link": "https://example.gov.uk/wiki/developer-experience",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "service_area": {
+                    "id": 301,
+                    "documentId": "sadocid0000000000000001",
+                    "name": "Accommodation & Interventions",
+                    "slug": "accommodation-and-interventions",
+                    "sa_id": "SA01",
+                    "owner": "Service Owner A",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "components": [
+                    {
+                      "id": 501,
+                      "documentId": "compdocid00000000000001",
+                      "name": "accredited-programmes-and-delius",
+                      "archived": false,
+                      "envs": [
+                        {
+                          "id": 735369,
+                          "name": "dev",
+                          "type": "dev",
+                          "namespace": "accredited-programmes-and-delius-dev",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://accredited-programmes-and-delius-dev.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "accredited-programmes-and-delius-alerts-nonprod",
+                          "alerts_slack_channel": "#accredited-programmes-and-delius-alerts-nonprod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid66235369"
+                        },
+                        {
+                          "id": 300374,
+                          "name": "prod",
+                          "type": "prod",
+                          "namespace": "accredited-programmes-and-delius-prod",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://accredited-programmes-and-delius-prod.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "accredited-programmes-and-delius-alerts-prod",
+                          "alerts_slack_channel": "#accredited-programmes-and-delius-alerts-prod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid66100374"
+                        }
+                      ],
+                      "language": "Java",
+                      "veracode_results_summary": null
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 100,
+              "pageCount": 1,
+              "total": 1
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "service-area-accommodation-and-interventions",
+      "priority": 1,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/service-areas",
+        "method": "GET",
+        "queryParameters": {
+          "filters[slug][$eq]": {
+            "equalTo": "accommodation-and-interventions"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 301,
+              "documentId": "sadocid0000000000000001",
+              "name": "Accommodation & Interventions",
+              "slug": "accommodation-and-interventions",
+              "sa_id": "SA01",
+              "owner": "Service Owner A",
+              "createdAt": "2024-01-01T00:00:00.000Z",
+              "updatedAt": "2026-01-01T00:00:00.000Z",
+              "publishedAt": "2026-01-01T00:00:00.000Z",
+              "products": [
+                {
+                  "id": 201,
+                  "documentId": "proddocid00000000000001",
+                  "name": "Service Catalogue",
+                  "slug": "service-catalogue",
+                  "p_id": "DPS000",
+                  "subproduct": false,
+                  "description": "Service Catalogue - synthetic product for isolated e2e tests",
+                  "phase": "Live",
+                  "portfolio": "Prisons",
+                  "delivery_manager": "Delivery Manager A",
+                  "product_manager": "Product Manager A",
+                  "lead_developer": "Lead Dev A",
+                  "technical_architect": "Technical Architect A",
+                  "principal_architect": "Principal Architect A",
+                  "business_owner": null,
+                  "slack_channel_id": null,
+                  "slack_channel_name": null,
+                  "decommissioned": false,
+                  "decommissioned_date": null,
+                  "createdAt": "2024-01-01T00:00:00.000Z",
+                  "updatedAt": "2026-01-01T00:00:00.000Z",
+                  "publishedAt": "2026-01-01T00:00:00.000Z",
+                  "product_set": {
+                    "id": 401,
+                    "documentId": "psdocid0000000000000001",
+                    "name": "Digital Products",
+                    "slug": "digital-products",
+                    "ps_id": "PS01",
+                    "lead_developer": "Lead Dev A",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "team": {
+                    "id": 101,
+                    "documentId": "teamdocid00000000000001",
+                    "name": "Developer Experience",
+                    "slug": "developer-experience",
+                    "t_id": "T01",
+                    "budget_code": "DX1",
+                    "confluence_link": "https://example.gov.uk/wiki/developer-experience",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "service_area": {
+                    "id": 301,
+                    "documentId": "sadocid0000000000000001",
+                    "name": "Accommodation & Interventions",
+                    "slug": "accommodation-and-interventions",
+                    "sa_id": "SA01",
+                    "owner": "Service Owner A",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "components": [
+                    {
+                      "id": 502,
+                      "documentId": "compdocid00000000000002",
+                      "name": "hmpps-component-dependencies",
+                      "archived": false,
+                      "envs": [
+                        {
+                          "id": 637388,
+                          "name": "dev",
+                          "type": "dev",
+                          "namespace": "hmpps-component-dependencies-dev",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://hmpps-component-dependencies-dev.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "hmpps-component-dependencies-alerts-nonprod",
+                          "alerts_slack_channel": "#hmpps-component-dependencies-alerts-nonprod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid91737388"
+                        },
+                        {
+                          "id": 969328,
+                          "name": "prod",
+                          "type": "prod",
+                          "namespace": "hmpps-component-dependencies-prod",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://hmpps-component-dependencies-prod.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "hmpps-component-dependencies-alerts-prod",
+                          "alerts_slack_channel": "#hmpps-component-dependencies-alerts-prod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid43269328"
+                        }
+                      ],
+                      "language": "Java",
+                      "veracode_results_summary": null
+                    },
+                    {
+                      "id": 503,
+                      "documentId": "compdocid00000000000003",
+                      "name": "hmpps-developer-portal",
+                      "archived": false,
+                      "envs": [
+                        {
+                          "id": 186422,
+                          "name": "dev",
+                          "type": "dev",
+                          "namespace": "hmpps-developer-portal-dev",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://hmpps-developer-portal-dev.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "hmpps-developer-portal-alerts-nonprod",
+                          "alerts_slack_channel": "#hmpps-developer-portal-alerts-nonprod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid49186422"
+                        },
+                        {
+                          "id": 605931,
+                          "name": "prod",
+                          "type": "prod",
+                          "namespace": "hmpps-developer-portal-prod",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://hmpps-developer-portal-prod.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "hmpps-developer-portal-alerts-prod",
+                          "alerts_slack_channel": "#hmpps-developer-portal-alerts-prod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid11205931",
+                          "snyk_scan": {
+                            "id": 802,
+                            "documentId": "snykscandocid0000000002",
+                            "name": "hmpps-developer-portal",
+                            "scan_status": "Succeeded",
+                            "environment_name": "prod",
+                            "build_image_tag": "2026-07-10.1.abc1234",
+                            "snyk_scan_timestamp": "2026-07-10T04:05:00.000000",
+                            "snyk_ids": ["SNYK-JAVA-SYNTHETIC-CRITICAL-0001", "SNYK-JAVA-SYNTHETIC-HIGH-0002"],
+                            "snyk_cves": null
+                          }
+                        }
+                      ],
+                      "language": "Java",
+                      "veracode_results_summary": null
+                    }
+                  ]
+                },
+                {
+                  "id": 202,
+                  "documentId": "proddocid00000000000002",
+                  "name": "Accredited Programmes",
+                  "slug": "accredited-programmes",
+                  "p_id": "DPS010",
+                  "subproduct": false,
+                  "description": "Accredited Programmes - synthetic product for isolated e2e tests",
+                  "phase": "Live",
+                  "portfolio": "Probation",
+                  "delivery_manager": "Delivery Manager A",
+                  "product_manager": "Product Manager A",
+                  "lead_developer": "Lead Dev A",
+                  "technical_architect": "Technical Architect A",
+                  "principal_architect": "Principal Architect A",
+                  "business_owner": null,
+                  "slack_channel_id": null,
+                  "slack_channel_name": null,
+                  "decommissioned": false,
+                  "decommissioned_date": null,
+                  "createdAt": "2024-01-01T00:00:00.000Z",
+                  "updatedAt": "2026-01-01T00:00:00.000Z",
+                  "publishedAt": "2026-01-01T00:00:00.000Z",
+                  "product_set": {
+                    "id": 401,
+                    "documentId": "psdocid0000000000000001",
+                    "name": "Digital Products",
+                    "slug": "digital-products",
+                    "ps_id": "PS01",
+                    "lead_developer": "Lead Dev A",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "team": {
+                    "id": 101,
+                    "documentId": "teamdocid00000000000001",
+                    "name": "Developer Experience",
+                    "slug": "developer-experience",
+                    "t_id": "T01",
+                    "budget_code": "DX1",
+                    "confluence_link": "https://example.gov.uk/wiki/developer-experience",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "service_area": {
+                    "id": 301,
+                    "documentId": "sadocid0000000000000001",
+                    "name": "Accommodation & Interventions",
+                    "slug": "accommodation-and-interventions",
+                    "sa_id": "SA01",
+                    "owner": "Service Owner A",
+                    "createdAt": "2024-01-01T00:00:00.000Z",
+                    "updatedAt": "2026-01-01T00:00:00.000Z",
+                    "publishedAt": "2026-01-01T00:00:00.000Z"
+                  },
+                  "components": [
+                    {
+                      "id": 501,
+                      "documentId": "compdocid00000000000001",
+                      "name": "accredited-programmes-and-delius",
+                      "archived": false,
+                      "envs": [
+                        {
+                          "id": 735369,
+                          "name": "dev",
+                          "type": "dev",
+                          "namespace": "accredited-programmes-and-delius-dev",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://accredited-programmes-and-delius-dev.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "accredited-programmes-and-delius-alerts-nonprod",
+                          "alerts_slack_channel": "#accredited-programmes-and-delius-alerts-nonprod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid66235369"
+                        },
+                        {
+                          "id": 300374,
+                          "name": "prod",
+                          "type": "prod",
+                          "namespace": "accredited-programmes-and-delius-prod",
+                          "info_path": "/info",
+                          "health_path": "/health",
+                          "url": "https://accredited-programmes-and-delius-prod.example.gov.uk",
+                          "cluster": "example.cloud-platform.service.justice.gov.uk",
+                          "monitor": true,
+                          "active_agencies": null,
+                          "swagger_docs": null,
+                          "ip_allow_list_enabled": false,
+                          "ip_allow_list": {},
+                          "include_in_subject_access_requests": false,
+                          "modsecurity_enabled": true,
+                          "modsecurity_audit_enabled": false,
+                          "build_image_tag": "2026-07-01.1.abc1234",
+                          "alert_severity_label": "accredited-programmes-and-delius-alerts-prod",
+                          "alerts_slack_channel": "#accredited-programmes-and-delius-alerts-prod",
+                          "createdAt": "2026-01-01T00:00:00.000Z",
+                          "updatedAt": "2026-07-01T00:00:00.000Z",
+                          "publishedAt": "2026-07-01T00:00:00.000Z",
+                          "postgres_database_restore": false,
+                          "documentId": "envdocid66100374"
+                        }
+                      ],
+                      "language": "Java",
+                      "veracode_results_summary": null
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 25,
+              "pageCount": 1,
+              "total": 1
+            }
+          }
+        }
+      }
+    }
+  ]
+}

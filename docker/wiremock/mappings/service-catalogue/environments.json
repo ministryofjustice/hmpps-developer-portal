@@ -1,0 +1,25 @@
+{
+  "name": "environments-list",
+  "priority": 5,
+  "request": {
+    "urlPath": "/serviceCatalogue/v1/environments",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "data": [],
+      "meta": {
+        "pagination": {
+          "page": 1,
+          "pageSize": 100,
+          "pageCount": 1,
+          "total": 0
+        }
+      }
+    }
+  }
+}

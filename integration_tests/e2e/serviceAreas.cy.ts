@@ -5,7 +5,7 @@ import Page from '../pages/page'
 
 context('Visit service area page for accommodation & interventions', () => {
   it('should load the home page, go to Service Areas, click on the top link for the Accommodation & Interventions page', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     const homePage = Page.verifyOnPage(HomePage)
     homePage.serviceAreasLink()
 

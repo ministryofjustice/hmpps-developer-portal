@@ -4,8 +4,12 @@ import ComponentsPage from '../pages/components'
 import Page from '../pages/page'
 
 context('visit the accredited programmes and delius component page', () => {
+  beforeEach(() => {
+    cy.task('seedRedis')
+  })
+
   it('should load the home page, go to the components page, click on the first link(accredited programmes and delius), and go to that page', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     const homePage = Page.verifyOnPage(HomePage)
     homePage.componentsLink()
 

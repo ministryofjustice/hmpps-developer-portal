@@ -2,6 +2,7 @@ import { defineConfig } from 'cypress'
 import { resetStubs } from './integration_tests/mockApis/wiremock'
 import serviceCatalogue from './integration_tests/mockApis/serviceCatalogue'
 import alertManager from './integration_tests/mockApis/alertManager'
+import redis from './integration_tests/mockApis/redis'
 
 export default defineConfig({
   chromeWebSecurity: false,
@@ -19,6 +20,8 @@ export default defineConfig({
     setupNodeEvents(on) {
       on('task', {
         reset: resetStubs,
+
+        seedRedis: redis.seed,
 
         // Log message to console
         log: (message: string) => {

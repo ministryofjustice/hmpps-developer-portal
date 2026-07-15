@@ -3,8 +3,12 @@ import Page from '../pages/page'
 import ProductDependenciesPage from '../pages/productDependencies'
 
 context('Visit Product Dependencies page', () => {
+  beforeEach(() => {
+    cy.task('seedRedis')
+  })
+
   it('should load the home page and go to Product Dependencies page', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     const homePage = Page.verifyOnPage(HomePage)
     homePage.productDependenciesLink()
 

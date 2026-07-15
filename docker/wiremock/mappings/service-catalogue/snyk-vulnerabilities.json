@@ -1,0 +1,158 @@
+{
+  "mappings": [
+    {
+      "name": "snyk-vulnerabilities-list",
+      "priority": 5,
+      "request": {
+        "urlPath": "/serviceCatalogue/v1/snyk-vulnerabilities",
+        "method": "GET",
+        "queryParameters": {
+          "pagination[page]": {
+            "equalTo": "1"
+          },
+          "filters[snyk_id][$eq]": {
+            "absent": true
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "data": [
+            {
+              "id": 901,
+              "documentId": "snykvulndocid0000000001",
+              "snyk_id": "SNYK-JAVA-SYNTHETIC-CRITICAL-0001",
+              "title": "Remote Code Execution in synthetic-lib",
+              "description": "Synthetic critical vulnerability for isolated e2e tests.",
+              "severity": "critical",
+              "cvss_score": 9.8,
+              "exploit_maturity": "mature",
+              "fix_available": "true",
+              "published_date": "2026-05-15T00:00:00.000Z",
+              "affected_package_name": "com.example.synthetic:synthetic-core",
+              "affected_versions": ["<1.4.2"],
+              "fixed_versions": ["1.4.2"],
+              "cves": ["CVE-2026-10001"],
+              "language": "java",
+              "createdAt": "2026-05-15T00:00:00.000Z",
+              "updatedAt": "2026-05-15T00:00:00.000Z",
+              "publishedAt": "2026-05-15T00:00:00.000Z"
+            },
+            {
+              "id": 902,
+              "documentId": "snykvulndocid0000000002",
+              "snyk_id": "SNYK-JAVA-SYNTHETIC-HIGH-0002",
+              "title": "Denial of Service in synthetic-web",
+              "description": "Synthetic high severity vulnerability for isolated e2e tests.",
+              "severity": "high",
+              "cvss_score": 7.5,
+              "exploit_maturity": "proof-of-concept",
+              "fix_available": "true",
+              "published_date": "2026-06-10T00:00:00.000Z",
+              "affected_package_name": "com.example.synthetic:synthetic-web",
+              "affected_versions": ["<2.1.0"],
+              "fixed_versions": ["2.1.0"],
+              "cves": ["CVE-2026-10002"],
+              "language": "java",
+              "createdAt": "2026-06-10T00:00:00.000Z",
+              "updatedAt": "2026-06-10T00:00:00.000Z",
+              "publishedAt": "2026-06-10T00:00:00.000Z"
+            },
+            {
+              "id": 903,
+              "documentId": "snykvulndocid0000000003",
+              "snyk_id": "SNYK-JAVA-SYNTHETIC-HIGH-0003",
+              "title": "Information Exposure in synthetic-utils",
+              "description": "Synthetic recently published high severity vulnerability, still within SLA.",
+              "severity": "high",
+              "cvss_score": 7.1,
+              "exploit_maturity": "no-known-exploit",
+              "fix_available": "true",
+              "published_date": "2026-07-12T00:00:00.000Z",
+              "affected_package_name": "com.example.synthetic:synthetic-utils",
+              "affected_versions": ["<3.0.5"],
+              "fixed_versions": ["3.0.5"],
+              "cves": ["CVE-2026-10003"],
+              "language": "java",
+              "createdAt": "2026-07-12T00:00:00.000Z",
+              "updatedAt": "2026-07-12T00:00:00.000Z",
+              "publishedAt": "2026-07-12T00:00:00.000Z"
+            },
+            {
+              "id": 904,
+              "documentId": "snykvulndocid0000000004",
+              "snyk_id": "SNYK-JAVA-SYNTHETIC-MEDIUM-0004",
+              "title": "Improper Input Validation in synthetic-parser",
+              "description": "Synthetic medium severity vulnerability for isolated e2e tests.",
+              "severity": "medium",
+              "cvss_score": 5.3,
+              "exploit_maturity": "no-known-exploit",
+              "fix_available": "true",
+              "published_date": "2026-04-15T00:00:00.000Z",
+              "affected_package_name": "com.example.synthetic:synthetic-parser",
+              "affected_versions": ["<1.0.9"],
+              "fixed_versions": ["1.0.9"],
+              "cves": ["CVE-2026-10004"],
+              "language": "java",
+              "createdAt": "2026-04-15T00:00:00.000Z",
+              "updatedAt": "2026-04-15T00:00:00.000Z",
+              "publishedAt": "2026-04-15T00:00:00.000Z"
+            },
+            {
+              "id": 905,
+              "documentId": "snykvulndocid0000000005",
+              "snyk_id": "SNYK-JS-SYNTHETIC-LOW-0005",
+              "title": "Regular Expression Denial of Service in synthetic-js",
+              "description": "Synthetic low severity vulnerability with no fix available.",
+              "severity": "low",
+              "cvss_score": 3.7,
+              "exploit_maturity": "no-known-exploit",
+              "fix_available": "false",
+              "published_date": "2026-03-14T00:00:00.000Z",
+              "affected_package_name": "synthetic-js",
+              "affected_versions": [">=0.0.0"],
+              "fixed_versions": [],
+              "cves": ["CVE-2026-10005"],
+              "language": "js",
+              "createdAt": "2026-03-14T00:00:00.000Z",
+              "updatedAt": "2026-03-14T00:00:00.000Z",
+              "publishedAt": "2026-03-14T00:00:00.000Z"
+            },
+            {
+              "id": 906,
+              "documentId": "snykvulndocid0000000006",
+              "snyk_id": "SNYK-JAVA-SYNTHETIC-CRITICAL-0006",
+              "title": "Deserialization of Untrusted Data in synthetic-io",
+              "description": "Synthetic critical vulnerability with no fix available yet.",
+              "severity": "critical",
+              "cvss_score": 9.1,
+              "exploit_maturity": "proof-of-concept",
+              "fix_available": "false",
+              "published_date": "2026-05-30T00:00:00.000Z",
+              "affected_package_name": "com.example.synthetic:synthetic-io",
+              "affected_versions": [">=0.0.0"],
+              "fixed_versions": [],
+              "cves": ["CVE-2026-10006"],
+              "language": "java",
+              "createdAt": "2026-05-30T00:00:00.000Z",
+              "updatedAt": "2026-05-30T00:00:00.000Z",
+              "publishedAt": "2026-05-30T00:00:00.000Z"
+            }
+          ],
+          "meta": {
+            "pagination": {
+              "page": 1,
+              "pageSize": 500,
+              "pageCount": 1,
+              "total": 6
+            }
+          }
+        }
+      }
+    }
+  ]
+}

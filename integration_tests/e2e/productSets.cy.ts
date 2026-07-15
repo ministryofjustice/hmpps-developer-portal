@@ -5,7 +5,7 @@ import ProductSetPage from '../pages/productSet'
 
 context('Visit Product Sets Page', () => {
   it('should load the home page, go to Product Sets page, click the first product set link and visit that page', () => {
-    cy.visit('http://localhost:3000')
+    cy.visit('/')
     const homePage = Page.verifyOnPage(HomePage)
     homePage.productSetsLink()
 
