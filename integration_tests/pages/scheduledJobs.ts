@@ -1,4 +1,4 @@
-import { type Page as PlaywrightPage } from '@playwright/test'
+import { type Locator, type Page as PlaywrightPage } from '@playwright/test'
 import Page from './page'
 
 export default class ScheduledJobsPage extends Page {
@@ -12,5 +12,21 @@ export default class ScheduledJobsPage extends Page {
     await link.click()
 
     return scheduledJobName
+  }
+
+  scheduledJobLinks(): Locator {
+    return this.page.locator('[data-test="scheduled-job-link"]')
+  }
+
+  async searchJobName(term: string): Promise<void> {
+    const input = this.page.getByPlaceholder('Job Name (regex)', { exact: true })
+    await input.click()
+    await input.pressSequentially(term)
+  }
+
+  async clearJobNameSearch(): Promise<void> {
+    const input = this.page.getByPlaceholder('Job Name (regex)', { exact: true })
+    await input.press('ControlOrMeta+a')
+    await input.press('Backspace')
   }
 }
