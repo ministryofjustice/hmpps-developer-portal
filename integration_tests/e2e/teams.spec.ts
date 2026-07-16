@@ -1,4 +1,4 @@
-import { test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 import HomePage from '../pages/home'
 import TeamsPage from '../pages/teams'
 import TeamOverviewPage from '../pages/teamOverview'
@@ -30,5 +30,28 @@ test.describe('Visit Teams Page', () => {
     const teamsPage = await Page.verifyOnPage(TeamsPage, page)
     const teamName = await teamsPage.teamLink()
     await Page.verifyOnPage(TeamPage, page, teamName)
+  })
+})
+
+test.describe('Teams table', () => {
+  test('should render all teams when table loads', async ({ page }) => {
+    await page.goto('/teams')
+    const teamsPage = await Page.verifyOnPage(TeamsPage, page)
+
+    await expect(teamsPage.teamLinks()).toHaveText(['Developer Experience'])
+    await expect(teamsPage.teamLinks()).toHaveAttribute('href', '/teams/developer-experience')
+  })
+
+  test('should filter rows when typing in name column search', async ({ page }) => {
+    await page.goto('/teams')
+    const teamsPage = await Page.verifyOnPage(TeamsPage, page)
+    await expect(teamsPage.teamLinks()).toHaveCount(1)
+
+    await teamsPage.searchName('zzz-no-such-team')
+
+    await expect(teamsPage.teamLinks()).toHaveCount(0)
+
+    await teamsPage.clearNameSearch()
+    await expect(teamsPage.teamLinks()).toHaveCount(1)
   })
 })
