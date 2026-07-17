@@ -1,36 +1,4 @@
-jQuery(function () {
-  const columns = [
-    {
-      data: 'name',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/teams/${rowData.slug}" data-test="team-link">${rowData.name}</a>`)
-      },
-    },
-    {
-      data: 'budget_code',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html((rowData.budget_code ?? '').trim())
-      },
-    },
-    {
-      data: 'products',
-      render: function (data, type, row) {
-        return createSearchableProductList(data)
-      },
-    },
-    {
-      data: 'slug',
-      createdCell: function (td, _cellData, rowData) {
-        const monitor_name = `${formatMonitorName(rowData.name)}`
-        $(td).html(
-          `<details class="govuk-details"><summary class="govuk-details__summary" data-test="all-links"><span class="govuk-details__summary-text">Links</span></summary><li><a class="govuk-link--no-visited-state" href="/monitor/team/${monitor_name}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${monitor_name}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" data-test="team-overview-link" href="/teams/team-overview/${rowData.slug}">Team Overview</a></li>`,
-        )
-      },
-    },
-  ]
-
-  createTable({ id: 'teamsTable', ajaxUrl: '/teams/data', orderColumn: 0, orderType: 'asc', columns })
-})
+import { createTable, createSearchableProductList } from './common.js'
 
 function formatMonitorName(name) {
   return `${name} `
@@ -39,4 +7,40 @@ function formatMonitorName(name) {
     .replace(/ /g, '-')
     .replace(/[^-a-z0-9]/g, '')
     .replace(/-+/g, '-')
+}
+
+if (document.querySelector('#teamsTable')) {
+  jQuery(function () {
+    const columns = [
+      {
+        data: 'name',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(`<a href="/teams/${rowData.slug}" data-test="team-link">${rowData.name}</a>`)
+        },
+      },
+      {
+        data: 'budget_code',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html((rowData.budget_code ?? '').trim())
+        },
+      },
+      {
+        data: 'products',
+        render: function (data, type, row) {
+          return createSearchableProductList(data)
+        },
+      },
+      {
+        data: 'slug',
+        createdCell: function (td, _cellData, rowData) {
+          const monitor_name = `${formatMonitorName(rowData.name)}`
+          $(td).html(
+            `<details class="govuk-details"><summary class="govuk-details__summary" data-test="all-links"><span class="govuk-details__summary-text">Links</span></summary><li><a class="govuk-link--no-visited-state" href="/monitor/team/${monitor_name}">Health Monitor</a></li><li><a class="govuk-link--no-visited-state" href="/drift-radiator/teams/${monitor_name}">Deployment drift</a></li><li><a class="govuk-link--no-visited-state" data-test="team-overview-link" href="/teams/team-overview/${rowData.slug}">Team Overview</a></li>`,
+          )
+        },
+      },
+    ]
+
+    createTable({ id: 'teamsTable', ajaxUrl: '/teams/data', orderColumn: 0, orderType: 'asc', columns })
+  })
 }

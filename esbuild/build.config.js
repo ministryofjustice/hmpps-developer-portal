@@ -29,16 +29,14 @@ const getBuildConfig = () => {
 
     assets: {
       outDir: path.join(cwd, 'dist/assets'),
-      entryPoints: [path.join(cwd, 'assets/scss/application.scss')],
+      entryPoints: [
+        path.join(cwd, 'assets/js/index.js'),
+        path.join(cwd, 'assets/scss/application.scss'),
+      ],
       copy: [
         {
           from: path.join(cwd, 'assets/images/**/*'),
           to: path.join(cwd, 'dist/assets/images'),
-          watch: isWatchMode,
-        },
-        {
-          from: path.join(cwd, 'assets/js/**/*'),
-          to: path.join(cwd, 'dist/assets/js'),
           watch: isWatchMode,
         },
       ],

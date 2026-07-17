@@ -1,218 +1,6 @@
-jQuery(function () {
-  const urlParams = new URLSearchParams(window.location.search)
-  const archived = urlParams.get('archived')
-  const isArchived = archived === 'true'
-  const ajaxUrl = archived ? `/components/data?archived=${archived}` : '/components/data?archived=false'
+import { createTable, cleanColumnOutput } from './common.js'
 
-  const columns = [
-    {
-      data: 'name',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(
-          `<a data-test="component-links" class="govuk-link--no-visited-state" href="/components/${cleanColumnOutput(rowData.name)}">${cleanColumnOutput(
-            rowData.name,
-          )}</a>`,
-        )
-      },
-    },
-    {
-      data: 'product.p_id',
-      createdCell: function (td, _cellData, rowData) {
-        const link = rowData.product.p_id
-          ? `<a class="govuk-link--no-visited-state" href="/products/${rowData.product.slug}">${cleanColumnOutput(
-              rowData.product.p_id,
-            )}</a>`
-          : 'N/A'
-        $(td).html(link)
-      },
-    },
-    {
-      data: 'product.name',
-      createdCell: function (td, _cellData, rowData) {
-        const link = rowData.product.name
-          ? `<a class="govuk-link--no-visited-state" href="/products/${rowData.product.slug}">${cleanColumnOutput(
-              rowData.product.name,
-            )}</a>`
-          : 'N/A'
-        $(td).html(link)
-      },
-    },
-    {
-      data: 'product.portfolio',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.product.portfolio}`)
-      },
-    },
-    {
-      data: 'github_repo',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(
-          `<a class="govuk-link--no-visited-state" href="https://github.com/ministryofjustice/${rowData.github_repo}" target="_blank" data-test="github-repo"> ${rowData.github_repo}</a>`,
-        )
-      },
-    },
-    {
-      data: 'github_enforce_admins_enabled',
-      visible: false,
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.github_enforce_admins_enabled}`)
-      },
-    },
-    {
-      data: null,
-      render: function (data, type, rowData, meta) {
-        const prodEnvironments = (rowData?.envs || []).filter(env => env.name === 'prod')
-
-        if (prodEnvironments.length === 0) {
-          const displayVal = 'N/A'
-          const filterVal = displayVal
-          const sortVal = 'zzzzz'
-          if (type === 'display') return displayVal
-          if (type === 'filter') return filterVal
-          return sortVal
-        }
-
-        const displayList = prodEnvironments.map(env =>
-          env.alerts_slack_channel === null ? 'N/A' : env.alerts_slack_channel,
-        )
-        const filterList = prodEnvironments.map(env => env.alerts_slack_channel || 'N/A')
-        const sortList = prodEnvironments
-          .map(env => {
-            const channel = env.alerts_slack_channel
-            return channel === null ? 'zzzz' : channel.toLowerCase().replace(/[^a-z0-9]/g, '')
-          })
-          .sort()
-
-        switch (type) {
-          case 'display':
-            return displayList.join(', ')
-          case 'filter':
-            return filterList.join(' ')
-          default:
-            return sortList.join(' ')
-        }
-      },
-    },
-    {
-      data: null,
-      createdCell: function (td, _cellData, rowData) {
-        const adminTeams = renderGithubTeams(rowData.github_project_teams_admin, 'No Teams with Admin Access')
-        const writeTeams = renderGithubTeams(rowData.github_project_teams_write, 'No Teams with Write Access')
-        const maintainTeams = renderGithubTeams(rowData.github_project_teams_maintain, 'No Teams with Maintain Access')
-        const detailsContent = `<details class="govuk-details">
-          <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">Links</span>
-          </summary>
-          <div class="govuk-details__text">
-            <strong>Admin Teams:</strong>
-            <ul>${adminTeams}</ul>
-            <strong>Write Teams:</strong>
-            <ul>${writeTeams}</ul>
-            <strong>Maintain Teams:</strong>
-            <ul>${maintainTeams}</ul>
-          </div>
-        </details>`
-        $(td).html(detailsContent)
-      },
-    },
-    {
-      data: 'github_project_teams_admin',
-      visible: false,
-      createdCell: function (td, _cellData, rowData) {
-        const githubTeams = (rowData.github_project_teams_admin ?? [])
-          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
-          .join('')
-
-        if (githubTeams) {
-          $(td).html(githubTeams)
-        } else {
-          $(td).html('No Teams with Admin Access')
-        }
-      },
-    },
-    {
-      data: 'github_project_teams_write',
-      visible: false,
-      createdCell: function (td, _cellData, rowData) {
-        const githubTeams = (rowData.github_project_teams_write ?? [])
-          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
-          .join('')
-
-        if (githubTeams) {
-          $(td).html(githubTeams)
-        } else {
-          $(td).html('No Teams with Write Access')
-        }
-      },
-    },
-    {
-      data: 'github_project_teams_maintain',
-      visible: false,
-      createdCell: function (td, _cellData, rowData) {
-        const githubTeams = (rowData.github_project_teams_maintain ?? [])
-          .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
-          .join('')
-
-        if (githubTeams) {
-          $(td).html(githubTeams)
-        } else {
-          $(td).html('No Teams with maintain Access')
-        }
-      },
-    },
-    {
-      data: 'archived',
-      visible: isArchived,
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`${rowData.archived ? 'Yes' : 'No'}`)
-      },
-    },
-    {
-      data: 'app_insights_cloud_role_name',
-      visible: false,
-      createdCell: function (td, _cellData, rowData) {
-        const value = rowData.app_insights_cloud_role_name ? rowData.app_insights_cloud_role_name : 'N/A'
-        $(td).html(`${value}`)
-      },
-    },
-    {
-      data: 'app_insights_alerts_enabled',
-      visible: false,
-      createdCell: function (td, _cellData, rowData) {
-        const value = rowData.app_insights_cloud_role_name ? (rowData.app_insights_alerts_enabled ?? true) : 'N/A'
-        $(td).html(`${value}`)
-      },
-    },
-    {
-      name: 'dependent_count',
-      data: 'dependent_count',
-      visible: false,
-      createdCell: function (td, _cellData, rowData) {
-        const value = rowData.dependent_count
-        $(td).html(`${value}`)
-      },
-    },
-    {
-      name: 'ip_allowlist_version',
-      data: 'ip_allowlist_version',
-      visible: false,
-      createdCell: function (td, _cellData, rowData) {
-        const value = rowData.ip_allowlist_version
-        $(td).html(`${value}`)
-      },
-    },
-  ]
-
-  createTable({
-    id: 'componentsTable',
-    ajaxUrl,
-    orderColumn: 0,
-    orderType: 'asc',
-    columns,
-  })
-})
-
-const renderGithubTeams = (teams, noTeamsMessage) => {
+function renderGithubTeams(teams, noTeamsMessage) {
   return (
     (teams ?? [])
       .map(
@@ -221,4 +9,220 @@ const renderGithubTeams = (teams, noTeamsMessage) => {
       )
       .join('') || `<li>${noTeamsMessage}</li>`
   )
+}
+
+if (document.querySelector('#componentsTable')) {
+  jQuery(function () {
+    const urlParams = new URLSearchParams(window.location.search)
+    const archived = urlParams.get('archived')
+    const isArchived = archived === 'true'
+    const ajaxUrl = archived ? `/components/data?archived=${archived}` : '/components/data?archived=false'
+
+    const columns = [
+      {
+        data: 'name',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(
+            `<a data-test="component-links" class="govuk-link--no-visited-state" href="/components/${cleanColumnOutput(rowData.name)}">${cleanColumnOutput(
+              rowData.name,
+            )}</a>`,
+          )
+        },
+      },
+      {
+        data: 'product.p_id',
+        createdCell: function (td, _cellData, rowData) {
+          const link = rowData.product.p_id
+            ? `<a class="govuk-link--no-visited-state" href="/products/${rowData.product.slug}">${cleanColumnOutput(
+                rowData.product.p_id,
+              )}</a>`
+            : 'N/A'
+          $(td).html(link)
+        },
+      },
+      {
+        data: 'product.name',
+        createdCell: function (td, _cellData, rowData) {
+          const link = rowData.product.name
+            ? `<a class="govuk-link--no-visited-state" href="/products/${rowData.product.slug}">${cleanColumnOutput(
+                rowData.product.name,
+              )}</a>`
+            : 'N/A'
+          $(td).html(link)
+        },
+      },
+      {
+        data: 'product.portfolio',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(`${rowData.product.portfolio}`)
+        },
+      },
+      {
+        data: 'github_repo',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(
+            `<a class="govuk-link--no-visited-state" href="https://github.com/ministryofjustice/${rowData.github_repo}" target="_blank" data-test="github-repo"> ${rowData.github_repo}</a>`,
+          )
+        },
+      },
+      {
+        data: 'github_enforce_admins_enabled',
+        visible: false,
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(`${rowData.github_enforce_admins_enabled}`)
+        },
+      },
+      {
+        data: null,
+        render: function (data, type, rowData, meta) {
+          const prodEnvironments = (rowData?.envs || []).filter(env => env.name === 'prod')
+
+          if (prodEnvironments.length === 0) {
+            const displayVal = 'N/A'
+            const filterVal = displayVal
+            const sortVal = 'zzzzz'
+            if (type === 'display') return displayVal
+            if (type === 'filter') return filterVal
+            return sortVal
+          }
+
+          const displayList = prodEnvironments.map(env =>
+            env.alerts_slack_channel === null ? 'N/A' : env.alerts_slack_channel,
+          )
+          const filterList = prodEnvironments.map(env => env.alerts_slack_channel || 'N/A')
+          const sortList = prodEnvironments
+            .map(env => {
+              const channel = env.alerts_slack_channel
+              return channel === null ? 'zzzz' : channel.toLowerCase().replace(/[^a-z0-9]/g, '')
+            })
+            .sort()
+
+          switch (type) {
+            case 'display':
+              return displayList.join(', ')
+            case 'filter':
+              return filterList.join(' ')
+            default:
+              return sortList.join(' ')
+          }
+        },
+      },
+      {
+        data: null,
+        createdCell: function (td, _cellData, rowData) {
+          const adminTeams = renderGithubTeams(rowData.github_project_teams_admin, 'No Teams with Admin Access')
+          const writeTeams = renderGithubTeams(rowData.github_project_teams_write, 'No Teams with Write Access')
+          const maintainTeams = renderGithubTeams(rowData.github_project_teams_maintain, 'No Teams with Maintain Access')
+          const detailsContent = `<details class="govuk-details">
+            <summary class="govuk-details__summary">
+              <span class="govuk-details__summary-text">Links</span>
+            </summary>
+            <div class="govuk-details__text">
+              <strong>Admin Teams:</strong>
+              <ul>${adminTeams}</ul>
+              <strong>Write Teams:</strong>
+              <ul>${writeTeams}</ul>
+              <strong>Maintain Teams:</strong>
+              <ul>${maintainTeams}</ul>
+            </div>
+          </details>`
+          $(td).html(detailsContent)
+        },
+      },
+      {
+        data: 'github_project_teams_admin',
+        visible: false,
+        createdCell: function (td, _cellData, rowData) {
+          const githubTeams = (rowData.github_project_teams_admin ?? [])
+            .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+            .join('')
+
+          if (githubTeams) {
+            $(td).html(githubTeams)
+          } else {
+            $(td).html('No Teams with Admin Access')
+          }
+        },
+      },
+      {
+        data: 'github_project_teams_write',
+        visible: false,
+        createdCell: function (td, _cellData, rowData) {
+          const githubTeams = (rowData.github_project_teams_write ?? [])
+            .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+            .join('')
+
+          if (githubTeams) {
+            $(td).html(githubTeams)
+          } else {
+            $(td).html('No Teams with Write Access')
+          }
+        },
+      },
+      {
+        data: 'github_project_teams_maintain',
+        visible: false,
+        createdCell: function (td, _cellData, rowData) {
+          const githubTeams = (rowData.github_project_teams_maintain ?? [])
+            .map(githubTeam => `<li><a href="/github-teams/${githubTeam}">${githubTeam}</a></li>`)
+            .join('')
+
+          if (githubTeams) {
+            $(td).html(githubTeams)
+          } else {
+            $(td).html('No Teams with maintain Access')
+          }
+        },
+      },
+      {
+        data: 'archived',
+        visible: isArchived,
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(`${rowData.archived ? 'Yes' : 'No'}`)
+        },
+      },
+      {
+        data: 'app_insights_cloud_role_name',
+        visible: false,
+        createdCell: function (td, _cellData, rowData) {
+          const value = rowData.app_insights_cloud_role_name ? rowData.app_insights_cloud_role_name : 'N/A'
+          $(td).html(`${value}`)
+        },
+      },
+      {
+        data: 'app_insights_alerts_enabled',
+        visible: false,
+        createdCell: function (td, _cellData, rowData) {
+          const value = rowData.app_insights_cloud_role_name ? (rowData.app_insights_alerts_enabled ?? true) : 'N/A'
+          $(td).html(`${value}`)
+        },
+      },
+      {
+        name: 'dependent_count',
+        data: 'dependent_count',
+        visible: false,
+        createdCell: function (td, _cellData, rowData) {
+          const value = rowData.dependent_count
+          $(td).html(`${value}`)
+        },
+      },
+      {
+        name: 'ip_allowlist_version',
+        data: 'ip_allowlist_version',
+        visible: false,
+        createdCell: function (td, _cellData, rowData) {
+          const value = rowData.ip_allowlist_version
+          $(td).html(`${value}`)
+        },
+      },
+    ]
+
+    createTable({
+      id: 'componentsTable',
+      ajaxUrl,
+      orderColumn: 0,
+      orderType: 'asc',
+      columns,
+    })
+  })
 }
