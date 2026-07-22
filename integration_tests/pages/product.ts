@@ -1,9 +1,12 @@
-import Page, { PageElement } from './page'
+import { type Page as PlaywrightPage } from '@playwright/test'
+import Page from './page'
 
 export default class ProductPage extends Page {
-  constructor(productName: string) {
-    super(productName)
+  constructor(page: PlaywrightPage, productName: string) {
+    super(page, productName)
   }
 
-  componentLink = (): PageElement => cy.get('[data-test="component-link"]').first().click()
+  async componentLink(): Promise<void> {
+    await this.page.locator('[data-test="component-link"]').first().click()
+  }
 }

@@ -1,17 +1,32 @@
+import { type Locator, type Page as PlaywrightPage } from '@playwright/test'
 import Page from './page'
 
 export default class EnvironmentsPage extends Page {
-  constructor() {
-    super('Environments')
+  constructor(page: PlaywrightPage) {
+    super(page, 'Environments')
   }
 
-  environmentLink = (): Cypress.Chainable<string> =>
-    cy
-      .get('[data-test="environment"]')
-      .first()
-      .then($element => {
-        const environmentName = $element.text().trim()
-        cy.wrap($element).click()
-        return cy.wrap(environmentName)
-      })
+  async environmentLink(): Promise<string> {
+    const link = this.page.locator('[data-test="environment"]').first()
+    const environmentName = (await link.textContent())?.trim() ?? ''
+    await link.click()
+
+    return environmentName
+  }
+
+  environmentLinks(): Locator {
+    return this.page.locator('[data-test="environment"]')
+  }
+
+  async searchEnvironment(term: string): Promise<void> {
+    const input = this.page.getByPlaceholder('Environment (regex)', { exact: true })
+    await input.click()
+    await input.pressSequentially(term)
+  }
+
+  async clearEnvironmentSearch(): Promise<void> {
+    const input = this.page.getByPlaceholder('Environment (regex)', { exact: true })
+    await input.press('ControlOrMeta+a')
+    await input.press('Backspace')
+  }
 }

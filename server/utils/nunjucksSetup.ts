@@ -1,33 +1,32 @@
 /* eslint-disable no-param-reassign */
+import fs from 'fs'
 import path from 'path'
 import nunjucks from 'nunjucks'
 import express from 'express'
 import { deflate } from 'pako'
 import { fromUint8Array } from 'js-base64'
 import { formatMonitorName, initialiseName } from './utils'
-import { ApplicationInfo } from '../applicationInfo'
 import { FieldValidationError } from '../@types/FieldValidationError'
 
 const production = process.env.NODE_ENV === 'production'
 
-export default function nunjucksSetup(app: express.Express, applicationInfo: ApplicationInfo): void {
+export default function nunjucksSetup(app: express.Express): void {
   app.set('view engine', 'njk')
 
   app.locals.asset_path = '/assets/'
   app.locals.applicationName = 'Developer Portal'
   app.locals.isDev = !production
 
-  // Cachebusting version string
-  if (production) {
-    // Version only changes with new commits
-    app.locals.version = applicationInfo.gitShortHash
-  } else {
-    // Version changes every request
-    app.use((req, res, next) => {
-      res.locals.version = Date.now().toString()
+  let assetManifest: Record<string, string> = {}
 
-      return next()
-    })
+  try {
+    const assetMetadataPath = path.resolve(__dirname, '../../assets/manifest.json')
+    assetManifest = JSON.parse(fs.readFileSync(assetMetadataPath, 'utf8'))
+  } catch (e) {
+    if (production) {
+      // eslint-disable-next-line no-console
+      console.error('Could not read asset manifest file', e)
+    }
   }
 
   const njkEnv = nunjucks.configure(
@@ -61,6 +60,7 @@ export default function nunjucksSetup(app: express.Express, applicationInfo: App
   })
 
   njkEnv.addFilter('initialiseName', initialiseName)
+  njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
   njkEnv.addFilter('toJson', (val: unknown, depth = 0) => JSON.stringify(val, null, depth))
   njkEnv.addFilter('snakeToTitleCase', function snakeToTitleCase(str) {
     return str

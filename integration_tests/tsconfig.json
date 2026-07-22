@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "noEmit": true,
-    "lib": ["es5", "dom", "es2015.promise"],
-    "types": ["cypress", "cypress-axe", "express", "express-session"],
+    "lib": ["es2023", "dom"],
+    "types": ["node"],
+    "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "rootDir": "./integration_tests"
+    "rootDir": "."
   },
-  "include": ["**/index.d.ts"]
+  "include": ["**/*.ts"]
 }

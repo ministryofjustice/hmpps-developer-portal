@@ -1,9 +1,28 @@
-import Page, { PageElement } from './page'
+import { type Locator, type Page as PlaywrightPage } from '@playwright/test'
+import Page from './page'
 
 export default class ServiceAreasPage extends Page {
-  constructor() {
-    super('Service Areas')
+  constructor(page: PlaywrightPage) {
+    super(page, 'Service Areas')
   }
 
-  serviceAreaNameLink = (): PageElement => cy.get('[data-test="service-area-name-link"]').first().click()
+  async serviceAreaNameLink(): Promise<void> {
+    await this.page.locator('[data-test="service-area-name-link"]').first().click()
+  }
+
+  serviceAreaNameLinks(): Locator {
+    return this.page.locator('[data-test="service-area-name-link"]')
+  }
+
+  async searchName(term: string): Promise<void> {
+    const input = this.page.getByPlaceholder('Name (regex)', { exact: true })
+    await input.click()
+    await input.pressSequentially(term)
+  }
+
+  async clearNameSearch(): Promise<void> {
+    const input = this.page.getByPlaceholder('Name (regex)', { exact: true })
+    await input.press('ControlOrMeta+a')
+    await input.press('Backspace')
+  }
 }

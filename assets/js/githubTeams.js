@@ -1,48 +1,4 @@
-jQuery(function () {
-  const columns = [
-    {
-      data: 'github_team_id',
-      visible: false,
-    },
-    {
-      data: 'team_name',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(`<a href="/github-teams/${rowData.team_name}">${rowData.team_name}</a>`)
-      },
-    },
-    {
-      data: 'parent_team_name',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(
-          rowData.parent_team_name === 'hmpps-developers' || rowData.parent_team_name === null
-            ? `${rowData.parent_team_name}`
-            : `<a href="/github-teams/${rowData.parent_team_name}">${rowData.parent_team_name}</a>`,
-        )
-      },
-    },
-    {
-      data: 'team_desc',
-    },
-    {
-      data: 'members',
-      createdCell: function (td, _cellData, rowData) {
-        const membersList = renderGithubTeams(rowData)
-        $(td).html(membersList ? `<ul>${membersList}</ul>` : 'No members in this team')
-      },
-    },
-    {
-      data: 'terraform_managed',
-    },
-  ]
-
-  createTable({
-    id: 'githubTeamsTable',
-    ajaxUrl: '/github-teams/data',
-    orderColumn: 1,
-    orderType: 'asc',
-    columns,
-  })
-})
+import { createTable } from './common.js'
 
 function renderGithubTeams(rowData) {
   const members = rowData.members
@@ -52,4 +8,52 @@ function renderGithubTeams(rowData) {
     )
     .join('')
   return members
+}
+
+if (document.querySelector('#githubTeamsTable')) {
+  jQuery(function () {
+    const columns = [
+      {
+        data: 'github_team_id',
+        visible: false,
+      },
+      {
+        data: 'team_name',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(`<a href="/github-teams/${rowData.team_name}">${rowData.team_name}</a>`)
+        },
+      },
+      {
+        data: 'parent_team_name',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(
+            rowData.parent_team_name === 'hmpps-developers' || rowData.parent_team_name === null
+              ? `${rowData.parent_team_name}`
+              : `<a href="/github-teams/${rowData.parent_team_name}">${rowData.parent_team_name}</a>`,
+          )
+        },
+      },
+      {
+        data: 'team_desc',
+      },
+      {
+        data: 'members',
+        createdCell: function (td, _cellData, rowData) {
+          const membersList = renderGithubTeams(rowData)
+          $(td).html(membersList ? `<ul>${membersList}</ul>` : 'No members in this team')
+        },
+      },
+      {
+        data: 'terraform_managed',
+      },
+    ]
+
+    createTable({
+      id: 'githubTeamsTable',
+      ajaxUrl: '/github-teams/data',
+      orderColumn: 1,
+      orderType: 'asc',
+      columns,
+    })
+  })
 }

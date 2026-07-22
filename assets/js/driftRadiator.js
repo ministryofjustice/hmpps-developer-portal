@@ -1,7 +1,9 @@
-dayjs.extend(window.dayjs_plugin_relativeTime)
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime)
 
 const getIndicatorColour = daysDiff => {
-  // Decrease denominator to increase rate of change , increase daysDiff to increase initial jump
   const diffScore = (daysDiff + 6) / 15
 
   const hue = Math.max(0, (1 - diffScore) * 120).toString(10)
@@ -37,7 +39,7 @@ class DeploymentRenderer {
 
     components.forEach(component => {
       if (component?.environments) {
-        const environments = component.environments // This is defined in teamHealthService.ts
+        const environments = component.environments
           .map(env => {
             const gitDiffUrl = `https://github.com/ministryofjustice/${component.repo}/compare/${env.sha}...${component.baseSha}`
             const showDiff = Boolean(component.baseSha) && env.sha !== component.baseSha
@@ -81,12 +83,10 @@ class DeploymentRenderer {
             </div>
             </td>
           </tr>`)
-        // red after around 30 days
         $(`#radiator-${component.name}-staleness`).css(
           'background-color',
           !component.staleness.present ? 'hsl(180,0%,50%)' : getIndicatorColour(component.staleness.days * 0.3),
         )
-        // red after around 10 days
         $(`#radiator-${component.name}-drift`).css(
           'background-color',
           !component.drift.present ? 'hsl(180,0%,50%)' : getIndicatorColour(component.drift.days * 0.8),
@@ -98,4 +98,13 @@ class DeploymentRenderer {
   start = async componentNames => {
     await this.fetchMessages(componentNames)
   }
+}
+
+if (document.querySelector('#drift-radiator-data')) {
+  const { components, csrfToken, viewMode } = JSON.parse(document.querySelector('#drift-radiator-data').textContent)
+
+  jQuery(function () {
+    const renderer = new DeploymentRenderer(csrfToken, viewMode)
+    renderer.start(components)
+  })
 }

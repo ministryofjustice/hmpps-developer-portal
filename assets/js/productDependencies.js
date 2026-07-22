@@ -1,34 +1,36 @@
-import mermaid from '/assets/mermaid.esm.min.mjs'
+if (document.querySelector('.dependency-graph')) {
+  jQuery(async function () {
+    const { default: mermaid } = await import('mermaid')
+    const { default: svgPanZoom } = await import('svg-pan-zoom')
+    mermaid.initialize({ startOnLoad: false })
 
-jQuery(async function () {
-  mermaid.initialize({ startOnLoad: false })
+    const element = document.querySelector('.dependency-graph')
+    const graphDefinition = document.getElementById('graph-source').innerText
 
-  const element = document.querySelector('.dependency-graph')
-  const graphDefinition = document.getElementById('graph-source').innerText
+    const { svg } = await mermaid.render('graph-svg', graphDefinition)
+    element.innerHTML = svg
+    svgPanZoom('#graph-svg', {
+      zoomEnabled: true,
+      fit: true,
+      center: true,
+    })
 
-  const { svg } = await mermaid.render('graph-svg', graphDefinition)
-  element.innerHTML = svg
-  svgPanZoom('#graph-svg', {
-    zoomEnabled: true,
-    fit: true,
-    center: true,
+    const graph = document.getElementById('graph-svg')
+    graph.setAttribute('height', '1500px')
+    graph.setAttribute('width', '100%')
+
+    $('#updateProduct').on('click', async e => {
+      e.preventDefault()
+      const productCode = document.getElementById('product').value
+      window.location = `/product-dependencies/${productCode}`
+    })
+    $('#toggleOrientation').on('click', async e => {
+      e.preventDefault()
+      const urlParams = new URLSearchParams(window.location.search)
+      const orientation = urlParams.get('orientation') == 'LR' ? 'TB' : 'LR'
+      const productCode = document.getElementById('product').value
+
+      window.location = `/product-dependencies/${productCode}?orientation=${orientation}`
+    })
   })
-
-  const graph = document.getElementById('graph-svg')
-  graph.setAttribute('height', '1500px')
-  graph.setAttribute('width', '100%')
-
-  $('#updateProduct').on('click', async e => {
-    e.preventDefault()
-    const productCode = document.getElementById('product').value
-    window.location = `/product-dependencies/${productCode}`
-  })
-  $('#toggleOrientation').on('click', async e => {
-    e.preventDefault()
-    const urlParams = new URLSearchParams(window.location.search)
-    const orientation = urlParams.get('orientation') == 'LR' ? 'TB' : 'LR'
-    const productCode = document.getElementById('product').value
-
-    window.location = `/product-dependencies/${productCode}?orientation=${orientation}`
-  })
-})
+}

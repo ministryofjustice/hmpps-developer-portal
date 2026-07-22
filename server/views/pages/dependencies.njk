@@ -56,7 +56,7 @@
   </form>
 
   {% if dependencyName|length %}
-  <table class="stripe" id="dependenciesTable">
+  <table class="stripe" id="dependenciesTable" data-dependency-name="{{ dependencyName }}" data-dependency-type="{{ dependencyType }}">
     <thead>
       <tr>
         <th>Component</th>
@@ -74,15 +74,4 @@
   </table>
   {% endif %}
 
-{% endblock %}
-
-{% block bodyEnd %}
-  <script nonce="{{ cspNonce }}">
-    const dataDependencyName = '{{ dependencyName }}'
-    const dataDependencyType = '{{ dependencyType }}'
-  </script>
-  <script type="module" src="/assets/frontendInit.js"></script>
-
-  <script src="/assets/js/common.js"></script>
-  <script src="/assets/js/dependencies.js"></script>
 {% endblock %}

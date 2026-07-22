@@ -2,20 +2,29 @@ version: '3.1'
 services:
 
   redis:
-    image: 'redis:7.4'
+    image: 'redis/redis-stack-server:7.4.0-v7'
     networks:
       - hmpps_int
     ports:
       - '6379:6379'
 
   wiremock:
-    image: wiremock/wiremock
+    image: wiremock/wiremock:3.13.2
     networks:
     - hmpps_int
     container_name: wiremock
     restart: always
     ports:
       - "9091:8080"
+    volumes:
+      - ./docker/wiremock/mappings:/home/wiremock/mappings
+    environment:
+      WIREMOCK_SERVICE_CATALOGUE_URL: ${WIREMOCK_SERVICE_CATALOGUE_URL:-https://service-catalogue-dev.hmpps.service.justice.gov.uk}
+      WIREMOCK_ALERTMANAGER_URL: ${WIREMOCK_ALERTMANAGER_URL:-http://monitoring-alerts-service.cloud-platform-monitoring-alerts:8080/alertmanager}
+      # Real catalogue responses are large; recording sessions through the proxy need
+      # more than the default heap, and the journal is capped for the same reason
+      JAVA_OPTS: -Xmx2g
+    command: --local-response-templating --max-request-journal-entries 200
 
 networks:
   hmpps_int:

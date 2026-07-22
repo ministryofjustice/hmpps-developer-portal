@@ -1,0 +1,12 @@
+{
+  "name": "Proxy to Alertmanager",
+  "request": {
+    "urlPattern": "/alertManager/.*"
+  },
+  "response": {
+    "proxyBaseUrl": "{{systemValue type='ENVIRONMENT' key='WIREMOCK_ALERTMANAGER_URL'}}",
+    "proxyUrlPrefixToRemove": "/alertManager",
+    "transformers": ["response-template"]
+  },
+  "priority": 100
+}

@@ -1,21 +1,40 @@
-import Page, { PageElement } from './page'
+import { type Locator, type Page as PlaywrightPage } from '@playwright/test'
+import Page from './page'
 
 export default class TeamsPage extends Page {
-  constructor() {
-    super('Teams')
+  constructor(page: PlaywrightPage) {
+    super(page, 'Teams')
   }
 
-  allLinks = (): PageElement => cy.get('[data-test="all-links"]').first().click()
+  async allLinks(): Promise<void> {
+    await this.page.locator('[data-test="all-links"]').first().click()
+  }
 
-  teamOverviewLink = (): PageElement => cy.get('[data-test="team-overview-link"]').first().click()
+  async teamOverviewLink(): Promise<void> {
+    await this.page.locator('[data-test="team-overview-link"]').first().click()
+  }
 
-  teamLink = (): Cypress.Chainable<string> =>
-    cy
-      .get('[data-test="team-link"]')
-      .first()
-      .then($element => {
-        const teamName = $element.text().trim()
-        cy.wrap($element).click()
-        return cy.wrap(teamName)
-      })
+  async teamLink(): Promise<string> {
+    const link = this.page.locator('[data-test="team-link"]').first()
+    const teamName = (await link.textContent())?.trim() ?? ''
+    await link.click()
+
+    return teamName
+  }
+
+  teamLinks(): Locator {
+    return this.page.locator('[data-test="team-link"]')
+  }
+
+  async searchName(term: string): Promise<void> {
+    const input = this.page.getByPlaceholder('Name (regex)', { exact: true })
+    await input.click()
+    await input.pressSequentially(term)
+  }
+
+  async clearNameSearch(): Promise<void> {
+    const input = this.page.getByPlaceholder('Name (regex)', { exact: true })
+    await input.press('ControlOrMeta+a')
+    await input.press('Backspace')
+  }
 }

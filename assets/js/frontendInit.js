@@ -1,5 +1,5 @@
-import * as govukFrontend from '/assets/govuk/govuk-frontend.min.js'
-import * as mojFrontend from '/assets/moj/moj-frontend.min.js'
+import * as govukFrontend from 'govuk-frontend'
+import * as mojFrontend from '@ministryofjustice/frontend'
 
 govukFrontend.initAll()
 mojFrontend.initAll()
