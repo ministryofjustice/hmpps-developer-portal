@@ -1,216 +1,4 @@
-const applicationFilter = document.getElementById('application')
-const environmentFilter = document.getElementById('environment')
-const namespaceFilter = document.getElementById('namespace')
-const severityFilter = document.getElementById('severity')
-const teamFilter = document.getElementById('team')
-const portfolioFilter = document.getElementById('portfolio')
-
-jQuery(function () {
-  // checks URL, to see if any filters are currently applied
-  let currentFilters = getFiltersFromURL()
-  // alertsData will hold the most recently fetched data
-  let alertsData = []
-  // timer ticks if a dropdown is open or when navigating table pages, data fetches every 30 seconds instead of 5
-  let isDropDownOpen = false
-  let isPaginationActive = false
-  let timer = 0
-
-  const columns = [
-    {
-      data: 'labels.alertname',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(rowData.labels.alertname ? `${rowData.labels.alertname}` : 'N/A')
-      },
-    },
-    {
-      data: 'startsAt',
-      createdCell: function (td, _cellData, rowData) {
-        const startsAt = rowData.startsAt ? formatTimeStamp(rowData.startsAt) : 'N/A'
-        $(td).html(`${startsAt}`)
-      },
-    },
-    {
-      data: 'annotations.message',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(rowData.annotations.message ? `${rowData.annotations.message}` : 'N/A')
-      },
-    },
-    {
-      data: 'labels.application',
-      createdCell: function (td, _cellData, rowData) {
-        $(td).html(rowData.labels.application ? `${rowData.labels.application}` : 'N/A')
-      },
-    },
-    {
-      data: 'labels.alert_slack_channel',
-      // default content to handle missing column data - prevents rendering issues for when no data for slack channel
-      defaultContent: 'N/A',
-      createdCell: function (td, _cellData, rowData) {
-        const slackName = rowData.labels.alert_slack_channel || 'N/A'
-        const slackNameNoHashtag = slackName.slice(1) // removes #
-        if (slackName !== 'N/A') {
-          $(td).html(
-            `<a href="https://slack.com/app_redirect?channel=${slackNameNoHashtag}" target="_blank">${slackName}</a>`,
-          )
-        } else {
-          $(td).html(`${slackName}`)
-        }
-      },
-    },
-    {
-      data: 'annotations',
-      createdCell: function (td, _cellData, rowData) {
-        const dashboardLink = rowData.annotations.dashboard_url
-          ? `<a href="${rowData.annotations.dashboard_url}" class="statusTileHealth" target="_blank">Dashboard</a>`
-          : ''
-        const runbookLink = rowData.annotations.runbook_url
-          ? `<a href="${rowData.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook</a>`
-          : ''
-        const generatorLink = rowData.generatorURL
-          ? `<a href="${rowData.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
-          : ''
-
-        $(td).html(`<ul><li>${dashboardLink}</li><li>${runbookLink}</li><li>${generatorLink}</li></ul>`)
-      },
-    },
-  ]
-
-  const alertsTable = createTable({
-    id: 'alertsTable',
-    ajaxUrl: '/alerts/all',
-    orderColumn: 1,
-    orderType: 'asc',
-    columns,
-    responsive: true,
-    createdRow: function (row, data, dataIndex) {
-      if (data.status.state === 'suppressed') {
-        $(row).addClass('silenced-alert')
-      } else if (data.status.state === 'active') {
-        $(row).addClass('active-alert')
-      }
-    },
-    ajaxErrorHandler: function (jqXHR, textStatus, errorThrown) {
-      $('#alertsErrorStatus').html(
-        `<div role="region" class="moj-alert moj-alert--error" aria-label="error: Unable to load alerts data. Please try again later" data-module="moj-alert">
-          <div>
-            <svg
-              class="moj-alert__icon"
-              role="presentation"
-              focusable="false"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 30 30"
-              height="30"
-              width="30"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M20.1777 2.5H9.82233L2.5 9.82233V20.1777L9.82233 27.5H20.1777L27.5 20.1777V9.82233L20.1777 2.5ZM10.9155 8.87769L15.0001 12.9623L19.0847 8.87771L21.1224 10.9154L17.0378 15L21.1224 19.0846L19.0847 21.1222L15.0001 17.0376L10.9155 21.1223L8.87782 19.0846L12.9624 15L8.87783 10.9153L10.9155 8.87769Z"
-                fill="currentColor"
-              />
-            </svg>
-          </div>
-          <div class="moj-alert__content">
-            Unable to load alerts data. Please try again later
-          </div>
-        </div>`,
-      )
-      console.error('DataTables error:', textStatus, errorThrown, jqXHR)
-    },
-  })
-
-  // Alerts API called every 5 seconds. If slow mode, timer increases and API called every 30 seconds
-  setInterval(function () {
-    const slowMode = isDropDownOpen || isPaginationActive
-    const { newTime, dataShouldRefresh } = isDataThirtySecondsOld(timer)
-    timer = newTime
-
-    // Timer resets to 0 when API called
-    if (!slowMode || dataShouldRefresh) {
-      alertsTable.ajax.reload(null, false) // user paging is not reset on reload
-      timer = 0
-      lastUpdatedTime()
-    }
-  }, 5000)
-
-  lastUpdatedTime()
-  alertsUpdateFrequencyMessage(isDropDownOpen)
-
-  // xhr event is fired when an Ajax request is completed, whether it is successful (data refreshes) or there's an error
-  alertsTable.on('xhr', function (_e, settings, json) {
-    $('#alertsErrorStatus').empty()
-
-    alertsData = Array.isArray(json) ? json : json.data || []
-    if (!alertsData || !alertsData.length) return
-
-    filterOrResetDropdowns(alertsData, currentFilters, { isReset: false })
-
-    // Registers allFiltersChecker as a Datatable custom filter function. Determines if a row should be displayed in the table
-    $.fn.dataTable.ext.search = []
-    $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
-    alertsTable.draw(false)
-  })
-
-  // On click of any 'Update' button to apply filters. Button ids mapped to corresponding filter's key
-  $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel,#updateTeam,#updatePortfolio').on(
-    'click',
-    function (e) {
-      e.preventDefault()
-
-      const buttonIdToFilterKey = {
-        updateApplicationName: 'application',
-        updateEnvironment: 'environment',
-        updateNamespace: 'namespace',
-        updateSeverityLabel: 'severity',
-        updateTeam: 'team',
-        updatePortfolio: 'portfolio',
-      }
-
-      const key = buttonIdToFilterKey[this.id]
-      if (!key) return
-
-      // creating filter object with values from the dropdowns
-      currentFilters[key] = $(`#${key}`).val()
-
-      // Update URL without reload
-      updateURLParams(currentFilters)
-
-      // Reapply all filters
-      $.fn.dataTable.ext.search = []
-      $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
-      alertsTable.draw(false)
-      filterOrResetDropdowns(alertsData, currentFilters, { isReset: false })
-    },
-  )
-
-  // When reset filters clicked, this clears all filters, resets URL params and updates table
-  $('#resetFilters').on('click', function (e) {
-    e.preventDefault()
-    // Clear filters
-    currentFilters = {
-      application: '',
-      environment: '',
-      namespace: '',
-      severity: '',
-      team: '',
-      portfolio: '',
-    }
-    // Reset selects
-    $('#application,#environment,#namespace,#severity,#team,#portfolio').val('')
-    updateURLParams(currentFilters)
-    // Remove all filters and redraw
-    $.fn.dataTable.ext.search = []
-    alertsTable.draw(false)
-    filterOrResetDropdowns(alertsData, currentFilters, { isReset: true })
-  })
-
-  // Toggles fetch frequency between 5 and 30 seconds, and changes message when using dropdowns / pages
-  $(document).on('mousedown', e => {
-    isDropDownOpen = $(e.target).is('select')
-    isPaginationActive = $(e.target).closest('.dt-paging-button').length > 0
-    alertsUpdateFrequencyMessage(isDropDownOpen || isPaginationActive)
-  })
-})
+import { createTable } from './common.js'
 
 function alertsUpdateFrequencyMessage(isSlowMode) {
   const frequency = isSlowMode ? 30 : 5
@@ -220,10 +8,8 @@ function alertsUpdateFrequencyMessage(isSlowMode) {
   )
 }
 
-// Refreshes data if stale - when 30 seconds old
 function isDataThirtySecondsOld(timer) {
   if (timer >= 25) {
-    // next interval will tick at 30 seconds
     return { dataShouldRefresh: true, newTime: 0 }
   }
   return { dataShouldRefresh: false, newTime: timer + 5 }
@@ -235,7 +21,6 @@ function lastUpdatedTime() {
   document.getElementById('lastUpdated').textContent = `Last updated: ${lastUpdatedTimestamp}`
 }
 
-// function checks url params for applied filters and builds filter object
 function getFiltersFromURL() {
   const params = new URLSearchParams(location.search)
   return {
@@ -248,7 +33,6 @@ function getFiltersFromURL() {
   }
 }
 
-// add current filters to Url params
 function updateURLParams(filters) {
   const params = new URLSearchParams()
   if (filters.application.length) params.set('application', filters.application)
@@ -261,7 +45,6 @@ function updateURLParams(filters) {
   history.replaceState(null, '', `?${params.toString()}`)
 }
 
-// Checks all filters for each row, filtering out any false rows. Returns true (!false) where all filters match (or are empty)
 function allFiltersChecker(filters) {
   return function (_settings, _data, _dataIndex, rowData) {
     return !(
@@ -275,7 +58,6 @@ function allFiltersChecker(filters) {
   }
 }
 
-// Filters alerts data by dropdowns, returning an array of matching rows. Used to dynamically update dropdown options
 function getFilteredData(data, filters) {
   return data.filter(
     rowData =>
@@ -288,7 +70,6 @@ function getFilteredData(data, filters) {
   )
 }
 
-// Updates dropdowns with the options related to the current filters or all when reset
 function filterOrResetDropdowns(alertsData, currentFilters, { isReset = true }) {
   let selectedItems = {}
   let firstKeySelected = ''
@@ -309,7 +90,7 @@ function filterOrResetDropdowns(alertsData, currentFilters, { isReset = true }) 
   const keys = ['application', 'environment', 'namespace', 'severity', 'team', 'portfolio']
   keys.forEach(key => populateAlertsDropdowns(filteredData, key, currentFilters, firstKeySelected))
 }
-// Populates a dropdown with options from the filtered data, or to the current filter if present
+
 function populateAlertsDropdowns(data, key, currentFilters, firstKeySelected) {
   if (key === firstKeySelected) return
   const allOptions = [...new Set(data.map(a => a.labels[`${key}`]))].sort()
@@ -321,7 +102,6 @@ function populateAlertsDropdowns(data, key, currentFilters, firstKeySelected) {
     $dropdownSelect.append(`<option value="${option}">${option}</option>`)
   })
 
-  // Set value from URL param on load
   if (currentFilters[`${key}`]) {
     $dropdownSelect.val(currentFilters[`${key}`])
   }
@@ -347,4 +127,203 @@ function formatTimeStamp(dateString) {
   } catch (error) {
     return 'Invalid date'
   }
+}
+
+if (document.querySelector('#alertsTable')) {
+  jQuery(function () {
+    const applicationFilter = document.getElementById('application')
+    const environmentFilter = document.getElementById('environment')
+    const namespaceFilter = document.getElementById('namespace')
+    const severityFilter = document.getElementById('severity')
+    const teamFilter = document.getElementById('team')
+    const portfolioFilter = document.getElementById('portfolio')
+
+    let currentFilters = getFiltersFromURL()
+    let alertsData = []
+    let isDropDownOpen = false
+    let isPaginationActive = false
+    let timer = 0
+
+    const columns = [
+      {
+        data: 'labels.alertname',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(rowData.labels.alertname ? `${rowData.labels.alertname}` : 'N/A')
+        },
+      },
+      {
+        data: 'startsAt',
+        createdCell: function (td, _cellData, rowData) {
+          const startsAt = rowData.startsAt ? formatTimeStamp(rowData.startsAt) : 'N/A'
+          $(td).html(`${startsAt}`)
+        },
+      },
+      {
+        data: 'annotations.message',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(rowData.annotations.message ? `${rowData.annotations.message}` : 'N/A')
+        },
+      },
+      {
+        data: 'labels.application',
+        createdCell: function (td, _cellData, rowData) {
+          $(td).html(rowData.labels.application ? `${rowData.labels.application}` : 'N/A')
+        },
+      },
+      {
+        data: 'labels.alert_slack_channel',
+        defaultContent: 'N/A',
+        createdCell: function (td, _cellData, rowData) {
+          const slackName = rowData.labels.alert_slack_channel || 'N/A'
+          const slackNameNoHashtag = slackName.slice(1)
+          if (slackName !== 'N/A') {
+            $(td).html(
+              `<a href="https://slack.com/app_redirect?channel=${slackNameNoHashtag}" target="_blank">${slackName}</a>`,
+            )
+          } else {
+            $(td).html(`${slackName}`)
+          }
+        },
+      },
+      {
+        data: 'annotations',
+        createdCell: function (td, _cellData, rowData) {
+          const dashboardLink = rowData.annotations.dashboard_url
+            ? `<a href="${rowData.annotations.dashboard_url}" class="statusTileHealth" target="_blank">Dashboard</a>`
+            : ''
+          const runbookLink = rowData.annotations.runbook_url
+            ? `<a href="${rowData.annotations.runbook_url}" class="statusTileHealth" target="_blank">Runbook</a>`
+            : ''
+          const generatorLink = rowData.generatorURL
+            ? `<a href="${rowData.generatorURL}" class="statusTileHealth" target="_blank">View</a>`
+            : ''
+
+          $(td).html(`<ul><li>${dashboardLink}</li><li>${runbookLink}</li><li>${generatorLink}</li></ul>`)
+        },
+      },
+    ]
+
+    const alertsTable = createTable({
+      id: 'alertsTable',
+      ajaxUrl: '/alerts/all',
+      orderColumn: 1,
+      orderType: 'asc',
+      columns,
+      responsive: true,
+      createdRow: function (row, data, dataIndex) {
+        if (data.status.state === 'suppressed') {
+          $(row).addClass('silenced-alert')
+        } else if (data.status.state === 'active') {
+          $(row).addClass('active-alert')
+        }
+      },
+      ajaxErrorHandler: function (jqXHR, textStatus, errorThrown) {
+        $('#alertsErrorStatus').html(
+          `<div role="region" class="moj-alert moj-alert--error" aria-label="error: Unable to load alerts data. Please try again later" data-module="moj-alert">
+            <div>
+              <svg
+                class="moj-alert__icon"
+                role="presentation"
+                focusable="false"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 30 30"
+                height="30"
+                width="30"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M20.1777 2.5H9.82233L2.5 9.82233V20.1777L9.82233 27.5H20.1777L27.5 20.1777V9.82233L20.1777 2.5ZM10.9155 8.87769L15.0001 12.9623L19.0847 8.87771L21.1224 10.9154L17.0378 15L21.1224 19.0846L19.0847 21.1222L15.0001 17.0376L10.9155 21.1223L8.87782 19.0846L12.9624 15L8.87783 10.9153L10.9155 8.87769Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+            <div class="moj-alert__content">
+              Unable to load alerts data. Please try again later
+            </div>
+          </div>`,
+        )
+        console.error('DataTables error:', textStatus, errorThrown, jqXHR)
+      },
+    })
+
+    setInterval(function () {
+      const slowMode = isDropDownOpen || isPaginationActive
+      const { newTime, dataShouldRefresh } = isDataThirtySecondsOld(timer)
+      timer = newTime
+
+      if (!slowMode || dataShouldRefresh) {
+        alertsTable.ajax.reload(null, false)
+        timer = 0
+        lastUpdatedTime()
+      }
+    }, 5000)
+
+    lastUpdatedTime()
+    alertsUpdateFrequencyMessage(isDropDownOpen)
+
+    alertsTable.on('xhr', function (_e, settings, json) {
+      $('#alertsErrorStatus').empty()
+
+      alertsData = Array.isArray(json) ? json : json.data || []
+      if (!alertsData || !alertsData.length) return
+
+      filterOrResetDropdowns(alertsData, currentFilters, { isReset: false })
+
+      $.fn.dataTable.ext.search = []
+      $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
+      alertsTable.draw(false)
+    })
+
+    $('#updateApplicationName,#updateEnvironment,#updateNamespace,#updateSeverityLabel,#updateTeam,#updatePortfolio').on(
+      'click',
+      function (e) {
+        e.preventDefault()
+
+        const buttonIdToFilterKey = {
+          updateApplicationName: 'application',
+          updateEnvironment: 'environment',
+          updateNamespace: 'namespace',
+          updateSeverityLabel: 'severity',
+          updateTeam: 'team',
+          updatePortfolio: 'portfolio',
+        }
+
+        const key = buttonIdToFilterKey[this.id]
+        if (!key) return
+
+        currentFilters[key] = $(`#${key}`).val()
+
+        updateURLParams(currentFilters)
+
+        $.fn.dataTable.ext.search = []
+        $.fn.dataTable.ext.search.push(allFiltersChecker(currentFilters))
+        alertsTable.draw(false)
+        filterOrResetDropdowns(alertsData, currentFilters, { isReset: false })
+      },
+    )
+
+    $('#resetFilters').on('click', function (e) {
+      e.preventDefault()
+      currentFilters = {
+        application: '',
+        environment: '',
+        namespace: '',
+        severity: '',
+        team: '',
+        portfolio: '',
+      }
+      $('#application,#environment,#namespace,#severity,#team,#portfolio').val('')
+      updateURLParams(currentFilters)
+      $.fn.dataTable.ext.search = []
+      alertsTable.draw(false)
+      filterOrResetDropdowns(alertsData, currentFilters, { isReset: true })
+    })
+
+    $(document).on('mousedown', e => {
+      isDropDownOpen = $(e.target).is('select')
+      isPaginationActive = $(e.target).closest('.dt-paging-button').length > 0
+      alertsUpdateFrequencyMessage(isDropDownOpen || isPaginationActive)
+    })
+  })
 }
