@@ -50,7 +50,7 @@
           {% set rows = [] %}
           {% for vuln in component.breachedVulnerabilities %}
               {% set rows = (rows.push([
-                { html: '<a href="https://security.snyk.io/vuln/' + vuln.vulnerabilityId + '" class="govuk-link--no-visited-state">' + vuln.vulnerabilityId + '</a>' },
+                { html: '<a href="https://security.snyk.io/vuln/' + vuln.vulnerabilityId + '" target="_blank" rel="noopener noreferrer" class="govuk-link--no-visited-state">' + vuln.vulnerabilityId + ' (opens Snyk)</a>' },
                 { text: vuln.severityLevel },
                 { text: vuln.publishedDate },
                 { text: vuln.breachedSince }
