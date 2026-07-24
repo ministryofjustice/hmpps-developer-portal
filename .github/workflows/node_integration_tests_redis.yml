@@ -19,9 +19,9 @@ jobs:
           - 6379:6379
         options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - name: Use Node.js ${{ inputs.node_version_file }}
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version-file: ${{ inputs.node_version_file }}
       - name: download artifacts
@@ -30,7 +30,7 @@ jobs:
           name: npm_build_artifacts
       - name: restore cache
         id: restore-cache
-        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         env:
           cache-name: node-modules
         with:
@@ -62,7 +62,7 @@ jobs:
         # replacing the above with if: always()
       - name: upload results
         if: always()
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: npm_integration_test_artifacts
           path: |
@@ -73,7 +73,7 @@ jobs:
             ctrf/
       - name: fail the action if the tests failed
         if: ${{ steps.integration-tests.outcome == 'failure' }}
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           script: |
             core.setFailed('Integration tests failed')
